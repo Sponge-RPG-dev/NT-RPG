@@ -44,7 +44,9 @@ public class SpongeCharacterSkillUpgradeEvent extends AbstractCharacterEvent imp
         return failedTranslationKey;
     }
 
+    @Override
     public void setFailedTranslationKey(String failedTranslationKey) {
         this.failedTranslationKey = failedTranslationKey;
     }
+
 }

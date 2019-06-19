@@ -28,4 +28,5 @@ public interface CharacterSkillLearnAttemptEvent extends TargetCharacterEvent, S
     String getFailedTranslationKey();
 
     void setFailedTranslationKey(String failedMessage);
+
 }

@@ -9,4 +9,5 @@ import cz.neumimto.rpg.api.events.effect.TargetIEffectConsumer;
 public interface TargetIEntityEvent extends TargetIEffectConsumer {
 
     void setTarget(IEntity iEntity);
+
 }

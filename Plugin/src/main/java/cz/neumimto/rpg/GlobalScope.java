@@ -21,7 +21,7 @@ package cz.neumimto.rpg;
 import com.google.inject.Injector;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.effects.EffectService;
-import cz.neumimto.rpg.api.events.effect.EventFactoryService;
+import cz.neumimto.rpg.api.events.EventFactoryService;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.common.assets.AssetService;

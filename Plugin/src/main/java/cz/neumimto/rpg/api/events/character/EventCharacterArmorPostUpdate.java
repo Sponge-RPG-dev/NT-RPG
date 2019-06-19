@@ -30,4 +30,5 @@ public interface EventCharacterArmorPostUpdate extends TargetCharacterEvent {
     Set<RpgItemType> getArmor();
 
     void setArmor(Set<RpgItemType> armor);
+
 }

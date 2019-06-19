@@ -5,5 +5,4 @@ package cz.neumimto.rpg.api.events.character;
  */
 public interface CharacterInitializedEvent extends TargetCharacterEvent {
 
-
 }

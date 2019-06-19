@@ -7,4 +7,5 @@ public interface TargetEffectEvent<T extends IEffect> extends TargetIEffectConsu
     T getEffect();
 
     void setEffect(T iEffect);
+
 }

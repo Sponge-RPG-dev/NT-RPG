@@ -5,16 +5,10 @@ import cz.neumimto.rpg.api.IResourceLoader;
 import cz.neumimto.rpg.api.RpgApi;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.damage.DamageService;
-import cz.neumimto.rpg.api.entity.EntityService;
-import cz.neumimto.rpg.api.entity.PropertyService;
-import cz.neumimto.rpg.api.entity.players.ICharacterService;
-import cz.neumimto.rpg.api.entity.players.parties.PartyService;
-import cz.neumimto.rpg.api.events.effect.EventFactoryService;
+import cz.neumimto.rpg.api.events.EventFactoryService;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.skills.ISkillService;
-import cz.neumimto.rpg.junit.TestDictionary;
-import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.entities.SpongeEntityService;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
@@ -22,8 +16,11 @@ import cz.neumimto.rpg.sponge.entities.players.party.SpongePartyService;
 import cz.neumimto.rpg.sponge.properties.SpongePropertyService;
 
 import java.io.InputStream;
-import java.util.*;
-import java.util.concurrent.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class TestApiImpl implements RpgApi {
 

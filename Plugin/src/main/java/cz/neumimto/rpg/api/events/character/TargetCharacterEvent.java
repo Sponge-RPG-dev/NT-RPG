@@ -11,4 +11,5 @@ public interface TargetCharacterEvent {
     IActiveCharacter getTarget();
 
     void setTarget(IActiveCharacter target);
+
 }

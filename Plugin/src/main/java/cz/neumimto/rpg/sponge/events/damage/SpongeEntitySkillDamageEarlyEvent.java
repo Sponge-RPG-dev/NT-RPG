@@ -22,4 +22,5 @@ public class SpongeEntitySkillDamageEarlyEvent extends SpongeAbstractDamageEvent
     public void setSkill(ISkill iSkill) {
         this.skill = iSkill;
     }
+
 }

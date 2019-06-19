@@ -1,13 +1,11 @@
 package cz.neumimto.rpg.sponge.events.character;
 
 
-import cz.neumimto.rpg.api.events.character.TargetCharacterEvent;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import org.spongepowered.api.event.Event;
-import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.EventContext;
+import cz.neumimto.rpg.api.events.character.TargetCharacterEvent;
+import cz.neumimto.rpg.sponge.events.AbstractNEvent;
 
-abstract class AbstractCharacterEvent implements Event, TargetCharacterEvent {
+abstract class AbstractCharacterEvent extends AbstractNEvent implements TargetCharacterEvent {
 
     private IActiveCharacter target;
 
@@ -19,11 +17,6 @@ abstract class AbstractCharacterEvent implements Event, TargetCharacterEvent {
     @Override
     public void setTarget(IActiveCharacter target) {
         this.target = target;
-    }
-
-    @Override
-    public Cause getCause() {
-        return Cause.of(EventContext.empty(), target);
     }
 
 }

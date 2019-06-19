@@ -19,17 +19,19 @@
 package cz.neumimto.rpg.sponge.events.skill;
 
 import cz.neumimto.rpg.api.IRpgElement;
-import cz.neumimto.rpg.api.events.skill.SkillHealEvent;
 import cz.neumimto.rpg.api.entity.IEntity;
+import cz.neumimto.rpg.api.events.skill.SkillHealEvent;
+import org.spongepowered.api.event.Cancellable;
 
 /**
  * Created by NeumimTo on 7.8.2015.
  */
-public class SpongeHealEvent extends AbstractSkillEvent implements SkillHealEvent {
+public class SpongeHealEvent extends AbstractSkillEvent implements SkillHealEvent, Cancellable {
 
-    float amount;
-    IRpgElement source;
+    private float amount;
+    private IRpgElement source;
     private IEntity entity;
+    private boolean cancelled;
 
     @Override
     public float getAmount() {
@@ -59,5 +61,15 @@ public class SpongeHealEvent extends AbstractSkillEvent implements SkillHealEven
     @Override
     public void setEntity(IEntity entity) {
         this.entity = entity;
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return cancelled;
+    }
+
+    @Override
+    public void setCancelled(boolean cancelled) {
+        this.cancelled = cancelled;
     }
 }

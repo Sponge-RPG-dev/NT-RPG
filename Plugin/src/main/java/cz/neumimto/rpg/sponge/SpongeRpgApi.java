@@ -6,7 +6,7 @@ import cz.neumimto.rpg.api.IResourceLoader;
 import cz.neumimto.rpg.api.RpgApi;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.damage.DamageService;
-import cz.neumimto.rpg.api.events.effect.EventFactoryService;
+import cz.neumimto.rpg.api.events.EventFactoryService;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.skills.ISkillService;

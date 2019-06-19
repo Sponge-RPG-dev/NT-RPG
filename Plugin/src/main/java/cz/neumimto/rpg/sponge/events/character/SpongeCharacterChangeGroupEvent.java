@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.sponge.events.character;
 
-import cz.neumimto.rpg.api.events.character.CharacterChangeGroupEvent;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.api.events.character.CharacterChangeGroupEvent;
 
 /**
  * Created by NeumimTo on 29.4.2017.
@@ -30,4 +30,5 @@ public class SpongeCharacterChangeGroupEvent extends AbstractCharacterEvent impl
     public void setOldClass(ClassDefinition oldClass) {
         this.oldClass = oldClass;
     }
+
 }

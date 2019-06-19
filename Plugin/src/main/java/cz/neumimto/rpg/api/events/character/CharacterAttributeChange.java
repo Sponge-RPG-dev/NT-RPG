@@ -14,4 +14,5 @@ public interface CharacterAttributeChange extends TargetCharacterEvent {
     void setAttribute(AttributeConfig attribute);
 
     AttributeConfig getAttribute();
+
 }

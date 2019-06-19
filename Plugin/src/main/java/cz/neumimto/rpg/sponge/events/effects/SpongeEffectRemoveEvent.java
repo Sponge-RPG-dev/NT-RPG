@@ -1,8 +1,8 @@
 package cz.neumimto.rpg.sponge.events.effects;
 
 import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.api.events.effect.EffectRemoveEvent;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
+import cz.neumimto.rpg.api.events.effect.EffectRemoveEvent;
 import org.spongepowered.api.event.cause.Cause;
 
 /**
@@ -11,6 +11,6 @@ import org.spongepowered.api.event.cause.Cause;
  * <p>
  * To filter specific effects in listener use EffectRemoveEvent<YourEffect> or "@First YourEffect"
  */
-public class SpongeEffectRemoveEvent<T extends IEffect> extends AbstractEffectEvent<T> implements EffectRemoveEvent {
+public class SpongeEffectRemoveEvent<T extends IEffect> extends AbstractEffectEvent<T> implements EffectRemoveEvent<T> {
 
 }

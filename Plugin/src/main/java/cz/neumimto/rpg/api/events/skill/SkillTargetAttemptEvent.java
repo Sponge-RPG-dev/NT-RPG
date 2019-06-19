@@ -16,8 +16,10 @@
 package cz.neumimto.rpg.api.events.skill;
 
 import cz.neumimto.rpg.api.entity.IEntity;
+import cz.neumimto.rpg.api.events.Cancellable;
 
-public interface SkillTargetAttemptEvent extends SkillEvent {
+public interface SkillTargetAttemptEvent extends SkillEvent, Cancellable {
+
     IEntity getCaster();
 
     void setCaster(IEntity caster);

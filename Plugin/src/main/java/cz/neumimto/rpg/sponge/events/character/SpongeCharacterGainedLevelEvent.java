@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.sponge.events.character;
 
-import cz.neumimto.rpg.api.events.character.CharacterGainedLevelEvent;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
+import cz.neumimto.rpg.api.events.character.CharacterGainedLevelEvent;
 
 /**
  * Created by NeumimTo on 27.12.2015.
@@ -52,4 +52,5 @@ public class SpongeCharacterGainedLevelEvent extends AbstractCharacterEvent impl
     public void setAttributepointsPerLevel(int attributePerLevel) {
         this.attributePerLevel = attributePerLevel;
     }
+
 }

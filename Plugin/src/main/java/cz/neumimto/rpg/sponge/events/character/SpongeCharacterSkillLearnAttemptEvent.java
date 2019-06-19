@@ -48,4 +48,5 @@ public class SpongeCharacterSkillLearnAttemptEvent extends AbstractCharacterEven
     public void setSkill(ISkill skill) {
         this.skill = skill;
     }
+
 }

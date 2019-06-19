@@ -1,6 +1,8 @@
 package cz.neumimto.rpg.api.events.effect;
 
 
-public interface EffectRemoveEvent {
+import cz.neumimto.rpg.api.effects.IEffect;
+
+public interface EffectRemoveEvent<T extends IEffect> extends TargetEffectEvent<T> {
 
 }

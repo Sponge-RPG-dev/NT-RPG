@@ -1,38 +1,32 @@
 package cz.neumimto.rpg;
 
+import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.entity.players.ICharacterService;
-import cz.neumimto.rpg.common.persistance.model.JPACharacterBase;
-import cz.neumimto.rpg.api.utils.ActionResult;
+import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
-import cz.neumimto.rpg.api.events.effect.EventFactoryService;
+import cz.neumimto.rpg.api.events.EventFactoryService;
 import cz.neumimto.rpg.api.logging.Log;
-import cz.neumimto.rpg.api.skills.ISkill;
-import cz.neumimto.rpg.api.skills.PlayerSkillContext;
-import cz.neumimto.rpg.api.skills.SkillDependency;
+import cz.neumimto.rpg.api.persistance.model.CharacterClass;
+import cz.neumimto.rpg.api.skills.*;
+import cz.neumimto.rpg.api.skills.tree.SkillTree;
+import cz.neumimto.rpg.api.utils.ActionResult;
 import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
-import cz.neumimto.rpg.common.entity.players.CharacterService;
+import cz.neumimto.rpg.common.persistance.model.JPACharacterBase;
 import cz.neumimto.rpg.junit.NtRpgExtension;
 import cz.neumimto.rpg.junit.TestGuiceModule;
-import cz.neumimto.rpg.api.configuration.PluginConfig;
-import cz.neumimto.rpg.api.persistance.model.CharacterClass;
-import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
-import cz.neumimto.rpg.api.skills.SkillData;
-import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacter;
 import name.falgout.jeffrey.testing.junit.guice.GuiceExtension;
 import name.falgout.jeffrey.testing.junit.guice.IncludeModule;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
-import org.spongepowered.api.Sponge;
 
-import javax.inject.Inject;
 import java.util.UUID;
+import javax.inject.Inject;
 
 @ExtendWith({NtRpgExtension.class, GuiceExtension.class})
 @IncludeModule(TestGuiceModule.class)
@@ -67,7 +61,6 @@ public class SkillManipulationTests {
 
     ActiveCharacter character;
     PlayerClassData playerClassData;
-
 
 
     @BeforeEach
@@ -123,7 +116,6 @@ public class SkillManipulationTests {
         skillData.getHardDepends().add(new SkillDependency(shardDepending2, 2));
         skillData.getSoftDepends().add(new SkillDependency(ssoftDepending0, 1));
         skillData.getSoftDepends().add(new SkillDependency(ssoftDepending1, 2));
-
 
 
         TestHelper.setField(classDefinition, "skillTree", new SkillTree() {{
@@ -285,7 +277,6 @@ public class SkillManipulationTests {
 
         Assertions.assertTrue(actionResult.isOk());
     }
-
 
 
 }

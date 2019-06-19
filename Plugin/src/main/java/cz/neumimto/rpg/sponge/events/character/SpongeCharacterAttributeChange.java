@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.sponge.events.character;
 
-import cz.neumimto.rpg.api.events.character.CharacterAttributeChange;
 import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
+import cz.neumimto.rpg.api.events.character.CharacterAttributeChange;
 
 /**
  * Created by NeumimTo on 23.1.2016.
@@ -11,10 +11,12 @@ public class SpongeCharacterAttributeChange extends AbstractCharacterEvent imple
     private int attributeChange;
     private AttributeConfig attribute;
 
+    @Override
     public void setAttributeChange(int attributeChange) {
         this.attributeChange = attributeChange;
     }
 
+    @Override
     public AttributeConfig getAttribute() {
         return attribute;
     }
@@ -28,4 +30,5 @@ public class SpongeCharacterAttributeChange extends AbstractCharacterEvent imple
     public void setAttribute(AttributeConfig attribute) {
         this.attribute = attribute;
     }
+
 }

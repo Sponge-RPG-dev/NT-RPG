@@ -15,13 +15,15 @@
  */
 package cz.neumimto.rpg.sponge.events.skill;
 
-import cz.neumimto.rpg.api.events.skill.SkillTargetAttemptEvent;
 import cz.neumimto.rpg.api.entity.IEntity;
+import cz.neumimto.rpg.api.events.skill.SkillTargetAttemptEvent;
+import org.spongepowered.api.event.Cancellable;
 
-public class SpongeSkillTargetAttemptEvent extends AbstractSkillEvent implements SkillTargetAttemptEvent {
+public class SpongeSkillTargetAttemptEvent extends AbstractSkillEvent implements SkillTargetAttemptEvent, Cancellable {
 
     private IEntity target;
     private IEntity caster;
+    private boolean cancelled;
 
     @Override
     public IEntity getCaster() {
@@ -42,4 +44,15 @@ public class SpongeSkillTargetAttemptEvent extends AbstractSkillEvent implements
     public void setTarget(IEntity target) {
         this.target = target;
     }
+
+    @Override
+    public boolean isCancelled() {
+        return cancelled;
+    }
+
+    @Override
+    public void setCancelled(boolean state) {
+        cancelled = state;
+    }
+
 }

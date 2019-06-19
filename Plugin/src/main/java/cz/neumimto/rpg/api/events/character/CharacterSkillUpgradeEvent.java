@@ -28,4 +28,5 @@ public interface CharacterSkillUpgradeEvent extends TargetCharacterEvent, SkillE
     String getFailedTranslationKey();
 
     void setFailedTranslationKey(String failedMessage);
+
 }

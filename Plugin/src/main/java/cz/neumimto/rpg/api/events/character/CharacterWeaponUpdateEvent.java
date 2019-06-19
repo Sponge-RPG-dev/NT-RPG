@@ -12,4 +12,5 @@ public interface CharacterWeaponUpdateEvent extends TargetCharacterEvent {
     Map<RpgItemType, Double> getAllowedWeapons();
 
     void setWeapons(Map<RpgItemType, Double> weapons);
+
 }

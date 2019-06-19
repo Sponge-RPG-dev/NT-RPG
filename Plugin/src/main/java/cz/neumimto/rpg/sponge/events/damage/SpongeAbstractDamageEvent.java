@@ -1,19 +1,14 @@
 package cz.neumimto.rpg.sponge.events.damage;
 
 import cz.neumimto.rpg.api.entity.IEntity;
-import org.spongepowered.api.event.Event;
-import org.spongepowered.api.event.cause.Cause;
+import cz.neumimto.rpg.sponge.events.AbstractNEvent;
+import org.spongepowered.api.event.Cancellable;
 
-public abstract class SpongeAbstractDamageEvent implements Event {
+public abstract class SpongeAbstractDamageEvent extends AbstractNEvent implements Cancellable {
 
     private IEntity target;
     private double damage;
-    private Cause cause;
-
-    @Override
-    public Cause getCause() {
-        return cause;
-    }
+    private boolean cancelled;
 
     public IEntity getTarget() {
         return target;
@@ -31,7 +26,13 @@ public abstract class SpongeAbstractDamageEvent implements Event {
         this.damage = damage;
     }
 
-    public void setCause(Cause cause) {
-        this.cause = cause;
+    @Override
+    public boolean isCancelled() {
+        return cancelled;
+    }
+
+    @Override
+    public void setCancelled(boolean cancelled) {
+        this.cancelled = cancelled;
     }
 }

@@ -120,6 +120,7 @@ public abstract class EffectService {
     public <T extends IEffect> boolean addEffect(T effect) {
         return addEffect(effect, InternalEffectSourceProvider.INSTANCE);
     }
+
     /**
      * Adds effect to the consumer,
      * Effects requiring register are registered into the scheduler one tick later

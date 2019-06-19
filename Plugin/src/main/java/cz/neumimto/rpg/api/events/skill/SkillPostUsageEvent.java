@@ -18,19 +18,21 @@
 
 package cz.neumimto.rpg.api.events.skill;
 
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.entity.IEntity;
+import cz.neumimto.rpg.api.skills.mods.SkillContext;
 
 /**
  * Created by NeumimTo on 7.8.2015.
  */
 
 public interface SkillPostUsageEvent extends SkillEvent {
+
     SkillContext getSkillContext();
 
-    void setSkillContext(SkillContext  context);
+    void setSkillContext(SkillContext context);
 
     void setCaster(IEntity iEntity);
 
     IEntity getCaster();
+
 }

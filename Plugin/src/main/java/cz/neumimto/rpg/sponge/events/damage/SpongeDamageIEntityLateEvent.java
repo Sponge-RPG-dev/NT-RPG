@@ -1,7 +1,6 @@
 package cz.neumimto.rpg.sponge.events.damage;
 
 import cz.neumimto.rpg.api.events.damage.DamageIEntityLateEvent;
-import cz.neumimto.rpg.api.events.entity.TargetIEntityEvent;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.entity.damage.source.DamageSource;
 

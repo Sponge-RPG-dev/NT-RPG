@@ -28,6 +28,7 @@ public class SpongeCharacterManaRegainEvent extends AbstractCharacterEvent imple
 
     private double amount;
     private IRpgElement source;
+    private boolean cancelled;
 
     @Override
     public double getAmount() {
@@ -48,4 +49,15 @@ public class SpongeCharacterManaRegainEvent extends AbstractCharacterEvent imple
     public void setSource(IRpgElement source) {
         this.source = source;
     }
+
+    @Override
+    public boolean isCancelled() {
+        return cancelled;
+    }
+
+    @Override
+    public void setCancelled(boolean state) {
+        cancelled = state;
+    }
+
 }

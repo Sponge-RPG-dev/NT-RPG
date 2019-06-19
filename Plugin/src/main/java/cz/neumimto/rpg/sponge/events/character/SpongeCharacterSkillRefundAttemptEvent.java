@@ -19,7 +19,6 @@
 package cz.neumimto.rpg.sponge.events.character;
 
 import cz.neumimto.rpg.api.events.character.CharacterSkillRefundAttemptEvent;
-import cz.neumimto.rpg.api.events.skill.SkillEvent;
 import cz.neumimto.rpg.api.skills.ISkill;
 
 /**
@@ -49,4 +48,5 @@ public class SpongeCharacterSkillRefundAttemptEvent extends AbstractCharacterEve
     public void setFailedTranslationKey(String failedTranslationKey) {
         this.failedTranslationKey = failedTranslationKey;
     }
+
 }

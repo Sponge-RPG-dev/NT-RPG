@@ -20,4 +20,5 @@ public class SpongeEntityProjectileDamageLateEvent extends SpongeAbstractDamageE
     public void setProjectile(Projectile projectile) {
         this.projectile = projectile;
     }
+
 }
