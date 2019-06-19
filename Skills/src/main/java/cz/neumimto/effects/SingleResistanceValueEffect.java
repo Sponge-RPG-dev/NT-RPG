@@ -27,13 +27,13 @@ public abstract class SingleResistanceValueEffect extends SpongeEffectBase<Float
 	public void onApply(IEffect self) {
 		super.onApply(self);
 		float characterProperty = getConsumer().getProperty(getPropertyId());
-		getConsumer().setProperty(getPropertyId(), characterProperty - getValue());
+		getConsumer().setProperty(getPropertyId(), characterProperty + getValue());
 	}
 
 	@Override
 	public void onRemove(IEffect self) {
 		super.onRemove(self);
 		float characterProperty = getConsumer().getProperty(getPropertyId());
-		getConsumer().setProperty(getPropertyId(), characterProperty + getValue());
+		getConsumer().setProperty(getPropertyId(), characterProperty - getValue());
 	}
 }

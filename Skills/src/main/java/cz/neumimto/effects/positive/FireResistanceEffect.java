@@ -1,9 +1,9 @@
-package cz.neumimto.effects.negative;
+package cz.neumimto.effects.positive;
 
 import cz.neumimto.effects.SingleResistanceValueEffect;
 import cz.neumimto.rpg.api.effects.Generate;
-import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
+import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.sponge.properties.SpongeDefaultProperties;
 
 /**
@@ -13,11 +13,11 @@ import cz.neumimto.rpg.sponge.properties.SpongeDefaultProperties;
 @Generate(id = "name", description = "Increases resistance against fire damage")
 public class FireResistanceEffect extends SingleResistanceValueEffect {
 
-	public static final String name = "Fire Resistance";
+    public static final String name = "Fire Resistance";
 
-	public FireResistanceEffect(IEffectConsumer consumer, long duration, float percentage) {
-		super(name, consumer, SpongeDefaultProperties.fire_damage_protection_mult, percentage);
-		setDuration(duration);
-	}
+    public FireResistanceEffect(IEffectConsumer consumer, long duration, float percentage) {
+        super(name, consumer, SpongeDefaultProperties.fire_damage_protection_mult, percentage);
+        setDuration(duration);
+    }
 }
 
