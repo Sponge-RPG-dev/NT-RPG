@@ -29,6 +29,6 @@ public class TestPropertyService extends PropertyServiceImpl {
 
     @Override
     public Map<String, AttributeConfig> getAttributes() {
-        return null;
+        return attributeMap;
     }
 }

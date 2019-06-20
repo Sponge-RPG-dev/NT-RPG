@@ -13,6 +13,7 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.ICharacterService;
 import cz.neumimto.rpg.api.entity.players.parties.PartyService;
 import cz.neumimto.rpg.api.events.EventFactoryService;
+import cz.neumimto.rpg.api.gui.IPlayerMessage;
 import cz.neumimto.rpg.api.inventory.CharacterInventoryInteractionHandler;
 import cz.neumimto.rpg.api.inventory.InventoryService;
 import cz.neumimto.rpg.api.items.ItemService;
@@ -28,11 +29,15 @@ import cz.neumimto.rpg.common.entity.TestPropertyService;
 import cz.neumimto.rpg.common.entity.configuration.MobSettingsDao;
 import cz.neumimto.rpg.common.events.TestEventFactory;
 import cz.neumimto.rpg.common.exp.ExperienceDAO;
+import cz.neumimto.rpg.common.impl.TestCharacterService;
 import cz.neumimto.rpg.common.impl.TestItemService;
 import cz.neumimto.rpg.common.inventory.InventoryHandler;
 import cz.neumimto.rpg.common.inventory.crafting.runewords.RWDao;
 import cz.neumimto.rpg.common.localizations.TestLocalizationService;
-import cz.neumimto.rpg.common.persistance.dao.*;
+import cz.neumimto.rpg.common.persistance.dao.CharacterClassDao;
+import cz.neumimto.rpg.common.persistance.dao.ClassDefinitionDao;
+import cz.neumimto.rpg.common.persistance.dao.DirectAccessDao;
+import cz.neumimto.rpg.common.persistance.dao.PlayerDao;
 import cz.neumimto.rpg.common.scripting.JSLoader;
 import cz.neumimto.rpg.effects.TestEffectService;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
@@ -40,15 +45,18 @@ import cz.neumimto.rpg.sponge.commands.CommandService;
 import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
 import cz.neumimto.rpg.sponge.entities.SpongeEntityService;
 import cz.neumimto.rpg.sponge.entities.configuration.SpongeMobSettingsDao;
-import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
 import cz.neumimto.rpg.sponge.entities.players.party.SpongePartyService;
 import cz.neumimto.rpg.sponge.exp.ExperienceService;
-import cz.neumimto.rpg.sponge.gui.*;
+import cz.neumimto.rpg.sponge.gui.GuiService;
+import cz.neumimto.rpg.sponge.gui.ItemLoreBuilderService;
+import cz.neumimto.rpg.sponge.gui.ParticleDecorator;
+import cz.neumimto.rpg.sponge.gui.VanillaMessaging;
 import cz.neumimto.rpg.sponge.inventory.SpongeInventoryService;
 import cz.neumimto.rpg.sponge.inventory.runewords.RWService;
 import cz.neumimto.rpg.sponge.permission.TestPermissionService;
 import cz.neumimto.rpg.sponge.scripting.SpongeClassGenerator;
 import cz.neumimto.rpg.sponge.skills.SpongeSkillService;
+import net.bytebuddy.ByteBuddy;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,6 +92,19 @@ public class TestGuiceModule extends AbstractModule {
         bind(GuiService.class);
         bind(ItemLoreBuilderService.class);
         bind(ParticleDecorator.class);
+        Class<? extends IPlayerMessage> type = new ByteBuddy()
+                .subclass(IPlayerMessage.class)
+                .make()
+                .load(getClass().getClassLoader())
+                .getLoaded();
+        bind(IPlayerMessage.class).toProvider(() -> {
+            try {
+                return type.getConstructor().newInstance();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            throw new IllegalStateException(":(");
+        });
         bind(VanillaMessaging.class);
         bind(InventoryService.class).to(SpongeInventoryService.class);
         bind(CharacterInventoryInteractionHandler.class).to(InventoryHandler.class);
@@ -104,19 +125,19 @@ public class TestGuiceModule extends AbstractModule {
         bind(SkillService.class).to(TestSkillService.class);
         bind(AssetService.class).to(TestAssetService.class);
         bind(new TypeLiteral<ICharacterService<? extends IActiveCharacter>>() {
-        }).to(SpongeCharacterServise.class);
+        }).to(TestCharacterService.class);
 
         bind(ICharacterService.class).toProvider(SpongeCharacterServiceProvider.class);
 
         bind(new TypeLiteral<ICharacterService<? super IActiveCharacter>>() {
         })
-                .toProvider(SpongeCharacterServiceProvider1.class);//.toProvider(() -> (ICharacterService) spongeCharacterServise);
+                .toProvider(SpongeCharacterServiceProvider1.class);//.toProvider(() -> (ICharacterService) TestCharacterService);
         bind(new TypeLiteral<ICharacterService<IActiveCharacter>>() {
         })
                 .toProvider(SpongeCharacterServiceProvider.class);
     }
 
-    private static SpongeCharacterServise scs;
+    private static TestCharacterService scs;
 
     public static class SpongeCharacterServiceProvider implements Provider<ICharacterService<IActiveCharacter>> {
 
@@ -126,7 +147,7 @@ public class TestGuiceModule extends AbstractModule {
         @Override
         public ICharacterService get() {
             if (scs == null) {
-                scs = injector.getInstance(SpongeCharacterServise.class);
+                scs = injector.getInstance(TestCharacterService.class);
             }
             return scs;
         }
@@ -140,24 +161,11 @@ public class TestGuiceModule extends AbstractModule {
         @Override
         public ICharacterService<? super IActiveCharacter> get() {
             if (scs == null) {
-                scs = injector.getInstance(SpongeCharacterServise.class);
+                scs = injector.getInstance(TestCharacterService.class);
             }
             return (ICharacterService) scs;
         }
     }
 
-    public static class SpongeCharacterServiceProvider2 implements Provider<ICharacterService<? extends IActiveCharacter>> {
-
-        @Inject
-        private Injector injector;
-
-        @Override
-        public ICharacterService<? extends IActiveCharacter> get() {
-            if (scs == null) {
-                scs = injector.getInstance(SpongeCharacterServise.class);
-            }
-            return scs;
-        }
-    }
 }
 

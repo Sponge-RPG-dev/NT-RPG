@@ -10,17 +10,19 @@ import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.slf4j.LoggerFactory;
 
+import java.util.Dictionary;
+
 
 public class NtRpgExtension implements BeforeAllCallback {
 
     @Override
     public void beforeAll(ExtensionContext context) throws Exception {
         new RpgTest();
+        new TestDictionary().reset();
         Log.setLogger(LoggerFactory.getLogger("TestLogger"));
         NtRpgPlugin.pluginConfig = new PluginConfig();
         NtRpgPlugin.workingDir = ".";
         NtRpgPlugin.GlobalScope = new GlobalScope();
-        new RpgTest();
     }
 
 }

@@ -2,6 +2,7 @@ package cz.neumimto.rpg.junit;
 
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.items.ItemClass;
+import cz.neumimto.rpg.common.entity.TestCharacter;
 import cz.neumimto.rpg.common.persistance.model.JPACharacterBase;
 import cz.neumimto.rpg.common.persistance.model.JPACharacterClass;
 import cz.neumimto.rpg.common.entity.TestPropertyService;
@@ -50,10 +51,10 @@ public class CharactersExtension implements ParameterResolver {
     }
 
 
-    private ISpongeCharacter initializedCharacter() {
+    private TestCharacter initializedCharacter() {
         JPACharacterBase characterBase = new JPACharacterBase();
 
-        ISpongeCharacter activeCharacter = new SpongeCharacter(UUID.randomUUID(), characterBase, TestPropertyService.LAST_ID);
+        TestCharacter activeCharacter = new TestCharacter(UUID.randomUUID(), characterBase, TestPropertyService.LAST_ID);
 
 
         CharacterClass primaryCC = new JPACharacterClass();

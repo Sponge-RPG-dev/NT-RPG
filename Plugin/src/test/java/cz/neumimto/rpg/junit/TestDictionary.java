@@ -10,30 +10,37 @@ import java.util.Collections;
 
 public class TestDictionary {
 
-    public static final ItemClass WEAPON_CLASS_1 = new ItemClass("weaponclass1") ;
-    public static final RpgItemType ITEM_TYPE_WEAPON_1 = new RpgItemTypeImpl("weapon1", null, WEAPON_CLASS_1, 10, 0);
+    public static ItemClass WEAPON_CLASS_1;
+    public static RpgItemType ITEM_TYPE_WEAPON_1;
+    public static ItemClass WEAPON_CLASS_2;
+    public static RpgItemType ITEM_TYPE_WEAPON_2;
+    public static RpgItemType ARMOR_TYPE_1;
 
-    public static final ItemClass WEAPON_CLASS_2 = new ItemClass("weaponclass2");
-    public static final RpgItemType ITEM_TYPE_WEAPON_2 = new RpgItemTypeImpl("weapon2", null, WEAPON_CLASS_2, 11, 0);
-
-    public static final RpgItemType ARMOR_TYPE_1 = new RpgItemTypeImpl("armor1", null, ItemClass.ARMOR, 0, 100);
-
-    public static final AttributeConfig STR = new AttributeConfig("str", "str", 100, Collections.emptyMap(), null, null);
-    public static final AttributeConfig AGI = new AttributeConfig("agi", "agi", 100, Collections.emptyMap(), null, null);
+    public static AttributeConfig STR;
+    public static AttributeConfig AGI;
 
 
-    public static final ClassDefinition CLASS_PRIMARY = new ClassDefinition("primary","Primary");
-
-    public static final ClassDefinition CLASS_TERTIARY = new ClassDefinition("tertiary","Tertiary");
-
-    public static final ClassDefinition CLASS_SECONDARY = new ClassDefinition("secondary","Secondary");
+    public static ClassDefinition CLASS_PRIMARY;
+    public static ClassDefinition CLASS_TERTIARY;
+    public static ClassDefinition CLASS_SECONDARY;
 
 
-    static {
+    public void reset() {
+        WEAPON_CLASS_1 = new ItemClass("weaponclass1") ;
+        ITEM_TYPE_WEAPON_1 = new RpgItemTypeImpl("weapon1", null, WEAPON_CLASS_1, 10, 0);
+        WEAPON_CLASS_2 = new ItemClass("weaponclass2");
+        ITEM_TYPE_WEAPON_2 = new RpgItemTypeImpl("weapon2", null, WEAPON_CLASS_2, 11, 0);
+        ARMOR_TYPE_1 = new RpgItemTypeImpl("armor1", null, ItemClass.ARMOR, 0, 100);
+
+
         WEAPON_CLASS_1.getItems().add(ITEM_TYPE_WEAPON_1);
         WEAPON_CLASS_2.getItems().add(ITEM_TYPE_WEAPON_2);
-
         ItemClass.ARMOR.getItems().add(ARMOR_TYPE_1);
 
+        CLASS_PRIMARY = new ClassDefinition("primary","Primary");
+        CLASS_TERTIARY = new ClassDefinition("tertiary","Tertiary");
+        CLASS_SECONDARY = new ClassDefinition("secondary","Secondary");
+        STR = new AttributeConfig("str", "str", 100, Collections.emptyMap(), null, null);
+        AGI = new AttributeConfig("agi", "agi", 100, Collections.emptyMap(), null, null);
     }
 }

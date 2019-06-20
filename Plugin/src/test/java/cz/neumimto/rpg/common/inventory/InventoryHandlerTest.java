@@ -1,9 +1,11 @@
 package cz.neumimto.rpg.common.inventory;
 
+import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.logging.Log;
+import cz.neumimto.rpg.common.entity.TestCharacter;
 import cz.neumimto.rpg.common.items.RpgItemStackImpl;
 import cz.neumimto.rpg.junit.CharactersExtension;
 import cz.neumimto.rpg.junit.NtRpgExtension;
@@ -12,7 +14,9 @@ import cz.neumimto.rpg.junit.TestGuiceModule;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
+import cz.neumimto.rpg.sponge.properties.SpongePropertyService;
 import name.falgout.jeffrey.testing.junit.guice.GuiceExtension;
 import name.falgout.jeffrey.testing.junit.guice.IncludeModule;
 import org.junit.jupiter.api.Assertions;
@@ -42,11 +46,19 @@ class InventoryHandlerTest {
     @Inject
     private ItemService itemService;
 
-    private ISpongeCharacter character;
+    @Inject
+    private PropertyService propertyService;
+
+
+    private TestCharacter character;
 
     @BeforeEach
     public void beforeEach(@Stage(READY) IActiveCharacter character) {
-        this.character = (ISpongeCharacter) character;
+        this.character = (TestCharacter) character;
+        if (propertyService.getAttributes().isEmpty()) {
+            propertyService.getAttributes().put(TestDictionary.STR.getId(),TestDictionary.STR);
+            propertyService.getAttributes().put(TestDictionary.AGI.getId(),TestDictionary.AGI);
+        }
     }
 
     @ParameterizedTest
