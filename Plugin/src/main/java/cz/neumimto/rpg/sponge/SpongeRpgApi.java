@@ -6,6 +6,7 @@ import cz.neumimto.rpg.api.IResourceLoader;
 import cz.neumimto.rpg.api.RpgApi;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.damage.DamageService;
+import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.events.EventFactoryService;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.localization.LocalizationService;
@@ -128,7 +129,7 @@ public final class SpongeRpgApi implements RpgApi {
     }
 
     @Override
-    public SpongePropertyService getPropertyService() {
+    public PropertyService getPropertyService() {
         return NtRpgPlugin.GlobalScope.spongePropertyService;
     }
 

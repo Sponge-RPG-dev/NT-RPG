@@ -14,7 +14,7 @@ public class Custom extends AbstractLevelProgression {
     @Setting("Levels")
     private List<Double> lvlMgrs;
 
-    //because configurate and lightbend/config are extremly useless libraries once you stopEffectScheduler doing stupid hello fucking world applications.
+    //because configurate and lightbend/config are extremly useless libraries once you stopE doing stupid hello fucking world applications.
     @Override
     public double[] initCurve() {
         double[] doubles = lvlMgrs.stream().mapToDouble(Double::doubleValue).toArray();

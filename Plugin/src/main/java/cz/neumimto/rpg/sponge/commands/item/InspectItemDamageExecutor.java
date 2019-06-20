@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.sponge.commands.item;
 
+import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.items.ClassItem;
@@ -68,7 +69,7 @@ public class InspectItemDamageExecutor implements CommandExecutor {
         SpongeDamageService ds = NtRpgPlugin.GlobalScope.damageService;
         SpongeCharacterServise cs = NtRpgPlugin.GlobalScope.characterService;
         SpongeEntityService es = NtRpgPlugin.GlobalScope.entityService;
-        SpongePropertyService ps = NtRpgPlugin.GlobalScope.spongePropertyService;
+        PropertyService ps = NtRpgPlugin.GlobalScope.spongePropertyService;
         IActiveCharacter character = cs.getCharacter(player);
         src.sendMessage(Text.of(TextColors.RED, "Damage: ", ds.getCharacterItemDamage(character, fromItemStack)));
         src.sendMessage(Text.of(TextColors.RED, "Details: "));
@@ -110,7 +111,7 @@ public class InspectItemDamageExecutor implements CommandExecutor {
 
     private Function<ItemClass, List<Text>> TO_TEXT = weaponClass -> {
         List<Text> list = new ArrayList<>();
-        SpongePropertyService ps = NtRpgPlugin.GlobalScope.spongePropertyService;
+        PropertyService ps = NtRpgPlugin.GlobalScope.spongePropertyService;
         list.add(Text.of(TextColors.GOLD, weaponClass.getName()));
         for (Integer property : weaponClass.getProperties()) {
             list.add(Text.of(TextColors.GRAY, " -> ", ps.getNameById(property)));

@@ -1,5 +1,6 @@
 package cz.neumimto.rpg;
 
+import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.items.ItemClass;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
@@ -26,7 +27,7 @@ public class TestPropertyValueResolving {
 
     //@Test
     public void test0() {
-        SpongePropertyService spongePropertyService = NtRpgPlugin.GlobalScope.spongePropertyService;
+        PropertyService spongePropertyService = NtRpgPlugin.GlobalScope.spongePropertyService;
         SpongeItemService i = NtRpgPlugin.GlobalScope.itemService;
 
         CharacterService characterService = NtRpgPlugin.GlobalScope.characterService;
@@ -60,4 +61,5 @@ public class TestPropertyValueResolving {
         characterService.initActiveCharacter(character);
 */
     }
+
 }

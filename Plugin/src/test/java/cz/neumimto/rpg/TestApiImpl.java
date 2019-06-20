@@ -5,17 +5,22 @@ import cz.neumimto.rpg.api.IResourceLoader;
 import cz.neumimto.rpg.api.RpgApi;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.damage.DamageService;
+import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.events.EventFactoryService;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.skills.SkillService;
+import cz.neumimto.rpg.common.entity.TestPropertyService;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.entities.SpongeEntityService;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
 import cz.neumimto.rpg.sponge.entities.players.party.SpongePartyService;
 import cz.neumimto.rpg.sponge.properties.SpongePropertyService;
 
+import javax.inject.Inject;
+import java.io.File;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -113,7 +118,7 @@ public class TestApiImpl implements RpgApi {
     }
 
     @Override
-    public SpongePropertyService getPropertyService() {
+    public PropertyService getPropertyService() {
         return NtRpgPlugin.GlobalScope.spongePropertyService;
     }
 
@@ -124,7 +129,8 @@ public class TestApiImpl implements RpgApi {
 
     @Override
     public String getWorkingDirectory() {
-        return NtRpgPlugin.workingDir;
+        String string = this.getClass().getClassLoader().getResource("classes").toString();
+        return new File(string).getParent().substring(6);
     }
 
     @Override
