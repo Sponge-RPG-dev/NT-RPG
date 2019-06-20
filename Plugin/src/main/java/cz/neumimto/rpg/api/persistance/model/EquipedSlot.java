@@ -14,9 +14,7 @@ public final class EquipedSlot {
     private final int slotIndex;
 
     public EquipedSlot(String className, int slotIndex) throws ClassNotFoundException {
-        this.slotIndex = slotIndex;
-        this.className = className;
-        runtimeInventoryClass = Class.forName(className);
+        this(className, slotIndex, Class.forName(className));
     }
 
     public EquipedSlot(String className, int slotIndex, Class<?> class_) {

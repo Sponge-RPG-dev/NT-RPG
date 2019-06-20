@@ -36,7 +36,6 @@ import cz.neumimto.rpg.common.inventory.crafting.runewords.RWDao;
 import cz.neumimto.rpg.common.localizations.TestLocalizationService;
 import cz.neumimto.rpg.common.persistance.dao.CharacterClassDao;
 import cz.neumimto.rpg.common.persistance.dao.ClassDefinitionDao;
-import cz.neumimto.rpg.common.persistance.dao.DirectAccessDao;
 import cz.neumimto.rpg.common.persistance.dao.PlayerDao;
 import cz.neumimto.rpg.common.scripting.JSLoader;
 import cz.neumimto.rpg.effects.TestEffectService;
@@ -74,7 +73,6 @@ public class TestGuiceModule extends AbstractModule {
 
         bind(CharacterClassDao.class);
         bind(ClassDefinitionDao.class);
-        bind(DirectAccessDao.class);
         bind(PlayerDao.class);
         bind(SkillTreeDao.class);
 

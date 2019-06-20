@@ -21,7 +21,7 @@ public abstract class DamageServiceImpl<T> implements DamageService<T> {
     @Override
     public double getCharacterItemDamage(IActiveCharacter character, RpgItemType type) {
         if (type == null) {
-            return 1;
+            return 1; //todo unarmed
         }
         double base = character.getBaseWeaponDamage(type);
 
@@ -51,7 +51,7 @@ public abstract class DamageServiceImpl<T> implements DamageService<T> {
     @Override
     public void recalculateCharacterWeaponDamage(IActiveCharacter character, RpgItemStack mainHand) {
         if (mainHand == null) {
-            character.setWeaponDamage(0);
+            character.setWeaponDamage(0); //todo unarmed
         } else {
             recalculateCharacterWeaponDamage(character, mainHand.getItemType());
         }

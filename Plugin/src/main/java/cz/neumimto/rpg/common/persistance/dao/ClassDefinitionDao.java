@@ -19,10 +19,9 @@
 package cz.neumimto.rpg.common.persistance.dao;
 
 import cz.neumimto.config.blackjack.and.hookers.NotSoStupidObjectMapper;
-import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.common.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.common.configuration.ClassTypeDefinition;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMapper;
@@ -32,6 +31,7 @@ import javax.inject.Singleton;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -47,7 +47,7 @@ import static cz.neumimto.rpg.api.logging.Log.info;
 public class ClassDefinitionDao {
 
     public Set<ClassDefinition> parseClassFiles() throws ObjectMappingException {
-        Path path = ResourceLoader.classDir.toPath();
+        Path path = Paths.get(Rpg.get().getWorkingDirectory(), "classes");
         Set<ClassDefinition> set = new HashSet<>();
         try {
             Map<String, Path> stringPathMap = preloadClassDefs(path, set);

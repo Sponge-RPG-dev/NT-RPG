@@ -75,7 +75,6 @@ public class SpongeGuiceModule extends AbstractModule {
 
         bind(CharacterClassDao.class);
         bind(ClassDefinitionDao.class);
-        bind(DirectAccessDao.class);
         bind(PlayerDao.class);
         bind(SkillTreeDao.class);
 
