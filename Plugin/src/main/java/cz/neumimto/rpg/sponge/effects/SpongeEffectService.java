@@ -15,6 +15,8 @@ import org.spongepowered.api.asset.Asset;
 import org.spongepowered.api.event.CauseStackManager;
 import org.spongepowered.api.scheduler.Task;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -23,8 +25,6 @@ import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 
 @Singleton
 public class SpongeEffectService extends EffectService {
@@ -90,7 +90,7 @@ public class SpongeEffectService extends EffectService {
 
     @Override
     protected boolean mayTick(IEffect e) {
-        return e.getConsumer().isDetached();
+        return !e.getConsumer().isDetached();
     }
 
     @Override

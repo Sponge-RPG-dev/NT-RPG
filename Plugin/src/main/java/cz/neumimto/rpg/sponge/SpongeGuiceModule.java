@@ -12,6 +12,7 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.ICharacterService;
 import cz.neumimto.rpg.api.entity.players.parties.PartyService;
 import cz.neumimto.rpg.api.events.EventFactoryService;
+import cz.neumimto.rpg.api.gui.IPlayerMessage;
 import cz.neumimto.rpg.api.inventory.CharacterInventoryInteractionHandler;
 import cz.neumimto.rpg.api.inventory.InventoryService;
 import cz.neumimto.rpg.api.items.ItemService;
@@ -77,7 +78,7 @@ public class SpongeGuiceModule extends AbstractModule {
         bind(ClassDefinitionDao.class);
         bind(PlayerDao.class);
         bind(SkillTreeDao.class);
-
+        bind(IPlayerMessage.class).to(VanillaMessaging.class);
         bind(ClassGenerator.class).to(SpongeClassGenerator.class);
         bind(ClassService.class).to(ClassServiceImpl.class);
         bind(GlobalScope.class);

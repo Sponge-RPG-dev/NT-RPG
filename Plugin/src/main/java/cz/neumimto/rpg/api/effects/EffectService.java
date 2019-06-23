@@ -157,6 +157,7 @@ public abstract class EffectService {
         if (eff == null) {
             eff = effect.constructEffectContainer();
             effect.getConsumer().addEffect(eff);
+            eff.getEffects().add(effect);
             effect.onApply(effect);
         } else if (eff.isStackable()) {
             eff.stackEffect(effect, effectSourceProvider);
@@ -219,7 +220,6 @@ public abstract class EffectService {
         } else {
 
         }
-        //effect.setConsumer(null);
     }
 
     /**

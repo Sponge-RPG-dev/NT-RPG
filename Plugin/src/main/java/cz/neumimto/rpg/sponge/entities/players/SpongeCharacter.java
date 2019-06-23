@@ -44,7 +44,7 @@ public class SpongeCharacter extends ActiveCharacter<Player, SpongeParty> implem
 
     @Override
     public boolean isDetached() {
-        return getPlayer() != null;
+        return getPlayer() == null;
     }
 
     @Override

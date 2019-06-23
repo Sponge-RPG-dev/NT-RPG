@@ -1,6 +1,9 @@
 package cz.neumimto.rpg.common.inventory;
 
 import cz.neumimto.rpg.api.entity.PropertyService;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
+import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.items.RpgItemStack;
@@ -11,12 +14,6 @@ import cz.neumimto.rpg.junit.CharactersExtension;
 import cz.neumimto.rpg.junit.NtRpgExtension;
 import cz.neumimto.rpg.junit.TestDictionary;
 import cz.neumimto.rpg.junit.TestGuiceModule;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
-import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
-import cz.neumimto.rpg.sponge.properties.SpongePropertyService;
 import name.falgout.jeffrey.testing.junit.guice.GuiceExtension;
 import name.falgout.jeffrey.testing.junit.guice.IncludeModule;
 import org.junit.jupiter.api.Assertions;
@@ -208,30 +205,5 @@ class InventoryHandlerTest {
 
         boolean mayUse = itemService.checkItemAttributeRequirements(character, managedSlot, future);
         Assertions.assertFalse(mayUse);
-    }
-
-
-    @Test
-    void handleCharacterUnEquipActionPre() {
-    }
-
-    @Test
-    void handleInventoryInitializationPre() {
-    }
-
-    @Test
-    void handleCharacterEquipActionPost() {
-    }
-
-    @Test
-    void handleCharacterUnEquipActionPost() {
-    }
-
-    @Test
-    void handleInventoryInitializationPost() {
-    }
-
-    @Test
-    void isValidItemForSlot() {
     }
 }
