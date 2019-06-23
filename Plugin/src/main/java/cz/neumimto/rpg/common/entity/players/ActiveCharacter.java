@@ -503,7 +503,7 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
     @Override
     public void setParty(P party) {
         if (this.party != null) {
-            party.removePlayer(this);
+            this.party.removePlayer(this);
         }
         this.party = party;
     }

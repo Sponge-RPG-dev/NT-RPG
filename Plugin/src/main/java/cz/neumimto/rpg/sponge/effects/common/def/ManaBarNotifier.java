@@ -22,12 +22,10 @@ import java.util.Set;
  */
 public class ManaBarNotifier extends EffectBase<Object> implements IEffectContainer<Object, ManaBarNotifier> {
 
-
     public static final String name = "ManaBar";
     private IActiveCharacter character;
     private Player player;
     private ServerBossBar bossBar;
-
 
     public ManaBarNotifier(ISpongeCharacter consumer) {
         super(name, consumer);
@@ -66,7 +64,6 @@ public class ManaBarNotifier extends EffectBase<Object> implements IEffectContai
             bossBar.setVisible(true);
         }
         setLastTickTime(System.currentTimeMillis());
-
     }
 
     @Override
@@ -74,13 +71,11 @@ public class ManaBarNotifier extends EffectBase<Object> implements IEffectContai
         if (bossBar.isVisible()) {
             bossBar.setVisible(false);
         }
-
     }
 
     @Override
     public void onRemove(IEffect self) {
         bossBar.removePlayer(player);
-
     }
 
     @Override
