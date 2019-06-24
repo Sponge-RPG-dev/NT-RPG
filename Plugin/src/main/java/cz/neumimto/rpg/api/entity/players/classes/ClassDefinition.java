@@ -131,7 +131,7 @@ public class ClassDefinition implements IEffectSourceProvider {
     protected SkillTreeType skillTreeType;
 
     @Setting("ExperienceSources")
-    @AsCollectionImpl(HashSet.class)
+    @CustomAdapter(StringHashSetAdapter.class)
     protected Set<String> experienceSourceSet;
 
     @Setting("Default")

@@ -1,6 +1,7 @@
 package cz.neumimto.rpg.common.persistance.dao;
 
 import cz.neumimto.rpg.api.classes.ClassService;
+import cz.neumimto.rpg.api.entity.CommonProperties;
 import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.items.ItemService;
@@ -13,6 +14,7 @@ import cz.neumimto.rpg.sponge.properties.SpongePropertyService;
 import name.falgout.jeffrey.testing.junit.guice.GuiceExtension;
 import name.falgout.jeffrey.testing.junit.guice.IncludeModule;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -52,6 +54,17 @@ public class ClassDefinitionDaoTest {
     @Test
     void testClassConfigLoading() throws ObjectMappingException {
         Set<ClassDefinition> classDefinitions = classDefinitionDao.parseClassFiles();
+        Assertions.assertSame(classDefinitions.size(), 1);
+        ClassDefinition c = classDefinitions.iterator().next();
+        Assertions.assertEquals(c.getName(), "ClassExample1");
+        Assertions.assertEquals(c.getDescription(), "Description");
+        Assertions.assertEquals(c.getWelcomeMessage(), "WelcomeMessage");
+        Assertions.assertEquals(c.getPreferedColor(), "PreferredTextColor");
+        Assertions.assertEquals(c.getItemType(), "ItemType");
+        Assertions.assertEquals(c.getClassType(), "Primary");
+        Assertions.assertEquals(c.getItemType(), "ItemType");
+        Assertions.assertEquals(c.getSkillpointsPerLevel(), 10);
+        Assertions.assertEquals(c.getAttributepointsPerLevel(), 11);
 
     }
 }

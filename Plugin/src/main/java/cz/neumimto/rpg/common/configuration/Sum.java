@@ -1,12 +1,12 @@
-package cz.neumimto.rpg.sponge.configuration.itemDamage;
+package cz.neumimto.rpg.common.configuration;
 
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 
 @ConfigSerializable
-public class Max implements ItemDamageProcessor {
+public class Sum implements ItemDamageProcessor {
 
     @Override
     public double get(double classDamage, double itemDamage) {
-        return Math.max(classDamage, itemDamage);
+        return classDamage + itemDamage;
     }
 }

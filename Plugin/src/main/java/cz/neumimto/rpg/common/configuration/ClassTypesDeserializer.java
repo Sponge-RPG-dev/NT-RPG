@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.sponge.configuration;
+package cz.neumimto.rpg.common.configuration;
 
 import com.google.common.reflect.TypeToken;
 import cz.neumimto.rpg.common.configuration.ClassTypeDefinition;

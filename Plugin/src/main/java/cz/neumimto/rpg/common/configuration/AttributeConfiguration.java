@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.sponge.configuration;
+package cz.neumimto.rpg.common.configuration;
 
 import cz.neumimto.config.blackjack.and.hookers.annotations.CustomAdapter;
 import cz.neumimto.rpg.common.configuration.adapters.PropertiesMapAdapter;

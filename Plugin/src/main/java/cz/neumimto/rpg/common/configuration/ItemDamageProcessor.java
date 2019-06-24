@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.sponge.configuration.itemDamage;
+package cz.neumimto.rpg.common.configuration;
 
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 

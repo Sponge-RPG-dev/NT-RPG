@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.sponge.configuration;
+package cz.neumimto.rpg.common.configuration;
 
 import cz.neumimto.rpg.common.effects.EffectDumpConfiguration;
 import ninja.leaping.configurate.objectmapping.Setting;
