@@ -1,7 +1,7 @@
-package cz.neumimto.rpg.sponge.configuration.adapters;
+package cz.neumimto.rpg.common.configuration.adapters;
 
 import com.google.common.reflect.TypeToken;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import ninja.leaping.configurate.ConfigurationNode;
@@ -16,7 +16,7 @@ public class SkillTreeLookupAdapter implements TypeSerializer<SkillTree> {
     @Override
     public SkillTree deserialize(TypeToken<?> typeToken, ConfigurationNode configurationNode) throws ObjectMappingException {
         String string = configurationNode.getString();
-        SkillTree skillTree = NtRpgPlugin.GlobalScope.skillService.getSkillTrees().get(string);
+        SkillTree skillTree = Rpg.get().getSkillService().getSkillTrees().get(string);
         if (skillTree == null) {
             Log.info("Unknown skilltree " + string);
             skillTree = SkillTree.Default;

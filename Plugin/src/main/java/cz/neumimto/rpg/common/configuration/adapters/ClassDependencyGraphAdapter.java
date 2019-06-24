@@ -1,9 +1,10 @@
-package cz.neumimto.rpg.sponge.configuration.adapters;
+package cz.neumimto.rpg.common.configuration.adapters;
 
 import com.google.common.reflect.TypeToken;
 import cz.neumimto.config.blackjack.and.hookers.annotations.EnableSetterInjection;
 import cz.neumimto.config.blackjack.and.hookers.annotations.Setter;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.DependencyGraph;
 import ninja.leaping.configurate.ConfigurationNode;
@@ -39,7 +40,8 @@ public class ClassDependencyGraphAdapter implements TypeSerializer<DependencyGra
     }
 
     private Collection<? extends ClassDefinition> toClass(List<String> list) {
-        return list.stream().map(NtRpgPlugin.GlobalScope.classService::getClassDefinitionByName).collect(Collectors.toSet());
+        ClassService classService = Rpg.get().getClassService();
+        return list.stream().map(classService::getClassDefinitionByName).collect(Collectors.toSet());
     }
 
     @Override

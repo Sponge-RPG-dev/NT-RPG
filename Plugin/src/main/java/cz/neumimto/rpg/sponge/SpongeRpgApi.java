@@ -4,8 +4,10 @@ import cz.neumimto.core.localization.Arg;
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.api.IResourceLoader;
 import cz.neumimto.rpg.api.RpgApi;
+import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.damage.DamageService;
+import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.events.EventFactoryService;
 import cz.neumimto.rpg.api.items.ItemService;
@@ -146,5 +148,15 @@ public final class SpongeRpgApi implements RpgApi {
     @Override
     public IResourceLoader getResourceLoader() {
         return NtRpgPlugin.GlobalScope.resourceLoader;
+    }
+
+    @Override
+    public ClassService getClassService() {
+        return NtRpgPlugin.GlobalScope.classService;
+    }
+
+    @Override
+    public EffectService getEffectService() {
+        return NtRpgPlugin.GlobalScope.effectService;
     }
 }

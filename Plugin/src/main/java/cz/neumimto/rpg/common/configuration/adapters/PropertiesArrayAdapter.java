@@ -1,7 +1,8 @@
-package cz.neumimto.rpg.sponge.configuration.adapters;
+package cz.neumimto.rpg.common.configuration.adapters;
 
 import com.google.common.reflect.TypeToken;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
@@ -19,11 +20,13 @@ public class PropertiesArrayAdapter implements TypeSerializer<float[]> {
         float[] arr = new float[PropertyServiceImpl.LAST_ID];
 
         Map<Object, ? extends ConfigurationNode> childrenMap = configurationNode.getChildrenMap();
+        PropertyService propertyService = Rpg.get().getPropertyService();
         for (Map.Entry<Object, ? extends ConfigurationNode> objectEntry : childrenMap.entrySet()) {
             String propertyName = ((String) objectEntry.getKey()).toLowerCase();
             float f = ((Number) objectEntry.getValue().getValue()).floatValue();
-            if (NtRpgPlugin.GlobalScope.spongePropertyService.exists(propertyName)) {
-                int idByName = NtRpgPlugin.GlobalScope.spongePropertyService.getIdByName(propertyName);
+
+            if (propertyService.exists(propertyName)) {
+                int idByName = propertyService.getIdByName(propertyName);
                 arr[idByName] = f;
             } else {
                 throw new ObjectMappingException("Unknown property " + propertyName);

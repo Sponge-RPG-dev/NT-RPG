@@ -1,7 +1,7 @@
-package cz.neumimto.rpg.sponge.configuration.adapters;
+package cz.neumimto.rpg.common.configuration.adapters;
 
 import com.google.common.reflect.TypeToken;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.api.Rpg;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;
@@ -15,12 +15,12 @@ public class ClassTypeAdapter implements TypeSerializer<String> {
     @Override
     public String deserialize(TypeToken<?> typeToken, ConfigurationNode configurationNode) throws ObjectMappingException {
         String string = configurationNode.getString();
-        for (String class_type : NtRpgPlugin.pluginConfig.CLASS_TYPES.keySet()) {
+        for (String class_type : Rpg.get().getPluginConfig().CLASS_TYPES.keySet()) {
             if (string.equalsIgnoreCase(class_type)) {
                 return class_type;
             }
         }
-        String all = String.join(", ", NtRpgPlugin.pluginConfig.CLASS_TYPES.keySet());
+        String all = String.join(", ", Rpg.get().getPluginConfig().CLASS_TYPES.keySet());
         throw new ObjectMappingException("Unknown class type \"" + string + "\", must be one of " + all);
     }
 

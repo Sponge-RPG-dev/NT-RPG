@@ -1,7 +1,8 @@
-package cz.neumimto.rpg.sponge.configuration.adapters;
+package cz.neumimto.rpg.common.configuration.adapters;
 
 import com.google.common.reflect.TypeToken;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.logging.Log;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
@@ -18,11 +19,12 @@ public class PropertiesMapAdapter implements TypeSerializer<Map<Integer, Float>>
         Map<Integer, Float> map = new HashMap<>();
 
         Map<Object, ? extends ConfigurationNode> childrenMap = configurationNode.getChildrenMap();
+        PropertyService propertyService = Rpg.get().getPropertyService();
         for (Map.Entry<Object, ? extends ConfigurationNode> objectEntry : childrenMap.entrySet()) {
             String propertyName = ((String) objectEntry.getKey()).toLowerCase();
             float f = ((Number) objectEntry.getValue().getValue()).floatValue();
-            if (NtRpgPlugin.GlobalScope.spongePropertyService.exists(propertyName)) {
-                int idByName = NtRpgPlugin.GlobalScope.spongePropertyService.getIdByName(propertyName);
+            if (propertyService.exists(propertyName)) {
+                int idByName = propertyService.getIdByName(propertyName);
                 map.put(idByName, f);
             } else {
                 Log.warn("Unknown property " + propertyName);
@@ -38,9 +40,11 @@ public class PropertiesMapAdapter implements TypeSerializer<Map<Integer, Float>>
             return;
         }
         Map<String, Float> floatMap = new HashMap<>();
+        PropertyService propertyService = Rpg.get().getPropertyService();
+
         for (Map.Entry<Integer, Float> integerFloatEntry : obj.entrySet()) {
             Integer key = integerFloatEntry.getKey();
-            String nameById = NtRpgPlugin.GlobalScope.spongePropertyService.getNameById(key);
+            String nameById = propertyService.getNameById(key);
             if (nameById == null) {
                 continue;
             }

@@ -1,8 +1,10 @@
 package cz.neumimto.rpg.api;
 
 import cz.neumimto.core.localization.Arg;
+import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.damage.DamageService;
+import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.entity.players.ICharacterService;
@@ -59,4 +61,8 @@ public interface RpgApi {
     String getWorkingDirectory();
 
     IResourceLoader getResourceLoader();
+
+    ClassService getClassService();
+
+    EffectService getEffectService();
 }

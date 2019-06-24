@@ -1,7 +1,7 @@
-package cz.neumimto.rpg.sponge.configuration.adapters;
+package cz.neumimto.rpg.common.configuration.adapters;
 
 import com.google.common.reflect.TypeToken;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.effects.EffectParams;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.api.logging.Log;
@@ -27,7 +27,7 @@ public class EffectsAdapter implements TypeSerializer<Map<IGlobalEffect, EffectP
                 Log.warn("Cannot read effects section - Missing node Id");
                 continue;
             }
-            IGlobalEffect globalEffect = NtRpgPlugin.GlobalScope.effectService.getGlobalEffect(model.type);
+            IGlobalEffect globalEffect = Rpg.get().getEffectService().getGlobalEffect(model.type);
             if (globalEffect == null) {
                 Log.error("Unknown Effect " + model.type);
                 continue;

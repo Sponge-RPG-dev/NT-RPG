@@ -2,7 +2,7 @@ package cz.neumimto.rpg.api.entity.players.attributes;
 
 import cz.neumimto.config.blackjack.and.hookers.annotations.CustomAdapter;
 import cz.neumimto.rpg.sponge.configuration.AttributeConfiguration;
-import cz.neumimto.rpg.sponge.configuration.adapters.PropertiesMapAdapter;
+import cz.neumimto.rpg.common.configuration.adapters.PropertiesMapAdapter;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 
