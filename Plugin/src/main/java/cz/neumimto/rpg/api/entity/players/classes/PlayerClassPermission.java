@@ -3,7 +3,9 @@ package cz.neumimto.rpg.api.entity.players.classes;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -16,7 +18,7 @@ public class PlayerClassPermission implements Comparable<PlayerClassPermission> 
     private int level;
 
     @Setting("Permissions")
-    private Set<String> permissions;
+    private List<String> permissions;
 
     public int getLevel() {
         return level;
@@ -26,14 +28,14 @@ public class PlayerClassPermission implements Comparable<PlayerClassPermission> 
         this.level = level;
     }
 
-    public Set<String> getPermissions() {
+    public List<String> getPermissions() {
         if (permissions == null) {
-            permissions = new HashSet<>();
+            permissions = new ArrayList<>();
         }
         return permissions;
     }
 
-    public void setPermissions(Set<String> permissions) {
+    public void setPermissions(List<String> permissions) {
         this.permissions = permissions;
     }
 

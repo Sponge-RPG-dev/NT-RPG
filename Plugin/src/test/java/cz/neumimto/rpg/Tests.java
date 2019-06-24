@@ -63,11 +63,11 @@ public class Tests {
         race.setPermissions(new HashSet<PlayerClassPermission>() {{
             add(new PlayerClassPermission() {{
                 setLevel(1);
-                setPermissions(new HashSet<>(Arrays.asList("race1", "race2", "common2")));
+                setPermissions(Arrays.asList("race1", "race2", "common2"));
             }});
             add(new PlayerClassPermission() {{
                 setLevel(2);
-                setPermissions(new HashSet<>(Arrays.asList("race3", "common1")));
+                setPermissions(Arrays.asList("race3", "common1"));
             }});
         }});
 
@@ -82,11 +82,11 @@ public class Tests {
             {
                 add(new PlayerClassPermission() {{
                     setLevel(1);
-                    setPermissions(new HashSet<>(Arrays.asList("class1", "class2", "common2")));
+                    setPermissions(Arrays.asList("class1", "class2", "common2"));
                 }});
                 add(new PlayerClassPermission() {{
                     setLevel(2);
-                    setPermissions(new HashSet<>(Arrays.asList("class4", "common1")));
+                    setPermissions(Arrays.asList("class4", "common1"));
                 }});
             }
         });
@@ -109,7 +109,7 @@ public class Tests {
         changeTo.setPermissions(new HashSet<PlayerClassPermission>() {{
             add(new PlayerClassPermission() {{
                 setLevel(1);
-                setPermissions(new HashSet<>(Arrays.asList("class1", "class4", "common2")));
+                setPermissions(Arrays.asList("class1", "class4", "common2"));
             }});
         }});
 

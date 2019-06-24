@@ -5,6 +5,7 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 
 import javax.inject.Singleton;
+import java.util.Collection;
 import java.util.Set;
 
 @Singleton
@@ -26,12 +27,12 @@ public class TestPermissionService implements PermissionService {
     }
 
     @Override
-    public void addPermissions(IActiveCharacter character, Set perms) {
+    public void addPermissions(IActiveCharacter character, Collection perms) {
 
     }
 
     @Override
-    public void removePermissions(IActiveCharacter character, Set perms) {
+    public void removePermissions(IActiveCharacter character, Collection perms) {
 
     }
 }

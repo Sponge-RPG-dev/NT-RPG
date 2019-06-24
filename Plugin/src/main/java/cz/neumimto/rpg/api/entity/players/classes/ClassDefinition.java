@@ -75,7 +75,7 @@ public class ClassDefinition implements IEffectSourceProvider {
     protected Set<ClassItem> allowedArmor = new HashSet<>();
 
     @Setting("Permissions")
-    @AsCollectionImpl(TreeSet.class)
+    @CustomAdapter(ClassPermissionAdapter.class)
     protected Set<PlayerClassPermission> permissions;
 
     @Setting("PropertiesLevelBonus")
