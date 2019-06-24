@@ -37,7 +37,7 @@ public class LocalizationServiceImpl implements LocalizationService {
         if (s == null) {
             return message + " | " + singleKey;
         }
-        return StringUtils.replace(s, singleKey, singleArg);
+        return StringUtils.replace(s, Arg.START_TAG  + singleKey + Arg.END_TAG, singleArg);
     }
 
     @Override

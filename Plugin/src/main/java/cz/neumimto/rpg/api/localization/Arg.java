@@ -8,11 +8,14 @@ public class Arg {
 
     public static Arg EMPTY;
 
+    public static final String START_TAG = "{{";
+    public static final String END_TAG = "}}";
+
     static {
         EMPTY = arg(Collections.emptyMap());
     }
-
     private Map<String, Object> map = new HashMap<>();
+
 
     public static Arg arg(final Map<String, Object> map) {
         Arg args = new Arg();
@@ -28,8 +31,6 @@ public class Arg {
         return args;
     }
 
-    private static String START_TAG = "{{";
-    private static String END_TAG = "}}";
     public Arg with(String s, Object o) {
         map.put(START_TAG + s + END_TAG, o);
         return this;

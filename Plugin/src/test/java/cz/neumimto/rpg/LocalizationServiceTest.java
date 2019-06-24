@@ -32,4 +32,13 @@ public class LocalizationServiceTest {
         String translate = localizationService.translate("test.singlestr", Arg.arg("param", "abc"));
         Assertions.assertEquals(translate, "translated text abc");
     }
+
+
+    @Test
+    public void testSingleStringTranslation_SingleArg02() {
+        localizationService.addTranslationKey("test.singlestr","translated text {{param}}");
+        String translate = localizationService.translate("test.singlestr", "param", "abc");
+        Assertions.assertEquals(translate, "translated text abc");
+    }
+
 }
