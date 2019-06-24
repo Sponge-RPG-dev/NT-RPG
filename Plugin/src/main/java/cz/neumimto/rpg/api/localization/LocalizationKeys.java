@@ -9,7 +9,7 @@ public class LocalizationKeys {
     public static final String PLAYER_LEARNED_SKILL_GLOBAL_MESSAGE = "player.skill.learned.global.message";
     public static final String PLAYER_UPGRADED_SKILL_GLOBAL_MESSAGE = "player.skill.upgraded.global.message";
     public static final String PLAYER_REFUNDED_SKILL_GLOBAL_MESSAGE = "player.skill.refunded.global.message";
-    public static final String PLAYER_CHOOSED_SKILLTREE_PATH_GLOBAL_MESSAGE_CONTENT = "player.skill.preconditions.class-spec.learned.global.message";
+    public static final String PLAYER_CHOOSED_SKILLTREE_PATH_GLOBAL_MESSAGE_CONTENT = "player.skill.class-spec.learned.global.message";
     public static final String NO_ACCESS_TO_SKILL = "player.skill.preconditions.learn.no-access.message";
     public static final String NO_SKILLPOINTS = "player.skill.preconditions.no-skillpoints.message";
     public static final String NOT_LEARNED_SKILL = "player.skill.preconditions.not-learned.message";
