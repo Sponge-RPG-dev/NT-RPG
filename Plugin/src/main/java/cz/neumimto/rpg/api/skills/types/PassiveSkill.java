@@ -18,7 +18,7 @@
 
 package cz.neumimto.rpg.api.skills.types;
 
-import cz.neumimto.core.localization.Arg;
+import cz.neumimto.rpg.api.localization.Arg;
 import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.inventory.InventoryService;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;

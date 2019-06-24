@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.common.localization;
 
-import cz.neumimto.core.localization.Arg;
+import cz.neumimto.rpg.api.localization.Arg;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import org.apache.commons.lang3.StringUtils;
 
@@ -28,7 +28,7 @@ public class LocalizationServiceImpl implements LocalizationService {
             return key + " | " + args.getParams().keySet().stream().collect(Collectors.joining(","));
         }
         Map<String, Object> params = args.getParams();
-        return StringUtils.replaceEach(s, params.keySet().stream().toArray(String[]::new), params.values().stream().map(Object::toString).toArray(String[]::new));
+        return StringUtils.replaceEach(s, params.keySet().toArray(new String[0]), params.values().stream().map(Object::toString).toArray(String[]::new));
     }
 
     @Override

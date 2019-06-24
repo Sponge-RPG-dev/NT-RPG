@@ -19,7 +19,7 @@
 package cz.neumimto.rpg.common.entity.parties;
 
 
-import cz.neumimto.core.localization.Arg;
+import cz.neumimto.rpg.api.localization.Arg;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.players.parties.PartyService;
 import cz.neumimto.rpg.api.entity.players.party.IParty;

@@ -1,7 +1,5 @@
 package cz.neumimto.rpg.api.localization;
 
-import cz.neumimto.core.localization.Arg;
-
 import java.net.URLClassLoader;
 import java.util.List;
 import java.util.Locale;

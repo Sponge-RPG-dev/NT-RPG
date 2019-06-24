@@ -17,7 +17,7 @@
  */
 package cz.neumimto.rpg.common.entity.players;
 
-import static cz.neumimto.core.localization.Arg.arg;
+import static cz.neumimto.rpg.api.localization.Arg.arg;
 import static cz.neumimto.rpg.api.logging.Log.info;
 import static cz.neumimto.rpg.api.logging.Log.warn;
 import cz.neumimto.rpg.api.IRpgElement;

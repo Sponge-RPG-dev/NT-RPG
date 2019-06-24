@@ -2,7 +2,7 @@ package cz.neumimto.rpg.api.skills.tree;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
-import cz.neumimto.core.localization.Arg;
+import cz.neumimto.rpg.api.localization.Arg;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;

@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.api.entity.players.leveling;
 
 
-import cz.neumimto.core.localization.Arg;
+import cz.neumimto.rpg.api.localization.Arg;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.ICharacterService;

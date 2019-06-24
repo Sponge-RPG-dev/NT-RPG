@@ -33,7 +33,7 @@ import cz.neumimto.rpg.common.impl.TestCharacterService;
 import cz.neumimto.rpg.common.impl.TestItemService;
 import cz.neumimto.rpg.common.inventory.InventoryHandler;
 import cz.neumimto.rpg.common.inventory.crafting.runewords.RWDao;
-import cz.neumimto.rpg.common.localizations.TestLocalizationService;
+import cz.neumimto.rpg.common.localization.LocalizationServiceImpl;
 import cz.neumimto.rpg.common.persistance.dao.CharacterClassDao;
 import cz.neumimto.rpg.common.persistance.dao.ClassDefinitionDao;
 import cz.neumimto.rpg.common.persistance.dao.PlayerDao;
@@ -119,7 +119,7 @@ public class TestGuiceModule extends AbstractModule {
 
         bind(PermissionService.class).to(TestPermissionService.class);
         bind(EventFactoryService.class).to(TestEventFactory.class);
-        bind(LocalizationService.class).to(TestLocalizationService.class);
+        bind(LocalizationService.class).to(LocalizationServiceImpl.class);
         bind(SkillService.class).to(TestSkillService.class);
         bind(AssetService.class).to(TestAssetService.class);
         bind(new TypeLiteral<ICharacterService<? extends IActiveCharacter>>() {
