@@ -2,7 +2,8 @@ package cz.neumimto.skills.active;
 
 import cz.neumimto.effects.positive.AllSkillsBonus;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.api.effects.EffectService;
+import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
@@ -28,7 +29,7 @@ public class Dementia extends Targeted {
 	private EntityService entityService;
 
 	@Inject
-	private EffectService effectService;
+	private IEffectService effectService;
 
 	@Override
 	public void init() {

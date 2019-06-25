@@ -3,7 +3,8 @@ package cz.neumimto.skills.passive;
 import cz.neumimto.effects.positive.Bash;
 import cz.neumimto.model.BashModel;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.api.effects.EffectService;
+import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
@@ -23,7 +24,7 @@ import javax.inject.Singleton;
 public class Basher extends PassiveSkill {
 
 	@Inject
-	private EffectService effectService;
+	private IEffectService effectService;
 
 	@Inject
 	private EntityService entityService;

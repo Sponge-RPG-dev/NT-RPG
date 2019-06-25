@@ -3,9 +3,10 @@ package cz.neumimto.skills.passive;
 import cz.neumimto.effects.positive.CriticalEffect;
 import cz.neumimto.model.CriticalEffectModel;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.api.effects.IEffectService;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
-import cz.neumimto.rpg.api.effects.EffectService;
+import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.types.PassiveSkill;
@@ -23,7 +24,7 @@ import javax.inject.Singleton;
 public class Critical extends PassiveSkill {
 
 	@Inject
-	private EffectService effectService;
+	private IEffectService effectService;
 
 	public Critical() {
 		super(CriticalEffect.name);

@@ -9,9 +9,8 @@ import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.inventory.RpgInventory;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.items.RpgItemStack;
-import cz.neumimto.rpg.api.effects.EffectService;
+import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.effects.InternalEffectSourceProvider;
-import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
 

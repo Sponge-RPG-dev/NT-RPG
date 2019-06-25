@@ -18,8 +18,6 @@
 
 package cz.neumimto.rpg.sponge.skills;
 
-import cz.neumimto.rpg.common.reloading.Reload;
-import cz.neumimto.rpg.common.reloading.ReloadService;
 import cz.neumimto.rpg.common.skills.SkillServiceimpl;
 import cz.neumimto.rpg.sponge.gui.SkillTreeInterfaceModel;
 import cz.neumimto.rpg.sponge.skills.types.TargetedScriptSkill;
@@ -51,7 +49,6 @@ public class SpongeSkillService extends SkillServiceimpl {
     Map<Short, SkillTreeInterfaceModel> guiModelById = new HashMap<>();
 
     @Override
-    @Reload(on = ReloadService.PLUGIN_CONFIG)
     public void init() {
         super.init();
         int i = 0;

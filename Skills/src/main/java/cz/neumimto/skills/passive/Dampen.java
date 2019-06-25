@@ -2,8 +2,9 @@ package cz.neumimto.skills.passive;
 
 import cz.neumimto.effects.positive.DampenEffect;
 import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.api.effects.IEffectService;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
-import cz.neumimto.rpg.api.effects.EffectService;
+import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.types.PassiveSkill;
@@ -20,7 +21,7 @@ import javax.inject.Singleton;
 public class Dampen extends PassiveSkill {
 
 	@Inject
-	private EffectService effectService;
+	private IEffectService effectService;
 
 	public Dampen() {
 		super(DampenEffect.name);

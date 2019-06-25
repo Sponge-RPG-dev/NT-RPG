@@ -6,13 +6,15 @@ import static cz.neumimto.rpg.api.logging.Log.warn;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.classes.ClassService;
+import cz.neumimto.rpg.api.effects.IEffect;
+import cz.neumimto.rpg.api.effects.IEffectService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.skills.*;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.mods.SkillExecutorCallback;
-import cz.neumimto.rpg.api.skills.preprocessors.SkillPreprocessors;
+import cz.neumimto.rpg.common.skills.preprocessors.SkillPreprocessors;
 import cz.neumimto.rpg.api.skills.scripting.ActiveScriptSkill;
 import cz.neumimto.rpg.api.skills.scripting.ScriptSkillModel;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
@@ -20,8 +22,7 @@ import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.api.skills.types.PassiveScriptSkill;
 import cz.neumimto.rpg.api.skills.types.ScriptSkill;
 import cz.neumimto.rpg.api.utils.annotations.CatalogId;
-import cz.neumimto.rpg.common.configuration.SkillTreeDao;
-import cz.neumimto.rpg.common.scripting.JSLoader;
+import cz.neumimto.rpg.api.configuration.SkillTreeDao;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.description.annotation.AnnotationDescription;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -40,9 +41,6 @@ public abstract class SkillServiceimpl implements SkillService {
 
     @Inject
     private ClassService classService;
-
-    @Inject
-    private JSLoader jsLoader;
 
     protected Map<String, ISkill> skills = new HashMap<>();
 

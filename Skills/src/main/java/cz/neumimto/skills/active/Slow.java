@@ -2,7 +2,8 @@ package cz.neumimto.skills.active;
 
 import cz.neumimto.effects.negative.SlowPotion;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.api.effects.EffectService;
+import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
@@ -22,7 +23,7 @@ import javax.inject.Singleton;
 public class Slow extends Targeted {
 
     @Inject
-    private EffectService effectService;
+    private IEffectService effectService;
 
     @Override
     public void init() {

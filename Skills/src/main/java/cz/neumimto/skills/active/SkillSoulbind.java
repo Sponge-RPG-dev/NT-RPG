@@ -3,7 +3,8 @@ package cz.neumimto.skills.active;
 import cz.neumimto.effects.positive.SoulBindEffect;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.IResourceLoader;
-import cz.neumimto.rpg.api.effects.EffectService;
+import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
@@ -36,7 +37,7 @@ public class SkillSoulbind extends ActiveSkill<ISpongeCharacter> {
 	public static final String name = "Soulbind";
 
 	@Inject
-	private EffectService effectService;
+	private IEffectService effectService;
 
 	@Inject
 	private SpongeCharacterServise characterServise;

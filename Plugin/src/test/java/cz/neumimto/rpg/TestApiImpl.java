@@ -6,23 +6,20 @@ import cz.neumimto.rpg.api.RpgApi;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.damage.DamageService;
-import cz.neumimto.rpg.api.effects.EffectService;
+import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.events.EventFactoryService;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.localization.LocalizationService;
+import cz.neumimto.rpg.api.scripting.IScriptEngine;
 import cz.neumimto.rpg.api.skills.SkillService;
-import cz.neumimto.rpg.common.entity.TestPropertyService;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.entities.SpongeEntityService;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
 import cz.neumimto.rpg.sponge.entities.players.party.SpongePartyService;
-import cz.neumimto.rpg.sponge.properties.SpongePropertyService;
 
-import javax.inject.Inject;
 import java.io.File;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -148,5 +145,10 @@ public class TestApiImpl implements RpgApi {
     @Override
     public EffectService getEffectService() {
         return NtRpgPlugin.GlobalScope.effectService;
+    }
+
+    @Override
+    public IScriptEngine getScriptEngine() {
+        return NtRpgPlugin.GlobalScope.jsLoader;
     }
 }

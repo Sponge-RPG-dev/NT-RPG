@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.common.configuration;
 
+import cz.neumimto.rpg.api.configuration.SkillDumpConfiguration;
 import cz.neumimto.rpg.common.effects.EffectDumpConfiguration;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;

@@ -20,13 +20,13 @@ package cz.neumimto.rpg;
 
 import com.google.inject.Injector;
 import cz.neumimto.rpg.api.classes.ClassService;
-import cz.neumimto.rpg.api.effects.EffectService;
+import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.events.EventFactoryService;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.localization.LocalizationService;
+import cz.neumimto.rpg.api.scripting.IScriptEngine;
 import cz.neumimto.rpg.common.assets.AssetService;
-import cz.neumimto.rpg.common.scripting.JSLoader;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.commands.CommandService;
 import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
@@ -38,7 +38,6 @@ import cz.neumimto.rpg.sponge.gui.VanillaMessaging;
 import cz.neumimto.rpg.sponge.inventory.SpongeInventoryService;
 import cz.neumimto.rpg.sponge.inventory.SpongeItemService;
 import cz.neumimto.rpg.sponge.inventory.runewords.RWService;
-import cz.neumimto.rpg.sponge.properties.SpongePropertyService;
 import cz.neumimto.rpg.sponge.skills.SpongeSkillService;
 import org.spongepowered.api.Game;
 
@@ -97,7 +96,7 @@ public class GlobalScope {
     public Injector injector;
 
     @Inject
-    public JSLoader jsLoader;
+    public IScriptEngine jsLoader;
 
     @Inject
     public ResourceLoader resourceLoader;

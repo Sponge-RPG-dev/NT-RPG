@@ -24,6 +24,7 @@ import com.google.inject.Injector;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.logging.Log;
+import cz.neumimto.rpg.api.scripting.IScriptEngine;
 import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.api.skills.SkillsDefinition;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
@@ -52,7 +53,7 @@ import javax.script.*;
  * Created by NeumimTo on 13.3.2015.
  */
 @Singleton
-public class JSLoader {
+public class JSLoader implements IScriptEngine {
 
     private static ScriptEngine engine;
 
@@ -77,10 +78,12 @@ public class JSLoader {
 
     private Map<Class<?>, JsBinding.Type> dataToBind = new HashMap<>();
 
-    public static ScriptEngine getEngine() {
+    @Override
+    public ScriptEngine getEngine() {
         return engine;
     }
 
+    @Override
     public void initEngine() {
         try {
             scripts_root = Paths.get(Rpg.get().getWorkingDirectory() + "/scripts");
@@ -198,6 +201,7 @@ public class JSLoader {
 
     }
 
+    @Override
     public void generateDynamicListener(List list) {
         if (listener != null) {
             info("Found JS listener: " + listener.getClass().getSimpleName() + " Unregistering");
@@ -208,6 +212,7 @@ public class JSLoader {
         Rpg.get().registerListeners(listener);
     }
 
+    @Override
     public void reloadSkills() {
         Invocable invocable = (Invocable) engine;
         try {
@@ -239,6 +244,7 @@ public class JSLoader {
         }
     }
 
+    @Override
     public void loadSkillDefinitionFile(URLClassLoader urlClassLoader, File confFile) {
         info("Loading skills from file " + confFile.getName());
         try {
@@ -253,6 +259,7 @@ public class JSLoader {
         }
     }
 
+    @Override
     public void reloadGlobalEffects() {
         Invocable invocable = (Invocable) engine;
         try {
@@ -262,6 +269,7 @@ public class JSLoader {
         }
     }
 
+    @Override
     public void reloadAttributes() {
         Invocable invocable = (Invocable) engine;
         try {
@@ -271,6 +279,7 @@ public class JSLoader {
         }
     }
 
+    @Override
     public void generateListener() {
         Invocable invocable = (Invocable) engine;
         try {
@@ -280,30 +289,11 @@ public class JSLoader {
         }
     }
 
+    @Override
     public Map<Class<?>, JsBinding.Type> getDataToBind() {
         return dataToBind;
     }
 
-    public static class BindingsHelper {
-
-        private ScriptEngine scriptEngine;
-
-        public BindingsHelper(ScriptEngine scriptEngine) {
-            this.scriptEngine = scriptEngine;
-        }
-
-        public ScriptEngine getScriptEngine() {
-            return scriptEngine;
-        }
-
-        public Set<Map.Entry<String, Object>> getEngineScopeKeys() {
-            return scriptEngine.getBindings(ScriptContext.ENGINE_SCOPE).entrySet();
-        }
-
-        public Bindings getGlobalScopeKeys() {
-            return (Bindings) scriptEngine.getBindings(ScriptContext.GLOBAL_SCOPE).entrySet();
-        }
-    }
 
 
 }

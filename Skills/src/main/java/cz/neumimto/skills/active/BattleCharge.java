@@ -2,7 +2,8 @@ package cz.neumimto.skills.active;
 
 import cz.neumimto.effects.positive.SpeedBoost;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.api.effects.EffectService;
+import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
@@ -22,7 +23,7 @@ import javax.inject.Singleton;
 public class BattleCharge extends ActiveSkill<ISpongeCharacter> {
 
 	@Inject
-	private EffectService effectService;
+	private IEffectService effectService;
 
 	@Override
 	public void init() {

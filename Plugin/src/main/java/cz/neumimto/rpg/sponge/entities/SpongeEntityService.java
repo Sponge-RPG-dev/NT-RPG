@@ -2,7 +2,7 @@ package cz.neumimto.rpg.sponge.entities;
 
 import cz.neumimto.rpg.api.IRpgElement;
 import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.effects.EffectService;
+import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.api.entity.*;
 import cz.neumimto.rpg.api.events.skill.SkillHealEvent;
 import cz.neumimto.rpg.common.entity.configuration.MobsConfig;

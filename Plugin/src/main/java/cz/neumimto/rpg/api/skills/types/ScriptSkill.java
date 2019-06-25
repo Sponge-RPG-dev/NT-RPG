@@ -2,7 +2,6 @@ package cz.neumimto.rpg.api.skills.types;
 
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.skills.scripting.ScriptSkillModel;
-import cz.neumimto.rpg.common.scripting.JSLoader;
 
 import javax.script.ScriptException;
 
@@ -12,8 +11,8 @@ public interface ScriptSkill<T> {
         ScriptSkillModel model = getModel();
         String s = bindScriptToTemplate(model);
         try {
-            JSLoader.getEngine().eval(s);
-            T t = (T) JSLoader.getEngine().eval(model.getId().replaceAll(":", "") + "_executor");
+            Rpg.get().getScriptEngine().getEngine().eval(s);
+            T t = (T) Rpg.get().getScriptEngine().getEngine().eval(model.getId().replaceAll(":", "") + "_executor");
             setExecutor(t);
         } catch (ScriptException e) {
             e.printStackTrace();

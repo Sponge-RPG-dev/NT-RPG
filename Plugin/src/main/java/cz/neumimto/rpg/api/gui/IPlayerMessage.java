@@ -27,7 +27,6 @@ import cz.neumimto.rpg.api.inventory.CannotUseItemReason;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
-import cz.neumimto.rpg.common.inventory.crafting.runewords.RuneWord;
 
 import java.util.List;
 
@@ -69,16 +68,6 @@ public interface IPlayerMessage<T extends IActiveCharacter> {
     void sendClassInfo(T target, ClassDefinition configClass);
 
     void displayAttributes(T target, ClassDefinition group);
-
-    void displayRuneword(T character, RuneWord rw, boolean linkToRWList);
-
-    void displayRunewordBlockedGroups(T character, RuneWord rw);
-
-    void displayRunewordRequiredGroups(T character, RuneWord rw);
-
-    void displayRunewordAllowedGroups(T character, RuneWord rw);
-
-    void displayRunewordAllowedItems(T character, RuneWord rw);
 
     void displayHealth(T character);
 

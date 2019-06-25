@@ -11,7 +11,7 @@ import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.items.*;
-import cz.neumimto.rpg.common.configuration.ItemString;
+import cz.neumimto.rpg.api.configuration.ItemString;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.common.inventory.items.ItemMetaType;
 import cz.neumimto.rpg.common.inventory.items.subtypes.ItemSubtype;

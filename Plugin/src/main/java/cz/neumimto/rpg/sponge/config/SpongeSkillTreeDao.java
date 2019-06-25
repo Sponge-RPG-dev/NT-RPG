@@ -2,9 +2,9 @@ package cz.neumimto.rpg.sponge.config;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
+import cz.neumimto.rpg.common.configuration.SkillTreeLoaderImpl;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.utils.Pair;
-import cz.neumimto.rpg.common.configuration.SkillTreeDao;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.gui.SkillTreeInterfaceModel;
 
@@ -16,7 +16,7 @@ import java.util.Optional;
 import static cz.neumimto.rpg.api.logging.Log.error;
 
 @Singleton
-public class SpongeSkillTreeDao extends SkillTreeDao {
+public class SpongeSkillTreeDao extends SkillTreeLoaderImpl {
 
     @Override
     protected boolean loadTree(Config config, SkillTree skillTree) {

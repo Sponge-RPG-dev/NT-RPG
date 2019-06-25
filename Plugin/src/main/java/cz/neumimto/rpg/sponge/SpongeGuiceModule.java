@@ -4,8 +4,11 @@ import com.google.inject.*;
 import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.classes.ClassService;
+import cz.neumimto.rpg.api.configuration.SkillTreeDao;
+import cz.neumimto.rpg.api.scripting.IScriptEngine;
+import cz.neumimto.rpg.common.configuration.SkillTreeLoaderImpl;
 import cz.neumimto.rpg.api.damage.DamageService;
-import cz.neumimto.rpg.api.effects.EffectService;
+import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
@@ -22,13 +25,13 @@ import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.bytecode.ClassGenerator;
 import cz.neumimto.rpg.common.classes.ClassServiceImpl;
-import cz.neumimto.rpg.common.configuration.SkillTreeDao;
 import cz.neumimto.rpg.common.entity.configuration.MobSettingsDao;
 import cz.neumimto.rpg.common.exp.ExperienceDAO;
 import cz.neumimto.rpg.common.inventory.InventoryHandler;
 import cz.neumimto.rpg.common.inventory.crafting.runewords.RWDao;
 import cz.neumimto.rpg.common.localization.LocalizationServiceImpl;
 import cz.neumimto.rpg.common.persistance.dao.*;
+import cz.neumimto.rpg.common.scripting.JSLoader;
 import cz.neumimto.rpg.sponge.assets.SpongeAssetService;
 import cz.neumimto.rpg.sponge.commands.CommandService;
 import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
@@ -69,15 +72,15 @@ public class SpongeGuiceModule extends AbstractModule {
 
     @Override
     protected void configure() {
+        bind(SkillTreeDao.class).to(SkillTreeLoaderImpl.class);
         bind(SpongeSkillService.class);
         bind(PropertyService.class).to(SpongePropertyService.class);
         bind(PartyService.class).to(SpongePartyService.class);
 
-
+        bind(IScriptEngine.class).to(JSLoader.class);
         bind(CharacterClassDao.class);
         bind(ClassDefinitionDao.class);
         bind(PlayerDao.class);
-        bind(SkillTreeDao.class);
         bind(IPlayerMessage.class).to(VanillaMessaging.class);
         bind(ClassGenerator.class).to(SpongeClassGenerator.class);
         bind(ClassService.class).to(ClassServiceImpl.class);

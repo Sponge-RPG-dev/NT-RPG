@@ -6,6 +6,7 @@ import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.SkillSettings;
+import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.events.effects.SpongeEffectApplyEvent;
 import cz.neumimto.rpg.sponge.events.effects.SpongeEffectRemoveEvent;

@@ -5,8 +5,12 @@ import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.TestSkillService;
 import cz.neumimto.rpg.api.classes.ClassService;
+import cz.neumimto.rpg.api.configuration.SkillTreeDao;
+import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.api.scripting.IScriptEngine;
+import cz.neumimto.rpg.common.configuration.SkillTreeLoaderImpl;
 import cz.neumimto.rpg.api.damage.DamageService;
-import cz.neumimto.rpg.api.effects.EffectService;
+import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
@@ -24,7 +28,6 @@ import cz.neumimto.rpg.assets.TestAssetService;
 import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.bytecode.ClassGenerator;
 import cz.neumimto.rpg.common.classes.ClassServiceImpl;
-import cz.neumimto.rpg.common.configuration.SkillTreeDao;
 import cz.neumimto.rpg.common.entity.TestPropertyService;
 import cz.neumimto.rpg.common.entity.configuration.MobSettingsDao;
 import cz.neumimto.rpg.common.events.TestEventFactory;
@@ -42,6 +45,7 @@ import cz.neumimto.rpg.effects.TestEffectService;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.commands.CommandService;
 import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
+import cz.neumimto.rpg.sponge.effects.SpongeEffectService;
 import cz.neumimto.rpg.sponge.entities.SpongeEntityService;
 import cz.neumimto.rpg.sponge.entities.configuration.SpongeMobSettingsDao;
 import cz.neumimto.rpg.sponge.entities.players.party.SpongePartyService;
@@ -67,6 +71,8 @@ public class TestGuiceModule extends AbstractModule {
 
     @Override
     protected void configure() {
+        bind(SkillTreeDao.class).to(SkillTreeLoaderImpl.class);
+        bind(IEffectService.class).to(SpongeEffectService.class);
         bind(SpongeSkillService.class);
         bind(PropertyService.class).to(TestPropertyService.class);
         bind(PartyService.class).to(SpongePartyService.class);
@@ -74,7 +80,6 @@ public class TestGuiceModule extends AbstractModule {
         bind(CharacterClassDao.class);
         bind(ClassDefinitionDao.class);
         bind(PlayerDao.class);
-        bind(SkillTreeDao.class);
 
         bind(ClassGenerator.class).to(SpongeClassGenerator.class);
         bind(ClassService.class).to(ClassServiceImpl.class);
@@ -115,7 +120,7 @@ public class TestGuiceModule extends AbstractModule {
         bind(NtRpgPlugin.class).toProvider(NtRpgPlugin::new);
         bind(Game.class).toInstance(Mockito.mock(Game.class));
 
-        bind(JSLoader.class);
+        bind(IScriptEngine.class).to(JSLoader.class);
 
         bind(PermissionService.class).to(TestPermissionService.class);
         bind(EventFactoryService.class).to(TestEventFactory.class);

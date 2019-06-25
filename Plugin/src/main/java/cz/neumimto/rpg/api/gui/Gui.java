@@ -30,7 +30,9 @@ import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
-import cz.neumimto.rpg.common.inventory.crafting.runewords.RuneWord;
+
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
+import cz.neumimto.rpg.sponge.gui.VanillaMessaging;
 
 import java.util.List;
 
@@ -119,26 +121,6 @@ public class Gui {
 
     public static void displayInitialAttributes(ClassDefinition g, IActiveCharacter target) {
         getMessageTypeOf(target).displayAttributes(target, g);
-    }
-
-    public static void displayRuneword(IActiveCharacter character, RuneWord rw) {
-        getMessageTypeOf(character).displayRuneword(character, rw, true);
-    }
-
-    public static void displayRunewordBlockedGroups(IActiveCharacter character, RuneWord rw) {
-        getMessageTypeOf(character).displayRunewordBlockedGroups(character, rw);
-    }
-
-    public static void displayRunewordRequiredGroups(IActiveCharacter character, RuneWord rw) {
-        getMessageTypeOf(character).displayRunewordRequiredGroups(character, rw);
-    }
-
-    public static void displayRunewordAllowedGroups(IActiveCharacter character, RuneWord rw) {
-        getMessageTypeOf(character).displayRunewordAllowedGroups(character, rw);
-    }
-
-    public static void displayRunewordAllowedItems(IActiveCharacter character, RuneWord rw) {
-        getMessageTypeOf(character).displayRunewordAllowedItems(character, rw);
     }
 
     public static void displayHealth(IActiveCharacter character) {

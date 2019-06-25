@@ -3,7 +3,8 @@ package cz.neumimto.skills.active;
 import cz.neumimto.effects.positive.BurningPrescenseEffect;
 import cz.neumimto.model.BPModel;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.api.effects.EffectService;
+import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
@@ -25,7 +26,7 @@ import javax.inject.Singleton;
 public class BurningPrescense extends ActiveSkill {
 
     @Inject
-    private EffectService effectService;
+    private IEffectService effectService;
 
     @Override
     public void init() {

@@ -6,6 +6,7 @@ import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
+import cz.neumimto.rpg.api.scripting.IScriptEngine;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillService;
@@ -31,7 +32,7 @@ public class ReloadExecutor implements CommandExecutor {
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
         String[] a = args.<String>getOne("args").get().split(" ");
         if (a[0].equalsIgnoreCase("js")) {
-            JSLoader jsLoader = NtRpgPlugin.GlobalScope.jsLoader;
+            IScriptEngine jsLoader = NtRpgPlugin.GlobalScope.jsLoader;
             jsLoader.initEngine();
 
             int i = 1;

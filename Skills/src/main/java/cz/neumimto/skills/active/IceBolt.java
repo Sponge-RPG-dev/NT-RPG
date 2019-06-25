@@ -4,7 +4,8 @@ import com.flowpowered.math.imaginary.Quaterniond;
 import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.effects.negative.SlowPotion;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.api.effects.EffectService;
+import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
@@ -39,7 +40,7 @@ import static com.flowpowered.math.TrigMath.sin;
 public class IceBolt extends ActiveSkill<ISpongeCharacter> {
 
 	@Inject
-	private EffectService effectService;
+	private IEffectService effectService;
 
 	@Inject
 	private EntityService entityService;

@@ -20,17 +20,10 @@ package cz.neumimto.rpg.api.configuration;
 
 import cz.neumimto.config.blackjack.and.hookers.annotations.CustomAdapter;
 import cz.neumimto.rpg.api.utils.DebugLevel;
-import cz.neumimto.rpg.common.configuration.ClassTypeDefinition;
-import cz.neumimto.rpg.common.configuration.ClassTypesDeserializer;
-import cz.neumimto.rpg.common.configuration.ItemDamageProcessor;
-import cz.neumimto.rpg.common.configuration.Max;
-import cz.neumimto.rpg.sponge.inventory.ItemLoreSections;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Created by NeumimTo on 26.12.2014.
@@ -169,7 +162,11 @@ public class PluginConfig {
     public String ITEM_LORE_GROUP_MIN_LEVEL_COLOR = "DARK_PURPLE";
 
     @Setting
-    public List<String> ITEM_LORE_ORDER = Stream.of(ItemLoreSections.values()).map(ItemLoreSections::name).collect(Collectors.toList());
+    public List<String> ITEM_LORE_ORDER = Arrays.asList("META",
+            "EFFECTS",
+            "ATTRIBUTES",
+            "SOCKETS",
+            "REQUIREMENTS");
 
     @Setting
     public ItemDamageProcessor ITEM_DAMAGE_PROCESSOR = new Max();

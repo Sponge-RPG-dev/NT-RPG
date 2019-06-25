@@ -30,7 +30,7 @@ import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.utils.rng.PseudoRandomDistribution;
-import cz.neumimto.rpg.common.configuration.ClassTypeDefinition;
+import cz.neumimto.rpg.api.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.common.persistance.model.*;
 import cz.neumimto.rpg.sponge.configuration.Settings;
 import cz.neumimto.rpg.sponge.inventory.data.*;
@@ -84,7 +84,7 @@ public class NtRpgPlugin extends Rpg {
     public static File pluginjar;
 
     public static SpongeExecutorService asyncExecutor;
-    public static PluginConfig pluginConfig;
+    public static PluginConfig pluginConfig;;
 
     @Inject
     public DbMigrationService dbMigrationService;

@@ -3,10 +3,11 @@ package cz.neumimto.skills.active;
 import cz.neumimto.effects.positive.Invisibility;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.IResourceLoader;
+import cz.neumimto.rpg.api.effects.IEffectService;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.api.effects.EffectService;
+import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
@@ -24,7 +25,7 @@ import javax.inject.Singleton;
 public class SkillInvisibility extends ActiveSkill {
 
 	@Inject
-	private EffectService effectService;
+	private IEffectService effectService;
 
 	@Override
 	public void init() {

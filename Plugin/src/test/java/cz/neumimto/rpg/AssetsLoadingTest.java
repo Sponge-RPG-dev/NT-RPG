@@ -1,6 +1,7 @@
 package cz.neumimto.rpg;
 
 import com.google.inject.Injector;
+import cz.neumimto.rpg.api.scripting.IScriptEngine;
 import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.api.skills.scripting.ScriptExecutorSkill;
 import cz.neumimto.rpg.common.scripting.JSLoader;
@@ -32,7 +33,7 @@ public class AssetsLoadingTest {
     private SkillService skillService;
 
     @Inject
-    private JSLoader jsLoader;
+    private IScriptEngine jsLoader;
 
     @Inject
     private Injector injector;
@@ -41,12 +42,13 @@ public class AssetsLoadingTest {
     public void beforeEach() throws Exception {
         NtRpgPlugin.GlobalScope = new GlobalScope();
         NtRpgPlugin.GlobalScope.skillService = (SpongeSkillService) injector.getInstance(SkillService.class);
+        NtRpgPlugin.GlobalScope.jsLoader = jsLoader;
         jsLoader.initEngine();
-        Bindings bindings = JSLoader.getEngine().getBindings(ScriptContext.GLOBAL_SCOPE);
+        Bindings bindings = jsLoader.getEngine().getBindings(ScriptContext.GLOBAL_SCOPE);
         bindings = bindings == null ? new SimpleBindings() : bindings;
         bindings.put("ScriptExecutorSkill", ScriptExecutorSkill.class);
-        JSLoader.getEngine().eval("var ScriptExecutorSkill = Java.type(\"cz.neumimto.rpg.api.skills.scripting.ScriptExecutorSkill\")");
-        JSLoader.getEngine().setBindings(bindings, ScriptContext.GLOBAL_SCOPE);
+        jsLoader.getEngine().eval("var ScriptExecutorSkill = Java.type(\"cz.neumimto.rpg.api.skills.scripting.ScriptExecutorSkill\")");
+        jsLoader.getEngine().setBindings(bindings, ScriptContext.GLOBAL_SCOPE);
         skillService.init();
     }
 

@@ -12,7 +12,7 @@ import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.persistance.model.CharacterClass;
 import cz.neumimto.rpg.api.skills.*;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
-import cz.neumimto.rpg.common.configuration.ClassTypeDefinition;
+import cz.neumimto.rpg.api.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.commands.InfoCommand;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;

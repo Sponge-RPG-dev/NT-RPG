@@ -23,7 +23,7 @@ import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.api.IResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.classes.ClassService;
-import cz.neumimto.rpg.api.effects.EffectService;
+import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.api.effects.EffectStatusType;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
@@ -41,13 +41,10 @@ import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillData;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.common.effects.InternalEffectSourceProvider;
-import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.common.inventory.crafting.runewords.ItemUpgrade;
 import cz.neumimto.rpg.common.inventory.crafting.runewords.Rune;
-import cz.neumimto.rpg.common.inventory.crafting.runewords.RuneWord;
+import cz.neumimto.rpg.common.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.common.persistance.dao.PlayerDao;
-import cz.neumimto.rpg.common.reloading.Reload;
-import cz.neumimto.rpg.common.reloading.ReloadService;
 import cz.neumimto.rpg.common.utils.model.CharacterListModel;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.commands.InfoCommand;
@@ -138,7 +135,6 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
     @Inject
     private PlayerDao playerDao;
 
-    @Reload(on = ReloadService.PLUGIN_CONFIG)
     public void load() {
         controlls = new HashMap<>();
         for (String a : pluginConfig.SKILLTREE_BUTTON_CONTROLLS) {
@@ -500,7 +496,6 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
         target.getPlayer().openInventory(i);
     }
 
-    @Override
     public void displayRuneword(ISpongeCharacter character, RuneWord rw, boolean linkToRWList) {
         Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST).build(plugin);
         if (linkToRWList) {
@@ -577,23 +572,18 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
         character.getPlayer().openInventory(i);
     }
 
-
-    @Override
     public void displayRunewordBlockedGroups(ISpongeCharacter character, RuneWord rw) {
         character.getPlayer().openInventory(displayGroupRequirements(character, rw, rw.getAllowedGroups()));
     }
 
-    @Override
     public void displayRunewordRequiredGroups(ISpongeCharacter character, RuneWord rw) {
 
     }
 
-    @Override
     public void displayRunewordAllowedGroups(ISpongeCharacter character, RuneWord rw) {
 
     }
 
-    @Override
     public void displayRunewordAllowedItems(ISpongeCharacter character, RuneWord rw) {
         Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST).build(plugin);
         i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0, 0)))

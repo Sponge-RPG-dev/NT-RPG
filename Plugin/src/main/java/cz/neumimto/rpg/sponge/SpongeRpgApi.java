@@ -7,16 +7,16 @@ import cz.neumimto.rpg.api.RpgApi;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.damage.DamageService;
-import cz.neumimto.rpg.api.effects.EffectService;
+import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.events.EventFactoryService;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.localization.LocalizationService;
+import cz.neumimto.rpg.api.scripting.IScriptEngine;
 import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.sponge.entities.SpongeEntityService;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
 import cz.neumimto.rpg.sponge.entities.players.party.SpongePartyService;
-import cz.neumimto.rpg.sponge.properties.SpongePropertyService;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
@@ -158,5 +158,10 @@ public final class SpongeRpgApi implements RpgApi {
     @Override
     public EffectService getEffectService() {
         return NtRpgPlugin.GlobalScope.effectService;
+    }
+
+    @Override
+    public IScriptEngine getScriptEngine() {
+        return NtRpgPlugin.GlobalScope.jsLoader;
     }
 }

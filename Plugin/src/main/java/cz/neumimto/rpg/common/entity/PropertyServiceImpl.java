@@ -37,6 +37,10 @@ public abstract class PropertyServiceImpl implements PropertyService {
 
     protected float[] maxValues;
 
+    @Override
+    public int getLastId() {
+        return LAST_ID;
+    }
 
     @Override
     public void registerProperty(String name, int id) {

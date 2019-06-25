@@ -25,7 +25,7 @@ import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.damage.DamageService;
-import cz.neumimto.rpg.api.effects.EffectService;
+import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.api.entity.CommonProperties;
 import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.entity.PropertyService;

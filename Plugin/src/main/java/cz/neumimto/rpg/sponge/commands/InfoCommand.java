@@ -31,12 +31,13 @@ import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterClass;
 import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
-import cz.neumimto.rpg.common.inventory.crafting.runewords.RuneWord;
+import cz.neumimto.rpg.common.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.configuration.CommandLocalization;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
 import cz.neumimto.rpg.sponge.gui.SkillTreeViewModel;
+import cz.neumimto.rpg.sponge.gui.VanillaMessaging;
 import cz.neumimto.rpg.sponge.inventory.runewords.RWService;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.command.CommandResult;
@@ -78,6 +79,9 @@ public class InfoCommand extends CommandBase {
 
     @Inject
     private RWService rwService;
+
+    @Inject
+    private VanillaMessaging messaging;
 
     public InfoCommand() {
         setHelp(CommandLocalization.PLAYERINFO_HELP);
@@ -132,21 +136,22 @@ public class InfoCommand extends CommandBase {
             if (args.length == 2) {
                 RuneWord rw = rwService.getRuneword(args[1]);
                 if (rw != null) {
-                    Gui.displayRuneword(characterService.getCharacter(player.getUniqueId()), rw);
+                    ISpongeCharacter character = characterService.getCharacter(player.getUniqueId());
+                    messaging.displayRuneword(character, rw, true);
                 }
             } else if (args.length == 3) {
                 RuneWord rw = rwService.getRuneword(args[1]);
                 if (rw != null) {
-                    IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
+                    ISpongeCharacter character = characterService.getCharacter(player.getUniqueId());
                     String a = args[2];
                     if (a.equalsIgnoreCase("allowed-items")) {
-                        Gui.displayRunewordAllowedItems(character, rw);
+                        messaging.displayRunewordAllowedItems(character, rw);
                     } else if (a.equalsIgnoreCase("allowed-classes")) {
-                        Gui.displayRunewordAllowedGroups(character, rw);
+                        messaging.displayRunewordAllowedGroups(character, rw);
                     } else if (a.equalsIgnoreCase("required-classes")) {
-                        Gui.displayRunewordRequiredGroups(character, rw);
+                        messaging.displayRunewordRequiredGroups(character, rw);
                     } else if (a.equalsIgnoreCase("blocked-classes")) {
-                        Gui.displayRunewordBlockedGroups(character, rw);
+                        messaging.displayRunewordBlockedGroups(character, rw);
                     }
                 }
             }

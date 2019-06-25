@@ -32,7 +32,7 @@ import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
 import cz.neumimto.rpg.api.entity.players.leveling.EmptyLevelProgression;
 import cz.neumimto.rpg.api.entity.players.leveling.ILevelProgression;
 import cz.neumimto.rpg.api.entity.players.leveling.SkillTreeType;
-import cz.neumimto.rpg.common.configuration.adapters.*;
+import cz.neumimto.rpg.api.configuration.adapters.*;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 

@@ -11,8 +11,6 @@ import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.common.inventory.sockets.SocketType;
-import cz.neumimto.rpg.common.reloading.Reload;
-import cz.neumimto.rpg.common.reloading.ReloadService;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.inventory.ItemLoreSections;
 import cz.neumimto.rpg.sponge.inventory.LoreSectionDelimiter;
@@ -67,7 +65,6 @@ public class ItemLoreBuilderService {
         setupColor();
     }
 
-    @Reload(on = ReloadService.PLUGIN_CONFIG)
     public void setupColor() {
         effectName = Sponge.getRegistry().getType(TextColor.class, pluginConfig.ITEM_LORE_EFFECT_NAME_COLOR).get();
         doubleColon = Sponge.getRegistry().getType(TextColor.class, pluginConfig.ITEM_LORE_EFFECT_COLON_COLOR).get();

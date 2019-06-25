@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.sponge.events;
 
-import cz.neumimto.rpg.common.inventory.crafting.runewords.RuneWord;
+import cz.neumimto.rpg.common.inventory.runewords.RuneWord;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.EventContext;
 import org.spongepowered.api.event.impl.AbstractEvent;
