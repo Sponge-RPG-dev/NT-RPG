@@ -1,6 +1,7 @@
 package cz.neumimto.rpg.common.inventory;
 
 import cz.neumimto.rpg.api.effects.EffectParams;
+import cz.neumimto.rpg.api.effects.IEffectService;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.api.entity.players.ICharacterService;
 import cz.neumimto.rpg.api.inventory.CharacterInventoryInteractionHandler;
@@ -30,7 +31,7 @@ public class InventoryHandler implements CharacterInventoryInteractionHandler {
     private InventoryService inventoryService;
 
     @Inject
-    private EffectService effectService;
+    private IEffectService effectService;
 
     @Inject
     private ICharacterService<? super IActiveCharacter> characterService;

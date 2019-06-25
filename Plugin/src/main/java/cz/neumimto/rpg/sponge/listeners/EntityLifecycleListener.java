@@ -2,6 +2,7 @@ package cz.neumimto.rpg.sponge.listeners;
 
 import com.google.inject.Singleton;
 import cz.neumimto.rpg.api.IResourceLoader;
+import cz.neumimto.rpg.api.effects.IEffectService;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.IEntityType;
@@ -47,7 +48,7 @@ public class EntityLifecycleListener {
     private SpongeCharacterServise characterService;
 
     @Inject
-    private EffectService effectService;
+    private IEffectService effectService;
 
     @Inject
     private SpongeEntityService entityService;

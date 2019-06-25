@@ -18,6 +18,7 @@
 
 package cz.neumimto.rpg.sponge.gui;
 
+import cz.neumimto.rpg.api.effects.IEffectService;
 import cz.neumimto.rpg.api.localization.Arg;
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.api.IResourceLoader;
@@ -112,7 +113,7 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
     private ClassService classService;
 
     @Inject
-    private EffectService effectService;
+    private IEffectService effectService;
 
     @Inject
     private NtRpgPlugin plugin;

@@ -1,5 +1,6 @@
 package cz.neumimto.rpg;
 
+import cz.neumimto.rpg.api.effects.IEffectService;
 import cz.neumimto.rpg.api.localization.Arg;
 import cz.neumimto.rpg.api.IResourceLoader;
 import cz.neumimto.rpg.api.RpgApi;
@@ -143,7 +144,7 @@ public class TestApiImpl implements RpgApi {
     }
 
     @Override
-    public EffectService getEffectService() {
+    public IEffectService getEffectService() {
         return NtRpgPlugin.GlobalScope.effectService;
     }
 

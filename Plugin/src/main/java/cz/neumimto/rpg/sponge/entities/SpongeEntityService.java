@@ -2,6 +2,7 @@ package cz.neumimto.rpg.sponge.entities;
 
 import cz.neumimto.rpg.api.IRpgElement;
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.effects.IEffectService;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.api.entity.*;
 import cz.neumimto.rpg.api.events.skill.SkillHealEvent;
@@ -42,7 +43,7 @@ public class SpongeEntityService implements EntityService<Living> {
     private SpongeCharacterServise characterService;
 
     @Inject
-    private EffectService effectService;
+    private IEffectService effectService;
 
 
     @Override

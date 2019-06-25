@@ -26,6 +26,7 @@ import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.api.IResourceLoader;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.effects.EffectParams;
+import cz.neumimto.rpg.api.effects.IEffectService;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
@@ -98,7 +99,7 @@ public class SpongeInventoryService extends AbstractInventoryService<ISpongeChar
     private SpongeCharacterServise characterService;
 
     @Inject
-    private EffectService effectService;
+    private IEffectService effectService;
 
     @Inject
     private SpongeDamageService spongeDamageService;

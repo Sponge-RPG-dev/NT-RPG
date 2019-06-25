@@ -20,6 +20,7 @@ package cz.neumimto.rpg;
 
 import com.google.inject.Injector;
 import cz.neumimto.rpg.api.classes.ClassService;
+import cz.neumimto.rpg.api.effects.IEffectService;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.events.EventFactoryService;
@@ -33,6 +34,7 @@ import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
 import cz.neumimto.rpg.sponge.entities.SpongeEntityService;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
 import cz.neumimto.rpg.sponge.entities.players.party.SpongePartyService;
+import cz.neumimto.rpg.sponge.exp.ExperienceService;
 import cz.neumimto.rpg.sponge.gui.ParticleDecorator;
 import cz.neumimto.rpg.sponge.gui.VanillaMessaging;
 import cz.neumimto.rpg.sponge.inventory.SpongeInventoryService;
@@ -54,7 +56,7 @@ public class GlobalScope {
     public SpongeCharacterServise characterService;
 
     @Inject
-    public EffectService effectService;
+    public IEffectService effectService;
 
     @Inject
     public ClassService classService;
@@ -102,7 +104,7 @@ public class GlobalScope {
     public ResourceLoader resourceLoader;
 
     @Inject
-    public EffectService experienceService;
+    public ExperienceService experienceService;
 
     @Inject
     public SpongeInventoryService spongeInventoryService;

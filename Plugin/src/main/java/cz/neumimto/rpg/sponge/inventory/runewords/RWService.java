@@ -3,6 +3,7 @@ package cz.neumimto.rpg.sponge.inventory.runewords;
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.effects.EffectParams;
+import cz.neumimto.rpg.api.effects.IEffectService;
 import cz.neumimto.rpg.common.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
@@ -53,7 +54,7 @@ public class RWService {
     private RWDao dao;
 
     @Inject
-    private EffectService effectService;
+    private IEffectService effectService;
 
     @Inject
     private SpongeItemService itemService;

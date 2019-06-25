@@ -29,6 +29,7 @@ import cz.neumimto.core.Repository;
 import cz.neumimto.rpg.api.IResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.classes.ClassService;
+import cz.neumimto.rpg.api.effects.IEffectService;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.api.effects.model.EffectModelFactory;
@@ -108,7 +109,7 @@ public class ResourceLoader extends IResourceLoader {
     private ClassService classService;
 
     @Inject
-    private EffectService effectService;
+    private IEffectService effectService;
 
     @Inject
     private PropertyService propertyService;

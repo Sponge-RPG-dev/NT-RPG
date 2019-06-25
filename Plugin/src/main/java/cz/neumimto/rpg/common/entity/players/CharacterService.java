@@ -25,6 +25,7 @@ import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.damage.DamageService;
+import cz.neumimto.rpg.api.effects.IEffectService;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.api.entity.CommonProperties;
 import cz.neumimto.rpg.api.entity.EntityService;
@@ -98,7 +99,7 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
     private Map<UUID, DataPreparationStage> dataPreparationStageMap = new ConcurrentHashMap<>();
 
     @Inject
-    protected EffectService effectService;
+    protected IEffectService effectService;
 
     @Inject
     private PermissionService permissionService;

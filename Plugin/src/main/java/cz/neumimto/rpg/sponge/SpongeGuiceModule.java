@@ -5,6 +5,7 @@ import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.configuration.SkillTreeDao;
+import cz.neumimto.rpg.api.effects.IEffectService;
 import cz.neumimto.rpg.api.scripting.IScriptEngine;
 import cz.neumimto.rpg.common.configuration.SkillTreeLoaderImpl;
 import cz.neumimto.rpg.api.damage.DamageService;
@@ -88,7 +89,7 @@ public class SpongeGuiceModule extends AbstractModule {
         bind(ResourceLoader.class);
         bind(CommandService.class);
         bind(DamageService.class).to(SpongeDamageService.class);
-        bind(EffectService.class).to(SpongeEffectService.class);
+        bind(IEffectService.class).to(SpongeEffectService.class);
         bind(EntityService.class).to(SpongeEntityService.class);
         bind(MobSettingsDao.class).to(SpongeMobSettingsDao.class);
         bind(ExperienceDAO.class);

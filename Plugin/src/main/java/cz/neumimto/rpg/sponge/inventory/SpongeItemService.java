@@ -2,6 +2,7 @@ package cz.neumimto.rpg.sponge.inventory;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
+import cz.neumimto.rpg.api.effects.IEffectService;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.effects.EffectParams;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
@@ -41,7 +42,7 @@ import java.util.Optional;
 public class SpongeItemService extends AbstractItemService {
 
     @Inject
-    private EffectService effectService;
+    private IEffectService effectService;
 
     public Optional<RpgItemType> getRpgItemType(ItemStack itemStack) {
         Optional<Text> text = itemStack.get(Keys.DISPLAY_NAME);
