@@ -95,4 +95,8 @@ public interface CharacterBase extends TimestampEntity {
     Boolean getMarkedForRemoval();
 
     void setMarkedForRemoval(Boolean markedForRemoval);
+
+    Integer getAttributePointsSpent();
+
+    void setAttributePointsSpent(Integer attributePointsSpent);
 }

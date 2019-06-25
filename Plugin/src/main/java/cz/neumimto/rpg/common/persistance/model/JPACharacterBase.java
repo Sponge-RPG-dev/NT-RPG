@@ -96,6 +96,9 @@ public class JPACharacterBase extends JPATimestampEntity implements CharacterBas
     @Column(name = "marked_for_removal")
     private Boolean markedForRemoval;
 
+    @Column(name = "attribute_points_spent")
+    private Integer attributePointsSpent;
+
     private Integer X;
 
     private Integer Y;
@@ -340,5 +343,15 @@ public class JPACharacterBase extends JPATimestampEntity implements CharacterBas
     @Override
     public void setMarkedForRemoval(Boolean markedForRemoval) {
         this.markedForRemoval = markedForRemoval;
+    }
+
+    @Override
+    public Integer getAttributePointsSpent() {
+        return attributePointsSpent;
+    }
+
+    @Override
+    public void setAttributePointsSpent(Integer attributePointsSpent) {
+        this.attributePointsSpent = attributePointsSpent;
     }
 }
