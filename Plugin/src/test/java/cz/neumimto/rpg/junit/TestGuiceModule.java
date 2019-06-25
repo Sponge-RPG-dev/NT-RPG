@@ -72,7 +72,7 @@ public class TestGuiceModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(SkillTreeDao.class).to(SkillTreeLoaderImpl.class);
-        bind(IEffectService.class).to(SpongeEffectService.class);
+        bind(IEffectService.class).to(TestEffectService.class);
         bind(SpongeSkillService.class);
         bind(PropertyService.class).to(TestPropertyService.class);
         bind(PartyService.class).to(SpongePartyService.class);
