@@ -124,6 +124,7 @@ public class JSLoader {
         try (InputStreamReader rs = new InputStreamReader(new FileInputStream(path.toFile()))) {
             Bindings bindings = new SimpleBindings();
             bindings.put("Injector", injector);
+            bindings.put("Rpg", Rpg.get());
             bindings.put("Bindings", new BindingsHelper(engine));
             for (Map.Entry<Class<?>, JsBinding.Type> objectTypeEntry : dataToBind.entrySet()) {
                 if (objectTypeEntry.getValue() == JsBinding.Type.CONTAINER) {
