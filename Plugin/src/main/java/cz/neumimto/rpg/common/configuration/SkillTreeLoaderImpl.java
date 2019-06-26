@@ -177,17 +177,7 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
             info.setLevelGap(0);
             warn("Missing \"LevelGap\" node for a skill \"" + info.getSkillId() + "\", setting to 1");
         }
-/*
-        Description: {
-            Template: [
-                Contextualized Description: {{name}}
-            ]
-            Function:
-            """
-               arg.with("name", character.getName()).with(...)
-            """
-        }
- */
+
         ISkillNodeDescription skillNodeDescription = null;
         try {
             List<String> description = c.getStringList("Description");

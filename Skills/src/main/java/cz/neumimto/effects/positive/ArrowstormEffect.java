@@ -40,7 +40,7 @@ public class ArrowstormEffect extends EffectBase implements IEffectContainer {
         if (arrows != 0) {
             Living entity = ((ISpongeEntity) getConsumer()).getEntity();
             World world = entity.getWorld();
-            Vector3d rotation = entity.getRotation();
+            Vector3d rotation = entity.getHeadRotation();
             Vector3d direction = Quaterniond.fromAxesAnglesDeg(rotation.getX(), -rotation.getY(), rotation.getZ()).getDirection();
 
             Entity arrow = world.createEntity(EntityTypes.TIPPED_ARROW,

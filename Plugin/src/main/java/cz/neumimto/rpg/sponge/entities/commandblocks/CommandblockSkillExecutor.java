@@ -2,8 +2,11 @@ package cz.neumimto.rpg.sponge.entities.commandblocks;
 
 import com.flowpowered.math.vector.Vector3d;
 import com.flowpowered.math.vector.Vector3i;
+import cz.neumimto.rpg.api.effects.IEffect;
+import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.common.entity.players.PreloadCharacter;
 import cz.neumimto.rpg.api.entity.IReservable;
+import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
 import org.spongepowered.api.advancement.Advancement;
 import org.spongepowered.api.advancement.AdvancementProgress;
 import org.spongepowered.api.advancement.AdvancementTree;
@@ -23,6 +26,7 @@ import org.spongepowered.api.effect.sound.SoundCategory;
 import org.spongepowered.api.effect.sound.SoundType;
 import org.spongepowered.api.effect.sound.record.RecordType;
 import org.spongepowered.api.entity.*;
+import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.entity.living.player.CooldownTracker;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.tab.TabList;
@@ -66,19 +70,31 @@ import java.util.*;
 /**
  * Created by NeumimTo on 1.8.2017.
  */
-public class CommandblockSkillExecutor extends PreloadCharacter {
+public class CommandblockSkillExecutor extends PreloadCharacter implements ISpongeEntity {
 
 
     private static IReservable INFINITY_POOL = new InfinityPool();
     private Player mock;
+    private Map<String, IEffectContainer<Object, IEffect<Object>>> effectMap;
 
     private CommandblockSkillExecutor(Location<Extent> location, Vector3d headRotation) {
         super(null);
         mock = new CommandblockPlayer(location, headRotation);
+        effectMap = new HashMap<>();
     }
 
     public static CommandblockSkillExecutor wrap(Location<Extent> location, Vector3d headRotation) {
         return new CommandblockSkillExecutor(location, headRotation);
+    }
+
+    @Override
+    public Map<String, IEffectContainer<Object, IEffect<Object>>> getEffectMap() {
+        return effectMap;
+    }
+
+    @Override
+    public boolean isDetached() {
+        return false;
     }
 
     @Override
@@ -92,7 +108,7 @@ public class CommandblockSkillExecutor extends PreloadCharacter {
     }
 
     @Override
-    public Object getEntity() {
+    public Living getEntity() {
         return mock;
     }
 

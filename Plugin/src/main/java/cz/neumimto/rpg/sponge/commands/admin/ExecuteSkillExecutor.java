@@ -27,6 +27,7 @@ import org.spongepowered.api.world.Location;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+//nadmin skill ntrpg:arrowstorm -1 world;3;70;41 -2 0;0;0
 public class ExecuteSkillExecutor implements CommandExecutor {
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
