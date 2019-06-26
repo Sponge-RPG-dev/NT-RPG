@@ -32,10 +32,6 @@ public interface CharacterBase extends TimestampEntity {
 
     void setUuid(UUID uuid);
 
-    int getUsedAttributePoints();
-
-    void setUsedAttributePoints(int usedAttributePoints);
-
     Boolean isCanResetskills();
 
     void setCanResetskills(boolean canResetskills);
@@ -79,6 +75,8 @@ public interface CharacterBase extends TimestampEntity {
     Set<BaseCharacterAttribute> getBaseCharacterAttribute();
 
     void setBaseCharacterAttribute(Set<BaseCharacterAttribute> baseCharacterAttribute);
+
+    void addBaseCharacterAttribute(BaseCharacterAttribute baseCharacterAttribute);
 
     CharacterClass getCharacterClass(ClassDefinition configClass);
 

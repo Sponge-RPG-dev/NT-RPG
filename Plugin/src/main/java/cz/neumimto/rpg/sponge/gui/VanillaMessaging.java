@@ -254,7 +254,7 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
         }
         content.add(Text.builder().append(Text.of("AttributeConfig points: ", TextColors.GREEN))
                 .append(Text.of(character.getCharacterBase().getAttributePoints(), TextColors.AQUA))
-                .append(Text.of(String.format("(%s)", character.getCharacterBase().getUsedAttributePoints(), TextColors.GRAY))).toText());
+                .append(Text.of(String.format("(%s)", character.getCharacterBase().getAttributePointsSpent(), TextColors.GRAY))).toText());
 
         builder.contents(content);
         builder.sendTo(character.getPlayer());
@@ -831,13 +831,28 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
     @Override
     public void displayCharacterMenu(ISpongeCharacter character) {
         Inventory i = GuiHelper.createCharacterEmptyInventory(character).build(NtRpgPlugin.GlobalScope.plugin);
+        makeBorder(i, DyeColors.ORANGE);
+
 
         ItemStack itemStack = GuiHelper.itemStack(ItemTypes.BOOK);
         itemStack.offer(Keys.DISPLAY_NAME, translate(LocalizationKeys.ATTRIBUTES));
         itemStack.offer(new InventoryCommandItemMenuData("character attributes "));
         i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(1, 1))).offer(itemStack);
 
-        //todo more
+        itemStack = GuiHelper.itemStack(ItemTypes.ARMOR_STAND);
+        itemStack.offer(Keys.DISPLAY_NAME, translate(LocalizationKeys.CHARACTER_CLASSES));
+        itemStack.offer(new InventoryCommandItemMenuData("character classes"));
+        i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(2, 1))).offer(itemStack);
+
+        itemStack = GuiHelper.itemStack(ItemTypes.IRON_CHESTPLATE);
+        itemStack.offer(Keys.DISPLAY_NAME, translate(LocalizationKeys.CHARACTER_ARMOR));
+        itemStack.offer(new InventoryCommandItemMenuData("character armor"));
+        i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(3, 1))).offer(itemStack);
+
+        itemStack = GuiHelper.itemStack(ItemTypes.IRON_AXE);
+        itemStack.offer(Keys.DISPLAY_NAME, translate(LocalizationKeys.CHARACTER_WEAPONS));
+        itemStack.offer(new InventoryCommandItemMenuData("character weapons"));
+        i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(4, 1))).offer(itemStack);
 
         character.getPlayer().openInventory(i);
     }

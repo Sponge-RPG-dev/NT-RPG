@@ -7,6 +7,7 @@ import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 
 import java.util.Collections;
+import java.util.HashMap;
 
 public class TestDictionary {
 
@@ -40,7 +41,10 @@ public class TestDictionary {
         CLASS_PRIMARY = new ClassDefinition("primary","Primary");
         CLASS_TERTIARY = new ClassDefinition("tertiary","Tertiary");
         CLASS_SECONDARY = new ClassDefinition("secondary","Secondary");
-        STR = new AttributeConfig("str", "str", 100, Collections.emptyMap(), null, null);
-        AGI = new AttributeConfig("agi", "agi", 100, Collections.emptyMap(), null, null);
+        STR = new AttributeConfig("str", "str", 100, new HashMap<>(), null, null);
+        AGI = new AttributeConfig("agi", "agi", 100, new HashMap<>(), null, null);
+        AGI.getPropBonus().put(6, 1f);
+        STR.getPropBonus().put(5, 2f);
+
     }
 }

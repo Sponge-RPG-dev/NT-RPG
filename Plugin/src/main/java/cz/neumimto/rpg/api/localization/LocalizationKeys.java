@@ -100,4 +100,7 @@ public class LocalizationKeys {
     public static final String NO_ITEM_IN_HAND = "player.no-item-in-hand.message";
     public static final String SKILL_EXECUTED_MESSAGE = "player.skill-executed.notification";
     public static final String CANCELLED = "player.action-cancelled.notification";
+    public static final String CHARACTER_CLASSES = "item.label.character-class-list.button";
+    public static final String CHARACTER_ARMOR = "item.label.character-armor.button";
+    public static final String CHARACTER_WEAPONS = "item.label.character-weapons.button";
 }

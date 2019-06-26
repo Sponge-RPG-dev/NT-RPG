@@ -112,7 +112,7 @@ public interface ICharacterService<T> {
 
     int addAttribute(T character, AttributeConfig attribute, int i);
 
-    void addAttribute(T character, AttributeConfig attribute);
+    int addAttribute(T character, AttributeConfig attribute);
 
     void addTransientAttribtues(T activeCharacter, Map<AttributeConfig, Integer> attributes);
 

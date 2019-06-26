@@ -53,6 +53,7 @@ import cz.neumimto.rpg.api.utils.DebugLevel;
 import cz.neumimto.rpg.api.utils.MathUtils;
 import cz.neumimto.rpg.common.persistance.dao.CharacterClassDao;
 import cz.neumimto.rpg.common.persistance.dao.PlayerDao;
+import cz.neumimto.rpg.common.persistance.model.JPABaseCharacterAttribute;
 import cz.neumimto.rpg.common.persistance.model.JPACharacterClass;
 import cz.neumimto.rpg.common.persistance.model.JPACharacterSkill;
 import cz.neumimto.rpg.common.utils.exceptions.MissingConfigurationException;
@@ -504,6 +505,7 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
         return toInit;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public T createActiveCharacter(UUID player, CharacterBase characterBase) {
         characterBase = playerDao.fetchCharacterBase(characterBase);
@@ -949,9 +951,9 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
     @Override
     public void assignAttribute(T character, AttributeConfig attribute, int levels) {
         Map<Integer, Float> integerFloatMap = attribute.getPropBonus();
+        float[] primaryProperties = character.getPrimaryProperties();
         for (Map.Entry<Integer, Float> entry : integerFloatMap.entrySet()) {
-            character.getPrimaryProperties()[entry.getKey()] = character
-                    .getPrimaryProperties()[entry.getKey()] + entry.getValue() * levels;
+            primaryProperties[entry.getKey()] = primaryProperties[entry.getKey()] + entry.getValue() * levels;
         }
     }
 
@@ -972,26 +974,45 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
             return 1;
         }
 
-        int attributePoints = character.getCharacterBase().getAttributePoints();
-        if (attributePoints - i <= 0) {
+        CharacterBase base = character.getCharacterBase();
+        int attributePoints = base.getAttributePoints();
+        if (attributePoints - i < 0) {
             return 1;
         }
-        Set<BaseCharacterAttribute> ap = character.getCharacterBase().getBaseCharacterAttribute();
+
+        Set<BaseCharacterAttribute> ap = base.getBaseCharacterAttribute();
+        boolean found = false;
         for (BaseCharacterAttribute a : ap) {
             if (a.getName().equalsIgnoreCase(attribute.getName())) {
                 a.setLevel(a.getLevel() + i);
+                found = true;
+                break;
             }
         }
-        character.getCharacterBase().setAttributePoints(attributePoints - i);
+        if (!found) {
+            JPABaseCharacterAttribute attr = new JPABaseCharacterAttribute();
+            attr.setName(attribute.getName());
+            attr.setLevel(i);
+            attr.setCharacterBase(base);
+            base.addBaseCharacterAttribute(attr);
+        }
+        base.setAttributePoints(attributePoints - i);
         assignAttribute(character, attribute, i);
-        recalculateProperties(character);
+
         character.setRequiresDamageRecalculation(true);
+        base.setAttributePointsSpent(base.getAttributePointsSpent() + i);
+
+        if (!attribute.getPropBonus().isEmpty()) {
+            assignAttribute(character, attribute, i);
+        }
         return 0;
     }
 
+
+
     @Override
-    public void addAttribute(T character, AttributeConfig attribute) {
-        addAttribute(character, attribute, 1);
+    public int addAttribute(T character, AttributeConfig attribute) {
+        return addAttribute(character, attribute, 1);
     }
 
     @Override
@@ -1006,17 +1027,7 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
         Map<String, Integer> i = character.getTransientAttributes();
         i.merge(attribute.getId(), amount, Integer::sum);
         if (!attribute.getPropBonus().isEmpty()) {
-            applyAttributeValue(character, attribute, amount);
-        }
-    }
-
-    private void applyAttributeValue(T character, AttributeConfig attribute, int amount) {
-        float[] primaryProperties = character.getPrimaryProperties();
-        for (Map.Entry<Integer, Float> entry : attribute.getPropBonus().entrySet()) {
-            int key = entry.getKey();
-            float val = entry.getValue() * amount;
-            float currentVal = primaryProperties[key];
-            primaryProperties[key] = val + currentVal;
+            assignAttribute(character, attribute, amount);
         }
     }
 

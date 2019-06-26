@@ -54,9 +54,6 @@ public class JPACharacterBase extends JPATimestampEntity implements CharacterBas
 
     private String info;
 
-    @Column(name = "used_attribute_points")
-    private Integer usedAttributePoints;
-
     @Column(name = "attribute_points")
     private Integer attributePoints;
 
@@ -97,7 +94,7 @@ public class JPACharacterBase extends JPATimestampEntity implements CharacterBas
     private Boolean markedForRemoval;
 
     @Column(name = "attribute_points_spent")
-    private Integer attributePointsSpent;
+    private Integer attributePointsSpent = 0;
 
     private Integer X;
 
@@ -170,16 +167,6 @@ public class JPACharacterBase extends JPATimestampEntity implements CharacterBas
     @Override
     public void setUuid(UUID uuid) {
         this.uuid = uuid;
-    }
-
-    @Override
-    public int getUsedAttributePoints() {
-        return usedAttributePoints;
-    }
-
-    @Override
-    public void setUsedAttributePoints(int usedAttributePoints) {
-        this.usedAttributePoints = usedAttributePoints;
     }
 
     @Override
@@ -291,6 +278,16 @@ public class JPACharacterBase extends JPATimestampEntity implements CharacterBas
     public void setBaseCharacterAttribute(Set<BaseCharacterAttribute> baseCharacterAttribute) {
         this.baseCharacterAttribute = baseCharacterAttribute;
         for (BaseCharacterAttribute attribute : baseCharacterAttribute) {
+            cachedAttributes.put(attribute.getName(), attribute.getLevel());
+        }
+    }
+
+    @Override
+    public void addBaseCharacterAttribute(BaseCharacterAttribute attribute) {
+        this.baseCharacterAttribute.add(attribute);
+        if (cachedAttributes.containsKey(attribute.getName())) {
+            cachedAttributes.put(attribute.getName(), cachedAttributes.get(attribute.getName()) + attribute.getLevel());
+        } else {
             cachedAttributes.put(attribute.getName(), attribute.getLevel());
         }
     }
