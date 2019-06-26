@@ -6,6 +6,7 @@ import cz.neumimto.rpg.api.effects.IEffectSource;
 import cz.neumimto.rpg.api.items.ClassItem;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.items.RpgItemType;
+import cz.neumimto.rpg.api.skills.SkillExecutionType;
 import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
@@ -97,6 +98,11 @@ public class ItemAccessSkill extends AbstractSkill {
         } catch (ConfigException e) {
 
         }
+    }
+
+    @Override
+    public SkillExecutionType getSkillExecutionType() {
+        return SkillExecutionType.PASSIVE;
     }
 
     public class ItemAccessSkillData extends SkillData {

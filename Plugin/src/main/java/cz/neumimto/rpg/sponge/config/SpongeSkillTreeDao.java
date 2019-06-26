@@ -7,7 +7,9 @@ import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.utils.Pair;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.gui.SkillTreeInterfaceModel;
+import cz.neumimto.rpg.sponge.skills.SpongeSkillService;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Comparator;
 import java.util.List;
@@ -17,6 +19,9 @@ import static cz.neumimto.rpg.api.logging.Log.error;
 
 @Singleton
 public class SpongeSkillTreeDao extends SkillTreeLoaderImpl {
+
+    @Inject
+    private SpongeSkillService spongeSkillService;
 
     @Override
     protected boolean loadTree(Config config, SkillTree skillTree) {
@@ -47,7 +52,7 @@ public class SpongeSkillTreeDao extends SkillTreeLoaderImpl {
                             array[i][j] = Short.parseShort(num.toString());
                             j++;
                         }
-                        SkillTreeInterfaceModel guiModelByCharacter = NtRpgPlugin.GlobalScope.skillService.getGuiModelByCharacter(c1);
+                        SkillTreeInterfaceModel guiModelByCharacter = spongeSkillService.getGuiModelByCharacter(c1);
                         if (guiModelByCharacter != null) {
                             array[i][j] = guiModelByCharacter.getId();
                         }

@@ -9,7 +9,6 @@ import java.util.UUID;
 
 public class TestCharacter extends ActiveCharacter<UUID, TestParty> implements IActiveCharacter<UUID, TestParty> {
 
-    private UUID uuid;
 
     public TestCharacter(UUID uuid, CharacterBase base, int propertyCount) {
         super(uuid, base, propertyCount);
@@ -17,7 +16,7 @@ public class TestCharacter extends ActiveCharacter<UUID, TestParty> implements I
 
     @Override
     public UUID getUUID() {
-        return uuid;
+        return pl;
     }
 
     @Override
@@ -37,11 +36,11 @@ public class TestCharacter extends ActiveCharacter<UUID, TestParty> implements I
 
     @Override
     public UUID getEntity() {
-        return uuid;
+        return pl;
     }
 
     @Override
     public boolean isDetached() {
-        return uuid != null;
+        return pl != null;
     }
 }

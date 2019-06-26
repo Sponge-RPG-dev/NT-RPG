@@ -102,8 +102,7 @@ public class JSLoader implements IScriptEngine {
         }
     }
 
-    public void loadNashorn()
-            throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
+    public void loadNashorn() throws Exception {
         Object fct = Class.forName("jdk.nashorn.api.scripting.NashornScriptEngineFactory").newInstance();
         List<ClassLoader> list = new ArrayList<>();
         list.add(this.getClass().getClassLoader());

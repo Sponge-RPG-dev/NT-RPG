@@ -23,6 +23,7 @@ import cz.neumimto.rpg.api.inventory.InventoryService;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.SkillExecutionType;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
@@ -72,4 +73,8 @@ public abstract class ActiveSkill<T extends IActiveCharacter> extends AbstractSk
         return new SkillContext(this, esi);
     }
 
+    @Override
+    public SkillExecutionType getSkillExecutionType() {
+        return SkillExecutionType.ACTIVE;
+    }
 }

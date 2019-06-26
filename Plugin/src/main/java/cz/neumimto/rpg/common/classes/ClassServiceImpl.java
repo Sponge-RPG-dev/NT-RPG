@@ -29,7 +29,6 @@ public class ClassServiceImpl implements ClassService {
     @Inject
     private PermissionService permissionService;
 
-
     private Map<String, ClassDefinition> classes = new HashMap<>();
 
     @Override

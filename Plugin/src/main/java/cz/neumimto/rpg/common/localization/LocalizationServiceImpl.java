@@ -59,6 +59,16 @@ public class LocalizationServiceImpl implements LocalizationService {
     }
 
     @Override
+    public List<String> translateRaw(List<String> template, Arg arg) {
+        List<String> list = new ArrayList<>();
+        for (String s : template) {
+            Map<String, Object> params = arg.getParams();
+            list.add(StringUtils.replaceEach(s, params.keySet().toArray(new String[0]), params.values().stream().map(Object::toString).toArray(String[]::new)));
+        }
+        return list;
+    }
+
+    @Override
     public void loadResourceBundle(String resourceBundle, Locale locale, URLClassLoader localizationsClassLoader) {
         ResourceBundle translations = ResourceBundle.getBundle(resourceBundle, locale, localizationsClassLoader);
         Enumeration<String> keys = translations.getKeys();

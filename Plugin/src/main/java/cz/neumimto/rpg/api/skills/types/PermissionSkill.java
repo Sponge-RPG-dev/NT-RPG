@@ -16,6 +16,7 @@
 
 package cz.neumimto.rpg.api.skills.types;
 
+import cz.neumimto.rpg.api.skills.SkillExecutionType;
 import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
@@ -25,6 +26,11 @@ public class PermissionSkill extends AbstractSkill {
     @Override
     public void onPreUse(IActiveCharacter character, SkillContext skillContext) {
         skillContext.result(SkillResult.CANCELLED);
+    }
+
+    @Override
+    public SkillExecutionType getSkillExecutionType() {
+        return SkillExecutionType.PASSIVE;
     }
 
     @Override

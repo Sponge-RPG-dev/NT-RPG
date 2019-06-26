@@ -18,6 +18,9 @@
 
 package cz.neumimto.rpg.api.skills;
 
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.skills.scripting.ScriptedSkillNodeDescription;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -49,7 +52,8 @@ public class SkillData {
     private int levelGap;
     private String skillName;
     private SkillCost invokeCost;
-    private List<String> description;
+    private ISkillNodeDescription description;
+    private boolean useDescriptionOnly;
 
     public SkillData(String skill) {
         this.skill = skill;
@@ -179,11 +183,19 @@ public class SkillData {
         this.invokeCost = invokeCost;
     }
 
-    public List<String> getDescription() {
-        return description;
+    public List<String> getDescription(IActiveCharacter character) {
+        return description.getDescription(character);
     }
 
-    public void setDescription(List<String> description) {
+    public void setDescription(ISkillNodeDescription description) {
         this.description = description;
+        useDescriptionOnly = description instanceof ScriptedSkillNodeDescription;
     }
+
+    public boolean useDescriptionOnly() {
+        return useDescriptionOnly;
+    }
+
+
+
 }

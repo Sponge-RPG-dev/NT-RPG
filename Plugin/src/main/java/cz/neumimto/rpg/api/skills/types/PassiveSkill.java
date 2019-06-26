@@ -23,6 +23,7 @@ import cz.neumimto.rpg.api.localization.Arg;
 import cz.neumimto.rpg.api.inventory.InventoryService;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.SkillExecutionType;
 import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
@@ -89,4 +90,9 @@ public abstract class PassiveSkill extends AbstractSkill {
     }
 
     public abstract void applyEffect(PlayerSkillContext info, IActiveCharacter character);
+
+    @Override
+    public SkillExecutionType getSkillExecutionType() {
+        return SkillExecutionType.PASSIVE;
+    }
 }

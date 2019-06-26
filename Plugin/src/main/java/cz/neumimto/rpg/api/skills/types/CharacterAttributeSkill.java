@@ -5,6 +5,7 @@ import com.typesafe.config.ConfigException;
 import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.SkillExecutionType;
 import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
@@ -90,6 +91,11 @@ public class CharacterAttributeSkill extends AbstractSkill {
         } catch (ConfigException ex) {
 
         }
+    }
+
+    @Override
+    public SkillExecutionType getSkillExecutionType() {
+        return SkillExecutionType.PASSIVE;
     }
 
 

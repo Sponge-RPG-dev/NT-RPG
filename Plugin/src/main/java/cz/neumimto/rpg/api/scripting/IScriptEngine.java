@@ -26,4 +26,6 @@ public interface IScriptEngine {
     void generateListener();
 
     Map<Class<?>, JsBinding.Type> getDataToBind();
+
+    void loadNashorn() throws Exception;
 }

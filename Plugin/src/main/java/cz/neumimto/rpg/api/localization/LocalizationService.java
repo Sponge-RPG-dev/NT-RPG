@@ -16,5 +16,8 @@ public interface LocalizationService {
 
     List<String> translateMultiline(String s);
 
+    List<String> translateRaw(List<String> template, Arg arg);
+
     void loadResourceBundle(String resourceBundle, Locale locale, URLClassLoader localizationsClassLoader);
+
 }

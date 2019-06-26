@@ -51,7 +51,7 @@ class SkillTreeDaoTest {
         Assertions.assertTrue(skillTreeMap.get("Test").getSkills().containsKey("test2"));
 
         SkillTree test2 = skillTreeMap.get("Test");
-        Assertions.assertTrue(test2.getSkillById("test2").getDescription().get(0).equalsIgnoreCase("asdf"));
-        Assertions.assertTrue(test2.getSkillById("test").getDescription().get(0).equalsIgnoreCase("test"));
+        Assertions.assertTrue(test2.getSkillById("test2").getDescription(null).get(0).equalsIgnoreCase("asdf"));
+        Assertions.assertTrue(test2.getSkillById("test").getDescription(null).get(0).equalsIgnoreCase("test"));
     }
 }

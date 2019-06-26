@@ -2,10 +2,12 @@ package cz.neumimto.rpg.sponge.gui;
 
 import static cz.neumimto.rpg.sponge.gui.CatalogTypeItemStackBuilder.Block;
 import static cz.neumimto.rpg.sponge.gui.CatalogTypeItemStackBuilder.Item;
+
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.logging.Log;
@@ -258,7 +260,61 @@ public class GuiHelper {
     }
 
     private static ItemStack toItemStack(ISkill skill, IActiveCharacter character, SkillData skillData, SkillTree skillTree) {
-        throw new RuntimeException("//TODO");
+        List<Text> lore = new ArrayList<>();
+        ItemStack itemStack;
+        if (skillData.useDescriptionOnly()) {
+            List<String> description = skillData.getDescription(character);
+            lore.add(Text.builder(skillData.getSkillName()).style(TextStyles.BOLD).color(getSkillTextColor(character, skill, skillData, skillTree)).build());
+            lore.add(Text.EMPTY);
+            for (String s : description) {
+                lore.add(TextHelper.parse(s));
+            }
+            itemStack = itemStack(skill.getItemType());
+        } else {
+            itemStack = itemStack(skill.getItemType());
+            lore.add(Text.builder(skillData.getSkillName()).style(TextStyles.BOLD).color(getSkillTextColor(character, skill, skillData, skillTree)).build());
+            lore.add(Text.EMPTY);
+
+            LocalizationService locService = Rpg.get().getLocalizationService();
+            Text execType = TextHelper.parse(locService.translate(skill.getSkillExecutionType().toString().toLowerCase()));
+            lore.add(execType);
+            lore.add(Text.EMPTY);
+
+            for (String s : skillData.getDescription(character)) {
+                lore.add(TextHelper.parse(s));
+            }
+
+            lore.add(Text.EMPTY);
+
+            Set<ISkillType> skillTypes = skillData.getSkill().getSkillTypes();
+            Text.Builder builder = Text.builder();
+            Iterator<ISkillType> iterator = skillTypes.iterator();
+            int i = 0;
+            while (iterator.hasNext()) {
+                i++;
+                ISkillType next = iterator.next();
+                String translate = locService.translate(next.toString());
+                lore.add(TextHelper.parse(translate));
+                if (i % 3 == 0) {
+                    lore.add(builder.build());
+                    builder = Text.builder();
+                }
+            }
+        }
+
+
+        itemStack.offer(Keys.ITEM_LORE, lore);
+        return itemStack;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static TextColor getSkillTextColor(IActiveCharacter character, ISkill skill, SkillData skillData, SkillTree skillTree) {
+        if (character.hasSkill(skillData.getSkillId())) {
+            return TextColors.GREEN;
+        }
+        Collection<PlayerClassData> values = character.getClasses().values();
+        Optional<PlayerClassData> first = values.stream().filter(a -> a.getClassDefinition().getSkillTree() == skillTree).findFirst();
+        return first.filter(playerClassData -> Rpg.get().getCharacterService().canLearnSkill(character, playerClassData.getClassDefinition(), skill).isOk()).map(playerClassData -> TextColors.GRAY).orElse(TextColors.RED);
     }
 
 

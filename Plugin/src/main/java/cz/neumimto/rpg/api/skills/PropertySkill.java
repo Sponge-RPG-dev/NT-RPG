@@ -89,6 +89,11 @@ public class PropertySkill extends AbstractSkill {
     }
 
     @Override
+    public SkillExecutionType getSkillExecutionType() {
+        return SkillExecutionType.PASSIVE;
+    }
+
+    @Override
     public PropertySkillData constructSkillData() {
         return new PropertySkillData(getName());
     }

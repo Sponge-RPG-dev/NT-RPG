@@ -96,4 +96,6 @@ public interface ISkill extends IEffectSourceProvider, IRpgElement {
     default SkillContext createSkillExecutorContext(PlayerSkillContext esi) {
         return new SkillContext();
     }
+
+    SkillExecutionType getSkillExecutionType();
 }

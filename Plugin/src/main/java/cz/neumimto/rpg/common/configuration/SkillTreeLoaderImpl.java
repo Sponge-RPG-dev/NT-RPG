@@ -19,7 +19,6 @@
 package cz.neumimto.rpg.common.configuration;
 
 import com.typesafe.config.*;
-import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.ItemString;
 import cz.neumimto.rpg.api.configuration.SkillItemCost;
@@ -27,18 +26,21 @@ import cz.neumimto.rpg.api.configuration.SkillTreeDao;
 import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
 import cz.neumimto.rpg.api.skills.*;
 import cz.neumimto.rpg.api.skills.mods.ActiveSkillPreProcessorWrapper;
-import cz.neumimto.rpg.common.skills.preprocessors.SkillPreprocessorFactories;
+import cz.neumimto.rpg.api.skills.scripting.ScriptedSkillNodeDescription;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.skills.types.StartingPoint;
 import cz.neumimto.rpg.api.skills.utils.SkillLoadingErrors;
 import cz.neumimto.rpg.api.utils.MathUtils;
 import cz.neumimto.rpg.common.skills.SkillConfigLoader;
 import cz.neumimto.rpg.common.skills.SkillConfigLoaders;
+import cz.neumimto.rpg.common.skills.preprocessors.SkillPreprocessorFactories;
+import cz.neumimto.rpg.sponge.utils.io.FileUtils;
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -53,7 +55,8 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
 
     @Override
     public Map<String, SkillTree> getAll() {
-        Path dir = ResourceLoader.skilltreeDir.toPath();
+        Path dir = Paths.get(Rpg.get().getWorkingDirectory(), "skilltrees");
+        FileUtils.createDirectoryIfNotExists(dir);
         Map<String, SkillTree> map = new HashMap<>();
         try (DirectoryStream<Path> paths = Files.newDirectoryStream(dir, "*.conf")) {
             paths.forEach(path -> {
@@ -104,7 +107,7 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
         for (ConfigObject co : sub) {
             Config c = co.toConfig();
             String id = c.getString("SkillId");
-            ISkill skill = Rpg.get().getSkillService().getSkills().get(id.toLowerCase());;
+            ISkill skill = Rpg.get().getSkillService().getSkills().get(id.toLowerCase());
             if (skill == null) {
                 try {
                     String type = c.getString("Type");
@@ -122,6 +125,7 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
                     List<String> description = c.getStringList("Description");
                     skill.setDescription(description);
                 } catch (ConfigException.Missing ignored) {
+
                 }
 
                 try {
@@ -173,13 +177,38 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
             info.setLevelGap(0);
             warn("Missing \"LevelGap\" node for a skill \"" + info.getSkillId() + "\", setting to 1");
         }
-
-        try {
-            info.setDescription(c.getStringList("Description"));
-        } catch (ConfigException e) {
-            info.setDescription(info.getSkill().getDescription());
+/*
+        Description: {
+            Template: [
+                Contextualized Description: {{name}}
+            ]
+            Function:
+            """
+               arg.with("name", character.getName()).with(...)
+            """
         }
+ */
+        ISkillNodeDescription skillNodeDescription = null;
+        try {
+            List<String> description = c.getStringList("Description");
+            skillNodeDescription = new SkillNodeDescription(description);
+        } catch (ConfigException e) {
+            try {
+                Config description = c.getConfig("Description");
 
+                List<String> template = description.getStringList("Template");
+                ScriptedSkillNodeDescription scriptedSkillNodeDescription = new ScriptedSkillNodeDescription();
+                scriptedSkillNodeDescription.setTemplate(template);
+
+                scriptedSkillNodeDescription.setJSFunction(description.getString("Function"));
+
+                skillNodeDescription = scriptedSkillNodeDescription;
+            } catch (ConfigException ee) {
+                List<String> description = info.getSkill().getDescription();
+                skillNodeDescription = new SkillNodeDescription(description);
+            }
+        }
+        info.setDescription(skillNodeDescription);
 
         try {
             Config reagent = c.getConfig("InvokeCost");
