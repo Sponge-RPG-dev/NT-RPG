@@ -7,6 +7,7 @@ import cz.neumimto.rpg.TestSkillService;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.configuration.SkillTreeDao;
 import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.scripting.IScriptEngine;
 import cz.neumimto.rpg.common.configuration.SkillTreeLoaderImpl;
 import cz.neumimto.rpg.api.damage.DamageService;
@@ -35,6 +36,7 @@ import cz.neumimto.rpg.common.exp.ExperienceDAO;
 import cz.neumimto.rpg.common.impl.TestCharacterService;
 import cz.neumimto.rpg.common.impl.TestItemService;
 import cz.neumimto.rpg.common.inventory.InventoryHandler;
+import cz.neumimto.rpg.common.inventory.TestInventoryService;
 import cz.neumimto.rpg.common.inventory.crafting.runewords.RWDao;
 import cz.neumimto.rpg.common.localization.LocalizationServiceImpl;
 import cz.neumimto.rpg.common.persistance.dao.CharacterClassDao;
@@ -60,11 +62,17 @@ import cz.neumimto.rpg.sponge.permission.TestPermissionService;
 import cz.neumimto.rpg.sponge.scripting.SpongeClassGenerator;
 import cz.neumimto.rpg.sponge.skills.SpongeSkillService;
 import net.bytebuddy.ByteBuddy;
+import net.bytebuddy.dynamic.loading.ClassLoadingStrategy;
+import net.bytebuddy.implementation.InvocationHandlerAdapter;
+import net.bytebuddy.matcher.ElementMatchers;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.plugin.PluginContainer;
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
 
 public class TestGuiceModule extends AbstractModule {
 
@@ -95,11 +103,15 @@ public class TestGuiceModule extends AbstractModule {
         bind(GuiService.class);
         bind(ItemLoreBuilderService.class);
         bind(ParticleDecorator.class);
-        Class<? extends IPlayerMessage> type = new ByteBuddy()
-                .subclass(IPlayerMessage.class)
-                .make()
-                .load(getClass().getClassLoader())
+
+        Class<IPlayerMessage> type = (Class<IPlayerMessage>) new ByteBuddy()
+                .subclass(Object.class)
+                .implement(IPlayerMessage.class)
+                .method(ElementMatchers.any())
+                .intercept(InvocationHandlerAdapter.of(new MethodInterceptor()))
+                .make().load(IPlayerMessage.class.getClassLoader(), ClassLoadingStrategy.Default.WRAPPER)
                 .getLoaded();
+
         bind(IPlayerMessage.class).toProvider(() -> {
             try {
                 return type.getConstructor().newInstance();
@@ -109,7 +121,7 @@ public class TestGuiceModule extends AbstractModule {
             throw new IllegalStateException(":(");
         });
         bind(VanillaMessaging.class);
-        bind(InventoryService.class).to(SpongeInventoryService.class);
+        bind(InventoryService.class).to(TestInventoryService.class);
         bind(CharacterInventoryInteractionHandler.class).to(InventoryHandler.class);
         bind(ItemService.class).to(TestItemService.class);
         bind(RWDao.class);
@@ -170,5 +182,14 @@ public class TestGuiceModule extends AbstractModule {
         }
     }
 
+
+    public class MethodInterceptor implements InvocationHandler {
+
+        @Override
+        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+            Log.info(method.getName());
+            return null;
+        }
+    }
 }
 

@@ -7,10 +7,7 @@ import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.types.IActiveSkill;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -87,7 +84,7 @@ public class SkillContext {
         wrappers.add(proc);
     }
 
-    public void addExecutor(Set<ActiveSkillPreProcessorWrapper> set) {
+    public void addExecutor(Collection<ActiveSkillPreProcessorWrapper> set) {
         wrappers.addAll(set);
     }
 

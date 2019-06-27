@@ -41,7 +41,30 @@ public abstract class EffectService implements IEffectService {
     protected Set<IEffect> pendingAdditions = new HashSet<>();
     protected Set<IEffect> pendingRemovals = new HashSet<>();
     protected Map<String, IGlobalEffect> globalEffects = new HashMap<>();
+    private Map<String, EffectType> effectTypes = new HashMap<>();
 
+    public EffectService() {
+        registerEffectTypes(CommonEffectTypes.class);
+        registerEffectTypes(CoreEffectTypes.class);
+    }
+
+    @Override
+    public void registerEffectType(EffectType effectType) {
+        effectTypes.put(effectType.toString().toLowerCase(), effectType);
+    }
+
+    @Override
+    public void registerEffectTypes(Class<? extends Enum> e) {
+        EnumSet.allOf(e).stream().forEach(a -> {
+            EffectType type = (EffectType) a;
+            registerEffectType(type);
+        });
+    }
+
+    @Override
+    public Optional<EffectType> getEffectType(String effectType) {
+        return Optional.ofNullable(effectTypes.get(effectType.toLowerCase()));
+    }
 
     /**
      * calls effect.onApply and registers if effect requires

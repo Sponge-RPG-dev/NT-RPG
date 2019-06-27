@@ -2,8 +2,11 @@ package cz.neumimto.rpg.common.skills.preprocessors;
 
 import com.typesafe.config.ConfigObject;
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.effects.EffectType;
+import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillPreProcessorFactory;
+import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.mods.ActiveSkillPreProcessorWrapper;
 import cz.neumimto.rpg.api.skills.mods.PreProcessorTarget;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
@@ -39,6 +42,50 @@ public class SkillPreprocessorFactories {
                         e.printStackTrace();
                     }
                     context.next(character, info, context);
+                }
+            };
+        }
+    };
+
+    static final SkillPreProcessorFactory HAS_EFFECT = new SkillPreProcessorFactory("has_effect", new HashSet<>(Arrays.asList(PreProcessorTarget.BEFORE))) {
+        @Override
+        public ActiveSkillPreProcessorWrapper parse(ConfigObject configObject) {
+            final String effect = configObject.get("Effect").unwrapped().toString();
+            final SkillResult conditionMet = SkillResult.valueOf(configObject.get("ConditionMet").unwrapped().toString().toUpperCase());
+            final SkillResult conditionNotMet = SkillResult.valueOf(configObject.get("ConditionNotMet").unwrapped().toString().toUpperCase());
+
+            return new ActiveSkillPreProcessorWrapper(PreProcessorTarget.BEFORE) {
+                @Override
+                public void doNext(IActiveCharacter character, PlayerSkillContext info, SkillContext context) {
+                    SkillResult skillResult1 = character.hasEffect(effect) ? conditionMet : conditionNotMet;
+                    context.next(character, info, context.result(skillResult1));
+                }
+            };
+        }
+    };
+
+    static final SkillPreProcessorFactory HAS_EFFECT_TYPE = new SkillPreProcessorFactory("has_effect_type", new HashSet<>(Arrays.asList(PreProcessorTarget.BEFORE))) {
+        @Override
+        public ActiveSkillPreProcessorWrapper parse(ConfigObject configObject) {
+            final String effect = configObject.get("EffectType").unwrapped().toString();
+            final SkillResult conditionMet = SkillResult.valueOf(configObject.get("ConditionMet").unwrapped().toString().toUpperCase());
+            final SkillResult conditionNotMet = SkillResult.valueOf(configObject.get("ConditionNotMet").unwrapped().toString().toUpperCase());
+            Optional<EffectType> effectType = Rpg.get().getEffectService().getEffectType(effect);
+            if (!effectType.isPresent()) {
+                Log.error("Unknown effect type " + effect);
+                return new ActiveSkillPreProcessorWrapper(PreProcessorTarget.BEFORE) {
+                    @Override
+                    public void doNext(IActiveCharacter character, PlayerSkillContext info, SkillContext skillResult) {
+                        skillResult.next(character, info, skillResult);
+                    }
+                };
+            }
+            EffectType type = effectType.get();
+            return new ActiveSkillPreProcessorWrapper(PreProcessorTarget.BEFORE) {
+                @Override
+                public void doNext(IActiveCharacter character, PlayerSkillContext info, SkillContext context) {
+                    SkillResult skillResult1 = character.hasEffectType(type) ? conditionMet : conditionNotMet;
+                    context.next(character, info, context.result(skillResult1));
                 }
             };
         }

@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.junit;
 
+import cz.neumimto.rpg.api.entity.IReservable;
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.items.ItemClass;
 import cz.neumimto.rpg.common.entity.TestCharacter;
@@ -95,6 +96,9 @@ public class CharactersExtension implements ParameterResolver {
         activeCharacter.getTransientAttributes().put(TestDictionary.AGI.getId(), 94);
         activeCharacter.getTransientAttributes().put(TestDictionary.STR.getId(), 5);
 
+        activeCharacter.setHealth(new TestPool());
+        activeCharacter.setMana(new TestPool());
+
         return activeCharacter;
     }
 
@@ -103,6 +107,52 @@ public class CharactersExtension implements ParameterResolver {
         Stages value();
         enum Stages {
             READY
+        }
+    }
+
+    private static class TestPool implements IReservable {
+        double max = 100;
+        private double value = 50;
+        private float regen;
+
+        @Override
+        public void setReservedAmnout(float f) {
+
+        }
+
+        @Override
+        public double getReservedAmount() {
+            return 0;
+        }
+
+        @Override
+        public double getMaxValue() {
+            return max;
+        }
+
+        @Override
+        public void setMaxValue(double f) {
+            this.max = f;
+        }
+
+        @Override
+        public double getValue() {
+            return value;
+        }
+
+        @Override
+        public void setValue(double f) {
+            this.value = f;
+        }
+
+        @Override
+        public double getRegen() {
+            return this.regen;
+        }
+
+        @Override
+        public void setRegen(float f) {
+            this.regen = f;
         }
     }
 

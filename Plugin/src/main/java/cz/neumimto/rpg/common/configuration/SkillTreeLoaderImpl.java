@@ -33,7 +33,9 @@ import cz.neumimto.rpg.api.skills.utils.SkillLoadingErrors;
 import cz.neumimto.rpg.api.utils.MathUtils;
 import cz.neumimto.rpg.common.skills.SkillConfigLoader;
 import cz.neumimto.rpg.common.skills.SkillConfigLoaders;
+
 import cz.neumimto.rpg.common.skills.preprocessors.SkillPreprocessorFactories;
+import cz.neumimto.rpg.common.skills.preprocessors.SkillPreprocessors;
 import cz.neumimto.rpg.sponge.utils.io.FileUtils;
 
 import java.io.IOException;
@@ -223,19 +225,8 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
             }
             list = reagent.getObjectList("Insufficient");
             for (ConfigObject configObject : list) {
-                String preprocessorFactoryId = configObject.get("Id").unwrapped().toString();
-                Optional<SkillPreProcessorFactory> id = SkillPreprocessorFactories.getById(preprocessorFactoryId);
-                if (id.isPresent()) {
-                    SkillPreProcessorFactory skillPreProcessorFactory = id.get();
-                    ActiveSkillPreProcessorWrapper parse = skillPreProcessorFactory.parse(configObject);
-                    itemCost.getInsufficientProcessors().add(parse);
-                } else {
-                    warn("- Unknown processor type " + configObject.get("Id").render() + ", use one of: " +
-                            SkillPreprocessorFactories.getAll()
-                            .stream()
-                            .map(SkillPreProcessorFactory::getId)
-                            .collect(Collectors.joining(", ")));
-                }
+                Set<ActiveSkillPreProcessorWrapper> preprocessors = itemCost.getInsufficientProcessors();
+                loadPreprocessor(configObject, preprocessors);
             }
         } catch (Exception e) {
 
@@ -285,6 +276,16 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
             Rpg.get().getSkillService().registerSkillAlternateName(info.getSkillName(), info.getSkill());
         } catch (ConfigException missing) {
             info.setSkillName(info.getSkill().getLocalizableName());
+        }
+
+        try {
+            List<ActiveSkillPreProcessorWrapper> skillPreprocessors = info.getSkillPreprocessors();
+            List<? extends ConfigObject> preprocessors = c.getObjectList("Preprocessors");
+            for (ConfigObject preprocessor : preprocessors) {
+                loadPreprocessor(preprocessor, skillPreprocessors);
+            }
+        } catch (ConfigException e) {
+
         }
 
         SkillSettings skillSettings = new SkillSettings();
@@ -359,6 +360,22 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
 
 
         skillTree.getSkills().put(info.getSkillId().toLowerCase(), info);
+    }
+
+    private void loadPreprocessor(ConfigObject configObject, Collection<ActiveSkillPreProcessorWrapper> preprocessors) {
+        String preprocessorFactoryId = configObject.get("Id").unwrapped().toString();
+        Optional<SkillPreProcessorFactory> id = SkillPreprocessorFactories.getById(preprocessorFactoryId);
+        if (id.isPresent()) {
+            SkillPreProcessorFactory skillPreProcessorFactory = id.get();
+            ActiveSkillPreProcessorWrapper parse = skillPreProcessorFactory.parse(configObject);
+            preprocessors.add(parse);
+        } else {
+            warn("- Unknown processor type " + configObject.get("Id").render() + ", use one of: " +
+                    SkillPreprocessorFactories.getAll()
+                    .stream()
+                    .map(SkillPreProcessorFactory::getId)
+                    .collect(Collectors.joining(", ")));
+        }
     }
 
     private void addRequiredIfMissing(SkillSettings skillSettings) {

@@ -40,7 +40,6 @@ public class PlayerSkillContext {
 
     private int level;
     private SkillData skillData;
-    private Set<ActiveSkillPreProcessorWrapper> mods;
     private int bonusLevel;
 
     private final ClassDefinition classDefinition;
@@ -53,7 +52,6 @@ public class PlayerSkillContext {
         this.classDefinition = classDefinition;
         this.skill = skill;
         this.character = character;
-        this.mods = new HashSet<>();
     }
 
     public ISkill getSkill() {
@@ -90,10 +88,6 @@ public class PlayerSkillContext {
 
     public int getTotalLevel() {
         return getBonusLevel() + getLevel();
-    }
-
-    public Set<ActiveSkillPreProcessorWrapper> getMods() {
-        return mods;
     }
 
     public void setSkill(ISkill skill) {

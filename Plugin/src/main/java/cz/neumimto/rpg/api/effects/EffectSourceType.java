@@ -19,6 +19,7 @@ public enum EffectSourceType implements IEffectSource {
     INTERNAL(true),
     COMMAND(true),
     EFFECT(false),
+    SKILL_EXECUTOR(false),
     ITEM_ACCESS_SKILL(true);
     private boolean m;
 

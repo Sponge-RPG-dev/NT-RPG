@@ -1,6 +1,7 @@
 package cz.neumimto.rpg.sponge.entities.commandblocks;
 
 import com.flowpowered.math.vector.Vector3d;
+import cz.neumimto.rpg.api.effects.EffectContainer;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.common.entity.players.PreloadCharacter;

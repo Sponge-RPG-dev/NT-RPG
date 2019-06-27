@@ -35,6 +35,7 @@ import cz.neumimto.rpg.api.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.api.skills.IPlayerSkillHandler;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.preprocessors.InterruptableSkillPreprocessor;
 import cz.neumimto.rpg.api.skills.tree.SkillTreeSpecialization;
 import cz.neumimto.rpg.common.skills.PlayerSkillHandlers;
 import cz.neumimto.rpg.common.skills.types.ItemAccessSkill;
@@ -114,6 +115,7 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
 
     private boolean requiresDamageRecalculation;
     private int lastHotbarSlotInteraction = -1;
+    private InterruptableSkillPreprocessor channeledSkill;
 
     public ActiveCharacter(UUID uuid, CharacterBase base, int propertyCount) {
         this.pl = uuid;
@@ -128,18 +130,58 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
     }
 
     @Override
+    public void setChanneledSkill(InterruptableSkillPreprocessor o) {
+        this.channeledSkill = o;
+    }
+
+    @Override
+    public Optional<InterruptableSkillPreprocessor> getChanneledSkill() {
+        return Optional.ofNullable(channeledSkill);
+    }
+
+    @Override
     public boolean isSilenced() {
-        for (IEffectContainer<Object, IEffect<Object>> container : effects.values()) {
-            for (IEffect effect : container.getEffects()) {
-                if (effect.getEffectTypes().contains(CommonEffectTypes.SILENCE)) return true;
-            }
-        }
-        return false;
+        return channeledSkill == null && hasEffectType(CommonEffectTypes.SILENCE);
     }
 
     @Override
     public Map<Class<?>, RpgInventory> getManagedInventory() {
         return inventory;
+    }
+
+
+    @SuppressWarnings("unchecked")
+    public void addEffect(IEffect effect) {
+        IEffectContainer IEffectContainer1 = getEffectMap().get(effect.getName());
+        if (channeledSkill != null && effect.getEffectTypes().contains(CommonEffectTypes.INTERRUPTING)) {
+            channeledSkill.interrupt();
+        }
+        if (IEffectContainer1 == null) {
+            getEffectMap().put(effect.getName(), new EffectContainer<>(effect));
+        } else {
+            IEffectContainer1.getEffects().add(effect);
+        }
+    }
+
+
+
+    @SuppressWarnings("unchecked")
+    public void addEffect(IEffectContainer<Object, IEffect<Object>> iEffectContainer) {
+        IEffectContainer effectContainer1 = getEffectMap().get(iEffectContainer.getName());
+        if (channeledSkill != null) {
+            Set<IEffect<Object>> effects = iEffectContainer.getEffects();
+            for (IEffect<Object> effect : effects) {
+                if (effect.getEffectTypes().contains(CommonEffectTypes.INTERRUPTING)) {
+                    channeledSkill.interrupt();
+                    break;
+                }
+            }
+        }
+        if (effectContainer1 == null) {
+            getEffectMap().put(iEffectContainer.getName(), iEffectContainer);
+        } else {
+            effectContainer1.mergeWith(iEffectContainer);
+        }
     }
 
     @Override

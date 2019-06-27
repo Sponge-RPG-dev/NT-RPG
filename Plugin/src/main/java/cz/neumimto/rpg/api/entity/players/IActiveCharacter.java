@@ -18,6 +18,9 @@
 
 package cz.neumimto.rpg.api.entity.players;
 
+import cz.neumimto.rpg.api.effects.EffectType;
+import cz.neumimto.rpg.api.effects.IEffect;
+import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.api.entity.EntityHand;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.IEntityType;
@@ -34,6 +37,7 @@ import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.preprocessors.InterruptableSkillPreprocessor;
 import cz.neumimto.rpg.api.skills.tree.SkillTreeSpecialization;
 
 import java.util.*;
@@ -54,6 +58,17 @@ public interface IActiveCharacter<T, P extends IParty> extends IEntity<T> {
             }
         }
         return null;
+    }
+
+    default boolean hasEffectType(EffectType effectType) {
+        for (IEffectContainer<Object, IEffect<Object>> container : getEffectMap().values()) {
+            for (IEffect effect : container.getEffects()) {
+                if (effect.getEffectTypes().contains(effectType)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     Map<Class<?>, RpgInventory> getManagedInventory();
@@ -255,4 +270,8 @@ public interface IActiveCharacter<T, P extends IParty> extends IEntity<T> {
     default PlayerClassData getClassByName(String name) {
         return getClasses().get(name);
     }
+
+    void setChanneledSkill(InterruptableSkillPreprocessor o);
+
+    Optional<InterruptableSkillPreprocessor> getChanneledSkill();
 }

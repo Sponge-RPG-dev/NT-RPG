@@ -19,8 +19,10 @@
 package cz.neumimto.rpg.api.skills;
 
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.skills.mods.ActiveSkillPreProcessorWrapper;
 import cz.neumimto.rpg.api.skills.scripting.ScriptedSkillNodeDescription;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -54,6 +56,7 @@ public class SkillData {
     private SkillCost invokeCost;
     private ISkillNodeDescription description;
     private boolean useDescriptionOnly;
+    private List<ActiveSkillPreProcessorWrapper> skillPreprocessors = new ArrayList<>();
 
     public SkillData(String skill) {
         this.skill = skill;
@@ -197,5 +200,8 @@ public class SkillData {
     }
 
 
+    public List<ActiveSkillPreProcessorWrapper> getSkillPreprocessors() {
+        return skillPreprocessors;
+    }
 
 }

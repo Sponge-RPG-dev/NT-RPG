@@ -8,6 +8,7 @@ import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.mods.ResultNotificationSkillExecutor;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.mods.SkillExecutorCallback;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
@@ -34,27 +35,7 @@ public class PlayerSkillCastExecutor implements CommandExecutor {
             src.sendMessage(TextHelper.parse(localizationService.translate(LocalizationKeys.CHARACTER_DOES_NOT_HAVE_SKILL, Arg.arg("skill", skill.getName()))));
             //TODO: maybe return?
         }
-        NtRpgPlugin.GlobalScope.skillService.executeSkill(character, info, new SkillExecutorCallback() {
-            @Override
-            public void doNext(IActiveCharacter character, PlayerSkillContext info, SkillContext skillResult) {
-                switch (skillResult.getResult()) {
-                    case ON_COOLDOWN:
-                        break;
-                    case NO_MANA:
-                        character.sendMessage(localizationService.translate(LocalizationKeys.NO_MANA));
-                        break;
-                    case NO_HP:
-                        character.sendMessage(localizationService.translate(LocalizationKeys.NO_HP));
-                        break;
-                    case CASTER_SILENCED:
-                        character.sendMessage(localizationService.translate(LocalizationKeys.PLAYER_IS_SILENCED));
-                        break;
-                    case NO_TARGET:
-                        character.sendMessage(localizationService.translate(LocalizationKeys.NO_TARGET));
-                        break;
-                }
-            }
-        });
+        Rpg.get().getSkillService().executeSkill(character, info, ResultNotificationSkillExecutor.INSTANCE);
         return CommandResult.success();
     }
 }

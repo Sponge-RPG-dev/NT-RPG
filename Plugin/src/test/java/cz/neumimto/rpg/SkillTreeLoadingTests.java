@@ -1,17 +1,18 @@
 package cz.neumimto.rpg;
 
+import cz.neumimto.rpg.api.configuration.SkillItemCost;
 import cz.neumimto.rpg.api.configuration.SkillTreeDao;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.scripting.IScriptEngine;
-import cz.neumimto.rpg.api.skills.PlayerSkillContext;
-import cz.neumimto.rpg.api.skills.SkillData;
-import cz.neumimto.rpg.api.skills.SkillDependency;
-import cz.neumimto.rpg.api.skills.SkillService;
+import cz.neumimto.rpg.api.skills.*;
+import cz.neumimto.rpg.api.skills.mods.ActiveSkillPreProcessorWrapper;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.common.entity.TestCharacter;
+import cz.neumimto.rpg.common.skills.preprocessors.SkillPreprocessorFactories;
+import cz.neumimto.rpg.common.skills.preprocessors.SkillPreprocessors;
 import cz.neumimto.rpg.junit.NtRpgExtension;
 import cz.neumimto.rpg.junit.TestGuiceModule;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
@@ -25,6 +26,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 @ExtendWith({NtRpgExtension.class, GuiceExtension.class})
@@ -87,9 +89,27 @@ public class SkillTreeLoadingTests {
         Assertions.assertEquals(description.size(), 1);
         Assertions.assertEquals(description.get(0), "Contextualized Description: " + testCharacter.getUUID().toString());
 
+
+        SkillCost invokeCost = sd.getInvokeCost();
+        Assertions.assertNotNull(invokeCost);
+        SkillItemCost cost = invokeCost.getItemCost().iterator().next();
+        Assertions.assertTrue(cost.consumeItems());
+        Assertions.assertEquals(cost.getItemType().model, "variant");
+        Assertions.assertEquals(cost.getItemType().itemId, "test:item");
+        Assertions.assertSame(cost.getAmount(), 1);
+
+        Set<ActiveSkillPreProcessorWrapper> insufficientProcessors = invokeCost.getInsufficientProcessors();
+        Assertions.assertSame(insufficientProcessors.size(), 1);
+        ActiveSkillPreProcessorWrapper wrapper = insufficientProcessors.iterator().next();
+        Assertions.assertSame(wrapper, SkillPreprocessors.NOT_CASTABLE);
+
         sd = tree.getSkills().get("test2");
         Assertions.assertEquals(sd.getDescription(testCharacter).get(0), "Simple Description");
+
+
     }
+
+
 
     private static class TestSkill extends ActiveSkill {
 

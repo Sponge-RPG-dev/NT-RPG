@@ -102,9 +102,9 @@ public abstract class SkillServiceimpl implements SkillService {
 
         context.addExecutor(SkillPreprocessors.SKILL_COST);
         context.addExecutor(callback);
-        //skill execution startEffectScheduler
+        //skill execution start
         esi.getSkill().onPreUse(character, context);
-        //skill execution stopEffectScheduler
+        //skill execution stop
     }
 
     @Override

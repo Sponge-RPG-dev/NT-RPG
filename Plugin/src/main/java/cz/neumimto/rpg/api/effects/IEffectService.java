@@ -6,8 +6,13 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Optional;
 
 public interface IEffectService {
+    void registerEffectType(EffectType effectType);
+
+    void registerEffectTypes(Class<? extends Enum> e);
+
     void stopEffect(IEffect effect);
 
     void startEffectScheduler();
@@ -58,4 +63,6 @@ public interface IEffectService {
     void purgeEffectCache();
 
     Map<IGlobalEffect, EffectParams> parseItemEffects(Map<String, EffectParams> stringEffectParamsMap);
+
+    Optional<EffectType> getEffectType(String effectType);
 }

@@ -34,6 +34,7 @@ import cz.neumimto.rpg.api.items.RpgItemType;
 import cz.neumimto.rpg.api.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.preprocessors.InterruptableSkillPreprocessor;
 import cz.neumimto.rpg.api.skills.tree.SkillTreeSpecialization;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.common.persistance.model.JPACharacterBase;
@@ -55,6 +56,16 @@ public abstract class PreloadCharacter<T, P extends IParty> implements IActiveCh
         this.uuid = uuid;
     }
 
+
+    @Override
+    public void setChanneledSkill(InterruptableSkillPreprocessor o) {
+
+    }
+
+    @Override
+    public Optional<InterruptableSkillPreprocessor> getChanneledSkill() {
+        return Optional.empty();
+    }
 
     @Override
     public boolean isFriendlyTo(IActiveCharacter character) {
@@ -299,6 +310,11 @@ public abstract class PreloadCharacter<T, P extends IParty> implements IActiveCh
 
     @Override
     public void addEffect(IEffect effect) {
+
+    }
+
+    @Override
+    public void addEffect(IEffectContainer<Object, IEffect<Object>> IEffectContainer) {
 
     }
 

@@ -55,7 +55,7 @@ public interface IEffectConsumer extends PropertyContainer {
     }
 
     @SuppressWarnings("unchecked")
-    default void addEffect(IEffectContainer IEffectContainer) {
+    default void addEffect(IEffectContainer<Object, IEffect<Object>> IEffectContainer) {
         IEffectContainer effectContainer1 = getEffectMap().get(IEffectContainer.getName());
         if (effectContainer1 == null) {
             getEffectMap().put(IEffectContainer.getName(), IEffectContainer);
