@@ -54,7 +54,7 @@ public class ArrowstormEffect extends EffectBase implements IEffectContainer {
             sb.offer(Keys.VELOCITY, direction.mul(3f));
             arrows--;
         } else {
-            setDuration(0); //remove the effect next effect scheduler phase
+            setDuration(1); //remove the effect next effect scheduler phase
         }
     }
 

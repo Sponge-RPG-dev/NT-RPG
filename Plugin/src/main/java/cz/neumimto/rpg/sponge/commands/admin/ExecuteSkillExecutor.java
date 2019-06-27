@@ -12,7 +12,7 @@ import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.api.skills.types.IActiveSkill;
 import cz.neumimto.rpg.api.utils.MathUtils;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.sponge.entities.commandblocks.CommandblockSkillExecutor;
+import cz.neumimto.rpg.sponge.entities.commandblocks.ConsoleSkillExecutor;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -20,6 +20,7 @@ import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.source.CommandBlockSource;
 import org.spongepowered.api.command.spec.CommandExecutor;
+import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.Location;
@@ -62,7 +63,7 @@ public class ExecuteSkillExecutor implements CommandExecutor {
                         Double.parseDouble(MathUtils.extractNumber(split[2]))
                 );
             }).orElse(new Vector3d());
-            character = CommandblockSkillExecutor.wrap(location, headRotation);
+            character = ConsoleSkillExecutor.wrap(location, headRotation);
 
             defaultSkillSettings = args.<String>getOne("settings").map(o -> {
                 SkillSettings skillSettings = new SkillSettings();
@@ -106,10 +107,13 @@ public class ExecuteSkillExecutor implements CommandExecutor {
                     public void doNext(IActiveCharacter character, PlayerSkillContext info, SkillContext skillResult) {
                         Long e = System.nanoTime();
                         character.sendMessage("Exec Time: " + TimeUnit.MILLISECONDS.convert(e - l, TimeUnit.NANOSECONDS));
+                        if (character instanceof ConsoleSkillExecutor) {
+                            Living entity = (Living) character.getEntity();
+                            entity.remove();
+                        }
                     }
                 });
             }};
-
             skillContext.sort();
             skillContext.next(character, playerSkillContext, skillContext);
         }

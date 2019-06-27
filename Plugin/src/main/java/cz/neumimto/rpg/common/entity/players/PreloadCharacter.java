@@ -293,11 +293,6 @@ public abstract class PreloadCharacter<T, P extends IParty> implements IActiveCh
     }
 
     @Override
-    public EffectContainer getEffect(String cl) {
-        return null;
-    }
-
-    @Override
     public boolean hasEffect(String cl) {
         return false;
     }
