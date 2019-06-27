@@ -87,7 +87,8 @@ public class SpongeCharacterServise extends CharacterService<ISpongeCharacter> {
 
     @Override
     protected boolean hasCharacter(UUID uniqueId) {
-        return characters.containsKey(uniqueId);
+        ISpongeCharacter iSpongeCharacter = characters.get(uniqueId);
+        return !iSpongeCharacter.isStub();
     }
 
     @Override
@@ -115,7 +116,6 @@ public class SpongeCharacterServise extends CharacterService<ISpongeCharacter> {
         if (popt.isPresent()) {
             finalizePlayerDataPreloadStage(id, character, event);
             assignPlayerToCharacter(id);
-            initActiveCharacter(character);
         } else {
             playerDataPreloadStagePlayerNotReady(id, character);
         }
@@ -138,7 +138,6 @@ public class SpongeCharacterServise extends CharacterService<ISpongeCharacter> {
         if (character.getCharacterBase().getHealthScale() != null) {
             pl.offer(Keys.HEALTH_SCALE, character.getCharacterBase().getHealthScale());
         }
-        inventoryService.initializeCharacterInventory(character);
         return true;
     }
 

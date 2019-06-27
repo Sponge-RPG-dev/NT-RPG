@@ -129,18 +129,13 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
                 playerCharacters = Collections.singletonList(cb);
                 info("Automatically created character for a player " + id + ", " + playerName);
             }
-            T icharacter = null;
-            if (pluginConfig.PLAYER_AUTO_CHOOSE_LAST_PLAYED_CHAR || playerCharacters.size() == 1) {
-                icharacter = createActiveCharacter(id, playerCharacters.get(0));
-                dataPreparationStageMap.put(id, new DataPreparationStage(DataPreparationStage.Stage.TO_BE_ASSIGNED));
-            }
-            final T character = icharacter;
 
-            if (character != null) {
-                info("Finished initializing of player character " + id + ", [" + (System.currentTimeMillis() - k) + "]ms");
-                addCharacterToGame(id, character, playerCharacters);
+            if (pluginConfig.PLAYER_AUTO_CHOOSE_LAST_PLAYED_CHAR || playerCharacters.size() == 1) {
+                T activeCharacter = createActiveCharacter(id, playerCharacters.get(0));
+                dataPreparationStageMap.put(id, new DataPreparationStage(DataPreparationStage.Stage.TO_BE_ASSIGNED));
+                addCharacterToGame(id, activeCharacter, playerCharacters);
             } else {
-                dataPreparationStageMap.put(id, new DataPreparationStage(DataPreparationStage.Stage.NO_ACTION, playerCharacters));
+                dataPreparationStageMap.put(id, new DataPreparationStage(DataPreparationStage.Stage.NO_ACTION));
             }
         }, Rpg.get().getAsyncExecutor());
     }
@@ -159,15 +154,13 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
 
     @Override
     public void checkPlayerDataStatus(UUID uniqueId) {
-        if (!hasCharacter(uniqueId)) {
+        if (hasCharacter(uniqueId)) {
             return;
         }
         DataPreparationStage dataPreparationStage = dataPreparationStageMap.get(uniqueId);
-        if (dataPreparationStage.stage == DataPreparationStage.Stage.PLAYER_NOT_YET_READY) {
-            setActiveCharacter(uniqueId, (T) dataPreparationStage.character);
-            invalidateCaches(getCharacter(uniqueId));
-            assignPlayerToCharacter(uniqueId);
-            dataPreparationStageMap.remove(uniqueId);
+        Log.info("Player logged in - data for Player " + uniqueId + " in stage " + dataPreparationStage.stage);
+        if (dataPreparationStage.stage == DataPreparationStage.Stage.TO_BE_ASSIGNED) {
+            addCharacterToGame(uniqueId, (T) dataPreparationStage.character, dataPreparationStage.characters);
         } else if (dataPreparationStage.stage == DataPreparationStage.Stage.NO_ACTION) {
             if (!dataPreparationStage.characters.isEmpty()) {
                 Gui.invokeCharacterMenu(getCharacter(uniqueId), dataPreparationStage.characters);
@@ -175,6 +168,8 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
                 //todo message
             }
         }
+        dataPreparationStageMap.remove(uniqueId);
+
     }
 
     /**
