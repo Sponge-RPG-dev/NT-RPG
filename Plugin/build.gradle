@@ -35,7 +35,8 @@ dependencies {
     // https://mvnrepository.com/artifact/org.mockito/mockito-core
     testCompile group: 'org.mockito', name: 'mockito-core', version: '2.25.0'
     testCompile group: 'it.unimi.dsi', name: 'fastutil', version: '8.2.1'
-
+    testCompile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.26'
+    
     jar {
         manifest {
             attributes(

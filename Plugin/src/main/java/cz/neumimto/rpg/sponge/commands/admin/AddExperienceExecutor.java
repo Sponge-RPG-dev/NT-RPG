@@ -1,7 +1,8 @@
 package cz.neumimto.rpg.sponge.commands.admin;
 
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
-import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
+import cz.neumimto.rpg.common.commands.AdminCommandFacade;
+import cz.neumimto.rpg.common.commands.CommandProcessingException;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import org.spongepowered.api.command.CommandException;
@@ -12,10 +13,16 @@ import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 
-import java.util.Collection;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Optional;
 
+@Singleton
 public class AddExperienceExecutor implements CommandExecutor {
+
+    @Inject
+    private AdminCommandFacade adminCommandFacade;
+
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
         Player player = args.<Player>getOne("player").get();
@@ -24,19 +31,14 @@ public class AddExperienceExecutor implements CommandExecutor {
         Optional<String> expSource = args.getOne("source");
 
         ISpongeCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter(player.getUniqueId());
-        Collection<PlayerClassData> classes = character.getClasses().values();
 
-        if (classDefinition.isPresent()) {
-            classes.stream()
-                    .filter(PlayerClassData::takesExp)
-                    .filter(c -> c.getClassDefinition().getName().equalsIgnoreCase(classDefinition.get().getName()))
-                    .forEach(c -> NtRpgPlugin.GlobalScope.characterService.addExperiences(character, amount, c));
-        } else if (expSource.isPresent()) {
-            NtRpgPlugin.GlobalScope.characterService.addExperiences(character, amount, expSource.get());
-        } else {
-            src.sendMessage(Text.of("Specify class or experience source!"));
-            return CommandResult.empty();
+        try {
+            adminCommandFacade.commandAddExperiences(character, amount, classDefinition.orElse(null), expSource.orElse(null));
+            return CommandResult.success();
+        } catch (CommandProcessingException e) {
+            src.sendMessage(Text.of(e.getMessage()));
         }
-        return CommandResult.success();
+        return CommandResult.empty();
+
     }
 }

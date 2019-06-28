@@ -149,6 +149,7 @@ public class ClassDefinition implements IEffectSourceProvider {
         this.name = name;
         this.type = classType;
         this.classDefinitionDependencyGraph = new DependencyGraph(this);
+        this.experienceSourceSet = new HashSet<>();
     }
 
     public String getName() {
@@ -258,6 +259,10 @@ public class ClassDefinition implements IEffectSourceProvider {
 
     public boolean hasExperienceSource(String source) {
         return experienceSourceSet.contains(source);
+    }
+
+    public void addExperienceSource(String source) {
+        experienceSourceSet.add(source);
     }
 
     public List<String> getCustomLore() {

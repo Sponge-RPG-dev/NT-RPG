@@ -18,6 +18,7 @@
 
 package cz.neumimto.rpg.sponge.commands;
 
+import com.google.inject.Injector;
 import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
@@ -63,6 +64,9 @@ public class CommandService {
     private GlobalScope globalScope;
 
     @Inject
+    private Injector injector;
+
+    @Inject
     private SpongeCharacterServise characterService;
 
     public void registerStandartCommands() {
@@ -96,7 +100,7 @@ public class CommandService {
                         GenericArguments.longNum(Text.of("duration")),
                         GenericArguments.optional(GenericArguments.remainingJoinedStrings(Text.of("data")))
                 )
-                .executor(new AddEffectExecutor())
+                .executor(injector.getInstance(AddEffectExecutor.class))
                 .build();
 
         //=========CHARACTER MANIPULATIONS=========
@@ -109,7 +113,7 @@ public class CommandService {
                         GenericArguments.optionalWeak(GenericArguments.string(Text.of("source"))),
                         GenericArguments.optional(new ClassDefCommandElement(Text.of("class")))
                 )
-                .executor(new AddExperienceExecutor())
+                .executor(injector.getInstance(AddExperienceExecutor.class))
                 .build();
 
         CommandSpec experience = CommandSpec.builder()
@@ -153,7 +157,7 @@ public class CommandService {
                         GenericArguments.onlyOne(GenericArguments.player(Text.of("player"))),
                         GenericArguments.remainingJoinedStrings(Text.of("command"))
                 )
-                .executor(new InvoceExecutorExecutor())
+                .executor(new InvokeExecutorExecutor())
                 .build();
 
 
