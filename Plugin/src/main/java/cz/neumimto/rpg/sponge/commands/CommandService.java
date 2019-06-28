@@ -188,7 +188,7 @@ public class CommandService {
                         GenericArguments.remainingJoinedStrings(Text.of("name"))
                 )
                 .permission("ntrpg.player.character.create")
-                .executor(new CharacterCreateExecutor())
+                .executor(injector.getInstance(CharacterCreateExecutor.class))
                 .build();
 
         CommandSpec characterDelete = CommandSpec.builder()
@@ -221,7 +221,7 @@ public class CommandService {
                         new AnyClassDefCommandElement(Text.of("class"))
                 )
                 .permission("ntrpg.player.choose.class")
-                .executor(new CharacterChooseClassExecutor())
+                .executor(injector.getInstance(CharacterChooseClassExecutor.class))
                 .build();
 
 
@@ -276,7 +276,7 @@ public class CommandService {
                         new CharacterAttributeCommandElement(Text.of("attribute")),
                         GenericArguments.integer(Text.of("amount"))
                 )
-                .executor(new CharacterAttributeExecutor())
+                .executor(injector.getInstance(CharacterAttributeExecutor.class))
                 .build();
 
         CommandSpec characterAttributes = CommandSpec.builder()

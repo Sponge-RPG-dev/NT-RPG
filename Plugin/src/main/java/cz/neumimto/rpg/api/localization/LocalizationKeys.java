@@ -103,4 +103,5 @@ public class LocalizationKeys {
     public static final String CHARACTER_CLASSES = "item.label.character-class-list.button";
     public static final String CHARACTER_ARMOR = "item.label.character-armor.button";
     public static final String CHARACTER_WEAPONS = "item.label.character-weapons.button";
+    public static final String CHARACTER_CREATED = "player.character-created.message";
 }

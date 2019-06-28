@@ -3,7 +3,6 @@ package cz.neumimto.rpg.sponge.entities;
 import cz.neumimto.rpg.api.IRpgElement;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.effects.IEffectService;
-import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.api.entity.*;
 import cz.neumimto.rpg.api.events.skill.SkillHealEvent;
 import cz.neumimto.rpg.common.entity.configuration.MobsConfig;
@@ -60,6 +59,16 @@ public class SpongeEntityService implements EntityService<Living> {
 
     public IEntity get(Entity id) {
         return get((Living)id);
+    }
+
+    /**
+     * Unlike {@link IEntity#getProperty} this method checks for maximal allowed value, defined in config file.
+     *
+     * @see PropertyService#loadMaximalServerPropertyValues(Path) ()
+     */
+    @Override
+    public float getEntityProperty(IEffectConsumer entity, int id) {
+        return Math.min(entity.getProperty(id), spongePropertyService.getMaxPropertyValue(id));
     }
 
     private IMob createEntity(Living entity) {
@@ -126,16 +135,6 @@ public class SpongeEntityService implements EntityService<Living> {
             return aDouble;
         }
         return 0;
-    }
-
-    /**
-     * Unlike {@link IEntity#getProperty} this method checks for maximal allowed value, defined in config file.
-     *
-     * @see PropertyService#loadMaximalServerPropertyValues(Path) ()
-     */
-    @Override
-    public float getEntityProperty(IEffectConsumer entity, int id) {
-        return Math.min(entity.getProperty(id), spongePropertyService.getMaxPropertyValue(id));
     }
 
     /**

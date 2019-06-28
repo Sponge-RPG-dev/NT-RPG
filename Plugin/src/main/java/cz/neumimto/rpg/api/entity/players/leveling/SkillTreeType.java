@@ -49,7 +49,7 @@ public enum SkillTreeType {
                 characterService.learnSkill(character, playerClassData, iSkill);
                 characterService.putInSaveQueue(character.getCharacterBase());
             } else {
-                MessageLevel.ERROR.sendMessage(character, actionResult.getErrorMesage());
+                MessageLevel.ERROR.sendMessage(character, actionResult.getMessage());
             }
         }
 
@@ -63,7 +63,7 @@ public enum SkillTreeType {
                 characterService.upgradeSkill(character, skillInfo, iSkill);
                 characterService.putInSaveQueue(character.getCharacterBase());
             } else {
-                MessageLevel.ERROR.sendMessage(character, actionResult.getErrorMesage());
+                MessageLevel.ERROR.sendMessage(character, actionResult.getMessage());
             }
         }
 
@@ -81,7 +81,7 @@ public enum SkillTreeType {
                     Rpg.get().getCharacterService().removePersistantSkill(characterSkill);
                 }, Rpg.get().getAsyncExecutor());
             } else {
-                MessageLevel.ERROR.sendMessage(character, actionResult.getErrorMesage());
+                MessageLevel.ERROR.sendMessage(character, actionResult.getMessage());
             }
         }
     },

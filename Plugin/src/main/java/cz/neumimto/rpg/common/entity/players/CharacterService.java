@@ -17,16 +17,12 @@
  */
 package cz.neumimto.rpg.common.entity.players;
 
-import static cz.neumimto.rpg.api.localization.Arg.arg;
-import static cz.neumimto.rpg.api.logging.Log.info;
-import static cz.neumimto.rpg.api.logging.Log.warn;
 import cz.neumimto.rpg.api.IRpgElement;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.damage.DamageService;
 import cz.neumimto.rpg.api.effects.IEffectService;
-import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.api.entity.CommonProperties;
 import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.entity.PropertyService;
@@ -37,6 +33,7 @@ import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.DependencyGraph;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.entity.players.leveling.SkillTreeType;
+import cz.neumimto.rpg.api.events.EventFactoryService;
 import cz.neumimto.rpg.api.events.character.*;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.inventory.InventoryService;
@@ -44,7 +41,10 @@ import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.permissions.PermissionService;
-import cz.neumimto.rpg.api.persistance.model.*;
+import cz.neumimto.rpg.api.persistance.model.BaseCharacterAttribute;
+import cz.neumimto.rpg.api.persistance.model.CharacterBase;
+import cz.neumimto.rpg.api.persistance.model.CharacterClass;
+import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
 import cz.neumimto.rpg.api.skills.*;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.skills.tree.SkillTreeSpecialization;
@@ -59,11 +59,15 @@ import cz.neumimto.rpg.common.persistance.model.JPACharacterSkill;
 import cz.neumimto.rpg.common.utils.exceptions.MissingConfigurationException;
 import cz.neumimto.rpg.sponge.events.PlayerDataPreloadComplete;
 
+import javax.inject.Inject;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
-import javax.inject.Inject;
+
+import static cz.neumimto.rpg.api.localization.Arg.arg;
+import static cz.neumimto.rpg.api.logging.Log.info;
+import static cz.neumimto.rpg.api.logging.Log.warn;
 
 /**
  * Created by NeumimTo on 26.12.2014.
@@ -93,6 +97,9 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
 
     @Inject
     private LocalizationService localizationService;
+
+    @Inject
+    private EventFactoryService eventFactoryService;
 
     @Inject
     private CharacterClassDao characterClassDao;
@@ -191,7 +198,7 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
     @Override
     public void updateWeaponRestrictions(T character) {
         Map weapons = character.getAllowedWeapons();
-        CharacterWeaponUpdateEvent event = Rpg.get().getEventFactory().createEventInstance(CharacterWeaponUpdateEvent.class);
+        CharacterWeaponUpdateEvent event = eventFactoryService.createEventInstance(CharacterWeaponUpdateEvent.class);
         event.setWeapons(weapons);
         event.setTarget(character);
         Rpg.get().postEvent(event);
@@ -200,7 +207,7 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
     @Override
     public void updateArmorRestrictions(T character) {
         Set allowedArmor = character.getAllowedArmor();
-        EventCharacterArmorPostUpdate event = Rpg.get().getEventFactory().createEventInstance(EventCharacterArmorPostUpdate.class);
+        EventCharacterArmorPostUpdate event = eventFactoryService.createEventInstance(EventCharacterArmorPostUpdate.class);
         event.setArmor(allowedArmor);
         event.setTarget(character);
         Rpg.get().postEvent(event);
@@ -960,7 +967,7 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
      */
     @Override
     public int addAttribute(T character, AttributeConfig attribute, int i) {
-        CharacterAttributeChange event = Rpg.get().getEventFactory().createEventInstance(CharacterAttributeChange.class);
+        CharacterAttributeChange event = eventFactoryService.createEventInstance(CharacterAttributeChange.class);
 
         event.setTarget(character);
         event.setAttribute(attribute);
@@ -1091,6 +1098,11 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
         Map<String, PlayerClassData> classes = character.getClasses();
         if (classes.containsKey(klass.getName())) {
             String text = localizationService.translate(LocalizationKeys.ALREADY_HAS_THIS_CLASS, "class", klass.getName());
+            return ActionResult.withErrorMessage(text);
+        }
+
+        if (!permissionService.hasPermission(character,"ntrpg.class." + klass.getName().toLowerCase())) {
+            String text = localizationService.translate(LocalizationKeys.NO_PERMISSIONS);
             return ActionResult.withErrorMessage(text);
         }
 

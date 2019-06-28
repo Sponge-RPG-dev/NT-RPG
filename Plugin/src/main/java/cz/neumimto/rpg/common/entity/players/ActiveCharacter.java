@@ -30,6 +30,7 @@ import cz.neumimto.rpg.api.inventory.RpgInventory;
 import cz.neumimto.rpg.api.items.ClassItem;
 import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.items.RpgItemType;
+import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.api.skills.IPlayerSkillHandler;
@@ -39,7 +40,6 @@ import cz.neumimto.rpg.api.skills.preprocessors.InterruptableSkillPreprocessor;
 import cz.neumimto.rpg.api.skills.tree.SkillTreeSpecialization;
 import cz.neumimto.rpg.common.skills.PlayerSkillHandlers;
 import cz.neumimto.rpg.common.skills.types.ItemAccessSkill;
-import org.jline.utils.Log;
 
 import java.lang.ref.WeakReference;
 import java.util.*;
@@ -364,7 +364,7 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
 
     @Override
     public IActiveCharacter updateItemRestrictions() {
-        Log.debug("Updating item restrictions " + getName());
+        Log.info("Updating item restrictions " + getName());
 
         allowedWeapons.clear();
         allowedOffHandWeapons.clear();
