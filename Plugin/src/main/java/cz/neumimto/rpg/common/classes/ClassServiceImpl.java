@@ -45,6 +45,11 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
+    public void registerClassDefinition(ClassDefinition classDefinition) {
+        classes.put(classDefinition.getName().toLowerCase(), classDefinition);
+    }
+
+    @Override
     public boolean existsClass(String s) {
         return getClasses().containsKey(s.toLowerCase());
     }
@@ -104,7 +109,7 @@ public class ClassServiceImpl implements ClassService {
             Set<ClassDefinition> classDefinitions = classDefinitionDao.parseClassFiles();
             classes.clear();
 
-            classDefinitions.forEach(a -> classes.put(a.getName().toLowerCase(), a));
+            classDefinitions.forEach(this::registerClassDefinition);
 
             for (ClassDefinition result : classDefinitions) {
                 Map<String, ClassDefinition> classes = getClasses();

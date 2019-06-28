@@ -113,7 +113,7 @@ public class CharactersExtension implements ParameterResolver {
     private static class TestPool implements IReservable {
         double max = 100;
         private double value = 50;
-        private float regen;
+        private float regen = 1;
 
         @Override
         public void setReservedAmnout(float f) {

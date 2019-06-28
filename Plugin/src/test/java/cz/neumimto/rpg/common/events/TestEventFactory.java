@@ -10,6 +10,8 @@ import javax.inject.Singleton;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Supplier;
 
 @Singleton
@@ -21,13 +23,13 @@ public class TestEventFactory extends EventFactoryImpl {
         if (cache.containsKey(iFace)) {
             return super.createEventInstance(iFace);
         }
-
+        Map<String, Object> fields = new HashMap<>();
         @SuppressWarnings("unchecked")
         Class<T> proxyType = (Class<T>) new ByteBuddy()
                 .subclass(Object.class)
                 .implement(iFace)
                 .method(ElementMatchers.any())
-                .intercept(InvocationHandlerAdapter.of(new MethodInterceptor()))
+                .intercept(InvocationHandlerAdapter.of(new MethodInterceptor(fields)))
                 .make().load(iFace.getClassLoader(), ClassLoadingStrategy.Default.WRAPPER)
                 .getLoaded();
 
@@ -47,9 +49,20 @@ public class TestEventFactory extends EventFactoryImpl {
     public class MethodInterceptor implements InvocationHandler {
 
 
+        private Map<String, Object> fields;
+
+        public MethodInterceptor(Map<String, Object> fields) {
+            this.fields = fields;
+        }
+
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-            Log.info(method.getName());
+            if (method.getName().startsWith("set")) {
+                fields.put(method.getName().substring(3), args[0]);
+            }
+            if (method.getName().startsWith("get")) {
+                return fields.get(method.getName().substring(3));
+            }
             return null;
         }
     }

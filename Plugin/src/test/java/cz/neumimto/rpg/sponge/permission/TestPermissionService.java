@@ -11,9 +11,11 @@ import java.util.Set;
 @Singleton
 public class TestPermissionService implements PermissionService {
 
+    public static final String MISSING_PERM = ".QWE789456189.";
+
     @Override
     public boolean hasPermission(IActiveCharacter character, String value) {
-        return false;
+        return !value.toLowerCase().contains(MISSING_PERM.toLowerCase());
     }
 
     @Override

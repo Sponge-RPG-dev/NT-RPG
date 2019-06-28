@@ -35,6 +35,8 @@ public interface ClassService  {
 
     ClassDefinition getClassDefinitionByName(String name);
 
+    void registerClassDefinition(ClassDefinition classDefinition);
+
     boolean existsClass(String s);
 
     Collection<ClassDefinition> getClassDefinitions();
