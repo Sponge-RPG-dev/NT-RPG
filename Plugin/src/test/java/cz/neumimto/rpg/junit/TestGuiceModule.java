@@ -45,6 +45,7 @@ import cz.neumimto.rpg.common.persistance.dao.PlayerDao;
 import cz.neumimto.rpg.common.scripting.JSLoader;
 import cz.neumimto.rpg.effects.TestEffectService;
 import cz.neumimto.rpg.entity.EntityServiceTest;
+import cz.neumimto.rpg.persistance.InMemoryPlayerStorage;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.commands.CommandService;
 import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
@@ -85,7 +86,7 @@ public class TestGuiceModule extends AbstractModule {
 
         bind(CharacterClassDao.class);
         bind(ClassDefinitionDao.class);
-        bind(PlayerDao.class);
+        bind(PlayerDao.class).to(InMemoryPlayerStorage.class);
 
         bind(ClassGenerator.class).to(SpongeClassGenerator.class);
         bind(ClassService.class).to(ClassServiceImpl.class);

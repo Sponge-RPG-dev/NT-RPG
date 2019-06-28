@@ -24,6 +24,7 @@ import javax.inject.Inject;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
 
 import static cz.neumimto.rpg.junit.CharactersExtension.Stage.Stages.READY;
 
@@ -77,15 +78,18 @@ public class CharacterCommandTests {
 
     @Test
     public void testCharacterCreated() {
+        CountDownLatch latch = new CountDownLatch(1);
         characterCommandFacade.commandCreateCharacter(UUID.randomUUID(), "test", actionResult -> {
             Log.info(actionResult.getMessage());
             Assertions.assertTrue(actionResult.isOk());
-            //todo
+            latch.countDown();
         });
+
         try {
-            Thread.sleep(500L);
+            latch.await();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        Assertions.assertEquals(latch.getCount(), 0);
     }
 }

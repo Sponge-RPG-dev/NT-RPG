@@ -56,7 +56,6 @@ public class CharacterCommandFacade {
     public void commandCreateCharacter(UUID uuid, String name, Consumer<ActionResult> actionResultConsumer) {
         CompletableFuture.runAsync(() -> {
             int i = characterService.canCreateNewCharacter(uuid, name);
-            LocalizationService localizationService = Rpg.get().getLocalizationService();
             if (i == 1) {
                 actionResultConsumer.accept(ActionResult.withErrorMessage(localizationService.translate(LocalizationKeys.REACHED_CHARACTER_LIMIT)));
             } else if (i == 2) {
