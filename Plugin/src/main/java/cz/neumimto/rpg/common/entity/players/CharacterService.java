@@ -139,8 +139,9 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
 
             if (pluginConfig.PLAYER_AUTO_CHOOSE_LAST_PLAYED_CHAR || playerCharacters.size() == 1) {
                 T activeCharacter = createActiveCharacter(id, playerCharacters.get(0));
-                dataPreparationStageMap.put(id, new DataPreparationStage(DataPreparationStage.Stage.TO_BE_ASSIGNED));
-                addCharacterToGame(id, activeCharacter, playerCharacters);
+                DataPreparationStage dataPreparationStage = new DataPreparationStage(DataPreparationStage.Stage.TO_BE_ASSIGNED, activeCharacter);
+                dataPreparationStageMap.put(id, dataPreparationStage);
+
             } else {
                 dataPreparationStageMap.put(id, new DataPreparationStage(DataPreparationStage.Stage.NO_ACTION));
             }

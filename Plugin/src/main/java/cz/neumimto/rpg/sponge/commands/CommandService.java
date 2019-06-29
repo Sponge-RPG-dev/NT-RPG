@@ -205,7 +205,7 @@ public class CommandService {
                 .arguments(
                         GenericArguments.remainingJoinedStrings(Text.of("name"))
                 )
-                .executor(new CharacterSwitchExecutor())
+                .executor(injector.getInstance(CharacterSwitchExecutor.class))
                 .build();
 
         CommandSpec characterList = CommandSpec.builder()

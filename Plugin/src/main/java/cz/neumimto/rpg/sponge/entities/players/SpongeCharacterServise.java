@@ -70,7 +70,6 @@ public class SpongeCharacterServise extends CharacterService<ISpongeCharacter> {
         SpongeCharacter spongeCharacter = new SpongeCharacter(player, characterBase, PropertyServiceImpl.LAST_ID);
         spongeCharacter.setMana(new CharacterMana(spongeCharacter));
         spongeCharacter.setHealth(new CharacterHealth(spongeCharacter));
-        partyService.createNewParty(spongeCharacter);
         return spongeCharacter;
     }
 
@@ -104,7 +103,7 @@ public class SpongeCharacterServise extends CharacterService<ISpongeCharacter> {
     protected void addCharacterToGame(UUID id, ISpongeCharacter character, List<CharacterBase> playerChars) {
 
         Sponge.getScheduler().createTaskBuilder().name("Callback-PlayerDataLoad" + id).execute(() -> {
-            completePlayerDataPreloading(id, character, playerChars);
+             completePlayerDataPreloading(id, character, playerChars);
         }).submit(plugin);
     }
 

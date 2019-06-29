@@ -5,16 +5,21 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.ICharacterService;
 import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.api.entity.players.parties.PartyService;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.localization.Arg;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.permissions.PermissionService;
+import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.utils.ActionResult;
 import cz.neumimto.rpg.common.persistance.model.JPACharacterBase;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
@@ -32,6 +37,9 @@ public class CharacterCommandFacade {
 
     @Inject
     private PermissionService permissionService;
+
+    @Inject
+    private PartyService partyService;
 
     public void commandAddAttribute(IActiveCharacter character, AttributeConfig iCharacterAttribute, int amount) {
         characterService.addAttribute(character, iCharacterAttribute, amount);
@@ -78,4 +86,50 @@ public class CharacterCommandFacade {
             }
         }, Rpg.get().getAsyncExecutor());
     }
+
+    public void commandSwitchCharacter(IActiveCharacter current, String nameNext, Consumer<Runnable> syncCallback) {
+        if (current != null && current.getName().equalsIgnoreCase(nameNext)) {
+            current.sendMessage(localizationService.translate(LocalizationKeys.ALREADY_CUURENT_CHARACTER));
+            return;
+        }
+        CompletableFuture.runAsync(() -> {
+            UUID uuid = current.getUUID();
+            List<CharacterBase> playersCharacters = characterService.getPlayersCharacters(uuid);
+            boolean b = false;
+            for (CharacterBase playersCharacter : playersCharacters) {
+                if (playersCharacter.getName().equalsIgnoreCase(nameNext)) {
+                    ISpongeCharacter character =
+                            NtRpgPlugin.GlobalScope.characterService.createActiveCharacter(uuid, playersCharacter);
+                    syncCallback.accept(new CommandSyncCallback(character, this));
+                    b = true;
+                    //Update characterbase#updated, so next time plazer logs it it will autoselect this character,
+                    // even if it was never updated afterwards
+                    characterService.save(playersCharacter);
+                    break;
+                }
+            }
+            if (!b) {
+                current.sendMessage(localizationService.translate(LocalizationKeys.NON_EXISTING_CHARACTER));
+            }
+        }, Rpg.get().getAsyncExecutor());
+    }
+
+    private static class CommandSyncCallback implements Runnable {
+        private final IActiveCharacter character;
+        private CharacterCommandFacade facade;
+        private CommandSyncCallback(IActiveCharacter character, CharacterCommandFacade facade) {
+            this.character = character;
+            this.facade = facade;
+        }
+
+        @Override
+        public void run() {
+            UUID uuid = character.getUUID();
+            facade.partyService.createNewParty(character);
+            facade.characterService.setActiveCharacter(uuid, character);
+            facade.characterService.invalidateCaches(character);
+            facade.characterService.assignPlayerToCharacter(uuid);
+        }
+    }
+
 }

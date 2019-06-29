@@ -48,8 +48,7 @@ public class SpongeParty implements IParty<ISpongeCharacter> {
     }
 
     @Override
-    public void addPlayer(ISpongeCharacter c) {
-        ISpongeCharacter character = (ISpongeCharacter) c;
+    public void addPlayer(ISpongeCharacter character) {
         players.add(character);
         if (team == null) {
             team = Team.builder()
