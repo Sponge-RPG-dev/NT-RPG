@@ -25,7 +25,7 @@ import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 public class CharacterCommandFacade {
 
     @Inject
-    private ICharacterService<IActiveCharacter> characterService;
+    private ICharacterService<? super IActiveCharacter> characterService;
 
     @Inject
     private LocalizationService localizationService;
@@ -73,7 +73,8 @@ public class CharacterCommandFacade {
 
                 actionResultConsumer.accept(ActionResult.ok(text));
 
-                Gui.sendListOfCharacters(characterService.getCharacter(uuid), characterBase);
+                IActiveCharacter character = (IActiveCharacter) characterService.getCharacter(uuid);
+                Gui.sendListOfCharacters(character, characterBase);
             }
         }, Rpg.get().getAsyncExecutor());
     }
