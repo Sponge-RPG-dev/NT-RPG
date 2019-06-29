@@ -13,7 +13,7 @@ import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.preprocessors.InterruptableSkillPreprocessor;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.effects.common.model.SlowModel;
-import cz.neumimto.rpg.sponge.effects.common.negative.Slow;
+import cz.neumimto.rpg.sponge.effects.common.negative.SlowEffect;
 import org.spongepowered.api.Sponge;
 
 import java.util.Optional;
@@ -46,7 +46,7 @@ public class SpongeInteruptableSkillPreprocessor extends ActiveSkillPreProcessor
             return;
         }
         if (slowCaster) {
-            Slow slowEffect = new Slow(character, delay, model);
+            SlowEffect slowEffect = new SlowEffect(character, delay, model);
             Rpg.get().getEffectService().addEffect(slowEffect, this);
         }
         Sponge.getScheduler().createSyncExecutor(NtRpgPlugin.GlobalScope.plugin).schedule(() -> {

@@ -93,12 +93,14 @@ public class GlobalEffectAnnotationProcessor extends AbstractProcessor {
 		javaTypes.put("int", "parseInt(map,\"%field%\")");
 		javaTypes.put("float", "parseFloat(map,\"%field%\")");
 		javaTypes.put("double", "parseDouble(map,\"%field%\")");
+		javaTypes.put("boolean", "parseBoolean(map,\"%field%\")");
+
 
 		javaTypes.put("java.lang.Long", "parseLong(map,\"%field%\")");
 		javaTypes.put("java.lang.Int", "parseInt(map,\"%field%\")");
 		javaTypes.put("java.lang.Float", "parseFloat(map,\"%field%\")");
 		javaTypes.put("java.lang.Double", "parseDouble(map,\"%field%\")");
-
+		javaTypes.put("java.lang.Boolean", "parseBoolean(map,\"%field%\")");
 
 		filerUtils = processingEnv.getFiler();
 		elementUtils = processingEnv.getElementUtils();

@@ -140,5 +140,10 @@ public abstract class EffectModelMapper {
         return s == null ? 0L : Long.parseLong(MathUtils.extractNumber(s));
     }
 
+
+    public boolean parseBoolean(Map<String, String> map, String key) {
+        String s = map.get(key);
+        return s != null && Boolean.parseBoolean(s);
+    }
 }
 

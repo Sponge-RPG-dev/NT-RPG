@@ -1,6 +1,7 @@
 package cz.neumimto.rpg.common.persistance.converters;
 
 import com.google.gson.*;
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.persistance.model.EquipedSlot;
 
 import java.lang.reflect.Type;
@@ -15,10 +16,6 @@ public class EquipedSlotDeserializer implements JsonDeserializer<EquipedSlot> {
         JsonObject object = json.getAsJsonObject();
         String className = object.get("className").getAsString();
         int slotId = object.get("slotIndex").getAsInt();
-        try {
-            return new EquipedSlot(className, slotId);
-        } catch (ClassNotFoundException e) {
-            return null;
-        }
+        return Rpg.get().getInventoryService().createEquipedSlot(className, slotId);
     }
 }

@@ -1,19 +1,19 @@
 package cz.neumimto.rpg;
 
-import cz.neumimto.rpg.api.effects.IEffectService;
-import cz.neumimto.rpg.api.localization.Arg;
 import cz.neumimto.rpg.api.IResourceLoader;
 import cz.neumimto.rpg.api.RpgApi;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.damage.DamageService;
-import cz.neumimto.rpg.common.effects.EffectService;
+import cz.neumimto.rpg.api.effects.IEffectService;
 import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.events.EventFactoryService;
 import cz.neumimto.rpg.api.items.ItemService;
+import cz.neumimto.rpg.api.localization.Arg;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.scripting.IScriptEngine;
 import cz.neumimto.rpg.api.skills.SkillService;
+import cz.neumimto.rpg.common.inventory.TestInventoryService;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.entities.SpongeEntityService;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
@@ -151,5 +151,10 @@ public class TestApiImpl implements RpgApi {
     @Override
     public IScriptEngine getScriptEngine() {
         return NtRpgPlugin.GlobalScope.jsLoader;
+    }
+
+    @Override
+    public TestInventoryService getInventoryService() {
+        return null;
     }
 }

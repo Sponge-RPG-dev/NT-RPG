@@ -18,27 +18,30 @@
 
 package cz.neumimto.rpg.sponge.inventory;
 
-import static cz.neumimto.rpg.api.logging.Log.error;
-import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.api.IResourceLoader;
 import cz.neumimto.rpg.api.classes.ClassService;
+import cz.neumimto.rpg.api.configuration.ItemString;
+import cz.neumimto.rpg.api.configuration.SkillItemCost;
 import cz.neumimto.rpg.api.effects.EffectParams;
 import cz.neumimto.rpg.api.effects.IEffectService;
-import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.inventory.CharacterInventoryInteractionHandler;
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.inventory.RpgInventory;
 import cz.neumimto.rpg.api.items.RpgItemStack;
-import cz.neumimto.rpg.api.skills.*;
+import cz.neumimto.rpg.api.logging.Log;
+import cz.neumimto.rpg.api.persistance.model.EquipedSlot;
+import cz.neumimto.rpg.sponge.persistance.EquipedSlotImpl;
+import cz.neumimto.rpg.api.skills.ISkill;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.SkillCost;
+import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.api.skills.mods.ActiveSkillPreProcessorWrapper;
 import cz.neumimto.rpg.api.utils.Console;
-import cz.neumimto.rpg.api.configuration.ItemString;
-import cz.neumimto.rpg.api.configuration.SkillItemCost;
 import cz.neumimto.rpg.common.inventory.AbstractInventoryService;
 import cz.neumimto.rpg.common.inventory.ManagedInventory;
 import cz.neumimto.rpg.common.inventory.SlotEffectSource;
@@ -74,13 +77,16 @@ import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.api.text.Text;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.util.*;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+
+import static cz.neumimto.rpg.api.logging.Log.error;
+import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 22.7.2015.
@@ -387,5 +393,16 @@ public class SpongeInventoryService extends AbstractInventoryService<ISpongeChar
             return invokeCost.getInsufficientProcessors();
         }
         return Collections.emptySet();
+    }
+
+    @Override
+    public EquipedSlot createEquipedSlot(String className, int slotId) {
+        try {
+            return new EquipedSlotImpl(className, slotId);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            Log.error("Class not found - " + className, e);
+        }
+        return null;
     }
 }

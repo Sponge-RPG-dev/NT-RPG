@@ -11,11 +11,11 @@ import org.spongepowered.api.effect.potion.PotionEffect;
 import org.spongepowered.api.effect.potion.PotionEffectTypes;
 
 @Generate(id = "name", description = "Decreases movement speed")
-public class Slow extends EffectBase<SlowModel> {
+public class SlowEffect extends EffectBase<SlowModel> {
 
-    public static String name = "Slow";
+    public static String name = "SlowEffect";
 
-    public Slow(IEffectConsumer consumer, long duration, SlowModel slowModel) {
+    public SlowEffect(IEffectConsumer consumer, long duration, @Generate.Model SlowModel slowModel) {
         super(name, consumer);
         setValue(slowModel);
         setDuration(duration);

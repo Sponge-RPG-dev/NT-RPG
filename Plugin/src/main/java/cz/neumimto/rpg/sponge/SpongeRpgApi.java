@@ -1,23 +1,23 @@
 package cz.neumimto.rpg.sponge;
 
-import cz.neumimto.rpg.api.effects.IEffectService;
-import cz.neumimto.rpg.api.localization.Arg;
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.api.IResourceLoader;
 import cz.neumimto.rpg.api.RpgApi;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.damage.DamageService;
-import cz.neumimto.rpg.common.effects.EffectService;
+import cz.neumimto.rpg.api.effects.IEffectService;
 import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.events.EventFactoryService;
 import cz.neumimto.rpg.api.items.ItemService;
+import cz.neumimto.rpg.api.localization.Arg;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.scripting.IScriptEngine;
 import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.sponge.entities.SpongeEntityService;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
 import cz.neumimto.rpg.sponge.entities.players.party.SpongePartyService;
+import cz.neumimto.rpg.sponge.inventory.SpongeInventoryService;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executor;
 
+@SuppressWarnings("unchecked")
 public final class SpongeRpgApi implements RpgApi {
 
     protected SpongeRpgApi() {
@@ -164,5 +165,10 @@ public final class SpongeRpgApi implements RpgApi {
     @Override
     public IScriptEngine getScriptEngine() {
         return NtRpgPlugin.GlobalScope.jsLoader;
+    }
+
+    @Override
+    public SpongeInventoryService getInventoryService() {
+        return NtRpgPlugin.GlobalScope.spongeInventoryService;
     }
 }
