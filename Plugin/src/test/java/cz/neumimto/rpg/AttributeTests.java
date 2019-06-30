@@ -52,7 +52,9 @@ public class AttributeTests {
     @Test
     public void testAttributeAdd2(@Stage(READY)IActiveCharacter iActiveCharacter) {
         iActiveCharacter.setAttributePoints(1);
-        int i = characterService.addAttribute(iActiveCharacter, TestDictionary.AGI, 2);
+        HashMap<AttributeConfig, Integer> map = new HashMap<>();
+        map.put(TestDictionary.AGI, 2);
+        int i = characterService.addAttribute(iActiveCharacter, map);
         Integer attributeValue = iActiveCharacter.getAttributeValue(TestDictionary.AGI);
         Assertions.assertEquals(attributeValue, 99);
         Assertions.assertEquals(i, 1);
@@ -61,7 +63,9 @@ public class AttributeTests {
     @Test
     public void testAttributeAdd_ok(@Stage(READY)IActiveCharacter iActiveCharacter) {
         iActiveCharacter.setAttributePoints(2);
-        int i = characterService.addAttribute(iActiveCharacter, TestDictionary.AGI, 2);
+        HashMap<AttributeConfig, Integer> map = new HashMap<>();
+        map.put(TestDictionary.AGI, 2);
+        int i = characterService.addAttribute(iActiveCharacter, map);
         Integer attributeValue = iActiveCharacter.getAttributeValue(TestDictionary.AGI);
         Assertions.assertEquals(attributeValue, 101);
         Assertions.assertEquals(i, 0);

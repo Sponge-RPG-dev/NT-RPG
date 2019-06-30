@@ -22,6 +22,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import javax.inject.Inject;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
@@ -52,8 +53,9 @@ public class CharacterCommandTests {
         iActiveCharacter.getCharacterBase().setAttributePoints(1);
         iActiveCharacter.getTransientAttributes().put("test", 0);
         Integer value = iActiveCharacter.getAttributeValue(attributeConfig);
-
-        characterCommandFacade.commandAddAttribute(iActiveCharacter, attributeConfig, 1);
+        HashMap<AttributeConfig, Integer> map = new HashMap<>();
+        map.put(attributeConfig, 1);
+        characterCommandFacade.commandCommitAttribute(iActiveCharacter, map);
         Assertions.assertEquals(iActiveCharacter.getAttributeValue(attributeConfig), value + 1);
         Assertions.assertEquals(iActiveCharacter.getCharacterBase().getAttributePoints(), 0);
         Assertions.assertEquals(iActiveCharacter.getCharacterBase().getAttributePointsSpent(), 1);

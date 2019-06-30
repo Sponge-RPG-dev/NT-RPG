@@ -110,7 +110,7 @@ public interface ICharacterService<T extends IActiveCharacter> {
 
     void assignAttribute(T character, AttributeConfig attribute, int levels);
 
-    int addAttribute(T character, AttributeConfig attribute, int i);
+    int addAttribute(T character, Map<AttributeConfig, Integer> attributes);
 
     int addAttribute(T character, AttributeConfig attribute);
 

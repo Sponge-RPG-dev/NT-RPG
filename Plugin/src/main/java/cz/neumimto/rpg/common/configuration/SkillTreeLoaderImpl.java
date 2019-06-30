@@ -51,7 +51,7 @@ import static cz.neumimto.rpg.api.logging.Log.warn;
 /**
  * Created by NeumimTo on 24.7.2015.
  */
-public abstract class SkillTreeLoaderImpl implements SkillTreeDao {
+public class SkillTreeLoaderImpl implements SkillTreeDao {
 
     @Override
     public Map<String, SkillTree> getAll() {
@@ -79,7 +79,9 @@ public abstract class SkillTreeLoaderImpl implements SkillTreeDao {
         map.put(skillTree.getId(), skillTree);
     }
 
-    protected abstract void loadAsciiMaps(Config config, SkillTree skillTree);
+    public void loadAsciiMaps(Config config, SkillTree skillTree) {
+
+    }
 
 
     protected boolean loadTree(Config config, SkillTree skillTree) {

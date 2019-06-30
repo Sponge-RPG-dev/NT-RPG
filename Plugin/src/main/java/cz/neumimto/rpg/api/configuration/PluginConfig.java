@@ -228,4 +228,7 @@ public class PluginConfig {
         put("Primary", new ClassTypeDefinition("YELLOW", "GOLD", "YELLOW", true, 2));
         put("Profession", new ClassTypeDefinition("GRAY", "BLACK", "GRAY", true, 3));
     }};
+
+    @Setting(comment = "Whenever a player is able to respec attributes at any time")
+    public boolean RESPEC_ATTRIBUTES = false;
 }

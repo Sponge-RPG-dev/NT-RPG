@@ -9,10 +9,7 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.chat.ChatTypes;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 public class SpongePreloadCharacter extends PreloadCharacter<Player, SpongeParty> implements ISpongeCharacter {
 
@@ -44,6 +41,16 @@ public class SpongePreloadCharacter extends PreloadCharacter<Player, SpongeParty
     @Override
     public SkillTreeViewModel getLastTimeInvokedSkillTreeView() {
         return null;
+    }
+
+    @Override
+    public Map<String, Integer> getAttributesTransaction() {
+        return Collections.emptyMap();
+    }
+
+    @Override
+    public void setAttributesTransaction(HashMap<String, Integer> map) {
+
     }
 
     @Override

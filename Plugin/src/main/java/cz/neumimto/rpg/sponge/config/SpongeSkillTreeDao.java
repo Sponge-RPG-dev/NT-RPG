@@ -22,7 +22,7 @@ public class SpongeSkillTreeDao extends SkillTreeLoaderImpl {
     @Inject
     private SpongeSkillService spongeSkillService;
 
-    protected void loadAsciiMaps(Config config, SkillTree skillTree) {
+    public void loadAsciiMaps(Config config, SkillTree skillTree) {
         try {
             List<String> asciiMap = config.getStringList("AsciiMap");
             Optional<String> max = asciiMap.stream().max(Comparator.comparingInt(String::length));

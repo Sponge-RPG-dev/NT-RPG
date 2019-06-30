@@ -45,13 +45,7 @@ class SkillTreeDaoTest {
     void loadSkillConfigTest01() {
         Map<String, SkillTree> skillTreeMap = new HashMap<>();
         Config config = ConfigFactory.load(getClass().getClassLoader(), "testconfig/SkillTree01.conf");
-        new SkillTreeLoaderImpl(){
-
-            @Override
-            protected void loadAsciiMaps(Config config, SkillTree skillTree) {
-
-            }
-        }.populateMap(skillTreeMap, config);
+        new SkillTreeLoaderImpl().populateMap(skillTreeMap, config);
         Assertions.assertTrue(skillTreeMap.containsKey("Test"));
         Assertions.assertTrue(skillTreeMap.get("Test").getSkills().containsKey("test"));
         Assertions.assertTrue(skillTreeMap.get("Test").getSkills().containsKey("test2"));

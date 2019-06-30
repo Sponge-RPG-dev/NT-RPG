@@ -962,16 +962,15 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
 
     /**
      * @param character
-     * @param attribute
-     * @param i
+     * @param attributes
      * @return
      */
     @Override
-    public int addAttribute(T character, AttributeConfig attribute, int i) {
+    public int addAttribute(T character, Map<AttributeConfig, Integer> attributes) {
         CharacterAttributeChange event = eventFactoryService.createEventInstance(CharacterAttributeChange.class);
 
         event.setTarget(character);
-        event.setAttribute(attribute);
+        event.setAttribute(attributes);
 
         if (Rpg.get().postEvent(event)) {
             return 1;
@@ -979,35 +978,37 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
 
         CharacterBase base = character.getCharacterBase();
         int attributePoints = base.getAttributePoints();
-        if (attributePoints - i < 0) {
+        int requiredAP = attributes.values().stream().mapToInt(a -> a).sum();
+        if (attributePoints - requiredAP < 0) {
             return 1;
         }
 
-        Set<BaseCharacterAttribute> ap = base.getBaseCharacterAttribute();
-        boolean found = false;
-        for (BaseCharacterAttribute a : ap) {
-            if (a.getName().equalsIgnoreCase(attribute.getName())) {
-                a.setLevel(a.getLevel() + i);
-                found = true;
-                break;
+        for (Map.Entry<AttributeConfig, Integer> entry : attributes.entrySet()) {
+            Set<BaseCharacterAttribute> ap = base.getBaseCharacterAttribute();
+            boolean found = false;
+            for (BaseCharacterAttribute a : ap) {
+                if (a.getName().equalsIgnoreCase(entry.getKey().getId())) {
+                    a.setLevel(a.getLevel() + entry.getValue());
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                JPABaseCharacterAttribute attr = new JPABaseCharacterAttribute();
+                attr.setName(entry.getKey().getId());
+                attr.setLevel(entry.getValue());
+                attr.setCharacterBase(base);
+                base.addBaseCharacterAttribute(attr);
+            }
+            base.setAttributePoints(attributePoints - requiredAP);
+            assignAttribute(character, entry.getKey(), entry.getValue());
+            if (!entry.getKey().getPropBonus().isEmpty()) {
+                assignAttribute(character, entry.getKey(), entry.getValue());
             }
         }
-        if (!found) {
-            JPABaseCharacterAttribute attr = new JPABaseCharacterAttribute();
-            attr.setName(attribute.getName());
-            attr.setLevel(i);
-            attr.setCharacterBase(base);
-            base.addBaseCharacterAttribute(attr);
-        }
-        base.setAttributePoints(attributePoints - i);
-        assignAttribute(character, attribute, i);
 
         character.setRequiresDamageRecalculation(true);
-        base.setAttributePointsSpent(base.getAttributePointsSpent() + i);
-
-        if (!attribute.getPropBonus().isEmpty()) {
-            assignAttribute(character, attribute, i);
-        }
+        base.setAttributePointsSpent(base.getAttributePointsSpent() + requiredAP);
         return 0;
     }
 
@@ -1015,7 +1016,9 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
 
     @Override
     public int addAttribute(T character, AttributeConfig attribute) {
-        return addAttribute(character, attribute, 1);
+        return addAttribute(character, new HashMap<AttributeConfig, Integer>() {{
+            put(attribute, 1);
+        }});
     }
 
     @Override

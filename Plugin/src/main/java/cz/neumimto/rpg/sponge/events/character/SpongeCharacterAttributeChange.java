@@ -3,13 +3,15 @@ package cz.neumimto.rpg.sponge.events.character;
 import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
 import cz.neumimto.rpg.api.events.character.CharacterAttributeChange;
 
+import java.util.Map;
+
 /**
  * Created by NeumimTo on 23.1.2016.
  */
 public class SpongeCharacterAttributeChange extends AbstractCharacterEvent implements CharacterAttributeChange {
 
     private int attributeChange;
-    private AttributeConfig attribute;
+    private Map<AttributeConfig, Integer> attribute;
 
     @Override
     public void setAttributeChange(int attributeChange) {
@@ -17,7 +19,7 @@ public class SpongeCharacterAttributeChange extends AbstractCharacterEvent imple
     }
 
     @Override
-    public AttributeConfig getAttribute() {
+    public Map<AttributeConfig, Integer> getAttribute() {
         return attribute;
     }
 
@@ -27,7 +29,7 @@ public class SpongeCharacterAttributeChange extends AbstractCharacterEvent imple
     }
 
     @Override
-    public void setAttribute(AttributeConfig attribute) {
+    public void setAttribute(Map<AttributeConfig, Integer> attribute) {
         this.attribute = attribute;
     }
 

@@ -2,7 +2,6 @@ package cz.neumimto.rpg.sponge.entities.players;
 
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
-import cz.neumimto.rpg.api.skills.preprocessors.InterruptableSkillPreprocessor;
 import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.sponge.entities.players.party.SpongeParty;
 import cz.neumimto.rpg.sponge.gui.SkillTreeViewModel;
@@ -11,12 +10,12 @@ import org.spongepowered.api.text.chat.ChatTypes;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 public class SpongeCharacter extends ActiveCharacter<Player, SpongeParty> implements ISpongeCharacter {
 
     protected Map<String, SkillTreeViewModel> skillTreeViewLocation = new HashMap<>();
+    private Map<String, Integer> attrTransaction;
 
     public SpongeCharacter(UUID uuid, CharacterBase base, int propertyCount) {
         super(uuid, base, propertyCount);
@@ -67,5 +66,15 @@ public class SpongeCharacter extends ActiveCharacter<Player, SpongeParty> implem
             }
         }
         return null;
+    }
+
+    @Override
+    public Map<String, Integer> getAttributesTransaction() {
+        return attrTransaction;
+    }
+
+    @Override
+    public void setAttributesTransaction(HashMap<String, Integer> map) {
+        attrTransaction = map;
     }
 }

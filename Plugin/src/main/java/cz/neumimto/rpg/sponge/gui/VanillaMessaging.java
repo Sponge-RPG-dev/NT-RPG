@@ -53,7 +53,10 @@ import cz.neumimto.rpg.sponge.effects.common.def.BossBarExpNotifier;
 import cz.neumimto.rpg.sponge.effects.common.def.ManaBarNotifier;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
-import cz.neumimto.rpg.sponge.inventory.data.*;
+import cz.neumimto.rpg.sponge.inventory.data.AttributeRefMenuData;
+import cz.neumimto.rpg.sponge.inventory.data.InventoryCommandItemMenuData;
+import cz.neumimto.rpg.sponge.inventory.data.MenuInventoryData;
+import cz.neumimto.rpg.sponge.inventory.data.SkillTreeInventoryViewControllsData;
 import cz.neumimto.rpg.sponge.inventory.data.manipulators.SkillTreeNode;
 import cz.neumimto.rpg.sponge.inventory.runewords.RWService;
 import cz.neumimto.rpg.sponge.items.SpongeRpgItemType;
@@ -68,11 +71,13 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
-import org.spongepowered.api.item.inventory.*;
+import org.spongepowered.api.item.inventory.Container;
+import org.spongepowered.api.item.inventory.Inventory;
+import org.spongepowered.api.item.inventory.InventoryArchetypes;
+import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.property.InventoryTitle;
 import org.spongepowered.api.item.inventory.property.SlotPos;
 import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
-import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
 import org.spongepowered.api.item.inventory.type.GridInventory;
 import org.spongepowered.api.service.pagination.PaginationList;
 import org.spongepowered.api.service.pagination.PaginationService;
@@ -830,12 +835,12 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
     @Override
     public void displayCharacterMenu(ISpongeCharacter character) {
         Inventory i = GuiHelper.createCharacterEmptyInventory(character).build(NtRpgPlugin.GlobalScope.plugin);
-        makeBorder(i, DyeColors.ORANGE);
 
+        makeBorder(i, DyeColors.ORANGE);
 
         ItemStack itemStack = GuiHelper.itemStack(ItemTypes.BOOK);
         itemStack.offer(Keys.DISPLAY_NAME, translate(LocalizationKeys.ATTRIBUTES));
-        itemStack.offer(new InventoryCommandItemMenuData("character attributes "));
+        itemStack.offer(new InventoryCommandItemMenuData("character attributes"));
         i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(1, 1))).offer(itemStack);
 
         itemStack = GuiHelper.itemStack(ItemTypes.ARMOR_STAND);
@@ -858,32 +863,22 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
 
     @Override
     public void displayCharacterAttributes(ISpongeCharacter character) {
+        character.setAttributesTransaction(new HashMap<>());
+
+        SlotPos commitSP = SlotPos.of(6, 1);
         Inventory i = GuiHelper.createCharacterEmptyInventory(character)
                 .listener(ClickInventoryEvent.Primary.class, event -> {
-                    Player root = (Player) event.getCause().root();
-                    Iterator<SlotTransaction> iterator = event.getTransactions().iterator();
-                    while (iterator.hasNext()) {
-                        SlotTransaction next = iterator.next();
-                        Optional<String> s = next.getFinal().get(NKeys.ATTRIBUTE_REF);
-                        if (s.isPresent()) {
-                            Slot slot = next.getSlot();
-                            Optional<SlotPos> properties = slot.transform().getInventoryProperty(SlotPos.class);
-                            SlotPos slotPos = properties.get();
-                            slotPos = new SlotPos(slotPos.getX(), slotPos.getY() - 1);
 
-                        }
-                        break;
-                    }
                 })
                 .build(NtRpgPlugin.GlobalScope.plugin);
-
-        i.offer(back("character ", Text.of("back")));
+        makeBorder(i, DyeColors.ORANGE);
+        i.offer(back("char ", Text.of("back")));
 
         ItemStack commit = GuiHelper.itemStack(ItemTypes.DIAMOND);
         commit.offer(Keys.DISPLAY_NAME, Text.builder("Commit").color(TextColors.GREEN).build());
-        commit.offer(new InventoryCommandItemMenuData("character attributes tx-commit "));
+        commit.offer(new InventoryCommandItemMenuData("character attributes tx-commit"));
 
-        i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(7, 0)))
+        i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(commitSP))
                 .offer(commit);
 
 
@@ -905,8 +900,19 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
             btn.offer(new AttributeRefMenuData(attribute.getId()));
             i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(q, 2))).offer(btn);
             i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(q, 3))).offer(itemStack);
+            btn.offer(new InventoryCommandItemMenuData("character attribute " + attribute.getId()));
+
+            if (pluginConfig.RESPEC_ATTRIBUTES) {
+                ItemStack btnM = GuiHelper.itemStack(ItemTypes.SUGAR);
+                btnM.offer(Keys.DISPLAY_NAME, Text.of(TextColors.RED, "-"));
+                btnM.offer(new AttributeRefMenuData(attribute.getId()));
+                btnM.offer(new InventoryCommandItemMenuData("character attribute remove " + attribute.getId()));
+                i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(q, 4))).offer(btnM);
+            }
+
             q++;
         }
+        character.getPlayer().openInventory(i);
     }
 
     @Override

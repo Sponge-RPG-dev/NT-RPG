@@ -18,6 +18,7 @@ import cz.neumimto.rpg.common.persistance.model.JPACharacterBase;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
@@ -40,8 +41,8 @@ public class CharacterCommandFacade {
     @Inject
     private PartyService partyService;
 
-    public void commandAddAttribute(IActiveCharacter character, AttributeConfig iCharacterAttribute, int amount) {
-        characterService.addAttribute(character, iCharacterAttribute, amount);
+    public void commandCommitAttribute(IActiveCharacter character, Map<AttributeConfig, Integer> map) {
+        characterService.addAttribute(character, map);
         characterService.putInSaveQueue(character.getCharacterBase());
     }
 

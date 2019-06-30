@@ -2,6 +2,8 @@ package cz.neumimto.rpg.api.events.character;
 
 import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
 
+import java.util.Map;
+
 /**
  * Created by NeumimTo on 23.1.2016.
  */
@@ -11,8 +13,8 @@ public interface CharacterAttributeChange extends TargetCharacterEvent {
 
     void setAttributeChange(int c);
 
-    void setAttribute(AttributeConfig attribute);
+    void setAttribute(Map<AttributeConfig, Integer> attributes);
 
-    AttributeConfig getAttribute();
+    Map<AttributeConfig, Integer> getAttribute();
 
 }
