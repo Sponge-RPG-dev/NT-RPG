@@ -18,9 +18,6 @@
 
 package cz.neumimto.rpg;
 
-import static cz.neumimto.rpg.api.logging.Log.error;
-import static cz.neumimto.rpg.api.logging.Log.info;
-import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 import com.google.inject.Injector;
 import cz.neumimto.configuration.ConfigMapper;
 import cz.neumimto.configuration.ConfigurationContainer;
@@ -30,7 +27,6 @@ import cz.neumimto.rpg.api.IResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.effects.IEffectService;
-import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.api.effects.model.EffectModelFactory;
 import cz.neumimto.rpg.api.effects.model.EffectModelMapper;
@@ -52,6 +48,8 @@ import cz.neumimto.rpg.sponge.commands.CommandService;
 import org.apache.commons.io.FileUtils;
 import org.spongepowered.api.Game;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -62,8 +60,10 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+
+import static cz.neumimto.rpg.api.logging.Log.error;
+import static cz.neumimto.rpg.api.logging.Log.info;
+import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 27.12.2014.
@@ -82,7 +82,7 @@ public class ResourceLoader extends IResourceLoader {
         classDir = new File(NtRpgPlugin.workingDir + File.separator + "classes");
         addonDir = new File(NtRpgPlugin.workingDir + File.separator + "addons");
         addonLoadDir = new File(NtRpgPlugin.workingDir + File.separator + ".deployed");
-        skilltreeDir = new File(NtRpgPlugin.workingDir + File.separator + "skilltrees");
+        skilltreeDir = new File(NtRpgPlugin.workingDir + File.separator + "Skilltrees");
         localizations = new File(NtRpgPlugin.workingDir + File.separator + "localizations");
         classDir.mkdirs();
         skilltreeDir.mkdirs();

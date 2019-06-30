@@ -1,10 +1,8 @@
 package cz.neumimto.rpg.sponge.gui;
 
-import static cz.neumimto.rpg.sponge.gui.CatalogTypeItemStackBuilder.Block;
-import static cz.neumimto.rpg.sponge.gui.CatalogTypeItemStackBuilder.Item;
-
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
@@ -14,11 +12,14 @@ import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.persistance.model.CharacterClass;
 import cz.neumimto.rpg.api.skills.*;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
-import cz.neumimto.rpg.api.configuration.ClassTypeDefinition;
+import cz.neumimto.rpg.api.utils.Pair;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.commands.InfoCommand;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
-import cz.neumimto.rpg.sponge.inventory.data.*;
+import cz.neumimto.rpg.sponge.inventory.data.InventoryCommandItemMenuData;
+import cz.neumimto.rpg.sponge.inventory.data.MenuInventoryData;
+import cz.neumimto.rpg.sponge.inventory.data.NKeys;
+import cz.neumimto.rpg.sponge.inventory.data.SkillTreeInventoryViewControllsData;
 import cz.neumimto.rpg.sponge.items.SpongeRpgItemType;
 import cz.neumimto.rpg.sponge.listeners.SkillTreeInventoryListener;
 import cz.neumimto.rpg.sponge.skills.NDamageType;
@@ -48,6 +49,9 @@ import org.spongepowered.api.text.format.TextStyles;
 
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static cz.neumimto.rpg.sponge.gui.CatalogTypeItemStackBuilder.Block;
+import static cz.neumimto.rpg.sponge.gui.CatalogTypeItemStackBuilder.Item;
 
 /**
  * Created by ja on 29.12.2016.
@@ -255,54 +259,57 @@ public class GuiHelper {
         return of;
     }
 
-    public static ItemStack skillToItemStack(IActiveCharacter character, SkillData skillData, SkillTree skillTree) {
-        return toItemStack(skillData.getSkill(), character, skillData, skillTree);
+    public static ItemStack skillToItemStack(ISpongeCharacter character, SkillData skillData, SkillTree skillTree, SkillTreeViewModel model) {
+        return toItemStack(skillData.getSkill(), character, skillData, skillTree, model);
     }
 
-    private static ItemStack toItemStack(ISkill skill, IActiveCharacter character, SkillData skillData, SkillTree skillTree) {
-        List<Text> lore = new ArrayList<>();
-        ItemStack itemStack;
-        if (skillData.useDescriptionOnly()) {
-            List<String> description = skillData.getDescription(character);
-            lore.add(Text.builder(skillData.getSkillName()).style(TextStyles.BOLD).color(getSkillTextColor(character, skill, skillData, skillTree)).build());
-            lore.add(Text.EMPTY);
-            for (String s : description) {
-                lore.add(TextHelper.parse(s));
-            }
-            itemStack = itemStack(skill.getItemType());
-        } else {
-            itemStack = itemStack(skill.getItemType());
-            lore.add(Text.builder(skillData.getSkillName()).style(TextStyles.BOLD).color(getSkillTextColor(character, skill, skillData, skillTree)).build());
-            lore.add(Text.EMPTY);
+    private static ItemStack toItemStack(ISkill skill, ISpongeCharacter character, SkillData skillData, SkillTree skillTree, SkillTreeViewModel model) {
+        List<Text> lore;
+        TextColor nameColor;
+        Pair<List<Text>, TextColor> fromCache = model.getFromCache(skill);
+        ItemStack itemStack = itemStack(NtRpgPlugin.GlobalScope.inventorySerivce.getItemIconForSkill(skill));
+        if (fromCache == null) {
+            lore = new ArrayList<>();
+            nameColor = getSkillTextColor(character, skill, skillData, skillTree);
+            if (skillData.useDescriptionOnly()) {
+                List<String> description = skillData.getDescription(character);
+                for (String s : description) {
+                    lore.add(TextHelper.parse(s));
+                }
+            } else {
+                LocalizationService locService = Rpg.get().getLocalizationService();
+                Text execType = TextHelper.parse(locService.translate(skill.getSkillExecutionType().toString().toLowerCase()));
+                lore.add(execType);
+                lore.add(Text.EMPTY);
 
-            LocalizationService locService = Rpg.get().getLocalizationService();
-            Text execType = TextHelper.parse(locService.translate(skill.getSkillExecutionType().toString().toLowerCase()));
-            lore.add(execType);
-            lore.add(Text.EMPTY);
+                for (String s : skillData.getDescription(character)) {
+                    lore.add(TextHelper.parse(s));
+                }
 
-            for (String s : skillData.getDescription(character)) {
-                lore.add(TextHelper.parse(s));
-            }
+                lore.add(Text.EMPTY);
 
-            lore.add(Text.EMPTY);
-
-            Set<ISkillType> skillTypes = skillData.getSkill().getSkillTypes();
-            Text.Builder builder = Text.builder();
-            Iterator<ISkillType> iterator = skillTypes.iterator();
-            int i = 0;
-            while (iterator.hasNext()) {
-                i++;
-                ISkillType next = iterator.next();
-                String translate = locService.translate(next.toString());
-                lore.add(TextHelper.parse(translate));
-                if (i % 3 == 0) {
-                    lore.add(builder.build());
-                    builder = Text.builder();
+                Set<ISkillType> skillTypes = skillData.getSkill().getSkillTypes();
+                Text.Builder builder = Text.builder();
+                Iterator<ISkillType> iterator = skillTypes.iterator();
+                int i = 0;
+                while (iterator.hasNext()) {
+                    i++;
+                    ISkillType next = iterator.next();
+                    String translate = locService.translate(next.toString());
+                    lore.add(TextHelper.parse(translate));
+                    if (i % 3 == 0) {
+                        lore.add(builder.build());
+                        builder = Text.builder();
+                    }
                 }
             }
+
+            model.addToCache(skill, lore, nameColor);
+        } else {
+            lore = fromCache.key;
+            nameColor = fromCache.value;
         }
-
-
+        itemStack.offer(Keys.DISPLAY_NAME, Text.builder(skillData.getSkillName()).style(TextStyles.BOLD).color(nameColor).build());
         itemStack.offer(Keys.ITEM_LORE, lore);
         return itemStack;
     }
@@ -379,7 +386,8 @@ public class GuiHelper {
                         .build()))
                 .build(plugin);
 
-        ItemStack back = back("skilltree " + character.getLastTimeInvokedSkillTreeView().getViewedClass().getName(), translate(LocalizationKeys.SKILLTREE));
+        SkillTreeViewModel skillTreeViewModel = character.getLastTimeInvokedSkillTreeView();
+        ItemStack back = back("skilltree " + skillTreeViewModel.getViewedClass().getName(), translate(LocalizationKeys.SKILLTREE));
         build.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0, 0))).offer(back);
 
         if (skillData instanceof SkillPathData) {
@@ -397,7 +405,7 @@ public class GuiHelper {
             for (Map.Entry<String, Integer> entry : data.getSkillBonus().entrySet()) {
                 ISkill skill = skillService.getById(entry.getKey()).orElse(null);
                 if (skill != null) {
-                    ItemStack itemStack = skillToItemStack(character, character.getSkill(skill.getId()).getSkillData(), skillTree);
+                    ItemStack itemStack = skillToItemStack(character, character.getSkill(skill.getId()).getSkillData(), skillTree, skillTreeViewModel);
                     itemStack.offer(Keys.DISPLAY_NAME, Text
                             .builder(String.format("%+d", entry.getValue()) + " | " + entry.getKey())
                             .color(entry.getValue() < 0 ? TextColors.RED : TextColors.DARK_GREEN)
@@ -583,6 +591,9 @@ public class GuiHelper {
     }
 
     public static ItemStack itemStack(String itemType) {
+        if (itemType == null) {
+            return itemStack(ItemTypes.STONE);
+        }
         return itemStack(Sponge.getRegistry().getType(ItemType.class, itemType).orElse(ItemTypes.STONE));
     }
 

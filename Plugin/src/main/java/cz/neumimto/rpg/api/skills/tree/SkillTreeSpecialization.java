@@ -131,12 +131,6 @@ public class SkillTreeSpecialization extends PassiveSkill {
             }
         } catch (ConfigException e) {
         }
-        try {
-            String a = c.getString("ItemIcon");
-            setIcon(a);
-        } catch (ConfigException e) {
-
-        }
 
         pdata.setCombination(null);
         pdata.setMaxSkillLevel(1);

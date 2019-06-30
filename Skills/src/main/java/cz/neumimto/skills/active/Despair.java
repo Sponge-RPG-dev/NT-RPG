@@ -54,7 +54,6 @@ public class Despair extends ActiveSkill<ISpongeCharacter> {
 		addSkillType(SkillType.AOE);
 		addSkillType(SkillType.ESCAPE);
 		addSkillType(SkillType.STEALTH);
-		setIcon(ItemTypes.COAL.getType().getId());
 	}
 
 	@Override

@@ -31,7 +31,6 @@ public class GroupHeal extends ActiveSkill<ISpongeCharacter> {
 		settings.addNode(SkillNodes.HEALED_AMOUNT, 10, 10);
 		addSkillType(SkillType.HEALING);
 		addSkillType(SkillType.AOE);
-		setIcon(ItemTypes.PAPER.getId());
 	}
 
 	@Override

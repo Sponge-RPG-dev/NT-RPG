@@ -43,7 +43,6 @@ public class DropTNT extends ActiveSkill<ISpongeCharacter> {
         settings.addNode("explosion-radius", 3 ,0.1f);
         addSkillType(SkillType.PHYSICAL);
         addSkillType(SkillType.SUMMON);
-        setIcon(ItemTypes.TNT.getId());
     }
 
     @Override

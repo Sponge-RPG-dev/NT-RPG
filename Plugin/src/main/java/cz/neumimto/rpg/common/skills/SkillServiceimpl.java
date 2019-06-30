@@ -1,20 +1,15 @@
 package cz.neumimto.rpg.common.skills;
 
-import static cz.neumimto.rpg.api.logging.Log.error;
-import static cz.neumimto.rpg.api.logging.Log.info;
-import static cz.neumimto.rpg.api.logging.Log.warn;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.classes.ClassService;
-import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.api.configuration.SkillTreeDao;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.skills.*;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.mods.SkillExecutorCallback;
-import cz.neumimto.rpg.common.skills.preprocessors.SkillPreprocessors;
 import cz.neumimto.rpg.api.skills.scripting.ActiveScriptSkill;
 import cz.neumimto.rpg.api.skills.scripting.ScriptSkillModel;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
@@ -22,17 +17,22 @@ import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.api.skills.types.PassiveScriptSkill;
 import cz.neumimto.rpg.api.skills.types.ScriptSkill;
 import cz.neumimto.rpg.api.utils.annotations.CatalogId;
-import cz.neumimto.rpg.api.configuration.SkillTreeDao;
+import cz.neumimto.rpg.common.skills.preprocessors.SkillPreprocessors;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.description.annotation.AnnotationDescription;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
+import javax.inject.Inject;
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
-import javax.inject.Inject;
+
+import static cz.neumimto.rpg.api.logging.Log.*;
 
 public abstract class SkillServiceimpl implements SkillService {
 
@@ -155,7 +155,7 @@ public abstract class SkillServiceimpl implements SkillService {
 			}
 			*/
         } catch (Exception e) {
-            warn("Failed to reload skilltrees: " + e.getMessage());
+            warn("Failed to reload Skilltrees: " + e.getMessage());
         }
     }
 

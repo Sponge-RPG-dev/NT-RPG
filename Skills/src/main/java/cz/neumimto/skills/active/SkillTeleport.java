@@ -33,7 +33,6 @@ public class SkillTeleport extends ActiveSkill<ISpongeCharacter> {
 		super.init();
 		settings.addNode(SkillNodes.RANGE, 20, 20);
 		addSkillType(SkillType.TELEPORT);
-		setIcon(ItemTypes.END_PORTAL_FRAME.getId());
 	}
 
 	@Override

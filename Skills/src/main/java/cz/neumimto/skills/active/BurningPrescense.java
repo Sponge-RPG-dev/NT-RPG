@@ -39,7 +39,6 @@ public class BurningPrescense extends ActiveSkill {
         addSkillType(SkillType.AOE);
         addSkillType(SkillType.ELEMENTAL);
         addSkillType(SkillType.FIRE);
-        setIcon(ItemTypes.FIRE_CHARGE.getId());
     }
 
     @Override

@@ -37,7 +37,6 @@ public class Dementia extends Targeted {
 		settings.addNode(SkillNodes.DURATION, 30000, 1500);
 		settings.addNode("skill-level", 1, 2);
 		addSkillType(SkillType.DISEASE);
-		setIcon(ItemTypes.ROTTEN_FLESH.getId());
 	}
 
 	@Override

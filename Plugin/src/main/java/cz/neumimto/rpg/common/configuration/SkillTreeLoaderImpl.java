@@ -33,9 +33,7 @@ import cz.neumimto.rpg.api.skills.utils.SkillLoadingErrors;
 import cz.neumimto.rpg.api.utils.MathUtils;
 import cz.neumimto.rpg.common.skills.SkillConfigLoader;
 import cz.neumimto.rpg.common.skills.SkillConfigLoaders;
-
 import cz.neumimto.rpg.common.skills.preprocessors.SkillPreprocessorFactories;
-import cz.neumimto.rpg.common.skills.preprocessors.SkillPreprocessors;
 import cz.neumimto.rpg.sponge.utils.io.FileUtils;
 
 import java.io.IOException;
@@ -53,11 +51,11 @@ import static cz.neumimto.rpg.api.logging.Log.warn;
 /**
  * Created by NeumimTo on 24.7.2015.
  */
-public class SkillTreeLoaderImpl implements SkillTreeDao {
+public abstract class SkillTreeLoaderImpl implements SkillTreeDao {
 
     @Override
     public Map<String, SkillTree> getAll() {
-        Path dir = Paths.get(Rpg.get().getWorkingDirectory(), "skilltrees");
+        Path dir = Paths.get(Rpg.get().getWorkingDirectory(), "Skilltrees");
         FileUtils.createDirectoryIfNotExists(dir);
         Map<String, SkillTree> map = new HashMap<>();
         try (DirectoryStream<Path> paths = Files.newDirectoryStream(dir, "*.conf")) {
@@ -77,8 +75,12 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
         if (loadTree(config, skillTree)) {
             return;
         }
+        loadAsciiMaps(config, skillTree);
         map.put(skillTree.getId(), skillTree);
     }
+
+    protected abstract void loadAsciiMaps(Config config, SkillTree skillTree);
+
 
     protected boolean loadTree(Config config, SkillTree skillTree) {
         try {

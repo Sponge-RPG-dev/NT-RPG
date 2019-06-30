@@ -31,7 +31,6 @@ public class Astronomy extends ActiveSkill<ISpongeCharacter> {
 	@Override
 	public void init() {
 		super.init();
-		setIcon(ItemTypes.CLOCK.getId());
 		addSkillType(SkillType.CAN_CAST_WHILE_SILENCED);
 		addSkillType(SkillType.UTILITY);
 	}

@@ -70,15 +70,9 @@ public interface ISkill extends IEffectSourceProvider, IRpgElement {
 
     void setLore(List<String> lore);
 
-    void setIcon(String icon);
-
     String getDamageType();
 
     void setDamageType(String type);
-
-    default String getItemType() {
-        return "stone";
-    }
 
     @Override
     default IEffectSource getType() {

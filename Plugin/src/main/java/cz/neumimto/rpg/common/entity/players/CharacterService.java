@@ -823,7 +823,7 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
 
 
     /**
-     * Resets character's skilltrees, and gives back all allocated skillpoints.
+     * Resets character's Skilltrees, and gives back all allocated skillpoints.
      *
      * @param character to be reseted
      * @param force

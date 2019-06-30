@@ -53,8 +53,6 @@ public abstract class AbstractSkill implements ISkill {
     protected List<String> description;
     protected SkillSettings settings = new SkillSettings();
 
-    protected String itemType;
-
     @CatalogId
     private String catalogId;
 
@@ -163,11 +161,6 @@ public abstract class AbstractSkill implements ISkill {
     }
 
     @Override
-    public void setIcon(String icon) {
-        this.itemType = icon;
-    }
-
-    @Override
     public List<String> getLore() {
         return lore;
     }
@@ -208,11 +201,6 @@ public abstract class AbstractSkill implements ISkill {
     @Override
     public String getId() {
         return catalogId;
-    }
-
-    @Override
-    public String getItemType() {
-        return itemType;
     }
 
     @Override

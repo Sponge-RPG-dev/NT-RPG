@@ -18,22 +18,21 @@
 
 package cz.neumimto.rpg.sponge.gui;
 
-import cz.neumimto.rpg.api.effects.IEffectService;
-import cz.neumimto.rpg.api.localization.Arg;
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.api.IResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.classes.ClassService;
-import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.api.effects.EffectStatusType;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
+import cz.neumimto.rpg.api.effects.IEffectService;
 import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.gui.IPlayerMessage;
 import cz.neumimto.rpg.api.inventory.CannotUseItemReason;
 import cz.neumimto.rpg.api.items.ClassItem;
+import cz.neumimto.rpg.api.localization.Arg;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
@@ -782,7 +781,7 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
                                     itemStack.offer(Keys.DISPLAY_NAME, Text.of("UNKNOWN SKILL ID: " + id));
                                     itemStack.offer(new MenuInventoryData(true));
                                 } else {
-                                    itemStack = GuiHelper.skillToItemStack(character, skillById, skillTree);
+                                    itemStack = GuiHelper.skillToItemStack(character, skillById, skillTree, skillTreeViewModel);
                                     itemStack.offer(new SkillTreeInventoryViewControllsData(SkillTreeControllsButton.NODE));
                                     itemStack.offer(new MenuInventoryData(true));
                                     itemStack.offer(new SkillTreeNode(skillById.getSkill().getId()));

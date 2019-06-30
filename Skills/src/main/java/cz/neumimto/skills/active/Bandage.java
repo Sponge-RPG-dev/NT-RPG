@@ -37,7 +37,6 @@ public class Bandage extends Targeted {
 	public void init() {
 		super.init();
 		settings.addNode(SkillNodes.HEALED_AMOUNT, 15, 5);
-		setIcon(ItemTypes.PAPER.getId());
 		addSkillType(SkillType.HEALING);
 		addSkillType(SkillType.PHYSICAL);
 	}

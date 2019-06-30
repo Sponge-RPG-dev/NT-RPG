@@ -18,7 +18,6 @@
 
 package cz.neumimto.rpg.sponge;
 
-import static cz.neumimto.rpg.api.logging.Log.info;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
@@ -27,11 +26,14 @@ import cz.neumimto.core.PluginCore;
 import cz.neumimto.core.migrations.DbMigrationService;
 import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.utils.rng.PseudoRandomDistribution;
-import cz.neumimto.rpg.api.configuration.ClassTypeDefinition;
-import cz.neumimto.rpg.common.persistance.model.*;
+import cz.neumimto.rpg.common.persistance.model.JPABaseCharacterAttribute;
+import cz.neumimto.rpg.common.persistance.model.JPACharacterBase;
+import cz.neumimto.rpg.common.persistance.model.JPACharacterClass;
+import cz.neumimto.rpg.common.persistance.model.JPACharacterSkill;
 import cz.neumimto.rpg.sponge.configuration.Settings;
 import cz.neumimto.rpg.sponge.inventory.data.*;
 import cz.neumimto.rpg.sponge.inventory.data.manipulators.*;
@@ -60,6 +62,7 @@ import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.scheduler.SpongeExecutorService;
 
+import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -68,7 +71,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
-import javax.annotation.Resource;
+
+import static cz.neumimto.rpg.api.logging.Log.info;
 
 /**
  * Created by NeumimTo on 29.4.2015.
@@ -421,7 +425,7 @@ public class NtRpgPlugin extends Rpg {
             Log.error("Could not read localizations in locale " + NtRpgPlugin.pluginConfig.LOCALE + " - " + e.getMessage());
         }
         GlobalScope.itemService.loadItemGroups(Paths.get(NtRpgPlugin.workingDir));
-        GlobalScope.inventorySerivce.loadItemGroups(Paths.get(NtRpgPlugin.workingDir));
+        GlobalScope.inventorySerivce.load();
         GlobalScope.eventFactory.registerEventProviders();
         GlobalScope.experienceService.load();
         GlobalScope.skillService.load();

@@ -40,7 +40,6 @@ public class Harmtouch extends Targeted {
 		super.init();
 		settings.addNode(SkillNodes.DAMAGE, 5000, 100);
 		setDamageType(DamageTypes.MAGIC.getId());
-		setIcon(ItemTypes.BLAZE_ROD.getId());
 	}
 
 	@Override

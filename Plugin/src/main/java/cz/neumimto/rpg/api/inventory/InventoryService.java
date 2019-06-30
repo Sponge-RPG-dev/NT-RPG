@@ -10,7 +10,7 @@ import java.util.Set;
 
 public interface InventoryService<T extends IActiveCharacter> {
 
-    void loadItemGroups(Path path);
+    void load();
 
     void initializeManagedSlots(T activeCharacter);
 

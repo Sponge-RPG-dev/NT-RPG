@@ -31,7 +31,6 @@ public class BattleCharge extends ActiveSkill<ISpongeCharacter> {
 		settings.addNode(SkillNodes.DURATION, 7500, 100);
 		settings.addNode(SkillNodes.RADIUS, 7500, 100);
 		settings.addNode("speed-per-level", 0.9f, 0.01f);
-		setIcon(ItemTypes.BANNER.getId());
 	}
 
 	@Override

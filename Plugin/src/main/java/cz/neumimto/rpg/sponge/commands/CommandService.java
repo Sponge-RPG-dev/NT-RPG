@@ -238,7 +238,7 @@ public class CommandService {
                         new PlayerClassCommandElement(Text.of("class"))
                 )
                 .permission("ntrpg.player.skills")
-                .executor(new SkillLearnExecutor())
+                .executor(injector.getInstance(SkillLearnExecutor.class))
                 .build();
 
         CommandSpec characterSkillUpgrade = CommandSpec.builder()
@@ -248,7 +248,7 @@ public class CommandService {
                         new PlayerClassCommandElement(Text.of("class"))
                 )
                 .permission("ntrpg.player.skills")
-                .executor(new SkillUpgradeExecutor())
+                .executor(injector.getInstance(SkillUpgradeExecutor.class))
                 .build();
 
         CommandSpec characterSkillRefund = CommandSpec.builder()
@@ -258,7 +258,7 @@ public class CommandService {
                         new PlayerClassCommandElement(Text.of("class"))
                 )
                 .permission("ntrpg.player.skills.refund")
-                .executor(new SkillRefundExecutor())
+                .executor(injector.getInstance(SkillRefundExecutor.class))
                 .build();
 
         CommandSpec characterSkill = CommandSpec.builder()

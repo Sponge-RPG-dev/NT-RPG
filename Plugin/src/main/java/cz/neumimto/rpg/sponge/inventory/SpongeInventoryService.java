@@ -20,8 +20,10 @@ package cz.neumimto.rpg.sponge.inventory;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
+import cz.neumimto.config.blackjack.and.hookers.NotSoStupidObjectMapper;
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.api.IResourceLoader;
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.configuration.ItemString;
 import cz.neumimto.rpg.api.configuration.SkillItemCost;
@@ -35,13 +37,13 @@ import cz.neumimto.rpg.api.inventory.RpgInventory;
 import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.persistance.model.EquipedSlot;
-import cz.neumimto.rpg.sponge.persistance.EquipedSlotImpl;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillCost;
 import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.api.skills.mods.ActiveSkillPreProcessorWrapper;
 import cz.neumimto.rpg.api.utils.Console;
+import cz.neumimto.rpg.api.utils.Pair;
 import cz.neumimto.rpg.common.inventory.AbstractInventoryService;
 import cz.neumimto.rpg.common.inventory.ManagedInventory;
 import cz.neumimto.rpg.common.inventory.SlotEffectSource;
@@ -52,14 +54,18 @@ import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
+import cz.neumimto.rpg.sponge.gui.GuiConfig;
+import cz.neumimto.rpg.sponge.gui.GuiDictionary;
 import cz.neumimto.rpg.sponge.gui.ItemLoreBuilderService;
 import cz.neumimto.rpg.sponge.inventory.data.NKeys;
 import cz.neumimto.rpg.sponge.inventory.data.manipulators.*;
 import cz.neumimto.rpg.sponge.inventory.runewords.RWService;
+import cz.neumimto.rpg.sponge.persistance.EquipedSlotImpl;
 import cz.neumimto.rpg.sponge.properties.SpongePropertyService;
 import ninja.leaping.configurate.SimpleConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMapper;
+import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.asset.Asset;
@@ -83,6 +89,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 import static cz.neumimto.rpg.api.logging.Log.error;
@@ -291,8 +298,8 @@ public class SpongeInventoryService extends AbstractInventoryService<ISpongeChar
 
 
     @Override
-    public void loadItemGroups(Path path) {
-        path = path.resolve("ItemGroups.conf");
+    public void load() {
+        Path path = Paths.get(Rpg.get().getWorkingDirectory(), "ItemGroups.conf");
         File f = path.toFile();
         if (!f.exists()) {
             Optional<Asset> asset = Sponge.getAssetManager().getAsset(NtRpgPlugin.GlobalScope.plugin, "ItemGroups.conf");
@@ -316,6 +323,33 @@ public class SpongeInventoryService extends AbstractInventoryService<ISpongeChar
         List<String> itemMetaSubtypes = c.getStringList("ItemMetaSubtypes");
 
         itemMetaSubtypes.stream().map(ItemSubtype::new).forEach(a -> itemService.getItemSubtypes().get(a));
+
+        loadSkillGuis();
+    }
+
+    private void loadSkillGuis() {
+        Path path = Paths.get(Rpg.get().getWorkingDirectory(), "Gui.conf");
+        File file = path.toFile();
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                Log.error("Could not create a file " + path.toString(), e);
+            }
+        }
+        try {
+            ObjectMapper<GuiConfig> mapper = NotSoStupidObjectMapper.forClass(GuiConfig.class);
+            HoconConfigurationLoader hcl = HoconConfigurationLoader.builder().setPath(path).build();
+            GuiConfig guiConfig = mapper.bind(new GuiConfig()).populate(hcl.load());
+            guiConfig.getSkillIcons()
+                    .entrySet()
+                    .stream()
+                    .filter(a -> skillService.getById(a.getKey()).isPresent())
+                    .map(a -> new Pair<>(skillService.getById(a.getKey()).get(), a.getValue()))
+                    .forEach(a -> GuiDictionary.addSkillIcon(a.key, a.value));
+        } catch (ObjectMappingException | IOException e) {
+            Log.error("Could not read " + path, e);
+        }
     }
 
 
@@ -403,6 +437,10 @@ public class SpongeInventoryService extends AbstractInventoryService<ISpongeChar
             e.printStackTrace();
             Log.error("Class not found - " + className, e);
         }
+        return null;
+    }
+
+    public String getItemIconForSkill(ISkill iSkill) {
         return null;
     }
 }

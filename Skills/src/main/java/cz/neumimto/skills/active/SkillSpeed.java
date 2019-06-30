@@ -33,7 +33,6 @@ public class SkillSpeed extends ActiveSkill {
 		settings.addNode(SkillNodes.DURATION, 1000, 1500);
 		settings.addNode(SkillNodes.AMOUNT, 0.1f, 0.05f);
 		addSkillType(SkillType.MOVEMENT);
-		setIcon(ItemTypes.LEATHER_BOOTS.getId());
 	}
 
 	@Override

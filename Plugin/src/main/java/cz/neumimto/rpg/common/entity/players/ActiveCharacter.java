@@ -403,7 +403,7 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
             //merge weapon sets
             mergeWeapons(next.getClassDefinition());
 
-            //might be expensive on massive skilltrees, eventually i could cache these types of skill in an extra collection
+            //might be expensive on massive Skilltrees, eventually i could cache these types of skill in an extra collection
             for (PlayerSkillContext playerSkillContext : getSkills().values()) {
                 if (playerSkillContext.getSkill().getType() == EffectSourceType.ITEM_ACCESS_SKILL) {
                     ItemAccessSkill.ItemAccessSkillData skillData = (ItemAccessSkill.ItemAccessSkillData) playerSkillContext.getSkillData();

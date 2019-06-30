@@ -58,7 +58,6 @@ public class GrapplingHook extends ActiveSkill<ISpongeCharacter> {
 		addSkillType(SkillType.PROJECTILE);
 		addSkillType(SkillType.SUMMON);
 		addSkillType(SkillType.STEALTH);
-		setIcon(ItemTypes.LEAD.getId());
 	}
 
 	@Override

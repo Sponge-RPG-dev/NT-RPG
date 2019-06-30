@@ -44,7 +44,6 @@ public class BrainSap extends Targeted {
 		settings.addNode(SkillNodes.COOLDOWN, 1000f, 10f);
 		settings.addNode(SkillNodes.RANGE, 10f, 1f);
 		settings.addNode(SkillNodes.DAMAGE, 10f, 10f);
-		setIcon(ItemTypes.ENDER_EYE.getId());
 		setDamageType(DamageTypes.MAGIC.getId());
 		addSkillType(SkillType.HEALTH_DRAIN);
 	}

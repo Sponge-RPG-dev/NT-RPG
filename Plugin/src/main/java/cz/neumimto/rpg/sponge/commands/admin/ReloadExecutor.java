@@ -109,7 +109,7 @@ public class ReloadExecutor implements CommandExecutor {
                 NtRpgPlugin.GlobalScope.effectService.purgeEffectCache();
                 NtRpgPlugin.GlobalScope.effectService.stopEffectScheduler();
                 //todo purge all skill
-                //todo purge all skilltrees
+                //todo purge all Skilltrees
 
                 for (CharacterBase characterBase : characterBases) {
                     Log.info("[RELOAD] saving character " + characterBase.getLastKnownPlayerName());
@@ -123,7 +123,7 @@ public class ReloadExecutor implements CommandExecutor {
 
                     NtRpgPlugin.GlobalScope.effectService.startEffectScheduler();
                     //todo load skill
-                    //todo load skilltrees
+                    //todo load Skilltrees
 
                     NtRpgPlugin.GlobalScope.classService.loadClasses();
                     Comparator<CharacterBase> cmp = Comparator.comparing(CharacterBase::getUpdated);

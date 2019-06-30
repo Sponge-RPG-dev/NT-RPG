@@ -6,4 +6,5 @@ import java.util.Map;
 
 public interface SkillTreeDao {
     Map<String, SkillTree> getAll();
+
 }

@@ -30,7 +30,6 @@ public class Web extends Targeted {
 	public void init() {
 		super.init();
 		settings.addNode(SkillNodes.DURATION, 5000, 100);
-		setIcon(ItemTypes.WEB.getId());
 	}
 
 	@Override

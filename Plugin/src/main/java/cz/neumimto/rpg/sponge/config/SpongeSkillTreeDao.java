@@ -2,10 +2,9 @@ package cz.neumimto.rpg.sponge.config;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
-import cz.neumimto.rpg.common.configuration.SkillTreeLoaderImpl;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.utils.Pair;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.common.configuration.SkillTreeLoaderImpl;
 import cz.neumimto.rpg.sponge.gui.SkillTreeInterfaceModel;
 import cz.neumimto.rpg.sponge.skills.SpongeSkillService;
 
@@ -23,9 +22,7 @@ public class SpongeSkillTreeDao extends SkillTreeLoaderImpl {
     @Inject
     private SpongeSkillService spongeSkillService;
 
-    @Override
-    protected boolean loadTree(Config config, SkillTree skillTree) {
-        boolean k = super.loadTree(config, skillTree);
+    protected void loadAsciiMaps(Config config, SkillTree skillTree) {
         try {
             List<String> asciiMap = config.getStringList("AsciiMap");
             Optional<String> max = asciiMap.stream().max(Comparator.comparingInt(String::length));
@@ -68,6 +65,7 @@ public class SpongeSkillTreeDao extends SkillTreeLoaderImpl {
             error("Could not read ascii map in the skilltree " + skillTree.getId(), ignored);
             skillTree.setSkillTreeMap(new short[][]{});
         }
-        return k;
     }
+
+
 }

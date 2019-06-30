@@ -6,15 +6,15 @@ import cz.neumimto.rpg.api.skills.mods.ActiveSkillPreProcessorWrapper;
 import cz.neumimto.rpg.common.entity.TestCharacter;
 
 import javax.inject.Singleton;
-import java.nio.file.Path;
 import java.util.Collections;
 import java.util.Set;
 
 @Singleton
 public class TestInventoryService extends AbstractInventoryService<TestCharacter> {
 
+
     @Override
-    public void loadItemGroups(Path path) {
+    public void load() {
 
     }
 

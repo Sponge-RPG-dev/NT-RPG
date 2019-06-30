@@ -1,22 +1,22 @@
 package cz.neumimto.rpg.api.entity.players;
 
-import cz.neumimto.rpg.api.utils.ActionResult;
 import cz.neumimto.rpg.api.IRpgElement;
+import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
+import cz.neumimto.rpg.api.persistance.model.CharacterBase;
+import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
-import cz.neumimto.rpg.api.persistance.model.CharacterBase;
-import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
-import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
 import cz.neumimto.rpg.api.skills.SkillData;
+import cz.neumimto.rpg.api.utils.ActionResult;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public interface ICharacterService<T> {
+public interface ICharacterService<T extends IActiveCharacter> {
 
     T buildDummyChar(UUID uuid);
 

@@ -55,6 +55,7 @@ public class SkilltreeExecutor implements CommandExecutor {
                 skillTreeViewModel.setSkillTree(skillTree);
             } else {
                 skillTreeViewModel.setCurrent(true);
+                skillTreeViewModel.reset();
             }
             skillTreeViewModel.setViewedClass(configClass);
             Gui.openSkillTreeMenu(character);

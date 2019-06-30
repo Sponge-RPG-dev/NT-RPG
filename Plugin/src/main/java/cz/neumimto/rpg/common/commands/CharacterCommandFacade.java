@@ -14,8 +14,6 @@ import cz.neumimto.rpg.api.permissions.PermissionService;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.utils.ActionResult;
 import cz.neumimto.rpg.common.persistance.model.JPACharacterBase;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -26,11 +24,12 @@ import java.util.function.Consumer;
 
 import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 
+@SuppressWarnings("unchecked")
 @Singleton
 public class CharacterCommandFacade {
 
     @Inject
-    private ICharacterService<? super IActiveCharacter> characterService;
+    private ICharacterService characterService;
 
     @Inject
     private LocalizationService localizationService;
@@ -81,7 +80,7 @@ public class CharacterCommandFacade {
 
                 actionResultConsumer.accept(ActionResult.ok(text));
 
-                IActiveCharacter character = (IActiveCharacter) characterService.getCharacter(uuid);
+                IActiveCharacter character = characterService.getCharacter(uuid);
                 Gui.sendListOfCharacters(character, characterBase);
             }
         }, Rpg.get().getAsyncExecutor());
@@ -98,8 +97,7 @@ public class CharacterCommandFacade {
             boolean b = false;
             for (CharacterBase playersCharacter : playersCharacters) {
                 if (playersCharacter.getName().equalsIgnoreCase(nameNext)) {
-                    ISpongeCharacter character =
-                            NtRpgPlugin.GlobalScope.characterService.createActiveCharacter(uuid, playersCharacter);
+                    IActiveCharacter character = characterService.createActiveCharacter(uuid, playersCharacter);
                     syncCallback.accept(new CommandSyncCallback(character, this));
                     b = true;
                     //Update characterbase#updated, so next time plazer logs it it will autoselect this character,
