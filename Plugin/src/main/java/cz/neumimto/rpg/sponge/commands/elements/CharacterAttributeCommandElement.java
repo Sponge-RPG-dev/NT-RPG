@@ -27,7 +27,7 @@ public class CharacterAttributeCommandElement extends PatternMatchingCommandElem
 
     @Override
     protected Object getValue(String choice) {
-        return Rpg.get().getPropertyService().getAttributeById(choice);
+        return Rpg.get().getPropertyService().getAttributeById(choice).orElse(null);
     }
 
 }

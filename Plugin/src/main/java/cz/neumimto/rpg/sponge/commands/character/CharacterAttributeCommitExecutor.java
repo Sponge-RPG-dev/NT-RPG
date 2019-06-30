@@ -11,7 +11,6 @@ import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.text.Text;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -33,18 +32,17 @@ public class CharacterAttributeCommitExecutor implements CommandExecutor {
 
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-        args.<AttributeConfig>getOne(Text.of("attribute")).ifPresent(a -> {
-            ISpongeCharacter character = characterServise.getCharacter((Player) src);
-            Map<String, Integer> attributesTransaction = character.getAttributesTransaction();
-            Map<AttributeConfig, Integer> map = new HashMap<>();
-            for (Map.Entry<String, Integer> entry : attributesTransaction.entrySet()) {
-                Optional<AttributeConfig> attributeById = propertyService.getAttributeById(entry.getKey());
-                if (attributeById.isPresent()) {
-                    map.put(attributeById.get(), entry.getValue());
-                }
+        ISpongeCharacter character = characterServise.getCharacter((Player) src);
+        Map<String, Integer> attributesTransaction = character.getAttributesTransaction();
+        Map<AttributeConfig, Integer> map = new HashMap<>();
+        for (Map.Entry<String, Integer> entry : attributesTransaction.entrySet()) {
+            Optional<AttributeConfig> attributeById = propertyService.getAttributeById(entry.getKey());
+            if (attributeById.isPresent()) {
+                map.put(attributeById.get(), entry.getValue());
             }
-            characterCommandFacade.commandCommitAttribute(character, map);
-        });
+        }
+        characterCommandFacade.commandCommitAttribute(character, map);
+
         return CommandResult.success();
     }
 }

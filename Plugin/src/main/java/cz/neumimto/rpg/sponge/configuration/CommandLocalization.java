@@ -28,6 +28,12 @@ import cz.neumimto.configuration.ConfigurationContainer;
 public class CommandLocalization {
 
     @ConfigValue
+    public static String COMMAND_ATTRIBUTE_RESPEC = "&2Respec attributes";
+
+    @ConfigValue
+    public static String COMMAND_ATTRIBUTE_COMMIT = "&2Commits attribute transaction";
+
+    @ConfigValue
     public static String COMMAND_ADMIN_ENCHANT = "&2Enchants held item with custom enchantment";
 
     @ConfigValue
@@ -141,4 +147,6 @@ public class CommandLocalization {
 
     @ConfigValue
     public static String COMMAND_DELETE_DESCRIPTION = "&2Deletes a character";
+
+
 }

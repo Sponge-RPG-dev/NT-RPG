@@ -279,6 +279,19 @@ public class CommandService {
                 .executor(injector.getInstance(CharacterAttributeExecutor.class))
                 .build();
 
+
+        CommandSpec characterAttributeCommit = CommandSpec.builder()
+                .description(TextSerializers.FORMATTING_CODE
+                        .deserialize(CommandLocalization.COMMAND_ATTRIBUTE_COMMIT))
+                .executor(injector.getInstance(CharacterAttributeCommitExecutor.class))
+                .build();
+
+        CommandSpec characterAttributeRespec = CommandSpec.builder()
+                .description(TextSerializers.FORMATTING_CODE
+                        .deserialize(CommandLocalization.COMMAND_ATTRIBUTE_RESPEC))
+                .executor(injector.getInstance(CharacterAttributeRespecExecutor.class))
+                .build();
+
         CommandSpec characterAttributes = CommandSpec.builder()
                 .executor(new CharacterAttributesExecutor())
                 .build();
@@ -295,6 +308,8 @@ public class CommandService {
 
                 .child(characterSkill, "skill", "s", "sk")
 
+                .child(characterAttributeRespec, "attributes-respec", "arspc")
+                .child(characterAttributeCommit, "tx-attribute-commit", "tac")
                 .child(characterAttribute, "attribute", "attr", "a")
                 .child(characterAttributes, "attributes", "al")
                 .executor(new CharacterMenuExecutor()) //default fallback for char list

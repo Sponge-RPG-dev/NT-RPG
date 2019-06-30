@@ -53,7 +53,6 @@ import cz.neumimto.rpg.sponge.effects.common.def.BossBarExpNotifier;
 import cz.neumimto.rpg.sponge.effects.common.def.ManaBarNotifier;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
-import cz.neumimto.rpg.sponge.inventory.data.AttributeRefMenuData;
 import cz.neumimto.rpg.sponge.inventory.data.InventoryCommandItemMenuData;
 import cz.neumimto.rpg.sponge.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.sponge.inventory.data.SkillTreeInventoryViewControllsData;
@@ -68,7 +67,6 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.DyeColors;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.Container;
@@ -865,18 +863,15 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
     public void displayCharacterAttributes(ISpongeCharacter character) {
         character.setAttributesTransaction(new HashMap<>());
 
-        SlotPos commitSP = SlotPos.of(6, 1);
+        SlotPos commitSP = SlotPos.of(7, 1);
         Inventory i = GuiHelper.createCharacterEmptyInventory(character)
-                .listener(ClickInventoryEvent.Primary.class, event -> {
-
-                })
                 .build(NtRpgPlugin.GlobalScope.plugin);
         makeBorder(i, DyeColors.ORANGE);
         i.offer(back("char ", Text.of("back")));
 
         ItemStack commit = GuiHelper.itemStack(ItemTypes.DIAMOND);
         commit.offer(Keys.DISPLAY_NAME, Text.builder("Commit").color(TextColors.GREEN).build());
-        commit.offer(new InventoryCommandItemMenuData("character attributes tx-commit"));
+        commit.offer(new InventoryCommandItemMenuData("char tx-attribute-commit"));
 
         i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(commitSP))
                 .offer(commit);
@@ -897,21 +892,20 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
 
             ItemStack btn = GuiHelper.itemStack(ItemTypes.SUGAR);
             btn.offer(Keys.DISPLAY_NAME, Text.of(TextColors.GREEN, "+"));
-            btn.offer(new AttributeRefMenuData(attribute.getId()));
             i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(q, 2))).offer(btn);
             i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(q, 3))).offer(itemStack);
-            btn.offer(new InventoryCommandItemMenuData("character attribute " + attribute.getId()));
-
-            if (pluginConfig.RESPEC_ATTRIBUTES) {
-                ItemStack btnM = GuiHelper.itemStack(ItemTypes.SUGAR);
-                btnM.offer(Keys.DISPLAY_NAME, Text.of(TextColors.RED, "-"));
-                btnM.offer(new AttributeRefMenuData(attribute.getId()));
-                btnM.offer(new InventoryCommandItemMenuData("character attribute remove " + attribute.getId()));
-                i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(q, 4))).offer(btnM);
-            }
+            btn.offer(new InventoryCommandItemMenuData("char attribute " + attribute.getId() + " 1"));
 
             q++;
         }
+        if (pluginConfig.RESPEC_ATTRIBUTES) {
+            SlotPos respecSp = SlotPos.of(7, 5);
+            ItemStack btnRespec = GuiHelper.itemStack(ItemTypes.BARRIER);
+            btnRespec.offer(Keys.DISPLAY_NAME, translate(LocalizationKeys.RESPEC_ATTRIBUTES));
+            btnRespec.offer(new InventoryCommandItemMenuData("char attributes-respec"));
+            i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(respecSp)).offer(btnRespec);
+        }
+
         character.getPlayer().openInventory(i);
     }
 

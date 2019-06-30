@@ -1265,5 +1265,26 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
         }
     }
 
+    @Override
+    public void resetAttributes(T character) {
+        if (!Rpg.get().getPluginConfig().RESPEC_ATTRIBUTES) {
+            character.sendMessage(localizationService.translate(LocalizationKeys.ATTRIBUTE_RESPEC_NOT_ALLOWED));
+            return;
+        }
+        CharacterBase base = character.getCharacterBase();
+        int attributePoints = base.getAttributePoints();
+
+        Set<BaseCharacterAttribute> attribute = character.getCharacterBase().getBaseCharacterAttribute();
+
+        for (BaseCharacterAttribute characterAttribute : attribute) {
+            attributePoints += characterAttribute.getLevel();
+            characterAttribute.setLevel(0);
+        }
+
+        recalculateProperties(character);
+        character.setRequiresDamageRecalculation(true);
+        base.setAttributePointsSpent(0);
+        base.setAttributePoints(attributePoints);
+    }
 }
 

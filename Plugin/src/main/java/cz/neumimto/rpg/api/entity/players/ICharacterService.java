@@ -141,4 +141,6 @@ public interface ICharacterService<T extends IActiveCharacter> {
     void changePropertyValue(T character, int propertyId, float value);
 
     void removePersistantSkill(CharacterSkill characterSkill);
+
+    void resetAttributes(T character);
 }
