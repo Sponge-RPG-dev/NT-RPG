@@ -1,45 +1,49 @@
 package cz.neumimto.skills.active;
 
 import cz.neumimto.Decorator;
-import cz.neumimto.SkillLocalization;
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
-import cz.neumimto.rpg.entities.EntityService;
-import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.*;
-import org.spongepowered.api.entity.living.Living;
+import cz.neumimto.rpg.api.entity.IEntity;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.SkillNodes;
+import cz.neumimto.rpg.api.skills.SkillResult;
+import cz.neumimto.rpg.api.skills.mods.SkillContext;
+import cz.neumimto.rpg.api.skills.tree.SkillType;
+import cz.neumimto.rpg.sponge.damage.SkillDamageSource;
+import cz.neumimto.rpg.sponge.damage.SkillDamageSourceBuilder;
+import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
+import cz.neumimto.rpg.sponge.skills.NDamageType;
+import cz.neumimto.rpg.sponge.skills.types.Targeted;
+
+import javax.inject.Singleton;
 
 /**
  * Created by NeumimTo on 29.12.2015.
  */
-@ResourceLoader.Skill
-public class SkillLightning extends Targetted {
+@Singleton
+@ResourceLoader.Skill("ntrpg:lightning")
+public class SkillLightning extends Targeted {
 
-	@Inject
-	EntityService entityService;
-
-	public SkillLightning() {
-		setName("Lightning");
-		setLore(SkillLocalization.SKILL_LIGHTNING_LORE);
-		setDescription(SkillLocalization.SKILL_LIGHTNING_DESC);
-		setDamageType(NDamageType.LIGHTNING);
-		SkillSettings skillSettings = new SkillSettings();
-		skillSettings.addNode(SkillNodes.DAMAGE, 10, 20);
-		skillSettings.addNode(SkillNodes.RANGE, 10, 10);
-		super.settings = skillSettings;
+	@Override
+	public void init() {
+		super.init();
+		setDamageType(NDamageType.LIGHTNING.getId());
+		settings.addNode(SkillNodes.DAMAGE, 10, 20);
+		settings.addNode(SkillNodes.RANGE, 10, 10);
 		addSkillType(SkillType.ELEMENTAL);
 		addSkillType(SkillType.LIGHTNING);
 	}
 
 	@Override
-	public SkillResult castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info) {
-		float damage = settings.getLevelNodeValue(SkillNodes.DAMAGE, info.getTotalLevel());
-		SkillDamageSourceBuilder build = new SkillDamageSourceBuilder();
-		build.fromSkill(this);
-		build.setCaster(source);
-		target.damage(damage, build.build());
-		Decorator.strikeLightning(target);
-		return SkillResult.OK;
+	public void castOn(IEntity target, ISpongeCharacter source, PlayerSkillContext info, SkillContext skillContext) {
+		float damage = skillContext.getFloatNodeValue(SkillNodes.DAMAGE);
+		SkillDamageSource s = new SkillDamageSourceBuilder()
+				.fromSkill(this)
+				.setSource(source)
+				.build();
+		ISpongeEntity entity = (ISpongeEntity) target.getEntity();
+		entity.getEntity().damage(damage, s);
+		Decorator.strikeLightning(entity.getEntity());
+		skillContext.next(source, info, skillContext.result(SkillResult.OK));
 	}
 }

@@ -2,25 +2,29 @@ package cz.neumimto.skills.active;
 
 import com.flowpowered.math.imaginary.Quaterniond;
 import com.flowpowered.math.vector.Vector3d;
-import cz.neumimto.SkillLocalization;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.SkillNodes;
+import cz.neumimto.rpg.api.skills.SkillResult;
+import cz.neumimto.rpg.api.skills.mods.SkillContext;
+import cz.neumimto.rpg.api.skills.tree.SkillType;
+import cz.neumimto.rpg.api.skills.types.ActiveSkill;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import org.spongepowered.api.data.key.Keys;
+
+import javax.inject.Singleton;
 
 /**
  * Created by NeumimTo on 23.12.2015.
  */
-@ResourceLoader.Skill
-public class SkillJump extends ActiveSkill {
+@Singleton
+@ResourceLoader.Skill("ntrpg:jump")
+public class SkillJump extends ActiveSkill<ISpongeCharacter> {
 
-	public SkillJump() {
-		setName(SkillLocalization.SKILL_JUMP_NAME);
+	public void init() {
+		super.init();
 		setDamageType(null);
-		setDescription(SkillLocalization.SKILL_JUMP_DESC);
-		SkillSettings skillSettings = new SkillSettings();
-		skillSettings.addNode(SkillNodes.VELOCITY, 2, 2);
-		settings = skillSettings;
+		settings.addNode(SkillNodes.VELOCITY, 2, 2);
 		addSkillType(SkillType.STEALTH);
 		addSkillType(SkillType.MOVEMENT);
 		addSkillType(SkillType.PHYSICAL);
@@ -28,11 +32,12 @@ public class SkillJump extends ActiveSkill {
 
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier skillModifier) {
+	public void cast(ISpongeCharacter character, PlayerSkillContext info, SkillContext skillContext) {
 		Vector3d rotation = character.getEntity().getRotation();
 		Vector3d direction = Quaterniond.fromAxesAnglesDeg(rotation.getX(), -rotation.getY(), rotation.getZ()).getDirection();
-		Vector3d velocity = direction.add(0, 1, 0).mul(settings.getLevelNodeValue(SkillNodes.VELOCITY, info.getTotalLevel()));
-		character.getEntity().offer(Keys.VELOCITY, velocity);
-		return SkillResult.OK;
+		Vector3d mul = new Vector3d(0, 1, 0).mul(skillContext.getFloatNodeValue(SkillNodes.VELOCITY));
+		direction = mul.add(direction.getX(), 0, direction.getZ());
+		character.getEntity().offer(Keys.VELOCITY, direction);
+		skillContext.next(character, info, skillContext.result(SkillResult.OK));
 	}
 }

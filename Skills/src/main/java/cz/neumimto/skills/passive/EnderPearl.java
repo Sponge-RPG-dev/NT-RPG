@@ -1,41 +1,45 @@
 package cz.neumimto.skills.passive;
 
-import cz.neumimto.SkillLocalization;
 import cz.neumimto.effects.EnderPearlEffect;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.effects.IEffectContainer;
-import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.api.effects.IEffectContainer;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.SkillNodes;
+import cz.neumimto.rpg.api.skills.tree.SkillType;
+import cz.neumimto.rpg.api.skills.types.PassiveSkill;
+
+import javax.inject.Singleton;
 
 /**
  * Created by NeumimTo on 7.8.17.
  */
-@ResourceLoader.Skill
+@Singleton
+@ResourceLoader.Skill("ntrpg:enderpearl")
 public class EnderPearl extends PassiveSkill {
 
 
 	public EnderPearl() {
 		super(EnderPearlEffect.name);
-		setName(SkillLocalization.SKILL_ENDERPEARL_NAME);
-		setDescription(SkillLocalization.SKILL_ENDERPEARL_DESC);
-		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.COOLDOWN, 7500, -150);
 		addSkillType(SkillType.TELEPORT);
 		addSkillType(SkillType.MOVEMENT);
 	}
 
 	@Override
-	public void applyEffect(ExtendedSkillInfo info, IActiveCharacter character) {
-		long cooldown = getLongNodeValue(info, SkillNodes.COOLDOWN);
+	public void applyEffect(PlayerSkillContext info, IActiveCharacter character) {
+		int totalLevel = info.getTotalLevel();
+		long cooldown = (long) info.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.COOLDOWN, totalLevel);
 		EnderPearlEffect effect = new EnderPearlEffect(character, -1L, cooldown);
-		effectService.addEffect(effect, character, this);
+		effectService.addEffect(effect, this);
 	}
 
 	@Override
 	public void skillUpgrade(IActiveCharacter IActiveCharacter, int level) {
 		super.skillUpgrade(IActiveCharacter, level);
-		ExtendedSkillInfo skill = IActiveCharacter.getSkill(getName());
-		long cooldown = getLongNodeValue(skill, SkillNodes.COOLDOWN);
+		PlayerSkillContext skill = IActiveCharacter.getSkill(getId());
+		int totalLevel = skill.getTotalLevel();
+		long cooldown = (long) skill.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.COOLDOWN, totalLevel);
 		IEffectContainer<Long, EnderPearlEffect> container = IActiveCharacter.getEffect(EnderPearlEffect.name);
 		container.updateValue(cooldown, this);
 	}

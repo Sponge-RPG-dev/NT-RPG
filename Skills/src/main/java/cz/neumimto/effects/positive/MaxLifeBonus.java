@@ -1,18 +1,14 @@
 package cz.neumimto.effects.positive;
 
-import cz.neumimto.rpg.ClassGenerator;
-import cz.neumimto.rpg.effects.EffectBase;
-import cz.neumimto.rpg.effects.IEffectConsumer;
+import cz.neumimto.rpg.api.effects.EffectBase;
+import cz.neumimto.rpg.api.entity.IEffectConsumer;
 
 
-@ClassGenerator.Generate(id = "name")
 public class MaxLifeBonus extends EffectBase {
 
-	public static final String name = "Max life";
+    public static final String name = "Max life";
 
-	public MaxLifeBonus(IEffectConsumer character, long duration, String level) {
-
-		//todo
-	}
-
+    public MaxLifeBonus(String name, IEffectConsumer consumer) {
+        super(name, consumer);
+    }
 }

@@ -1,68 +1,74 @@
 package cz.neumimto.skills.active;
 
-import cz.neumimto.SkillLocalization;
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.negative.StunEffect;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
-import cz.neumimto.rpg.effects.EffectService;
-import cz.neumimto.rpg.effects.IEffectConsumer;
-import cz.neumimto.rpg.entities.EntityService;
-import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.*;
-import cz.neumimto.rpg.utils.Utils;
+import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.common.effects.EffectService;
+import cz.neumimto.rpg.api.entity.EntityService;
+import cz.neumimto.rpg.api.entity.IEffectConsumer;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.SkillNodes;
+import cz.neumimto.rpg.api.skills.SkillResult;
+import cz.neumimto.rpg.api.skills.mods.SkillContext;
+import cz.neumimto.rpg.api.skills.tree.SkillType;
+import cz.neumimto.rpg.api.skills.types.ActiveSkill;
+import cz.neumimto.rpg.sponge.damage.SkillDamageSource;
+import cz.neumimto.rpg.sponge.damage.SkillDamageSourceBuilder;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
+import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * Created by NeumimTo on 7.7.2017.
  */
-@ResourceLoader.Skill
-public class Wrestle extends Targetted {
+@Singleton
+@ResourceLoader.Skill("ntrpg:wrestle")
+public class Wrestle extends ActiveSkill<ISpongeCharacter> {
 
 	@Inject
-	private EffectService effectService;
+	private IEffectService effectService;
 
 	@Inject
 	private EntityService entityService;
 
-	public Wrestle() {
-		setName("Wrestle");
-		setDescription(SkillLocalization.SKILL_WRESTLE_DESC);
-		setLore(SkillLocalization.SKILL_WRESTLE_LORE);
-		setDamageType(NDamageType.PHYSICAL);
-		SkillSettings settings = new SkillSettings();
+	@Override
+	public void init() {
+		super.init();
+		setDamageType(DamageTypes.ATTACK.getId());
 		settings.addNode(SkillNodes.RADIUS, 3, 0.5f);
 		settings.addNode(SkillNodes.DURATION, 1, 0.1f);
 		settings.addNode(SkillNodes.DAMAGE, 1, 0.5f);
-		super.settings = settings;
 		addSkillType(SkillType.PHYSICAL);
 		addSkillType(SkillType.AOE);
 	}
 
 	@Override
-	public SkillResult castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info) {
-		int intNodeValue = getIntNodeValue(info, SkillNodes.RADIUS);
-		float floatNodeValue = getFloatNodeValue(info, SkillNodes.DAMAGE);
-		long duration = getLongNodeValue(info, SkillNodes.DURATION);
-		for (Entity entity : target.getNearbyEntities(intNodeValue)) {
+	public void cast(ISpongeCharacter source, PlayerSkillContext info, SkillContext skillContext) {
+		int radius = skillContext.getIntNodeValue(SkillNodes.RADIUS);
+		float damage = skillContext.getFloatNodeValue(SkillNodes.DAMAGE);
+		long duration = skillContext.getLongNodeValue(SkillNodes.DURATION);
+		for (Entity entity : source.getPlayer().getNearbyEntities(radius)) {
 			if (Utils.isLivingEntity(entity)) {
 				Living l = (Living) entity;
 				if (Utils.canDamage(source, l)) {
-					IEffectConsumer t = entityService.get(target);
+					IEffectConsumer t = entityService.get(l);
 					StunEffect stunEffect = new StunEffect(t, duration);
-					effectService.addEffect(stunEffect, t, this);
-					if (floatNodeValue > 0) {
-						SkillDamageSourceBuilder build = new SkillDamageSourceBuilder();
-						build.fromSkill(this);
-						build.setCaster(source);
-						build.type(DamageTypes.ATTACK);
-						entity.damage(floatNodeValue, build.build());
+					effectService.addEffect(stunEffect, this, source);
+					if (damage > 0) {
+						SkillDamageSource s = new SkillDamageSourceBuilder()
+								.fromSkill(this)
+								.setSource(source)
+								.build();
+						entity.damage(damage, s);
 					}
 				}
 			}
 		}
-		return SkillResult.OK;
+		skillContext.next(source, info, skillContext.result(SkillResult.OK));
 	}
 }

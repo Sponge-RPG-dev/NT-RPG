@@ -1,7 +1,7 @@
 package cz.neumimto;
 
-import cz.neumimto.rpg.players.properties.Property;
-import cz.neumimto.rpg.players.properties.PropertyContainer;
+import cz.neumimto.rpg.api.properties.Property;
+import cz.neumimto.rpg.api.properties.PropertyContainer;
 
 /**
  * Created by NeumimTo on 5.7.2017.

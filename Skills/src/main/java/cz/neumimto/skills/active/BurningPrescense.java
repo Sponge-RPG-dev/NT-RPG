@@ -1,57 +1,65 @@
 package cz.neumimto.skills.active;
 
-import cz.neumimto.SkillLocalization;
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.positive.BurningPrescenseEffect;
-import cz.neumimto.model.BurningpresenseModel;
+import cz.neumimto.model.BPModel;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.effects.EffectService;
-import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.*;
-import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
+import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.common.effects.EffectService;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.SkillNodes;
+import cz.neumimto.rpg.api.skills.SkillResult;
+import cz.neumimto.rpg.api.skills.mods.SkillContext;
+import cz.neumimto.rpg.api.skills.tree.SkillType;
+import cz.neumimto.rpg.api.skills.types.ActiveSkill;
+import cz.neumimto.rpg.sponge.skills.NDamageType;
 import org.spongepowered.api.item.ItemTypes;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Created by NeumimTo on 4.7.2017.
  */
-@ResourceLoader.Skill
+@Singleton
+@ResourceLoader.Skill("ntrpg:burningprescense")
 public class BurningPrescense extends ActiveSkill {
 
-	@Inject
-	private EffectService effectService;
+    @Inject
+    private IEffectService effectService;
 
-	public BurningPrescense() {
-		setName(SkillLocalization.burningPrescense);
-		setDescription(SkillLocalization.burningPrescense_desc);
-		SkillSettings settings = new SkillSettings();
-		settings.addNode(SkillNodes.CHANCE, 0.1f, 0.005f);
-		settings.addNode(SkillNodes.PERIOD, 2500, -100);
-		settings.addNode(SkillNodes.RADIUS, 2500, -100);
-		super.settings = settings;
-		setDamageType(DamageTypes.FIRE);
-		addSkillType(SkillType.AURA);
-		addSkillType(SkillType.AOE);
-		addSkillType(SkillType.ELEMENTAL);
-		addSkillType(SkillType.FIRE);
-		setIcon(ItemTypes.FIRE_CHARGE);
-	}
+    @Override
+    public void init() {
+        super.init();
+        settings.addNode(SkillNodes.PERIOD, 1000, -10);
+        settings.addNode(SkillNodes.RADIUS, 3, 0);
+        settings.addNode(SkillNodes.DAMAGE, 5, 1);
+        setDamageType(NDamageType.FIRE.getId());
+        addSkillType(SkillType.AURA);
+        addSkillType(SkillType.AOE);
+        addSkillType(SkillType.ELEMENTAL);
+        addSkillType(SkillType.FIRE);
+    }
 
-	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier modifier) {
-		if (character.hasEffect(BurningPrescenseEffect.name)) {
-			effectService.removeEffectContainer(character.getEffect(BurningPrescenseEffect.name), character);
-		} else {
-			BurningpresenseModel model = getBPModel(info, character);
-			model.duration = -1;
-		}
-		return SkillResult.OK;
-	}
+    @Override
+    public void cast(IActiveCharacter character, PlayerSkillContext info, SkillContext skillContext) {
+        if (character.hasEffect(BurningPrescenseEffect.name)) {
+            effectService.removeEffectContainer(character.getEffect(BurningPrescenseEffect.name), character);
+        } else {
+            BPModel model = getBPModel(skillContext);
+            model.duration = -1;
+            BurningPrescenseEffect eff = new BurningPrescenseEffect(character, -1, model);
+            effectService.addEffect(eff, this);
+        }
 
-	private BurningpresenseModel getBPModel(ExtendedSkillInfo info, IActiveCharacter character) {
-		BurningpresenseModel model = new BurningpresenseModel();
-		model.period = getIntNodeValue(info, SkillNodes.PERIOD);
-		model.radius = getLongNodeValue(info, SkillNodes.RADIUS);
-		model.damage = getIntNodeValue(info, SkillNodes.DAMAGE);
-		return model;
-	}
+        skillContext.next(character, info, skillContext.result(SkillResult.OK));
+    }
+
+    private BPModel getBPModel(SkillContext skillContext) {
+        BPModel model = new BPModel();
+        model.period = skillContext.getIntNodeValue(SkillNodes.PERIOD);
+        model.radius = skillContext.getLongNodeValue(SkillNodes.RADIUS);
+        model.damage = skillContext.getIntNodeValue(SkillNodes.DAMAGE);
+        return model;
+    }
 }

@@ -2,12 +2,15 @@ package cz.neumimto.skills.active;
 
 import com.flowpowered.math.imaginary.Quaterniond;
 import com.flowpowered.math.vector.Vector3d;
-import cz.neumimto.SkillLocalization;
-import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.rpg.NtRpgPlugin;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.SkillNodes;
+import cz.neumimto.rpg.api.skills.SkillResult;
+import cz.neumimto.rpg.api.skills.mods.SkillContext;
+import cz.neumimto.rpg.api.skills.tree.SkillType;
+import cz.neumimto.rpg.api.skills.types.ActiveSkill;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.particle.ParticleTypes;
@@ -20,6 +23,8 @@ import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -32,8 +37,9 @@ import static com.flowpowered.math.TrigMath.sin;
 /**
  * Created by NeumimTo on 5.8.2017.
  */
-@ResourceLoader.Skill
-public class GrapplingHook extends ActiveSkill {
+@Singleton
+@ResourceLoader.Skill("ntrpg:grapplinghook")
+public class GrapplingHook extends ActiveSkill<ISpongeCharacter> {
 
 	public static Map<UUID, Long> cache = new LinkedHashMap<UUID, Long>() {
 		@Override
@@ -45,24 +51,21 @@ public class GrapplingHook extends ActiveSkill {
 	@Inject
 	private NtRpgPlugin plugin;
 
-	public GrapplingHook() {
-		setName(SkillLocalization.GRAPPLING_HOOK_NAME);
-		setDescription(SkillLocalization.GRAPPLING_HOOK_DESC);
-		SkillSettings settings = new SkillSettings();
+	public void init() {
+		super.init();
 		settings.addNode(SkillNodes.RANGE, 100, 10);
-		setSettings(settings);
 		addSkillType(SkillType.PHYSICAL);
 		addSkillType(SkillType.PROJECTILE);
 		addSkillType(SkillType.SUMMON);
 		addSkillType(SkillType.STEALTH);
-		setIcon(ItemTypes.LEAD);
 	}
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier modifier) {
+	public void cast(ISpongeCharacter character, PlayerSkillContext info, SkillContext skillContext) {
 		Player p = character.getPlayer();
 		World world = p.getWorld();
-		Entity optional = world.createEntity(EntityTypes.TIPPED_ARROW, p.getLocation().getPosition().add(cos((p.getRotation().getX() - 90) % 360) * 0.2, 1.8, sin((p.getRotation().getX() - 90) % 360) * 0.2));
+		Entity optional = world.createEntity(EntityTypes.TIPPED_ARROW, p.getLocation().getPosition()
+				.add(cos((p.getRotation().getX() - 90) % 360) * 0.2, 1.8, sin((p.getRotation().getX() - 90) % 360) * 0.2));
 
 		Vector3d rotation = p.getRotation();
 		Vector3d direction = Quaterniond.fromAxesAnglesDeg(rotation.getX(), -rotation.getY(), rotation.getZ()).getDirection();
@@ -72,7 +75,7 @@ public class GrapplingHook extends ActiveSkill {
 
 		Vector3d arrowVec = direction.normalize().mul(2);
 		sb.setVelocity(arrowVec);
-		double range = getDoubleNodeValue(info, SkillNodes.RANGE);
+		double range = skillContext.getDoubleNodeValue(SkillNodes.RANGE);
 		//final double rangeSquared = Math.pow(range, 2);
 
 		world.spawnEntity(sb);
@@ -118,7 +121,7 @@ public class GrapplingHook extends ActiveSkill {
 				.interval(50, TimeUnit.MILLISECONDS)
 				.submit(plugin);
 
-		return SkillResult.OK;
+		skillContext.next(character, info, SkillResult.OK);
 	}
 
 

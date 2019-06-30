@@ -1,0 +1,41 @@
+plugins {
+    id 'org.spongepowered.plugin' version '0.8.1'
+    id 'idea'
+}
+
+group = 'cz.neumimto.rpggui'
+version = '0.0.1'
+
+dependencies {
+    compileOnly 'org.spongepowered:spongeapi:' + project.spongeApiVersion
+    compile project(':NT-RPG') //todo change to implementation
+
+    compile group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
+
+    compile group: 'org.eclipse.jetty', name: 'jetty-continuation', version: '9.4.14.v20181114'
+    compile group: 'org.eclipse.jetty.websocket', name: 'websocket-server', version: '9.4.14.v20181114'
+    compile group: 'org.eclipse.jetty.websocket', name: 'javax-websocket-server-impl', version: '9.4.14.v20181114'
+
+    compile group: 'com.vaadin', name: 'vaadin-core', version: '13.0.2'
+// https://mvnrepository.com/artifact/org.slf4j/slf4j-simple
+    testCompile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.26'
+
+    jar {
+        manifest {
+            attributes(
+                    'Build-Timestamp': new Date()
+            )
+        }
+        from {
+            configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+        }
+    }
+
+
+}
+
+task execute(type:JavaExec) {
+    main = 'com.example.ntrpgwebservergui.NTRpgWebGui'
+    classpath = sourceSets.main.runtimeClasspath
+    debug = true
+}

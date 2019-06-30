@@ -1,15 +1,19 @@
 package cz.neumimto.model;
 
-import cz.neumimto.rpg.effects.common.stacking.UnstackableEffectData;
+import cz.neumimto.rpg.api.effects.stacking.UnstackableEffectData;
+import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 
 /**
  * Created by NeumimTo on 6.7.2017.
  */
+@JsBinding(JsBinding.Type.CLASS)
 public class CriticalEffectModel implements UnstackableEffectData<CriticalEffectModel> {
+
 	public int chance;
 	public float mult;
 
 	public CriticalEffectModel() {
+
 	}
 
 	public CriticalEffectModel(int chance, float mult) {

@@ -1,36 +1,34 @@
 package cz.neumimto.effects.positive;
 
-import cz.neumimto.rpg.ClassGenerator;
-import cz.neumimto.rpg.effects.EffectBase;
-import cz.neumimto.rpg.effects.IEffectConsumer;
-import cz.neumimto.rpg.effects.common.stacking.IntegerEffectStackingStrategy;
-import cz.neumimto.rpg.players.properties.DefaultProperties;
-import cz.neumimto.rpg.utils.Utils;
+import cz.neumimto.rpg.api.effects.EffectBase;
+import cz.neumimto.rpg.api.effects.Generate;
+import cz.neumimto.rpg.api.effects.IEffect;
+import cz.neumimto.rpg.api.effects.stacking.IntegerEffectStackingStrategy;
+import cz.neumimto.rpg.api.entity.IEffectConsumer;
+import cz.neumimto.rpg.api.skills.scripting.JsBinding;
+import cz.neumimto.rpg.sponge.properties.SpongeDefaultProperties;
 
-@ClassGenerator.Generate(id = "name")
+@JsBinding(JsBinding.Type.CLASS)
+@Generate(id = "name", description = "An effect which gives +x bonus points to all skill")
 public class AllSkillsBonus extends EffectBase<Integer> {
 
-	public static final String name = "All skills";
+    public static final String name = "All skill";
 
-	public AllSkillsBonus(IEffectConsumer character, long duration, int value) {
-		super(name, character);
-		setDuration(duration);
-		setStackable(true, new IntegerEffectStackingStrategy());
-		setValue(value);
-	}
+    public AllSkillsBonus(IEffectConsumer character, long duration, int value) {
+        super(name, character);
+        setDuration(duration);
+        setStackable(true, IntegerEffectStackingStrategy.INSTANCE);
+        setValue(value);
+    }
 
-	public AllSkillsBonus(IEffectConsumer character, long duration, String value) {
-		this(character, duration, Integer.parseInt(Utils.extractNumber(value)));
-	}
+    @Override
+    public void onApply(IEffect self) {
+        getConsumer().setProperty(SpongeDefaultProperties.all_skills_bonus, getConsumer().getProperty(SpongeDefaultProperties.all_skills_bonus) + getValue());
+    }
 
-	@Override
-	public void onApply() {
-		getConsumer().setProperty(DefaultProperties.all_skills_bonus, getConsumer().getProperty(DefaultProperties.all_skills_bonus) + getValue());
-	}
-
-	@Override
-	public void onRemove() {
-		getConsumer().setProperty(DefaultProperties.all_skills_bonus, getConsumer().getProperty(DefaultProperties.all_skills_bonus) - getValue());
-	}
+    @Override
+    public void onRemove(IEffect self) {
+        getConsumer().setProperty(SpongeDefaultProperties.all_skills_bonus, getConsumer().getProperty(SpongeDefaultProperties.all_skills_bonus) - getValue());
+    }
 
 }

@@ -1,4 +1,4 @@
-/*    
+/*
  *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -13,23 +13,39 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
+ *
  */
 
 package cz.neumimto.rpg;
 
-import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.core.ioc.Singleton;
-import cz.neumimto.rpg.damage.DamageService;
-import cz.neumimto.rpg.effects.EffectService;
-import cz.neumimto.rpg.entities.EntityService;
-import cz.neumimto.rpg.inventory.InventoryService;
-import cz.neumimto.rpg.inventory.runewords.RWService;
-import cz.neumimto.rpg.players.CharacterService;
-import cz.neumimto.rpg.players.parties.PartyService;
-import cz.neumimto.rpg.players.properties.PropertyService;
-import cz.neumimto.rpg.skills.SkillService;
+import com.google.inject.Injector;
+import cz.neumimto.rpg.api.classes.ClassService;
+import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.api.skills.SkillService;
+import cz.neumimto.rpg.common.effects.EffectService;
+import cz.neumimto.rpg.api.entity.PropertyService;
+import cz.neumimto.rpg.api.events.EventFactoryService;
+import cz.neumimto.rpg.api.gui.Gui;
+import cz.neumimto.rpg.api.localization.LocalizationService;
+import cz.neumimto.rpg.api.scripting.IScriptEngine;
+import cz.neumimto.rpg.common.assets.AssetService;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.commands.CommandService;
+import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
+import cz.neumimto.rpg.sponge.entities.SpongeEntityService;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
+import cz.neumimto.rpg.sponge.entities.players.party.SpongePartyService;
+import cz.neumimto.rpg.sponge.exp.ExperienceService;
+import cz.neumimto.rpg.sponge.gui.ParticleDecorator;
+import cz.neumimto.rpg.sponge.gui.VanillaMessaging;
+import cz.neumimto.rpg.sponge.inventory.SpongeInventoryService;
+import cz.neumimto.rpg.sponge.inventory.SpongeItemService;
+import cz.neumimto.rpg.sponge.inventory.runewords.RWService;
+import cz.neumimto.rpg.sponge.skills.SpongeSkillService;
 import org.spongepowered.api.Game;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Created by NeumimTo on 6.8.2015.
@@ -37,39 +53,81 @@ import org.spongepowered.api.Game;
 @Singleton
 public class GlobalScope {
 
-	@Inject
-	public CharacterService characterService;
+    @Inject
+    public SpongeCharacterServise characterService;
 
-	@Inject
-	public EffectService effectService;
+    @Inject
+    public IEffectService effectService;
 
-	@Inject
-	public GroupService groupService;
+    @Inject
+    public ClassService classService;
 
-	@Inject
-	public SkillService skillService;
+    @Inject
+    public CommandService commandService;
 
-	@Inject
-	public NtRpgPlugin plugin;
+    @Inject
+    public SkillService skillService;
 
-	@Inject
-	public Game game;
+    @Inject
+    public NtRpgPlugin plugin;
 
-	@Inject
-	public DamageService damageService;
+    @Inject
+    public Game game;
 
-	@Inject
-	public InventoryService inventorySerivce;
+    @Inject
+    public SpongeDamageService damageService;
 
-	@Inject
-	public RWService runewordService;
+    @Inject
+    public SpongeInventoryService inventorySerivce;
 
-	@Inject
-	public EntityService entityService;
+    @Inject
+    public RWService runewordService;
 
-	@Inject
-	public PartyService partyService;
+    @Inject
+    public SpongeEntityService entityService;
 
-	@Inject
-	public PropertyService propertyService;
+    @Inject
+    public SpongePartyService partyService;
+
+    @Inject
+    public PropertyService spongePropertyService;
+
+    @Inject
+    public SpongeItemService itemService;
+
+    @Inject
+    public Injector injector;
+
+    @Inject
+    public IScriptEngine jsLoader;
+
+    @Inject
+    public ResourceLoader resourceLoader;
+
+    @Inject
+    public ExperienceService experienceService;
+
+    @Inject
+    public SpongeInventoryService spongeInventoryService;
+
+    @Inject
+    public VanillaMessaging vanillaMessaging;
+
+    @Inject
+    public ParticleDecorator particleDecorator;
+
+    @Inject
+    public RWService rwService;
+
+    @Inject
+    public Gui gui;
+
+    @Inject
+    public LocalizationService localizationService;
+
+    @Inject
+    public EventFactoryService eventFactory;
+
+    @Inject
+    public AssetService assetService;
 }

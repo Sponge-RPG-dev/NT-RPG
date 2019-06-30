@@ -1,52 +1,52 @@
 package cz.neumimto.skills.active;
 
-import cz.neumimto.SkillLocalization;
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.negative.MultiboltEffect;
 import cz.neumimto.model.MultiboltModel;
-import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.effects.EffectService;
-import cz.neumimto.rpg.effects.IEffect;
-import cz.neumimto.rpg.entities.EntityService;
-import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.*;
-import org.spongepowered.api.entity.living.Living;
+import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.common.effects.EffectService;
+import cz.neumimto.rpg.api.effects.IEffect;
+import cz.neumimto.rpg.api.entity.IEntity;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.SkillNodes;
+import cz.neumimto.rpg.api.skills.SkillResult;
+import cz.neumimto.rpg.api.skills.mods.SkillContext;
+import cz.neumimto.rpg.api.skills.tree.SkillType;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
+import cz.neumimto.rpg.sponge.skills.NDamageType;
+import cz.neumimto.rpg.sponge.skills.types.Targeted;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 
 /**
  * Created by NeumimTo on 6.7.2017.
  */
-@ResourceLoader.Skill
-public class Multibolt extends Targetted {
+@Singleton
+@ResourceLoader.Skill("ntrpg:multibolt")
+public class Multibolt extends Targeted {
 
 	@Inject
-	private EntityService entityService;
+	private IEffectService effectService;
 
-	@Inject
-	private EffectService effectService;
-
-	public Multibolt() {
-		setName("Multibolt");
-		setLore(SkillLocalization.SKILL_MULTIBOLT_LORE);
-		setDescription(SkillLocalization.SKILL_MULTIBOLT_DESC);
-		setDamageType(NDamageType.LIGHTNING);
-		SkillSettings skillSettings = new SkillSettings();
-		skillSettings.addNode(SkillNodes.DAMAGE, 10, 20);
-		skillSettings.addNode("times-hit", 10, 20);
-		super.settings = skillSettings;
+	@Override
+	public void init() {
+		super.init();
+		setDamageType(NDamageType.LIGHTNING.getId());
+		settings.addNode(SkillNodes.DAMAGE, 10, 20);
+		settings.addNode("times-hit", 10, 20);
 		addSkillType(SkillType.ELEMENTAL);
 		addSkillType(SkillType.LIGHTNING);
 	}
 
 	@Override
-	public SkillResult castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info) {
-		float damage = getFloatNodeValue(info, SkillNodes.DAMAGE);
-		int timesToHit = getIntNodeValue(info, "times-hit");
+	public void castOn(IEntity target, ISpongeCharacter source, PlayerSkillContext info, SkillContext skillContext) {
+		float damage = skillContext.getFloatNodeValue(SkillNodes.DAMAGE);
+		int timesToHit = skillContext.getIntNodeValue("times-hit");
 		MultiboltModel model = new MultiboltModel(timesToHit, damage);
-		IEntity iEntity = entityService.get(target);
-		IEffect effect = new MultiboltEffect(iEntity, source, model);
-		effectService.addEffect(effect, iEntity, this);
-		return SkillResult.OK;
+		IEffect effect = new MultiboltEffect(target, source, model);
+		effectService.addEffect(effect, this);
+		skillContext.next(source, info, SkillResult.OK);
 	}
 }

@@ -1,38 +1,47 @@
 package cz.neumimto.skills.active;
 
-import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.effects.positive.Invisibility;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.effects.EffectService;
-import cz.neumimto.rpg.effects.common.positive.Invisibility;
-import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.api.IResourceLoader;
+import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.SkillNodes;
+import cz.neumimto.rpg.api.skills.SkillResult;
+import cz.neumimto.rpg.common.effects.EffectService;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.skills.mods.SkillContext;
+import cz.neumimto.rpg.api.skills.types.ActiveSkill;
+import cz.neumimto.rpg.api.skills.tree.SkillType;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Created by NeumimTo on 23.12.2015.
  */
-@ResourceLoader.Skill
-@ResourceLoader.ListenerClass
+@Singleton
+@ResourceLoader.Skill("ntrpg:invisibility")
+@IResourceLoader.ListenerClass
 public class SkillInvisibility extends ActiveSkill {
 
 	@Inject
-	private EffectService effectService;
+	private IEffectService effectService;
 
-	public SkillInvisibility() {
-		setName("Invisibility");
+	@Override
+	public void init() {
+		super.init();
 		setDamageType(null);
-		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.DURATION, 10, 10);
-		setSettings(settings);
 		addSkillType(SkillType.STEALTH);
 		addSkillType(SkillType.MOVEMENT);
 	}
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier skillModifier) {
-		long duration = (long) settings.getLevelNodeValue(SkillNodes.DURATION, info.getTotalLevel());
+	public void cast(IActiveCharacter character, PlayerSkillContext info, SkillContext skillContext) {
+		long duration = skillContext.getLongNodeValue(SkillNodes.DURATION);
 		Invisibility invisibility = new Invisibility(character, duration);
-		effectService.addEffect(invisibility, character, this);
-		return SkillResult.OK;
+		effectService.addEffect(invisibility, this);
+		skillContext.next(character, info, skillContext.result(SkillResult.OK));
 	}
 
 

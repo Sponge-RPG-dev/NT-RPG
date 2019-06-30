@@ -1,60 +1,59 @@
 package cz.neumimto.skills.active;
 
-import cz.neumimto.SkillLocalization;
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.negative.StunEffect;
-import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.damage.SkillDamageSource;
-import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
-import cz.neumimto.rpg.effects.EffectService;
-import cz.neumimto.rpg.entities.EntityService;
-import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.*;
-import org.spongepowered.api.entity.living.Living;
+import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.common.effects.EffectService;
+import cz.neumimto.rpg.api.entity.IEntity;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.SkillNodes;
+import cz.neumimto.rpg.api.skills.SkillResult;
+import cz.neumimto.rpg.api.skills.mods.SkillContext;
+import cz.neumimto.rpg.api.skills.tree.SkillType;
+import cz.neumimto.rpg.sponge.damage.SkillDamageSource;
+import cz.neumimto.rpg.sponge.damage.SkillDamageSourceBuilder;
+import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
+import cz.neumimto.rpg.sponge.skills.types.Targeted;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Created by ja on 20.8.2017.
  */
-@ResourceLoader.Skill
-public class Stun extends Targetted {
+@Singleton
+@ResourceLoader.Skill("ntrpg:stun")
+public class Stun extends Targeted {
 
 	@Inject
-	private EntityService entityService;
+	private IEffectService effectService;
 
-
-	@Inject
-	private EffectService effectService;
-
-	public Stun() {
-		setName(SkillLocalization.SKILL_STUN_NAME);
-		setDescription(SkillLocalization.SKILL_STUN_DESC);
-		SkillSettings settings = new SkillSettings();
+	@Override
+	public void init() {
+		super.init();
 		settings.addNode(SkillNodes.DAMAGE, 10, 1);
 		settings.addNode(SkillNodes.DURATION, 4500, 100);
-		setSettings(settings);
 		addSkillType(SkillType.PHYSICAL);
 		addSkillType(SkillType.MOVEMENT);
-		setDamageType(DamageTypes.ATTACK);
+		setDamageType(DamageTypes.ATTACK.getId());
 	}
 
 	@Override
-	public SkillResult castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info) {
-		long duration = getLongNodeValue(info, SkillNodes.DURATION);
-		double damage = getDoubleNodeValue(info, SkillNodes.DAMAGE);
-		IEntity e = entityService.get(target);
-		StunEffect stunEffect = new StunEffect(e, duration);
-		effectService.addEffect(stunEffect, e, this);
+	public void castOn(IEntity target, ISpongeCharacter source, PlayerSkillContext info, SkillContext skillContext) {
+		long duration = skillContext.getLongNodeValue(SkillNodes.DURATION);
+		double damage = skillContext.getDoubleNodeValue(SkillNodes.DAMAGE);
+		StunEffect stunEffect = new StunEffect(target, duration);
+		effectService.addEffect(stunEffect, this, source);
 		if (damage > 0) {
-			SkillDamageSourceBuilder builder = new SkillDamageSourceBuilder();
-			builder.fromSkill(this);
-			builder.setTarget(e);
-			builder.setCaster(source);
-			SkillDamageSource s = builder.build();
-			target.damage(damage, s);
+			SkillDamageSource s = new SkillDamageSourceBuilder()
+					.fromSkill(this)
+					.setSource(source)
+					.build();
+			((ISpongeEntity)target).getEntity().damage(damage, s);
 		}
-		return SkillResult.OK;
+		skillContext.next(source, info, skillContext.result(SkillResult.OK));
 	}
 
 }

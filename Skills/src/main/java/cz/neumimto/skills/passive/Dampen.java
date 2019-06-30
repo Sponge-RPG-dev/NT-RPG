@@ -1,49 +1,47 @@
 package cz.neumimto.skills.passive;
 
-import cz.neumimto.SkillLocalization;
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.positive.DampenEffect;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.effects.EffectService;
-import cz.neumimto.rpg.effects.IEffectContainer;
-import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
-import cz.neumimto.rpg.skills.PassiveSkill;
-import cz.neumimto.rpg.skills.SkillSettings;
-import cz.neumimto.rpg.skills.SkillType;
+import cz.neumimto.rpg.api.effects.IEffectContainer;
+import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.tree.SkillType;
+import cz.neumimto.rpg.api.skills.types.PassiveSkill;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Created by NeumimTo on 7.7.2017.
  */
-@ResourceLoader.Skill
+@Singleton
+@ResourceLoader.Skill("ntrpg:dampen")
 public class Dampen extends PassiveSkill {
 
 	@Inject
-	private EffectService effectService;
+	private IEffectService effectService;
 
 	public Dampen() {
 		super(DampenEffect.name);
-		setName("Dampen");
-		setLore(SkillLocalization.SKILL_DAMPEN_LORE);
-		setDescription(SkillLocalization.SKILL_DAMPEN_DESC);
-		SkillSettings skillSettings = new SkillSettings();
-		skillSettings.addNode("min-mana", 310, -5);
-		super.settings = skillSettings;
+		settings.addNode("min-mana", 310, -5);
 		addSkillType(SkillType.UTILITY);
 	}
 
 	@Override
-	public void applyEffect(ExtendedSkillInfo info, IActiveCharacter character) {
-		double val = getDoubleNodeValue(info, "min-mana");
+	public void applyEffect(PlayerSkillContext info, IActiveCharacter character) {
+		int totalLevel = info.getTotalLevel();
+		double val = info.getSkillData().getSkillSettings().getLevelNodeValue("min-mana", totalLevel);
 		DampenEffect eff = new DampenEffect(character, -1, val);
-		effectService.addEffect(eff, character, this);
+		effectService.addEffect(eff, this);
 	}
 
 	@Override
 	public void skillUpgrade(IActiveCharacter IActiveCharacter, int level) {
 		super.skillUpgrade(IActiveCharacter, level);
-
-		double val = getDoubleNodeValue(IActiveCharacter.getSkill(getName()), "min-mana");
+		PlayerSkillContext info = IActiveCharacter.getSkill(getId());
+		int totalLevel = info.getTotalLevel();
+		double val = info.getSkillData().getSkillSettings().getLevelNodeValue("min-mana", totalLevel);
 		IEffectContainer<Double, DampenEffect> effect = IActiveCharacter.getEffect(DampenEffect.name);
 		effect.updateValue(val, this);
 	}

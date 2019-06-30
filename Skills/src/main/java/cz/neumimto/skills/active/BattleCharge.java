@@ -1,64 +1,54 @@
 package cz.neumimto.skills.active;
 
-import cz.neumimto.SkillLocalization;
-import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.effects.positive.SpeedBoost;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.configuration.Localization;
-import cz.neumimto.rpg.effects.EffectService;
-import cz.neumimto.rpg.effects.common.positive.SpeedBoost;
-import cz.neumimto.rpg.gui.Gui;
-import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.common.effects.EffectService;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.SkillNodes;
+import cz.neumimto.rpg.api.skills.SkillResult;
+import cz.neumimto.rpg.api.skills.mods.SkillContext;
+import cz.neumimto.rpg.api.skills.types.ActiveSkill;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import org.spongepowered.api.item.ItemTypes;
-import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.text.format.TextStyles;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Created by NeumimTo on 6.8.2017.
  */
-@ResourceLoader.Skill
-public class BattleCharge extends ActiveSkill {
+@Singleton
+@ResourceLoader.Skill("ntrpg:battlecharge")
+public class BattleCharge extends ActiveSkill<ISpongeCharacter> {
 
 	@Inject
-	private EffectService effectService;
+	private IEffectService effectService;
 
-	public BattleCharge() {
-		setName(SkillLocalization.SKILL_BATTLECHARGE_NAME);
-		setDescription(SkillLocalization.SKILL_BATTLECHARGE_DESC);
-		SkillSettings settings = new SkillSettings();
+	@Override
+	public void init() {
+		super.init();
 		settings.addNode(SkillNodes.DURATION, 7500, 100);
 		settings.addNode(SkillNodes.RADIUS, 7500, 100);
 		settings.addNode("speed-per-level", 0.9f, 0.01f);
-		setIcon(ItemTypes.BANNER);
-		setSettings(settings);
 	}
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier modifier) {
-		if (character.getParty().getPlayers().size() == 1) {
-			Gui.sendNotification(character, Text.builder(Localization.NO_PARTYMEMBERS)
-					.color(TextColors.GOLD).style(TextStyles.BOLD).build());
-			return SkillResult.CANCELLED;
-		}
-
-		double distSq = Math.pow(getDoubleNodeValue(info, SkillNodes.RADIUS), 2);
-		long duration = getLongNodeValue(info, SkillNodes.DURATION);
-		float value = getFloatNodeValue(info, "speed-per-level");
-		boolean found = false;
-		for (IActiveCharacter pmember : character.getParty().getPlayers()) {
-			if (pmember.getLocation().getPosition().distanceSquared(character.getLocation().getPosition()) <= distSq) {
-				found = true;
-				SpeedBoost sp = new SpeedBoost(character, duration, value);
-				effectService.addEffect(sp, character, this);
+	public void cast(ISpongeCharacter character, PlayerSkillContext info, SkillContext skillContext) {
+		double distSq = Math.pow(skillContext.getDoubleNodeValue(SkillNodes.RADIUS), 2);
+		long duration = skillContext.getLongNodeValue(SkillNodes.DURATION);
+		float value = skillContext.getFloatNodeValue("speed-per-level");
+		if (character.hasParty()) {
+			for (ISpongeCharacter pmember : character.getParty().getPlayers()) {
+				if (pmember.getLocation().getPosition().distanceSquared(character.getLocation().getPosition()) <= distSq) {
+					SpeedBoost sp = new SpeedBoost(pmember, duration, value);
+					effectService.addEffect(sp, this);
+				}
 			}
+		} else {
+			SpeedBoost sp = new SpeedBoost(character, duration, value);
+			effectService.addEffect(sp, this);
 		}
-
-		if (!found) {
-			Gui.sendNotification(character, Text.builder(Localization.NO_PARTYMEMBERS)
-					.color(TextColors.GOLD).style(TextStyles.BOLD).build());
-			return SkillResult.CANCELLED;
-		}
-		return SkillResult.OK;
+		skillContext.next(character, info, skillContext.result(SkillResult.OK));
 	}
 }

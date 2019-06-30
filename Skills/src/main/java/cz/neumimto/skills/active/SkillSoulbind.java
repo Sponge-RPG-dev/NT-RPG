@@ -1,82 +1,92 @@
 package cz.neumimto.skills.active;
 
-import cz.neumimto.SkillLocalization;
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.positive.SoulBindEffect;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
-import cz.neumimto.rpg.effects.EffectService;
-import cz.neumimto.rpg.effects.IEffectContainer;
-import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.*;
-import cz.neumimto.rpg.utils.Utils;
+import cz.neumimto.rpg.api.IResourceLoader;
+import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.common.effects.EffectService;
+import cz.neumimto.rpg.api.effects.IEffectContainer;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.SkillNodes;
+import cz.neumimto.rpg.api.skills.SkillResult;
+import cz.neumimto.rpg.api.skills.mods.SkillContext;
+import cz.neumimto.rpg.api.skills.types.ActiveSkill;
+import cz.neumimto.rpg.sponge.damage.SkillDamageSourceBuilder;
+import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
+import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.entity.DamageEntityEvent;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.UUID;
 
 /**
  * Created by NeumimTo on 5.2.2016.
  */
-@ResourceLoader.Skill
-@ResourceLoader.ListenerClass
-public class SkillSoulbind extends ActiveSkill {
+@Singleton
+@ResourceLoader.Skill("ntrpg:soulbind")
+@IResourceLoader.ListenerClass
+public class SkillSoulbind extends ActiveSkill<ISpongeCharacter> {
 
 	public static final String name = "Soulbind";
 
 	@Inject
-	private EffectService effectService;
+	private IEffectService effectService;
 
-	public SkillSoulbind() {
-		SkillSettings settings = new SkillSettings();
+	@Inject
+	private SpongeCharacterServise characterServise;
+
+	@Override
+	public void init() {
+		super.init();
 		settings.addNode(SkillNodes.DURATION, 1000f, 10f);
 		settings.addNode(SkillNodes.COOLDOWN, 1000f, 10f);
 		settings.addNode(SkillNodes.RANGE, 10f, 1f);
-		setLore(SkillLocalization.SKILL_SOULBIND_LORE);
-		super.settings = settings;
-		setName(name);
-		setDescription(SkillLocalization.SKILL_SOULBIND_DESC);
 	}
 
 	@Override
-	public SkillResult cast(IActiveCharacter iActiveCharacter, ExtendedSkillInfo extendedSkillInfo, SkillModifier skillModifier) {
-		float range = extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.RANGE, extendedSkillInfo.getTotalLevel());
-		Living targettedEntity = Utils.getTargettedEntity(iActiveCharacter, (int) range);
-		if (targettedEntity != null && targettedEntity == EntityTypes.PLAYER) {
-			IActiveCharacter character = characterService.getCharacter(targettedEntity.getUniqueId());
+	public void cast(ISpongeCharacter iActiveCharacter, PlayerSkillContext playerSkillContext, SkillContext skillContext) {
+		float range = skillContext.getFloatNodeValue(SkillNodes.RANGE);
+		Living targettedEntity = Utils.getTargetedEntity(iActiveCharacter, (int) range);
+		if (targettedEntity != null && targettedEntity.getType() == EntityTypes.PLAYER) {
+			ISpongeCharacter character = characterServise.getCharacter(targettedEntity.getUniqueId());
 			if (iActiveCharacter.getParty().getPlayers().contains(character)) {
 				SoulBindEffect effect = new SoulBindEffect(iActiveCharacter, character);
-				effect.setDuration((long) extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.DURATION, extendedSkillInfo.getTotalLevel()));
-				effectService.addEffect(effect, iActiveCharacter, this);
-				effectService.addEffect(effect, character, this);
+				effect.setDuration(skillContext.getLongNodeValue(SkillNodes.DURATION));
+				effectService.addEffect(effect, this);
+				effectService.addEffect(effect, this);
 			}
 		}
-		return SkillResult.CANCELLED;
+		skillContext.next(iActiveCharacter, playerSkillContext, skillContext.result(SkillResult.OK));
 	}
 
 	@Listener(order = Order.LAST)
 	public void onEntityDamage(DamageEntityEvent event) {
-		if (event.isCancelled() || event.getFinalDamage() == 0) {
+		if (event.getFinalDamage() == 0) {
 			return;
 		}
 		if (event.getTargetEntity().getType() == EntityTypes.PLAYER) {
 			UUID id = event.getTargetEntity().getUniqueId();
-			IActiveCharacter character = characterService.getCharacter(id);
+			ISpongeCharacter character = characterServise.getCharacter(id);
 			IEffectContainer container = character.getEffect(name);
-			if (container == null)
+			if (container == null) {
 				return;
+			}
 			if (!event.getCause().first(SoulBindEffect.class).isPresent()) {
 				event.setBaseDamage(event.getBaseDamage() * .5);
 				SoulBindEffect effect = (SoulBindEffect) container;
 				SkillDamageSourceBuilder builder = new SkillDamageSourceBuilder();
 
 				if (effect.getConsumer() == character) {
-					effect.getTarget().getEntity().damage(event.getBaseDamage(), builder.build());
+					((ISpongeEntity)effect.getTarget()).getEntity().damage(event.getBaseDamage(), builder.build());
 				} else {
-					effect.getConsumer().getEntity().damage(event.getBaseDamage(), builder.build());
+					((ISpongeEntity)effect.getTarget()).getEntity().damage(event.getBaseDamage(), builder.build());
 				}
 			}
 		}

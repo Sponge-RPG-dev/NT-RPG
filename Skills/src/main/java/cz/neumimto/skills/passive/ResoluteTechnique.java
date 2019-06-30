@@ -1,39 +1,36 @@
 package cz.neumimto.skills.passive;
 
-import cz.neumimto.SkillLocalization;
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.ResoluteTechniqueEffect;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.effects.EffectService;
-import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
-import cz.neumimto.rpg.skills.PassiveSkill;
-import cz.neumimto.rpg.skills.SkillSettings;
-import cz.neumimto.rpg.skills.SkillType;
+import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.tree.SkillType;
+import cz.neumimto.rpg.api.skills.types.PassiveSkill;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Created by NeumimTo on 6.7.2017.
  */
-@ResourceLoader.Skill
+@Singleton
+@ResourceLoader.Skill("ntrpg:resolutetechnique")
 public class ResoluteTechnique extends PassiveSkill {
 
 	@Inject
-	private EffectService effectService;
+	private IEffectService effectService;
 
 	public ResoluteTechnique() {
 		super(ResoluteTechniqueEffect.name);
-		setName("ResoluteTechnique");
-		setLore(SkillLocalization.SKILL_RESOLUTE_TECHNIQUE_LORE);
-		setDescription(SkillLocalization.SKILL_RESOLUTE_TECHNIQUE_DESC);
-		super.settings = new SkillSettings();
-		setDamageType(DamageTypes.ATTACK);
+		setDamageType(DamageTypes.ATTACK.getId());
 		addSkillType(SkillType.PHYSICAL);
 	}
 
 	@Override
-	public void applyEffect(ExtendedSkillInfo info, IActiveCharacter character) {
-		ResoluteTechniqueEffect effect = new ResoluteTechniqueEffect(character, -1, null);
-		effectService.addEffect(effect, character, this);
+	public void applyEffect(PlayerSkillContext info, IActiveCharacter character) {
+		ResoluteTechniqueEffect effect = new ResoluteTechniqueEffect(character, -1);
+		effectService.addEffect(effect, this);
 	}
 }

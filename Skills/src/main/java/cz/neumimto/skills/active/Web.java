@@ -1,45 +1,43 @@
 package cz.neumimto.skills.active;
 
-import cz.neumimto.SkillLocalization;
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.negative.WebEffect;
-import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.effects.EffectService;
-import cz.neumimto.rpg.entities.EntityService;
-import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.*;
-import org.spongepowered.api.entity.living.Living;
+import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.common.effects.EffectService;
+import cz.neumimto.rpg.api.entity.IEntity;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.SkillNodes;
+import cz.neumimto.rpg.api.skills.SkillResult;
+import cz.neumimto.rpg.api.skills.mods.SkillContext;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
+import cz.neumimto.rpg.sponge.skills.types.Targeted;
 import org.spongepowered.api.item.ItemTypes;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Created by NeumimTo on 20.8.2017.
  */
-@ResourceLoader.Skill
-public class Web extends Targetted {
+@Singleton
+@ResourceLoader.Skill("ntrpg:web")
+public class Web extends Targeted {
 
 	@Inject
-	EntityService entityService;
+	private IEffectService effectService;
 
-	@Inject
-	EffectService effectService;
-
-	public Web() {
-		setName(SkillLocalization.SKILL_WEB_NAME);
-		setDescription(SkillLocalization.SKILL_WEB_DESC);
-		SkillSettings settings = new SkillSettings();
+	@Override
+	public void init() {
+		super.init();
 		settings.addNode(SkillNodes.DURATION, 5000, 100);
-		setSettings(settings);
-		setIcon(ItemTypes.WEB);
 	}
 
 	@Override
-	public SkillResult castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info) {
-		long duration = getLongNodeValue(info, SkillNodes.DURATION);
-		IEntity iEntity = entityService.get(target);
-		WebEffect eff = new WebEffect(iEntity, duration);
-		effectService.addEffect(eff, iEntity, this);
-		return null;
+	public void castOn(IEntity target, ISpongeCharacter source, PlayerSkillContext info, SkillContext skillContext) {
+		long duration = skillContext.getLongNodeValue(SkillNodes.DURATION);
+		WebEffect eff = new WebEffect(target, duration);
+		effectService.addEffect(eff, this);
+		skillContext.next(source, info, skillContext.result(SkillResult.OK));
 	}
 
 

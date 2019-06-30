@@ -1,0 +1,13 @@
+plugins {
+    id 'org.spongepowered.plugin' version '0.8.1'
+}
+
+group = 'cz.neumimto.rpg'
+version = '3.0.5'
+
+dependencies {
+    compileOnly 'org.spongepowered:spongeapi:' + project.spongeApiVersion
+    implementation 'com.github.Sponge-RPG-dev:NTCore:' + project.NTCoreVersion
+    annotationProcessor project(':Generator')
+    implementation project(':NT-RPG')
+}

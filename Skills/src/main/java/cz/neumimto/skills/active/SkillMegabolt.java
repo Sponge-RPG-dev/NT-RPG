@@ -2,52 +2,59 @@ package cz.neumimto.skills.active;
 
 import cz.neumimto.Decorator;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.damage.SkillDamageSource;
-import cz.neumimto.rpg.damage.SkillDamageSourceBuilder;
-import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.*;
-import cz.neumimto.rpg.utils.Utils;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.SkillNodes;
+import cz.neumimto.rpg.api.skills.SkillResult;
+import cz.neumimto.rpg.api.skills.mods.SkillContext;
+import cz.neumimto.rpg.api.skills.tree.SkillType;
+import cz.neumimto.rpg.api.skills.types.ActiveSkill;
+import cz.neumimto.rpg.sponge.damage.SkillDamageSource;
+import cz.neumimto.rpg.sponge.damage.SkillDamageSourceBuilder;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
+import cz.neumimto.rpg.sponge.skills.NDamageType;
+import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.Living;
 
+import javax.inject.Singleton;
 import java.util.Set;
 
 /**
  * Created by NeumimTo on 29.12.2015.
  */
-@ResourceLoader.Skill
-public class SkillMegabolt extends ActiveSkill {
+@Singleton
+@ResourceLoader.Skill("ntrpg:megabolt")
+public class SkillMegabolt extends ActiveSkill<ISpongeCharacter> {
 
-	public SkillMegabolt() {
-		setName("Megabolt");
-		setDamageType(NDamageType.LIGHTNING);
-		SkillSettings settings = new SkillSettings();
+	@Override
+	public void init() {
+		super.init();
+		setDamageType(NDamageType.LIGHTNING.getId());
 		settings.addNode(SkillNodes.DAMAGE, 10, 10);
 		settings.addNode(SkillNodes.RADIUS, 30, 5);
-		super.settings = settings;
 		addSkillType(SkillType.AOE);
 		addSkillType(SkillType.ELEMENTAL);
 		addSkillType(SkillType.LIGHTNING);
 	}
 
 	@Override
-	public SkillResult cast(IActiveCharacter iActiveCharacter, ExtendedSkillInfo extendedSkillInfo, SkillModifier skillModifier) {
-		int r = (int) settings.getLevelNodeValue(SkillNodes.RADIUS, extendedSkillInfo.getTotalLevel());
-		Set<Entity> nearbyEntities = Utils.getNearbyEntities(iActiveCharacter.getPlayer().getLocation(), r);
-		float damage = settings.getLevelNodeValue(SkillNodes.DAMAGE, extendedSkillInfo.getTotalLevel());
-		SkillDamageSourceBuilder builder = new SkillDamageSourceBuilder();
-		builder.fromSkill(this);
-		builder.setCaster(iActiveCharacter);
-		SkillDamageSource src = builder.build();
+	public void cast(ISpongeCharacter caster, PlayerSkillContext info, SkillContext skillContext) {
+		int r = skillContext.getIntNodeValue(SkillNodes.RADIUS);
+		Set<Entity> nearbyEntities = Utils.getNearbyEntities(caster.getPlayer().getLocation(), r);
+		float damage = skillContext.getFloatNodeValue(SkillNodes.DAMAGE);
+		SkillDamageSource s = new SkillDamageSourceBuilder()
+				.fromSkill(this)
+				.setSource(caster)
+				.build();
 		for (Entity e : nearbyEntities) {
 			if (Utils.isLivingEntity(e)) {
 				Living l = (Living) e;
-				if (Utils.canDamage(iActiveCharacter, l)) {
-					l.damage(damage, src);
+				if (Utils.canDamage(caster, l)) {
+					l.damage(damage, s);
 					Decorator.strikeLightning(l);
 				}
 			}
 		}
-		return SkillResult.OK;
+		skillContext.next(caster, info, skillContext.result(SkillResult.OK));
 	}
 }

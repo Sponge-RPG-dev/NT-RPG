@@ -4,13 +4,13 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import cz.neumimto.effects.positive.PotionEffect;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
-import cz.neumimto.rpg.skills.PassiveSkill;
-import cz.neumimto.rpg.skills.SkillSettings;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.types.PassiveSkill;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.effect.potion.PotionEffectType;
 
+import javax.inject.Singleton;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,19 +18,19 @@ import java.util.Map;
 /**
  * Created by NeumimTo on 20.8.2017.
  */
-@ResourceLoader.Skill
+@Singleton
+@ResourceLoader.Skill("ntrpg:potion")
 public class SkillPotion extends PassiveSkill {
 
 	private Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-	public SkillPotion() {
-		super(PotionEffect.name);
+	@Override
+	public void init() {
 		Map<PotionEffectType, Long> list = new HashMap<>();
 		Collection<PotionEffectType> allOf = Sponge.getRegistry().getAllOf(PotionEffectType.class);
 		for (PotionEffectType type : allOf) {
 			list.put(type, 19000L);
 		}
-		SkillSettings settings = new SkillSettings();
 		settings.addNode("cooldown-reduced", 0, -125);
 		settings.addObjectNode("potions", gson.toJson(list));
 	}
@@ -47,7 +47,7 @@ public class SkillPotion extends PassiveSkill {
 
 
 	@Override
-	public void applyEffect(ExtendedSkillInfo info, IActiveCharacter character) {
+	public void applyEffect(PlayerSkillContext info, IActiveCharacter character) {
 		PotionEffect pe = (PotionEffect) character.getEffect(PotionEffect.name);
 		if (pe == null) {
 			String potions = info.getSkillData().getSkillSettings().getObjectNode("potions");

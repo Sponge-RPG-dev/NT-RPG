@@ -1,5 +1,7 @@
 package cz.neumimto;
 
+import cz.neumimto.core.localization.TextHelper;
+import cz.neumimto.rpg.api.Rpg;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Item;
@@ -26,8 +28,8 @@ public class Utils {
 
 	public static ItemStack createTeleportationScroll(Location<World> location) {
 		ItemStack of = ItemStack.of(ItemTypes.PAPER, 1);
-		of.offer(Keys.DISPLAY_NAME, Text.builder(SkillLocalization.TELEPORTATION_SCROLL)
-				.color(teleportationScrollColor).build());
+		String translate = Rpg.get().getLocalizationService().translate(SkillLocalization.TELEPORTATION_SCROLL);
+		of.offer(Keys.DISPLAY_NAME, TextHelper.parse(translate));
 		List<Text> lore = new ArrayList<>();
 		String name = location.getExtent().getName();
 		lore.add(Text.builder(name).color(TextColors.DARK_GRAY).style(TextStyles.BOLD).build());
@@ -52,7 +54,7 @@ public class Utils {
 				return null;
 			}
 
-			if (!text1.toPlain().equalsIgnoreCase(SkillLocalization.TELEPORTATION_SCROLL)) {
+			if (!text1.equals(SkillLocalization.TELEPORTATION_SCROLL)) {
 				return null;
 			}
 

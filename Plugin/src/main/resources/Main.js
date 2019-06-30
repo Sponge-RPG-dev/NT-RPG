@@ -8,22 +8,6 @@ var File = Java.type("java.io.File");
 var TimeUnit = Java.type("java.util.concurrent.TimeUnit");
 var Runnable = Java.type("java.lang.Runnable");
 var Consumer = Java.type("java.util.function.Consumer");
-/*plugin */
-/*TODO bind from plugin */
-var SkillSettings = Java.type("cz.neumimto.rpg.skills.SkillSettings");
-var SkillNodes = Java.type("cz.neumimto.rpg.skills.SkillNodes");
-var ActiveSkill = Java.type("cz.neumimto.rpg.skills.ActiveSkill");
-var SkillResult = Java.type("cz.neumimto.rpg.skills.SkillResult");
-var AbstractSkill = Java.type("cz.neumimto.rpg.skills.AbstractSkill");
-var PassiveSkill = Java.type("cz.neumimto.rpg.skills.PassiveSkill");
-var GlobalEffect = Java.type("cz.neumimto.rpg.effects.IGlobalEffect");
-var EffectBase = Java.type("cz.neumimto.rpg.effects.EffectBase");
-var PluginConfig = Java.type("cz.neumimto.rpg.configuration.PluginConfig");
-var Effect = Java.type("cz.neumimto.rpg.effects.EffectBase");
-var SpeedBoost = Java.type("cz.neumimto.rpg.effects.common.positive.SpeedBoost");
-var DefaultProperties = Java.type("cz.neumimto.rpg.players.properties.DefaultProperties");
-var JSLoader = Java.type("cz.neumimto.rpg.scripting.JSLoader");
-var CharacterAttribute = Java.type("cz.neumimto.rpg.players.properties.attributes.CharacterAttribute");
 /* sponge */
 var Texts = Java.type("org.spongepowered.api.text.Text");
 var Keys = Java.type("org.spongepowered.api.data.key.Keys");
@@ -32,11 +16,31 @@ var Vector3d = Java.type("com.flowpowered.math.vector.Vector3d");
 var Optional = Java.type("com.google.common.base.Optional");
 /* https://wiki.openjdk.java.net/display/Nashorn/Nashorn+extensions */
 
-var events = new HashMap();
+/* Also available:
+var Folder // java.nio.file.Path of scripts folder
+var GlobalScope // GlobalScope, containing characterService, effectService, entityService and others.
+See https://github.com/Sponge-RPG-dev/NT-RPG/blob/master/Plugin/src/main/java/cz/neumimto/rpg/GlobalScope.java
+ */
+
+var events = new ArrayList();
+
 var skills = new ArrayList();
 var globalEffects = new ArrayList();
 var attributes = new ArrayList();
-//
+
+var folder = Folder;
+
+with (imports) {
+    Files.walkFileTree(folder, new (Java.extend(Java.type("java.nio.file.SimpleFileVisitor"), {
+        visitFile: function (file, attrs) {
+            if (file.toString().endsWith(".js") && !file.toString().endsWith("Main.js")) {
+                load(file.toString());
+            }
+            return FileVisitResult.CONTINUE;
+        }
+    })));
+}
+
 function log(obj) {
     console.println("[NTRPG-JS]" + obj);
 }
@@ -70,22 +74,20 @@ function getLevelNode(extendedSkillInfo, node) {
     return extendedSkillInfo.getSkillData().getSkillSettings().getLevelNodeValue(node, extendedSkillInfo.getLevel());
 }
 
-function registerEventListener(eventclass, consumer) {
-    var cls = events.get(eventclass);
-    if (cls == null) {
-        cls = new HashSet();
-        events.put(eventclass, new HashSet());
+function registerEventListener(eventData) {
+    if (eventData == null) {
+        log("Could not register Event listener defined via JS, parametr EventData is null")
+        return;
     }
-    cls.add(consumer);
-}
-with (imports) {
-    var stream = Files.newDirectoryStream(new File("./config/nt-rpg/scripts").toPath(), "*.js");
-    stream.forEach(function (p) {
-        var name = p.toFile().absolutePath;
-        if (!name.endsWith("Main.js")) {
-            load(name);
-        }
-    });
+    if (eventData.consumer == null) {
+        log("Could not register Event listener defined via JS, parametr EventData.consumer is null")
+        return;
+    }
+    if (eventData.type == null) {
+        log("Could not register Event listener defined via JS, parametr EventData.type is null")
+        return;
+    }
+    events.add(eventData);
 }
 
 function registerAttributes() {
@@ -105,7 +107,7 @@ function registerSkills() {
     for (obj in skills) {
         var s = skills.get(obj);
         s.init();
-        GlobalScope.skillService.addSkill(s);
+        GlobalScope.skillService.registerAdditionalCatalog(s);
     }
 }
 
@@ -114,16 +116,16 @@ function registerGlobalEffects() {
     log("registerGlobalEffects, " + globalEffects.size())
     for (obj in globalEffects) {
         var g = globalEffects.get(obj);
-        if (g instanceof GlobalEffect) {
+        if (g instanceof Java.type("cz.neumimto.rpg.api.effects.IGlobalEffect")) {
             GlobalScope.effectService.registerGlobalEffect(g);
         }
     }
 }
 
 function generateListener() {
-    log("generateListener")
     if (!events.isEmpty()) {
-        IoC.build(JSLoader.class).generateDynamicListener(events);
+        log("generateListener")
+        GlobalScope.jsLoader.generateDynamicListener(events);
     }
     events.clear();
 }

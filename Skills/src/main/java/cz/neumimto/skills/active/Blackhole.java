@@ -1,15 +1,14 @@
 package cz.neumimto.skills.active;
 
 import com.flowpowered.math.vector.Vector3d;
-import cz.neumimto.core.ioc.Inject;
-import cz.neumimto.rpg.gui.ParticleDecorator;
-import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.ActiveSkill;
-import cz.neumimto.rpg.skills.ExtendedSkillInfo;
-import cz.neumimto.rpg.skills.SkillModifier;
-import cz.neumimto.rpg.skills.SkillResult;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.sponge.gui.ParticleDecorator;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.skills.mods.SkillContext;
+import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 
 /**
  * Created by ja on 12.8.2017.
@@ -40,7 +39,7 @@ public class Blackhole extends ActiveSkill {
 	}
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier modifier) {
-		return null;
+	public void cast(IActiveCharacter character, PlayerSkillContext info, SkillContext modifier) {
+		;
 	}
 }

@@ -1,49 +1,52 @@
 package cz.neumimto.skills.passive;
 
-import cz.neumimto.SkillLocalization;
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.ManaDrainEffect;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.effects.EffectService;
-import cz.neumimto.rpg.effects.IEffectContainer;
-import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.api.effects.IEffectContainer;
+import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.SkillNodes;
+import cz.neumimto.rpg.api.skills.tree.SkillType;
+import cz.neumimto.rpg.api.skills.types.PassiveSkill;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
+import org.spongepowered.api.item.ItemTypes;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Created by NeumimTo on 7.7.2017.
  */
-@ResourceLoader.Skill
+@Singleton
+@ResourceLoader.Skill("ntrpg:drain")
 public class Drain extends PassiveSkill {
 
 	@Inject
-	private EffectService effectService;
+	private IEffectService effectService;
 
 	public Drain() {
 		super(ManaDrainEffect.name);
-		setName("Drain");
-		setLore(SkillLocalization.SKILL_DRAIN_LORE);
-		setDescription(SkillLocalization.SKILL_DRAIN_DESC);
-		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.AMOUNT, 1, 1);
-		super.settings = settings;
-		setDamageType(DamageTypes.ATTACK);
+		setDamageType(DamageTypes.ATTACK.getId());
 		addSkillType(SkillType.HEALTH_DRAIN);
 		addSkillType(SkillType.DRAIN);
 	}
 
 	@Override
-	public void applyEffect(ExtendedSkillInfo info, IActiveCharacter character) {
-		float floatNodeValue = getFloatNodeValue(info, SkillNodes.AMOUNT);
+	public void applyEffect(PlayerSkillContext info, IActiveCharacter character) {
+		int totalLevel = info.getTotalLevel();
+		float floatNodeValue =  info.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.AMOUNT, totalLevel);
 		ManaDrainEffect effect = new ManaDrainEffect(character, -1L, floatNodeValue);
-		effectService.addEffect(effect, character, this);
+		effectService.addEffect(effect, this);
 	}
 
 	@Override
 	public void skillUpgrade(IActiveCharacter IActiveCharacter, int level) {
 		super.skillUpgrade(IActiveCharacter, level);
-		ExtendedSkillInfo skill = IActiveCharacter.getSkill(getName());
-		float floatNodeValue = getFloatNodeValue(skill, SkillNodes.AMOUNT);
+		PlayerSkillContext info = IActiveCharacter.getSkill(getId());
+		int totalLevel = info.getTotalLevel();
+		float floatNodeValue =  info.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.AMOUNT, totalLevel);
 		IEffectContainer<Float, ManaDrainEffect> container = IActiveCharacter.getEffect(ManaDrainEffect.name);
 		container.updateValue(floatNodeValue, this);
 	}

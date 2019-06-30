@@ -1,33 +1,30 @@
 package cz.neumimto.effects.negative;
 
-import cz.neumimto.rpg.ClassGenerator;
-import cz.neumimto.rpg.effects.EffectBase;
-import cz.neumimto.rpg.effects.IEffectConsumer;
-import cz.neumimto.rpg.utils.Utils;
+import cz.neumimto.rpg.api.effects.EffectBase;
+import cz.neumimto.rpg.api.effects.Generate;
+import cz.neumimto.rpg.api.effects.IEffect;
+import cz.neumimto.rpg.api.entity.IEffectConsumer;
+import cz.neumimto.rpg.api.skills.scripting.JsBinding;
+import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
 import org.spongepowered.api.event.cause.entity.damage.source.DamageSources;
 
-@ClassGenerator.Generate(id = "name")
+@JsBinding(JsBinding.Type.CLASS)
+@Generate(id = "name", description = "An effect which applies Dame Over Time debuff to the target.")
 public class DOTFireDamageEffect extends EffectBase {
 
-	public static final String name = "Fire damage over time";
+    public static final String name = "Fire damage over time";
 
-	private double damage;
+    private double damage;
 
-	public DOTFireDamageEffect(IEffectConsumer consumer, double damage, long period, long duration) {
-		super(name, consumer);
-		setDuration(duration);
-		setPeriod(period);
-	}
+    public DOTFireDamageEffect(IEffectConsumer consumer, long duration, DotDamageEffectModel model) {
+        super(name, consumer);
+        setDuration(duration);
+        setPeriod(model.period);
+        this.damage = model.damage;
+    }
 
-	public DOTFireDamageEffect(IEffectConsumer character, long duration, String damage) {
-		super(name, character);
-		setDuration(duration);
-		setPeriod(1000L);
-		this.damage = Double.parseDouble(Utils.extractNumber(damage));
-	}
-
-	@Override
-	public void onTick() {
-		getConsumer().getEntity().damage(damage, DamageSources.FIRE_TICK);
-	}
+    @Override
+    public void onTick(IEffect self) {
+        ((ISpongeEntity) getConsumer()).getEntity().damage(damage, DamageSources.FIRE_TICK);
+    }
 }

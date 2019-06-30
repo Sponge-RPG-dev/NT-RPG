@@ -1,41 +1,46 @@
 package cz.neumimto.skills.active;
 
-import cz.neumimto.SkillLocalization;
-import cz.neumimto.core.ioc.Inject;
+import cz.neumimto.effects.positive.SpeedBoost;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.effects.EffectService;
-import cz.neumimto.rpg.effects.common.positive.SpeedBoost;
-import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.*;
+import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.SkillNodes;
+import cz.neumimto.rpg.api.skills.SkillResult;
+import cz.neumimto.rpg.common.effects.EffectService;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.skills.mods.SkillContext;
+import cz.neumimto.rpg.api.skills.types.ActiveSkill;
+import cz.neumimto.rpg.api.skills.tree.SkillType;
 import org.spongepowered.api.item.ItemTypes;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Created by NeumimTo on 23.12.2015.
  */
-@ResourceLoader.Skill
+@Singleton
+@ResourceLoader.Skill("ntrpg:speed")
 public class SkillSpeed extends ActiveSkill {
 
 	@Inject
-	private EffectService effectService;
+	private IEffectService effectService;
 
-	public SkillSpeed() {
-		setName("Speed");
+	@Override
+	public void init() {
+		super.init();
 		setDamageType(null);
-		setDescription(SkillLocalization.SKILL_SPEED_DESC);
-		SkillSettings settings = new SkillSettings();
 		settings.addNode(SkillNodes.DURATION, 1000, 1500);
 		settings.addNode(SkillNodes.AMOUNT, 0.1f, 0.05f);
-		setSettings(settings);
 		addSkillType(SkillType.MOVEMENT);
-		setIcon(ItemTypes.LEATHER_BOOTS);
 	}
 
 	@Override
-	public SkillResult cast(IActiveCharacter character, ExtendedSkillInfo info, SkillModifier skillModifier) {
-		long duration = getLongNodeValue(info, SkillNodes.DURATION);
-		float amount = getFloatNodeValue(info, SkillNodes.AMOUNT);
+	public void cast(IActiveCharacter character, PlayerSkillContext info, SkillContext skillContext) {
+		long duration = skillContext.getLongNodeValue(SkillNodes.DURATION);
+		float amount = skillContext.getFloatNodeValue(SkillNodes.AMOUNT);
 		SpeedBoost sb = new SpeedBoost(character, duration, amount);
-		effectService.addEffect(sb, character, this);
-		return SkillResult.OK;
+		effectService.addEffect(sb, this);
+		skillContext.next(character, info, skillContext.result(SkillResult.OK));
 	}
 }

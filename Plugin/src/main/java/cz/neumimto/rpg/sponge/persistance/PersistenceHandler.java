@@ -1,0 +1,67 @@
+package cz.neumimto.rpg.sponge.persistance;
+
+import com.google.inject.Inject;
+import com.google.inject.Injector;
+import com.google.inject.Singleton;
+import cz.neumimto.core.FindDbSchemaMigrationsEvent;
+import cz.neumimto.core.FindPersistenceContextEvent;
+import cz.neumimto.core.migrations.DbMigrationService;
+import cz.neumimto.rpg.common.assets.AssetService;
+import cz.neumimto.rpg.common.persistance.model.JPABaseCharacterAttribute;
+import cz.neumimto.rpg.common.persistance.model.JPACharacterBase;
+import cz.neumimto.rpg.common.persistance.model.JPACharacterClass;
+import cz.neumimto.rpg.common.persistance.model.JPACharacterSkill;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import org.spongepowered.api.event.Listener;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+
+/**
+ * Created by NeumimTo on 1.12.2018.
+ */
+@Singleton
+public class PersistenceHandler {
+
+    @Inject
+    private Injector injector;
+
+    @Inject
+    private AssetService assetService;
+
+    @Listener
+    public void onFindDbSchemaMigrationsEvent(FindDbSchemaMigrationsEvent event) throws IOException {
+        if (event.validForContext("nt-rpg")) {
+            DbMigrationService dms =  NtRpgPlugin.getDBMigrationService();
+            List<String> migrations = Arrays.asList(
+                    "sql/%s/040918-init-db.sql",
+                    "sql/%s/060119-update-2.0.0.sql"
+            );
+
+            for (String migration : migrations) {
+                migration = migration.replaceAll("%s", dms.getDatabaseProductName().toLowerCase());
+
+                try {
+                    String sql = assetService.getAssetAsString(migration);
+                    dms.addMigration(sql);
+                } catch (Exception e) {
+                    System.out.println("You are using a database which is not officialy supported, nor tested. " +
+                            "While the plugin will most likely keep working all DDL changes have to be done manually, If you want to have a simpler life  please consider switching to either mysql or postgres. " +
+                            "Or in the best case submit a pr containing Database schema migrations.");
+                    break;
+                }
+            }
+        }
+    }
+
+    @Listener
+    public void registerEntities(FindPersistenceContextEvent event) {
+        if (event.validForContext("nt-rpg")) {
+            event.getClasses().add(JPACharacterBase.class);
+            event.getClasses().add(JPABaseCharacterAttribute.class);
+            event.getClasses().add(JPACharacterSkill.class);
+            event.getClasses().add(JPACharacterClass.class);
+        }
+    }
+}

@@ -1,55 +1,29 @@
 package cz.neumimto.effects.positive;
 
 import cz.neumimto.model.BashModel;
-import cz.neumimto.rpg.ClassGenerator;
-import cz.neumimto.rpg.effects.EffectBase;
-import cz.neumimto.rpg.effects.EffectContainer;
-import cz.neumimto.rpg.effects.IEffectConsumer;
-import cz.neumimto.rpg.effects.IEffectContainer;
-import cz.neumimto.rpg.utils.Utils;
+import cz.neumimto.rpg.api.effects.*;
+import cz.neumimto.rpg.api.entity.IEffectConsumer;
+import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 
 /**
  * Created by NeumimTo on 4.7.2017.
  */
-@ClassGenerator.Generate(id = "name")
+@JsBinding(JsBinding.Type.CLASS)
+@Generate(id = "name", description = "An effect, which gives the target % chance to apply stun while attacking to entity")
 public class Bash extends EffectBase<BashModel> {
 
-	public static final String name = "Bash";
+    public static final String name = "Bash";
 
-	public Bash(IEffectConsumer consumer, long duration, String value) {
-		super(name, consumer);
-		BashModel model = new BashModel();
-
-		String[] split = value.split(", ");
-		if (split.length > 0) {
-			model.chance = Integer.parseInt(Utils.extractNumber(split[0]));
-			model.damage = 0;
-			model.cooldown = 2000;
-			model.stunDuration = 500;
-			if (split.length > 1) {
-				model.damage = Double.parseDouble(Utils.extractNumber(split[1]));
-				if (split.length > 2) {
-					model.stunDuration = Long.parseLong(Utils.extractNumber(split[2])) * 1000;
-					if (split.length > 3) {
-						model.cooldown = Long.parseLong(Utils.extractNumber(split[3])) * 100;
-					}
-				}
-			}
-		}
-		setValue(model);
-		setDuration(duration);
-		setStackable(true, null);
-	}
-
-	public Bash(IEffectConsumer consumer, long duration, BashModel value) {
-		super(name, consumer);
-		setValue(value);
-		setDuration(duration);
-	}
+    public Bash(IEffectConsumer consumer, long duration, BashModel value) {
+        super(name, consumer);
+        setValue(value);
+        setDuration(duration);
+        setStackable(true, null);
+    }
 
 
-	@Override
-	public IEffectContainer constructEffectContainer() {
-		return new EffectContainer.UnstackableSingleInstance(this);
-	}
+    @Override
+    public IEffectContainer constructEffectContainer() {
+        return new EffectContainer.UnstackableSingleInstance(this);
+    }
 }

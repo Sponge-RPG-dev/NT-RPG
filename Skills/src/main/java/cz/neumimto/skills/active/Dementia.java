@@ -1,47 +1,50 @@
 package cz.neumimto.skills.active;
 
-import cz.neumimto.SkillLocalization;
-import cz.neumimto.core.ioc.Inject;
 import cz.neumimto.effects.positive.AllSkillsBonus;
-import cz.neumimto.rpg.IEntity;
 import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.effects.EffectService;
-import cz.neumimto.rpg.entities.EntityService;
-import cz.neumimto.rpg.players.IActiveCharacter;
-import cz.neumimto.rpg.skills.*;
-import org.spongepowered.api.entity.living.Living;
+import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.common.effects.EffectService;
+import cz.neumimto.rpg.api.entity.EntityService;
+import cz.neumimto.rpg.api.entity.IEntity;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.SkillNodes;
+import cz.neumimto.rpg.api.skills.SkillResult;
+import cz.neumimto.rpg.api.skills.mods.SkillContext;
+import cz.neumimto.rpg.api.skills.tree.SkillType;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
+import cz.neumimto.rpg.sponge.skills.types.Targeted;
 import org.spongepowered.api.item.ItemTypes;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Created by NeumimTo on 10.8.17.
  */
-@ResourceLoader.Skill
-public class Dementia extends Targetted {
+@Singleton
+@ResourceLoader.Skill("ntrpg:dementia")
+public class Dementia extends Targeted {
 
 	@Inject
 	private EntityService entityService;
 
 	@Inject
-	private EffectService effectService;
+	private IEffectService effectService;
 
-	public Dementia() {
-		setName(SkillLocalization.SKILL_DEMENTIA_NAME);
-		setDescription(SkillLocalization.SKILL_DEMENTIA_DESC);
-		SkillSettings settings = new SkillSettings();
+	@Override
+	public void init() {
+		super.init();
 		settings.addNode(SkillNodes.DURATION, 30000, 1500);
 		settings.addNode("skill-level", 1, 2);
-		setSettings(settings);
 		addSkillType(SkillType.DISEASE);
-		setIcon(ItemTypes.ROTTEN_FLESH);
 	}
 
 	@Override
-	public SkillResult castOn(Living target, IActiveCharacter source, ExtendedSkillInfo info) {
-		IEntity iEntity = entityService.get(target);
-		long duration = getLongNodeValue(info, SkillNodes.DURATION);
-		int skillLevel = getIntNodeValue(info, "skill-level");
-		AllSkillsBonus bonus = new AllSkillsBonus(iEntity, duration, -1 * skillLevel);
-		effectService.addEffect(bonus, iEntity, this);
-		return null;
+	public void castOn(IEntity target, ISpongeCharacter source, PlayerSkillContext info, SkillContext skillContext) {
+		long duration = skillContext.getLongNodeValue(SkillNodes.DURATION);
+		int skillLevel = skillContext.getIntNodeValue("skill-level");
+		AllSkillsBonus bonus = new AllSkillsBonus(target, duration, -1 * skillLevel);
+		effectService.addEffect(bonus, this);
+		skillContext.next(source, info, SkillResult.OK);
 	}
 }
