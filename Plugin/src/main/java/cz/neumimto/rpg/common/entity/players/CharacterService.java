@@ -68,6 +68,7 @@ import java.util.stream.Collectors;
 import static cz.neumimto.rpg.api.localization.Arg.arg;
 import static cz.neumimto.rpg.api.logging.Log.info;
 import static cz.neumimto.rpg.api.logging.Log.warn;
+import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 26.12.2014.
@@ -191,6 +192,8 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
         characterBase.setUuid(uuid);
         PluginConfig pluginConfig = Rpg.get().getPluginConfig();
         characterBase.setAttributePoints(pluginConfig.ATTRIBUTEPOINTS_ON_START);
+
+        characterBase.setAttributePointsSpent(0);
         return characterBase;
     }
 

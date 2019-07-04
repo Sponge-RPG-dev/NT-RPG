@@ -69,11 +69,7 @@ public class CharacterCommandFacade {
             } else if (i == 2) {
                 actionResultConsumer.accept(ActionResult.withErrorMessage(localizationService.translate(LocalizationKeys.CHARACTER_EXISTS)));
             } else if (i == 0) {
-                JPACharacterBase characterBase = new JPACharacterBase();
-                characterBase.setUuid(uuid);
-                characterBase.setName(name);
-                characterBase.setAttributePoints(pluginConfig.ATTRIBUTEPOINTS_ON_START);
-                characterBase.setAttributePoints(pluginConfig.ATTRIBUTEPOINTS_ON_START);
+                CharacterBase characterBase = characterService.createCharacterBase(name, uuid);
 
                 characterService.createAndUpdate(characterBase);
 
