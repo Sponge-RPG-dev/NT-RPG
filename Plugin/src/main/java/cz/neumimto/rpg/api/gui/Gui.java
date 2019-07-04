@@ -72,10 +72,6 @@ public class Gui {
         getMessageTypeOf(player).invokeCharacterMenu(player, characterBases);
     }
 
-    public static void sendPlayerInfo(IActiveCharacter character, List<CharacterBase> target) {
-        getMessageTypeOf(character).sendPlayerInfo(character, target);
-    }
-
     public static void showCharacterInfo(IActiveCharacter player, IActiveCharacter character) {
         getMessageTypeOf(player).sendPlayerInfo(player, character);
     }
@@ -90,10 +86,6 @@ public class Gui {
 
     public static void sendStatus(IActiveCharacter character) {
         getMessageTypeOf(character).sendStatus(character);
-    }
-
-    public static void invokeDefaultMenu(IActiveCharacter character) {
-        getMessageTypeOf(character).invokerDefaultMenu(character);
     }
 
     public static void sendListOfCharacters(IActiveCharacter player, CharacterBase currentlyCreated) {
@@ -120,16 +112,8 @@ public class Gui {
         getMessageTypeOf(target).displayAttributes(target, g);
     }
 
-    public static void displayHealth(IActiveCharacter character) {
-        getMessageTypeOf(character).displayHealth(character);
-    }
-
     public static void displayMana(IActiveCharacter character) {
         getMessageTypeOf(character).displayMana(character);
-    }
-
-    public static void sendCannotUseItemNotification(IActiveCharacter character, String is, CannotUseItemReason reason) {
-        getMessageTypeOf(character).sendCannotUseItemNotification(character, is, reason);
     }
 
     public static void displayCurrentClicks(IActiveCharacter character, String combo) {
@@ -146,10 +130,6 @@ public class Gui {
 
     public static void displayInitialProperties(ClassDefinition byName, IActiveCharacter commandSource) {
         getMessageTypeOf(commandSource).displayInitialProperties(byName, commandSource);
-    }
-
-    public static void sendCannotUseItemInOffHandNotification(IActiveCharacter character, String futureOffHand, CannotUseItemReason reason) {
-        getMessageTypeOf(character).sendCannotUseItemInOffHandNotification(futureOffHand, character, reason);
     }
 
     public static void skillExecution(IActiveCharacter character, PlayerSkillContext skill) {

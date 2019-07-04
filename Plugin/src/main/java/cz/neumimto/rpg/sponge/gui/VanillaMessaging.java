@@ -892,9 +892,11 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
 
             ItemStack btn = GuiHelper.itemStack(ItemTypes.SUGAR);
             btn.offer(Keys.DISPLAY_NAME, Text.of(TextColors.GREEN, "+"));
+            btn.offer(new InventoryCommandItemMenuData("char attribute " + attribute.getId() + " 1"));
+
             i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(q, 2))).offer(btn);
             i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(q, 3))).offer(itemStack);
-            btn.offer(new InventoryCommandItemMenuData("char attribute " + attribute.getId() + " 1"));
+
 
             q++;
         }
