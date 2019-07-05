@@ -106,4 +106,5 @@ public class LocalizationKeys {
     public static final String CHARACTER_CREATED = "player.character-created.message";
     public static final String RESPEC_ATTRIBUTES = "item.label.respec-attributes.button";
     public static final String ATTRIBUTE_RESPEC_NOT_ALLOWED = "player.attribute-reset-not-allowed.message";
+    public static final String NO_ATTRIBUTEPOINTS = "player.attributes.not-enough-points.message";
 }

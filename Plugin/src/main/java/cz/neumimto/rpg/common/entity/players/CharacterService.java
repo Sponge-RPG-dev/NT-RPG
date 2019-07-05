@@ -68,7 +68,6 @@ import java.util.stream.Collectors;
 import static cz.neumimto.rpg.api.localization.Arg.arg;
 import static cz.neumimto.rpg.api.logging.Log.info;
 import static cz.neumimto.rpg.api.logging.Log.warn;
-import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 26.12.2014.
@@ -969,21 +968,22 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
      * @return
      */
     @Override
-    public int addAttribute(T character, Map<AttributeConfig, Integer> attributes) {
+    public ActionResult addAttribute(T character, Map<AttributeConfig, Integer> attributes) {
         CharacterAttributeChange event = eventFactoryService.createEventInstance(CharacterAttributeChange.class);
 
         event.setTarget(character);
         event.setAttribute(attributes);
 
         if (Rpg.get().postEvent(event)) {
-            return 1;
+            return ActionResult.nok();
         }
 
         CharacterBase base = character.getCharacterBase();
         int attributePoints = base.getAttributePoints();
         int requiredAP = attributes.values().stream().mapToInt(a -> a).sum();
         if (attributePoints - requiredAP < 0) {
-            return 1;
+            String translate = localizationService.translate(LocalizationKeys.NO_ATTRIBUTEPOINTS);
+            return ActionResult.withErrorMessage(translate);
         }
 
         for (Map.Entry<AttributeConfig, Integer> entry : attributes.entrySet()) {
@@ -1012,13 +1012,13 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
 
         character.setRequiresDamageRecalculation(true);
         base.setAttributePointsSpent(base.getAttributePointsSpent() + requiredAP);
-        return 0;
+        return ActionResult.ok();
     }
 
 
 
     @Override
-    public int addAttribute(T character, AttributeConfig attribute) {
+    public ActionResult addAttribute(T character, AttributeConfig attribute) {
         return addAttribute(character, new HashMap<AttributeConfig, Integer>() {{
             put(attribute, 1);
         }});

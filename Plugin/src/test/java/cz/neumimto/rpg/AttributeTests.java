@@ -4,6 +4,7 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.ICharacterService;
 import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
 import cz.neumimto.rpg.api.events.EventFactoryService;
+import cz.neumimto.rpg.api.utils.ActionResult;
 import cz.neumimto.rpg.junit.CharactersExtension;
 import cz.neumimto.rpg.junit.CharactersExtension.Stage;
 import cz.neumimto.rpg.junit.NtRpgExtension;
@@ -43,10 +44,10 @@ public class AttributeTests {
     @Test
     public void testAttributeAdd(@Stage(READY)IActiveCharacter iActiveCharacter) {
         iActiveCharacter.setAttributePoints(0);
-        int i = characterService.addAttribute(iActiveCharacter, TestDictionary.AGI);
+        ActionResult i = characterService.addAttribute(iActiveCharacter, TestDictionary.AGI);
         Integer attributeValue = iActiveCharacter.getAttributeValue(TestDictionary.AGI);
         Assertions.assertEquals(attributeValue, 99);
-        Assertions.assertEquals(i, 1);
+        Assertions.assertFalse(i.isOk());
     }
 
     @Test
@@ -54,10 +55,10 @@ public class AttributeTests {
         iActiveCharacter.setAttributePoints(1);
         HashMap<AttributeConfig, Integer> map = new HashMap<>();
         map.put(TestDictionary.AGI, 2);
-        int i = characterService.addAttribute(iActiveCharacter, map);
+        ActionResult i = characterService.addAttribute(iActiveCharacter, map);
         Integer attributeValue = iActiveCharacter.getAttributeValue(TestDictionary.AGI);
         Assertions.assertEquals(attributeValue, 99);
-        Assertions.assertEquals(i, 1);
+        Assertions.assertFalse(i.isOk());
     }
 
     @Test
@@ -65,10 +66,10 @@ public class AttributeTests {
         iActiveCharacter.setAttributePoints(2);
         HashMap<AttributeConfig, Integer> map = new HashMap<>();
         map.put(TestDictionary.AGI, 2);
-        int i = characterService.addAttribute(iActiveCharacter, map);
+        ActionResult i = characterService.addAttribute(iActiveCharacter, map);
         Integer attributeValue = iActiveCharacter.getAttributeValue(TestDictionary.AGI);
         Assertions.assertEquals(attributeValue, 101);
-        Assertions.assertEquals(i, 0);
+        Assertions.assertTrue(i.isOk());
         Assertions.assertEquals(iActiveCharacter.getAttributePoints(),0);
         Assertions.assertEquals(iActiveCharacter.getCharacterBase().getAttributePointsSpent(),2);
         Assertions.assertTrue(iActiveCharacter.requiresDamageRecalculation());

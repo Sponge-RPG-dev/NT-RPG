@@ -79,7 +79,7 @@ public class JPACharacterBase extends JPATimestampEntity implements CharacterBas
     @OneToMany(targetEntity = JPACharacterClass.class, fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "characterBase")
     private Set<CharacterClass> characterClasses = new HashSet<>();
 
-    @OneToMany(targetEntity = JPABaseCharacterAttribute.class, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "characterBase")
+    @OneToMany(targetEntity = JPABaseCharacterAttribute.class, fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "characterBase")
     @Access(AccessType.FIELD)
     private Set<BaseCharacterAttribute> baseCharacterAttribute = new HashSet<>();
 

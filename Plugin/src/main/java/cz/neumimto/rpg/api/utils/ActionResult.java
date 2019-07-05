@@ -18,6 +18,10 @@ public class ActionResult {
         return new ActionResult(true, text);
     }
 
+    public static ActionResult nok() {
+        return new ActionResult(false);
+    }
+
     public boolean isOk() {
         return ok;
     }

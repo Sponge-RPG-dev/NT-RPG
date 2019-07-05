@@ -13,7 +13,6 @@ import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.permissions.PermissionService;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.utils.ActionResult;
-import cz.neumimto.rpg.common.persistance.model.JPACharacterBase;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -22,8 +21,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
-
-import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 
 @SuppressWarnings("unchecked")
 @Singleton
@@ -42,8 +39,15 @@ public class CharacterCommandFacade {
     private PartyService partyService;
 
     public void commandCommitAttribute(IActiveCharacter character, Map<AttributeConfig, Integer> map) {
-        characterService.addAttribute(character, map);
-        characterService.putInSaveQueue(character.getCharacterBase());
+        ActionResult actionResult = characterService.addAttribute(character, map);
+        if (actionResult.isOk()) {
+            characterService.putInSaveQueue(character.getCharacterBase());
+            for (Map.Entry<AttributeConfig, Integer> e : map.entrySet()) {
+                character.sendMessage(e.getKey().getName() + " +" + e.getValue());
+            }
+        } else {
+            character.sendMessage(actionResult.getMessage());
+        }
     }
 
     public boolean commandChooseClass(IActiveCharacter character, ClassDefinition configClass) {
