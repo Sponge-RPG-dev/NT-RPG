@@ -648,7 +648,7 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
 
         of.offer(new MenuInventoryData(true));
         List<Text> lore = new ArrayList<>();
-        lore.add(translate(LocalizationKeys.INITIAL_VALUE,Arg.arg("value", value)));
+        lore.add(translate(LocalizationKeys.INITIAL_VALUE, Arg.arg("value", value)));
         if (key.getDescription() != null) {
             lore.addAll(getItemLore(key.getDescription()));
         }
@@ -877,24 +877,26 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
                             Sponge.getScheduler()
                                     .createSyncExecutor(NtRpgPlugin.GlobalScope.plugin)
                                     .schedule(
-                                            () ->                             {for (int a = 1; a < 8; a++) {
-                                inventory.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(a, 2))).poll();
-                            }},
+                                            () -> {
+                                                for (int a = 1; a < 8; a++) {
+                                                    inventory.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(a, 2))).poll();
+                                                }
+                                            },
                                             1L,
                                             TimeUnit.MILLISECONDS
                                     );
 
-
-                        } else {
-                            Sponge.getScheduler()
-                                    .createSyncExecutor(NtRpgPlugin.GlobalScope.plugin)
-                                    .schedule(
-                                            () -> createCommitAttributeTxButton(commitSP, attributePoints, inventory),
-                                            1L,
-                                            TimeUnit.MILLISECONDS
-                                    );
 
                         }
+                        Sponge.getScheduler()
+                                .createSyncExecutor(NtRpgPlugin.GlobalScope.plugin)
+                                .schedule(
+                                        () -> createCommitAttributeTxButton(commitSP, attributePoints, inventory),
+                                        1L,
+                                        TimeUnit.MILLISECONDS
+                                );
+
+
                     } else {
                         aFinal.get(NKeys.COMMAND).ifPresent(s -> {
                             if (s.equalsIgnoreCase("char tx-attribute-commit")) {
@@ -904,7 +906,7 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
                                                 () -> Sponge.getCommandManager().process(character.getPlayer(), "char"),
                                                 1L,
                                                 TimeUnit.MILLISECONDS
-                                                );
+                                        );
 
                             }
                         });
@@ -971,7 +973,7 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
 
         character.getPlayer().sendMessage(ChatTypes.ACTION_BAR, build);
     }
-    
+
     private Text translate(String key) {
         return TextHelper.parse(localizationService.translate(key));
     }
