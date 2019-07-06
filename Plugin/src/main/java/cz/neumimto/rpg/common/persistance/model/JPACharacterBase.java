@@ -270,6 +270,7 @@ public class JPACharacterBase extends JPATimestampEntity implements CharacterBas
     }
 
     @Override
+    @OneToMany(targetEntity = JPABaseCharacterAttribute.class, fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "characterBase")
     public Set<BaseCharacterAttribute> getBaseCharacterAttribute() {
         return baseCharacterAttribute;
     }
@@ -350,5 +351,12 @@ public class JPACharacterBase extends JPATimestampEntity implements CharacterBas
     @Override
     public void setAttributePointsSpent(Integer attributePointsSpent) {
         this.attributePointsSpent = attributePointsSpent;
+    }
+
+    @PostLoad
+    public void postLoad() {
+        for (BaseCharacterAttribute characterAttribute : baseCharacterAttribute) {
+            cachedAttributes.put(characterAttribute.getName(), characterAttribute.getLevel());
+        }
     }
 }

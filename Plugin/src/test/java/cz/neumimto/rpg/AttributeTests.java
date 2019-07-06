@@ -7,33 +7,41 @@ import cz.neumimto.rpg.api.events.EventFactoryService;
 import cz.neumimto.rpg.api.utils.ActionResult;
 import cz.neumimto.rpg.junit.CharactersExtension;
 import cz.neumimto.rpg.junit.CharactersExtension.Stage;
+import cz.neumimto.rpg.junit.H2TestGuiceModule;
 import cz.neumimto.rpg.junit.NtRpgExtension;
 import cz.neumimto.rpg.junit.TestDictionary;
-import cz.neumimto.rpg.junit.TestGuiceModule;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import name.falgout.jeffrey.testing.junit.guice.GuiceExtension;
 import name.falgout.jeffrey.testing.junit.guice.IncludeModule;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import javax.inject.Inject;
-
+import javax.persistence.Query;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static cz.neumimto.rpg.junit.CharactersExtension.Stage.Stages.READY;
 
 @ExtendWith({GuiceExtension.class, NtRpgExtension.class, CharactersExtension.class})
-@IncludeModule(TestGuiceModule.class)
+@IncludeModule(H2TestGuiceModule.class)
 public class AttributeTests {
 
     @Inject
-    private ICharacterService<? super IActiveCharacter> characterService;
+    private ICharacterService characterService;
 
     @Inject
     private EventFactoryService eventFactoryService;
+
+    @Inject
+    private SessionFactory sessionFactory;
 
     @BeforeEach
     public void before() {
@@ -63,16 +71,28 @@ public class AttributeTests {
 
     @Test
     public void testAttributeAdd_ok(@Stage(READY)IActiveCharacter iActiveCharacter) {
+        iActiveCharacter.getCharacterBase().setUuid(UUID.randomUUID());
+        characterService.createAndUpdate(iActiveCharacter.getCharacterBase());
         iActiveCharacter.setAttributePoints(2);
         HashMap<AttributeConfig, Integer> map = new HashMap<>();
         map.put(TestDictionary.AGI, 2);
         ActionResult i = characterService.addAttribute(iActiveCharacter, map);
+
         Integer attributeValue = iActiveCharacter.getAttributeValue(TestDictionary.AGI);
         Assertions.assertEquals(attributeValue, 101);
         Assertions.assertTrue(i.isOk());
         Assertions.assertEquals(iActiveCharacter.getAttributePoints(),0);
         Assertions.assertEquals(iActiveCharacter.getCharacterBase().getAttributePointsSpent(),2);
         Assertions.assertTrue(iActiveCharacter.requiresDamageRecalculation());
+
+        characterService.putInSaveQueue(iActiveCharacter.getCharacterBase());
+        Session session = sessionFactory.openSession();
+        Transaction tx = session.beginTransaction();
+
+        Query query = session.createQuery("from BaseCharacterAttribute where characterBase = :base");
+        query.setParameter("base", iActiveCharacter.getCharacterBase());
+
+        List result = query.getResultList();
 
     }
 

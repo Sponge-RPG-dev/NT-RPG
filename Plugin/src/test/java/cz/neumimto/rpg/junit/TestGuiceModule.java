@@ -85,7 +85,7 @@ public class TestGuiceModule extends AbstractModule {
 
         bind(CharacterClassDao.class);
         bind(ClassDefinitionDao.class);
-        bind(PlayerDao.class).to(InMemoryPlayerStorage.class);
+        bind(PlayerDao.class).to(getPlayerDaoImpl());
 
         bind(ClassGenerator.class).to(SpongeClassGenerator.class);
         bind(ClassService.class).to(ClassServiceImpl.class);
@@ -147,6 +147,10 @@ public class TestGuiceModule extends AbstractModule {
         bind(new TypeLiteral<ICharacterService<IActiveCharacter>>() {
         })
                 .toProvider(SpongeCharacterServiceProvider.class);
+    }
+
+    protected Class<? extends PlayerDao> getPlayerDaoImpl() {
+        return InMemoryPlayerStorage.class;
     }
 
     private static TestCharacterService scs;

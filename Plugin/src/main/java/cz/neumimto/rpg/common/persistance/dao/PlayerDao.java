@@ -56,7 +56,7 @@ public class PlayerDao extends GenericDao<CharacterBase> {
      */
     public List<CharacterBase> getPlayersCharacters(UUID uuid) {
         Session session = getFactory().openSession();
-        Query query = session.createQuery("SELECT a FROM JPACharacterBase a WHERE a.uuid=:id AND a.markedForRemoval = null  ORDER BY a.updated DESC");
+        Query query = session.createQuery("SELECT a FROM JPACharacterBase a WHERE a.uuid=:id AND a.markedForRemoval = null ORDER BY a.updated DESC");
         query.setParameter("id", uuid);
         List list = query.list();
         session.close();
