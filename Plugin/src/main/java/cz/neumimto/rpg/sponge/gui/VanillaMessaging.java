@@ -104,8 +104,8 @@ import static cz.neumimto.rpg.sponge.gui.GuiHelper.*;
 @IResourceLoader.ListenerClass
 public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
 
-    private static final String skillname = "sk";
     public static Map<SkillTreeControllsButton, SkillTreeInterfaceModel> controlls;
+
     @Inject
     private Game game;
 
@@ -392,8 +392,6 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
         s.offer(new MenuInventoryData(true));
         s.offer(Keys.DISPLAY_NAME, Text.of(p.getName(), TextColors.DARK_PURPLE));
         s.offer(Keys.ITEM_LORE, getItemLore(p.getDescription()));
-        String l = "race ";
-        s.offer(new InventoryCommandItemMenuData(l + p.getName()));
         return s;
     }
 
@@ -839,17 +837,17 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
 
         ItemStack itemStack = GuiHelper.itemStack(ItemTypes.BOOK);
         itemStack.offer(Keys.DISPLAY_NAME, translate(LocalizationKeys.ATTRIBUTES));
-        itemStack.offer(new InventoryCommandItemMenuData("character attributes"));
+        itemStack.offer(new InventoryCommandItemMenuData("char attributes"));
         i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(1, 1))).offer(itemStack);
 
         itemStack = GuiHelper.itemStack(ItemTypes.ARMOR_STAND);
         itemStack.offer(Keys.DISPLAY_NAME, translate(LocalizationKeys.CHARACTER_CLASSES));
-        itemStack.offer(new InventoryCommandItemMenuData("character classes"));
+        itemStack.offer(new InventoryCommandItemMenuData("char classes"));
         i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(2, 1))).offer(itemStack);
 
         itemStack = GuiHelper.itemStack(ItemTypes.IRON_CHESTPLATE);
         itemStack.offer(Keys.DISPLAY_NAME, translate(LocalizationKeys.CHARACTER_ARMOR));
-        itemStack.offer(new InventoryCommandItemMenuData("character armor"));
+        itemStack.offer(new InventoryCommandItemMenuData("char armor"));
         i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(3, 1))).offer(itemStack);
 
         itemStack = GuiHelper.itemStack(ItemTypes.IRON_AXE);
@@ -976,6 +974,14 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
                 .append(Text.builder("_").color(TextColors.GRAY).build()).build();
 
         character.getPlayer().sendMessage(ChatTypes.ACTION_BAR, build);
+    }
+
+    @Override
+    public void displayCharacterArmor(ISpongeCharacter character, int page) {
+        Inventory inventory = ArmorAndWeaponMenuHelper.listArmor(character, page);
+        if (inventory != null) {
+            character.getPlayer().openInventory(inventory);
+        }
     }
 
     private Text translate(String key) {

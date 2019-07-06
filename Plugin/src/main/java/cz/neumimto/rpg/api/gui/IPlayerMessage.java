@@ -96,4 +96,6 @@ public interface IPlayerMessage<T extends IActiveCharacter> {
     void displayCharacterAttributes(T character);
 
     void displayCurrentClicks(T character, String combo);
+
+    void displayCharacterArmor(T character, int page);
 }

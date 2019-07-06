@@ -296,6 +296,9 @@ public class CommandService {
                 .executor(new CharacterAttributesExecutor())
                 .build();
 
+        CommandSpec characterArmor = CommandSpec.builder()
+                .executor(new CharacterArmorExecutor())
+                .build();
 
         CommandSpec characterRoot = CommandSpec.builder()
                 .description(TextSerializers.FORMATTING_CODE.deserialize(CommandLocalization.COMMAND_CHOOSE_DESC))
@@ -307,6 +310,8 @@ public class CommandService {
                 .child(characterChoose, "choose", "set")
 
                 .child(characterSkill, "skill", "s", "sk")
+
+                .child(characterArmor, "armor", "armr", "a")
 
                 .child(characterAttributeRespec, "attributes-respec", "arspc")
                 .child(characterAttributeCommit, "tx-attribute-commit", "tac")

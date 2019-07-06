@@ -52,7 +52,6 @@ import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
 import cz.neumimto.rpg.sponge.entities.configuration.SpongeMobSettingsDao;
 import cz.neumimto.rpg.sponge.entities.players.party.SpongePartyService;
 import cz.neumimto.rpg.sponge.exp.ExperienceService;
-import cz.neumimto.rpg.sponge.gui.GuiService;
 import cz.neumimto.rpg.sponge.gui.ItemLoreBuilderService;
 import cz.neumimto.rpg.sponge.gui.ParticleDecorator;
 import cz.neumimto.rpg.sponge.gui.VanillaMessaging;
@@ -99,7 +98,6 @@ public class TestGuiceModule extends AbstractModule {
         bind(MobSettingsDao.class).to(SpongeMobSettingsDao.class);
         bind(ExperienceDAO.class);
         bind(ExperienceService.class);
-        bind(GuiService.class);
         bind(ItemLoreBuilderService.class);
         bind(ParticleDecorator.class);
 

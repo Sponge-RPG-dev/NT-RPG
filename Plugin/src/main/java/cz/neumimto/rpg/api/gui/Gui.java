@@ -25,7 +25,6 @@ import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
-import cz.neumimto.rpg.api.inventory.CannotUseItemReason;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
@@ -150,5 +149,9 @@ public class Gui {
 
     public static void displayCharacterAttributes(IActiveCharacter character) {
         getMessageTypeOf(character).displayCharacterAttributes(character);
+    }
+
+    public static void displayCharacterArmor(IActiveCharacter character, int page) {
+        getMessageTypeOf(character).displayCharacterArmor(character, page);
     }
 }

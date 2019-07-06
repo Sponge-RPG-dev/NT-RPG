@@ -18,7 +18,6 @@ import cz.neumimto.rpg.sponge.commands.InfoCommand;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.inventory.data.InventoryCommandItemMenuData;
 import cz.neumimto.rpg.sponge.inventory.data.MenuInventoryData;
-import cz.neumimto.rpg.sponge.inventory.data.NKeys;
 import cz.neumimto.rpg.sponge.inventory.data.SkillTreeInventoryViewControllsData;
 import cz.neumimto.rpg.sponge.items.SpongeRpgItemType;
 import cz.neumimto.rpg.sponge.listeners.SkillTreeInventoryListener;
@@ -93,7 +92,7 @@ public class GuiHelper {
         return is;
     }
 
-    public static ItemStack damageTypeToItemStack(String type) {
+    private static ItemStack damageTypeToItemStack(String type) {
         if (type == null) {
             return itemStack(ItemTypes.STONE);
         }
@@ -108,7 +107,7 @@ public class GuiHelper {
         return is;
     }
 
-    public static Inventory createMenuInventoryClassDefView(ClassDefinition w) {
+    static Inventory createMenuInventoryClassDefView(ClassDefinition w) {
         Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST)
                 .property(InventoryTitle.of(Text.of(w.getName(), toTextColor(w.getPreferedColor()), TextStyles.BOLD)))
                 .build(plugin);
@@ -131,7 +130,7 @@ public class GuiHelper {
         return i;
     }
 
-    public static Inventory createMenuInventoryClassTypeView(String type) {
+    static Inventory createMenuInventoryClassTypeView(String type) {
         ClassTypeDefinition classTypeDefinition = NtRpgPlugin.pluginConfig.CLASS_TYPES.get(type);
         Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST)
                 .property(InventoryTitle.of(
@@ -176,39 +175,27 @@ public class GuiHelper {
         return i;
     }
 
-    public static ItemStack createPropertyCommand(ClassDefinition group) {
-        ItemStack i = itemStack(ItemTypes.BOOK);
-        i.offer(NKeys.MENU_INVENTORY, true);
-        i.offer(Keys.DISPLAY_NAME, translate(LocalizationKeys.PROPERTIES));
+    private static ItemStack createPropertyCommand(ClassDefinition group) {
         String cc = NtRpgPlugin.GlobalScope.injector.getInstance(InfoCommand.class).getAliases().iterator().next();
-        i.offer(new InventoryCommandItemMenuData(cc + " properties-initial " + group.getName()));
-        return i;
+        return command(cc + " properties-initial " + group.getName(),
+                translate(LocalizationKeys.PROPERTIES), ItemTypes.BOOK);
     }
 
-    public static ItemStack createAttributesCommand(ClassDefinition group) {
-        ItemStack i = itemStack(ItemTypes.BOOK);
-        i.offer(NKeys.MENU_INVENTORY, true);
-        i.offer(Keys.DISPLAY_NAME, translate(LocalizationKeys.ATTRIBUTES));
+    private static ItemStack createAttributesCommand(ClassDefinition group) {
         String cc = NtRpgPlugin.GlobalScope.injector.getInstance(InfoCommand.class).getAliases().iterator().next();
-        i.offer(new InventoryCommandItemMenuData(cc + " attributes-initial " + group.getName()));
-        return i;
+        return command(cc + "  attributes-initial " + group.getName(),
+                translate(LocalizationKeys.ATTRIBUTES), ItemTypes.BOOK);
     }
 
-    public static ItemStack createArmorCommand(ClassDefinition group) {
-        ItemStack i = itemStack(ItemTypes.DIAMOND_CHESTPLATE);
-        i.offer(NKeys.MENU_INVENTORY, true);
-        i.offer(Keys.DISPLAY_NAME, translate(LocalizationKeys.ARMOR));
+    private static ItemStack createArmorCommand(ClassDefinition group) {
+        ItemStack i = command("armor " + group.getName(),translate(LocalizationKeys.ARMOR), ItemTypes.DIAMOND_CHESTPLATE);
         i.offer(Keys.ITEM_LORE, Collections.singletonList(translate(LocalizationKeys.ARMOR_MENU_HELP)));
-        i.offer(new InventoryCommandItemMenuData("armor " + group.getName()));
         return i;
     }
 
-    public static ItemStack createWeaponCommand(ClassDefinition group) {
-        ItemStack i = itemStack(ItemTypes.DIAMOND_SWORD);
-        i.offer(NKeys.MENU_INVENTORY, true);
-        i.offer(Keys.DISPLAY_NAME, translate(LocalizationKeys.WEAPONS));
+    private static ItemStack createWeaponCommand(ClassDefinition group) {
+        ItemStack i = command("weapons " + group.getName(),translate(LocalizationKeys.WEAPONS), ItemTypes.DIAMOND_SWORD);
         i.offer(Keys.ITEM_LORE, Collections.singletonList(translate(LocalizationKeys.WEAPONS_MENU_HELP)));
-        i.offer(new InventoryCommandItemMenuData("weapons " + group.getName()));
         return i;
     }
 
@@ -226,7 +213,7 @@ public class GuiHelper {
         return i;
     }
 
-    public static List<Text> getItemLore(String s) {
+    static List<Text> getItemLore(String s) {
         String[] a = s.split("\\n");
         List<Text> t = new ArrayList<>();
         for (String s1 : a) {
@@ -236,7 +223,11 @@ public class GuiHelper {
     }
 
     public static ItemStack back(String command, Text displayName) {
-        ItemStack of = itemStack(ItemTypes.PAPER);
+        return command(command, displayName, ItemTypes.PAPER);
+    }
+
+    public static ItemStack command(String command, Text displayName, ItemType type) {
+        ItemStack of = itemStack(type);
         of.offer(Keys.DISPLAY_NAME, displayName);
         of.offer(new MenuInventoryData(true));
         of.offer(new InventoryCommandItemMenuData(command));
@@ -244,22 +235,18 @@ public class GuiHelper {
     }
 
     public static ItemStack back(ClassDefinition g) {
-        ItemStack of = itemStack(ItemTypes.PAPER);
-        of.offer(new MenuInventoryData(true));
-        of.offer(Keys.DISPLAY_NAME, translate(LocalizationKeys.BACK));
-        of.offer(new InventoryCommandItemMenuData("class " + g.getName()));
-        return of;
+        return command("class " + g.getName(), translate(LocalizationKeys.BACK), ItemTypes.PAPER);
     }
 
-    public static ItemStack unclickableInterface() {
+    public static ItemStack unclickableInterface(DyeColor dyeColor) {
         ItemStack of = itemStack(ItemTypes.STAINED_GLASS_PANE);
         of.offer(new MenuInventoryData(true));
-        of.offer(Keys.DYE_COLOR, DyeColors.YELLOW);
+        of.offer(Keys.DYE_COLOR, dyeColor);
         of.offer(Keys.DISPLAY_NAME, Text.EMPTY);
         return of;
     }
 
-    public static ItemStack skillToItemStack(ISpongeCharacter character, SkillData skillData, SkillTree skillTree, SkillTreeViewModel model) {
+    static ItemStack skillToItemStack(ISpongeCharacter character, SkillData skillData, SkillTree skillTree, SkillTreeViewModel model) {
         return toItemStack(skillData.getSkill(), character, skillData, skillTree, model);
     }
 
@@ -336,12 +323,12 @@ public class GuiHelper {
                         event -> new SkillTreeInventoryListener().onOptionSelect(event, (Player) event.getCause().root()))
                 .build(plugin);
 
-        i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(7, 0))).offer(unclickableInterface());
-        i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(7, 1))).offer(unclickableInterface());
-        i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(7, 2))).offer(unclickableInterface());
-        i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(7, 3))).offer(unclickableInterface());
-        i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(7, 4))).offer(unclickableInterface());
-        i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(7, 5))).offer(unclickableInterface());
+        i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(7, 0))).offer(unclickableInterface(DyeColors.YELLOW));
+        i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(7, 1))).offer(unclickableInterface(DyeColors.YELLOW));
+        i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(7, 2))).offer(unclickableInterface(DyeColors.YELLOW));
+        i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(7, 3))).offer(unclickableInterface(DyeColors.YELLOW));
+        i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(7, 4))).offer(unclickableInterface(DyeColors.YELLOW));
+        i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(7, 5))).offer(unclickableInterface(DyeColors.YELLOW));
 
 
         SkillTreeViewModel model = character.getSkillTreeViewLocation().get(skillTree.getId());
@@ -562,22 +549,18 @@ public class GuiHelper {
     public static void makeBorder(Inventory i, DyeColor dyeColor) {
         if (i.getArchetype() == InventoryArchetypes.DOUBLE_CHEST) {
             for (int j = 0; j < 9; j++) {
-                ItemStack of = unclickableInterface();
-                of.offer(Keys.DYE_COLOR, dyeColor);
+                ItemStack of = unclickableInterface(dyeColor);
                 i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(j, 0))).offer(of);
 
-                of = unclickableInterface();
-                of.offer(Keys.DYE_COLOR, dyeColor);
+                of = unclickableInterface(dyeColor);
                 i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(j, 5))).offer(of);
             }
 
             for (int j = 1; j < 5; j++) {
-                ItemStack of = unclickableInterface();
-                of.offer(Keys.DYE_COLOR, dyeColor);
+                ItemStack of = unclickableInterface(dyeColor);
                 i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0, j))).offer(of);
 
-                of = unclickableInterface();
-                of.offer(Keys.DYE_COLOR, dyeColor);
+                of = unclickableInterface(dyeColor);
                 i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(8, j))).offer(of);
             }
         }
