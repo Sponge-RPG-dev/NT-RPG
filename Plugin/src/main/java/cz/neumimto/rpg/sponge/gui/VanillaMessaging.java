@@ -860,6 +860,8 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
         character.getPlayer().openInventory(i);
     }
 
+    //todo this could be optimized.
+    // Dont redraw every time user clicks +
     @Override
     public void displayCharacterAttributes(ISpongeCharacter character) {
         character.setAttributesTransaction(new HashMap<>());
@@ -873,30 +875,17 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
                     ItemStackSnapshot aFinal = slotTransaction.getOriginal();
                     Optional<Text> text = aFinal.get(Keys.DISPLAY_NAME);
                     if (text.isPresent() && text.get().toPlainSingle().equalsIgnoreCase("+")) {
-                        if (attributePoints == 0 || attributePoints == character.getAttributesTransaction().values().stream().mapToInt(a -> a).sum()) {
-                            Sponge.getScheduler()
-                                    .createSyncExecutor(NtRpgPlugin.GlobalScope.plugin)
-                                    .schedule(
-                                            () -> {
-                                                for (int a = 1; a < 8; a++) {
-                                                    inventory.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(a, 2))).poll();
-                                                }
-                                            },
-                                            1L,
-                                            TimeUnit.MILLISECONDS
-                                    );
-
-
-                        }
                         Sponge.getScheduler()
                                 .createSyncExecutor(NtRpgPlugin.GlobalScope.plugin)
                                 .schedule(
-                                        () -> createCommitAttributeTxButton(commitSP, attributePoints, inventory),
+                                        () -> {
+                                            createAttributeRow(character, inventory);
+                                            createCommitAttributeTxButton(commitSP, attributePoints, inventory);
+                                        }
+                                            ,
                                         1L,
                                         TimeUnit.MILLISECONDS
                                 );
-
-
                     } else {
                         aFinal.get(NKeys.COMMAND).ifPresent(s -> {
                             if (s.equalsIgnoreCase("char tx-attribute-commit")) {
@@ -919,30 +908,7 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
         createCommitAttributeTxButton(commitSP, attributePoints, i);
 
 
-        Collection<AttributeConfig> allOf = Rpg.get().getPropertyService().getAttributes().values();
-
-        int q = 0;
-        for (AttributeConfig attribute : allOf) {
-
-            ItemStack itemStack = GuiHelper.itemStack(attribute.getItemType());
-            itemStack.offer(Keys.DISPLAY_NAME, Text.of(attribute.getName()));
-            List<Text> text = TextHelper.splitStringByDelimiter(attribute.getDescription());
-            Integer amount = character.getCharacterBase().getAttributes().get(attribute.getId());
-            text.add(Text.builder((amount == null ? 0 : amount) + " / " + attribute.getMaxValue()).build());
-            itemStack.offer(Keys.ITEM_LORE, text);
-
-            if (attributePoints > 0) {
-                ItemStack btn = GuiHelper.itemStack(ItemTypes.SUGAR);
-                btn.offer(Keys.DISPLAY_NAME, Text.of(TextColors.GREEN, "+"));
-                btn.offer(new InventoryCommandItemMenuData("char attribute " + attribute.getId() + " 1"));
-                i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(q, 2))).offer(btn);
-            }
-
-            i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(q, 3))).offer(itemStack);
-
-
-            q++;
-        }
+        createAttributeRow(character, i);
         if (pluginConfig.RESPEC_ATTRIBUTES) {
             SlotPos respecSp = SlotPos.of(7, 5);
             ItemStack btnRespec = GuiHelper.itemStack(ItemTypes.BARRIER);
@@ -952,6 +918,44 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
         }
 
         character.getPlayer().openInventory(i);
+    }
+
+    public void createAttributeRow(ISpongeCharacter character, Inventory i) {
+        Collection<AttributeConfig> allOf = Rpg.get().getPropertyService().getAttributes().values();
+        int attributePoints = character.getAttributePoints() ;
+        for (Integer value : character.getAttributesTransaction().values()) {
+            attributePoints -= value;
+        }
+
+        int q = 1;
+        for (AttributeConfig attribute : allOf) {
+
+            ItemStack itemStack = GuiHelper.itemStack(attribute.getItemType());
+            itemStack.offer(Keys.DISPLAY_NAME, Text.of(attribute.getName()));
+            List<Text> text = TextHelper.splitStringByDelimiter(attribute.getDescription());
+            Integer amount = character.getCharacterBase().getAttributes().get(attribute.getId());
+            amount = amount == null ? 0 : amount;
+            Integer c = character.getAttributesTransaction().get(attribute.getId());
+            if (c != null) {
+                amount += c;
+            }
+            text.add(Text.builder(amount + " / " + attribute.getMaxValue()).build());
+            itemStack.offer(Keys.ITEM_LORE, text);
+
+            if (attributePoints > 0) {
+                ItemStack btn = GuiHelper.itemStack(ItemTypes.SUGAR);
+                btn.offer(Keys.DISPLAY_NAME, Text.of(TextColors.GREEN, "+"));
+                btn.offer(new InventoryCommandItemMenuData("char attribute " + attribute.getId() + " 1"));
+                i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(q, 2))).set(btn);
+            } else {
+                i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(q, 2))).poll();
+            }
+
+            i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(q, 3))).set(itemStack);
+
+
+            q++;
+        }
     }
 
     public void createCommitAttributeTxButton(SlotPos commitSP, int attributePoints, Inventory i) {
