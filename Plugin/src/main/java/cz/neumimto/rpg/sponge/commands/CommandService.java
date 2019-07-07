@@ -297,7 +297,13 @@ public class CommandService {
                 .build();
 
         CommandSpec characterArmor = CommandSpec.builder()
+                .arguments(GenericArguments.integer(Text.of("page")))
                 .executor(new CharacterArmorExecutor())
+                .build();
+
+        CommandSpec characterWeapons = CommandSpec.builder()
+                .arguments(GenericArguments.integer(Text.of("page")))
+                .executor(new CharacterWeaponsExecutor())
                 .build();
 
         CommandSpec characterRoot = CommandSpec.builder()
@@ -312,7 +318,7 @@ public class CommandService {
                 .child(characterSkill, "skill", "s", "sk")
 
                 .child(characterArmor, "armor", "armr", "a")
-
+                .child(characterWeapons, "weapon", "wpn", "w")
                 .child(characterAttributeRespec, "attributes-respec", "arspc")
                 .child(characterAttributeCommit, "tx-attribute-commit", "tac")
                 .child(characterAttribute, "attribute", "attr", "a")

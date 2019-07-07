@@ -847,12 +847,12 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
 
         itemStack = GuiHelper.itemStack(ItemTypes.IRON_CHESTPLATE);
         itemStack.offer(Keys.DISPLAY_NAME, translate(LocalizationKeys.CHARACTER_ARMOR));
-        itemStack.offer(new InventoryCommandItemMenuData("char armor"));
+        itemStack.offer(new InventoryCommandItemMenuData("char armor 0"));
         i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(3, 1))).offer(itemStack);
 
         itemStack = GuiHelper.itemStack(ItemTypes.IRON_AXE);
         itemStack.offer(Keys.DISPLAY_NAME, translate(LocalizationKeys.CHARACTER_WEAPONS));
-        itemStack.offer(new InventoryCommandItemMenuData("character weapons"));
+        itemStack.offer(new InventoryCommandItemMenuData("char weapon 0"));
         i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(4, 1))).offer(itemStack);
 
         character.getPlayer().openInventory(i);
@@ -977,6 +977,14 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
     @Override
     public void displayCharacterArmor(ISpongeCharacter character, int page) {
         Inventory inventory = ArmorAndWeaponMenuHelper.listArmor(character, page);
+        if (inventory != null) {
+            character.getPlayer().openInventory(inventory);
+        }
+    }
+
+    @Override
+    public void displayCharacterWeapons(ISpongeCharacter character, int page) {
+        Inventory inventory = ArmorAndWeaponMenuHelper.listWeapons(character, page);
         if (inventory != null) {
             character.getPlayer().openInventory(inventory);
         }

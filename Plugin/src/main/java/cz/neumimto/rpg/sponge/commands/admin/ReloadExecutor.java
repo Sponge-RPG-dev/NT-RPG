@@ -1,7 +1,5 @@
 package cz.neumimto.rpg.sponge.commands.admin;
 
-import static cz.neumimto.rpg.api.logging.Log.info;
-import static cz.neumimto.rpg.api.logging.Log.warn;
 import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.logging.Log;
@@ -11,10 +9,10 @@ import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.common.persistance.dao.ClassDefinitionDao;
-import cz.neumimto.rpg.common.scripting.JSLoader;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
+import cz.neumimto.rpg.sponge.gui.ArmorAndWeaponMenuHelper;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
@@ -27,10 +25,14 @@ import org.spongepowered.api.text.Text;
 
 import java.util.*;
 
+import static cz.neumimto.rpg.api.logging.Log.info;
+import static cz.neumimto.rpg.api.logging.Log.warn;
+
 public class ReloadExecutor implements CommandExecutor {
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
         String[] a = args.<String>getOne("args").get().split(" ");
+        ArmorAndWeaponMenuHelper.resetAll();
         if (a[0].equalsIgnoreCase("js")) {
             IScriptEngine jsLoader = NtRpgPlugin.GlobalScope.jsLoader;
             jsLoader.initEngine();
