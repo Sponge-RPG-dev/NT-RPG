@@ -950,8 +950,6 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
             }
 
             i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(q, 3))).set(itemStack);
-
-
             q++;
         }
     }

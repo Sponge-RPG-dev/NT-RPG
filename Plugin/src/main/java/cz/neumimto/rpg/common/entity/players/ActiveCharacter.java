@@ -19,6 +19,7 @@
 package cz.neumimto.rpg.common.entity.players;
 
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.configuration.ItemDamageProcessor;
 import cz.neumimto.rpg.api.effects.*;
 import cz.neumimto.rpg.api.entity.EntityHand;
 import cz.neumimto.rpg.api.entity.IReservable;
@@ -337,10 +338,12 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
 
     private void mergeWeapons(Set<ClassItem> weapons) {
         for (ClassItem weapon : weapons) {
-            if (allowedWeapons.containsKey(weapon.getType())) {
+            if (!allowedWeapons.containsKey(weapon.getType())) {
                 allowedWeapons.put(weapon.getType(), weapon.getDamage());
             } else {
-                allowedWeapons.put(weapon.getType(), Rpg.get().getPluginConfig().ITEM_DAMAGE_PROCESSOR.get(allowedWeapons.get(weapon.getType()), weapon.getDamage()));
+                ItemDamageProcessor itemDamageProcessor = Rpg.get().getPluginConfig().ITEM_DAMAGE_PROCESSOR;
+                double dmg = itemDamageProcessor.get(allowedWeapons.get(weapon.getType()), weapon.getDamage());
+                allowedWeapons.put(weapon.getType(), dmg);
             }
         }
     }

@@ -39,7 +39,10 @@ public class ArmorAndWeaponMenuHelper {
         List<Inventory> i = new ArrayList<>();
 
         Set<SpongeRpgItemType> allowedArmor = character.getAllowedArmor();
-        List<SpongeRpgItemType> list = allowedArmor.stream().sorted(Comparator.comparingDouble(RpgItemTypeImpl::getArmor)).collect(Collectors.toList());
+        List<SpongeRpgItemType> list = allowedArmor.stream().sorted(
+                Comparator.comparingDouble(RpgItemTypeImpl::getArmor)
+                        .thenComparing(RpgItemTypeImpl::getId))
+                .collect(Collectors.toList());
         final int max = list.size();
         int q = 0;
         Inventory inventory;
@@ -48,23 +51,24 @@ public class ArmorAndWeaponMenuHelper {
         for (List<SpongeRpgItemType> inner : partition) {
             inventory = prepareArmorInventory(q, max);
             fillInventoryWithItems(inventory, inner);
+            i.add(inventory);
         }
 
         return i;
     }
 
     private static void fillInventoryWithItems(Inventory inventory, List<SpongeRpgItemType> inner) {
-        int row = 3;
+        int row = 2;
         int column = 1;
         for (SpongeRpgItemType spongeRpgItemType : inner) {
-            if (column % 7 == 0) {
+            ItemStack itemStack = GuiHelper.itemStack(spongeRpgItemType.getItemType());
+            inventory.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(column,row))).offer(itemStack);
+            if ((column) % 7 == 0) {
                 column = 1;
                 row++;
+            } else {
+                column++;
             }
-            ItemStack itemStack = GuiHelper.itemStack(spongeRpgItemType.getItemType());
-
-            inventory.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(column,row))).offer(itemStack);
-            column++;
         }
     }
 
