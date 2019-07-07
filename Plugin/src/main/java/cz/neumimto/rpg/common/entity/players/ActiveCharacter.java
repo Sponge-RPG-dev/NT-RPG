@@ -367,6 +367,7 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
 
     @Override
     public IActiveCharacter updateItemRestrictions() {
+
         Log.info("Updating item restrictions " + getName());
 
         allowedWeapons.clear();

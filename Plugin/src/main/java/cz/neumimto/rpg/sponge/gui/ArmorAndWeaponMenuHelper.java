@@ -114,8 +114,6 @@ public class ArmorAndWeaponMenuHelper {
         }
     }
 
-
-
     private static void fillInventoryWithItems(Inventory inventory, List<SpongeRpgItemType> inner) {
         int row = 2;
         int column = 1;
