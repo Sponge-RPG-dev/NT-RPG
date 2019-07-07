@@ -8,7 +8,6 @@ import org.spongepowered.api.service.permission.SubjectData;
 import org.spongepowered.api.util.Tristate;
 
 import java.util.Collection;
-import java.util.Set;
 
 public class SpongePermissionService implements PermissionService<ISpongeCharacter> {
 

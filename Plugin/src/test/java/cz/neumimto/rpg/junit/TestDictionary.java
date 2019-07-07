@@ -6,7 +6,6 @@ import cz.neumimto.rpg.common.items.RpgItemTypeImpl;
 import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 
-import java.util.Collections;
 import java.util.HashMap;
 
 public class TestDictionary {

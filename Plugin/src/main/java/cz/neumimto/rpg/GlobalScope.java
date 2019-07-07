@@ -22,7 +22,6 @@ import com.google.inject.Injector;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.effects.IEffectService;
 import cz.neumimto.rpg.api.skills.SkillService;
-import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.events.EventFactoryService;
 import cz.neumimto.rpg.api.gui.Gui;
@@ -41,7 +40,6 @@ import cz.neumimto.rpg.sponge.gui.VanillaMessaging;
 import cz.neumimto.rpg.sponge.inventory.SpongeInventoryService;
 import cz.neumimto.rpg.sponge.inventory.SpongeItemService;
 import cz.neumimto.rpg.sponge.inventory.runewords.RWService;
-import cz.neumimto.rpg.sponge.skills.SpongeSkillService;
 import org.spongepowered.api.Game;
 
 import javax.inject.Inject;

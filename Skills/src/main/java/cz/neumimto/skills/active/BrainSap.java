@@ -21,7 +21,6 @@ import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 import org.spongepowered.api.event.filter.IsCancelled;
 import org.spongepowered.api.event.filter.cause.First;
-import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.util.Tristate;
 
 import javax.inject.Inject;

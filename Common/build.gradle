@@ -1,0 +1,28 @@
+plugins {
+    id "net.kyori.blossom" version "1.1.0"
+}
+
+group = 'cz.neumimto.rpg'
+version = '2.0.0-SNAPSHOT-12'
+
+dependencies {
+    implementation 'commons-io:commons-io:2.4'
+    compile project(':API')
+    
+    annotationProcessor project(':Generator')
+    compileOnly 'com.google.inject:guice:4.2.2'
+    compileOnly 'com.github.Sponge-RPG-dev:ConfigurateButWithBlackjackAndHookers:39d5fc8afd'
+    compileOnly 'ninja.leaping.configurate:configurate-hocon:3.3'
+
+    jar {
+        manifest {
+            attributes(
+                    'Build-Timestamp': new Date()
+            )
+        }
+
+        from {
+            configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+        }
+    }
+}

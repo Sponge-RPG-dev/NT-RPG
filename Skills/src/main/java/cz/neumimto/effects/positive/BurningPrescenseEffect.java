@@ -2,7 +2,6 @@ package cz.neumimto.effects.positive;
 
 import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.model.BPModel;
-import cz.neumimto.rpg.api.effects.*;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;

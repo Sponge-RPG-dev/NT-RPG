@@ -10,7 +10,6 @@ import cz.neumimto.rpg.junit.TestDictionary;
 import cz.neumimto.rpg.junit.TestGuiceModule;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.inventory.SpongeItemService;
-import cz.neumimto.rpg.sponge.properties.SpongePropertyService;
 import name.falgout.jeffrey.testing.junit.guice.GuiceExtension;
 import name.falgout.jeffrey.testing.junit.guice.IncludeModule;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
@@ -22,8 +21,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import javax.inject.Inject;
 
 import java.util.Set;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith({GuiceExtension.class, NtRpgExtension.class})
 @IncludeModule(TestGuiceModule.class)

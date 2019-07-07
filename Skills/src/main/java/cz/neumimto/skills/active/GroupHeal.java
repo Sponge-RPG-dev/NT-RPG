@@ -10,7 +10,6 @@ import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
-import org.spongepowered.api.item.ItemTypes;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

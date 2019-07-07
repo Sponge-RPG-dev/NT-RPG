@@ -4,7 +4,6 @@ import cz.neumimto.effects.negative.MultiboltEffect;
 import cz.neumimto.model.MultiboltModel;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.effects.IEffectService;
-import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;

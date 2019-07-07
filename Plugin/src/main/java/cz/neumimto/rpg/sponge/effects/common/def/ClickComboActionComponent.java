@@ -2,7 +2,6 @@ package cz.neumimto.rpg.sponge.effects.common.def;
 
 import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.effects.*;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.gui.Gui;

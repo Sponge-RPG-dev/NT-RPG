@@ -4,6 +4,11 @@ include ':Generator'
 include ':NT-RPG'
 include ':NT-RPG-Skills'
 include ':NT-RPG-WebServer-GUI'
+include ':API'
+include ':Common'
+
+project(':API').projectDir = file('API')
+project(':Common').projectDir = file('Common')
 
 project(':NT-RPG').projectDir = file('Plugin')
 project(':NT-RPG-Skills').projectDir = file('Skills')

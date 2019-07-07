@@ -1,7 +1,6 @@
 package cz.neumimto.rpg.sponge.effects.common.mechanics;
 
 
-import cz.neumimto.rpg.api.effects.*;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.utils.MathUtils;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacter;

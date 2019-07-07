@@ -4,7 +4,6 @@ import cz.neumimto.effects.positive.ShadowRunEffect;
 import cz.neumimto.model.ShadowRunModel;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.effects.IEffectService;
-import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;

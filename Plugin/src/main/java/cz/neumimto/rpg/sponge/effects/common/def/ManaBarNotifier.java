@@ -1,6 +1,5 @@
 package cz.neumimto.rpg.sponge.effects.common.def;
 
-import cz.neumimto.rpg.api.effects.*;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.utils.MathUtils;
 import cz.neumimto.rpg.common.effects.CoreEffectTypes;

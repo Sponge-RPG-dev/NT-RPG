@@ -1,6 +1,5 @@
 package cz.neumimto.rpg.sponge.effects;
 
-import cz.neumimto.rpg.api.effects.*;
 import cz.neumimto.rpg.api.effects.model.EffectModelFactory;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.entity.IEntity;

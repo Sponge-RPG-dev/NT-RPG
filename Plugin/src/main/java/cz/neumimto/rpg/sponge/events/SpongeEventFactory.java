@@ -1,10 +1,5 @@
 package cz.neumimto.rpg.sponge.events;
 
-import cz.neumimto.rpg.api.events.character.*;
-import cz.neumimto.rpg.api.events.damage.*;
-import cz.neumimto.rpg.api.events.effect.*;
-import cz.neumimto.rpg.api.events.party.*;
-import cz.neumimto.rpg.api.events.skill.*;
 import cz.neumimto.rpg.common.events.EventFactoryImpl;
 import cz.neumimto.rpg.sponge.events.character.*;
 import cz.neumimto.rpg.sponge.events.damage.*;

@@ -6,7 +6,6 @@ import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 
 import javax.inject.Singleton;
 import java.util.Collection;
-import java.util.Set;
 
 @Singleton
 public class TestPermissionService implements PermissionService {

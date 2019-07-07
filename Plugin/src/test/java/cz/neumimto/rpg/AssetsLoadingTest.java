@@ -4,7 +4,6 @@ import com.google.inject.Injector;
 import cz.neumimto.rpg.api.scripting.IScriptEngine;
 import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.api.skills.scripting.ScriptExecutorSkill;
-import cz.neumimto.rpg.common.scripting.JSLoader;
 import cz.neumimto.rpg.junit.NtRpgExtension;
 import cz.neumimto.rpg.junit.TestGuiceModule;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
@@ -47,7 +46,7 @@ public class AssetsLoadingTest {
         Bindings bindings = jsLoader.getEngine().getBindings(ScriptContext.GLOBAL_SCOPE);
         bindings = bindings == null ? new SimpleBindings() : bindings;
         bindings.put("ScriptExecutorSkill", ScriptExecutorSkill.class);
-        jsLoader.getEngine().eval("var ScriptExecutorSkill = Java.type(\"cz.neumimto.rpg.api.skills.scripting.ScriptExecutorSkill\")");
+        jsLoader.getEngine().eval("var ScriptExecutorSkill = Java.type(\"ScriptExecutorSkill\")");
         jsLoader.getEngine().setBindings(bindings, ScriptContext.GLOBAL_SCOPE);
         skillService.init();
     }

@@ -3,7 +3,6 @@ package cz.neumimto.skills.active;
 import cz.neumimto.effects.negative.WebEffect;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.effects.IEffectService;
-import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
@@ -11,7 +10,6 @@ import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.skills.types.Targeted;
-import org.spongepowered.api.item.ItemTypes;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

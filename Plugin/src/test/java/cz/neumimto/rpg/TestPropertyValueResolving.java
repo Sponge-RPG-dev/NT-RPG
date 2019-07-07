@@ -8,7 +8,6 @@ import cz.neumimto.rpg.api.utils.DebugLevel;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.sponge.inventory.SpongeItemService;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
-import cz.neumimto.rpg.sponge.properties.SpongePropertyService;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import org.junit.jupiter.api.BeforeAll;
 import org.mockito.Mockito;
