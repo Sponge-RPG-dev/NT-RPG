@@ -46,21 +46,21 @@ public interface IEffectConsumer extends PropertyContainer {
 
     @SuppressWarnings("unchecked")
     default void addEffect(IEffect effect) {
-        IEffectContainer IEffectContainer1 = getEffectMap().get(effect.getName());
-        if (IEffectContainer1 == null) {
+        IEffectContainer iEffectContainer1 = getEffectMap().get(effect.getName());
+        if (iEffectContainer1 == null) {
             getEffectMap().put(effect.getName(), new EffectContainer<>(effect));
         } else {
-            IEffectContainer1.getEffects().add(effect);
+            iEffectContainer1.getEffects().add(effect);
         }
     }
 
     @SuppressWarnings("unchecked")
-    default void addEffect(IEffectContainer<Object, IEffect<Object>> IEffectContainer) {
-        IEffectContainer effectContainer1 = getEffectMap().get(IEffectContainer.getName());
+    default void addEffect(IEffectContainer<Object, IEffect<Object>> iEffectContainer) {
+        IEffectContainer effectContainer1 = getEffectMap().get(iEffectContainer.getName());
         if (effectContainer1 == null) {
-            getEffectMap().put(IEffectContainer.getName(), IEffectContainer);
+            getEffectMap().put(iEffectContainer.getName(), iEffectContainer);
         } else {
-            effectContainer1.mergeWith(IEffectContainer);
+            effectContainer1.mergeWith(iEffectContainer);
         }
     }
 

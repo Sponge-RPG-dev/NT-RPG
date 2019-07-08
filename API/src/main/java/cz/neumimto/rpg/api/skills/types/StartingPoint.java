@@ -35,8 +35,13 @@ import java.util.Set;
 public final class StartingPoint extends PassiveSkill {
 
     public static final String NODE_NAME = "StartingPoint";
-    public static SkillData SKILL_DATA = new SkillData(NODE_NAME);
-    private static SkillSettings skillSettings = new SkillSettings();
+    public static final SkillData SKILL_DATA;
+    private static final SkillSettings skillSettings;
+
+    static {
+        SKILL_DATA = new SkillData(NODE_NAME);
+        skillSettings = new SkillSettings();
+    }
 
     public StartingPoint() {
         super();

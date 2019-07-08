@@ -8,7 +8,12 @@ import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 
 public class ResultNotificationSkillExecutor extends SkillExecutorCallback {
 
-    public static ResultNotificationSkillExecutor INSTANCE = new ResultNotificationSkillExecutor();
+    public static final ResultNotificationSkillExecutor INSTANCE;
+
+    static {
+        INSTANCE = new ResultNotificationSkillExecutor();
+    }
+
 
     private ResultNotificationSkillExecutor() {
 

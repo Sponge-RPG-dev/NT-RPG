@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class Arg {
 
-    public static Arg EMPTY;
+    public static final Arg EMPTY;
 
     public static final String START_TAG = "{{";
     public static final String END_TAG = "}}";

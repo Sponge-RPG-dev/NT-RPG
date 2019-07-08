@@ -12,8 +12,8 @@ import java.util.Map;
 
 public class EffectModelFactory {
 
-    public static Map<Class<?>, EffectModelMapper> effectmappers = new HashMap<>();
-    public static Map<Class<?>, EffectModelMapper> typeMappers = new HashMap<>();
+    static final Map<Class<?>, EffectModelMapper> effectmappers = new HashMap<>();
+    static final Map<Class<?>, EffectModelMapper> typeMappers = new HashMap<>();
 
     static {
         typeMappers.put(Void.TYPE, new SingleValueModelMapper.Void());
@@ -22,6 +22,9 @@ public class EffectModelFactory {
         typeMappers.put(Double.TYPE, new SingleValueModelMapper.Double(Double.TYPE));
         typeMappers.put(Long.TYPE, new SingleValueModelMapper.Long(Long.TYPE));
         typeMappers.put(String.class, new SingleValueModelMapper.Str(String.class));
+    }
+
+    private EffectModelFactory() {
     }
 
     @SuppressWarnings("unchecked")
@@ -42,8 +45,7 @@ public class EffectModelFactory {
         if (typeMappers.containsKey(modelType)) {
             return typeMappers.get(modelType);
         }
-        throw new RuntimeException("Could not find a model mapper for a class: " + modelType);
-
+        throw new MissingEffectModelMapper("Could not find a model mapper for a class: " + modelType);
     }
 
 
@@ -74,4 +76,17 @@ public class EffectModelFactory {
     }
 
 
+    public static Map<Class<?>, EffectModelMapper> getEffectmappers() {
+        return effectmappers;
+    }
+
+    public static Map<Class<?>, EffectModelMapper> getTypeMappers() {
+        return typeMappers;
+    }
+
+    public static class MissingEffectModelMapper extends RuntimeException {
+        public MissingEffectModelMapper(String message) {
+            super(message);
+        }
+    }
 }

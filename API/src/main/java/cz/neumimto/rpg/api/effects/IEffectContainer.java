@@ -14,8 +14,8 @@ public interface IEffectContainer<K, T extends IEffect<K>> extends IEffectSource
 
     boolean isStackable();
 
-    default void mergeWith(IEffectContainer<K, T> IEffectContainer) {
-        getEffects().addAll(IEffectContainer.getEffects());
+    default void mergeWith(IEffectContainer<K, T> iEffectContainer) {
+        getEffects().addAll(iEffectContainer.getEffects());
         updateStackedValue();
     }
 

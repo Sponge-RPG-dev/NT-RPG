@@ -10,7 +10,7 @@ import java.util.Set;
  */
 public class EffectContainer<K, T extends IEffect<K>> implements IEffectContainer<K, T> {
 
-    final protected Set<T> effects = new HashSet<>();
+    final Set<T> effects = new HashSet<>();
 
     final String name;
 
@@ -67,11 +67,6 @@ public class EffectContainer<K, T extends IEffect<K>> implements IEffectContaine
 
         public UnstackableSingleInstance(IEffect iEffect) {
             super(iEffect);
-        }
-
-        @Override
-        public void stackEffect(IEffect<UnstackableEffectData<?>> unstackableEffectDataIEffect, IEffectSourceProvider effectSourceProvider) {
-            super.stackEffect(unstackableEffectDataIEffect, effectSourceProvider);
         }
 
         @Override

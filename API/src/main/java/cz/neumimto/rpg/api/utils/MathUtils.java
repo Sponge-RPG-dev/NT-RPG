@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 
 public class MathUtils {
 
-    public static Pattern REGEXP_NUMBER = Pattern.compile("[-+]?\\d+([\\.,]\\d+)?");
+    private static final Pattern REGEXP_NUMBER = Pattern.compile("[-+]?\\d+([\\.,]\\d+)?");
 
     public static double getPercentage(double n, double total) {
         return (n / total) * 100;
