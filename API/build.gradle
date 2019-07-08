@@ -19,6 +19,9 @@ dependencies {
     compileOnly 'org.slf4j:slf4j-api:1.7.26'
     compileOnly 'com.google.code.gson:gson:2.8.5'
 
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.1'
+    testCompile 'org.junit.jupiter:junit-jupiter-engine:5.4.1'
+    testCompile 'org.junit.jupiter:junit-jupiter-params:5.4.1'
     jar {
         manifest {
             attributes(
