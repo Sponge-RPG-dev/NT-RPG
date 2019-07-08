@@ -1,7 +1,6 @@
-package cz.neumimto.rpg.api.entity.players.attributes;
+package cz.neumimto.rpg.api.configuration;
 
 import cz.neumimto.config.blackjack.and.hookers.annotations.CustomAdapter;
-import cz.neumimto.rpg.api.configuration.AttributeConfiguration;
 import cz.neumimto.rpg.api.configuration.adapters.PropertiesMapAdapter;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
@@ -29,10 +28,6 @@ public class AttributeConfig {
 
     @Setting("Description")
     private String description;
-
-    public AttributeConfig(AttributeConfiguration a) {
-        this(a.getId(), a.getName(), a.getMaxValue(), a.getPropBonus(), a.getItemType(), a.getDescription());
-    }
 
     public AttributeConfig(String id, String name, float maxValue, Map<Integer, Float> propBonus, String itemType, String description) {
         this.id = id;

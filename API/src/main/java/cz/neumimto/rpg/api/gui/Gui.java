@@ -39,16 +39,16 @@ import java.util.List;
 @Singleton
 public class Gui {
 
-    public static IPlayerMessage vanilla;
+    private static IPlayerMessage vanilla;
 
-    public static IPlayerMessage mod;
+    private static IPlayerMessage mod;
 
     @Inject
     public Gui(IPlayerMessage vanilla) {
         Gui.vanilla = vanilla;
     }
 
-    public static IPlayerMessage getMessageTypeOf(IActiveCharacter player) {
+    private static IPlayerMessage getMessageTypeOf(IActiveCharacter player) {
         if (player == null || player.isUsingGuiMod()) {
             return mod;
         }

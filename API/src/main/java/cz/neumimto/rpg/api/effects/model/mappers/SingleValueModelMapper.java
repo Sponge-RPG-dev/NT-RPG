@@ -5,7 +5,6 @@ import cz.neumimto.rpg.api.effects.model.EffectModelMapper;
 import cz.neumimto.rpg.api.utils.MathUtils;
 
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * Created by NeumimTo on 6.1.2018.

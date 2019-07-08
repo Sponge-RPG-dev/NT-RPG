@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.api.events.character;
 
-import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
+import cz.neumimto.rpg.api.configuration.AttributeConfig;
 
 import java.util.Map;
 

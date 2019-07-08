@@ -12,6 +12,9 @@ public class Log {
 
     protected static Logger logger;
 
+    private Log() {
+    }
+
     public static void info(String message) {
         logger.info(message);
     }

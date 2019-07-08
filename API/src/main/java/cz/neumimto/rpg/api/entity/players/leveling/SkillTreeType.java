@@ -122,7 +122,7 @@ public enum SkillTreeType {
             if (skillTree == null) {
                 return;
             }
-            int level = playerClassData.getLevel();
+            //todo
         }
 
         @Override

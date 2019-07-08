@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.api.entity.players;
 
 import cz.neumimto.rpg.api.IRpgElement;
-import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
+import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;

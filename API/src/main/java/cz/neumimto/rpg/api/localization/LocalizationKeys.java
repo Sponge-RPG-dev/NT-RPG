@@ -65,7 +65,7 @@ public class LocalizationKeys {
     public static final String ON_COOLDOWN = "player.action-on-cooldown.message";
     public static final String ITEM_DAMAGE = "gui.label.item-damage";
     public static final String SKILL_VALUE_PER_LEVEL = "gui.label.skill.setting-start-at";
-    public static final String SKILL_VALUE_STARTS_AT = "gui.label.skill.setting-per-level";;
+    public static final String SKILL_VALUE_STARTS_AT = "gui.label.skill.setting-per-level";
     public static final String CONFIRM_SKILL_SELECTION_BUTTON = "gui.button.label.confirm.skill-selection";
     public static final String WEAPONS_MENU_HELP = "gui.label.weapons.tooltip";
     public static final String WEAPONS = "gui.label.weapons";
@@ -109,4 +109,7 @@ public class LocalizationKeys {
     public static final String NO_ATTRIBUTEPOINTS = "player.attributes.not-enough-points.message";
     public static final String NEXT = "item.label.next.button";
     public static final String CASTING_FAILED = "player.skill-castfailed.notification";
+
+    private LocalizationKeys() {
+    }
 }

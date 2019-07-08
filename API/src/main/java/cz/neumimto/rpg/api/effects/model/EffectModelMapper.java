@@ -12,7 +12,7 @@ import java.util.function.Function;
  */
 public abstract class EffectModelMapper {
 
-    public static Map<Class<?>, Function<String, Object>> typeMapperMap = new HashMap<>();
+    protected final static Map<Class<?>, Function<String, Object>> typeMapperMap = new HashMap<>();
 
     static {
 
@@ -145,5 +145,6 @@ public abstract class EffectModelMapper {
         String s = map.get(key);
         return s != null && Boolean.parseBoolean(s);
     }
+
 }
 

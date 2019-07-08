@@ -5,6 +5,9 @@ package cz.neumimto.rpg.api.utils;
  */
 public class Console {
 
+    private Console() {
+    }
+
     // Reset
     public static final String RESET = "\033[0m";  // Text Reset
 
