@@ -32,9 +32,13 @@ import java.util.Set;
  */
 public class SkillData {
 
-    public static SkillData EMPTY = new SkillData("Empty") {{
-        setSkillSettings(new SkillSettings());
-    }};
+    public final static SkillData EMPTY;
+
+    static {
+        EMPTY = new SkillData("Empty");
+        EMPTY.setSkillSettings(new SkillSettings());
+    }
+
     private final String skill;
     private SkillSettings skillSettings;
 
