@@ -3,6 +3,8 @@ package cz.neumimto.rpg.api.configuration;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 
+import java.util.Objects;
+
 @ConfigSerializable
 public class ClassTypeDefinition implements Comparable<ClassTypeDefinition> {
 
@@ -55,5 +57,22 @@ public class ClassTypeDefinition implements Comparable<ClassTypeDefinition> {
     @Override
     public int compareTo(ClassTypeDefinition o) {
         return order - o.order;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ClassTypeDefinition that = (ClassTypeDefinition) o;
+        return changeable == that.changeable &&
+                order == that.order &&
+                primaryColor.equals(that.primaryColor) &&
+                secondaryColor.equals(that.secondaryColor) &&
+                Objects.equals(dyeColor, that.dyeColor);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(primaryColor, secondaryColor, dyeColor, changeable, order);
     }
 }

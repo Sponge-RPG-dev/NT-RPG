@@ -16,11 +16,13 @@ public class MathUtils {
     }
 
     public static double round(double value, int precision) {
+        if (precision <= 0) throw new ArithmeticException("Precision has to be > 0");
         int scale = (int) Math.pow(10, precision);
         return (double) Math.round(value * scale) / scale;
     }
 
     public static double round(float value, int precision) {
+        if (precision <= 0) throw new ArithmeticException("Precision has to be > 0");
         int scale = (int) Math.pow(10, precision);
         return Math.round(value * scale) / scale;
     }

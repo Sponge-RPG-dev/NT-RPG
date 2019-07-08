@@ -5,6 +5,7 @@ import cz.neumimto.rpg.api.effects.model.EffectModelMapper;
 import cz.neumimto.rpg.api.utils.MathUtils;
 
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Created by NeumimTo on 6.1.2018.
@@ -22,9 +23,10 @@ public abstract class SingleValueModelMapper extends EffectModelMapper {
             return null;
         }
         if (map.size() != 1) {
-            throw new RuntimeException("SingleValueModelMapper but map.size != 1 " + new Gson().toJson(map));
+            throw new InvalidEffectModelDataFormat("SingleValueModelMapper but map.size != 1 " + new Gson().toJson(map));
         }
-        return parseStr(map.values().stream().findFirst().get());
+        String first = map.values().stream().findFirst().orElseThrow(() -> new InvalidEffectModelDataFormat("Its required at least one value in the map"));
+        return parseStr(first);
     }
 
     public abstract Object parseStr(String s);
@@ -103,4 +105,11 @@ public abstract class SingleValueModelMapper extends EffectModelMapper {
             return null;
         }
     }
+
+    public static class InvalidEffectModelDataFormat extends RuntimeException {
+        private InvalidEffectModelDataFormat(String message) {
+            super(message);
+        }
+    }
+
 }

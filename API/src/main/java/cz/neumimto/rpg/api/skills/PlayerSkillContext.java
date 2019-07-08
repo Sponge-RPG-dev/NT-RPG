@@ -31,9 +31,12 @@ import java.util.*;
  */
 public class PlayerSkillContext {
 
-    public static PlayerSkillContext Empty = new PlayerSkillContext(null, null, null) {{
-        setSkillData(SkillData.EMPTY);
-    }};
+    public static final PlayerSkillContext EMPTY;
+
+    static {
+         EMPTY = new PlayerSkillContext(null, null, null);
+         EMPTY.setSkillData(SkillData.EMPTY);
+    }
 
     private final IActiveCharacter character;
 

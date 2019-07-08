@@ -45,8 +45,15 @@ public final class ItemString {
                 }
                 break;
             default:
-                throw new RuntimeException("Not possible to resolve argument " + string);
+                throw new InvalidItemStringException("Not possible to resolve argument " + string);
         }
         return new ItemString(id, damage, 0, model);
+    }
+
+    public static class InvalidItemStringException extends RuntimeException {
+
+        private InvalidItemStringException(String s) {
+            super(s);
+        }
     }
 }

@@ -12,10 +12,11 @@ public class SingleEffectInstanceContainer<K, T extends IEffect<K>> extends Effe
 
     @Override
     public void stackEffect(T t, IEffectSourceProvider effectSourceProvider) {
-        T a = effects.stream().findFirst().get();
-        if (t.getDuration() == -1 && a.getDuration() != -1) {
-            a.setDuration(-1);
-        }
+        effects.stream().findFirst().ifPresent(a -> {
+            if (t.getDuration() == -1 && a.getDuration() != -1) {
+                a.setDuration(-1);
+            }
+        });
     }
 
     @Override

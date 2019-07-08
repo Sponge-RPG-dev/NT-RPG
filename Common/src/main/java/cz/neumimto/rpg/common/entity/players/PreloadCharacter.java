@@ -330,7 +330,7 @@ public abstract class PreloadCharacter<T, P extends IParty> implements IActiveCh
 
     @Override
     public PlayerSkillContext getSkillInfo(ISkill skill) {
-        return PlayerSkillContext.Empty;
+        return PlayerSkillContext.EMPTY;
     }
 
     @Override
@@ -340,7 +340,7 @@ public abstract class PreloadCharacter<T, P extends IParty> implements IActiveCh
 
     @Override
     public PlayerSkillContext getSkillInfo(String s) {
-        return PlayerSkillContext.Empty;
+        return PlayerSkillContext.EMPTY;
     }
 
     @Override
@@ -355,7 +355,7 @@ public abstract class PreloadCharacter<T, P extends IParty> implements IActiveCh
 
     @Override
     public PlayerSkillContext getSkill(String skillName) {
-        return PlayerSkillContext.Empty;
+        return PlayerSkillContext.EMPTY;
     }
 
     @Override

@@ -29,10 +29,13 @@ import java.util.Map;
  */
 public class SkillTree {
 
-    public static SkillTree Default = new SkillTree() {{
-        setId("None");
-        setDescription("No skill tree");
-    }};
+    public static final SkillTree Default;
+
+    static {
+        Default = new SkillTree();
+        Default.setId("None");
+        Default.setDescription("No skill tree");
+    }
 
     private String id;
 
