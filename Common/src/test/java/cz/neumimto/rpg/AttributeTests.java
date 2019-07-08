@@ -1,37 +1,31 @@
 package cz.neumimto.rpg;
 
+import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.ICharacterService;
-import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
 import cz.neumimto.rpg.api.events.EventFactoryService;
 import cz.neumimto.rpg.api.utils.ActionResult;
 import cz.neumimto.rpg.junit.CharactersExtension;
 import cz.neumimto.rpg.junit.CharactersExtension.Stage;
-import cz.neumimto.rpg.junit.H2TestGuiceModule;
 import cz.neumimto.rpg.junit.NtRpgExtension;
 import cz.neumimto.rpg.junit.TestDictionary;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.junit.TestGuiceModule;
 import name.falgout.jeffrey.testing.junit.guice.GuiceExtension;
 import name.falgout.jeffrey.testing.junit.guice.IncludeModule;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import javax.inject.Inject;
-import javax.persistence.Query;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import static cz.neumimto.rpg.junit.CharactersExtension.Stage.Stages.READY;
 
 @ExtendWith({GuiceExtension.class, NtRpgExtension.class, CharactersExtension.class})
-@IncludeModule(H2TestGuiceModule.class)
+@IncludeModule(TestGuiceModule.class)
 public class AttributeTests {
 
     @Inject
@@ -40,12 +34,9 @@ public class AttributeTests {
     @Inject
     private EventFactoryService eventFactoryService;
 
-    @Inject
-    private SessionFactory sessionFactory;
 
     @BeforeEach
     public void before() {
-        NtRpgPlugin.GlobalScope.eventFactory = eventFactoryService;
         new TestDictionary().reset();
     }
 
@@ -86,14 +77,6 @@ public class AttributeTests {
         Assertions.assertTrue(iActiveCharacter.requiresDamageRecalculation());
 
         characterService.putInSaveQueue(iActiveCharacter.getCharacterBase());
-        Session session = sessionFactory.openSession();
-        Transaction tx = session.beginTransaction();
-
-        Query query = session.createQuery("from BaseCharacterAttribute where characterBase = :base");
-        query.setParameter("base", iActiveCharacter.getCharacterBase());
-
-        List result = query.getResultList();
-
     }
 
     @Test

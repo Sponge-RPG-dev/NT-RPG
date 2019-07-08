@@ -7,18 +7,20 @@ import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.damage.DamageService;
 import cz.neumimto.rpg.api.effects.IEffectService;
 import cz.neumimto.rpg.api.entity.PropertyService;
+import cz.neumimto.rpg.api.entity.players.parties.PartyService;
 import cz.neumimto.rpg.api.events.EventFactoryService;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.localization.Arg;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.scripting.IScriptEngine;
 import cz.neumimto.rpg.api.skills.SkillService;
+import cz.neumimto.rpg.common.effects.EffectService;
+import cz.neumimto.rpg.common.impl.TestCharacterService;
 import cz.neumimto.rpg.common.inventory.TestInventoryService;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.sponge.entities.SpongeEntityService;
-import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
-import cz.neumimto.rpg.sponge.entities.players.party.SpongePartyService;
+import cz.neumimto.rpg.entity.TestEntityService;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.File;
 import java.io.InputStream;
 import java.util.List;
@@ -27,11 +29,94 @@ import java.util.Scanner;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+@Singleton
 public class TestApiImpl implements RpgApi {
+
+    @Inject
+    private ItemService itemService;
+
+    @Inject
+    private EventFactoryService eventFactoryService;
+
+    @Inject
+    private SkillService skillService;
+
+    @Inject
+    private LocalizationService localizationService;
+
+    @Inject
+    private PluginConfig pluginConfig;
+
+    @Inject
+    private TestCharacterService testCharacterService;
+
+    @Inject
+    private IResourceLoader resourceLoader;
+
+    @Inject
+    private ClassService classService;
+
+    @Inject
+    private IEffectService effectService;
+
+    @Inject
+    private IScriptEngine jsLoader;
+
+    @Inject
+    private TestEntityService entityService;
+
+    @Inject
+    private DamageService damageService;
+
+    @Inject
+    private PropertyService propertyService;
+
+    @Inject
+    private PartyService partyService;
+
+    @Override
+    public IResourceLoader getResourceLoader() {
+        return resourceLoader;
+    }
+
+    @Override
+    public ClassService getClassService() {
+        return classService;
+    }
+
+    @Override
+    public IEffectService getEffectService() {
+        return effectService;
+    }
+
+    @Override
+    public IScriptEngine getScriptEngine() {
+        return jsLoader;
+    }
+
+    @Override
+    public TestEntityService getEntityService() {
+        return entityService;
+    }
+
+    @Override
+    public DamageService getDamageService() {
+        return damageService;
+    }
+
+    @Override
+    public PropertyService getPropertyService() {
+        return propertyService;
+    }
+
+    @Override
+    public PartyService getPartyService() {
+        return partyService;
+    }
 
     @Override
     public ItemService getItemService() {
-        return NtRpgPlugin.GlobalScope.itemService;
+        return itemService;
     }
 
     @Override
@@ -78,22 +163,22 @@ public class TestApiImpl implements RpgApi {
 
     @Override
     public EventFactoryService getEventFactory() {
-        return NtRpgPlugin.GlobalScope.eventFactory;
+        return eventFactoryService;
     }
 
     @Override
     public SkillService getSkillService() {
-        return NtRpgPlugin.GlobalScope.skillService;
+        return skillService;
     }
 
     @Override
     public LocalizationService getLocalizationService() {
-        return NtRpgPlugin.GlobalScope.localizationService;
+        return localizationService;
     }
 
     @Override
     public PluginConfig getPluginConfig() {
-        return NtRpgPlugin.pluginConfig;
+        return pluginConfig;
     }
 
     @Override
@@ -102,29 +187,8 @@ public class TestApiImpl implements RpgApi {
     }
 
     @Override
-    public SpongeCharacterServise getCharacterService() {
-        return NtRpgPlugin.GlobalScope.characterService;
-    }
-
-
-    @Override
-    public SpongeEntityService getEntityService() {
-        return NtRpgPlugin.GlobalScope.entityService;
-    }
-
-    @Override
-    public DamageService getDamageService() {
-        return NtRpgPlugin.GlobalScope.damageService;
-    }
-
-    @Override
-    public PropertyService getPropertyService() {
-        return NtRpgPlugin.GlobalScope.spongePropertyService;
-    }
-
-    @Override
-    public SpongePartyService getPartyService() {
-        return NtRpgPlugin.GlobalScope.partyService;
+    public TestCharacterService getCharacterService() {
+        return testCharacterService;
     }
 
     @Override
@@ -133,25 +197,6 @@ public class TestApiImpl implements RpgApi {
         return new File(string).getParent().substring(6);
     }
 
-    @Override
-    public IResourceLoader getResourceLoader() {
-        return NtRpgPlugin.GlobalScope.resourceLoader;
-    }
-
-    @Override
-    public ClassService getClassService() {
-        return NtRpgPlugin.GlobalScope.classService;
-    }
-
-    @Override
-    public IEffectService getEffectService() {
-        return NtRpgPlugin.GlobalScope.effectService;
-    }
-
-    @Override
-    public IScriptEngine getScriptEngine() {
-        return NtRpgPlugin.GlobalScope.jsLoader;
-    }
 
     @Override
     public TestInventoryService getInventoryService() {

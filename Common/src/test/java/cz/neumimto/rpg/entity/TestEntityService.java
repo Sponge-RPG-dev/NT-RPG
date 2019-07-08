@@ -11,7 +11,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class EntityServiceTest implements EntityService<TestCharacter> {
+public class TestEntityService implements EntityService<TestCharacter> {
+
     @Inject
     private PropertyService propertyService;
 

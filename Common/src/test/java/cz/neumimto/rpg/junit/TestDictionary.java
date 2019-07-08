@@ -1,9 +1,9 @@
 package cz.neumimto.rpg.junit;
 
+import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.items.ItemClass;
 import cz.neumimto.rpg.api.items.RpgItemType;
 import cz.neumimto.rpg.common.items.RpgItemTypeImpl;
-import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 
 import java.util.HashMap;

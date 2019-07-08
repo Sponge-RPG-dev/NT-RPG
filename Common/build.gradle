@@ -8,12 +8,23 @@ version = '2.0.0-SNAPSHOT-12'
 dependencies {
     implementation 'commons-io:commons-io:2.4'
     compile project(':API')
-    
     annotationProcessor project(':Generator')
+    
     compileOnly 'com.google.inject:guice:4.2.2'
     compileOnly 'com.github.Sponge-RPG-dev:ConfigurateButWithBlackjackAndHookers:39d5fc8afd'
     compileOnly 'ninja.leaping.configurate:configurate-hocon:3.3'
-
+    
+    compile 'com.scireum:parsii:1.5'
+    compileOnly 'ninja.leaping.configurate:configurate-hocon:3.3'
+    compileOnly 'com.google.inject:guice:4.2.2'
+    compileOnly 'org.slf4j:slf4j-api:1.7.26'
+    compileOnly 'com.google.code.gson:gson:2.8.5'
+    
+    testCompile 'com.github.JeffreyFalgout:junit5-extensions:89fa6cb1e7'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.1'
+    testCompile 'org.junit.jupiter:junit-jupiter-engine:5.4.1'
+    testCompile 'org.junit.jupiter:junit-jupiter-params:5.4.1'
+    
     jar {
         manifest {
             attributes(

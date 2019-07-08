@@ -36,7 +36,6 @@ dependencies {
     testCompile group: 'org.mockito', name: 'mockito-core', version: '2.25.0'
     testCompile group: 'it.unimi.dsi', name: 'fastutil', version: '8.2.1'
     testCompile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.26'
-    testCompile 'com.h2database:h2:1.4.199'
 
     jar {
         manifest {
