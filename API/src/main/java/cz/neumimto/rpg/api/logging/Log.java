@@ -5,7 +5,6 @@ import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.utils.DebugLevel;
 import org.slf4j.Logger;
 
-
 /**
  * Created by NeumimTo on 19.8.2018.
  */

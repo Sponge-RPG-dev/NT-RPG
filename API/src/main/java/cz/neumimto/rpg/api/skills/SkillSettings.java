@@ -36,7 +36,7 @@ import static cz.neumimto.rpg.api.logging.Log.error;
 @JsBinding(JsBinding.Type.CLASS)
 public class SkillSettings {
 
-    public static final String bonus = "_levelbonus";
+    public static final String BONUS_SUFFIX = "_levelbonus";
 
     private Map<String, Float> skillSettings = new HashMap<>();
     private Map<String, String> objMap = new HashMap<>();
@@ -47,7 +47,7 @@ public class SkillSettings {
 
     public void addNode(String n, float val, float levelbonux) {
         addNode(n, val);
-        addNode(n + bonus, levelbonux);
+        addNode(n + BONUS_SUFFIX, levelbonux);
     }
 
     public void addAttributeNode(ISkillNode n, AttributeConfig attribute, float val) {
@@ -113,7 +113,7 @@ public class SkillSettings {
 
     @Deprecated
     public float getLevelNodeValue(String s, int level) {
-        return getNodeValue(s) + level * getNodeValue(s + bonus);
+        return getNodeValue(s) + level * getNodeValue(s + BONUS_SUFFIX);
     }
 
     @Deprecated
@@ -125,7 +125,7 @@ public class SkillSettings {
         Set<String> collect = Rpg.get().getPropertyService().getAttributes().values().stream()
                 .map(attribute -> "_per_" + attribute.getId())
                 .collect(Collectors.toSet());
-        collect.add(bonus);
+        collect.add(BONUS_SUFFIX);
         return collect;
     }
 

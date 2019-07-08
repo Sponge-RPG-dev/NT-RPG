@@ -11,6 +11,7 @@ import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +43,13 @@ public class EffectsAdapter implements TypeSerializer<Map<IGlobalEffect, EffectP
 
     @Override
     public void serialize(TypeToken<?> type, Map<IGlobalEffect, EffectParams> obj, ConfigurationNode value) throws ObjectMappingException {
-
+        List<EffectConfigModel> list = new ArrayList<>();
+        for (Map.Entry<IGlobalEffect, EffectParams> entry : obj.entrySet()) {
+            EffectConfigModel model = new EffectConfigModel();
+            model.settings = entry.getValue();
+            model.type = entry.getKey().getName();
+        }
+        value.setValue(list);
     }
 
     @ConfigSerializable

@@ -36,7 +36,7 @@ public enum SkillTreeType {
 
         @Override
         public void processCharacterInit(IActiveCharacter character, PlayerClassData playerClassData) {
-
+            //No need to load skilltree for character, as each character has learned skills stored in the database
         }
 
         @Override

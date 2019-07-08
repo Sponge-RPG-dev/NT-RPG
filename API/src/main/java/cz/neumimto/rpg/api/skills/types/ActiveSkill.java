@@ -40,9 +40,6 @@ public abstract class ActiveSkill<T extends IActiveCharacter> extends AbstractSk
     @Inject
     private InventoryService inventoryService;
 
-    @Inject
-    private LocalizationService localizationService;
-
     @Override
     public void init() {
         super.init();

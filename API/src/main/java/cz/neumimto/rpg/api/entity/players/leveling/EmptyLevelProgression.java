@@ -8,7 +8,7 @@ public class EmptyLevelProgression implements ILevelProgression {
 
     @Override
     public void setLevelMargins(double[] levelMargins) {
-
+        //Just no levels
     }
 
     @Override

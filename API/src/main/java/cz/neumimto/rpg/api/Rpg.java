@@ -2,7 +2,11 @@ package cz.neumimto.rpg.api;
 
 public class Rpg {
 
-    protected static RpgApi impl;
+    static RpgApi impl;
+
+    protected Rpg() {
+
+    }
 
     public static RpgApi get() {
         return impl;

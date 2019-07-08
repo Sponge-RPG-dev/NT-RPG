@@ -16,6 +16,6 @@ public class SkillExecutorCallback extends ActiveSkillPreProcessorWrapper {
 
     @Override
     public void doNext(IActiveCharacter character, PlayerSkillContext info, SkillContext skillResult) {
-
+        //so we dont have to override this method in bunch of tests
     }
 }

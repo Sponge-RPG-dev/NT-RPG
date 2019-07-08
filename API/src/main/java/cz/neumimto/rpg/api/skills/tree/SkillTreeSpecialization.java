@@ -23,6 +23,8 @@ import java.util.Map;
 
 public class SkillTreeSpecialization extends PassiveSkill {
 
+    private static final String PLAYER = "player";
+
     public SkillTreeSpecialization() {
         super();
         SkillSettings settings = new SkillSettings();
@@ -33,7 +35,7 @@ public class SkillTreeSpecialization extends PassiveSkill {
     public void skillLearn(IActiveCharacter IActiveCharacter) {
         if (Rpg.get().getPluginConfig().PLAYER_CHOOSED_SKILLTREE_SPECIALIZATION_GLOBAL_MESSAGE) {
             Rpg.get().broadcastLocalizableMessage(LocalizationKeys.PLAYER_CHOOSED_SKILLTREE_PATH_GLOBAL_MESSAGE_CONTENT,
-                    Arg.arg("player", IActiveCharacter.getName())
+                    Arg.arg(PLAYER, IActiveCharacter.getName())
                             .with("character", IActiveCharacter.getName())
                             .with("path", getName()));
 
@@ -55,7 +57,7 @@ public class SkillTreeSpecialization extends PassiveSkill {
 
         if (pdata.getEnterCommands() != null) {
             Map<String, String> args = new HashMap<>();
-            args.put("player", c.getName());
+            args.put(PLAYER, c.getName());
             Rpg.get().executeCommandBatch(args, pdata.getEnterCommands());
         }
 
@@ -74,7 +76,7 @@ public class SkillTreeSpecialization extends PassiveSkill {
 
         if (pdata.getEnterCommands() != null) {
             Map<String, String> args = new HashMap<>();
-            args.put("player", c.getName());
+            args.put(PLAYER, c.getName());
             Rpg.get().executeCommandBatch(args, pdata.getExitCommands());
         }
     }

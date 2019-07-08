@@ -4,13 +4,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.net.URLClassLoader;
 
-public abstract class IResourceLoader {
-    public abstract Object loadClass(Class<?> clazz) throws IllegalAccessException, InstantiationException;
+public interface IResourceLoader {
+    Object loadClass(Class<?> clazz) throws IllegalAccessException, InstantiationException;
 
-    public abstract URLClassLoader getConfigClassLoader();
+    URLClassLoader getConfigClassLoader();
 
     @Retention(RetentionPolicy.RUNTIME)
-    public @interface Skill {
+    @interface Skill {
 
         String value();
 
@@ -18,17 +18,17 @@ public abstract class IResourceLoader {
     }
 
     @Retention(RetentionPolicy.RUNTIME)
-    public @interface Command {
+    @interface Command {
 
     }
 
     @Retention(RetentionPolicy.RUNTIME)
-    public @interface ModelMapper {
+    @interface ModelMapper {
 
     }
 
     @Retention(RetentionPolicy.RUNTIME)
-    public static @interface ListenerClass {
+    @interface ListenerClass {
 
     }
 }

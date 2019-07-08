@@ -46,6 +46,9 @@ import java.util.Set;
 @JsBinding(JsBinding.Type.CLASS)
 public abstract class AbstractSkill implements ISkill {
 
+    private static final String SKILL = "skill";
+    public static final String PLAYER = "player";
+
     @Inject
     protected LocalizationService localizationService;
 
@@ -103,8 +106,8 @@ public abstract class AbstractSkill implements ISkill {
     public void skillUpgrade(IActiveCharacter IActiveCharacter, int level) {
         if (Rpg.get().getPluginConfig().PLAYER_UPGRADED_SKILL_GLOBAL_MESSAGE) {
             Rpg.get().broadcastLocalizableMessage(LocalizationKeys.PLAYER_UPGRADED_SKILL_GLOBAL_MESSAGE,
-                    Arg.arg("player", IActiveCharacter.getName())
-                            .with("skill", getName())
+                    Arg.arg(PLAYER, IActiveCharacter.getName())
+                            .with(SKILL, getName())
                             .with("level", level));
         }
     }
@@ -113,8 +116,8 @@ public abstract class AbstractSkill implements ISkill {
     public void skillRefund(IActiveCharacter IActiveCharacter) {
         if (Rpg.get().getPluginConfig().PLAYER_REFUNDED_SKILL_GLOBAL_MESSAGE) {
             Rpg.get().broadcastLocalizableMessage(LocalizationKeys.PLAYER_REFUNDED_SKILL_GLOBAL_MESSAGE,
-                    Arg.arg("%player%", IActiveCharacter.getName())
-                            .with("skill", getName()));
+                    Arg.arg(PLAYER, IActiveCharacter.getName())
+                            .with(SKILL, getName()));
         }
     }
 

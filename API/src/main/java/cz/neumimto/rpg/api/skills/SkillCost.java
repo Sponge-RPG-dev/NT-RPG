@@ -12,10 +12,7 @@ import java.util.Set;
 public class SkillCost {
     private Set<SkillItemCost> itemCost = new HashSet<>();
     private Set<ActiveSkillPreProcessorWrapper> insufficientProcessors = new HashSet<>();
-
-    public SkillCost() {
-    }
-
+    
     public Set<SkillItemCost> getItemCost() {
         return itemCost;
     }

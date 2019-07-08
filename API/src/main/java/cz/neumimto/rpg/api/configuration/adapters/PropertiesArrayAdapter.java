@@ -7,6 +7,7 @@ import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -38,6 +39,14 @@ public class PropertiesArrayAdapter implements TypeSerializer<float[]> {
 
     @Override
     public void serialize(TypeToken<?> typeToken, float[] floats, ConfigurationNode configurationNode) throws ObjectMappingException {
-
+        Map<String, Float> map = new HashMap<>();
+        PropertyService propertyService = Rpg.get().getPropertyService();
+        for (int i = 0; i < floats.length; i++) {
+            String nameById = propertyService.getNameById(i);
+            if (floats[i] != 0) {
+                map.put(nameById, floats[i]);
+            }
+        }
+        configurationNode.setValue(map);
     }
 }

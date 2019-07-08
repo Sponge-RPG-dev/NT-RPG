@@ -10,10 +10,6 @@ public class SkillItemCost {
     private Integer amount;
     private boolean consumeItems;
 
-    public SkillItemCost() {
-    }
-
-
     public ItemString getItemType() {
         return item;
     }

@@ -44,6 +44,8 @@ public final class ItemString {
                     model = data[1];
                 }
                 break;
+            default:
+                throw new RuntimeException("Not possible to resolve argument " + string);
         }
         return new ItemString(id, damage, 0, model);
     }

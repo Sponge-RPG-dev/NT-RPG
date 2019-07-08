@@ -115,33 +115,49 @@ public class PlayerSkillContext {
         SkillSettings preSet = skillData.getSkillSettings();
 
         for (Map.Entry<String, Float> entry : preSet.getNodes().entrySet()) {
-            Optional<String> complexNode = isComplexNode(complexKeySuffixes, entry.getKey());
-            if (!complexNode.isPresent()) {
-                cachedComputedSkillSettings.put(entry.getKey(), entry.getValue().floatValue());
-            }
+            cacheNonComplexNodes(complexKeySuffixes, entry);
         }
 
         for (Map.Entry<String, Float> entry : preSet.getNodes().entrySet()) {
-            String key = entry.getKey();
-            Optional<String> first = isComplexNode(complexKeySuffixes, key);
+            cacheComplexNodes(complexKeySuffixes, attributes, entry);
+        }
+    }
 
-            if (first.isPresent()) {
-                String s = first.get();
-                if (s.endsWith(SkillSettings.bonus)) {
-                    String stripped = s.substring(0, s.length() - SkillSettings.bonus.length());
-                    float aFloat1 = cachedComputedSkillSettings.getFloat(stripped);
-                    cachedComputedSkillSettings.put(stripped, aFloat1 + entry.getValue() * getTotalLevel());
-                }
-                for (AttributeConfig attribute : attributes) {
-                    String id = "_per_" + attribute.getId();
-                    if (s.endsWith(id)) {
-                        String stripped = s.substring(0, s.length() - id.length());
-                        float aFloat1 = cachedComputedSkillSettings.getFloat(stripped);
-                        cachedComputedSkillSettings.put(stripped, aFloat1 + entry.getValue() * character.getAttributeValue(attribute));
-                        break;
-                    }
-                }
+    private void cacheComplexNodes(Set<String> complexKeySuffixes, Collection<AttributeConfig> attributes, Map.Entry<String, Float> entry) {
+        String key = entry.getKey();
+        Optional<String> first = isComplexNode(complexKeySuffixes, key);
+
+        if (first.isPresent()) {
+            String s = first.get();
+            if (s.endsWith(SkillSettings.BONUS_SUFFIX)) {
+                cacheSettingsNodes(entry, s);
             }
+            cacheAttributeNodes(attributes, entry, s);
+        }
+    }
+
+    private void cacheSettingsNodes(Map.Entry<String, Float> entry, String s) {
+        String stripped = s.substring(0, s.length() - SkillSettings.BONUS_SUFFIX.length());
+        float aFloat1 = cachedComputedSkillSettings.getFloat(stripped);
+        cachedComputedSkillSettings.put(stripped, aFloat1 + entry.getValue() * getTotalLevel());
+    }
+
+    private void cacheAttributeNodes(Collection<AttributeConfig> attributes, Map.Entry<String, Float> entry, String s) {
+        for (AttributeConfig attribute : attributes) {
+            String id = "_per_" + attribute.getId();
+            if (s.endsWith(id)) {
+                String stripped = s.substring(0, s.length() - id.length());
+                float aFloat1 = cachedComputedSkillSettings.getFloat(stripped);
+                cachedComputedSkillSettings.put(stripped, aFloat1 + entry.getValue() * character.getAttributeValue(attribute));
+                break;
+            }
+        }
+    }
+
+    private void cacheNonComplexNodes(Set<String> complexKeySuffixes, Map.Entry<String, Float> entry) {
+        Optional<String> complexNode = isComplexNode(complexKeySuffixes, entry.getKey());
+        if (!complexNode.isPresent()) {
+            cachedComputedSkillSettings.put(entry.getKey(), entry.getValue().floatValue());
         }
     }
 

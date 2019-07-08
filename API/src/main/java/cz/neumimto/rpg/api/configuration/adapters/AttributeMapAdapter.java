@@ -43,6 +43,12 @@ public class AttributeMapAdapter implements TypeSerializer<Map<AttributeConfig, 
 
     @Override
     public void serialize(TypeToken<?> type, Map<AttributeConfig, Integer> obj, ConfigurationNode value) throws ObjectMappingException {
-
+        if (obj != null) {
+            Map<String, Integer> map = new HashMap<>();
+            for (Map.Entry<AttributeConfig, Integer> entry : obj.entrySet()) {
+                map.put(entry.getKey().getId(), entry.getValue());
+            }
+            value.setValue(map);
+        }
     }
 }
