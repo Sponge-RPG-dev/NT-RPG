@@ -157,7 +157,7 @@ public class NtRpgPlugin extends Rpg {
         PluginCore.MANAGED_JPA_TYPES.add(JPABaseCharacterAttribute.class);
         PluginCore.MANAGED_JPA_TYPES.add(JPACharacterSkill.class);
         PluginCore.MANAGED_JPA_TYPES.add(JPACharacterClass.class);
-        Sponge.getEventManager().registerListeners(this, new PersistenceHandler());
+        Sponge.getEventManager().registerListeners(this, injector.getInstance(PersistenceHandler.class));
         new NKeys();
         DataRegistration.builder()
                 .manipulatorId("item_attribute_ref")

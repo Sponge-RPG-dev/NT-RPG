@@ -17,7 +17,7 @@ public class SpongeAssetService implements AssetService {
     @Override
     public String getAssetAsString(String path) {
         try {
-            return Sponge.getAssetManager().getAsset(NtRpgPlugin.GlobalScope.plugin, "Skills-Definitions.conf").get().readString();
+            return Sponge.getAssetManager().getAsset(NtRpgPlugin.GlobalScope.plugin, path).get().readString();
         } catch (IOException e) {
             Log.error("Could not copy file Skills-Definition.conf into the directory " + ResourceLoader.addonDir, e);
             throw new IllegalArgumentException(e);
@@ -26,7 +26,7 @@ public class SpongeAssetService implements AssetService {
 
     @Override
     public void copyToFile(String s, Path toPath) {
-        Asset asset = Sponge.getAssetManager().getAsset(NtRpgPlugin.GlobalScope.plugin, "Skills-Definitions.conf").get();
+        Asset asset = Sponge.getAssetManager().getAsset(NtRpgPlugin.GlobalScope.plugin, s).get();
         try {
             asset.copyToFile(toPath);
         } catch (IOException e) {

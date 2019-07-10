@@ -37,14 +37,12 @@ public class PersistenceHandler {
             List<String> migrations = Arrays.asList(
                     "sql/%s/040918-init-db.sql",
                     "sql/%s/060119-update-2.0.0.sql",
-                    "sql/%s/240219-fix-null-levels.sql",
-                    "sql/%s/250619-attrpoints-spent.sql"
+                    "sql/%s/022419-fix-null-levels.sql",
+                    "sql/%s/062519-attrpoints-spent.sql",
+                    "sql/%s/071019-add-missing-columns.sql"
             );
 
             String s = dms.getDatabaseProductName().toLowerCase();
-            if (s.equalsIgnoreCase("mariadb")) {
-                s = "mysql";
-            }
             for (String migration : migrations) {
                 migration = migration.replaceAll("%s", s);
 
