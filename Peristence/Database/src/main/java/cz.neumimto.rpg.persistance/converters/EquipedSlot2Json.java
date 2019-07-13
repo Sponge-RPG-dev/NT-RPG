@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.common.persistance.converters;
+package cz.neumimto.rpg.persistance.converters;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

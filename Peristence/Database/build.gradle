@@ -1,5 +1,4 @@
 plugins {
-    id "net.kyori.blossom" version "1.1.0"
     id "org.sonarqube" version "2.7"
 }
 
@@ -7,24 +6,23 @@ group = 'cz.neumimto.rpg'
 version = '2.0.0-SNAPSHOT-12'
 
 dependencies {
-    implementation 'commons-io:commons-io:2.4'
     compile project(':API')
-    annotationProcessor project(':Generator')
+    annotationProcessor project(':Common')
     
     compileOnly 'com.google.inject:guice:4.2.2'
     compileOnly 'com.github.Sponge-RPG-dev:ConfigurateButWithBlackjackAndHookers:39d5fc8afd'
     compileOnly 'ninja.leaping.configurate:configurate-hocon:3.3'
     
-    compile 'com.scireum:parsii:1.5'
-    compileOnly 'ninja.leaping.configurate:configurate-hocon:3.3'
     compileOnly 'com.google.inject:guice:4.2.2'
     compileOnly 'org.slf4j:slf4j-api:1.7.26'
     compileOnly 'com.google.code.gson:gson:2.8.5'
-    
+    implementation 'com.github.Sponge-RPG-dev:NTCore:' + project.NTCoreVersion
+
     testCompile 'com.github.JeffreyFalgout:junit5-extensions:89fa6cb1e7'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.1'
     testCompile 'org.junit.jupiter:junit-jupiter-engine:5.4.1'
     testCompile 'org.junit.jupiter:junit-jupiter-params:5.4.1'
+    testCompile 'com.h2database:h2:1.4.199'
     
     jar {
         manifest {

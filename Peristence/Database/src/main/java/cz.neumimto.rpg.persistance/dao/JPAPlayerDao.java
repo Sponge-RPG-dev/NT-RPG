@@ -16,14 +16,15 @@
  *
  */
 
-package cz.neumimto.rpg.common.persistance.dao;
+package cz.neumimto.rpg.persistance.dao;
 
 import cz.neumimto.core.PersistentContext;
 import cz.neumimto.core.Repository;
 import cz.neumimto.core.dao.GenericDao;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
-import cz.neumimto.rpg.common.persistance.model.JPACharacterBase;
+import cz.neumimto.rpg.common.persistance.dao.IPlayerDao;
+import cz.neumimto.rpg.persistance.model.JPACharacterBase;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -43,17 +44,12 @@ import java.util.UUID;
 //todo catch exceptions and rollback transactions
 @Singleton
 @Repository
-public class PlayerDao extends GenericDao<CharacterBase> {
+public class JPAPlayerDao extends GenericDao<CharacterBase> implements IPlayerDao {
 
     @PersistentContext("nt-rpg")
     private SessionFactory factory;
 
-    /**
-     * Returns player's characters ordered by updated time desc
-     *
-     * @param uuid
-     * @return
-     */
+    @Override
     public List<CharacterBase> getPlayersCharacters(UUID uuid) {
         Session session = getFactory().openSession();
         Query query = session.createQuery("SELECT a FROM JPACharacterBase a WHERE a.uuid=:id AND a.markedForRemoval = null ORDER BY a.updated DESC");
@@ -63,7 +59,8 @@ public class PlayerDao extends GenericDao<CharacterBase> {
         return list;
     }
 
-    public JPACharacterBase fetchCharacterBase(CharacterBase base) {
+
+    public CharacterBase fetchCharacterBase(CharacterBase base) {
         Session session = getFactory().openSession();
         JPACharacterBase cb = (JPACharacterBase) session.merge(base);
         session.beginTransaction();
@@ -76,6 +73,7 @@ public class PlayerDao extends GenericDao<CharacterBase> {
         return cb;
     }
 
+    @Override
     public CharacterBase getLastPlayed(UUID uuid) {
         Session session = getFactory().openSession();
         List r = session.createCriteria(JPACharacterBase.class)
@@ -91,6 +89,7 @@ public class PlayerDao extends GenericDao<CharacterBase> {
         return (CharacterBase) r.get(0);
     }
 
+    @Override
     public CharacterBase getCharacter(UUID player, String name) {
         Session s = getFactory().openSession();
         s.beginTransaction();
@@ -105,6 +104,7 @@ public class PlayerDao extends GenericDao<CharacterBase> {
         return list.get(0);
     }
 
+    @Override
     public int getCharacterCount(UUID uuid) {
         Session s = getFactory().openSession();
         s.beginTransaction();
@@ -119,6 +119,7 @@ public class PlayerDao extends GenericDao<CharacterBase> {
      * @param uniqueId
      * @return rows updated
      */
+    @Override
     public int deleteData(UUID uniqueId) {
         Session session = getFactory().openSession();
         Transaction transaction = session.beginTransaction();
@@ -136,7 +137,7 @@ public class PlayerDao extends GenericDao<CharacterBase> {
         return i;
     }
 
-
+    @Override
     public void createAndUpdate(CharacterBase base) {
         Session session = getFactory().openSession();
         Transaction tx = session.beginTransaction();
@@ -146,6 +147,7 @@ public class PlayerDao extends GenericDao<CharacterBase> {
         session.close();
     }
 
+    @Override
     public int markCharacterForRemoval(UUID player, String charName) {
         String hql = "update JPACharacterBase b set b.markedForRemoval=:t where uuid= :uid AND lower(name)= :name";
         Session session = getFactory().openSession();

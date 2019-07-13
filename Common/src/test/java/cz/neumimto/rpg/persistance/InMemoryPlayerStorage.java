@@ -2,7 +2,7 @@ package cz.neumimto.rpg.persistance;
 
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
-import cz.neumimto.rpg.common.persistance.dao.PlayerDao;
+import cz.neumimto.rpg.common.persistance.dao.JPAPlayerDao;
 import cz.neumimto.rpg.common.persistance.model.JPACharacterBase;
 import org.hibernate.SessionFactory;
 
@@ -13,7 +13,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Singleton
-public class InMemoryPlayerStorage extends PlayerDao {
+public class InMemoryPlayerStorage extends JPAPlayerDao {
 
     private Map<UUID, CharacterBase> map = new ConcurrentHashMap<>();
 

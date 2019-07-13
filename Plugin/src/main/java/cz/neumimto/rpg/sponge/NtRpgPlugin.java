@@ -22,7 +22,6 @@ import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import cz.neumimto.configuration.ConfigMapper;
-import cz.neumimto.core.PluginCore;
 import cz.neumimto.core.migrations.DbMigrationService;
 import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.api.Rpg;

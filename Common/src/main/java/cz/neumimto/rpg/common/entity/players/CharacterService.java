@@ -34,6 +34,7 @@ import cz.neumimto.rpg.api.entity.players.classes.DependencyGraph;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.entity.players.leveling.SkillTreeType;
 import cz.neumimto.rpg.api.events.EventFactoryService;
+import cz.neumimto.rpg.api.events.character.*;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.inventory.InventoryService;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
@@ -43,13 +44,17 @@ import cz.neumimto.rpg.api.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterClass;
 import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
+import cz.neumimto.rpg.api.skills.*;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.skills.tree.SkillTreeSpecialization;
 import cz.neumimto.rpg.api.utils.ActionResult;
 import cz.neumimto.rpg.api.utils.DebugLevel;
 import cz.neumimto.rpg.api.utils.MathUtils;
 import cz.neumimto.rpg.common.persistance.dao.CharacterClassDao;
-import cz.neumimto.rpg.common.persistance.dao.PlayerDao;
+import cz.neumimto.rpg.common.persistance.dao.ICharacterClassDao;
+import cz.neumimto.rpg.common.persistance.dao.IPersistenceHandler;
+import cz.neumimto.rpg.common.persistance.dao.IPlayerDao;
+import cz.neumimto.rpg.common.persistance.dao.JPAPlayerDao;
 import cz.neumimto.rpg.common.persistance.model.JPABaseCharacterAttribute;
 import cz.neumimto.rpg.common.persistance.model.JPACharacterClass;
 import cz.neumimto.rpg.common.persistance.model.JPACharacterSkill;
@@ -75,7 +80,7 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
     private SkillService skillService;
 
     @Inject
-    protected PlayerDao playerDao;
+    protected IPlayerDao playerDao;
 
     @Inject
     protected InventoryService inventoryService;
@@ -99,7 +104,11 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
     private EventFactoryService eventFactoryService;
 
     @Inject
-    private CharacterClassDao characterClassDao;
+    private ICharacterClassDao characterClassDao;
+
+    @Inject
+    private IPersistenceHandler persistanceHandler;
+
 
     private Map<UUID, DataPreparationStage> dataPreparationStageMap = new ConcurrentHashMap<>();
 
@@ -193,7 +202,9 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
         return characterBase;
     }
 
-    protected abstract CharacterBase createCharacterBase();
+    protected final CharacterBase createCharacterBase() {
+        return persistanceHandler.createCharacterBase();
+    }
 
     @Override
     public void updateWeaponRestrictions(T character) {
@@ -994,7 +1005,7 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
                 }
             }
             if (!found) {
-                JPABaseCharacterAttribute attr = new JPABaseCharacterAttribute();
+                BaseCharacterAttribute attr = persistanceHandler.createCharacterAttribute();
                 attr.setName(entry.getKey().getId());
                 attr.setLevel(entry.getValue());
                 attr.setCharacterBase(base);
@@ -1153,7 +1164,7 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
     @Override
     public ActionResult addNewClass(T character, ClassDefinition klass) {
         CharacterBase characterBase = character.getCharacterBase();
-        CharacterClass cc = new JPACharacterClass();
+        CharacterClass cc = persistanceHandler.createCharacterClass();
         cc.setName(klass.getName());
         cc.setCharacterBase(characterBase);
         cc.setExperiences(0D);
@@ -1229,7 +1240,7 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
         SkillTree skillTree = classDef.getSkillTree();
         einfo.setSkillData(skillTree.getSkills().get(skill.getId()));
 
-        CharacterSkill skill1 = new JPACharacterSkill();
+        CharacterSkill skill1 = persistanceHandler.createCharacterSkill();
         skill1.setLevel(1);
         skill1.setCharacterBase(character.getCharacterBase());
         skill1.setFromClass(clazz);

@@ -19,7 +19,6 @@
 package cz.neumimto.rpg.sponge.events;
 
 import cz.neumimto.rpg.NEventContextKeys;
-import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.EventContext;
 import org.spongepowered.api.event.impl.AbstractEvent;

@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.common.persistance.model;
+package cz.neumimto.rpg.persistance.model;
 
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterClass;

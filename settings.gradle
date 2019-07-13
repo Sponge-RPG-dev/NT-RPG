@@ -6,6 +6,9 @@ include ':NT-RPG-Skills'
 include ':NT-RPG-WebServer-GUI'
 include ':API'
 include ':Common'
+include ':Database-Persistence'
+
+project(':Database-Persistence').projectDir = file('Peristence/Database')
 
 project(':API').projectDir = file('API')
 project(':Common').projectDir = file('Common')

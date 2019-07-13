@@ -1,15 +1,6 @@
 package cz.neumimto.rpg.sponge.entities.players;
 
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.configuration.PluginConfig;
-import cz.neumimto.rpg.api.effects.IEffectContainer;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.persistance.model.CharacterBase;
-import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
-import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
-import cz.neumimto.rpg.common.entity.players.UserActionType;
-import cz.neumimto.rpg.common.persistance.model.JPACharacterBase;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.effects.common.def.ClickComboActionComponent;
 import cz.neumimto.rpg.sponge.effects.common.def.CombatEffect;
@@ -28,8 +19,6 @@ import javax.inject.Singleton;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-import static cz.neumimto.rpg.api.logging.Log.error;
-import static cz.neumimto.rpg.api.logging.Log.info;
 
 @Singleton
 public class SpongeCharacterServise extends CharacterService<ISpongeCharacter> {
@@ -90,10 +79,6 @@ public class SpongeCharacterServise extends CharacterService<ISpongeCharacter> {
         return !iSpongeCharacter.isStub();
     }
 
-    @Override
-    protected CharacterBase createCharacterBase() {
-        return new JPACharacterBase();
-    }
 
     public ISpongeCharacter getCharacter(Player player) {
         return characters.get(player.getUniqueId());

@@ -41,7 +41,7 @@ import cz.neumimto.rpg.common.inventory.crafting.runewords.RWDao;
 import cz.neumimto.rpg.common.localization.LocalizationServiceImpl;
 import cz.neumimto.rpg.common.persistance.dao.CharacterClassDao;
 import cz.neumimto.rpg.common.persistance.dao.ClassDefinitionDao;
-import cz.neumimto.rpg.common.persistance.dao.PlayerDao;
+import cz.neumimto.rpg.common.persistance.dao.JPAPlayerDao;
 import cz.neumimto.rpg.common.scripting.JSLoader;
 import cz.neumimto.rpg.effects.TestEffectService;
 import cz.neumimto.rpg.entity.TestEntityService;
@@ -85,7 +85,7 @@ public class TestGuiceModule extends AbstractModule {
 
         bind(CharacterClassDao.class);
         bind(ClassDefinitionDao.class);
-        bind(PlayerDao.class).to(getPlayerDaoImpl());
+        bind(JPAPlayerDao.class).to(getPlayerDaoImpl());
 
         bind(ClassGenerator.class).to(SpongeClassGenerator.class);
         bind(ClassService.class).to(ClassServiceImpl.class);
@@ -149,7 +149,7 @@ public class TestGuiceModule extends AbstractModule {
                 .toProvider(SpongeCharacterServiceProvider.class);
     }
 
-    protected Class<? extends PlayerDao> getPlayerDaoImpl() {
+    protected Class<? extends JPAPlayerDao> getPlayerDaoImpl() {
         return InMemoryPlayerStorage.class;
     }
 
