@@ -19,6 +19,7 @@
 package cz.neumimto.rpg.common.effects;
 
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.effects.*;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;

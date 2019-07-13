@@ -5,6 +5,7 @@ import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.properties.Property;
+import cz.neumimto.rpg.api.utils.Console;
 
 import java.io.*;
 import java.lang.reflect.Field;
@@ -163,7 +164,7 @@ public abstract class PropertyServiceImpl implements PropertyService {
                 Object o = properties.get(s);
                 if (o == null) {
                     missing.add(s);
-                    info("Missing property \"" + java.io.Console.GREEN + s + Console.RESET + "\" in the file max_server_property_values.properties");
+                    info("Missing property \"" + Console.GREEN + s + Console.RESET + "\" in the file max_server_property_values.properties");
                     info(" - Appending the file and setting its default value to 1000; You might want to reconfigure that file.");
                     maxValues[getIdByName(s)] = 1000f;
                 } else {

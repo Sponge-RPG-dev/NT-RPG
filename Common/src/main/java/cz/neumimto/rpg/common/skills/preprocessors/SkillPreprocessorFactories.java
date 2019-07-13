@@ -11,7 +11,6 @@ import cz.neumimto.rpg.api.skills.mods.ActiveSkillPreProcessorWrapper;
 import cz.neumimto.rpg.api.skills.mods.PreProcessorTarget;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 import javax.script.ScriptException;
 import java.util.*;
@@ -98,11 +97,11 @@ public class SkillPreprocessorFactories {
         register(ADJUSTED_SKILL_SETTINGS);
     }
 
-    public static Optional<SkillPreProcessorFactory> getById(@NonNull String id) {
+    public static Optional<SkillPreProcessorFactory> getById(String id) {
         return Optional.ofNullable(internalCache.get(id.toLowerCase()));
     }
 
-    public static void register(@NonNull String id, @NonNull SkillPreProcessorFactory l) {
+    public static void register(String id, SkillPreProcessorFactory l) {
         internalCache.put(id.toLowerCase(), l);
     }
 

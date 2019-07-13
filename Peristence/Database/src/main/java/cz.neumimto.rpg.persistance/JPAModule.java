@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.persistance;
 
+import com.google.inject.Injector;
 import cz.neumimto.rpg.common.GuiceModule;
 import cz.neumimto.rpg.common.persistance.dao.ICharacterClassDao;
 import cz.neumimto.rpg.common.persistance.dao.IPersistenceHandler;
@@ -23,7 +24,7 @@ public class JPAModule implements GuiceModule {
     }
 
     @Override
-    public void processStageEarly() {
-
+    public void processStageEarly(Injector injector) {
+        IPersistenceHandler instance = injector.getInstance(IPersistenceHandler.class);
     }
 }

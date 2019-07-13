@@ -30,13 +30,13 @@ import cz.neumimto.rpg.api.entity.players.party.IParty;
 import cz.neumimto.rpg.api.inventory.RpgInventory;
 import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.items.RpgItemType;
+import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.preprocessors.InterruptableSkillPreprocessor;
 import cz.neumimto.rpg.api.skills.tree.SkillTreeSpecialization;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
-import cz.neumimto.rpg.common.persistance.model.JPACharacterBase;
 
 import java.util.*;
 
@@ -283,8 +283,8 @@ public abstract class PreloadCharacter<T, P extends IParty> implements IActiveCh
     }
 
     @Override
-    public JPACharacterBase getCharacterBase() {
-        return new JPACharacterBase();
+    public CharacterBase getCharacterBase() {
+        return null;
     }
 
     @Override

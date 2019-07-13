@@ -24,21 +24,6 @@ import cz.neumimto.configuration.ConfigurationContainer;
 import cz.neumimto.core.PluginCore;
 import cz.neumimto.core.Repository;
 import cz.neumimto.rpg.api.IResourceLoader;
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.classes.ClassService;
-import cz.neumimto.rpg.api.effects.IEffectService;
-import cz.neumimto.rpg.api.effects.IGlobalEffect;
-import cz.neumimto.rpg.api.effects.model.EffectModelFactory;
-import cz.neumimto.rpg.api.effects.model.EffectModelMapper;
-import cz.neumimto.rpg.api.entity.PropertyService;
-import cz.neumimto.rpg.api.localization.Localization;
-import cz.neumimto.rpg.api.localization.LocalizationService;
-import cz.neumimto.rpg.api.logging.Log;
-import cz.neumimto.rpg.api.properties.PropertyContainer;
-import cz.neumimto.rpg.api.skills.ISkill;
-import cz.neumimto.rpg.api.skills.SkillService;
-import cz.neumimto.rpg.api.skills.scripting.JsBinding;
-import cz.neumimto.rpg.api.utils.Console;
 import cz.neumimto.rpg.common.bytecode.ClassGenerator;
 import cz.neumimto.rpg.common.scripting.JSLoader;
 import cz.neumimto.rpg.common.utils.ResourceClassLoader;
@@ -61,8 +46,6 @@ import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import static cz.neumimto.rpg.api.logging.Log.error;
-import static cz.neumimto.rpg.api.logging.Log.info;
 import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 
 /**

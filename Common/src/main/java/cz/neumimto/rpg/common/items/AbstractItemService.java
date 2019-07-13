@@ -11,6 +11,7 @@ import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.configuration.ItemString;
+import cz.neumimto.rpg.api.items.*;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.common.inventory.items.ItemMetaType;
 import cz.neumimto.rpg.common.inventory.items.subtypes.ItemSubtype;
@@ -18,6 +19,8 @@ import cz.neumimto.rpg.common.inventory.sockets.SocketType;
 
 import javax.inject.Inject;
 import java.util.*;
+
+import static cz.neumimto.rpg.api.logging.Log.*;
 
 public abstract class AbstractItemService implements ItemService {
 

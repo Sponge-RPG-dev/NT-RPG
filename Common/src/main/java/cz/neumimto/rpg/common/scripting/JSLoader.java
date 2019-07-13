@@ -20,19 +20,19 @@ package cz.neumimto.rpg.common.scripting;
 
 import static cz.neumimto.rpg.api.logging.Log.error;
 import static cz.neumimto.rpg.api.logging.Log.info;
+
 import com.google.inject.Injector;
-import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.api.IResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.scripting.IScriptEngine;
 import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.api.skills.SkillsDefinition;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.api.utils.DebugLevel;
+import cz.neumimto.rpg.api.utils.FileUtils;
 import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.bytecode.ClassGenerator;
 import cz.neumimto.rpg.common.skills.scripting.SkillComponent;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.sponge.utils.io.FileUtils;
 import net.bytebuddy.dynamic.loading.MultipleParentClassLoader;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMapper;
@@ -66,7 +66,7 @@ public class JSLoader implements IScriptEngine {
     private ClassGenerator classGenerator;
 
     @Inject
-    private ResourceLoader resourceLoader;
+    private IResourceLoader resourceLoader;
 
     @Inject
     private SkillService skillService;
@@ -173,7 +173,7 @@ public class JSLoader implements IScriptEngine {
     }
 
     private void dumpDocumentedFunctions(List<SkillComponent> skillComponents) {
-        File file = new File(NtRpgPlugin.workingDir, "functions.md");
+        File file = new File(Rpg.get().getWorkingDirectory(), "functions.md");
         if (file.exists()) {
             file.delete();
         }
@@ -217,7 +217,8 @@ public class JSLoader implements IScriptEngine {
         } catch (ScriptException | NoSuchMethodException e) {
             error("Could not invoke JS function registerSkills()", e);
         }
-        File file = new File(ResourceLoader.addonDir, "Skills-Definition.conf");
+        Path addonDir = Paths.get(Rpg.get().getWorkingDirectory() + File.separator + "addons");
+        File file = addonDir.resolve("Skills-Definition.conf").toFile();
         if (!file.exists()) {
             assetService.copyToFile("Skills-Definitions.conf", file.toPath());
         }
@@ -236,7 +237,7 @@ public class JSLoader implements IScriptEngine {
         };
 
 
-        for (File confFile : ResourceLoader.addonDir.listFiles(pathname -> pathname.isFile() && pathname.getName().endsWith(".conf"))) {
+        for (File confFile : addonDir.toFile().listFiles(pathname -> pathname.isFile() && pathname.getName().endsWith(".conf"))) {
             loadSkillDefinitionFile(urlClassLoader, confFile);
         }
     }

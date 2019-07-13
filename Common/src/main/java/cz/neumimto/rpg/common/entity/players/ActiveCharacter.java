@@ -20,6 +20,7 @@ package cz.neumimto.rpg.common.entity.players;
 
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.ItemDamageProcessor;
+import cz.neumimto.rpg.api.effects.*;
 import cz.neumimto.rpg.api.entity.EntityHand;
 import cz.neumimto.rpg.api.entity.IReservable;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;

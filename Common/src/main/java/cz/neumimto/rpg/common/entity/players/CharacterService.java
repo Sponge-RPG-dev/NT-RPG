@@ -20,6 +20,7 @@ package cz.neumimto.rpg.common.entity.players;
 import cz.neumimto.rpg.api.IRpgElement;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.classes.ClassService;
+import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.damage.DamageService;
 import cz.neumimto.rpg.api.effects.IEffectService;
@@ -28,7 +29,6 @@ import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.ICharacterService;
-import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.DependencyGraph;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
@@ -50,16 +50,10 @@ import cz.neumimto.rpg.api.skills.tree.SkillTreeSpecialization;
 import cz.neumimto.rpg.api.utils.ActionResult;
 import cz.neumimto.rpg.api.utils.DebugLevel;
 import cz.neumimto.rpg.api.utils.MathUtils;
-import cz.neumimto.rpg.common.persistance.dao.CharacterClassDao;
 import cz.neumimto.rpg.common.persistance.dao.ICharacterClassDao;
 import cz.neumimto.rpg.common.persistance.dao.IPersistenceHandler;
 import cz.neumimto.rpg.common.persistance.dao.IPlayerDao;
-import cz.neumimto.rpg.common.persistance.dao.JPAPlayerDao;
-import cz.neumimto.rpg.common.persistance.model.JPABaseCharacterAttribute;
-import cz.neumimto.rpg.common.persistance.model.JPACharacterClass;
-import cz.neumimto.rpg.common.persistance.model.JPACharacterSkill;
 import cz.neumimto.rpg.common.utils.exceptions.MissingConfigurationException;
-import cz.neumimto.rpg.sponge.events.PlayerDataPreloadComplete;
 
 import javax.inject.Inject;
 import java.util.*;
@@ -154,13 +148,13 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
         }, Rpg.get().getAsyncExecutor());
     }
 
-
+/*
     protected void finalizePlayerDataPreloadStage(UUID id, T character, PlayerDataPreloadComplete event) {
         setActiveCharacter(event.getPlayer(), character);
         invalidateCaches(character);
         dataPreparationStageMap.remove(id);
     }
-
+*/
     protected void playerDataPreloadStagePlayerNotReady(UUID id, T character) {
         dataPreparationStageMap.put(id, new DataPreparationStage(DataPreparationStage.Stage.PLAYER_NOT_YET_READY, character));
         info("Data for Player " + id + " prepared but player instance not ready yet, will attempt to initialize later");

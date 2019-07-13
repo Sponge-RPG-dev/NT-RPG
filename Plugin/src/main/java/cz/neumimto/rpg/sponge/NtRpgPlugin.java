@@ -40,7 +40,7 @@ import cz.neumimto.rpg.sponge.listeners.DebugListener;
 import cz.neumimto.rpg.sponge.persistance.PersistenceHandler;
 import cz.neumimto.rpg.sponge.skills.NDamageType;
 import cz.neumimto.rpg.sponge.utils.Placeholders;
-import cz.neumimto.rpg.sponge.utils.io.FileUtils;
+import cz.neumimto.rpg.api.utils.FileUtils;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMapper;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;

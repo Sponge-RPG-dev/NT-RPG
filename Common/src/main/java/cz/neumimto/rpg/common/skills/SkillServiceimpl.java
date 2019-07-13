@@ -1,12 +1,12 @@
 package cz.neumimto.rpg.common.skills;
 
-import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.api.IResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.configuration.SkillTreeDao;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.gui.Gui;
-import cz.neumimto.rpg.api.logging.Log;
+import cz.neumimto.rpg.api.skills.*;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.mods.SkillExecutorCallback;
 import cz.neumimto.rpg.api.skills.scripting.ActiveScriptSkill;
@@ -15,12 +15,12 @@ import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.api.skills.types.PassiveScriptSkill;
 import cz.neumimto.rpg.api.skills.types.ScriptSkill;
+import cz.neumimto.rpg.api.utils.ClassUtils;
 import cz.neumimto.rpg.api.utils.annotations.CatalogId;
 import cz.neumimto.rpg.common.skills.preprocessors.SkillPreprocessors;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.description.annotation.AnnotationDescription;
-import org.apache.commons.lang3.reflect.FieldUtils;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.apache.commons.io.FileUtils;
 
 import javax.inject.Inject;
 import java.lang.reflect.Field;
@@ -30,6 +30,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
+
+import static cz.neumimto.rpg.api.logging.Log.*;
 
 public abstract class SkillServiceimpl implements SkillService {
 
@@ -200,7 +202,7 @@ public abstract class SkillServiceimpl implements SkillService {
                 throw new RuntimeException("Attempted to register alternate name " + name + " for a skill " + skill.getId() + ". But the name is "
                         + "already taken by the skill " + iSkill.getId());
             }
-            Log.warn("Attempted to register alternate name for a skill " + skill.getId() + ". Skill is already registered under the same name - " + name);
+            warn("Attempted to register alternate name for a skill " + skill.getId() + ". Skill is already registered under the same name - " + name);
         }
         skillByNames.put(name, skill);
     }
@@ -222,7 +224,7 @@ public abstract class SkillServiceimpl implements SkillService {
         Class sk = new ByteBuddy()
                 .subclass(type)
                 .name("cz.neumimto.skills.scripts." + scriptSkillModel.getName())
-                .annotateType(AnnotationDescription.Builder.ofType(ResourceLoader.Skill.class)
+                .annotateType(AnnotationDescription.Builder.ofType(IResourceLoader.Skill.class)
                         .define("value", scriptSkillModel.getId())
                         .build())
                 .make()
@@ -257,7 +259,7 @@ public abstract class SkillServiceimpl implements SkillService {
 
     @Override
     public void injectCatalogId(ISkill skill, String name) {
-        Optional<Field> first = Stream.of(FieldUtils.getAllFields(skill.getClass())).filter(field -> field.isAnnotationPresent(CatalogId.class))
+        Optional<Field> first = ClassUtils.getAllFields(skill.getClass()).stream().filter(field -> field.isAnnotationPresent(CatalogId.class))
                 .findFirst();
         Field field = first.get();
         field.setAccessible(true);
@@ -269,12 +271,12 @@ public abstract class SkillServiceimpl implements SkillService {
     }
 
     @Override
-    public Optional<ISkillType> getSkillType(@NonNull String id) {
+    public Optional<ISkillType> getSkillType(String id) {
         return Optional.ofNullable(skillTypes.get(id.toLowerCase()));
     }
 
     @Override
-    public void registerSkillType(@NonNull ISkillType skillType) {
+    public void registerSkillType(ISkillType skillType) {
         skillTypes.put(skillType.getId().toLowerCase(), skillType);
     }
 

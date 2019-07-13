@@ -27,5 +27,7 @@ public interface IPlayerDao {
 
     int markCharacterForRemoval(UUID player, String charName);
 
-    public CharacterBase fetchCharacterBase(CharacterBase characterBase);
+    CharacterBase fetchCharacterBase(CharacterBase characterBase);
+
+    void update(CharacterBase characterBase);
 }

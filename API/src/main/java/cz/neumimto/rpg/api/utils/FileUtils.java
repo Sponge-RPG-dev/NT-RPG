@@ -16,9 +16,9 @@
  *
  */
 
-package cz.neumimto.rpg.sponge.utils.io;
+package cz.neumimto.rpg.api.utils;
 
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.api.RpgApi;
 import ninja.leaping.configurate.commented.SimpleCommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMapper;
@@ -38,7 +38,7 @@ import java.nio.file.Path;
 public class FileUtils {
 
     public static URL getPluginUrl() {
-        URL clsUrl = NtRpgPlugin.class.getResource(NtRpgPlugin.class.getSimpleName() + ".class");
+        URL clsUrl = RpgApi.class.getResource(RpgApi.class.getSimpleName() + ".class");
         if (clsUrl != null) {
             try {
                 URLConnection conn = clsUrl.openConnection();

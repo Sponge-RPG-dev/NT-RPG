@@ -20,28 +20,31 @@ package cz.neumimto.rpg.common.configuration;
 
 import com.typesafe.config.*;
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.configuration.ItemString;
 import cz.neumimto.rpg.api.configuration.SkillItemCost;
 import cz.neumimto.rpg.api.configuration.SkillTreeDao;
-import cz.neumimto.rpg.api.configuration.AttributeConfig;
+import cz.neumimto.rpg.api.skills.*;
 import cz.neumimto.rpg.api.skills.mods.ActiveSkillPreProcessorWrapper;
 import cz.neumimto.rpg.api.skills.scripting.ScriptedSkillNodeDescription;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.skills.types.StartingPoint;
 import cz.neumimto.rpg.api.skills.utils.SkillLoadingErrors;
+import cz.neumimto.rpg.api.utils.FileUtils;
 import cz.neumimto.rpg.api.utils.MathUtils;
 import cz.neumimto.rpg.common.skills.SkillConfigLoader;
 import cz.neumimto.rpg.common.skills.SkillConfigLoaders;
 import cz.neumimto.rpg.common.skills.preprocessors.SkillPreprocessorFactories;
-import cz.neumimto.rpg.sponge.utils.io.FileUtils;
+
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Optional;
+
 import java.util.*;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static cz.neumimto.rpg.api.logging.Log.info;
@@ -297,7 +300,7 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
             Collection<AttributeConfig> attributes = Rpg.get().getPropertyService().getAttributes().values();
             outer:
             for (Map.Entry<String, ConfigValue> e : settings.entrySet()) {
-                if (e.getKey().endsWith(SkillSettings.bonus)) {
+                if (e.getKey().endsWith(SkillSettings.BONUS_SUFFIX)) {
                     continue;
                 }
                 String val = e.getValue().render();
@@ -315,7 +318,7 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
 
                     String name = e.getKey();
                     skillSettings.addNode(name, norm);
-                    name = name + SkillSettings.bonus;
+                    name = name + SkillSettings.BONUS_SUFFIX;
                     float bonus = 0f;
                     try {
                         bonus = Float.parseFloat(settings.getString(name));
@@ -339,11 +342,11 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
                 Map.Entry<String, Float> next = iterator.next();
                 Float value = next.getValue();
                 String key = next.getKey();
-                if (key.endsWith(SkillSettings.bonus)) {
+                if (key.endsWith(SkillSettings.BONUS_SUFFIX)) {
                     continue;
                 }
                 if (!skillSettings.getNodes().containsKey(key)) {
-                    Float val2 = defaultSkillSettings.getNodes().get(key + SkillSettings.bonus);
+                    Float val2 = defaultSkillSettings.getNodes().get(key + SkillSettings.BONUS_SUFFIX);
                     skillSettings.addNode(key, value, val2);
                     warn(" - Missing settings node " + key + " for a skill " + info.getSkillId() + " - inherited from default: " + value + " / " + val2);
                 }

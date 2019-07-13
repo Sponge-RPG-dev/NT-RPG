@@ -4,7 +4,6 @@ import cz.neumimto.rpg.api.skills.PropertySkill;
 import cz.neumimto.rpg.api.skills.tree.SkillTreeSpecialization;
 import cz.neumimto.rpg.api.skills.types.CharacterAttributeSkill;
 import cz.neumimto.rpg.common.skills.types.ItemAccessSkill;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,11 +25,11 @@ public class SkillConfigLoaders {
         register(PROPERTY);
     }
 
-    public static Optional<SkillConfigLoader> getById(@NonNull String id) {
+    public static Optional<SkillConfigLoader> getById(String id) {
         return Optional.ofNullable(internalCache.get(id.toLowerCase()));
     }
 
-    public static void register(@NonNull String id, @NonNull SkillConfigLoader l) {
+    public static void register(String id, SkillConfigLoader l) {
         internalCache.put(id.toLowerCase(), l);
     }
 
