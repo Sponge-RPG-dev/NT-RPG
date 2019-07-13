@@ -3,7 +3,6 @@ package cz.neumimto.rpg.persistance.migrations;
 
 import com.google.common.io.CharStreams;
 
-import javax.inject.Singleton;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -16,7 +15,6 @@ import java.util.List;
 /**
  * Created by NeumimTo on 24.6.2018.
  */
-@Singleton
 public class DbMigrationsService {
 
     private List<DbMigration> migrations = new ArrayList<>();

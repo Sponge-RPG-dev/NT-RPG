@@ -6,7 +6,7 @@ import java.util.Map;
 
 public interface GuiceModule {
 
-    Map<Class<?>, Class<?>> getBindings();
+    Map<Class<?>, Object> getBindings();
 
     default void processStageEarly(Injector injector){};
 
