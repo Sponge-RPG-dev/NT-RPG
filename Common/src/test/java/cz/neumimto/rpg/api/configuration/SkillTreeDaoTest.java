@@ -2,6 +2,8 @@ package cz.neumimto.rpg.api.configuration;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
+import cz.neumimto.rpg.RpgTest;
+import cz.neumimto.rpg.api.RpgApi;
 import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.skills.types.AbstractSkill;
@@ -28,8 +30,13 @@ class SkillTreeDaoTest {
     @Inject
     private SkillService skillService;
 
+
+    @Inject
+    private RpgApi api;
+
     @BeforeEach
-    public void beforeAll() {
+    public void before() {
+        new RpgTest(api);
         AbstractSkill spy = Mockito.spy(AbstractSkill.class);
         Mockito.doNothing().when(spy).init();
         Mockito.when(spy.getName()).thenReturn("test");

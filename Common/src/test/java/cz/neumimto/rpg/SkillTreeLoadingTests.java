@@ -1,5 +1,6 @@
 package cz.neumimto.rpg;
 
+import cz.neumimto.rpg.api.RpgApi;
 import cz.neumimto.rpg.api.configuration.SkillItemCost;
 import cz.neumimto.rpg.api.configuration.SkillTreeDao;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
@@ -43,9 +44,12 @@ public class SkillTreeLoadingTests {
     @Inject
     private LocalizationService localizationService;
 
+    @Inject
+    private RpgApi rpgApi;
 
     @BeforeEach
     public void before() throws Exception {
+        new RpgTest(rpgApi);
         skillService.getSkills().put("test", new TestSkill("test"));
         skillService.getSkills().put("test2", new TestSkill("test2"));
         scriptEngine.loadNashorn();

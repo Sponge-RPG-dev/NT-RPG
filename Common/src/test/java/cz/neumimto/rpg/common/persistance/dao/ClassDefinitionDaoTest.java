@@ -1,5 +1,7 @@
 package cz.neumimto.rpg.common.persistance.dao;
 
+import cz.neumimto.rpg.RpgTest;
+import cz.neumimto.rpg.api.RpgApi;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
@@ -34,8 +36,12 @@ public class ClassDefinitionDaoTest {
     @Inject
     private ClassService classService;
 
+    @Inject
+    private RpgApi api;
+
     @BeforeEach
     public void before() {
+        new RpgTest(api);
         propertyService.getAttributes().put(TestDictionary.STR.getId(), TestDictionary.STR);
         propertyService.getAttributes().put(TestDictionary.AGI.getId(), TestDictionary.AGI);
         propertyService.registerProperty("max_mana",1);

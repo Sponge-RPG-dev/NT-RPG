@@ -1,5 +1,6 @@
 package cz.neumimto.rpg;
 
+import cz.neumimto.rpg.api.RpgApi;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.api.entity.CommonProperties;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
@@ -21,6 +22,7 @@ import cz.neumimto.rpg.persistance.model.JPACharacterClass;
 import name.falgout.jeffrey.testing.junit.guice.GuiceExtension;
 import name.falgout.jeffrey.testing.junit.guice.IncludeModule;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -41,6 +43,13 @@ public class AdminCommandTests {
     @Inject
     private IPlayerMessage vanillaMessaging;
 
+    @Inject
+    private RpgApi rpgApi;
+
+    @BeforeEach
+    public void before(){
+        new RpgTest(rpgApi);
+    }
 
     @Test
     public void testAddEffectCommand(@Stage(READY)IActiveCharacter iActiveCharacter) {

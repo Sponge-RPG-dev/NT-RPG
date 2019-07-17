@@ -4,6 +4,7 @@ import cz.neumimto.rpg.api.IResourceLoader;
 
 import javax.inject.Singleton;
 import java.net.URLClassLoader;
+import java.util.Collections;
 import java.util.Map;
 
 @Singleton
@@ -20,6 +21,6 @@ public class TestResourceLoader implements IResourceLoader {
 
     @Override
     public Map<String, URLClassLoader> getClassLoaderMap() {
-        return null;
+        return Collections.emptyMap();
     }
 }

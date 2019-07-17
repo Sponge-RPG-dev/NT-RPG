@@ -1,5 +1,7 @@
 package cz.neumimto.rpg.common.inventory;
 
+import cz.neumimto.rpg.RpgTest;
+import cz.neumimto.rpg.api.RpgApi;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
@@ -49,12 +51,17 @@ class InventoryHandlerTest {
 
     private TestCharacter character;
 
+    @Inject
+    private RpgApi api;
+
+
     @BeforeEach
     public void beforeEach(@Stage(READY) IActiveCharacter character) {
         this.character = (TestCharacter) character;
+        new RpgTest(api);
         if (propertyService.getAttributes().isEmpty()) {
-            propertyService.getAttributes().put(TestDictionary.STR.getId(),TestDictionary.STR);
-            propertyService.getAttributes().put(TestDictionary.AGI.getId(),TestDictionary.AGI);
+            propertyService.getAttributes().put(TestDictionary.STR.getId(), TestDictionary.STR);
+            propertyService.getAttributes().put(TestDictionary.AGI.getId(), TestDictionary.AGI);
         }
     }
 
@@ -147,13 +154,15 @@ class InventoryHandlerTest {
         Map<AttributeConfig, Integer> minimalRequirements = new HashMap<>();
         minimalRequirements.put(TestDictionary.STR, 2);
 
-        RpgItemStackImpl rpgItemStack = new RpgItemStackImpl(TestDictionary.ARMOR_TYPE_1, Collections.emptyMap(), Collections.emptyMap(), minimalRequirements,  Collections.emptyMap());
+        RpgItemStackImpl rpgItemStack = new RpgItemStackImpl(TestDictionary.ARMOR_TYPE_1, Collections.emptyMap(), Collections.emptyMap(), minimalRequirements, Collections.emptyMap());
         managedSlot.setContent(rpgItemStack);
         managedSlots.put(0, managedSlot);
 
         minimalRequirements = new HashMap<>();
         minimalRequirements.put(TestDictionary.STR, 3);
-        RpgItemStackImpl future = new RpgItemStackImpl(TestDictionary.ARMOR_TYPE_1, Collections.emptyMap(), new HashMap<AttributeConfig, Integer>() {{put(TestDictionary.STR, 0);}},
+        RpgItemStackImpl future = new RpgItemStackImpl(TestDictionary.ARMOR_TYPE_1, Collections.emptyMap(), new HashMap<AttributeConfig, Integer>() {{
+            put(TestDictionary.STR, 0);
+        }},
                 minimalRequirements, Collections.emptyMap());
 
         boolean mayUse = itemService.checkItemAttributeRequirements(character, managedSlot, future);
@@ -168,7 +177,7 @@ class InventoryHandlerTest {
         Map<AttributeConfig, Integer> minimalRequirements = new HashMap<>();
         minimalRequirements.put(TestDictionary.STR, 2);
 
-        RpgItemStackImpl rpgItemStack = new RpgItemStackImpl(TestDictionary.ARMOR_TYPE_1, Collections.emptyMap(), Collections.emptyMap(), minimalRequirements,  Collections.emptyMap());
+        RpgItemStackImpl rpgItemStack = new RpgItemStackImpl(TestDictionary.ARMOR_TYPE_1, Collections.emptyMap(), Collections.emptyMap(), minimalRequirements, Collections.emptyMap());
         managedSlot.setContent(rpgItemStack);
         managedSlots.put(0, managedSlot);
 
@@ -176,7 +185,10 @@ class InventoryHandlerTest {
         minimalRequirements.put(TestDictionary.STR, 11); //character has 10 str
         minimalRequirements.put(TestDictionary.AGI, 0);
         RpgItemStackImpl future = new RpgItemStackImpl(TestDictionary.ARMOR_TYPE_1, Collections.emptyMap(),
-                new HashMap<AttributeConfig, Integer>() {{put(TestDictionary.STR, 0);put(TestDictionary.AGI, 0);}},
+                new HashMap<AttributeConfig, Integer>() {{
+                    put(TestDictionary.STR, 0);
+                    put(TestDictionary.AGI, 0);
+                }},
                 minimalRequirements, Collections.emptyMap());
 
         boolean mayUse = itemService.checkItemAttributeRequirements(character, managedSlot, future);
@@ -191,7 +203,7 @@ class InventoryHandlerTest {
         Map<AttributeConfig, Integer> minimalRequirements = new HashMap<>();
         minimalRequirements.put(TestDictionary.STR, 2);
 
-        RpgItemStackImpl rpgItemStack = new RpgItemStackImpl(TestDictionary.ARMOR_TYPE_1, Collections.emptyMap(), Collections.emptyMap(), minimalRequirements,  Collections.emptyMap());
+        RpgItemStackImpl rpgItemStack = new RpgItemStackImpl(TestDictionary.ARMOR_TYPE_1, Collections.emptyMap(), Collections.emptyMap(), minimalRequirements, Collections.emptyMap());
         managedSlot.setContent(rpgItemStack);
         managedSlots.put(0, managedSlot);
 

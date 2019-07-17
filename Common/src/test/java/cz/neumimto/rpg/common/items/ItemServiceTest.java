@@ -1,5 +1,7 @@
 package cz.neumimto.rpg.common.items;
 
+import cz.neumimto.rpg.RpgTest;
+import cz.neumimto.rpg.api.RpgApi;
 import cz.neumimto.rpg.api.items.ItemClass;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.items.RpgItemType;
@@ -8,6 +10,7 @@ import cz.neumimto.rpg.junit.TestGuiceModule;
 import name.falgout.jeffrey.testing.junit.guice.GuiceExtension;
 import name.falgout.jeffrey.testing.junit.guice.IncludeModule;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -21,7 +24,15 @@ import java.util.Optional;
 public class ItemServiceTest {
 
     @Inject
-    private static ItemService itemService;
+    private ItemService itemService;
+
+    @Inject
+    private RpgApi api;
+
+    @BeforeEach
+    public void before() {
+        new RpgTest(api);
+    }
 
     @Test
     public void getWeaponClassByNameUnknown() {
