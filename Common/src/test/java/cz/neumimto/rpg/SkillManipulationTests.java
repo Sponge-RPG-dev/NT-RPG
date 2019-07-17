@@ -5,16 +5,19 @@ import cz.neumimto.rpg.api.entity.players.ICharacterService;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.events.EventFactoryService;
-import cz.neumimto.rpg.api.logging.Log;
+import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterClass;
+import cz.neumimto.rpg.api.skills.ISkill;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.SkillData;
+import cz.neumimto.rpg.api.skills.SkillDependency;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.utils.ActionResult;
+import cz.neumimto.rpg.common.entity.TestCharacter;
 import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
-import cz.neumimto.rpg.common.persistance.model.JPACharacterBase;
 import cz.neumimto.rpg.junit.NtRpgExtension;
 import cz.neumimto.rpg.junit.TestGuiceModule;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.sponge.entities.players.SpongeCharacter;
+import cz.neumimto.rpg.persistance.model.JPACharacterBase;
 import name.falgout.jeffrey.testing.junit.guice.GuiceExtension;
 import name.falgout.jeffrey.testing.junit.guice.IncludeModule;
 import org.junit.jupiter.api.Assertions;
@@ -22,10 +25,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
-import org.slf4j.Logger;
 
-import java.util.UUID;
 import javax.inject.Inject;
+import java.util.UUID;
 
 @ExtendWith({NtRpgExtension.class, GuiceExtension.class})
 @IncludeModule(TestGuiceModule.class)
@@ -49,7 +51,7 @@ public class SkillManipulationTests {
 
     CharacterClass characterClass;
 
-    JPACharacterBase characterBase;
+    CharacterBase characterBase;
 
     SkillData skillData;
     SkillData sconflicting;
@@ -64,14 +66,11 @@ public class SkillManipulationTests {
 
     @BeforeEach
     public void before() throws Exception {
-        Log.setLogger(Mockito.mock(Logger.class));
-
-        NtRpgPlugin.GlobalScope.eventFactory = eventFactoryService;
 
         //lets not invoke constructor
         PluginConfig o = (PluginConfig) TestHelper.getUnsafe().allocateInstance(PluginConfig.class);
         o.PRIMARY_CLASS_TYPE = "Primary";
-        NtRpgPlugin.pluginConfig = o;
+
         main = TestHelper.createMockSkill("main");
 
         conflicting = TestHelper.createMockSkill("conflicting");
@@ -129,7 +128,7 @@ public class SkillManipulationTests {
         characterBase = new JPACharacterBase();
         characterBase.getCharacterClasses().add(characterClass);
 
-        character = new SpongeCharacter(UUID.randomUUID(), characterBase, 0);
+        character = new TestCharacter(UUID.randomUUID(), characterBase, 0);
 
         playerClassData = new PlayerClassData(classDefinition, characterClass);
         character.addClass(playerClassData);

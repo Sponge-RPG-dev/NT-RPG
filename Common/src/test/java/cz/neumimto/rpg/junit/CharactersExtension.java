@@ -1,17 +1,18 @@
 package cz.neumimto.rpg.junit;
 
 import cz.neumimto.rpg.api.entity.IReservable;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.items.ItemClass;
+import cz.neumimto.rpg.api.persistance.model.CharacterBase;
+import cz.neumimto.rpg.api.persistance.model.CharacterClass;
 import cz.neumimto.rpg.common.entity.TestCharacter;
-import cz.neumimto.rpg.common.persistance.model.JPACharacterBase;
-import cz.neumimto.rpg.common.persistance.model.JPACharacterClass;
 import cz.neumimto.rpg.common.entity.TestPropertyService;
 import cz.neumimto.rpg.common.inventory.FilteredManagedSlotImpl;
 import cz.neumimto.rpg.common.inventory.RpgInventoryImpl;
-import cz.neumimto.rpg.api.persistance.model.CharacterClass;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
+import cz.neumimto.rpg.persistance.model.JPACharacterBase;
+import cz.neumimto.rpg.persistance.model.JPACharacterClass;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
@@ -50,7 +51,7 @@ public class CharactersExtension implements ParameterResolver {
 
 
     private TestCharacter initializedCharacter() {
-        JPACharacterBase characterBase = new JPACharacterBase();
+        CharacterBase characterBase = new JPACharacterBase();
 
         TestCharacter activeCharacter = new TestCharacter(UUID.randomUUID(), characterBase, TestPropertyService.LAST_ID);
 

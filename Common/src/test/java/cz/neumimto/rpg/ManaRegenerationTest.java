@@ -1,12 +1,10 @@
 package cz.neumimto.rpg;
 
 import cz.neumimto.rpg.api.configuration.PluginConfig;
-import cz.neumimto.rpg.api.effects.IEffectService;
 import cz.neumimto.rpg.api.entity.CommonProperties;
 import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.events.EventFactoryService;
-import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.gui.IPlayerMessage;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.effects.core.DefaultManaRegeneration;
@@ -14,8 +12,6 @@ import cz.neumimto.rpg.junit.CharactersExtension;
 import cz.neumimto.rpg.junit.CharactersExtension.Stage;
 import cz.neumimto.rpg.junit.NtRpgExtension;
 import cz.neumimto.rpg.junit.TestGuiceModule;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.sponge.entities.SpongeEntityService;
 import name.falgout.jeffrey.testing.junit.guice.GuiceExtension;
 import name.falgout.jeffrey.testing.junit.guice.IncludeModule;
 import org.junit.jupiter.api.Assertions;
@@ -38,7 +34,7 @@ public class ManaRegenerationTest {
     private PluginConfig pluginConfig;
 
     @Inject
-    private SpongeEntityService entityService;
+    private EntityService entityService;
 
     @Inject
     private IPlayerMessage vanillaMessaging;
@@ -48,11 +44,8 @@ public class ManaRegenerationTest {
 
     @BeforeEach
     public void before() {
-        NtRpgPlugin.pluginConfig = pluginConfig;
+
         pluginConfig.MANA_REGENERATION_RATE = 1;
-        Gui.vanilla = vanillaMessaging;
-        NtRpgPlugin.GlobalScope.entityService = entityService;
-        NtRpgPlugin.GlobalScope.eventFactory = eventFactoryService;
     }
 
     @Test

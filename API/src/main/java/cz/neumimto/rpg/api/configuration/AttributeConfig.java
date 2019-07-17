@@ -38,6 +38,9 @@ public class AttributeConfig {
         this.description = description;
     }
 
+    public AttributeConfig() {
+    }
+
     public String getId() {
         return id;
     }

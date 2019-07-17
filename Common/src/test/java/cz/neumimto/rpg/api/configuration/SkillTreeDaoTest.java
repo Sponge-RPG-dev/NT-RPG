@@ -2,43 +2,47 @@ package cz.neumimto.rpg.api.configuration;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
-import cz.neumimto.rpg.GlobalScope;
-import cz.neumimto.rpg.common.configuration.SkillTreeLoaderImpl;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.junit.NtRpgExtension;
-import cz.neumimto.rpg.api.skills.types.AbstractSkill;
+import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
-import cz.neumimto.rpg.sponge.skills.SpongeSkillService;
+import cz.neumimto.rpg.api.skills.types.AbstractSkill;
+import cz.neumimto.rpg.common.configuration.SkillTreeLoaderImpl;
+import cz.neumimto.rpg.junit.NtRpgExtension;
+import cz.neumimto.rpg.junit.TestGuiceModule;
+import name.falgout.jeffrey.testing.junit.guice.GuiceExtension;
+import name.falgout.jeffrey.testing.junit.guice.IncludeModule;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 
+import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-@ExtendWith(NtRpgExtension.class)
+@ExtendWith({GuiceExtension.class, NtRpgExtension.class})
+@IncludeModule(TestGuiceModule.class)
 class SkillTreeDaoTest {
 
-    @BeforeAll
-    public static void beforeAll() {
-        NtRpgPlugin.GlobalScope = new GlobalScope();
-        NtRpgPlugin.GlobalScope.skillService = new SpongeSkillService();
+    @Inject
+    private SkillService skillService;
+
+    @BeforeEach
+    public void beforeAll() {
         AbstractSkill spy = Mockito.spy(AbstractSkill.class);
         Mockito.doNothing().when(spy).init();
         Mockito.when(spy.getName()).thenReturn("test");
         spy.setDescription(Arrays.asList("test"));
         spy.setCatalogId("test");
-        NtRpgPlugin.GlobalScope.skillService.registerAdditionalCatalog(spy);
+        skillService.registerAdditionalCatalog(spy);
 
         spy = Mockito.spy(AbstractSkill.class);
         Mockito.doNothing().when(spy).init();
         Mockito.when(spy.getName()).thenReturn("test2");
         spy.setDescription(Arrays.asList("test"));
         spy.setCatalogId("test2");
-        NtRpgPlugin.GlobalScope.skillService.registerAdditionalCatalog(spy);
+        skillService.registerAdditionalCatalog(spy);
     }
 
     @Test

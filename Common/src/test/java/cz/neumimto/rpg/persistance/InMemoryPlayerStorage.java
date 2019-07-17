@@ -2,9 +2,7 @@ package cz.neumimto.rpg.persistance;
 
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
-import cz.neumimto.rpg.common.persistance.dao.JPAPlayerDao;
-import cz.neumimto.rpg.common.persistance.model.JPACharacterBase;
-import org.hibernate.SessionFactory;
+import cz.neumimto.rpg.common.persistance.dao.IPlayerDao;
 
 import javax.inject.Singleton;
 import java.util.List;
@@ -13,7 +11,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Singleton
-public class InMemoryPlayerStorage extends JPAPlayerDao {
+public class InMemoryPlayerStorage implements IPlayerDao {
 
     private Map<UUID, CharacterBase> map = new ConcurrentHashMap<>();
 
@@ -21,8 +19,13 @@ public class InMemoryPlayerStorage extends JPAPlayerDao {
         throw new RuntimeException("In mememory storage");
     }
 
-    public JPACharacterBase fetchCharacterBase(CharacterBase base) {
+    public CharacterBase fetchCharacterBase(CharacterBase base) {
         throw new RuntimeException("In mememory storage");
+    }
+
+    @Override
+    public void update(CharacterBase characterBase) {
+        map.put(characterBase.getUuid(), characterBase);
     }
 
     public CharacterBase getLastPlayed(UUID uuid) {
@@ -51,12 +54,6 @@ public class InMemoryPlayerStorage extends JPAPlayerDao {
     }
 
     public int markCharacterForRemoval(UUID player, String charName) {
-        throw new RuntimeException("In mememory storage");
-    }
-
-
-    @Override
-    public SessionFactory getFactory() {
         throw new RuntimeException("In mememory storage");
     }
 

@@ -1,7 +1,6 @@
 package cz.neumimto.rpg.persistance;
 
 import com.google.inject.Provider;
-import cz.neumimto.core.DummySessionFactory;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.common.GuiceModule;
@@ -82,7 +81,7 @@ public class JPAModule implements GuiceModule {
         } catch (Exception e) {
             error("Could not build session factory", e);
             error("^ This is the relevant part of log you are looking for");
-            factory = new DummySessionFactory();
+            throw new RuntimeException("Cannot connect to database");
         }
 
         return factory;

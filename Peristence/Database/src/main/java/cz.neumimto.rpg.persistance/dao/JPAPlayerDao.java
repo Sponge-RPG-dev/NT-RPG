@@ -18,9 +18,6 @@
 
 package cz.neumimto.rpg.persistance.dao;
 
-import cz.neumimto.core.PersistentContext;
-import cz.neumimto.core.Repository;
-import cz.neumimto.core.dao.GenericDao;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
 import cz.neumimto.rpg.common.persistance.dao.IPlayerDao;
@@ -43,10 +40,8 @@ import java.util.UUID;
  */
 //todo catch exceptions and rollback transactions
 @Singleton
-@Repository
 public class JPAPlayerDao extends GenericDao<CharacterBase> implements IPlayerDao {
 
-    @PersistentContext("nt-rpg")
     private SessionFactory factory;
 
     @Override

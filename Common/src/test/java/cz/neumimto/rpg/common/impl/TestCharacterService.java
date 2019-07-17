@@ -5,8 +5,6 @@ import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.common.entity.TestCharacter;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
-import cz.neumimto.rpg.common.persistance.model.JPACharacterBase;
-import cz.neumimto.rpg.sponge.events.PlayerDataPreloadComplete;
 
 import javax.inject.Singleton;
 import java.util.*;
@@ -18,8 +16,7 @@ public class TestCharacterService extends CharacterService<TestCharacter> {
 
     @Override
     protected void addCharacterToGame(UUID id, TestCharacter character, List<CharacterBase> playerChars) {
-        PlayerDataPreloadComplete event = new PlayerDataPreloadComplete(id, playerChars);
-        finalizePlayerDataPreloadStage(id, character, event);
+        //finalizePlayerDataPreloadStage(id, character, event);
         assignPlayerToCharacter(id);
         initActiveCharacter(character);
     }
@@ -27,11 +24,6 @@ public class TestCharacterService extends CharacterService<TestCharacter> {
     @Override
     protected boolean hasCharacter(UUID uniqueId) {
         return characterMap.containsKey(uniqueId);
-    }
-
-    @Override
-    protected CharacterBase createCharacterBase() {
-        return new JPACharacterBase();
     }
 
     @Override

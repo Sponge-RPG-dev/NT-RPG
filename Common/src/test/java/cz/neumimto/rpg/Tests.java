@@ -2,34 +2,24 @@ package cz.neumimto.rpg;
 
 
 import cz.neumimto.rpg.api.classes.ClassService;
-import cz.neumimto.rpg.api.logging.Log;
-import cz.neumimto.rpg.common.classes.ClassServiceImpl;
-import cz.neumimto.rpg.common.persistance.model.JPACharacterClass;
-import cz.neumimto.rpg.common.bytecode.ClassGenerator;
-import cz.neumimto.rpg.api.persistance.model.CharacterClass;
-import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
-import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassPermission;
-import cz.neumimto.rpg.sponge.scripting.SpongeClassGenerator;
-import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
+import cz.neumimto.rpg.api.persistance.model.CharacterClass;
+import cz.neumimto.rpg.common.classes.ClassServiceImpl;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
+import cz.neumimto.rpg.persistance.model.JPACharacterClass;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.slf4j.LoggerFactory;
 
-import javax.script.ScriptEngine;
-import javax.script.ScriptException;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.*;
 
 import static org.mockito.Mockito.when;
 
 public class Tests {
 
-    @Test
+   /* @Test
     public void testDynamicListener() throws Exception {
         Class.forName("jdk.nashorn.api.scripting.NashornScriptEngineFactory");
         ScriptEngine engine = new NashornScriptEngineFactory().getScriptEngine();
@@ -43,7 +33,7 @@ public class Tests {
             Assertions.fail(e.getMessage());
         }
     }
-
+*/
     @Test
     public void k() {
         int x = -256;
@@ -121,13 +111,6 @@ public class Tests {
         Assertions.assertTrue(permissionsToRemove.contains("class2"));
         Assertions.assertTrue(permissionsToRemove.contains("class4"));
     }
-
-
-    @BeforeAll
-    public static void setupLogger() {
-        Log.setLogger(LoggerFactory.getLogger(Tests.class));
-    }
-
 
 }
 

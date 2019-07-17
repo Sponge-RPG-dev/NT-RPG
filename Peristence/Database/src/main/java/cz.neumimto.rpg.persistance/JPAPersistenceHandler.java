@@ -3,15 +3,13 @@ package cz.neumimto.rpg.persistance;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
-import cz.neumimto.core.FindDbSchemaMigrationsEvent;
-import cz.neumimto.core.FindPersistenceContextEvent;
-import cz.neumimto.core.migrations.DbMigrationService;
 import cz.neumimto.rpg.api.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterClass;
 import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
 import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.persistance.dao.IPersistenceHandler;
+import cz.neumimto.rpg.persistance.migrations.DbMigrationsService;
 import cz.neumimto.rpg.persistance.model.JPABaseCharacterAttribute;
 import cz.neumimto.rpg.persistance.model.JPACharacterBase;
 import cz.neumimto.rpg.persistance.model.JPACharacterClass;
@@ -33,7 +31,7 @@ public class JPAPersistenceHandler implements IPersistenceHandler {
     @Inject
     private AssetService assetService;
 
-    public void on(DbMigrationService dms) throws IOException {
+    public void findMigrations(DbMigrationsService dms) throws IOException {
             List<String> migrations = Arrays.asList(
                     "sql/%s/040918-init-db.sql",
                     "sql/%s/060119-update-2.0.0.sql",
@@ -59,13 +57,6 @@ public class JPAPersistenceHandler implements IPersistenceHandler {
                 }
             }
 
-    }
-
-    public void registerEntities(FindPersistenceContextEvent event) {
-        event.getClasses().add(JPACharacterBase.class);
-        event.getClasses().add(JPABaseCharacterAttribute.class);
-        event.getClasses().add(JPACharacterSkill.class);
-        event.getClasses().add(JPACharacterClass.class);
     }
 
     @Override

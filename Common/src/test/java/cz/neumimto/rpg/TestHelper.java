@@ -1,10 +1,10 @@
 package cz.neumimto.rpg;
 
-import cz.neumimto.rpg.api.logging.Log;
-import cz.neumimto.rpg.common.persistance.model.JPACharacterClass;
-import cz.neumimto.rpg.api.skills.ISkill;
-import cz.neumimto.rpg.api.persistance.model.CharacterClass;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.api.logging.Log;
+import cz.neumimto.rpg.api.persistance.model.CharacterClass;
+import cz.neumimto.rpg.api.skills.ISkill;
+import cz.neumimto.rpg.persistance.model.JPACharacterClass;
 import org.mockito.Mockito;
 import org.slf4j.LoggerFactory;
 import sun.misc.Unsafe;

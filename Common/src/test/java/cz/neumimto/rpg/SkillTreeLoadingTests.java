@@ -5,6 +5,7 @@ import cz.neumimto.rpg.api.configuration.SkillTreeDao;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.scripting.IScriptEngine;
+import cz.neumimto.rpg.api.skills.*;
 import cz.neumimto.rpg.api.skills.mods.ActiveSkillPreProcessorWrapper;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
@@ -13,7 +14,6 @@ import cz.neumimto.rpg.common.entity.TestCharacter;
 import cz.neumimto.rpg.common.skills.preprocessors.SkillPreprocessors;
 import cz.neumimto.rpg.junit.NtRpgExtension;
 import cz.neumimto.rpg.junit.TestGuiceModule;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import name.falgout.jeffrey.testing.junit.guice.GuiceExtension;
 import name.falgout.jeffrey.testing.junit.guice.IncludeModule;
 import org.junit.jupiter.api.Assertions;
@@ -48,9 +48,6 @@ public class SkillTreeLoadingTests {
     public void before() throws Exception {
         skillService.getSkills().put("test", new TestSkill("test"));
         skillService.getSkills().put("test2", new TestSkill("test2"));
-        NtRpgPlugin.GlobalScope.skillService = skillService;
-        NtRpgPlugin.GlobalScope.jsLoader = scriptEngine;
-        NtRpgPlugin.GlobalScope.localizationService = localizationService;
         scriptEngine.loadNashorn();
     }
 

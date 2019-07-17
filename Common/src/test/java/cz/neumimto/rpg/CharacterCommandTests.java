@@ -1,8 +1,8 @@
 package cz.neumimto.rpg;
 
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.gui.IPlayerMessage;
@@ -44,7 +44,7 @@ public class CharacterCommandTests {
 
     @BeforeEach
     public void before() {
-        Gui.vanilla = vanillaMessaging;
+        new Gui(vanillaMessaging);
     }
 
     @Test

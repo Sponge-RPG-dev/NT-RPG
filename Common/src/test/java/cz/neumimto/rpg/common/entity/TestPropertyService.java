@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.common.entity;
 
 import com.google.inject.Singleton;
-import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
+import cz.neumimto.rpg.api.configuration.AttributeConfig;
 
 import java.nio.file.Path;
 import java.util.Map;

@@ -9,10 +9,11 @@ version = '2.1.0-SNAPSHOT'
 dependencies {
     implementation 'commons-io:commons-io:2.4'
     compile project(':API')
+
     annotationProcessor project(':Generator')
     
     compileOnly 'com.google.inject:guice:4.2.2'
-    compileOnly 'com.github.Sponge-RPG-dev:ConfigurateButWithBlackjackAndHookers:39d5fc8afd'
+    compile 'com.github.Sponge-RPG-dev:ConfigurateButWithBlackjackAndHookers:39d5fc8afd'
     compileOnly 'ninja.leaping.configurate:configurate-hocon:3.3'
     
     compile 'com.scireum:parsii:1.5'
@@ -27,7 +28,14 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.1'
     testCompile 'org.junit.jupiter:junit-jupiter-engine:5.4.1'
     testCompile 'org.junit.jupiter:junit-jupiter-params:5.4.1'
-    
+    testCompile project(':Database-Persistence')
+    testCompile 'ninja.leaping.configurate:configurate-hocon:3.3'
+    testCompile 'com.github.Sponge-RPG-dev:ConfigurateButWithBlackjackAndHookers:39d5fc8afd'
+    testCompile group: 'it.unimi.dsi', name: 'fastutil', version: '8.2.1'
+    testCompile 'org.slf4j:slf4j-api:1.7.26'
+    testCompile 'org.slf4j:slf4j-simple:1.7.26'
+
+
     jar {
         manifest {
             attributes(

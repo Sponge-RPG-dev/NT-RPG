@@ -7,21 +7,20 @@ import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.entity.players.leveling.ILevelProgression;
 import cz.neumimto.rpg.api.entity.players.leveling.Linear;
-import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.gui.IPlayerMessage;
+import cz.neumimto.rpg.api.persistance.model.CharacterClass;
 import cz.neumimto.rpg.common.commands.AdminCommandFacade;
 import cz.neumimto.rpg.common.effects.EffectService;
-import cz.neumimto.rpg.common.persistance.model.JPACharacterClass;
 import cz.neumimto.rpg.effects.TestEffectFloat;
 import cz.neumimto.rpg.effects.TestEffectFloatGlobal;
 import cz.neumimto.rpg.junit.CharactersExtension;
 import cz.neumimto.rpg.junit.CharactersExtension.Stage;
 import cz.neumimto.rpg.junit.NtRpgExtension;
 import cz.neumimto.rpg.junit.TestGuiceModule;
+import cz.neumimto.rpg.persistance.model.JPACharacterClass;
 import name.falgout.jeffrey.testing.junit.guice.GuiceExtension;
 import name.falgout.jeffrey.testing.junit.guice.IncludeModule;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -42,10 +41,6 @@ public class AdminCommandTests {
     @Inject
     private IPlayerMessage vanillaMessaging;
 
-    @BeforeEach
-    public void before() {
-        Gui.vanilla = vanillaMessaging;
-    }
 
     @Test
     public void testAddEffectCommand(@Stage(READY)IActiveCharacter iActiveCharacter) {
@@ -76,7 +71,7 @@ public class AdminCommandTests {
                 return linear;
             }
         };
-        JPACharacterClass jpaCharacterClass = new JPACharacterClass();
+        CharacterClass jpaCharacterClass = new JPACharacterClass();
         jpaCharacterClass.setLevel(0);
         jpaCharacterClass.setExperiences(0);
         PlayerClassData data = new PlayerClassData(classDefinition, jpaCharacterClass) {

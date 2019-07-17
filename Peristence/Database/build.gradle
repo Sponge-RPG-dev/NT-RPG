@@ -8,7 +8,7 @@ version = '2.0.0-SNAPSHOT-12'
 dependencies {
     compile project(':API')
     annotationProcessor project(':Common')
-    
+    api 'org.hibernate:hibernate-entitymanager:5.3.6.Final'
     compileOnly 'com.google.inject:guice:4.2.2'
     compileOnly 'com.github.Sponge-RPG-dev:ConfigurateButWithBlackjackAndHookers:39d5fc8afd'
     compileOnly 'ninja.leaping.configurate:configurate-hocon:3.3'
@@ -16,7 +16,6 @@ dependencies {
     compileOnly 'com.google.inject:guice:4.2.2'
     compileOnly 'org.slf4j:slf4j-api:1.7.26'
     compileOnly 'com.google.code.gson:gson:2.8.5'
-    implementation 'com.github.Sponge-RPG-dev:NTCore:' + project.NTCoreVersion
 
     testCompile 'com.github.JeffreyFalgout:junit5-extensions:89fa6cb1e7'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.1'

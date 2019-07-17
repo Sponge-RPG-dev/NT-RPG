@@ -11,13 +11,16 @@ import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.events.EventFactoryService;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.scripting.IScriptEngine;
+import cz.neumimto.rpg.api.skills.*;
+import cz.neumimto.rpg.api.skills.mods.ActiveSkillPreProcessorWrapper;
+import cz.neumimto.rpg.api.skills.mods.PreProcessorTarget;
+import cz.neumimto.rpg.api.skills.mods.SkillContext;
+import cz.neumimto.rpg.api.skills.mods.SkillExecutorCallback;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.junit.CharactersExtension;
 import cz.neumimto.rpg.junit.CharactersExtension.Stage;
 import cz.neumimto.rpg.junit.NtRpgExtension;
 import cz.neumimto.rpg.junit.TestGuiceModule;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.sponge.entities.SpongeEntityService;
 import name.falgout.jeffrey.testing.junit.guice.GuiceExtension;
 import name.falgout.jeffrey.testing.junit.guice.IncludeModule;
 import org.junit.jupiter.api.Assertions;
@@ -26,7 +29,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import javax.inject.Inject;
-
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static cz.neumimto.rpg.junit.CharactersExtension.Stage.Stages.READY;
@@ -54,7 +56,7 @@ public class SkillExecutionTests {
     private PropertyService propertyService;
 
     @Inject
-    private SpongeEntityService entityService;
+    private EntityService entityService;
 
     @Inject
     private Injector injector;
@@ -68,11 +70,6 @@ public class SkillExecutionTests {
         testSkill = injector.getInstance(TestSkill.class);
         skillService.getSkills().put("test", testSkill);
         hadRun = false;
-        NtRpgPlugin.GlobalScope.skillService = skillService;
-        NtRpgPlugin.GlobalScope.localizationService = localizationService;
-        NtRpgPlugin.GlobalScope.eventFactory = eventFactoryService;
-        NtRpgPlugin.GlobalScope.spongePropertyService = propertyService;
-        NtRpgPlugin.GlobalScope.entityService = entityService;
     }
 
     @Test

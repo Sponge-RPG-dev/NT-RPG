@@ -1,13 +1,14 @@
 package cz.neumimto.rpg;
 
-import cz.neumimto.rpg.common.persistance.model.JPACharacterBase;
+import cz.neumimto.rpg.api.configuration.AttributeConfig;
+import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
-import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
-import cz.neumimto.rpg.api.configuration.AttributeConfiguration;
-import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.api.skills.SkillData;
 import cz.neumimto.rpg.api.skills.SkillSettings;
-import cz.neumimto.rpg.sponge.entities.players.SpongeCharacter;
+import cz.neumimto.rpg.common.entity.TestCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
+import cz.neumimto.rpg.junit.TestDictionary;
+import cz.neumimto.rpg.persistance.model.JPACharacterBase;
 import it.unimi.dsi.fastutil.objects.AbstractObject2FloatMap;
 import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;
 import org.junit.jupiter.api.Assertions;
@@ -39,19 +40,15 @@ public class TestSkillExecutorChain {
         TestHelper.setupLog();
 
         complexKeySuffixes = new HashSet<>();
-        complexKeySuffixes.add(SkillSettings.bonus);
+        complexKeySuffixes.add(SkillSettings.BONUS_SUFFIX);
         complexKeySuffixes.add("_per_ntrpg:strength");
         complexKeySuffixes.add("_per_ntrpg:agility");
 
+        str = TestDictionary.STR;
+        agi = TestDictionary.AGI;
+
         attributes = new HashSet<>();
-        AttributeConfiguration attributeConfiguration = new AttributeConfiguration();
-        TestUtils.setField(attributeConfiguration, "id", "ntrpg:agility");
-        str = new AttributeConfig(attributeConfiguration);
-
         attributes.add(str);
-        TestUtils.setField(attributeConfiguration, "id", "ntrpg:strength");
-        agi = new AttributeConfig(attributeConfiguration);
-
         attributes.add(agi);
 
     }
@@ -66,13 +63,13 @@ public class TestSkillExecutorChain {
         skillData.setSkillSettings(skillSettings);
 
 
-        JPACharacterBase characterBase = new JPACharacterBase();
+        CharacterBase characterBase = new JPACharacterBase();
         HashMap<Object, Object> objectObjectHashMap = new HashMap<>();
         objectObjectHashMap.put(str.getId(), 0);
         objectObjectHashMap.put(agi.getId(), 0);
         TestUtils.setField(characterBase, "cachedAttributes", objectObjectHashMap);
 
-        activeCharacter = new SpongeCharacter(UUID.randomUUID(), characterBase, 0);
+        activeCharacter = new TestCharacter(UUID.randomUUID(), characterBase, 0);
 
 
     }
@@ -92,7 +89,7 @@ public class TestSkillExecutorChain {
         Assertions.assertNotNull(cachedComputedSkillSettings);
 
         for (String s : cachedComputedSkillSettings.keySet()) {
-            Assertions.assertTrue(!s.endsWith(SkillSettings.bonus));
+            Assertions.assertTrue(!s.endsWith(SkillSettings.BONUS_SUFFIX));
         }
 
         for (String s : cachedComputedSkillSettings.keySet()) {
@@ -131,7 +128,7 @@ public class TestSkillExecutorChain {
         Assertions.assertNotNull(cachedComputedSkillSettings);
 
         for (String s : cachedComputedSkillSettings.keySet()) {
-            Assertions.assertTrue(!s.endsWith(SkillSettings.bonus));
+            Assertions.assertTrue(!s.endsWith(SkillSettings.BONUS_SUFFIX));
         }
 
         for (String s : cachedComputedSkillSettings.keySet()) {

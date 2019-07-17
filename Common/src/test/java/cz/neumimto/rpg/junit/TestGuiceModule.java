@@ -1,9 +1,12 @@
 package cz.neumimto.rpg.junit;
 
 import com.google.inject.*;
-import cz.neumimto.rpg.GlobalScope;
-import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.TestApiImpl;
+import cz.neumimto.rpg.TestDamageService;
+import cz.neumimto.rpg.TestResourceLoader;
 import cz.neumimto.rpg.TestSkillService;
+import cz.neumimto.rpg.api.IResourceLoader;
+import cz.neumimto.rpg.api.RpgApi;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.configuration.SkillTreeDao;
 import cz.neumimto.rpg.api.damage.DamageService;
@@ -24,6 +27,7 @@ import cz.neumimto.rpg.api.permissions.PermissionService;
 import cz.neumimto.rpg.api.scripting.IScriptEngine;
 import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.assets.TestAssetService;
+import cz.neumimto.rpg.common.TestPartyService;
 import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.bytecode.ClassGenerator;
 import cz.neumimto.rpg.common.classes.ClassServiceImpl;
@@ -31,6 +35,7 @@ import cz.neumimto.rpg.common.configuration.SkillTreeLoaderImpl;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.entity.TestPropertyService;
 import cz.neumimto.rpg.common.entity.configuration.MobSettingsDao;
+import cz.neumimto.rpg.common.entity.configuration.TestMobSettingsDao;
 import cz.neumimto.rpg.common.events.TestEventFactory;
 import cz.neumimto.rpg.common.exp.ExperienceDAO;
 import cz.neumimto.rpg.common.impl.TestCharacterService;
@@ -39,38 +44,26 @@ import cz.neumimto.rpg.common.inventory.InventoryHandler;
 import cz.neumimto.rpg.common.inventory.TestInventoryService;
 import cz.neumimto.rpg.common.inventory.crafting.runewords.RWDao;
 import cz.neumimto.rpg.common.localization.LocalizationServiceImpl;
-import cz.neumimto.rpg.common.persistance.dao.CharacterClassDao;
 import cz.neumimto.rpg.common.persistance.dao.ClassDefinitionDao;
-import cz.neumimto.rpg.common.persistance.dao.JPAPlayerDao;
+import cz.neumimto.rpg.common.persistance.dao.ICharacterClassDao;
+import cz.neumimto.rpg.common.persistance.dao.IPersistenceHandler;
+import cz.neumimto.rpg.common.persistance.dao.IPlayerDao;
 import cz.neumimto.rpg.common.scripting.JSLoader;
 import cz.neumimto.rpg.effects.TestEffectService;
 import cz.neumimto.rpg.entity.TestEntityService;
 import cz.neumimto.rpg.persistance.InMemoryPlayerStorage;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.sponge.commands.CommandService;
-import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
-import cz.neumimto.rpg.sponge.entities.configuration.SpongeMobSettingsDao;
-import cz.neumimto.rpg.sponge.entities.players.party.SpongePartyService;
-import cz.neumimto.rpg.sponge.exp.ExperienceService;
-import cz.neumimto.rpg.sponge.gui.ItemLoreBuilderService;
-import cz.neumimto.rpg.sponge.gui.ParticleDecorator;
-import cz.neumimto.rpg.sponge.gui.VanillaMessaging;
-import cz.neumimto.rpg.sponge.inventory.runewords.RWService;
+import cz.neumimto.rpg.persistance.JPAPersistenceHandler;
 import cz.neumimto.rpg.sponge.permission.TestPermissionService;
-import cz.neumimto.rpg.sponge.scripting.SpongeClassGenerator;
-import cz.neumimto.rpg.sponge.skills.SpongeSkillService;
+import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.dynamic.loading.ClassLoadingStrategy;
 import net.bytebuddy.implementation.InvocationHandlerAdapter;
 import net.bytebuddy.matcher.ElementMatchers;
-import org.mockito.Mockito;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.spongepowered.api.Game;
-import org.spongepowered.api.plugin.PluginContainer;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.util.List;
+
 
 public class TestGuiceModule extends AbstractModule {
 
@@ -79,27 +72,27 @@ public class TestGuiceModule extends AbstractModule {
     protected void configure() {
         bind(SkillTreeDao.class).to(SkillTreeLoaderImpl.class);
         bind(IEffectService.class).to(TestEffectService.class);
-        bind(SpongeSkillService.class);
+        bind(SkillService.class).to(TestSkillService.class);
         bind(PropertyService.class).to(TestPropertyService.class);
-        bind(PartyService.class).to(SpongePartyService.class);
-
-        bind(CharacterClassDao.class);
+        bind(PartyService.class).to(TestPartyService.class);
+        bind(IPersistenceHandler.class).to(JPAPersistenceHandler.class);
+        bind(ICharacterClassDao.class).toProvider(() -> c -> {});
         bind(ClassDefinitionDao.class);
-        bind(JPAPlayerDao.class).to(getPlayerDaoImpl());
+        bind(IPlayerDao.class).to(InMemoryPlayerStorage.class);
 
-        bind(ClassGenerator.class).to(SpongeClassGenerator.class);
+        bind(ClassGenerator.class).toProvider(() -> new ClassGenerator() {
+            @Override
+            public Object generateDynamicListener(List<ScriptObjectMirror> list) {
+                return null;
+            }
+        });
         bind(ClassService.class).to(ClassServiceImpl.class);
-        bind(GlobalScope.class);
-        bind(ResourceLoader.class);
-        bind(CommandService.class);
-        bind(DamageService.class).to(SpongeDamageService.class);
+        bind(IResourceLoader.class).to(TestResourceLoader.class);
+        bind(DamageService.class).to(TestDamageService.class);
         bind(EffectService.class).to(TestEffectService.class);
         bind(EntityService.class).to(TestEntityService.class);
-        bind(MobSettingsDao.class).to(SpongeMobSettingsDao.class);
+        bind(MobSettingsDao.class).to(TestMobSettingsDao.class);
         bind(ExperienceDAO.class);
-        bind(ExperienceService.class);
-        bind(ItemLoreBuilderService.class);
-        bind(ParticleDecorator.class);
 
         Class<IPlayerMessage> type = (Class<IPlayerMessage>) new ByteBuddy()
                 .subclass(Object.class)
@@ -117,17 +110,11 @@ public class TestGuiceModule extends AbstractModule {
             }
             throw new IllegalStateException(":(");
         });
-        bind(VanillaMessaging.class);
         bind(InventoryService.class).to(TestInventoryService.class);
         bind(CharacterInventoryInteractionHandler.class).to(InventoryHandler.class);
         bind(ItemService.class).to(TestItemService.class);
         bind(RWDao.class);
-        bind(RWService.class);
-
-        bind(Logger.class).toInstance(LoggerFactory.getLogger("TestLogger"));
-        bind(PluginContainer.class).toInstance(Mockito.mock(PluginContainer.class));
-        bind(NtRpgPlugin.class).toProvider(NtRpgPlugin::new);
-        bind(Game.class).toInstance(Mockito.mock(Game.class));
+        bind(RpgApi.class).to(TestApiImpl.class);
 
         bind(IScriptEngine.class).to(JSLoader.class);
 
@@ -147,10 +134,6 @@ public class TestGuiceModule extends AbstractModule {
         bind(new TypeLiteral<ICharacterService<IActiveCharacter>>() {
         })
                 .toProvider(SpongeCharacterServiceProvider.class);
-    }
-
-    protected Class<? extends JPAPlayerDao> getPlayerDaoImpl() {
-        return InMemoryPlayerStorage.class;
     }
 
     private static TestCharacterService scs;

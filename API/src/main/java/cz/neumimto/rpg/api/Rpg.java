@@ -4,8 +4,8 @@ public class Rpg {
 
     static RpgApi impl;
 
-    protected Rpg() {
-
+    protected Rpg(RpgApi rpgApi) {
+        impl = rpgApi;
     }
 
     public static RpgApi get() {
