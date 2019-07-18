@@ -26,7 +26,7 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.exp.ExperienceSources;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
-import cz.neumimto.rpg.sponge.exp.ExperienceService;
+import cz.neumimto.rpg.sponge.exp.SpongeExperienceService;
 import cz.neumimto.rpg.sponge.inventory.SpongeInventoryService;
 import cz.neumimto.rpg.sponge.utils.ItemStackUtils;
 import cz.neumimto.rpg.sponge.utils.Utils;
@@ -82,7 +82,7 @@ public class BasicListener {
     private EntityService entityService;
 
     @Inject
-    private ExperienceService experienceService;
+    private SpongeExperienceService spongeExperienceService;
 
     @Listener(order = Order.LATE)
     public void onAttack(InteractEntityEvent.Primary event) {
@@ -183,17 +183,17 @@ public class BasicListener {
         for (Transaction<BlockSnapshot> transaction : event.getTransactions()) {
             String type = transaction.getOriginal().getState().getType().getId();
 
-            Double d = experienceService.getMinningExperiences(type);
+            Double d = spongeExperienceService.getMinningExperiences(type);
             if (d != null) {
                 characterService.addExperiences(character, d, ExperienceSources.MINING);
                 return;
             }
-            d = experienceService.getFarmingExperiences(type);
+            d = spongeExperienceService.getFarmingExperiences(type);
             if (d != null) {
                 characterService.addExperiences(character, d, ExperienceSources.FARMING);
                 return;
             }
-            d = experienceService.getLoggingExperiences(type);
+            d = spongeExperienceService.getLoggingExperiences(type);
             if (d != null) {
                 characterService.addExperiences(character, d, ExperienceSources.LOGGING);
                 return;
@@ -215,7 +215,7 @@ public class BasicListener {
 
         if (ofish.isPresent()) {
             Fish fish = ofish.get();
-            Double d = experienceService.getFishingExperience(fish.getId());
+            Double d = spongeExperienceService.getFishingExperience(fish.getId());
             if (d == null) {
                 return;
             }

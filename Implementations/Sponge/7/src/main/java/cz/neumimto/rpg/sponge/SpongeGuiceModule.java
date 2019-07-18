@@ -44,7 +44,7 @@ import cz.neumimto.rpg.sponge.entities.configuration.SpongeMobSettingsDao;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
 import cz.neumimto.rpg.sponge.entities.players.party.SpongePartyService;
 import cz.neumimto.rpg.sponge.events.SpongeEventFactory;
-import cz.neumimto.rpg.sponge.exp.ExperienceService;
+import cz.neumimto.rpg.sponge.exp.SpongeExperienceService;
 import cz.neumimto.rpg.sponge.gui.ItemLoreBuilderService;
 import cz.neumimto.rpg.sponge.gui.ParticleDecorator;
 import cz.neumimto.rpg.sponge.gui.VanillaMessaging;
@@ -96,7 +96,7 @@ public class SpongeGuiceModule extends AbstractModule {
         bind(EntityService.class).to(SpongeEntityService.class);
         bind(MobSettingsDao.class).to(SpongeMobSettingsDao.class);
         bind(ExperienceDAO.class);
-        bind(ExperienceService.class);
+        bind(SpongeExperienceService.class);
         bind(ItemLoreBuilderService.class);
         bind(ParticleDecorator.class);
         bind(VanillaMessaging.class);

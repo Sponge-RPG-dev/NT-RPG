@@ -34,7 +34,7 @@ import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
 import cz.neumimto.rpg.sponge.entities.SpongeEntityService;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
 import cz.neumimto.rpg.sponge.entities.players.party.SpongePartyService;
-import cz.neumimto.rpg.sponge.exp.ExperienceService;
+import cz.neumimto.rpg.sponge.exp.SpongeExperienceService;
 import cz.neumimto.rpg.sponge.gui.ParticleDecorator;
 import cz.neumimto.rpg.sponge.gui.VanillaMessaging;
 import cz.neumimto.rpg.sponge.inventory.SpongeInventoryService;
@@ -103,7 +103,7 @@ public class GlobalScope {
     public ResourceLoader resourceLoader;
 
     @Inject
-    public ExperienceService experienceService;
+    public SpongeExperienceService spongeExperienceService;
 
     @Inject
     public SpongeInventoryService spongeInventoryService;
