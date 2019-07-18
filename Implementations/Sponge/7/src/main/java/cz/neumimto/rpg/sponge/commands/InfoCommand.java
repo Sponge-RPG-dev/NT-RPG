@@ -35,7 +35,7 @@ import cz.neumimto.rpg.common.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.configuration.CommandLocalization;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
-import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
 import cz.neumimto.rpg.sponge.gui.SkillTreeViewModel;
 import cz.neumimto.rpg.sponge.gui.VanillaMessaging;
 import cz.neumimto.rpg.sponge.inventory.runewords.RWService;
@@ -63,7 +63,7 @@ public class InfoCommand extends CommandBase {
     Game game;
 
     @Inject
-    private SpongeCharacterServise characterService;
+    private SpongeCharacterService characterService;
 
     @Inject
     private SkillService skillService;

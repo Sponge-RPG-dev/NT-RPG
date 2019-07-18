@@ -5,7 +5,7 @@ import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.damage.DamageService;
 import cz.neumimto.rpg.api.effects.IEffectService;
 import cz.neumimto.rpg.api.entity.EntityService;
-import cz.neumimto.rpg.api.entity.PropertyService;
+import cz.neumimto.rpg.api.entity.IPropertyService;
 import cz.neumimto.rpg.api.entity.players.ICharacterService;
 import cz.neumimto.rpg.api.entity.players.parties.PartyService;
 import cz.neumimto.rpg.api.events.EventFactoryService;
@@ -56,7 +56,7 @@ public interface RpgApi {
 
     DamageService getDamageService();
 
-    <P extends PropertyService> P getPropertyService();
+    <P extends IPropertyService> P getPropertyService();
 
     <P extends PartyService> P getPartyService();
 

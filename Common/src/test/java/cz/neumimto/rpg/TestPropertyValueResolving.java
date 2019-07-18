@@ -1,6 +1,6 @@
 package cz.neumimto.rpg;
 
-import cz.neumimto.rpg.api.entity.PropertyService;
+import cz.neumimto.rpg.api.entity.IPropertyService;
 import cz.neumimto.rpg.api.items.ItemClass;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 
@@ -10,7 +10,7 @@ import javax.inject.Inject;
 public class TestPropertyValueResolving {
 
     @Inject
-    private PropertyService propertyService;
+    private IPropertyService propertyService;
     
     //@Test
     public void test0() {

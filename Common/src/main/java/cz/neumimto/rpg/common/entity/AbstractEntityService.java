@@ -24,7 +24,7 @@ public abstract class AbstractEntityService<T, I extends IMob<T>> implements Ent
     private CharacterService characterService;
 
     @Inject
-    private PropertyService propertyService;
+    private IPropertyService propertyService;
 
     @Inject
     private IEffectService effectService;
@@ -58,7 +58,7 @@ public abstract class AbstractEntityService<T, I extends IMob<T>> implements Ent
     /**
      * Unlike {@link IEntity#getProperty} this method checks for maximal allowed value, defined in config file.
      *
-     * @see PropertyService#loadMaximalServerPropertyValues(Path) ()
+     * @see IPropertyService#loadMaximalServerPropertyValues(Path) ()
      */
     @Override
     public float getEntityProperty(IEffectConsumer entity, int id) {

@@ -32,7 +32,7 @@ import static cz.neumimto.rpg.api.logging.Log.info;
 
 
 @Singleton
-public class SpongeCharacterServise extends CharacterService<ISpongeCharacter> {
+public class SpongeCharacterService extends CharacterService<ISpongeCharacter> {
 
     @Inject
     private NtRpgPlugin plugin;

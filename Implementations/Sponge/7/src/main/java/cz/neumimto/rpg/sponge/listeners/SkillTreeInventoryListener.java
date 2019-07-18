@@ -8,7 +8,7 @@ import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
-import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
 import cz.neumimto.rpg.sponge.gui.SkillTreeControllsButton;
 import cz.neumimto.rpg.sponge.gui.SkillTreeViewModel;
 import cz.neumimto.rpg.sponge.inventory.data.NKeys;
@@ -24,7 +24,7 @@ import java.util.Iterator;
  */
 public class SkillTreeInventoryListener {
 
-    private final SpongeCharacterServise characterService;
+    private final SpongeCharacterService characterService;
 
     private final NtRpgPlugin plugin;
 

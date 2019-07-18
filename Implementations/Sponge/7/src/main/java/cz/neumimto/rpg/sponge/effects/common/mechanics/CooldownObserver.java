@@ -1,6 +1,10 @@
 package cz.neumimto.rpg.sponge.effects.common.mechanics;
 
 
+import cz.neumimto.rpg.api.effects.EffectBase;
+import cz.neumimto.rpg.api.effects.Generate;
+import cz.neumimto.rpg.api.effects.IEffect;
+import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.utils.MathUtils;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacter;
@@ -8,7 +12,10 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.chat.ChatTypes;
 import org.spongepowered.api.text.format.TextColors;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by NeumimTo on 26.4.17.

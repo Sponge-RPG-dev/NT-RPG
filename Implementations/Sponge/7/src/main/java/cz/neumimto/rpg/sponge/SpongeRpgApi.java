@@ -7,7 +7,7 @@ import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.damage.DamageService;
 import cz.neumimto.rpg.api.effects.IEffectService;
-import cz.neumimto.rpg.api.entity.PropertyService;
+import cz.neumimto.rpg.api.entity.IPropertyService;
 import cz.neumimto.rpg.api.events.EventFactoryService;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.localization.Arg;
@@ -15,7 +15,7 @@ import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.scripting.IScriptEngine;
 import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.sponge.entities.SpongeEntityService;
-import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
 import cz.neumimto.rpg.sponge.entities.players.party.SpongePartyService;
 import cz.neumimto.rpg.sponge.inventory.SpongeInventoryService;
 import cz.neumimto.rpg.sponge.utils.Utils;
@@ -118,7 +118,7 @@ public final class SpongeRpgApi implements RpgApi {
     }
 
     @Override
-    public SpongeCharacterServise getCharacterService() {
+    public SpongeCharacterService getCharacterService() {
         return NtRpgPlugin.GlobalScope.characterService;
     }
 
@@ -133,7 +133,7 @@ public final class SpongeRpgApi implements RpgApi {
     }
 
     @Override
-    public PropertyService getPropertyService() {
+    public IPropertyService getPropertyService() {
         return NtRpgPlugin.GlobalScope.spongePropertyService;
     }
 

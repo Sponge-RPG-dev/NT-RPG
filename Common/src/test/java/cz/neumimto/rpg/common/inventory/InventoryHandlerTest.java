@@ -3,7 +3,7 @@ package cz.neumimto.rpg.common.inventory;
 import cz.neumimto.rpg.RpgTest;
 import cz.neumimto.rpg.api.RpgApi;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
-import cz.neumimto.rpg.api.entity.PropertyService;
+import cz.neumimto.rpg.api.entity.IPropertyService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
@@ -46,7 +46,7 @@ class InventoryHandlerTest {
     private ItemService itemService;
 
     @Inject
-    private PropertyService propertyService;
+    private IPropertyService propertyService;
 
 
     private TestCharacter character;

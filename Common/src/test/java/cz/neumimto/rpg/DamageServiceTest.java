@@ -1,7 +1,7 @@
 package cz.neumimto.rpg;
 
 import cz.neumimto.rpg.api.damage.DamageService;
-import cz.neumimto.rpg.api.entity.PropertyService;
+import cz.neumimto.rpg.api.entity.IPropertyService;
 import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.items.RpgItemType;
 import cz.neumimto.rpg.common.impl.TestItemService;
@@ -32,7 +32,7 @@ public class DamageServiceTest {
     private DamageService damageService;
 
     @Inject
-    private PropertyService propertyService;
+    private IPropertyService propertyService;
 
     @Test
     void recalculateCharacterWeaponDamageTest01(@Stage(READY) IActiveCharacter character) {

@@ -26,7 +26,7 @@ import cz.neumimto.rpg.api.damage.DamageService;
 import cz.neumimto.rpg.api.effects.IEffectService;
 import cz.neumimto.rpg.api.entity.CommonProperties;
 import cz.neumimto.rpg.api.entity.EntityService;
-import cz.neumimto.rpg.api.entity.PropertyService;
+import cz.neumimto.rpg.api.entity.IPropertyService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.ICharacterService;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
@@ -90,7 +90,7 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
     private DamageService damageService;
 
     @Inject
-    private PropertyService propertyService;
+    private IPropertyService propertyService;
 
     @Inject
     private LocalizationService localizationService;

@@ -1,9 +1,9 @@
 package cz.neumimto.rpg.sponge.skills.scripting;
 
+import cz.neumimto.rpg.api.entity.IPropertyService;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.common.skills.scripting.SkillComponent;
-import cz.neumimto.rpg.sponge.properties.SpongePropertyService;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -22,15 +22,14 @@ import java.util.function.BiConsumer;
 public class Set_Property_Default_Value implements BiConsumer<String, Float> {
 
     @Inject
-    private SpongePropertyService spongePropertyService;
+    private IPropertyService propertyService;
 
     @Override
     public void accept(String s, Float aFloat) {
-        SpongePropertyService build = spongePropertyService;
         try {
-            build.overrideMaxPropertyValue(s, aFloat);
+            propertyService.overrideMaxPropertyValue(s, aFloat);
         } catch (Throwable t) {
-            Log.error("Unknown property value " + s + "." + " Use one of [" + String.join(", ", build.getAllProperties()) + "] ; Reloading your script wont have any effect on online players");
+            Log.error("Unknown property value " + s + "." + " Use one of [" + String.join(", ", propertyService.getAllProperties()) + "] ; Reloading your script wont have any effect on online players");
         }
     }
 }

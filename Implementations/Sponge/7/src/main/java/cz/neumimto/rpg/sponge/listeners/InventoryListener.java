@@ -27,7 +27,7 @@ import cz.neumimto.rpg.api.inventory.RpgInventory;
 import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.common.inventory.InventoryHandler;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
-import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
 import cz.neumimto.rpg.sponge.inventory.SpongeItemService;
 import cz.neumimto.rpg.sponge.inventory.data.NKeys;
 import cz.neumimto.rpg.sponge.utils.ItemStackUtils;
@@ -71,7 +71,7 @@ import java.util.Optional;
 public class InventoryListener {
 
     @Inject
-    private SpongeCharacterServise characterService;
+    private SpongeCharacterService characterService;
 
     @Inject
     private InventoryHandler inventoryHandler;

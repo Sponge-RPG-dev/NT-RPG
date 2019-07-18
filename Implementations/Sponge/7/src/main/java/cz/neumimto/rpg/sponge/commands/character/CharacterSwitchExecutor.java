@@ -5,7 +5,7 @@ import cz.neumimto.rpg.api.entity.players.parties.PartyService;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.common.commands.CharacterCommandFacade;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -24,7 +24,7 @@ public class CharacterSwitchExecutor implements CommandExecutor {
     private PartyService partyService;
 
     @Inject
-    private SpongeCharacterServise characterServise;
+    private SpongeCharacterService characterServise;
 
     @Inject
     private LocalizationService localizationService;

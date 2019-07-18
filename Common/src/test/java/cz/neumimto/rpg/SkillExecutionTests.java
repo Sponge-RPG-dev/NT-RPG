@@ -5,7 +5,7 @@ import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.SkillTreeDao;
 import cz.neumimto.rpg.api.entity.CommonProperties;
 import cz.neumimto.rpg.api.entity.EntityService;
-import cz.neumimto.rpg.api.entity.PropertyService;
+import cz.neumimto.rpg.api.entity.IPropertyService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.events.EventFactoryService;
@@ -53,7 +53,7 @@ public class SkillExecutionTests {
     private EventFactoryService eventFactoryService;
 
     @Inject
-    private PropertyService propertyService;
+    private IPropertyService propertyService;
 
     @Inject
     private EntityService entityService;

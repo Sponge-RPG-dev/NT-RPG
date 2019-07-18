@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.sponge.effects.common.negative;
+package cz.neumimto.rpg.api.effects.common;
 
 import cz.neumimto.rpg.api.effects.CommonEffectTypes;
 import cz.neumimto.rpg.api.effects.EffectBase;

@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.sponge.effects;
 
+import cz.neumimto.rpg.api.effects.*;
 import cz.neumimto.rpg.api.effects.model.EffectModelFactory;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.entity.IEntity;
@@ -117,7 +118,7 @@ public class SpongeEffectService extends EffectService {
                     s = s.replaceAll("\\{\\{effect\\.name}}", name);
                     s = s.replaceAll("\\{\\{effect\\.description}}", description);
 
-                    if (EffectModelFactory.typeMappers.containsKey(modelType)) {
+                    if (EffectModelFactory.getTypeMappers().containsKey(modelType)) {
                         s = s.replaceAll("\\{\\{effect\\.parameter}}", modelType.getSimpleName());
                         s = s.replaceAll("\\{\\{effect\\.parameters}}", "");
                     } else if (modelType == null) {

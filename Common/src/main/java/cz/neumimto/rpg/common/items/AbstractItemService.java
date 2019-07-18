@@ -4,7 +4,7 @@ import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.effects.IEffectSourceProvider;
-import cz.neumimto.rpg.api.entity.PropertyService;
+import cz.neumimto.rpg.api.entity.IPropertyService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
@@ -25,7 +25,7 @@ import static cz.neumimto.rpg.api.logging.Log.*;
 public abstract class AbstractItemService implements ItemService {
 
     @Inject
-    protected PropertyService propertyService;
+    protected IPropertyService propertyService;
 
     protected Map<String, RpgItemType> items = new HashMap<>();
 

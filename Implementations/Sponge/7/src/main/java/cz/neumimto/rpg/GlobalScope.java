@@ -22,7 +22,7 @@ import com.google.inject.Injector;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.effects.IEffectService;
 import cz.neumimto.rpg.api.skills.SkillService;
-import cz.neumimto.rpg.api.entity.PropertyService;
+import cz.neumimto.rpg.api.entity.IPropertyService;
 import cz.neumimto.rpg.api.events.EventFactoryService;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.localization.LocalizationService;
@@ -32,7 +32,7 @@ import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.commands.CommandService;
 import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
 import cz.neumimto.rpg.sponge.entities.SpongeEntityService;
-import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
 import cz.neumimto.rpg.sponge.entities.players.party.SpongePartyService;
 import cz.neumimto.rpg.sponge.exp.ExperienceService;
 import cz.neumimto.rpg.sponge.gui.ParticleDecorator;
@@ -52,7 +52,7 @@ import javax.inject.Singleton;
 public class GlobalScope {
 
     @Inject
-    public SpongeCharacterServise characterService;
+    public SpongeCharacterService characterService;
 
     @Inject
     public IEffectService effectService;
@@ -88,7 +88,7 @@ public class GlobalScope {
     public SpongePartyService partyService;
 
     @Inject
-    public PropertyService spongePropertyService;
+    public IPropertyService spongePropertyService;
 
     @Inject
     public SpongeItemService itemService;

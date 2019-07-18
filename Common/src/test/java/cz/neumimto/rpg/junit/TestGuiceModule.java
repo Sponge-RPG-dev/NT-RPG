@@ -12,7 +12,7 @@ import cz.neumimto.rpg.api.configuration.SkillTreeDao;
 import cz.neumimto.rpg.api.damage.DamageService;
 import cz.neumimto.rpg.api.effects.IEffectService;
 import cz.neumimto.rpg.api.entity.EntityService;
-import cz.neumimto.rpg.api.entity.PropertyService;
+import cz.neumimto.rpg.api.entity.IPropertyService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.ICharacterService;
 import cz.neumimto.rpg.api.entity.players.parties.PartyService;
@@ -73,7 +73,7 @@ public class TestGuiceModule extends AbstractModule {
         bind(SkillTreeDao.class).to(SkillTreeLoaderImpl.class);
         bind(IEffectService.class).to(TestEffectService.class);
         bind(SkillService.class).to(TestSkillService.class);
-        bind(PropertyService.class).to(TestPropertyService.class);
+        bind(IPropertyService.class).to(TestPropertyService.class);
         bind(PartyService.class).to(TestPartyService.class);
         bind(IPersistenceHandler.class).to(JPAPersistenceHandler.class);
         bind(ICharacterClassDao.class).toProvider(() -> c -> {});

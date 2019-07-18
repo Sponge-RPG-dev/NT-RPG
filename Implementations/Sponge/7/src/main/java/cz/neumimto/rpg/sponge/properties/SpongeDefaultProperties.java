@@ -20,7 +20,6 @@ package cz.neumimto.rpg.sponge.properties;
 
 import cz.neumimto.rpg.api.properties.Property;
 import cz.neumimto.rpg.api.properties.PropertyContainer;
-import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 
 /**
  * Created by NeumimTo on 30.12.2014.

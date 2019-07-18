@@ -25,7 +25,7 @@ import cz.neumimto.rpg.api.entity.IEntityType;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.exp.ExperienceSources;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
-import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
 import cz.neumimto.rpg.sponge.exp.ExperienceService;
 import cz.neumimto.rpg.sponge.inventory.SpongeInventoryService;
 import cz.neumimto.rpg.sponge.utils.ItemStackUtils;
@@ -73,7 +73,7 @@ import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 public class BasicListener {
 
     @Inject
-    private SpongeCharacterServise characterService;
+    private SpongeCharacterService characterService;
 
     @Inject
     private SpongeInventoryService spongeInventoryService;

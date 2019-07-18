@@ -52,7 +52,7 @@ import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
 import cz.neumimto.rpg.sponge.effects.common.def.BossBarExpNotifier;
 import cz.neumimto.rpg.sponge.effects.common.def.ManaBarNotifier;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
-import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
 import cz.neumimto.rpg.sponge.inventory.data.InventoryCommandItemMenuData;
 import cz.neumimto.rpg.sponge.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.sponge.inventory.data.NKeys;
@@ -131,7 +131,7 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
     private SpongeDamageService spongeDamageService;
 
     @Inject
-    private SpongeCharacterServise characterService;
+    private SpongeCharacterService characterService;
 
     @Inject
     private SpongeSkillService skillService;

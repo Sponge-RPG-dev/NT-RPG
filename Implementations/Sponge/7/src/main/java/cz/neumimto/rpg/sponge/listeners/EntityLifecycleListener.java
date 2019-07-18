@@ -10,7 +10,7 @@ import cz.neumimto.rpg.common.exp.ExperienceSources;
 import cz.neumimto.rpg.sponge.damage.SkillDamageSource;
 import cz.neumimto.rpg.sponge.entities.SpongeEntityService;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
-import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
 import cz.neumimto.rpg.sponge.inventory.SpongeInventoryService;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.data.key.Keys;
@@ -44,7 +44,7 @@ import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 public class EntityLifecycleListener {
 
     @Inject
-    private SpongeCharacterServise characterService;
+    private SpongeCharacterService characterService;
 
     @Inject
     private IEffectService effectService;

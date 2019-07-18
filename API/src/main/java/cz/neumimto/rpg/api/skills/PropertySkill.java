@@ -5,7 +5,7 @@ import com.typesafe.config.Config;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.damage.DamageService;
 import cz.neumimto.rpg.api.entity.EntityService;
-import cz.neumimto.rpg.api.entity.PropertyService;
+import cz.neumimto.rpg.api.entity.IPropertyService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
@@ -21,7 +21,7 @@ import java.util.function.BiFunction;
 public class PropertySkill extends AbstractSkill {
 
     @Inject
-    private PropertyService propertyService;
+    private IPropertyService propertyService;
 
     @Inject
     private DamageService damageService;

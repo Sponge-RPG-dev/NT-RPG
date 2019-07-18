@@ -2,11 +2,11 @@ package cz.neumimto.rpg.sponge.commands.admin;
 
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.EntityService;
-import cz.neumimto.rpg.api.entity.PropertyService;
+import cz.neumimto.rpg.api.entity.IPropertyService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.utils.TriConsumer;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -29,8 +29,8 @@ public class InspectPropertyExecutor implements CommandExecutor {
     }
 
     private TriConsumer<CommandSource, String, Player> PROPERTY_DETAIL = (src, data, player) -> {
-        PropertyService ps = NtRpgPlugin.GlobalScope.spongePropertyService;
-        SpongeCharacterServise cs = NtRpgPlugin.GlobalScope.characterService;
+        IPropertyService ps = NtRpgPlugin.GlobalScope.spongePropertyService;
+        SpongeCharacterService cs = NtRpgPlugin.GlobalScope.characterService;
 
         EntityService es = Rpg.get().getEntityService();
 

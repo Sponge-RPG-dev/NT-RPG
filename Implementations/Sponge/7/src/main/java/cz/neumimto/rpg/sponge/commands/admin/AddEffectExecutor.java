@@ -5,7 +5,7 @@ import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.commands.AdminCommandFacade;
 import cz.neumimto.rpg.common.commands.CommandProcessingException;
-import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -31,7 +31,7 @@ public class AddEffectExecutor implements CommandExecutor {
         Long duration = args.<Long>getOne("duration").get();
         String data = args.<String>getOne("data").get();
 
-        SpongeCharacterServise characterService = Rpg.get().getCharacterService();
+        SpongeCharacterService characterService = Rpg.get().getCharacterService();
         IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
 
         try {

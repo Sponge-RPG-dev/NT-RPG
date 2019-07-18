@@ -35,7 +35,7 @@ import cz.neumimto.rpg.sponge.commands.party.PartyInviteExecutor;
 import cz.neumimto.rpg.sponge.commands.party.PartyKickExecutor;
 import cz.neumimto.rpg.sponge.commands.skill.*;
 import cz.neumimto.rpg.sponge.configuration.CommandLocalization;
-import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandCallable;
 import org.spongepowered.api.command.CommandResult;
@@ -67,7 +67,7 @@ public class CommandService {
     private Injector injector;
 
     @Inject
-    private SpongeCharacterServise characterService;
+    private SpongeCharacterService characterService;
 
     public void registerStandartCommands() {
         registerAdminCommands();

@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 
-public interface PropertyService {
+public interface IPropertyService {
 
     void init(Path attributeConf, Path propertiesDump);
 

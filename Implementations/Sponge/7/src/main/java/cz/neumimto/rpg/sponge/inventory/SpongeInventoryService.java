@@ -29,6 +29,7 @@ import cz.neumimto.rpg.api.configuration.ItemString;
 import cz.neumimto.rpg.api.configuration.SkillItemCost;
 import cz.neumimto.rpg.api.effects.EffectParams;
 import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.api.entity.IPropertyService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.inventory.CharacterInventoryInteractionHandler;
@@ -53,7 +54,7 @@ import cz.neumimto.rpg.common.inventory.items.subtypes.ItemSubtypes;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
-import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
 import cz.neumimto.rpg.sponge.gui.GuiConfig;
 import cz.neumimto.rpg.sponge.gui.GuiDictionary;
 import cz.neumimto.rpg.sponge.gui.ItemLoreBuilderService;
@@ -61,7 +62,6 @@ import cz.neumimto.rpg.sponge.inventory.data.NKeys;
 import cz.neumimto.rpg.sponge.inventory.data.manipulators.*;
 import cz.neumimto.rpg.sponge.inventory.runewords.RWService;
 import cz.neumimto.rpg.sponge.persistance.EquipedSlotImpl;
-import cz.neumimto.rpg.sponge.properties.SpongePropertyService;
 import ninja.leaping.configurate.SimpleConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMapper;
@@ -109,7 +109,7 @@ public class SpongeInventoryService extends AbstractInventoryService<ISpongeChar
     private Game game;
 
     @Inject
-    private SpongeCharacterServise characterService;
+    private SpongeCharacterService characterService;
 
     @Inject
     private IEffectService effectService;
@@ -121,7 +121,7 @@ public class SpongeInventoryService extends AbstractInventoryService<ISpongeChar
     private RWService rwService;
 
     @Inject
-    private SpongePropertyService spongePropertyService;
+    private IPropertyService spongePropertyService;
 
     @Inject
     private CharacterInventoryInteractionHandler inventoryInteractionHandler;

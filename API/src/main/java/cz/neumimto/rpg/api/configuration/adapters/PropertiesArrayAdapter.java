@@ -2,7 +2,7 @@ package cz.neumimto.rpg.api.configuration.adapters;
 
 import com.google.common.reflect.TypeToken;
 import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.entity.PropertyService;
+import cz.neumimto.rpg.api.entity.IPropertyService;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;
@@ -21,7 +21,7 @@ public class PropertiesArrayAdapter implements TypeSerializer<float[]> {
         float[] arr = new float[lastId];
 
         Map<Object, ? extends ConfigurationNode> childrenMap = configurationNode.getChildrenMap();
-        PropertyService propertyService = Rpg.get().getPropertyService();
+        IPropertyService propertyService = Rpg.get().getPropertyService();
         for (Map.Entry<Object, ? extends ConfigurationNode> objectEntry : childrenMap.entrySet()) {
             String propertyName = ((String) objectEntry.getKey()).toLowerCase();
             float f = ((Number) objectEntry.getValue().getValue()).floatValue();
@@ -40,7 +40,7 @@ public class PropertiesArrayAdapter implements TypeSerializer<float[]> {
     @Override
     public void serialize(TypeToken<?> typeToken, float[] floats, ConfigurationNode configurationNode) throws ObjectMappingException {
         Map<String, Float> map = new HashMap<>();
-        PropertyService propertyService = Rpg.get().getPropertyService();
+        IPropertyService propertyService = Rpg.get().getPropertyService();
         for (int i = 0; i < floats.length; i++) {
             String nameById = propertyService.getNameById(i);
             if (floats[i] != 0) {

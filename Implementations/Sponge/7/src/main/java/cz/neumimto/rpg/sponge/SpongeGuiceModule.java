@@ -8,7 +8,7 @@ import cz.neumimto.rpg.api.configuration.SkillTreeDao;
 import cz.neumimto.rpg.api.damage.DamageService;
 import cz.neumimto.rpg.api.effects.IEffectService;
 import cz.neumimto.rpg.api.entity.EntityService;
-import cz.neumimto.rpg.api.entity.PropertyService;
+import cz.neumimto.rpg.api.entity.IPropertyService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.ICharacterService;
 import cz.neumimto.rpg.api.entity.players.parties.PartyService;
@@ -24,6 +24,7 @@ import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.bytecode.ClassGenerator;
 import cz.neumimto.rpg.common.classes.ClassServiceImpl;
+import cz.neumimto.rpg.common.entity.PropertyService;
 import cz.neumimto.rpg.common.entity.configuration.MobSettingsDao;
 import cz.neumimto.rpg.common.exp.ExperienceDAO;
 import cz.neumimto.rpg.common.inventory.InventoryHandler;
@@ -40,7 +41,7 @@ import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
 import cz.neumimto.rpg.sponge.effects.SpongeEffectService;
 import cz.neumimto.rpg.sponge.entities.SpongeEntityService;
 import cz.neumimto.rpg.sponge.entities.configuration.SpongeMobSettingsDao;
-import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
 import cz.neumimto.rpg.sponge.entities.players.party.SpongePartyService;
 import cz.neumimto.rpg.sponge.events.SpongeEventFactory;
 import cz.neumimto.rpg.sponge.exp.ExperienceService;
@@ -51,7 +52,6 @@ import cz.neumimto.rpg.sponge.inventory.SpongeInventoryService;
 import cz.neumimto.rpg.sponge.inventory.SpongeItemService;
 import cz.neumimto.rpg.sponge.inventory.runewords.RWService;
 import cz.neumimto.rpg.sponge.permission.SpongePermissionService;
-import cz.neumimto.rpg.sponge.properties.SpongePropertyService;
 import cz.neumimto.rpg.sponge.scripting.SpongeClassGenerator;
 import cz.neumimto.rpg.sponge.skills.SpongeSkillService;
 import cz.neumimto.rpg.sponge.utils.Placeholders;
@@ -78,7 +78,7 @@ public class SpongeGuiceModule extends AbstractModule {
     protected void configure() {
         bind(SkillTreeDao.class).to(SpongeSkillTreeDao.class);
         bind(SpongeSkillService.class);
-        bind(PropertyService.class).to(SpongePropertyService.class);
+        bind(IPropertyService.class).to(PropertyService.class);
         bind(PartyService.class).to(SpongePartyService.class);
 
         bind(IScriptEngine.class).to(JSLoader.class);
@@ -120,7 +120,7 @@ public class SpongeGuiceModule extends AbstractModule {
         bind(new TypeLiteral<ICharacterService>() {
         }).toProvider(SpongeCharacterServiceProvider.class);
         bind(new TypeLiteral<ICharacterService<? extends IActiveCharacter>>() {
-        }).to(SpongeCharacterServise.class);
+        }).to(SpongeCharacterService.class);
         bind(new TypeLiteral<ICharacterService<? super IActiveCharacter>>() {
         })
                 .toProvider(SpongeCharacterServiceProvider1.class);//.toProvider(() -> (ICharacterService) spongeCharacterServise);
@@ -133,7 +133,7 @@ public class SpongeGuiceModule extends AbstractModule {
     }
 
 
-    private static SpongeCharacterServise scs;
+    private static SpongeCharacterService scs;
 
     public static class SpongeCharacterServiceProvider implements Provider<ICharacterService<IActiveCharacter>> {
 
@@ -144,7 +144,7 @@ public class SpongeGuiceModule extends AbstractModule {
         @Override
         public ICharacterService get() {
             if (scs == null) {
-                scs = injector.getInstance(SpongeCharacterServise.class);
+                scs = injector.getInstance(SpongeCharacterService.class);
             }
             return scs;
         }
@@ -158,7 +158,7 @@ public class SpongeGuiceModule extends AbstractModule {
         @Override
         public ICharacterService<? super IActiveCharacter> get() {
             if (scs == null) {
-                scs = injector.getInstance(SpongeCharacterServise.class);
+                scs = injector.getInstance(SpongeCharacterService.class);
             }
             return (ICharacterService) scs;
         }

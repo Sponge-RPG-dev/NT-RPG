@@ -1,30 +1,49 @@
 package cz.neumimto.rpg.common.entity;
 
+import cz.neumimto.config.blackjack.and.hookers.NotSoStupidObjectMapper;
 import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.entity.PropertyService;
+import cz.neumimto.rpg.api.configuration.Attributes;
+import cz.neumimto.rpg.api.entity.IPropertyService;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
+import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.properties.Property;
 import cz.neumimto.rpg.api.utils.Console;
+import cz.neumimto.rpg.common.assets.AssetService;
+import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
+import ninja.leaping.configurate.objectmapping.ObjectMapper;
+import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.*;
 import java.lang.reflect.Field;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.text.Collator;
 import java.util.*;
 import java.util.function.Supplier;
 
 import static cz.neumimto.rpg.api.logging.Log.info;
 
-public abstract class PropertyServiceImpl implements PropertyService {
-
+@Singleton
+public class PropertyService implements IPropertyService {
 
     public static final double WALKING_SPEED = 0.1d;
+
     public static int LAST_ID = 0;
     public static final Supplier<Integer> getAndIncrement = () -> {
         int t = new Integer(LAST_ID);
         LAST_ID++;
         return t;
     };
+
+    @Inject
+    private ItemService itemService;
+
+    @Inject
+    private AssetService assetService;
 
     protected Map<String, Integer> idMap = new HashMap<>();
     private Map<Integer, String> nameMap = new HashMap<>();
@@ -85,7 +104,7 @@ public abstract class PropertyServiceImpl implements PropertyService {
         for (Field f : container.getDeclaredFields()) {
             if (f.isAnnotationPresent(Property.class)) {
                 Property p = f.getAnnotation(Property.class);
-                value = PropertyServiceImpl.getAndIncrement.get();
+                value = getAndIncrement.get();
                 try {
                     f.setInt(null, value);
                 } catch (IllegalAccessException e) {
@@ -195,7 +214,6 @@ public abstract class PropertyServiceImpl implements PropertyService {
         return attributeMap;
     }
 
-
     public Optional<AttributeConfig> getById(String id) {
         return getAttributeById(id);
     }
@@ -204,4 +222,37 @@ public abstract class PropertyServiceImpl implements PropertyService {
         return getAttributes().values();
     }
 
+    @Override
+    public void reLoadAttributes(Path attributeFilePath) {
+        try {
+            ObjectMapper<Attributes> mapper = NotSoStupidObjectMapper.forClass(Attributes.class);
+            HoconConfigurationLoader hcl = HoconConfigurationLoader.builder().setPath(attributeFilePath).build();
+            Attributes attributes = mapper.bind(new Attributes()).populate(hcl.load());
+            attributes.getAttributes().forEach(a -> attributeMap.put(a.getId(), a));
+            itemService.registerItemAttributes(Rpg.get().getPropertyService().getAttributes().values());
+        } catch (ObjectMappingException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void init(Path attributeConf, Path propertiesDump) {
+        StringBuilder s = new StringBuilder();
+        List<String> l = new ArrayList<>(idMap.keySet());
+        info(" - found " + l.size() + " Properties", Rpg.get().getPluginConfig().DEBUG);
+        l.sort(Collator.getInstance());
+        for (String s1 : l) {
+            s.append(s1).append('\t');
+        }
+        try {
+            Files.write(propertiesDump, s.toString().getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        File f = attributeConf.toFile();
+        if (!f.exists()) {
+            assetService.copyToFile("Attributes.conf", attributeConf);
+        }
+    }
 }

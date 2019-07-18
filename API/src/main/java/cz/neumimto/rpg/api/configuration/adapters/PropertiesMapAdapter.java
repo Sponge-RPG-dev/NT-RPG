@@ -2,7 +2,7 @@ package cz.neumimto.rpg.api.configuration.adapters;
 
 import com.google.common.reflect.TypeToken;
 import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.entity.PropertyService;
+import cz.neumimto.rpg.api.entity.IPropertyService;
 import cz.neumimto.rpg.api.logging.Log;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
@@ -18,7 +18,7 @@ public class PropertiesMapAdapter implements TypeSerializer<Map<Integer, Float>>
         Map<Integer, Float> map = new HashMap<>();
 
         Map<Object, ? extends ConfigurationNode> childrenMap = configurationNode.getChildrenMap();
-        PropertyService propertyService = Rpg.get().getPropertyService();
+        IPropertyService propertyService = Rpg.get().getPropertyService();
         for (Map.Entry<Object, ? extends ConfigurationNode> objectEntry : childrenMap.entrySet()) {
             String propertyName = ((String) objectEntry.getKey()).toLowerCase();
             float f = ((Number) objectEntry.getValue().getValue()).floatValue();
@@ -39,7 +39,7 @@ public class PropertiesMapAdapter implements TypeSerializer<Map<Integer, Float>>
             return;
         }
         Map<String, Float> floatMap = new HashMap<>();
-        PropertyService propertyService = Rpg.get().getPropertyService();
+        IPropertyService propertyService = Rpg.get().getPropertyService();
 
         for (Map.Entry<Integer, Float> integerFloatEntry : obj.entrySet()) {
             Integer key = integerFloatEntry.getKey();

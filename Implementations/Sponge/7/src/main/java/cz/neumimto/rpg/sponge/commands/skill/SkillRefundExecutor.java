@@ -8,7 +8,7 @@ import cz.neumimto.rpg.api.localization.Arg;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
-import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -25,7 +25,7 @@ import java.util.Map;
 public class SkillRefundExecutor implements CommandExecutor {
 
     @Inject
-    private SpongeCharacterServise characterServise;
+    private SpongeCharacterService characterServise;
 
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {

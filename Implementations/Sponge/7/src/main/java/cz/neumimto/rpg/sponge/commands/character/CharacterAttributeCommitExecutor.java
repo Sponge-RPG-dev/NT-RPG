@@ -1,10 +1,10 @@
 package cz.neumimto.rpg.sponge.commands.character;
 
-import cz.neumimto.rpg.api.entity.PropertyService;
+import cz.neumimto.rpg.api.entity.IPropertyService;
 import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
 import cz.neumimto.rpg.common.commands.CharacterCommandFacade;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
-import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -22,10 +22,10 @@ import java.util.Optional;
 public class CharacterAttributeCommitExecutor implements CommandExecutor {
 
     @Inject
-    private SpongeCharacterServise characterServise;
+    private SpongeCharacterService characterServise;
 
     @Inject
-    private PropertyService propertyService;
+    private IPropertyService propertyService;
 
     @Inject
     private CharacterCommandFacade characterCommandFacade;

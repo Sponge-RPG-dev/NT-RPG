@@ -5,7 +5,7 @@ import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.api.IResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.effects.EffectParams;
-import cz.neumimto.rpg.api.entity.PropertyService;
+import cz.neumimto.rpg.api.entity.IPropertyService;
 import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
@@ -118,7 +118,7 @@ public class ItemLoreBuilderService {
 
         public void attributeMapToItemLorePart(Map<String, Integer> a) {
             int k = 0;
-            PropertyService propertyService = Rpg.get().getPropertyService();
+            IPropertyService propertyService = Rpg.get().getPropertyService();
             for (Map.Entry<String, Integer> e : a.entrySet()) {
                 AttributeConfig attribute = propertyService.getAttributeById(e.getKey()).get();
                 String name = attribute.getName();

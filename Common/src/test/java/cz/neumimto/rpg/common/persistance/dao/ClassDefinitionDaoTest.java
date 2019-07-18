@@ -3,7 +3,7 @@ package cz.neumimto.rpg.common.persistance.dao;
 import cz.neumimto.rpg.RpgTest;
 import cz.neumimto.rpg.api.RpgApi;
 import cz.neumimto.rpg.api.classes.ClassService;
-import cz.neumimto.rpg.api.entity.PropertyService;
+import cz.neumimto.rpg.api.entity.IPropertyService;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.junit.NtRpgExtension;
@@ -31,7 +31,7 @@ public class ClassDefinitionDaoTest {
     private ItemService itemService;
 
     @Inject
-    private PropertyService propertyService;
+    private IPropertyService propertyService;
 
     @Inject
     private ClassService classService;

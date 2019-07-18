@@ -5,7 +5,7 @@ import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -20,7 +20,7 @@ public class CharacterDeleteExecutor implements CommandExecutor {
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
         String a = args.<String>getOne("name").get();
         Player player = (Player) src;
-        SpongeCharacterServise characterService = NtRpgPlugin.GlobalScope.characterService;
+        SpongeCharacterService characterService = NtRpgPlugin.GlobalScope.characterService;
         IActiveCharacter character = characterService.getCharacter(player);
         if (character.getName().equalsIgnoreCase(a)) {
             characterService.removeCachedCharacter(player.getUniqueId());

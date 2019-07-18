@@ -11,7 +11,7 @@ import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.common.persistance.dao.ClassDefinitionDao;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
-import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
 import cz.neumimto.rpg.sponge.gui.ArmorAndWeaponMenuHelper;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.spongepowered.api.Sponge;
@@ -43,7 +43,7 @@ public class ReloadExecutor implements CommandExecutor {
                 q = a[i];
                 if (q.equalsIgnoreCase("skills") || q.equalsIgnoreCase("s")) {
                     jsLoader.reloadSkills();
-                    SpongeCharacterServise build = NtRpgPlugin.GlobalScope.characterService;
+                    SpongeCharacterService build = NtRpgPlugin.GlobalScope.characterService;
                     SkillService skillService = NtRpgPlugin.GlobalScope.skillService;
                     build.getCharacters()
                             .stream()

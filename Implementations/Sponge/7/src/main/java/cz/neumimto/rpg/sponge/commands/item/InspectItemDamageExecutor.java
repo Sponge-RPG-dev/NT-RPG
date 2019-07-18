@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.sponge.commands.item;
 
-import cz.neumimto.rpg.api.entity.PropertyService;
+import cz.neumimto.rpg.api.entity.IPropertyService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.items.ClassItem;
@@ -9,7 +9,7 @@ import cz.neumimto.rpg.api.items.RpgItemType;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
 import cz.neumimto.rpg.sponge.entities.SpongeEntityService;
-import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
 import cz.neumimto.rpg.sponge.inventory.SpongeItemService;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -66,9 +66,9 @@ public class InspectItemDamageExecutor implements CommandExecutor {
         }
         src.sendMessage(Text.of(TextColors.GOLD, "=================="));
         SpongeDamageService ds = NtRpgPlugin.GlobalScope.damageService;
-        SpongeCharacterServise cs = NtRpgPlugin.GlobalScope.characterService;
+        SpongeCharacterService cs = NtRpgPlugin.GlobalScope.characterService;
         SpongeEntityService es = NtRpgPlugin.GlobalScope.entityService;
-        PropertyService ps = NtRpgPlugin.GlobalScope.spongePropertyService;
+        IPropertyService ps = NtRpgPlugin.GlobalScope.spongePropertyService;
         IActiveCharacter character = cs.getCharacter(player);
         src.sendMessage(Text.of(TextColors.RED, "Damage: ", ds.getCharacterItemDamage(character, fromItemStack)));
         src.sendMessage(Text.of(TextColors.RED, "Details: "));
@@ -110,7 +110,7 @@ public class InspectItemDamageExecutor implements CommandExecutor {
 
     private Function<ItemClass, List<Text>> TO_TEXT = weaponClass -> {
         List<Text> list = new ArrayList<>();
-        PropertyService ps = NtRpgPlugin.GlobalScope.spongePropertyService;
+        IPropertyService ps = NtRpgPlugin.GlobalScope.spongePropertyService;
         list.add(Text.of(TextColors.GOLD, weaponClass.getName()));
         for (Integer property : weaponClass.getProperties()) {
             list.add(Text.of(TextColors.GRAY, " -> ", ps.getNameById(property)));

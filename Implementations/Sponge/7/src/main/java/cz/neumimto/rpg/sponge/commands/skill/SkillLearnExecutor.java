@@ -8,7 +8,7 @@ import cz.neumimto.rpg.api.localization.Arg;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
-import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -25,7 +25,7 @@ import java.util.Map;
 public class SkillLearnExecutor implements CommandExecutor {
 
     @Inject
-    private SpongeCharacterServise spongeCharacterServise;
+    private SpongeCharacterService spongeCharacterService;
 
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
@@ -33,7 +33,7 @@ public class SkillLearnExecutor implements CommandExecutor {
             args.<ISkill>getOne(Text.of("skill")).ifPresent(iSkill -> {
                 Player player = (Player) src;
                 if (aClass.getSkillTree() != null) {
-                    ISpongeCharacter character = spongeCharacterServise.getCharacter(player);
+                    ISpongeCharacter character = spongeCharacterService.getCharacter(player);
                     Map<String, PlayerClassData> classes = character.getClasses();
                     PlayerClassData playerClassData = classes.get(aClass.getName());
                     aClass.getSkillTreeType().processLearnSkill(character, playerClassData, iSkill);
