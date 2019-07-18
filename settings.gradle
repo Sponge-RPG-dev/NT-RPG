@@ -7,6 +7,8 @@ include ':NT-RPG-WebServer-GUI'
 include ':API'
 include ':Common'
 include ':Database-Persistence'
+include ':Spigot-14.2'
+include ':Sponge-7'
 
 project(':Database-Persistence').projectDir = file('Peristence/Database')
 
@@ -16,3 +18,7 @@ project(':Common').projectDir = file('Common')
 project(':NT-RPG').projectDir = file('Plugin')
 project(':NT-RPG-Skills').projectDir = file('Skills')
 project(':NT-RPG-WebServer-GUI').projectDir = file('NT-RPG-WebServer-GUI')
+
+project(':Spigot-14.2').projectDir = file('Implementations/Spigot/14.2')
+
+project(':Sponge-7').projectDir = file('Implementations/Sponge/7')

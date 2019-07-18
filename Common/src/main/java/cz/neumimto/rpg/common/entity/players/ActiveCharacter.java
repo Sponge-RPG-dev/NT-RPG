@@ -131,6 +131,11 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
     }
 
     @Override
+    public UUID getUUID() {
+        return pl;
+    }
+
+    @Override
     public void setChanneledSkill(InterruptableSkillPreprocessor o) {
         this.channeledSkill = o;
     }

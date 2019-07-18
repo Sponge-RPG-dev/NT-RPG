@@ -50,6 +50,7 @@ import cz.neumimto.rpg.api.skills.tree.SkillTreeSpecialization;
 import cz.neumimto.rpg.api.utils.ActionResult;
 import cz.neumimto.rpg.api.utils.DebugLevel;
 import cz.neumimto.rpg.api.utils.MathUtils;
+import cz.neumimto.rpg.common.effects.core.CombatEffect;
 import cz.neumimto.rpg.common.persistance.dao.ICharacterClassDao;
 import cz.neumimto.rpg.common.persistance.dao.IPersistenceHandler;
 import cz.neumimto.rpg.common.persistance.dao.IPlayerDao;
@@ -112,10 +113,47 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
     @Inject
     private PermissionService permissionService;
 
+    protected Map<UUID, T> characters = new HashMap<>();
+
 
     protected abstract void addCharacterToGame(UUID id, T character, List<CharacterBase> playerChars);
 
-    protected abstract boolean hasCharacter(UUID uniqueId);
+    protected abstract void scheduleNextTick(Runnable r);
+
+    /**
+     * @param uniqueId player's uuid
+     * @return 1 - if player reached maximal amount of characters
+     * 2 - if player has character with same name
+     * 0 - ok
+     */
+    @Override
+    public abstract int canCreateNewCharacter(UUID uniqueId, String name);
+
+    protected abstract T createCharacter(UUID player, CharacterBase characterBase);
+
+    @Override
+    public T getCharacter(UUID uuid) {
+        return characters.get(uuid);
+    }
+
+    @Override
+    public Collection<T> getCharacters() {
+        return characters.values();
+    }
+
+    @Override
+    public void addCharacter(UUID uuid, T character) {
+        characters.put(uuid, character);
+    }
+
+    protected T removeCharacter(UUID uuid) {
+        return characters.remove(uuid);
+    }
+
+    protected boolean hasCharacter(UUID uniqueId) {
+        T iSpongeCharacter = characters.get(uniqueId);
+        return !iSpongeCharacter.isStub();
+    }
 
     @Override
     public void loadPlayerData(UUID id, String playerName) {
@@ -376,8 +414,6 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
         return deleteCharacterReferences(removeCharacter(uuid));
     }
 
-    protected abstract T removeCharacter(UUID uuid);
-
     protected IActiveCharacter deleteCharacterReferences(T character) {
         effectService.removeAllEffects(character);
         if (character.hasParty()) {
@@ -547,16 +583,6 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
     }
 
 
-    protected abstract T createCharacter(UUID player, CharacterBase characterBase);
-
-    /**
-     * @param uniqueId player's uuid
-     * @return 1 - if player reached maximal amount of characters
-     * 2 - if player has character with same name
-     * 0 - ok
-     */
-    @Override
-    public abstract int canCreateNewCharacter(UUID uniqueId, String name);
 
     @Override
     public ActionResult canUpgradeSkill(T character, ClassDefinition classDef, ISkill skill) {
@@ -1194,8 +1220,6 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
         return ActionResult.ok();
     }
 
-    protected abstract void scheduleNextTick(Runnable r);
-
     @Override
     public void addSkillPoint(T character, PlayerClassData playerClassData, int skillpointsPerLevel) {
         CharacterClass characterClass = character.getCharacterBase().getCharacterClass(playerClassData.getClassDefinition());
@@ -1265,6 +1289,8 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
             updateMaxHealth(character);
         } else if (propertyId == CommonProperties.max_mana) {
             updateMaxMana(character);
+        } else if (propertyId == CommonProperties.walk_speed) {
+            entityService.updateWalkSpeed(character);
         } else if (propertyService.updatingRequiresDamageRecalc(propertyId)) {
             damageService.recalculateCharacterWeaponDamage(character);
         }
@@ -1290,6 +1316,11 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
         character.setRequiresDamageRecalculation(true);
         base.setAttributePointsSpent(0);
         base.setAttributePoints(attributePoints);
+    }
+
+    @Override
+    public void addDefaultEffects(T character) {
+        effectService.addEffect(new CombatEffect(character, Rpg.get().getPluginConfig().COMBAT_TIME));
     }
 }
 

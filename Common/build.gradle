@@ -41,9 +41,5 @@ dependencies {
                     'Build-Timestamp': new Date()
             )
         }
-
-        from {
-            configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
-        }
     }
 }

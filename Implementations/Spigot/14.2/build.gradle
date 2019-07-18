@@ -1,0 +1,33 @@
+plugins {
+    id "net.kyori.blossom" version "1.1.0"
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url "https://hub.spigotmc.org/nexus/content/repositories/snapshots"
+    }
+    maven {
+        url "https://oss.sonatype.org/content/repositories/snapshots"
+    }
+}
+
+group = 'cz.neumimto.rpg'
+version = '1.0.0-SNAPSHOT'
+
+dependencies {
+    compileOnly "org.spigotmc:spigot-api:1.14.2-R0.1-SNAPSHOT"
+    compile project(':Common')
+
+    jar {
+        manifest {
+            attributes(
+                    'Build-Timestamp': new Date()
+            )
+        }
+
+        from {
+            configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+        }
+    }
+}

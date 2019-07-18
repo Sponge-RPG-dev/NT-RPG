@@ -52,4 +52,7 @@ public class CommonProperties {
     @Property(name = "weapon_damage_bonus")
     public static int weapon_damage_bonus;
 
+    @Property(name = "walk_speed", default_ = 0.1f)
+    public static int walk_speed;
+
 }

@@ -7,9 +7,13 @@ public abstract class MobSettingsDao {
 
     protected RootMobConfig cache;
 
-    protected abstract RootMobConfig createDefaults(String s);
+    protected abstract RootMobConfig createDefaults();
 
     public RootMobConfig getCache() {
         return cache;
+    }
+
+    public void load() {
+        cache = createDefaults();
     }
 }

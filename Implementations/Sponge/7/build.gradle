@@ -1,0 +1,53 @@
+plugins {
+    id "net.kyori.blossom" version "1.1.0"
+}
+
+group = 'cz.neumimto.rpg'
+version = '2.0.0-SNAPSHOT-12'
+
+blossom {
+    String str = "src/main/java/cz/neumimto/rpg/NtRpgPlugin.java"
+    replaceToken '@VERSION@', getVersion().toString(), str
+}
+
+dependencies {
+    implementation 'commons-io:commons-io:2.4'
+    compileOnly('org.spongepowered:spongevanilla:1.12.2-7.1.0-BETA-11') {
+        exclude module: '*'
+    }
+    compileOnly 'org.spongepowered:spongeapi:' + project.spongeApiVersion
+    compile 'com.github.Sponge-RPG-dev:ConfigurateButWithBlackjackAndHookers:39d5fc8afd'
+    implementation 'com.github.Sponge-RPG-dev:NTCore:' + project.NTCoreVersion
+    compileOnly 'me.lucko.luckperms:luckperms-api:4.2'
+    compileOnly 'com.github.rojo8399:PlaceholderAPI:4.5.1'
+    annotationProcessor project(':Generator')
+    compile project(':Common')
+    compileOnly group: 'it.unimi.dsi', name: 'fastutil', version: '8.2.1'
+    
+    compile 'com.scireum:parsii:1.5'
+    
+    testCompileOnly 'org.spongepowered:spongeapi:' + project.spongeApiVersion
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.1'
+    testCompile 'org.junit.jupiter:junit-jupiter-engine:5.4.1'
+    testCompile 'org.junit.jupiter:junit-jupiter-params:5.4.1'
+    testCompile 'com.github.JeffreyFalgout:junit5-extensions:89fa6cb1e7'
+
+    // https://mvnrepository.com/artifact/org.mockito/mockito-core
+    testCompile group: 'org.mockito', name: 'mockito-core', version: '2.25.0'
+    testCompile group: 'it.unimi.dsi', name: 'fastutil', version: '8.2.1'
+    testCompile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.26'
+
+    jar {
+        manifest {
+            attributes(
+                    'Build-Timestamp': new Date()
+            )
+        }
+
+        from {
+            configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+        }
+    }
+
+}
