@@ -51,15 +51,6 @@ import static org.spongepowered.api.item.ItemTypes.*;
 public class ItemStackUtils {
     /*If you want to add custom type of sword/axe/armor... via mod or resourcepack(remodeled potatoes) put them into these collections */
 
-    public static Set<ItemType> consumables = new HashSet<ItemType>() {{
-        addAll(Arrays.asList(APPLE,
-                GOLDEN_APPLE,
-                BAKED_POTATO,
-                CARROT, POTION, BREAD, POTATO,
-                POISONOUS_POTATO, ROTTEN_FLESH, PORKCHOP, COOKED_BEEF, COOKED_CHICKEN, COOKED_MUTTON,
-                COOKIE, COOKED_RABBIT, COOKED_FISH, FISH, CHICKEN, MELON));
-    }};
-
     public static Set<ItemType> boots = new HashSet<ItemType>() {{
         addAll(Arrays.asList(DIAMOND_BOOTS, GOLDEN_BOOTS, IRON_BOOTS, CHAINMAIL_BOOTS, LEATHER_BOOTS));
     }};
@@ -104,9 +95,6 @@ public class ItemStackUtils {
         return boots.contains(type);
     }
 
-    public static boolean isConsumable(ItemType type) {
-        return consumables.contains(type);
-    }
 
     public static boolean hasSockets(ItemStack itemStack) {
         return globalScope.runewordService.getSocketCount(itemStack) > 0;

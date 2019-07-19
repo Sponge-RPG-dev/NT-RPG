@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public interface IPlayerDao {
     /**
-     * Returns player's characters ordered by updated time desc
+     * Returns player's character ordered by updated time desc
      *
      * @param uuid
      * @return

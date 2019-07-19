@@ -45,3 +45,4 @@ public abstract class ExperienceService implements IExperienceService {
     }
 
     public abstract void populateBlockCacheFromConfig(Map<String, Double> expMap, Map<String, Double> map);
+}

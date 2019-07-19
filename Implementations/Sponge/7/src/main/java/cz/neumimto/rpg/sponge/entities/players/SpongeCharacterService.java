@@ -3,11 +3,12 @@ package cz.neumimto.rpg.sponge.entities.players;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
-import cz.neumimto.rpg.api.entity.CommonProperties;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
+import cz.neumimto.rpg.common.entity.PropertyService;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
+import cz.neumimto.rpg.common.entity.players.CharacterMana;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.common.entity.players.UserActionType;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
@@ -15,7 +16,6 @@ import cz.neumimto.rpg.sponge.effects.common.def.ClickComboActionComponent;
 import cz.neumimto.rpg.sponge.entities.SpongeEntityService;
 import cz.neumimto.rpg.sponge.entities.players.party.SpongePartyService;
 import cz.neumimto.rpg.sponge.events.PlayerDataPreloadComplete;
-import cz.neumimto.rpg.sponge.properties.SpongeDefaultProperties;
 import cz.neumimto.rpg.sponge.utils.PermissionUtils;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
@@ -45,9 +45,9 @@ public class SpongeCharacterService extends CharacterService<ISpongeCharacter> {
 
     @Override
     public ISpongeCharacter createCharacter(UUID player, CharacterBase characterBase) {
-        SpongeCharacter spongeCharacter = new SpongeCharacter(player, characterBase, PropertyServiceImpl.LAST_ID);
+        SpongeCharacter spongeCharacter = new SpongeCharacter(player, characterBase, PropertyService.LAST_ID);
         spongeCharacter.setMana(new CharacterMana(spongeCharacter));
-        spongeCharacter.setHealth(new CharacterHealth(spongeCharacter));
+        spongeCharacter.setHealth(new SpongeCharacterHealth(spongeCharacter));
         return spongeCharacter;
     }
 

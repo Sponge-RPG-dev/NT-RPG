@@ -16,24 +16,35 @@
  *
  */
 
-package cz.neumimto.rpg.sponge.entities.players;
+package cz.neumimto.rpg.spigot.events.character;
+
+import cz.neumimto.rpg.api.events.character.EventCharacterArmorPostUpdate;
+import cz.neumimto.rpg.api.items.RpgItemType;
+import org.bukkit.event.HandlerList;
+
+import java.util.Set;
 
 /**
- * Created by NeumimTo on 23.7.2015.
+ * Created by NeumimTo on 25.7.2015.
  */
-public class CharacterHealthStub extends CharacterHealth {
+public class SpigotEventCharacterArmorPostUpdate extends AbstractCharacterEvent implements EventCharacterArmorPostUpdate {
 
-    public CharacterHealthStub(SpongeCharacter activeCharacter) {
-        super(activeCharacter);
+    private Set<RpgItemType> armor;
+
+    @Override
+    public Set<RpgItemType> getArmor() {
+        return armor;
     }
 
     @Override
-    public double getValue() {
-        return 20;
+    public void setArmor(Set<RpgItemType> armor) {
+        this.armor = armor;
     }
 
-    @Override
-    public void setValue(double f) {
+    private static final HandlerList HANDLERS_LIST = new HandlerList();
 
+    @Override
+    public HandlerList getHandlers() {
+        return HANDLERS_LIST;
     }
 }

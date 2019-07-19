@@ -16,7 +16,6 @@ public class SpigotExperienceService extends ExperienceService {
     public void load() {
         super.load();
 
-
         Map<String, Double> fe = experienceDAO.getExperiencesForFishing();
         for (Map.Entry<String, Double> entry : fe.entrySet()) {
             try {
@@ -32,7 +31,6 @@ public class SpigotExperienceService extends ExperienceService {
     public void populateBlockCacheFromConfig(Map<String, Double> expMap, Map<String, Double> map) {
         for (Map.Entry<String, Double> entry : expMap.entrySet()) {
             Material material = Material.getMaterial(entry.getKey());
-
             if (material != null) {
                 map.put(material.name(), entry.getValue());
             } else {

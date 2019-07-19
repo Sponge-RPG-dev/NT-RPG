@@ -143,7 +143,7 @@ public class CommandLocalization {
     public static String COMMAND_ADMIN_ITEM_TYPE = "&2Sets item type";
 
     @ConfigValue
-    public static String COMMAND_CHARACTE_LIST = "&2Lists all your characters";
+    public static String COMMAND_CHARACTE_LIST = "&2Lists all your character";
 
     @ConfigValue
     public static String COMMAND_DELETE_DESCRIPTION = "&2Deletes a character";

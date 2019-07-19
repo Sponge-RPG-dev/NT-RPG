@@ -122,7 +122,7 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
 
     /**
      * @param uniqueId player's uuid
-     * @return 1 - if player reached maximal amount of characters
+     * @return 1 - if player reached maximal amount of character
      * 2 - if player has character with same name
      * 0 - ok
      */
@@ -165,7 +165,7 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
             long k = System.currentTimeMillis();
             List<CharacterBase> playerCharacters = playerDao.getPlayersCharacters(id);
             k = System.currentTimeMillis() - k;
-            info("Finished loading of player data" + id + ", loaded " + playerCharacters.size() + " characters   [" + k + "]ms");
+            info("Finished loading of player data" + id + ", loaded " + playerCharacters.size() + " character   [" + k + "]ms");
             PluginConfig pluginConfig = Rpg.get().getPluginConfig();
             if (playerCharacters.isEmpty() && pluginConfig.CREATE_FIRST_CHAR_AFTER_LOGIN) {
                 CharacterBase cb = createCharacterBase(playerName, id);
@@ -258,7 +258,7 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
 
 
     /**
-     * Gets list of player's characters
+     * Gets list of player's character
      * The method should be invoked only from async task
      *
      * @param id

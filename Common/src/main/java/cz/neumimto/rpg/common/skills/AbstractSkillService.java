@@ -20,7 +20,6 @@ import cz.neumimto.rpg.api.utils.annotations.CatalogId;
 import cz.neumimto.rpg.common.skills.preprocessors.SkillPreprocessors;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.description.annotation.AnnotationDescription;
-import org.apache.commons.io.FileUtils;
 
 import javax.inject.Inject;
 import java.lang.reflect.Field;
@@ -33,7 +32,7 @@ import java.util.stream.Stream;
 
 import static cz.neumimto.rpg.api.logging.Log.*;
 
-public abstract class SkillServiceimpl implements SkillService {
+public abstract class AbstractSkillService implements SkillService {
 
     @Inject
     private SkillTreeDao skillTreeDao;

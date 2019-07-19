@@ -152,10 +152,6 @@ public class NtRpgPlugin extends Rpg {
         GlobalScope = injector.getInstance(GlobalScope.class);
 
 
-        PluginCore.MANAGED_JPA_TYPES.add(JPACharacterBase.class);
-        PluginCore.MANAGED_JPA_TYPES.add(JPABaseCharacterAttribute.class);
-        PluginCore.MANAGED_JPA_TYPES.add(JPACharacterSkill.class);
-        PluginCore.MANAGED_JPA_TYPES.add(JPACharacterClass.class);
         Sponge.getEventManager().registerListeners(this, new PersistenceHandler());
         new NKeys();
         DataRegistration.builder()
@@ -423,22 +419,22 @@ public class NtRpgPlugin extends Rpg {
         } catch (Exception e) {
             Log.error("Could not read localizations in locale " + NtRpgPlugin.pluginConfig.LOCALE + " - " + e.getMessage());
         }
-        GlobalScope.itemService.loadItemGroups(Paths.get(NtRpgPlugin.workingDir));
-        GlobalScope.inventorySerivce.load();
-        GlobalScope.eventFactory.registerEventProviders();
-        GlobalScope.spongeExperienceService.load();
-        GlobalScope.skillService.load();
-        GlobalScope.spongePropertyService.init(Paths.get(NtRpgPlugin.workingDir + "/Attributes.conf"), Paths.get(NtRpgPlugin.workingDir + File.separator + "properties_dump.info"));
-        GlobalScope.spongePropertyService.reLoadAttributes(Paths.get(NtRpgPlugin.workingDir + "/Attributes.conf"));
-        GlobalScope.spongePropertyService.loadMaximalServerPropertyValues(Paths.get(NtRpgPlugin.workingDir, "max_server_property_values.properties"));
-        GlobalScope.jsLoader.initEngine();
-        GlobalScope.rwService.load();
-        GlobalScope.classService.loadClasses();
+        Rpg.get().getItemService().loadItemGroups(Paths.get(NtRpgPlugin.workingDir));
+        Rpg.get().getInventoryService().load();
+        Rpg.get().getEventFactory().registerEventProviders();
+        Rpg.get().getExperienceService().load();
+        Rpg.get().getSkillService().load();
+        Rpg.get().getPropertyService().init(Paths.get(NtRpgPlugin.workingDir + "/Attributes.conf"), Paths.get(NtRpgPlugin.workingDir + File.separator + "properties_dump.info"));
+        Rpg.get().getPropertyService().reLoadAttributes(Paths.get(NtRpgPlugin.workingDir + "/Attributes.conf"));
+        Rpg.get().getPropertyService().loadMaximalServerPropertyValues(Paths.get(NtRpgPlugin.workingDir, "max_server_property_values.properties"));
+        Rpg.get().getjsLoader.initEngine();
+        Rpg.get().getrwService.load();
+        Rpg.get().getClassService().loadClasses();
         GlobalScope.vanillaMessaging.load();
-        GlobalScope.effectService.load();
-        GlobalScope.effectService.startEffectScheduler();
+        Rpg.get().getEffectService().load();
+        Rpg.get().getEffectService().startEffectScheduler();
         GlobalScope.particleDecorator.initModels();
-        GlobalScope.damageService.createDamageToColorMapping();
+        Rpg.get().getDamageService().createDamageToColorMapping();
 
     }
 

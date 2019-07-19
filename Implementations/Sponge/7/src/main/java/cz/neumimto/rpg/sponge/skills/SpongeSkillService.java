@@ -18,42 +18,40 @@
 
 package cz.neumimto.rpg.sponge.skills;
 
-import cz.neumimto.rpg.common.skills.SkillServiceimpl;
+import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.gui.ISkillTreeInterfaceModel;
+import cz.neumimto.rpg.common.skills.AbstractSkillService;
 import cz.neumimto.rpg.sponge.gui.SkillTreeInterfaceModel;
 import cz.neumimto.rpg.sponge.skills.types.TargetedScriptSkill;
-import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.HashMap;
 import java.util.Map;
-
-import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 1.1.2015.
  */
 @Singleton
-public class SpongeSkillService extends SkillServiceimpl {
+public class SpongeSkillService extends AbstractSkillService {
 
-    private static int id = 0;
+    private Map<Character, SkillTreeInterfaceModel> guiModelByCharacter;
 
-    @Inject
-    private Game game;
+    private Map<Short, SkillTreeInterfaceModel> guiModelById;
 
-    Map<Character, SkillTreeInterfaceModel> guiModelByCharacter = new HashMap<>();
-
-    Map<Short, SkillTreeInterfaceModel> guiModelById = new HashMap<>();
+    public SpongeSkillService() {
+        guiModelByCharacter = new HashMap<>();
+        guiModelById = new HashMap<>();
+    }
 
     @Override
     public void init() {
         super.init();
         int i = 0;
 
-        for (String str : pluginConfig.SKILLTREE_RELATIONS) {
+        for (String str : Rpg.get().getPluginConfig().SKILLTREE_RELATIONS) {
             String[] split = str.split(",");
 
             short k = (short) (Short.MAX_VALUE - i);
@@ -66,6 +64,11 @@ public class SpongeSkillService extends SkillServiceimpl {
             i++;
         }
         scriptSkillsParents.put("targetted", TargetedScriptSkill.class);
+    }
+
+    @Override
+    public ISkillTreeInterfaceModel getGuiModelByCharacter(char c) {
+        return guiModelByCharacter.get(c);
     }
 
     public SkillTreeInterfaceModel getGuiModelByCharacter(Character character) {

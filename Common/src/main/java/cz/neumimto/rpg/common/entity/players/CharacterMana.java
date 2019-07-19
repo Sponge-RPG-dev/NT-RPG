@@ -16,63 +16,64 @@
  *
  */
 
-package cz.neumimto.rpg.sponge.entities.players;
+package cz.neumimto.rpg.common.entity.players;
 
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.CommonProperties;
 import cz.neumimto.rpg.api.entity.IReservable;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import org.spongepowered.api.data.key.Keys;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 
 /**
  * Created by NeumimTo on 30.12.2014.
  */
-public class CharacterHealth implements IReservable {
+public class CharacterMana implements IReservable {
 
-    private final SpongeCharacter activeCharacter;
+    private final IActiveCharacter character;
 
-    public CharacterHealth(SpongeCharacter activeCharacter) {
-        this.activeCharacter = activeCharacter;
+    public CharacterMana(IActiveCharacter activeCharacter) {
+        this.character = activeCharacter;
     }
 
     @Override
     public double getMaxValue() {
-        return activeCharacter.getPlayer().get(Keys.MAX_HEALTH).get();
+        return Rpg.get().getEntityService().getEntityProperty(character, CommonProperties.max_mana);
     }
 
     @Override
     public void setMaxValue(double f) {
-        activeCharacter.getPlayer().offer(Keys.MAX_HEALTH, f);
+        character.setProperty(CommonProperties.max_mana, (float) f);
     }
 
-    //todo useservice instead
-    //todo implement reserved amounts
     @Override
     public void setReservedAmnout(float f) {
-        activeCharacter.setProperty(CommonProperties.reserved_health, f);
+        character.setProperty(CommonProperties.reserved_mana, f);
     }
 
     @Override
     public double getReservedAmount() {
-        return NtRpgPlugin.GlobalScope.entityService.getEntityProperty(activeCharacter, CommonProperties.reserved_health);
+        return Rpg.get().getEntityService().getEntityProperty(character, CommonProperties.reserved_mana);
     }
 
     @Override
     public double getValue() {
-        return activeCharacter.getPlayer().get(Keys.HEALTH).get();
+        return Rpg.get().getEntityService().getEntityProperty(character, CommonProperties.mana);
     }
 
     @Override
     public void setValue(double f) {
-        activeCharacter.getPlayer().offer(Keys.HEALTH, f);
+        if (character.getMana().getMaxValue() < f) {
+            f = character.getMana().getMaxValue();
+        }
+        character.setProperty(CommonProperties.mana, (float) f);
     }
 
     @Override
     public double getRegen() {
-        return NtRpgPlugin.GlobalScope.entityService.getEntityProperty(activeCharacter, CommonProperties.health_regen);
+        return Rpg.get().getEntityService().getEntityProperty(character, CommonProperties.mana_regen);
     }
 
     @Override
     public void setRegen(float f) {
-        activeCharacter.setProperty(CommonProperties.health_regen, f);
+        character.setProperty(CommonProperties.mana_regen, f);
     }
 }

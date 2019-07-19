@@ -20,10 +20,21 @@ package cz.neumimto.rpg.common.effects;
 
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.effects.*;
+import cz.neumimto.rpg.api.effects.model.EffectModelFactory;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.skills.ISkill;
+import cz.neumimto.rpg.api.skills.SkillService;
+import cz.neumimto.rpg.api.skills.SkillSettings;
+import cz.neumimto.rpg.common.assets.AssetService;
 
+import javax.inject.Inject;
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -32,6 +43,12 @@ import java.util.function.Consumer;
  * Created by NeumimTo on 17.1.2015.
  */
 public abstract class EffectService implements IEffectService {
+
+    @Inject
+    private AssetService assetService;
+
+    @Inject
+    private SkillService skillService;
 
     public static final long TICK_PERIOD = 5L;
 
@@ -118,7 +135,9 @@ public abstract class EffectService implements IEffectService {
         pendingAdditions.clear();
     }
 
-    protected abstract boolean mayTick(IEffect e);
+    protected boolean mayTick(IEffect e) {
+        return !e.getConsumer().isDetached();
+    }
 
     /**
      * Calls onTick and increments tickCount
@@ -387,6 +406,93 @@ public abstract class EffectService implements IEffectService {
             }
         }
         return map;
+    }
+
+    @Override
+    public void load() {
+        File file1 = new File(Rpg.get().getWorkingDirectory(), "SkillsAndEffects.md");
+        if (file1.exists()) {
+            file1.delete();
+        }
+
+        try {
+            String finalString = "";
+            file1.createNewFile();
+            String s = assetService.getAssetAsString("templates/Effect.md");
+            for (Map.Entry<String, IGlobalEffect> effect : globalEffects.entrySet()) {
+                Class aClass = effect.getValue().asEffectClass();
+                if (aClass != null && aClass.isAnnotationPresent(Generate.class)) {
+                    Generate meta = (Generate) aClass.getAnnotation(Generate.class);
+                    String description = meta.description();
+                    String name = effect.getKey();
+
+                    Class<?> modelType = EffectModelFactory.getModelType(aClass);
+
+                    s = s.replaceAll("\\{\\{effect\\.name}}", name);
+                    s = s.replaceAll("\\{\\{effect\\.description}}", description);
+
+                    if (EffectModelFactory.getTypeMappers().containsKey(modelType)) {
+                        s = s.replaceAll("\\{\\{effect\\.parameter}}", modelType.getSimpleName());
+                        s = s.replaceAll("\\{\\{effect\\.parameters}}", "");
+                    } else if (modelType == null) {
+                        s = s.replaceAll("\\{\\{effect\\.parameter}}", "");
+                        s = s.replaceAll("\\{\\{effect\\.parameters}}", "");
+                    } else {
+                        Field[] fields = modelType.getFields();
+                        s = s.replaceAll("\\{\\{effect\\.parameter}}", "");
+                        StringBuilder buffer = new StringBuilder();
+                        for (Field field : fields) {
+                            String fname = field.getName();
+                            String type = field.getType().getSimpleName();
+                            buffer.append("   * " + fname + " - " + type + "\n\n");
+                        }
+                        s = s.replaceAll("\\{\\{effect\\.parameters}}", buffer.toString());
+                    }
+                    finalString += s;
+                }
+            }
+
+            s = assetService.getAssetAsString("templates/Skill.md");
+            String skills = "";
+            for (ISkill iSkill : skillService.getAll()) {
+
+                String damageType = iSkill.getDamageType();
+
+                s = s.replaceAll("\\{\\{skill\\.damageType}}", damageType == null ? "Deals no damage" : damageType);
+
+                List<String> description = iSkill.getDescription();
+                StringBuilder desc = new StringBuilder();
+                if (description == null) {
+                    desc.append("null");
+                } else {
+                    for (String text : description) {
+                        desc.append(text);
+                    }
+                }
+                s = s.replaceAll("\\{\\{skill\\.description}}", desc.toString());
+
+                String id = iSkill.getId();
+                s = s.replaceAll("\\{\\{skill\\.id}}", id);
+
+
+                s = s.replaceAll("\\{\\{skill\\.name}}", iSkill.getName());
+
+                SkillSettings defaultSkillSettings = iSkill.getDefaultSkillSettings();
+
+                StringBuilder buffer = new StringBuilder();
+                for (Map.Entry<String, Float> stringFloatEntry : defaultSkillSettings.getNodes().entrySet()) {
+                    buffer.append("   * " + stringFloatEntry.getKey() + "\n\n");
+                }
+                s = s.replaceAll("\\{\\{skill\\.parameters}}", buffer.toString());
+                skills += s;
+            }
+            s = assetService.getAssetAsString("templates/SE.md");
+
+            Files.write(file1.toPath(), s.replaceAll("\\{\\{effects}}", finalString)
+                    .replaceAll("\\{\\{skills}}", skills).getBytes(), StandardOpenOption.APPEND);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
 

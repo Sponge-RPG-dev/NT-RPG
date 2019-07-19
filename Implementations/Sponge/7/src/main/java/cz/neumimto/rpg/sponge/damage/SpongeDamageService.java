@@ -36,9 +36,9 @@ import org.spongepowered.api.event.cause.entity.damage.source.DamageSource;
 import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 
+import javax.inject.Singleton;
 import java.util.*;
 import java.util.stream.Collectors;
-import javax.inject.Singleton;
 
 /**
  * Created by NeumimTo on 4.8.15.
@@ -55,7 +55,7 @@ public class SpongeDamageService extends DamageServiceImpl<Living> {
             TextColors.RED,
             TextColors.DARK_RED,
             TextColors.DARK_PURPLE,
-            TextColors.GRAY
+            TextColors.DARK_BLUE
     };
 
     public double getCharacterProjectileDamage(IActiveCharacter character, EntityType type) {

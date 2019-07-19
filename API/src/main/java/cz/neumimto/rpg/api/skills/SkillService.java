@@ -1,6 +1,7 @@
 package cz.neumimto.rpg.api.skills;
 
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.gui.ISkillTreeInterfaceModel;
 import cz.neumimto.rpg.api.skills.mods.SkillExecutorCallback;
 import cz.neumimto.rpg.api.skills.scripting.ScriptSkillModel;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
@@ -44,4 +45,6 @@ public interface SkillService {
     Optional<ISkillType> getSkillType(String id);
 
     void registerSkillType(ISkillType skillType);
+
+    ISkillTreeInterfaceModel getGuiModelByCharacter(char c);
 }

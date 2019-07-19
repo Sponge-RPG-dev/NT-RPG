@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.sponge.gui;
 
-import cz.neumimto.core.localization.TextHelper;
+import cz.neumimto.rpg.api.gui.ISkillTreeInterfaceModel;
 import cz.neumimto.rpg.sponge.inventory.data.MenuInventoryData;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.property.item.UseLimitProperty;
@@ -11,7 +11,7 @@ import org.spongepowered.api.text.Text;
 /**
  * Created by NeumimTo on 11.2.2018.
  */
-public class SkillTreeInterfaceModel {
+public class SkillTreeInterfaceModel implements ISkillTreeInterfaceModel {
 
     private final int damage;
     private final ItemType itemType;

@@ -11,20 +11,19 @@ blossom {
 }
 
 dependencies {
-    implementation 'commons-io:commons-io:2.4'
+    compile project(':Common')
+    compile 'com.github.Sponge-RPG-dev:ConfigurateButWithBlackjackAndHookers:39d5fc8afd'
+    compile 'com.scireum:parsii:1.5'
+
+    compileOnly 'commons-io:commons-io:2.4'
+    compileOnly 'org.spongepowered:spongeapi:' + project.spongeApiVersion
     compileOnly('org.spongepowered:spongevanilla:1.12.2-7.1.0-BETA-11') {
         exclude module: '*'
     }
-    compileOnly 'org.spongepowered:spongeapi:' + project.spongeApiVersion
-    compile 'com.github.Sponge-RPG-dev:ConfigurateButWithBlackjackAndHookers:39d5fc8afd'
-    implementation 'com.github.Sponge-RPG-dev:NTCore:' + project.NTCoreVersion
     compileOnly 'me.lucko.luckperms:luckperms-api:4.2'
     compileOnly 'com.github.rojo8399:PlaceholderAPI:4.5.1'
-    annotationProcessor project(':Generator')
-    compile project(':Common')
     compileOnly group: 'it.unimi.dsi', name: 'fastutil', version: '8.2.1'
     
-    compile 'com.scireum:parsii:1.5'
     
     testCompileOnly 'org.spongepowered:spongeapi:' + project.spongeApiVersion
 

@@ -123,7 +123,7 @@ public class InfoCommand extends CommandBase {
                     Gui.showCharacterInfo(target, target);
                 }
             }
-        } else if (args[0].equalsIgnoreCase("characters")) {
+        } else if (args[0].equalsIgnoreCase("character")) {
             if (commandSource instanceof Player) {
                 if (args.length != 2) {
                     Player player = (Player) commandSource;
@@ -214,7 +214,7 @@ public class InfoCommand extends CommandBase {
         NtRpgPlugin.asyncExecutor.execute(() -> {
             List<CharacterBase> characters = characterService.getPlayersCharacters(player.getUniqueId());
             if (characters.isEmpty()) {
-                commandSource.sendMessage(Text.of("Player has no characters"));
+                commandSource.sendMessage(Text.of("Player has no character"));
                 return;
             }
             for (CharacterBase character : characters) {

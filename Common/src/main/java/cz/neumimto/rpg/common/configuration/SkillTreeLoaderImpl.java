@@ -32,28 +32,33 @@ import cz.neumimto.rpg.api.skills.types.StartingPoint;
 import cz.neumimto.rpg.api.skills.utils.SkillLoadingErrors;
 import cz.neumimto.rpg.api.utils.FileUtils;
 import cz.neumimto.rpg.api.utils.MathUtils;
+import cz.neumimto.rpg.api.utils.Pair;
+import cz.neumimto.rpg.api.gui.ISkillTreeInterfaceModel;
 import cz.neumimto.rpg.common.skills.SkillConfigLoader;
 import cz.neumimto.rpg.common.skills.SkillConfigLoaders;
 import cz.neumimto.rpg.common.skills.preprocessors.SkillPreprocessorFactories;
 
-
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
-import java.util.*;
 import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
-import static cz.neumimto.rpg.api.logging.Log.info;
-import static cz.neumimto.rpg.api.logging.Log.warn;
+import static cz.neumimto.rpg.api.logging.Log.*;
 
 /**
  * Created by NeumimTo on 24.7.2015.
  */
+@Singleton
 public class SkillTreeLoaderImpl implements SkillTreeDao {
+
+    @Inject
+    private SkillService skillService;
 
     @Override
     public Map<String, SkillTree> getAll() {
@@ -82,7 +87,48 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
     }
 
     public void loadAsciiMaps(Config config, SkillTree skillTree) {
+        try {
+            List<String> asciiMap = config.getStringList("AsciiMap");
+            Optional<String> max = asciiMap.stream().max(Comparator.comparingInt(String::length));
+            if (max.isPresent()) {
+                int length = max.get().length();
+                int rows = asciiMap.size();
 
+                short[][] array = new short[rows][length];
+
+                int i = 0;
+                int j = 0;
+                StringBuilder num = new StringBuilder();
+                for (String s : asciiMap) {
+                    for (char c1 : s.toCharArray()) {
+                        if (Character.isDigit(c1)) {
+                            num.append(c1);
+                            continue;
+                        } else if (c1 == 'X') {
+                            skillTree.setCenter(new Pair<>(i, j));
+                            j++;
+                            continue;
+                        }
+                        if (!num.toString().equals("")) {
+                            array[i][j] = Short.parseShort(num.toString());
+                            j++;
+                        }
+                        ISkillTreeInterfaceModel guiModelByCharacter = skillService.getGuiModelByCharacter(c1);
+                        if (guiModelByCharacter != null) {
+                            array[i][j] = guiModelByCharacter.getId();
+                        }
+                        num = new StringBuilder();
+                        j++;
+                    }
+                    j = 0;
+                    i++;
+                }
+                skillTree.setSkillTreeMap(array);
+            }
+        } catch (ConfigException | ArrayIndexOutOfBoundsException ignored) {
+            error("Could not read ascii map in the skilltree " + skillTree.getId(), ignored);
+            skillTree.setSkillTreeMap(new short[][]{});
+        }
     }
 
 

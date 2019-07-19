@@ -71,4 +71,5 @@ public interface RpgApi {
     IScriptEngine getScriptEngine();
 
     <I extends InventoryService> I getInventoryService();
+
 }
