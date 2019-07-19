@@ -1,13 +1,13 @@
 package cz.neumimto.rpg.sponge.gui;
 
 import com.google.common.collect.Lists;
-import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.common.items.RpgItemTypeImpl;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.items.SpongeRpgItemType;
+import cz.neumimto.rpg.sponge.utils.TextHelper;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.DyeColors;
 import org.spongepowered.api.item.ItemTypes;

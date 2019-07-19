@@ -45,7 +45,7 @@ public class EffectModelFactory {
         if (typeMappers.containsKey(modelType)) {
             return typeMappers.get(modelType);
         }
-        throw new MissingEffectModelMapper("Could not find a model mapper for a class: " + modelType);
+        throw new MissingEffectModelMapper("Could not find a variant mapper for a class: " + modelType);
     }
 
 

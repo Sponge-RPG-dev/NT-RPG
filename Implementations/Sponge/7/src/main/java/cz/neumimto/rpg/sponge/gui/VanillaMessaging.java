@@ -18,7 +18,6 @@
 
 package cz.neumimto.rpg.sponge.gui;
 
-import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.api.IResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.classes.ClassService;
@@ -61,6 +60,7 @@ import cz.neumimto.rpg.sponge.inventory.runewords.RWService;
 import cz.neumimto.rpg.sponge.items.SpongeRpgItemType;
 import cz.neumimto.rpg.sponge.skills.SpongeSkillService;
 import cz.neumimto.rpg.sponge.utils.ItemStackUtils;
+import cz.neumimto.rpg.sponge.utils.TextHelper;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;

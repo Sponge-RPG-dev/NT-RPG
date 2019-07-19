@@ -2,21 +2,21 @@ package cz.neumimto.rpg.sponge.inventory;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
-import cz.neumimto.rpg.api.effects.IEffectService;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.api.configuration.AttributeConfig;
+import cz.neumimto.rpg.api.configuration.ItemString;
 import cz.neumimto.rpg.api.effects.EffectParams;
+import cz.neumimto.rpg.api.effects.IEffectService;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
+import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.items.ItemClass;
 import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.items.RpgItemType;
 import cz.neumimto.rpg.api.logging.Log;
-import cz.neumimto.rpg.api.configuration.ItemString;
 import cz.neumimto.rpg.common.items.AbstractItemService;
 import cz.neumimto.rpg.common.items.RpgItemStackImpl;
+import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.inventory.data.NKeys;
 import cz.neumimto.rpg.sponge.items.SpongeRpgItemType;
-import cz.neumimto.rpg.api.entity.players.attributes.AttributeConfig;
-import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.asset.Asset;
 import org.spongepowered.api.data.key.Keys;
@@ -93,7 +93,7 @@ public class SpongeItemService extends AbstractItemService {
             return Optional.empty();
         }
         ItemType itemType = type.get();
-        return Optional.of(new SpongeRpgItemType(parsed.itemId, parsed.model, wClass, parsed.damage, parsed.armor, itemType));
+        return Optional.of(new SpongeRpgItemType(parsed.itemId, parsed.variant, wClass, parsed.damage, parsed.armor, itemType));
     }
 
 

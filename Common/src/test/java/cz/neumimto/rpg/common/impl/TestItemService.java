@@ -17,7 +17,7 @@ public class TestItemService extends AbstractItemService {
 
     @Override
     protected Optional<RpgItemType> createRpgItemType(ItemString parsed, ItemClass weapons) {
-        return Optional.of(new TestItemType(parsed.itemId, parsed.model, weapons, parsed.damage, parsed.armor));
+        return Optional.of(new TestItemType(parsed.itemId, parsed.variant, weapons, parsed.damage, parsed.armor));
     }
 
     public RpgItemStack getRpgItemStack(RpgItemType type) {

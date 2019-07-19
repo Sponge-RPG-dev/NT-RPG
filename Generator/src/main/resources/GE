@@ -13,7 +13,7 @@ public class {{effect}}Global implements IGlobalEffect<{{effect}}> {
 
 	@Override
 	public DamageBonus construct(IEffectConsumer consumer, long duration, Map<String, String> value) {
-		return new {{effect}}(consumer, duration, EffectModelFactory.create({{effect}}.class, value, {{model}}.class));
+		return new {{effect}}(consumer, duration, EffectModelFactory.create({{effect}}.class, value, {{variant}}.class));
 	}
 
 	@Override

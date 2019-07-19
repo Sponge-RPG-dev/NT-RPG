@@ -1,12 +1,12 @@
 package cz.neumimto.rpg.sponge.entities.players;
 
-import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.sponge.entities.players.party.SpongeParty;
 import cz.neumimto.rpg.sponge.gui.ArmorAndWeaponMenuHelper;
 import cz.neumimto.rpg.sponge.gui.SkillTreeViewModel;
+import cz.neumimto.rpg.sponge.utils.TextHelper;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.chat.ChatTypes;
 

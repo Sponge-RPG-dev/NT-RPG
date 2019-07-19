@@ -16,7 +16,7 @@ class ItemStringTest {
         ItemString parsed = ItemString.parse(input);
 
         Assertions.assertEquals(parsed.armor, expected.armor);
-        Assertions.assertEquals(parsed.model, expected.model);
+        Assertions.assertEquals(parsed.variant, expected.variant);
         Assertions.assertEquals(parsed.itemId, expected.itemId);
         Assertions.assertEquals(parsed.damage, expected.damage);
     }
@@ -26,9 +26,9 @@ class ItemStringTest {
                 Arguments.of("item:id", new ItemString("item:id",0,0,null)),
                 Arguments.of("item:id;10", new ItemString("item:id",10,0,null)),
                 Arguments.of("item:id;10.8", new ItemString("item:id",10.8D,0,null)),
-                Arguments.of("item:id;model;10", new ItemString("item:id",10,0,"model")),
-                Arguments.of("item:id;10;model", new ItemString("item:id",10,0,"model")),
-                Arguments.of("item:id;model", new ItemString("item:id",0,0,"model"))
+                Arguments.of("item:id;variant;10", new ItemString("item:id",10,0,"variant")),
+                Arguments.of("item:id;10;variant", new ItemString("item:id",10,0,"variant")),
+                Arguments.of("item:id;variant", new ItemString("item:id",0,0,"variant"))
         );
     }
 }

@@ -1,6 +1,5 @@
 package cz.neumimto.rpg.sponge.gui;
 
-import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
@@ -22,6 +21,7 @@ import cz.neumimto.rpg.sponge.inventory.data.SkillTreeInventoryViewControllsData
 import cz.neumimto.rpg.sponge.items.SpongeRpgItemType;
 import cz.neumimto.rpg.sponge.listeners.SkillTreeInventoryListener;
 import cz.neumimto.rpg.sponge.skills.NDamageType;
+import cz.neumimto.rpg.sponge.utils.TextHelper;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockTypes;

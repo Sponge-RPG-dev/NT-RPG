@@ -97,7 +97,7 @@ public class ItemServiceTest {
                 Assertions.assertEquals(1, subClass.getPropertiesMults().size());
                 for (RpgItemType item : subClass.getItems()) {
                     Assertions.assertEquals(10, item.getDamage());
-                    Assertions.assertEquals("model", item.getModelId());
+                    Assertions.assertEquals("variant", item.getModelId());
                     bFound = true;
                 }
             }

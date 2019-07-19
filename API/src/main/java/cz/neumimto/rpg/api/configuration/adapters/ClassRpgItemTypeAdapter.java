@@ -50,12 +50,12 @@ public class ClassRpgItemTypeAdapter implements TypeSerializer<Set<ClassItem>> {
                 }
             } else {
                 ItemString parsed = ItemString.parse(s);
-                Optional<RpgItemType> rpgItemType = Rpg.get().getItemService().getRpgItemType(parsed.itemId, parsed.model);
+                Optional<RpgItemType> rpgItemType = Rpg.get().getItemService().getRpgItemType(parsed.itemId, parsed.variant);
                 if (rpgItemType.isPresent()) {
                     RpgItemType rpgItemType1 = rpgItemType.get();
                     map2.put(rpgItemType1, parsed.damage);
                 } else {
-                    Log.error("- Not managed item type " + RpgItemType.KEY_BUILDER.apply(parsed.itemId, parsed.model));
+                    Log.error("- Not managed item type " + RpgItemType.KEY_BUILDER.apply(parsed.itemId, parsed.variant));
                 }
             }
         }

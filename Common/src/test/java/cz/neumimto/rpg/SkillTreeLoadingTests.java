@@ -93,7 +93,7 @@ public class SkillTreeLoadingTests {
         Assertions.assertNotNull(invokeCost);
         SkillItemCost cost = invokeCost.getItemCost().iterator().next();
         Assertions.assertTrue(cost.consumeItems());
-        Assertions.assertEquals(cost.getItemType().model, "variant");
+        Assertions.assertEquals(cost.getItemType().variant, "variant");
         Assertions.assertEquals(cost.getItemType().itemId, "test:item");
         Assertions.assertSame(cost.getAmount(), 1);
 

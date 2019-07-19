@@ -1,10 +1,10 @@
 package cz.neumimto.rpg.sponge.entities.players;
 
-import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.common.entity.players.PlayerNotInGameException;
 import cz.neumimto.rpg.common.entity.players.PreloadCharacter;
 import cz.neumimto.rpg.sponge.entities.players.party.SpongeParty;
 import cz.neumimto.rpg.sponge.gui.SkillTreeViewModel;
+import cz.neumimto.rpg.sponge.utils.TextHelper;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.chat.ChatTypes;

@@ -6,13 +6,13 @@ public final class ItemString {
     public final String itemId;
     public final double damage;
     public final double armor;
-    public final String model;
+    public final String variant;
 
-    protected ItemString(String itemId, double damage, double armor, String model) {
+    protected ItemString(String itemId, double damage, double armor, String variant) {
         this.itemId = itemId;
         this.damage = damage;
         this.armor = armor;
-        this.model = model;
+        this.variant = variant;
     }
 
     public static ItemString parse(String string) {

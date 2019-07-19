@@ -1,6 +1,5 @@
 package cz.neumimto.rpg.sponge.inventory.runewords;
 
-import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.effects.EffectParams;
 import cz.neumimto.rpg.api.effects.IEffectService;
@@ -23,6 +22,7 @@ import cz.neumimto.rpg.sponge.inventory.data.DataConstants;
 import cz.neumimto.rpg.sponge.inventory.data.NKeys;
 import cz.neumimto.rpg.sponge.inventory.data.manipulators.ItemSocketsData;
 import cz.neumimto.rpg.sponge.inventory.data.manipulators.ItemStackUpgradeData;
+import cz.neumimto.rpg.sponge.utils.TextHelper;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;

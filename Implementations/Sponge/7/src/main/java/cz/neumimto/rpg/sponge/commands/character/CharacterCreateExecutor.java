@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.sponge.commands.character;
 
-import cz.neumimto.core.localization.TextHelper;
 import cz.neumimto.rpg.common.commands.CharacterCommandFacade;
+import cz.neumimto.rpg.sponge.utils.TextHelper;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;

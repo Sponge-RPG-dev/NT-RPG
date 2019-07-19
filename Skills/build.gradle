@@ -6,8 +6,10 @@ group = 'cz.neumimto.rpg'
 version = '3.0.5'
 
 dependencies {
-    compileOnly 'org.spongepowered:spongeapi:' + project.spongeApiVersion
-    implementation 'com.github.Sponge-RPG-dev:NTCore:' + project.NTCoreVersion
     annotationProcessor project(':Generator')
-    implementation project(':NT-RPG')
+    
+    compileOnly project(':Sponge-7')
+    compileOnly project(':API')
+    
+    compileOnly 'org.spongepowered:spongeapi:' + project.spongeApiVersion
 }

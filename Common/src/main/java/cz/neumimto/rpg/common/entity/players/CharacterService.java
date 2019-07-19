@@ -104,7 +104,6 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
     @Inject
     private IPersistenceHandler persistanceHandler;
 
-
     private Map<UUID, DataPreparationStage> dataPreparationStageMap = new ConcurrentHashMap<>();
 
     @Inject

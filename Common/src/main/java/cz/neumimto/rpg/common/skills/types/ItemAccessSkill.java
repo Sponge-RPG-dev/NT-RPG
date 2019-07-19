@@ -87,7 +87,7 @@ public class ItemAccessSkill extends AbstractSkill {
                 List<String> citems = item.getStringList("items");
                 for (String allowedWeapon : citems) {
                     ItemString parsed = ItemString.parse(allowedWeapon);
-                    Optional<RpgItemType> type = itemService.getRpgItemType(parsed.itemId, parsed.model);
+                    Optional<RpgItemType> type = itemService.getRpgItemType(parsed.itemId, parsed.variant);
                     if (type.isPresent()) {
                         ClassItem citem = itemService.createClassItemSpecification(type.get(), parsed.damage, this);
 

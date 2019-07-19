@@ -12,7 +12,7 @@ import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.configuration.ItemString;
 import cz.neumimto.rpg.api.items.*;
-import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
+import cz.neumimto.rpg.common.entity.PropertyService;
 import cz.neumimto.rpg.common.inventory.items.ItemMetaType;
 import cz.neumimto.rpg.common.inventory.items.subtypes.ItemSubtype;
 import cz.neumimto.rpg.common.inventory.sockets.SocketType;
@@ -81,7 +81,7 @@ public abstract class AbstractItemService implements ItemService {
 
     @Override
     public void registerProperty(ItemClass itemClass, String property) {
-        int val = PropertyServiceImpl.getAndIncrement.get();
+        int val = PropertyService.getAndIncrement.get();
 
         if (!propertyService.exists(property)) {
             propertyService.registerProperty(property, val);

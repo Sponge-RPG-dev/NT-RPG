@@ -1,7 +1,8 @@
 package cz.neumimto;
 
-import cz.neumimto.core.localization.TextHelper;
+
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.sponge.utils.TextHelper;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Item;
