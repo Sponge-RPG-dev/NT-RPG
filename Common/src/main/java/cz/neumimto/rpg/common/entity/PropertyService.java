@@ -45,16 +45,17 @@ public class PropertyService implements IPropertyService {
     @Inject
     private AssetService assetService;
 
-    protected Map<String, Integer> idMap = new HashMap<>();
+    private Map<String, Integer> idMap = new HashMap<>();
+
     private Map<Integer, String> nameMap = new HashMap<>();
 
     private Map<Integer, Float> defaults = new HashMap<>();
 
     private Set<Integer> damageRecalc = new HashSet<>();
 
-    protected Map<String, AttributeConfig> attributeMap = new HashMap<>();
+    private Map<String, AttributeConfig> attributeMap = new HashMap<>();
 
-    protected float[] maxValues;
+    private float[] maxValues;
 
     @Override
     public int getLastId() {

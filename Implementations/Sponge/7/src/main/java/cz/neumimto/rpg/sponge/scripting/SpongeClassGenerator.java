@@ -9,7 +9,6 @@ import net.bytebuddy.description.modifier.Visibility;
 import net.bytebuddy.dynamic.DynamicType;
 import net.bytebuddy.implementation.MethodDelegation;
 import net.bytebuddy.implementation.bind.annotation.Argument;
-import org.objectweb.asm.Opcodes;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 
@@ -21,7 +20,7 @@ import java.util.function.Consumer;
  * Created by NeumimTo on 12.10.15.
  */
 @Singleton
-public class SpongeClassGenerator extends ClassGenerator implements Opcodes {
+public class SpongeClassGenerator extends ClassGenerator {
 
     @Override
     public Object generateDynamicListener(List<ScriptObjectMirror> list) {
