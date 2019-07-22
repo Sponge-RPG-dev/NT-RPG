@@ -5,6 +5,8 @@ import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.mods.ActiveSkillPreProcessorWrapper;
 import cz.neumimto.rpg.common.inventory.AbstractInventoryService;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.PlayerInventory;
 
 import javax.inject.Singleton;
 import java.util.Set;
@@ -24,11 +26,13 @@ public class SpigotInventoryService extends AbstractInventoryService<ISpigotChar
 
     @Override
     public void initializeCharacterInventory(ISpigotCharacter character) {
+        Player entity = character.getEntity();
+        PlayerInventory inventory = entity.getInventory();
 
     }
 
     @Override
     public EquipedSlot createEquipedSlot(String className, int slotId) {
-        return null;
+        return () -> slotId;
     }
 }
