@@ -30,16 +30,6 @@ public class TestInventoryService extends AbstractInventoryService<TestCharacter
 
     @Override
     public EquipedSlot createEquipedSlot(String className, int slotId) {
-        return new EquipedSlot() {
-            @Override
-            public String getClassName() {
-                return Object.class.getName();
-            }
-
-            @Override
-            public int getSlotIndex() {
-                return slotId;
-            }
-        };
+        return () -> slotId;
     }
 }

@@ -35,7 +35,6 @@ public final class EquipedSlotImpl implements EquipedSlot {
         );
     }
 
-    @Override
     public String getClassName() {
         return className;
     }

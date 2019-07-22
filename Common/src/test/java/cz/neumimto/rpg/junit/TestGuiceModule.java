@@ -33,7 +33,7 @@ import cz.neumimto.rpg.common.bytecode.ClassGenerator;
 import cz.neumimto.rpg.common.classes.ClassServiceImpl;
 import cz.neumimto.rpg.common.configuration.SkillTreeLoaderImpl;
 import cz.neumimto.rpg.common.effects.EffectService;
-import cz.neumimto.rpg.common.entity.TestPropertyService;
+import cz.neumimto.rpg.common.entity.PropertyService;
 import cz.neumimto.rpg.common.entity.configuration.MobSettingsDao;
 import cz.neumimto.rpg.common.entity.configuration.TestMobSettingsDao;
 import cz.neumimto.rpg.common.events.TestEventFactory;
@@ -73,7 +73,7 @@ public class TestGuiceModule extends AbstractModule {
         bind(SkillTreeDao.class).to(SkillTreeLoaderImpl.class);
         bind(IEffectService.class).to(TestEffectService.class);
         bind(SkillService.class).to(TestSkillService.class);
-        bind(IPropertyService.class).to(TestPropertyService.class);
+        bind(IPropertyService.class).to(PropertyService.class);
         bind(PartyService.class).to(TestPartyService.class);
         bind(IPersistenceHandler.class).to(JPAPersistenceHandler.class);
         bind(ICharacterClassDao.class).toProvider(() -> c -> {});
