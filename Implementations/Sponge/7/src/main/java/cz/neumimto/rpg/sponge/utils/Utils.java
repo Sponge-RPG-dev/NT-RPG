@@ -20,13 +20,12 @@ package cz.neumimto.rpg.sponge.utils;
 
 import com.flowpowered.math.imaginary.Quaterniond;
 import com.flowpowered.math.vector.Vector3d;
-import cz.neumimto.rpg.GlobalScope;
-import cz.neumimto.rpg.api.utils.MathUtils;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.api.utils.Console;
-import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.utils.Console;
+import cz.neumimto.rpg.api.utils.MathUtils;
+import cz.neumimto.rpg.common.entity.PropertyService;
 import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.skills.NDamageType;
@@ -70,7 +69,6 @@ public class Utils {
                     a -> !isTransparent(a.getExtent()
                             .getBlockType(a.getBlockX(), a.getBlockY(), a.getBlockZ()));
     public static Pattern REGEXP_CLASS_MEMBER = Pattern.compile("^[a-z_]\\w*$");
-    private static GlobalScope globalScope = NtRpgPlugin.GlobalScope;
 
     static {
         transparentBlocks.addAll(Arrays.asList(BlockTypes.AIR,
@@ -165,7 +163,7 @@ public class Utils {
      * @param player
      */
     public static void resetPlayerToDefault(Player player) {
-        player.offer(Keys.WALKING_SPEED, PropertyServiceImpl.WALKING_SPEED);
+        player.offer(Keys.WALKING_SPEED, PropertyService.WALKING_SPEED);
     }
 
     /**
@@ -182,7 +180,7 @@ public class Utils {
         }
         if (l.getType() == EntityTypes.PLAYER) {
             if (character.hasParty()) {
-                IActiveCharacter c = globalScope.characterService.getCharacter(l.getUniqueId());
+                IActiveCharacter c = Rpg.get().getCharacterService().getCharacter(l.getUniqueId());
                 if (character.getParty().getPlayers().contains(c)) {
                     return false;
                 }

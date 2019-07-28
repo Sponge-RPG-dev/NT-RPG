@@ -21,11 +21,11 @@ package cz.neumimto.rpg.sponge.utils;
 import com.flowpowered.math.TrigMath;
 import com.flowpowered.math.imaginary.Quaterniond;
 import com.flowpowered.math.vector.Vector3d;
-import cz.neumimto.rpg.GlobalScope;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.sponge.inventory.data.NKeys;
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.common.inventory.items.ItemMetaType;
 import cz.neumimto.rpg.common.inventory.items.ItemMetaTypes;
+import cz.neumimto.rpg.sponge.SpongeRpg;
+import cz.neumimto.rpg.sponge.inventory.data.NKeys;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.item.EnchantmentData;
@@ -75,7 +75,6 @@ public class ItemStackUtils {
     protected static String DAMAGE = "damage";
     protected static String DISPLAY_NAME = "name";
 
-    protected static GlobalScope globalScope = NtRpgPlugin.GlobalScope;
     private static BiFunction<String, String, String> formatedConfig = (k, v) -> Utils.newLine(k + ": " + v + ";");
     private static Pattern pattern = Pattern.compile("\\((.*?)\\)");
 
@@ -97,7 +96,7 @@ public class ItemStackUtils {
 
 
     public static boolean hasSockets(ItemStack itemStack) {
-        return globalScope.runewordService.getSocketCount(itemStack) > 0;
+        return ((SpongeRpg)Rpg.get()).getRwService().getSocketCount(itemStack) > 0;
     }
 
     /**

@@ -1,7 +1,6 @@
 package cz.neumimto.rpg.sponge;
 
 import com.google.inject.*;
-import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.configuration.SkillTreeDao;
@@ -24,6 +23,7 @@ import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.bytecode.ClassGenerator;
 import cz.neumimto.rpg.common.classes.ClassServiceImpl;
+import cz.neumimto.rpg.common.configuration.SkillTreeLoaderImpl;
 import cz.neumimto.rpg.common.entity.PropertyService;
 import cz.neumimto.rpg.common.entity.configuration.MobSettingsDao;
 import cz.neumimto.rpg.common.exp.ExperienceDAO;
@@ -36,7 +36,6 @@ import cz.neumimto.rpg.common.persistance.dao.PlayerDao;
 import cz.neumimto.rpg.common.scripting.JSLoader;
 import cz.neumimto.rpg.sponge.assets.SpongeAssetService;
 import cz.neumimto.rpg.sponge.commands.CommandService;
-import cz.neumimto.rpg.sponge.config.SpongeSkillTreeDao;
 import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
 import cz.neumimto.rpg.sponge.effects.SpongeEffectService;
 import cz.neumimto.rpg.sponge.entities.SpongeEntityService;
@@ -76,7 +75,7 @@ public class SpongeGuiceModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(SkillTreeDao.class).to(SpongeSkillTreeDao.class);
+        bind(SkillTreeDao.class).to(SkillTreeLoaderImpl.class);
         bind(SpongeSkillService.class);
         bind(IPropertyService.class).to(PropertyService.class);
         bind(PartyService.class).to(SpongePartyService.class);
@@ -88,7 +87,6 @@ public class SpongeGuiceModule extends AbstractModule {
         bind(IPlayerMessage.class).to(VanillaMessaging.class);
         bind(ClassGenerator.class).to(SpongeClassGenerator.class);
         bind(ClassService.class).to(ClassServiceImpl.class);
-        bind(GlobalScope.class);
         bind(ResourceLoader.class);
         bind(CommandService.class);
         bind(DamageService.class).to(SpongeDamageService.class);

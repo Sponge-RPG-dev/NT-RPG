@@ -62,4 +62,5 @@ public abstract class DamageServiceImpl<T> implements DamageService<T> {
         // damage += character.getMainHand().getDamage() + character.getOffHand().getDamage();
         character.setWeaponDamage(damage);
     }
+
 }

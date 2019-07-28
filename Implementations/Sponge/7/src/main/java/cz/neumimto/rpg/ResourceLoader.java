@@ -73,29 +73,7 @@ public class ResourceLoader extends AbstractResourceLoader {
     @Inject
     private CommandService commandService;
 
-    public void reloadLocalizations(Locale locale) {
-        File localizations = new File(Rpg.get().getWorkingDirectory() + "/localizations");
-        String language = locale.getLanguage();
-        Log.info("Loading localization from language " + language);
-        File[] files = localizations.listFiles();
-        for (File file : files) {
-            if (file.getName().endsWith(language + ".properties")) {
-                Log.info("Loading localization from file " + file.getName());
-                try (FileInputStream input = new FileInputStream(file)) {
-                    Properties properties = new Properties();
-                    properties.load(new InputStreamReader(input, Charset.forName("UTF-8")));
-                    for (Map.Entry<Object, Object> entry : properties.entrySet()) {
-                        if (entry.getValue() != null && !((String) entry.getValue()).isEmpty()) {
-                            localizationService.addTranslationKey(entry.getKey().toString(), entry.getValue().toString());
-                        }
-                    }
 
-                } catch (IOException e) {
-                    Log.error("Could not read localization file " + file.getName(), e);
-                }
-            }
-        }
-    }
 
     @Override
     public Object loadClass(Class<?> clazz) throws IllegalAccessException, InstantiationException {

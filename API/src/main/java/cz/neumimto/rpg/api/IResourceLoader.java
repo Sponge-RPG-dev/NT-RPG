@@ -3,6 +3,7 @@ package cz.neumimto.rpg.api;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.net.URLClassLoader;
+import java.util.Locale;
 import java.util.Map;
 
 public interface IResourceLoader {
@@ -12,6 +13,8 @@ public interface IResourceLoader {
     URLClassLoader getConfigClassLoader();
 
     Map<String, URLClassLoader> getClassLoaderMap();
+
+    void reloadLocalizations(Locale locale);
 
     @Retention(RetentionPolicy.RUNTIME)
     @interface Skill {

@@ -110,7 +110,8 @@ public class SpongeDamageService extends DamageServiceImpl<Living> {
         return 1;
     }
 
-    public void createDamageToColorMapping() {
+    @Override
+    public void init() {
         Collection<ClassDefinition> classes = classService.getClassDefinitions();
         Set<Double> list = new TreeSet<>();
 

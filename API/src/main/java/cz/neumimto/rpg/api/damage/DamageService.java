@@ -15,4 +15,6 @@ public interface DamageService<T> {
     void recalculateCharacterWeaponDamage(IActiveCharacter character, RpgItemType type);
 
     void damageEntity(IEntity<T> character, double maxValue);
+
+    void init();
 }

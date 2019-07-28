@@ -10,6 +10,7 @@ import cz.neumimto.rpg.api.effects.model.EffectModelFactory;
 import cz.neumimto.rpg.api.effects.model.EffectModelMapper;
 import cz.neumimto.rpg.api.localization.Localization;
 import cz.neumimto.rpg.api.localization.LocalizationService;
+import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.properties.PropertyContainer;
 import cz.neumimto.rpg.api.scripting.IScriptEngine;
 import cz.neumimto.rpg.api.skills.ISkill;
@@ -27,6 +28,7 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
@@ -329,6 +331,31 @@ public class AbstractResourceLoader implements IResourceLoader {
 
     public Map<String, URLClassLoader> getClassLoaderMap() {
         return classLoaderMap;
+    }
+
+    @Override
+    public void reloadLocalizations(Locale locale) {
+        File localizations = new File(Rpg.get().getWorkingDirectory() + "/localizations");
+        String language = locale.getLanguage();
+        Log.info("Loading localization from language " + language);
+        File[] files = localizations.listFiles();
+        for (File file : files) {
+            if (file.getName().endsWith(language + ".properties")) {
+                Log.info("Loading localization from file " + file.getName());
+                try (FileInputStream input = new FileInputStream(file)) {
+                    Properties properties = new Properties();
+                    properties.load(new InputStreamReader(input, Charset.forName("UTF-8")));
+                    for (Map.Entry<Object, Object> entry : properties.entrySet()) {
+                        if (entry.getValue() != null && !((String) entry.getValue()).isEmpty()) {
+                            localizationService.addTranslationKey(entry.getKey().toString(), entry.getValue().toString());
+                        }
+                    }
+
+                } catch (IOException e) {
+                    Log.error("Could not read localization file " + file.getName(), e);
+                }
+            }
+        }
     }
 
 }

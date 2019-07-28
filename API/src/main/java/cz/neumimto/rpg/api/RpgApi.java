@@ -9,6 +9,7 @@ import cz.neumimto.rpg.api.entity.IPropertyService;
 import cz.neumimto.rpg.api.entity.players.ICharacterService;
 import cz.neumimto.rpg.api.entity.players.parties.PartyService;
 import cz.neumimto.rpg.api.events.EventFactoryService;
+import cz.neumimto.rpg.api.exp.IExperienceService;
 import cz.neumimto.rpg.api.inventory.InventoryService;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.localization.Arg;
@@ -72,4 +73,9 @@ public interface RpgApi {
 
     <I extends InventoryService> I getInventoryService();
 
+    IExperienceService getExperienceService();
+
+    void reloadMainPluginConfig();
+
+    void postInit();
 }

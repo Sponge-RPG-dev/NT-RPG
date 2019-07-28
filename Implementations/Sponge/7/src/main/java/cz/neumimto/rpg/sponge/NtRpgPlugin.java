@@ -21,29 +21,16 @@ package cz.neumimto.rpg.sponge;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import cz.neumimto.configuration.ConfigMapper;
-import cz.neumimto.core.migrations.DbMigrationService;
-import cz.neumimto.rpg.GlobalScope;
 import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.logging.Log;
-import cz.neumimto.rpg.api.utils.rng.PseudoRandomDistribution;
-import cz.neumimto.rpg.common.persistance.model.JPABaseCharacterAttribute;
-import cz.neumimto.rpg.common.persistance.model.JPACharacterBase;
-import cz.neumimto.rpg.common.persistance.model.JPACharacterClass;
-import cz.neumimto.rpg.common.persistance.model.JPACharacterSkill;
+import cz.neumimto.rpg.api.utils.FileUtils;
 import cz.neumimto.rpg.sponge.configuration.Settings;
 import cz.neumimto.rpg.sponge.inventory.data.*;
 import cz.neumimto.rpg.sponge.inventory.data.manipulators.*;
 import cz.neumimto.rpg.sponge.listeners.DebugListener;
-import cz.neumimto.rpg.sponge.persistance.PersistenceHandler;
 import cz.neumimto.rpg.sponge.skills.NDamageType;
 import cz.neumimto.rpg.sponge.utils.Placeholders;
-import cz.neumimto.rpg.api.utils.FileUtils;
-import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
-import ninja.leaping.configurate.objectmapping.ObjectMapper;
-import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
@@ -69,7 +56,9 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
 import static cz.neumimto.rpg.api.logging.Log.info;
 
@@ -90,9 +79,6 @@ public class NtRpgPlugin extends Rpg {
     public static PluginConfig pluginConfig;;
 
     @Inject
-    public DbMigrationService dbMigrationService;
-
-    @Inject
     public Logger logger;
 
     @Inject
@@ -108,21 +94,16 @@ public class NtRpgPlugin extends Rpg {
     @ConfigDir(sharedRoot = false)
     private Path config;
 
-    public static GlobalScope GlobalScope;
-
     public static final Set<String> INTEGRATIONS = new HashSet<>();
-
 
     private Injector injector;
 
-    //todo remove
-    public static DbMigrationService getDBMigrationService() {
-        return GlobalScope.plugin.dbMigrationService;
-    }
-
     @Listener
     public void initializeApi(GameConstructionEvent event) {
-        Rpg.impl = new SpongeRpgApi();
+        injector = Guice.createInjector(
+                new SpongeGuiceModule(this, logger, game, causeStackManager)
+        );
+        super.impl = injector.getInstance(SpongeRpg.class);
     }
 
     @Listener
@@ -143,13 +124,6 @@ public class NtRpgPlugin extends Rpg {
         } catch (ClassNotFoundException ignored) {
             info("Placeholders Disabled");
         }
-
-
-        injector = Guice.createInjector(
-                new SpongeGuiceModule(this, logger, game, causeStackManager)
-        );
-
-        GlobalScope = injector.getInstance(GlobalScope.class);
 
 
         Sponge.getEventManager().registerListeners(this, new PersistenceHandler());
@@ -333,7 +307,7 @@ public class NtRpgPlugin extends Rpg {
     public void onPluginLoad(GamePostInitializationEvent event) {
         long start = System.nanoTime();
 
-        reloadMainPluginConfig();
+        Rpg.get().reloadMainPluginConfig();
         asyncExecutor = Sponge.getGame().getScheduler().createAsyncExecutor(NtRpgPlugin.this);
 
         Game game = Sponge.getGame();
@@ -375,67 +349,5 @@ public class NtRpgPlugin extends Rpg {
     }
 
 
-    public void reloadMainPluginConfig() {
-        File file = new File(NtRpgPlugin.workingDir);
-        if (!file.exists()) {
-            file.mkdir();
-        }
-        File properties = new File(NtRpgPlugin.workingDir, "Settings.conf");
-        if (!properties.exists()) {
-            FileUtils.generateConfigFile(new PluginConfig(), properties);
-        }
-        File sproperties = new File(NtRpgPlugin.workingDir, "SpongeSpecificSettings.conf");
-        if (!sproperties.exists()) {
-            FileUtils.generateConfigFile(new PluginConfig(), sproperties);
-        }
-        try {
-            ObjectMapper<PluginConfig> mapper = ObjectMapper.forClass(PluginConfig.class);
-            HoconConfigurationLoader hcl = HoconConfigurationLoader.builder().setPath(properties.toPath()).build();
-            pluginConfig = mapper.bind(new PluginConfig()).populate(hcl.load());
-
-            List<Map.Entry<String, ClassTypeDefinition>> list = new ArrayList<>(pluginConfig.CLASS_TYPES.entrySet());
-            list.sort(Map.Entry.comparingByValue());
-
-            Map<String, ClassTypeDefinition> result = new LinkedHashMap<>();
-            for (Map.Entry<String, ClassTypeDefinition> entry : list) {
-                result.put(entry.getKey(), entry.getValue());
-            }
-            pluginConfig.CLASS_TYPES = result;
-        } catch (ObjectMappingException | IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void postInit() {
-        int a = 0;
-        PseudoRandomDistribution p = new PseudoRandomDistribution();
-        PseudoRandomDistribution.C = new double[101];
-        for (double i = 0.01; i <= 1; i += 0.01) {
-            PseudoRandomDistribution.C[a] = p.c(i);
-            a++;
-        }
-        try {
-            GlobalScope.resourceLoader.reloadLocalizations(Locale.forLanguageTag(NtRpgPlugin.pluginConfig.LOCALE));
-        } catch (Exception e) {
-            Log.error("Could not read localizations in locale " + NtRpgPlugin.pluginConfig.LOCALE + " - " + e.getMessage());
-        }
-        Rpg.get().getItemService().loadItemGroups(Paths.get(NtRpgPlugin.workingDir));
-        Rpg.get().getInventoryService().load();
-        Rpg.get().getEventFactory().registerEventProviders();
-        Rpg.get().getExperienceService().load();
-        Rpg.get().getSkillService().load();
-        Rpg.get().getPropertyService().init(Paths.get(NtRpgPlugin.workingDir + "/Attributes.conf"), Paths.get(NtRpgPlugin.workingDir + File.separator + "properties_dump.info"));
-        Rpg.get().getPropertyService().reLoadAttributes(Paths.get(NtRpgPlugin.workingDir + "/Attributes.conf"));
-        Rpg.get().getPropertyService().loadMaximalServerPropertyValues(Paths.get(NtRpgPlugin.workingDir, "max_server_property_values.properties"));
-        Rpg.get().getjsLoader.initEngine();
-        Rpg.get().getrwService.load();
-        Rpg.get().getClassService().loadClasses();
-        GlobalScope.vanillaMessaging.load();
-        Rpg.get().getEffectService().load();
-        Rpg.get().getEffectService().startEffectScheduler();
-        GlobalScope.particleDecorator.initModels();
-        Rpg.get().getDamageService().createDamageToColorMapping();
-
-    }
 
 }
