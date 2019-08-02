@@ -32,7 +32,6 @@ import javax.inject.Inject;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 
 import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 
@@ -55,19 +54,12 @@ public class EntityLifecycleListener {
     @Inject
     private SpongeInventoryService spongeInventoryService;
 
-    @Listener
-    public void onPlayerJoin(ClientConnectionEvent.Auth event) {
-        if (event.isCancelled()) {
-            return;
-        }
-        UUID id = event.getProfile().getUniqueId();
-        characterService.loadPlayerData(id, event.getProfile().getName().get());
-    }
 
     @Listener
     public void onPlayerLogin(ClientConnectionEvent.Join event) {
         //  IActiveCharacter character = characterService.getTarget(event.getTarget().getUniqueId());
-        characterService.checkPlayerDataStatus(event.getTargetEntity().getUniqueId());
+
+        characterService.loadPlayerData(event.getTargetEntity().getUniqueId(), event.getTargetEntity().getName());
     }
 
     @Listener

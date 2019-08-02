@@ -65,25 +65,6 @@ public class SpongeCharacterService extends CharacterService<ISpongeCharacter> {
         return getCharacter(player.getUniqueId());
     }
 
-    @Override
-    protected void addCharacterToGame(UUID id, ISpongeCharacter character, List<CharacterBase> playerChars) {
-        Sponge.getScheduler().createTaskBuilder().name("Callback-PlayerDataLoad" + id).execute(() -> {
-             completePlayerDataPreloading(id, character, playerChars);
-        }).submit(plugin);
-    }
-
-    protected void completePlayerDataPreloading(UUID id, ISpongeCharacter character, List<CharacterBase> playerChars) {
-        PlayerDataPreloadComplete event = new PlayerDataPreloadComplete(id, playerChars);
-        Game game = Sponge.getGame();
-        game.getEventManager().post(event);
-        Optional<Player> popt = game.getServer().getPlayer(event.getPlayer());
-        if (popt.isPresent()) {
-            finalizePlayerDataPreloadStage(id, character, event);
-            assignPlayerToCharacter(id);
-        } else {
-            playerDataPreloadStagePlayerNotReady(id, character);
-        }
-    }
 
     @Override
     public boolean assignPlayerToCharacter(UUID uniqueId) {

@@ -78,4 +78,6 @@ public interface RpgApi {
     void reloadMainPluginConfig();
 
     void postInit();
+
+    void scheduleSyncLater(Runnable runnable);
 }

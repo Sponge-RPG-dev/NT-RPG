@@ -23,10 +23,6 @@ public class SpigotCharacterService extends CharacterService<ISpigotCharacter> {
         return iActiveCharacter;
     }
 
-    @Override
-    protected void addCharacterToGame(UUID id, ISpigotCharacter character, List<CharacterBase> playerChars) {
-
-    }
 
     @Override
     public ISpigotCharacter buildDummyChar(UUID uuid) {

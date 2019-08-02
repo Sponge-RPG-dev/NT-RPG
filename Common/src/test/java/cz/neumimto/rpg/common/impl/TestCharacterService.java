@@ -2,24 +2,22 @@ package cz.neumimto.rpg.common.impl;
 
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
+import cz.neumimto.rpg.common.entity.PropertyService;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.common.entity.TestCharacter;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
 
 import javax.inject.Singleton;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 @Singleton
 public class TestCharacterService extends CharacterService<TestCharacter> {
 
     private Map<UUID, TestCharacter> characterMap = new HashMap<>();
 
-    @Override
-    protected void addCharacterToGame(UUID id, TestCharacter character, List<CharacterBase> playerChars) {
-        //finalizePlayerDataPreloadStage(id, character, event);
-        assignPlayerToCharacter(id);
-        initActiveCharacter(character);
-    }
 
     @Override
     protected boolean hasCharacter(UUID uniqueId) {
@@ -33,7 +31,7 @@ public class TestCharacterService extends CharacterService<TestCharacter> {
 
     @Override
     protected TestCharacter createCharacter(UUID player, CharacterBase characterBase) {
-        return new TestCharacter(player, characterBase, PropertyServiceImpl.LAST_ID);
+        return new TestCharacter(player, characterBase, PropertyService.LAST_ID);
     }
 
     @Override

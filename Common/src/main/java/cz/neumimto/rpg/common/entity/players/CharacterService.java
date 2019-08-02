@@ -59,7 +59,6 @@ import cz.neumimto.rpg.common.utils.exceptions.MissingConfigurationException;
 import javax.inject.Inject;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import static cz.neumimto.rpg.api.localization.Arg.arg;
@@ -104,8 +103,6 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
     @Inject
     private IPersistenceHandler persistanceHandler;
 
-    private Map<UUID, DataPreparationStage> dataPreparationStageMap = new ConcurrentHashMap<>();
-
     @Inject
     protected IEffectService effectService;
 
@@ -114,8 +111,6 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
 
     protected Map<UUID, T> characters = new HashMap<>();
 
-
-    protected abstract void addCharacterToGame(UUID id, T character, List<CharacterBase> playerChars);
 
     protected abstract void scheduleNextTick(Runnable r);
 
@@ -156,8 +151,6 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
 
     @Override
     public void loadPlayerData(UUID id, String playerName) {
-        dataPreparationStageMap.put(id, new DataPreparationStage(DataPreparationStage.Stage.LOADING));
-
         addCharacter(id, buildDummyChar(id));
         CompletableFuture.runAsync(() -> {
             info("Loading player - " + id);
@@ -176,46 +169,15 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
 
             if (pluginConfig.PLAYER_AUTO_CHOOSE_LAST_PLAYED_CHAR || playerCharacters.size() == 1) {
                 T activeCharacter = createActiveCharacter(id, playerCharacters.get(0));
-                DataPreparationStage dataPreparationStage = new DataPreparationStage(DataPreparationStage.Stage.TO_BE_ASSIGNED, activeCharacter);
-                dataPreparationStageMap.put(id, dataPreparationStage);
-
-            } else {
-                dataPreparationStageMap.put(id, new DataPreparationStage(DataPreparationStage.Stage.NO_ACTION));
+                Rpg.get().scheduleSyncLater(() -> {
+                    addCharacter(id, activeCharacter);
+                    assignPlayerToCharacter(id);
+                    initActiveCharacter(activeCharacter);
+                });
             }
         }, Rpg.get().getAsyncExecutor());
     }
 
-/*
-    protected void finalizePlayerDataPreloadStage(UUID id, T character, PlayerDataPreloadComplete event) {
-        setActiveCharacter(event.getPlayer(), character);
-        invalidateCaches(character);
-        dataPreparationStageMap.remove(id);
-    }
-*/
-    protected void playerDataPreloadStagePlayerNotReady(UUID id, T character) {
-        dataPreparationStageMap.put(id, new DataPreparationStage(DataPreparationStage.Stage.PLAYER_NOT_YET_READY, character));
-        info("Data for Player " + id + " prepared but player instance not ready yet, will attempt to initialize later");
-    }
-
-    @Override
-    public void checkPlayerDataStatus(UUID uniqueId) {
-        if (hasCharacter(uniqueId)) {
-            return;
-        }
-        DataPreparationStage dataPreparationStage = dataPreparationStageMap.get(uniqueId);
-        info("Player logged in - data for Player " + uniqueId + " in stage " + dataPreparationStage.stage);
-        if (dataPreparationStage.stage == DataPreparationStage.Stage.TO_BE_ASSIGNED) {
-            addCharacterToGame(uniqueId, (T) dataPreparationStage.character, dataPreparationStage.characters);
-        } else if (dataPreparationStage.stage == DataPreparationStage.Stage.NO_ACTION) {
-            if (!dataPreparationStage.characters.isEmpty()) {
-                Gui.invokeCharacterMenu(getCharacter(uniqueId), dataPreparationStage.characters);
-            } else {
-                //todo message
-            }
-        }
-        dataPreparationStageMap.remove(uniqueId);
-
-    }
 
     /**
      * @param name
@@ -228,7 +190,6 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
         characterBase.setUuid(uuid);
         PluginConfig pluginConfig = Rpg.get().getPluginConfig();
         characterBase.setAttributePoints(pluginConfig.ATTRIBUTEPOINTS_ON_START);
-
         characterBase.setAttributePointsSpent(0);
         return characterBase;
     }

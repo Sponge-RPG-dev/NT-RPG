@@ -36,8 +36,6 @@ public interface ICharacterService<T extends IActiveCharacter> {
 
     void loadPlayerData(UUID id, String playerName);
 
-    void checkPlayerDataStatus(UUID uniqueId);
-
     CharacterBase createCharacterBase(String name, UUID uuid);
 
     void updateWeaponRestrictions(T character);
