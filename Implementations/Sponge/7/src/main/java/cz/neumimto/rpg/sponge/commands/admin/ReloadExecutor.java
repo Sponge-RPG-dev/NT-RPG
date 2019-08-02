@@ -1,5 +1,10 @@
 package cz.neumimto.rpg.sponge.commands.admin;
 
+import com.google.inject.Injector;
+import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.classes.ClassService;
+import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
@@ -23,18 +28,46 @@ import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.*;
 
 import static cz.neumimto.rpg.api.logging.Log.info;
 import static cz.neumimto.rpg.api.logging.Log.warn;
 
+@Singleton
 public class ReloadExecutor implements CommandExecutor {
+    
+    @Inject
+    private IScriptEngine jsLoader;
+
+    @Inject
+    private SpongeCharacterService characterService;
+
+    @Inject
+    private SkillService skillService;
+
+    @Inject
+    private EntityService entityService;
+
+    @Inject
+    private IEffectService effectService;
+
+    @Inject
+    private ClassService classService;
+
+    @Inject
+    private NtRpgPlugin plugin;
+
+
+    @Inject
+    private Injector injector;
+
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
         String[] a = args.<String>getOne("args").get().split(" ");
         ArmorAndWeaponMenuHelper.resetAll();
         if (a[0].equalsIgnoreCase("js")) {
-            IScriptEngine jsLoader = NtRpgPlugin.GlobalScope.jsLoader;
             jsLoader.initEngine();
 
             int i = 1;
@@ -43,14 +76,12 @@ public class ReloadExecutor implements CommandExecutor {
                 q = a[i];
                 if (q.equalsIgnoreCase("skills") || q.equalsIgnoreCase("s")) {
                     jsLoader.reloadSkills();
-                    SpongeCharacterService build = NtRpgPlugin.GlobalScope.characterService;
-                    SkillService skillService = NtRpgPlugin.GlobalScope.skillService;
-                    build.getCharacters()
+                    characterService.getCharacters()
                             .stream()
                             .forEach(qw -> {
                                 Map<String, PlayerSkillContext> skills = qw.getSkills();
                                 for (Map.Entry<String, PlayerSkillContext> entry : skills.entrySet()) {
-                                    if (entry.getValue() == PlayerSkillContext.Empty) {
+                                    if (entry.getValue() == PlayerSkillContext.EMPTY) {
                                         continue;
                                     }
                                     PlayerSkillContext value = entry.getValue();
@@ -74,16 +105,16 @@ public class ReloadExecutor implements CommandExecutor {
                 i++;
             }
         } else if (a[0].equalsIgnoreCase("skilltree")) {
-            NtRpgPlugin.GlobalScope.skillService.reloadSkillTrees();
+            skillService.reloadSkillTrees();
         } else if (a[0].equalsIgnoreCase("settings")) {
-            NtRpgPlugin.GlobalScope.plugin.reloadMainPluginConfig();
+            Rpg.get().reloadMainPluginConfig();
         } else if (a[0].equalsIgnoreCase("mobs")) {
-            NtRpgPlugin.GlobalScope.entityService.reload();
+            entityService.reload();
         } else if (a[0].equalsIgnoreCase("classes")) {
             //Check if configs are ok
             warn("[RELOAD] Attempting to reload classes from config files...");
             info("[RELOAD] Checking class files: ");
-            ClassDefinitionDao build = NtRpgPlugin.GlobalScope.injector.getInstance(ClassDefinitionDao.class);
+            ClassDefinitionDao build = injector.getInstance(ClassDefinitionDao.class);
             try {
                 build.parseClassFiles();
                 info("[RELOAD] Class files ok");
@@ -91,7 +122,7 @@ public class ReloadExecutor implements CommandExecutor {
                 //Get all objects we need to save
                 Set<CharacterBase> characterBases = new HashSet<>();
                 for (Player player : Sponge.getServer().getOnlinePlayers()) {
-                    IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter(player);
+                    IActiveCharacter character = characterService.getCharacter(player);
                     if (character.isStub()) {
                         continue;
                     }
@@ -100,22 +131,22 @@ public class ReloadExecutor implements CommandExecutor {
 
                 //Set Char stubs
                 for (Player player : Sponge.getServer().getOnlinePlayers()) {
-                    IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter(player);
+                    IActiveCharacter character = characterService.getCharacter(player);
                     if (character.isStub()) {
                         continue;
                     }
-                    ISpongeCharacter preloadCharacter = NtRpgPlugin.GlobalScope.characterService.buildDummyChar(player.getUniqueId());
-                    NtRpgPlugin.GlobalScope.characterService.registerDummyChar(preloadCharacter);
+                    ISpongeCharacter preloadCharacter = characterService.buildDummyChar(player.getUniqueId());
+                    characterService.registerDummyChar(preloadCharacter);
                 }
                 Log.info("[RELOAD] Purging effect caches");
-                NtRpgPlugin.GlobalScope.effectService.purgeEffectCache();
-                NtRpgPlugin.GlobalScope.effectService.stopEffectScheduler();
+                effectService.purgeEffectCache();
+                effectService.stopEffectScheduler();
                 //todo purge all skill
                 //todo purge all Skilltrees
 
                 for (CharacterBase characterBase : characterBases) {
                     Log.info("[RELOAD] saving character " + characterBase.getLastKnownPlayerName());
-                    NtRpgPlugin.GlobalScope.characterService.save(characterBase);
+                    characterService.save(characterBase);
                 }
 
 
@@ -123,25 +154,25 @@ public class ReloadExecutor implements CommandExecutor {
                 Sponge.getScheduler().createTaskBuilder().execute(() -> {
                     //System.gc(); - for reloading skill its required
 
-                    NtRpgPlugin.GlobalScope.effectService.startEffectScheduler();
+                    effectService.startEffectScheduler();
                     //todo load skill
                     //todo load Skilltrees
 
-                    NtRpgPlugin.GlobalScope.classService.loadClasses();
+                    classService.loadClasses();
                     Comparator<CharacterBase> cmp = Comparator.comparing(CharacterBase::getUpdated);
                     for (Player player : Sponge.getServer().getOnlinePlayers()) {
                         List<CharacterBase> playersCharacters =
-                                NtRpgPlugin.GlobalScope.characterService.getPlayersCharacters(player.getUniqueId());
+                                characterService.getPlayersCharacters(player.getUniqueId());
                         if (playersCharacters.isEmpty()) {
                             continue;
                         }
                         CharacterBase max = playersCharacters.stream().max(cmp).get();
-                        ISpongeCharacter activeCharacter = NtRpgPlugin.GlobalScope.characterService.createActiveCharacter(player.getUniqueId(), max);
-                        NtRpgPlugin.GlobalScope.characterService.setActiveCharacter(player.getUniqueId(), activeCharacter);
-                        NtRpgPlugin.GlobalScope.characterService.invalidateCaches(activeCharacter);
-                        NtRpgPlugin.GlobalScope.characterService.assignPlayerToCharacter(player.getUniqueId());
+                        ISpongeCharacter activeCharacter = characterService.createActiveCharacter(player.getUniqueId(), max);
+                        characterService.setActiveCharacter(player.getUniqueId(), activeCharacter);
+                        characterService.invalidateCaches(activeCharacter);
+                        characterService.assignPlayerToCharacter(player.getUniqueId());
                     }
-                }).submit(NtRpgPlugin.GlobalScope.plugin);
+                }).submit(Rpg.get());
             } catch (ObjectMappingException e) {
                 src.sendMessage(Text.of("Errors occured during class reload, check server console for more informations"));
             }

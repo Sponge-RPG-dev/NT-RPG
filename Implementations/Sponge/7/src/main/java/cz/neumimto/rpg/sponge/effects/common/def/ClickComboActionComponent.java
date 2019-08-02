@@ -10,7 +10,6 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 
 import java.util.Collections;
@@ -109,7 +108,7 @@ public class ClickComboActionComponent extends EffectBase implements IEffectCont
         notifyIfCancelled = true;
         boolean exec = false;
         if (combination != null) {
-            PlayerSkillContext skill = NtRpgPlugin.GlobalScope.skillService.invokeSkillByCombo(getCurrent(), character);
+            PlayerSkillContext skill = Rpg.get().getSkillService().invokeSkillByCombo(getCurrent(), character);
             if (skill != null) {
                 Gui.skillExecution(character, skill);
                 combination = null;

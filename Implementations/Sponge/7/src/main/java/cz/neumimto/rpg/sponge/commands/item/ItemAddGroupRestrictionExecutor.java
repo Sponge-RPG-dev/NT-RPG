@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.sponge.commands.item;
 
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.sponge.inventory.SpongeInventoryService;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -13,9 +13,16 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Optional;
 
+@Singleton
 public class ItemAddGroupRestrictionExecutor implements CommandExecutor {
+
+    @Inject
+    private SpongeInventoryService inventoryService;
+
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
         Player player = (Player) src;
@@ -28,8 +35,8 @@ public class ItemAddGroupRestrictionExecutor implements CommandExecutor {
         ClassDefinition group = args.<ClassDefinition>getOne("group").get();
         Integer integer = args.<Integer>getOne("level").orElse(0);
 
-        NtRpgPlugin.GlobalScope.inventorySerivce.addGroupRestriction(itemStack, group, integer);
-        NtRpgPlugin.GlobalScope.inventorySerivce.updateLore(itemStack);
+        inventoryService.addGroupRestriction(itemStack, group, integer);
+        inventoryService.updateLore(itemStack);
         player.setItemInHand(HandTypes.MAIN_HAND, itemStack);
         return CommandResult.success();
     }

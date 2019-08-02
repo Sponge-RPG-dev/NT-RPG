@@ -302,7 +302,7 @@ public class SpongeInventoryService extends AbstractInventoryService<ISpongeChar
         Path path = Paths.get(Rpg.get().getWorkingDirectory(), "ItemGroups.conf");
         File f = path.toFile();
         if (!f.exists()) {
-            Optional<Asset> asset = Sponge.getAssetManager().getAsset(NtRpgPlugin.GlobalScope.plugin, "ItemGroups.conf");
+            Optional<Asset> asset = Sponge.getAssetManager().getAsset(plugin, "ItemGroups.conf");
             if (!asset.isPresent()) {
                 throw new IllegalStateException("Could not find an asset ItemGroups.conf");
             }
@@ -440,6 +440,7 @@ public class SpongeInventoryService extends AbstractInventoryService<ISpongeChar
         return null;
     }
 
+    @Override
     public String getItemIconForSkill(ISkill iSkill) {
         return null;
     }

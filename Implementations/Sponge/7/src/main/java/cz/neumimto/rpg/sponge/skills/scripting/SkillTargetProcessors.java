@@ -1,11 +1,11 @@
 package cz.neumimto.rpg.sponge.skills.scripting;
 
-import cz.neumimto.rpg.common.skills.scripting.SkillComponent;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.api.skills.scripting.JsBinding;
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.IEntityType;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.skills.scripting.JsBinding;
+import cz.neumimto.rpg.common.skills.scripting.SkillComponent;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacter;
 import cz.neumimto.rpg.sponge.utils.Utils;
@@ -47,13 +47,13 @@ public class SkillTargetProcessors {
                 if (nearbyEntity.get(Keys.TAMED_OWNER).isPresent()) {
                     continue;
                 }
-                IEntity iEntity = NtRpgPlugin.GlobalScope.entityService.get(nearbyEntity);
+                IEntity iEntity = Rpg.get().getEntityService().get(nearbyEntity);
                 nearby.add(iEntity);
             }
         } else if (entity.getType() == IEntityType.CHARACTER) {
             IActiveCharacter character = (IActiveCharacter) entity;
             for (Entity nearbyEntity : nearbyEntities) {
-                IEntity iEntity = NtRpgPlugin.GlobalScope.entityService.get(nearbyEntity);
+                IEntity iEntity = Rpg.get().getEntityService().get(nearbyEntity);
                 if (iEntity.isFriendlyTo(character)) {
                     nearby.add(iEntity);
                 }
@@ -83,7 +83,7 @@ public class SkillTargetProcessors {
                     if (!(mtarget instanceof Living)) {
                         return null;
                     }
-                    return NtRpgPlugin.GlobalScope.entityService.get(mtarget);
+                    return Rpg.get().getEntityService().get(mtarget);
                 }
             } else {
                 Collection<Entity> nearbyEntities = entity.getNearbyEntities(range.doubleValue());
@@ -95,7 +95,7 @@ public class SkillTargetProcessors {
             Living targetedEntity = Utils.getTargetedEntity(character, range.intValue());
             if (targetedEntity != null) {
                 if (Utils.canDamage(character, targetedEntity)) {
-                    return NtRpgPlugin.GlobalScope.entityService.get(targetedEntity);
+                    return Rpg.get().getEntityService().get(targetedEntity);
                 }
             }
         }

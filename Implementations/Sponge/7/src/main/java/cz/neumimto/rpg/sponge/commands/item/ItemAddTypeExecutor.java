@@ -3,7 +3,7 @@ package cz.neumimto.rpg.sponge.commands.item;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.common.inventory.items.ItemMetaType;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.inventory.SpongeInventoryService;
 import cz.neumimto.rpg.sponge.utils.TextHelper;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -25,9 +25,10 @@ public class ItemAddTypeExecutor implements CommandExecutor {
             Optional<ItemStack> itemInHand = player.getItemInHand(HandTypes.MAIN_HAND);
             if (itemInHand.isPresent()) {
                 ItemStack itemStack = itemInHand.get();
-                NtRpgPlugin.GlobalScope.inventorySerivce.createItemMetaSectionIfMissing(itemStack);
-                NtRpgPlugin.GlobalScope.inventorySerivce.setItemMetaType(itemStack, type.get());
-                NtRpgPlugin.GlobalScope.inventorySerivce.updateLore(itemStack);
+                SpongeInventoryService inventoryService = (SpongeInventoryService) Rpg.get().getInventoryService();
+                inventoryService.createItemMetaSectionIfMissing(itemStack);
+                inventoryService.setItemMetaType(itemStack, type.get());
+                inventoryService.updateLore(itemStack);
                 player.setItemInHand(HandTypes.MAIN_HAND, itemStack);
                 return CommandResult.builder().affectedItems(1).build();
             }

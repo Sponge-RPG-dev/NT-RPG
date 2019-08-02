@@ -3,7 +3,7 @@ package cz.neumimto.rpg.persistance;
 import com.google.inject.Provider;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.logging.Log;
-import cz.neumimto.rpg.common.GuiceModule;
+import cz.neumimto.rpg.api.RpgAddon;
 import cz.neumimto.rpg.common.persistance.dao.ICharacterClassDao;
 import cz.neumimto.rpg.common.persistance.dao.IPersistenceHandler;
 import cz.neumimto.rpg.common.persistance.dao.IPlayerDao;
@@ -38,7 +38,7 @@ import static cz.neumimto.rpg.api.logging.Log.error;
 import static cz.neumimto.rpg.api.logging.Log.info;
 
 
-public class JPAModule implements GuiceModule {
+public class JPAModule implements RpgAddon {
 
     @Override
     public Map<Class<?>, Object> getBindings() {

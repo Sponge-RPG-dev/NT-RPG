@@ -7,7 +7,6 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
 import cz.neumimto.rpg.common.entity.PropertyService;
-import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.common.entity.players.CharacterMana;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.common.entity.players.UserActionType;
@@ -125,7 +124,7 @@ public class SpongeCharacterService extends CharacterService<ISpongeCharacter> {
     @Override
     protected void scheduleNextTick(Runnable r) {
         Sponge.getScheduler().createTaskBuilder().delay(1, TimeUnit.MILLISECONDS)
-                .execute(r).submit(NtRpgPlugin.GlobalScope.plugin);
+                .execute(r).submit(plugin);
     }
 
     public boolean processUserAction(IActiveCharacter character, UserActionType userActionType) {

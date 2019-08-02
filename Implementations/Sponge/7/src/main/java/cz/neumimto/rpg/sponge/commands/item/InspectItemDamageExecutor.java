@@ -6,7 +6,6 @@ import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.items.ClassItem;
 import cz.neumimto.rpg.api.items.ItemClass;
 import cz.neumimto.rpg.api.items.RpgItemType;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
 import cz.neumimto.rpg.sponge.entities.SpongeEntityService;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
@@ -22,21 +21,39 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.*;
 import java.util.function.Function;
 
+@Singleton
 public class InspectItemDamageExecutor implements CommandExecutor {
+
+    @Inject
+    private SpongeItemService itemService;
+
+    @Inject
+    private SpongeDamageService ds;
+
+    @Inject
+    private SpongeCharacterService cs;
+
+    @Inject
+    private SpongeEntityService es;
+
+    @Inject
+    private IPropertyService ps;
+
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
         Player player = args.<Player>getOne("player").get();
-        SpongeItemService is = NtRpgPlugin.GlobalScope.itemService;
         Optional<ItemStack> itemInHand = player.getItemInHand(HandTypes.MAIN_HAND);
         if (!itemInHand.isPresent()) {
             src.sendMessage(Text.of(player.getName() + " has no item in main hand"));
             return CommandResult.empty();
         }
         ItemStack itemStack = itemInHand.get();
-        Optional<RpgItemType> rpgItemType = NtRpgPlugin.GlobalScope.itemService.getRpgItemType(itemStack);
+        Optional<RpgItemType> rpgItemType = itemService.getRpgItemType(itemStack);
         if (!rpgItemType.isPresent()) {
             src.sendMessage(Text.of(player.getName() + " has no Managed item in main hand"));
             return CommandResult.empty();
@@ -65,10 +82,10 @@ public class InspectItemDamageExecutor implements CommandExecutor {
             src.sendMessage(text);
         }
         src.sendMessage(Text.of(TextColors.GOLD, "=================="));
-        SpongeDamageService ds = NtRpgPlugin.GlobalScope.damageService;
-        SpongeCharacterService cs = NtRpgPlugin.GlobalScope.characterService;
-        SpongeEntityService es = NtRpgPlugin.GlobalScope.entityService;
-        IPropertyService ps = NtRpgPlugin.GlobalScope.spongePropertyService;
+
+
+
+
         IActiveCharacter character = cs.getCharacter(player);
         src.sendMessage(Text.of(TextColors.RED, "Damage: ", ds.getCharacterItemDamage(character, fromItemStack)));
         src.sendMessage(Text.of(TextColors.RED, "Details: "));
@@ -110,7 +127,7 @@ public class InspectItemDamageExecutor implements CommandExecutor {
 
     private Function<ItemClass, List<Text>> TO_TEXT = weaponClass -> {
         List<Text> list = new ArrayList<>();
-        IPropertyService ps = NtRpgPlugin.GlobalScope.spongePropertyService;
+
         list.add(Text.of(TextColors.GOLD, weaponClass.getName()));
         for (Integer property : weaponClass.getProperties()) {
             list.add(Text.of(TextColors.GRAY, " -> ", ps.getNameById(property)));

@@ -32,7 +32,6 @@ import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.common.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.sponge.configuration.CommandLocalization;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
 import cz.neumimto.rpg.sponge.gui.SkillTreeViewModel;
@@ -84,10 +83,7 @@ public class InfoCommand extends CommandBase {
     private VanillaMessaging messaging;
 
     public InfoCommand() {
-        setHelp(CommandLocalization.PLAYERINFO_HELP);
         setPermission("*");
-        setDescription(CommandLocalization.PLAYERINFO_DESC);
-        setUsage(CommandLocalization.PLAYERINFO_USAGE);
         addAlias("show");
     }
 

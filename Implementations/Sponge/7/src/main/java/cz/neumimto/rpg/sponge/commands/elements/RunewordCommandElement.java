@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.sponge.commands.elements;
 
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.common.inventory.runewords.RuneWord;
+import cz.neumimto.rpg.sponge.inventory.runewords.RWService;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.ArgumentParseException;
 import org.spongepowered.api.command.args.CommandArgs;
@@ -19,14 +19,17 @@ import java.util.List;
  */
 public class RunewordCommandElement extends CommandElement {
 
-    protected RunewordCommandElement(@Nullable Text key) {
+    private final RWService rwService;
+    
+    protected RunewordCommandElement(@Nullable Text key, RWService rwService) {
         super(key);
+        this.rwService = rwService;
     }
 
     @Override
     protected Object parseValue(CommandSource source, CommandArgs args) throws ArgumentParseException {
         String skilllc = args.next();
-        RuneWord rune = NtRpgPlugin.GlobalScope.runewordService.getRuneword(skilllc);
+        RuneWord rune = rwService.getRuneword(skilllc);
         if (rune == null) {
             throw args.createError(TextSerializers.FORMATTING_CODE.deserialize("&CUnknown rw &C\"" + skilllc + "\""));
         }
@@ -35,7 +38,7 @@ public class RunewordCommandElement extends CommandElement {
 
     @Override
     public List<String> complete(CommandSource src, CommandArgs args, CommandContext context) {
-        return new ArrayList<>(NtRpgPlugin.GlobalScope.runewordService.getRunewords().keySet());
+        return new ArrayList<>(rwService.getRunewords().keySet());
     }
 
     @Override

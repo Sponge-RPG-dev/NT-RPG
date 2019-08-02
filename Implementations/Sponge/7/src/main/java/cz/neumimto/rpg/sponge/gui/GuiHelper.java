@@ -13,7 +13,7 @@ import cz.neumimto.rpg.api.skills.*;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.utils.Pair;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.sponge.commands.InfoCommand;
+import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.inventory.data.InventoryCommandItemMenuData;
 import cz.neumimto.rpg.sponge.inventory.data.MenuInventoryData;
@@ -58,10 +58,8 @@ import static cz.neumimto.rpg.sponge.gui.CatalogTypeItemStackBuilder.Item;
 public class GuiHelper {
 
     public static Map<DamageType, CatalogTypeItemStackBuilder> damageTypeToItemStack = new HashMap<>();
-    private static NtRpgPlugin plugin;
 
     static {
-        plugin = NtRpgPlugin.GlobalScope.plugin;
 
         damageTypeToItemStack.put(DamageTypes.ATTACK, Item.of(ItemTypes.STONE_SWORD));
         damageTypeToItemStack.put(DamageTypes.CONTACT, Item.of(ItemTypes.CACTUS));
@@ -110,7 +108,7 @@ public class GuiHelper {
     static Inventory createMenuInventoryClassDefView(ClassDefinition w) {
         Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST)
                 .property(InventoryTitle.of(Text.of(w.getName(), toTextColor(w.getPreferedColor()), TextStyles.BOLD)))
-                .build(plugin);
+                .build(NtRpgPlugin.getInstance());
         String dyeColor = NtRpgPlugin.pluginConfig.CLASS_TYPES.get(w.getClassType()).getDyeColor();
         makeBorder(i, toDyeColor(dyeColor));
         i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(1, 4))).offer(toItemStack(w));
@@ -138,10 +136,10 @@ public class GuiHelper {
                                 .append(Text.builder(type).color(toTextColor(classTypeDefinition.getPrimaryColor())).style(TextStyles.BOLD).build())
                                 .append(Text.builder(" ]").color(toTextColor(classTypeDefinition.getSecondaryColor())).build())
                                 .build()))
-                .build(plugin);
+                .build(NtRpgPlugin.getInstance());
         GuiHelper.makeBorder(i, toDyeColor(classTypeDefinition.getDyeColor()));
 
-        NtRpgPlugin.GlobalScope.classService.getClassDefinitions().stream()
+        Rpg.get().getClassService().getClassDefinitions().stream()
                 .filter(a -> a.getClassType().equalsIgnoreCase(type))
                 .forEach(a -> i.offer(GuiHelper.toItemStack(a)));
 
@@ -153,7 +151,7 @@ public class GuiHelper {
     public static Inventory createMenuInventoryClassTypesView() {
         Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST)
                 .property(InventoryTitle.of(translate(LocalizationKeys.CLASS_TYPES)))
-                .build(plugin);
+                .build(NtRpgPlugin.getInstance());
 
         makeBorder(i, DyeColors.WHITE);
 
@@ -176,14 +174,12 @@ public class GuiHelper {
     }
 
     private static ItemStack createPropertyCommand(ClassDefinition group) {
-        String cc = NtRpgPlugin.GlobalScope.injector.getInstance(InfoCommand.class).getAliases().iterator().next();
-        return command(cc + " properties-initial " + group.getName(),
+        return command("show properties-initial " + group.getName(),
                 translate(LocalizationKeys.PROPERTIES), ItemTypes.BOOK);
     }
 
     private static ItemStack createAttributesCommand(ClassDefinition group) {
-        String cc = NtRpgPlugin.GlobalScope.injector.getInstance(InfoCommand.class).getAliases().iterator().next();
-        return command(cc + "  attributes-initial " + group.getName(),
+        return command("show attributes-initial " + group.getName(),
                 translate(LocalizationKeys.ATTRIBUTES), ItemTypes.BOOK);
     }
 
@@ -201,7 +197,7 @@ public class GuiHelper {
 
     public static ItemStack propertyToItemStack(int id, float value) {
         ItemStack i = itemStack(ItemTypes.BOOK);
-        String nameById = NtRpgPlugin.GlobalScope.spongePropertyService.getNameById(id);
+        String nameById = Rpg.get().getPropertyService().getNameById(id);
         nameById = Utils.configNodeToReadableString(nameById);
         i.offer(Keys.DISPLAY_NAME, TextHelper.makeText(nameById, TextColors.GREEN));
         if (nameById.endsWith("mult")) {
@@ -254,7 +250,7 @@ public class GuiHelper {
         List<Text> lore;
         TextColor nameColor;
         Pair<List<Text>, TextColor> fromCache = model.getFromCache(skill);
-        ItemStack itemStack = itemStack(NtRpgPlugin.GlobalScope.inventorySerivce.getItemIconForSkill(skill));
+        ItemStack itemStack = itemStack(Rpg.get().getInventoryService().getItemIconForSkill(skill));
         if (fromCache == null) {
             lore = new ArrayList<>();
             nameColor = getSkillTextColor(character, skill, skillData, skillTree);
@@ -321,7 +317,7 @@ public class GuiHelper {
                         event -> new SkillTreeInventoryListener().onOptionSelect(event, (Player) event.getCause().root()))
                 .listener(ClickInventoryEvent.Secondary.class,
                         event -> new SkillTreeInventoryListener().onOptionSelect(event, (Player) event.getCause().root()))
-                .build(plugin);
+                .build(NtRpgPlugin.getInstance());
 
         i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(7, 0))).offer(unclickableInterface(DyeColors.YELLOW));
         i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(7, 1))).offer(unclickableInterface(DyeColors.YELLOW));
@@ -371,7 +367,7 @@ public class GuiHelper {
                 .of(InventoryArchetypes.DOUBLE_CHEST)
                 .property(InventoryTitle.of(Text.builder(skillData.getSkill().getLocalizableName()).color(TextColors.DARK_GREEN).style(TextStyles.BOLD)
                         .build()))
-                .build(plugin);
+                .build(NtRpgPlugin.getInstance());
 
         SkillTreeViewModel skillTreeViewModel = character.getLastTimeInvokedSkillTreeView();
         ItemStack back = back("skilltree " + skillTreeViewModel.getViewedClass().getName(), translate(LocalizationKeys.SKILLTREE));
@@ -385,7 +381,7 @@ public class GuiHelper {
             of.offer(new MenuInventoryData(true));
             build.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(1, 0))).offer(of);
 
-            SkillService skillService = NtRpgPlugin.GlobalScope.skillService;
+            SkillService skillService = Rpg.get().getSkillService();
 
             int i = 0;
             int j = 2;
@@ -514,7 +510,7 @@ public class GuiHelper {
         Text lore = Text.builder().append(translate(LocalizationKeys.ITEM_DAMAGE))
                 .append(Text.builder(": " + configRPGItemType.getDamage())
                         .style(TextStyles.BOLD)
-                        .color(NtRpgPlugin.GlobalScope.damageService.getColorByDamage(configRPGItemType.getDamage()))
+                        .color(((SpongeDamageService)Rpg.get().getDamageService()).getColorByDamage(configRPGItemType.getDamage()))
                         .build())
                 .build();
         q.offer(Keys.ITEM_LORE, Collections.singletonList(lore));

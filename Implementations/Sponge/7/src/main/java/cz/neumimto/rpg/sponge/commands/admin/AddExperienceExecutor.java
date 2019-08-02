@@ -3,8 +3,8 @@ package cz.neumimto.rpg.sponge.commands.admin;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.commands.AdminCommandFacade;
 import cz.neumimto.rpg.common.commands.CommandProcessingException;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -23,6 +23,9 @@ public class AddExperienceExecutor implements CommandExecutor {
     @Inject
     private AdminCommandFacade adminCommandFacade;
 
+    @Inject
+    private SpongeCharacterService characterService;
+
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
         Player player = args.<Player>getOne("player").get();
@@ -30,7 +33,7 @@ public class AddExperienceExecutor implements CommandExecutor {
         Optional<ClassDefinition> classDefinition = args.getOne("class");
         Optional<String> expSource = args.getOne("source");
 
-        ISpongeCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter(player.getUniqueId());
+        ISpongeCharacter character = characterService.getCharacter(player.getUniqueId());
 
         try {
             adminCommandFacade.commandAddExperiences(character, amount, classDefinition.orElse(null), expSource.orElse(null));

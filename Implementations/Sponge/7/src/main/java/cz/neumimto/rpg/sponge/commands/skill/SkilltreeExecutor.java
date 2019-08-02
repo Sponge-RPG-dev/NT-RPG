@@ -1,13 +1,15 @@
 package cz.neumimto.rpg.sponge.commands.skill;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
 import cz.neumimto.rpg.sponge.gui.SkillTreeViewModel;
 import cz.neumimto.rpg.sponge.utils.TextHelper;
 import org.spongepowered.api.command.CommandException;
@@ -20,13 +22,20 @@ import org.spongepowered.api.text.Text;
 
 import java.util.Optional;
 
+@Singleton
 public class SkilltreeExecutor implements CommandExecutor {
+    
+    @Inject
+    private SpongeCharacterService characterService;
+
+    @Inject
+    private LocalizationService localizationService;
+
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
         if (src instanceof Player) {
             Player p = (Player) src;
-            ISpongeCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter(p);
-            LocalizationService localizationService = NtRpgPlugin.GlobalScope.localizationService;
+            ISpongeCharacter character = characterService.getCharacter(p);
             if (character.isStub()) {
                 String translate = localizationService.translate(LocalizationKeys.CHARACTER_IS_REQUIRED);
                 p.sendMessage(TextHelper.parse(translate));

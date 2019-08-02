@@ -1,10 +1,10 @@
 package cz.neumimto.rpg.sponge.inventory.data.manipulators;
 
 import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.sponge.inventory.data.NKeys;
 import cz.neumimto.rpg.common.inventory.items.subtypes.ItemSubtype;
 import cz.neumimto.rpg.common.inventory.items.subtypes.ItemSubtypes;
+import cz.neumimto.rpg.sponge.inventory.SpongeItemService;
+import cz.neumimto.rpg.sponge.inventory.data.NKeys;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataHolder;
@@ -45,7 +45,7 @@ public class ItemSubtypeData extends AbstractSingleData<ItemSubtype, ItemSubtype
     public Optional<ItemSubtypeData> from(DataView view) {
         if (view.contains(NKeys.ITEM_META_SUBTYPE.getQuery())) {
             String s = view.getString(NKeys.ITEM_META_SUBTYPE.getQuery()).get();
-            ItemSubtype itemSubtype = NtRpgPlugin.GlobalScope.itemService.getItemSubtypes().get(s);
+            ItemSubtype itemSubtype =  ((SpongeItemService)Rpg.get().getItemService()).getItemSubtypes().get(s);
             setValue(itemSubtype);
             return Optional.of(this);
         }

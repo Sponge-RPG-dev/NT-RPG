@@ -1,11 +1,12 @@
 package cz.neumimto.rpg.sponge.skills.scripting;
 
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.api.utils.TriConsumer;
 import cz.neumimto.rpg.common.skills.scripting.SkillComponent;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
+import cz.neumimto.rpg.sponge.entities.SpongeEntityService;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.entity.Entity;
@@ -34,7 +35,7 @@ public class For_Each_Nearby_Enemy implements TriConsumer<ISpongeEntity, Number,
         for (Entity nearbyEntity : nearbyEntities) {
             if (nearbyEntity instanceof Living) {
                 Living living = (Living) nearbyEntity;
-                IEntity iEntity = NtRpgPlugin.GlobalScope.entityService.get(nearbyEntity);
+                IEntity iEntity = ((SpongeEntityService) Rpg.get().getEntityService()).get(nearbyEntity);
                 if (!iEntity.isFriendlyTo(character) && Utils.canDamage(character, living)) {
                     consumer.accept(iEntity);
                 }

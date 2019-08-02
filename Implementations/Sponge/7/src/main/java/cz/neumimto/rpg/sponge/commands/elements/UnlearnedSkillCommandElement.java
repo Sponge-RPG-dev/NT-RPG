@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.sponge.commands.elements;
 
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.api.Rpg;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.ArgumentParseException;
 import org.spongepowered.api.command.args.CommandArgs;
@@ -25,7 +25,7 @@ public class UnlearnedSkillCommandElement extends CommandElement {
     @Override
     protected Object parseValue(CommandSource source, CommandArgs args) throws ArgumentParseException {
         String next = args.next();
-        return NtRpgPlugin.GlobalScope.skillService.getSkillByLocalizedName(next);
+        return Rpg.get().getSkillService().getSkillByLocalizedName(next);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.sponge.commands.item;
 
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.inventory.SpongeInventoryService;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -12,13 +12,20 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
 import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 
+@Singleton
 public class ItemAddRarityExecutor implements CommandExecutor {
+
+    @Inject
+    private SpongeInventoryService inventoryService;
+
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
         Integer integer = args.<Integer>getOne("level").get();
@@ -42,9 +49,9 @@ public class ItemAddRarityExecutor implements CommandExecutor {
 
         ItemStack itemStack = itemInHand.get();
 
-        NtRpgPlugin.GlobalScope.inventorySerivce.setItemRarity(itemInHand.get(), integer);
-        NtRpgPlugin.GlobalScope.inventorySerivce.createItemMetaSectionIfMissing(itemStack);
-        NtRpgPlugin.GlobalScope.inventorySerivce.updateLore(itemStack);
+        inventoryService.setItemRarity(itemInHand.get(), integer);
+        inventoryService.createItemMetaSectionIfMissing(itemStack);
+        inventoryService.updateLore(itemStack);
         player.setItemInHand(HandTypes.MAIN_HAND, itemStack);
         return CommandResult.success();
     }

@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.sponge;
 
-import cz.neumimto.rpg.common.AbstractRpgGuiceModule;
+import cz.neumimto.rpg.common.AbstractRpg;
 import cz.neumimto.rpg.sponge.gui.ParticleDecorator;
 import cz.neumimto.rpg.sponge.gui.VanillaMessaging;
 import cz.neumimto.rpg.sponge.inventory.runewords.RWService;
@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.concurrent.Executor;
 
 @Singleton
-public final class SpongeRpg extends AbstractRpgGuiceModule {
+public final class SpongeRpg extends AbstractRpg {
 
     @Inject
     private VanillaMessaging vanillaMessaging;
@@ -28,6 +28,9 @@ public final class SpongeRpg extends AbstractRpgGuiceModule {
 
     @Inject
     private RWService rwService;
+
+    @Inject
+    private NtRpgPlugin plugin;
 
     protected SpongeRpg(String workingDir) {
         super(workingDir);
@@ -45,7 +48,7 @@ public final class SpongeRpg extends AbstractRpgGuiceModule {
     @Override
     public String getTextAssetContent(String templateName) {
         try {
-            return Sponge.getAssetManager().getAsset(NtRpgPlugin.GlobalScope.plugin, templateName).get().readString();
+            return Sponge.getAssetManager().getAsset(plugin, templateName).get().readString();
         } catch (IOException e) {
             throw new IllegalArgumentException("Unknown template " + templateName);
         }
@@ -68,7 +71,7 @@ public final class SpongeRpg extends AbstractRpgGuiceModule {
 
     @Override
     public void registerListeners(Object listener) {
-        Sponge.getEventManager().registerListeners(NtRpgPlugin.GlobalScope.plugin, listener);
+        Sponge.getEventManager().registerListeners(plugin, listener);
     }
 
     @Override

@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 public class SpongeScriptUtils {
 
     public void runTaskWithDelay(Runnable runnable, int delay) {
-        Sponge.getScheduler().createTaskBuilder().delay(delay, TimeUnit.MILLISECONDS).execute(runnable).submit(NtRpgPlugin.GlobalScope.plugin);
+        Sponge.getScheduler().createTaskBuilder().delay(delay, TimeUnit.MILLISECONDS).execute(runnable).submit(NtRpgPlugin.getInstance());
     }
 
 }

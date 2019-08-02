@@ -27,11 +27,14 @@ public class Placeholders {
     @Inject
     private SpongeCharacterService characterService;
 
+    @Inject
+    private NtRpgPlugin plugin;
+    
     public void init() {
         Sponge.getServiceManager().provide(PlaceholderService.class).ifPresent(a -> {
-            a.loadAll(this, NtRpgPlugin.GlobalScope.plugin)
+            a.loadAll(this, plugin)
                     .stream()
-                    .map(builder -> builder.author("NeumimTo").plugin(NtRpgPlugin.GlobalScope.plugin).version("0.0.1-Test"))
+                    .map(builder -> builder.author("NeumimTo").plugin(plugin).version("0.0.1-Test"))
                     .forEach(builder -> {
                         try {
                             builder.buildAndRegister();

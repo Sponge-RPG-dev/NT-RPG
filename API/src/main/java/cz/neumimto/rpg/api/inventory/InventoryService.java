@@ -1,6 +1,7 @@
 package cz.neumimto.rpg.api.inventory;
 
 import cz.neumimto.rpg.api.persistance.model.EquipedSlot;
+import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.mods.ActiveSkillPreProcessorWrapper;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
@@ -20,4 +21,6 @@ public interface InventoryService<T extends IActiveCharacter> {
     void initializeCharacterInventory(T character);
 
     EquipedSlot createEquipedSlot(String className, int slotId);
+
+    public String getItemIconForSkill(ISkill iSkill);
 }

@@ -1,8 +1,8 @@
 package cz.neumimto.rpg.sponge.commands.elements;
 
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.ArgumentParseException;
@@ -23,8 +23,12 @@ import java.util.stream.Collectors;
  */
 public class PartyMemberCommandElement extends CommandElement {
 
-    public PartyMemberCommandElement(@Nullable Text key) {
+    private final SpongeCharacterService characterService;
+
+
+    public PartyMemberCommandElement(@Nullable Text key, SpongeCharacterService characterService) {
         super(key);
+        this.characterService = characterService;
     }
 
     @Override
@@ -34,8 +38,8 @@ public class PartyMemberCommandElement extends CommandElement {
         if (!player.isPresent()) {
             throw args.createError(TextSerializers.FORMATTING_CODE.deserialize("&CUnknown Player &C\"" + pl + "\""));
         }
-        IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter(player.get());
-        IActiveCharacter pleader = NtRpgPlugin.GlobalScope.characterService.getCharacter((Player) source);
+        IActiveCharacter character = characterService.getCharacter(player.get());
+        IActiveCharacter pleader = characterService.getCharacter((Player) source);
         if (!pleader.isInPartyWith(character)) {
             return character;
         }
@@ -44,7 +48,7 @@ public class PartyMemberCommandElement extends CommandElement {
 
     @Override
     public List<String> complete(CommandSource src, CommandArgs args, CommandContext context) {
-        return NtRpgPlugin.GlobalScope.characterService.getCharacter((Player) src)
+        return characterService.getCharacter((Player) src)
                 .getParty()
                 .getPlayers()
                 .stream()

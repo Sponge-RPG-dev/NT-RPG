@@ -1,6 +1,7 @@
 package cz.neumimto.rpg.sponge.commands.admin;
 
 import com.flowpowered.math.vector.Vector3d;
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
@@ -11,7 +12,6 @@ import cz.neumimto.rpg.api.skills.mods.SkillExecutorCallback;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.api.skills.types.IActiveSkill;
 import cz.neumimto.rpg.api.utils.MathUtils;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.entities.commandblocks.ConsoleSkillExecutor;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.command.CommandException;
@@ -79,7 +79,7 @@ public class ExecuteSkillExecutor implements CommandExecutor {
         } else {
             defaultSkillSettings = skill.getSettings();
             Player player = (Player) src;
-            character = NtRpgPlugin.GlobalScope.characterService.getCharacter(player.getUniqueId());
+            character = Rpg.get().getCharacterService().getCharacter(player.getUniqueId());
             if (character.isStub()) {
                 throw new RuntimeException("Character is required even for an admin.");
             }

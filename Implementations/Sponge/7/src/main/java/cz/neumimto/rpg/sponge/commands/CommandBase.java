@@ -18,9 +18,8 @@
 
 package cz.neumimto.rpg.sponge.commands;
 
-import cz.neumimto.rpg.api.effects.IEffectSource;
-import cz.neumimto.rpg.sponge.configuration.CommandLocalization;
 import cz.neumimto.rpg.api.effects.EffectSourceType;
+import cz.neumimto.rpg.api.effects.IEffectSource;
 import cz.neumimto.rpg.api.effects.IEffectSourceProvider;
 import org.spongepowered.api.command.CommandCallable;
 import org.spongepowered.api.command.CommandException;
@@ -90,7 +89,7 @@ public abstract class CommandBase implements CommandCallable, IEffectSourceProvi
 
     @Override
     public Optional<Text> getShortDescription(CommandSource commandSource) {
-        return Optional.of(Text.of(CommandLocalization.COMMAND_CHOOSE_DESC));
+        return Optional.of(Text.EMPTY);
     }
 
     @Override

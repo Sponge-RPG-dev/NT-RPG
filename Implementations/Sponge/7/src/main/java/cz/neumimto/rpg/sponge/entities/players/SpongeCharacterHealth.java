@@ -18,9 +18,9 @@
 
 package cz.neumimto.rpg.sponge.entities.players;
 
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.CommonProperties;
 import cz.neumimto.rpg.api.entity.IReservable;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import org.spongepowered.api.data.key.Keys;
 
 /**
@@ -53,7 +53,7 @@ class SpongeCharacterHealth implements IReservable {
 
     @Override
     public double getReservedAmount() {
-        return NtRpgPlugin.GlobalScope.entityService.getEntityProperty(activeCharacter, CommonProperties.reserved_health);
+        return Rpg.get().getEntityService().getEntityProperty(activeCharacter, CommonProperties.reserved_health);
     }
 
     @Override
@@ -68,7 +68,7 @@ class SpongeCharacterHealth implements IReservable {
 
     @Override
     public double getRegen() {
-        return NtRpgPlugin.GlobalScope.entityService.getEntityProperty(activeCharacter, CommonProperties.health_regen);
+        return Rpg.get().getEntityService().getEntityProperty(activeCharacter, CommonProperties.health_regen);
     }
 
     @Override

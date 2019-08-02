@@ -1,6 +1,5 @@
 package cz.neumimto.rpg.sponge.commands.admin;
 
-import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.commands.AdminCommandFacade;
@@ -24,6 +23,9 @@ public class AddEffectExecutor implements CommandExecutor {
     @Inject
     private AdminCommandFacade adminCommandFacade;
 
+    @Inject
+    private SpongeCharacterService characterService;
+
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
         Player player = args.<Player>getOne("player").get();
@@ -31,7 +33,6 @@ public class AddEffectExecutor implements CommandExecutor {
         Long duration = args.<Long>getOne("duration").get();
         String data = args.<String>getOne("data").get();
 
-        SpongeCharacterService characterService = Rpg.get().getCharacterService();
         IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
 
         try {

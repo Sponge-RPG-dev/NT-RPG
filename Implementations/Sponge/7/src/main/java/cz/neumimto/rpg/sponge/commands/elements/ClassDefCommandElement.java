@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.sponge.commands.elements;
 
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.api.Rpg;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.PatternMatchingCommandElement;
 import org.spongepowered.api.text.Text;
@@ -18,7 +18,7 @@ public class ClassDefCommandElement extends PatternMatchingCommandElement {
 
     @Override
     protected Iterable<String> getChoices(CommandSource source) {
-        return NtRpgPlugin.GlobalScope.classService.getClassDefinitions().stream()
+        return Rpg.get().getClassService().getClassDefinitions().stream()
                 .filter(a -> source.hasPermission("ntrpg.class." + a.getName().toLowerCase()))
                 .map(a -> a.getName())
                 .collect(Collectors.toList());
@@ -26,6 +26,6 @@ public class ClassDefCommandElement extends PatternMatchingCommandElement {
 
     @Override
     protected Object getValue(String choice) throws IllegalArgumentException {
-        return NtRpgPlugin.GlobalScope.classService.getClassDefinitionByName(choice);
+        return Rpg.get().getClassService().getClassDefinitionByName(choice);
     }
 }

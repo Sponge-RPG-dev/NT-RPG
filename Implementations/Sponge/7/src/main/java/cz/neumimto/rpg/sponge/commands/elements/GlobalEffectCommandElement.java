@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.sponge.commands.elements;
 
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.api.Rpg;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.PatternMatchingCommandElement;
 import org.spongepowered.api.text.Text;
@@ -19,7 +19,7 @@ public class GlobalEffectCommandElement extends PatternMatchingCommandElement {
 
     @Override
     protected Iterable<String> getChoices(CommandSource source) {
-        return NtRpgPlugin.GlobalScope.effectService.getGlobalEffects()
+        return Rpg.get().getEffectService().getGlobalEffects()
                 .keySet()
                 .stream()
                 .map(this::normalize).collect(Collectors.toList());
@@ -32,7 +32,7 @@ public class GlobalEffectCommandElement extends PatternMatchingCommandElement {
     @Override
     protected Object getValue(String choice) throws IllegalArgumentException {
         choice = choice.replaceAll("_", " ");
-        return NtRpgPlugin.GlobalScope.effectService.getGlobalEffects().get(choice);
+        return Rpg.get().getEffectService().getGlobalEffects().get(choice);
     }
 
 

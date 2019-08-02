@@ -6,6 +6,7 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.common.items.RpgItemTypeImpl;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
 import cz.neumimto.rpg.sponge.items.SpongeRpgItemType;
 import cz.neumimto.rpg.sponge.utils.TextHelper;
 import org.spongepowered.api.data.key.Keys;
@@ -101,7 +102,7 @@ public class ArmorAndWeaponMenuHelper {
         for (Map.Entry<SpongeRpgItemType, Double> entry : inner) {
             SpongeRpgItemType spongeRpgItemType = entry.getKey();
             ItemStack itemStack = GuiHelper.itemStack(spongeRpgItemType.getItemType());
-            TextColor colorByDamage = NtRpgPlugin.GlobalScope.damageService.getColorByDamage(entry.getValue());
+            TextColor colorByDamage = ((SpongeDamageService)Rpg.get().getDamageService()).getColorByDamage(entry.getValue());
             Text t = Text.builder(iDmgLabel + ": " + entry.getValue()).color(colorByDamage).style(TextStyles.BOLD).build();
             itemStack.offer(Keys.ITEM_LORE, Collections.singletonList(t));
             inventory.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(column,row))).offer(itemStack);
@@ -133,20 +134,20 @@ public class ArmorAndWeaponMenuHelper {
         Inventory i = Inventory.builder()
                 .of(InventoryArchetypes.DOUBLE_CHEST)
                 .property(InventoryTitle.of(Text.of(title)))
-                .build(NtRpgPlugin.GlobalScope.plugin);
+                .build(NtRpgPlugin.getInstance());
         GuiHelper.makeBorder(i, DyeColors.ORANGE);
-        String translate = NtRpgPlugin.GlobalScope.localizationService.translate(LocalizationKeys.BACK);
+        String translate = Rpg.get().getLocalizationService().translate(LocalizationKeys.BACK);
 
         ItemStack back = GuiHelper.back("char", TextHelper.parse(translate));
         i.offer(back);
 
         if (idx * 21 < max) {
-            translate = NtRpgPlugin.GlobalScope.localizationService.translate(LocalizationKeys.NEXT);
+            translate = Rpg.get().getLocalizationService().translate(LocalizationKeys.NEXT);
             ItemStack c = GuiHelper.command("char " + command + " " + (idx + 1), TextHelper.parse(translate), ItemTypes.GLOWSTONE_DUST);
             i.offer(c);
         }
         if (idx > 0) {
-            translate = NtRpgPlugin.GlobalScope.localizationService.translate(LocalizationKeys.BACK);
+            translate = Rpg.get().getLocalizationService().translate(LocalizationKeys.BACK);
             ItemStack c = GuiHelper.command("char " + command + " " + (idx - 1), TextHelper.parse(translate), ItemTypes.REDSTONE);
             i.offer(c);
         }

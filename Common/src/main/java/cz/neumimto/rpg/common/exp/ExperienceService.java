@@ -16,18 +16,22 @@ public abstract class ExperienceService implements IExperienceService {
     protected Map<String, Double> farming = new HashMap<>();
     protected Map<String, Double> fishing = new HashMap<>();
 
+    @Override
     public Double getMinningExperiences(String type) {
         return minerals.get(type);
     }
 
+    @Override
     public Double getLoggingExperiences(String type) {
         return minerals.get(type);
     }
 
+    @Override
     public Double getFishingExperience(String type) {
         return fishing.get(type);
     }
 
+    @Override
     public Double getFarmingExperiences(String type) {
         return farming.get(type);
     }

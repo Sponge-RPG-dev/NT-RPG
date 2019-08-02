@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.spigot;
 
-import cz.neumimto.rpg.common.AbstractRpgGuiceModule;
+import cz.neumimto.rpg.common.AbstractRpg;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.concurrent.Executor;
 
 @Singleton
-public final class SpigotRpg extends AbstractRpgGuiceModule {
+public final class SpigotRpg extends AbstractRpg {
 
     protected SpigotRpg(String workingDirectory) {
         super(workingDirectory);

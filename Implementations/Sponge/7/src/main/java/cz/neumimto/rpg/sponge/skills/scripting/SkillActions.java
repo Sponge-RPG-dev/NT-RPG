@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.sponge.skills.scripting;
 
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.F;
@@ -7,7 +8,6 @@ import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.api.skills.scripting.SkillScriptContext;
 import cz.neumimto.rpg.api.utils.TriConsumer;
 import cz.neumimto.rpg.common.skills.scripting.SkillComponent;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.damage.SkillDamageSource;
 import cz.neumimto.rpg.sponge.damage.SkillDamageSourceBuilder;
 import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
@@ -112,7 +112,7 @@ public class SkillActions {
             }
     )
     public static TriConsumer<IEffect, SkillScriptContext, IEntity> APPLY_EFFECT = (effect, context, source) -> {
-        NtRpgPlugin.GlobalScope.effectService.addEffect(effect, context.getSkill(), source);
+        Rpg.get().getEffectService().addEffect(effect, context.getSkill(), source);
     };
 
     @SkillComponent(
@@ -171,7 +171,7 @@ public class SkillActions {
             }
     )
     public static TriConsumer<IEntity, Number, SkillScriptContext> HEAL = (iEntity, aNumber, context) ->
-            NtRpgPlugin.GlobalScope.entityService.healEntity(iEntity, aNumber.floatValue(), context.getSkill());
+            Rpg.get().getEntityService().healEntity(iEntity, aNumber.floatValue(), context.getSkill());
 
 
     @SkillComponent(

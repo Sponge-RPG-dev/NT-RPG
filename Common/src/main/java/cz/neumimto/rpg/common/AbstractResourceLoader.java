@@ -3,6 +3,7 @@ package cz.neumimto.rpg.common;
 import com.google.inject.Injector;
 import cz.neumimto.rpg.api.IResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.RpgAddon;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.effects.IEffectService;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
@@ -22,15 +23,16 @@ import cz.neumimto.rpg.api.utils.Pair;
 import cz.neumimto.rpg.common.bytecode.ClassGenerator;
 import cz.neumimto.rpg.common.entity.PropertyService;
 import cz.neumimto.rpg.common.utils.ResourceClassLoader;
+import org.apache.commons.io.FileUtils;
 
 import javax.inject.Inject;
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.charset.Charset;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -38,12 +40,10 @@ import java.util.jar.JarFile;
 import static cz.neumimto.rpg.api.logging.Log.error;
 import static cz.neumimto.rpg.api.logging.Log.info;
 
-public class AbstractResourceLoader implements IResourceLoader {
+public abstract class AbstractResourceLoader implements IResourceLoader {
 
     private final static String INNERCLASS_SEPARATOR = "$";
     public static File classDir, addonDir, skilltreeDir, addonLoadDir, localizations;
-
-
 
     @Inject
     private SkillService skillService;
@@ -75,6 +75,25 @@ public class AbstractResourceLoader implements IResourceLoader {
 
     private static boolean reload = false;
 
+    private Set<Class> classesToLoad = new HashSet<>();
+
+    @Override
+    public void init() {
+        String workingDirectory = Rpg.get().getWorkingDirectory();
+        classDir = new File(workingDirectory + File.separator + "classes");
+        addonDir = new File(workingDirectory + File.separator + "addons");
+        addonLoadDir = new File(workingDirectory + File.separator + ".deployed");
+        skilltreeDir = new File(workingDirectory + File.separator + "Skilltrees");
+        localizations = new File(workingDirectory + File.separator + "localizations");
+        classDir.mkdirs();
+        skilltreeDir.mkdirs();
+        addonDir.mkdirs();
+        localizations.mkdirs();
+
+
+    }
+
+
     private static <T> T newInstance(Class<T> excepted, Class<?> clazz) {
         T t = null;
         try {
@@ -85,14 +104,7 @@ public class AbstractResourceLoader implements IResourceLoader {
         return t;
     }
 
-    public void loadExternalJars() {
-        Path dir = Paths.get(Rpg.get().getWorkingDirectory()).resolve("addons");
-        for (File f : dir.toFile().listFiles()) {
-            loadJarFile(f, false);
-        }
-        reload = true;
-    }
-
+    @Override
     public void loadJarFile(File f, boolean main) {
         if (f == null) {
             return;
@@ -155,33 +167,26 @@ public class AbstractResourceLoader implements IResourceLoader {
         }
 
         for (String classToLoad : classesToLoad) {
-            loadClass(main, classLoader, classToLoad);
+            Class<?> clazz = loadClass(main, classLoader, classToLoad);
+            this.classesToLoad.add(clazz);
         }
-        info("Finished loading of jarfile " + file.getName());
-
+        info("Finished parsing of jarfile " + file.getName());
     }
 
-    protected void loadClass(boolean main, ClassLoader classLoader, String classToLoad) {
+    protected Class<?> loadClass(boolean main, ClassLoader classLoader, String classToLoad) {
         String className = classToLoad.substring(0, classToLoad.length() - 6);
         className = className.replace('/', '.');
         Class<?> clazz = null;
         try {
             if (!main) {
                 clazz = classLoader.loadClass(className);
-                if (loadClass(clazz) != null) {
-                    info("ClassLoader for "
-                                    + Console.GREEN_BOLD + classLoader +
-                                    Console.RESET + " loaded class " +
-                                    Console.GREEN + clazz.getSimpleName() + Console.RESET,
-                            Rpg.get().getPluginConfig().DEBUG);
-                }
             } else {
                 clazz = Class.forName(className);
-                loadClass(clazz);
             }
         } catch (Exception e) {
             error("Could not load the class [" + className + "]" + e.getMessage(), e);
         }
+        return clazz;
     }
 
     protected void prepareClassLoader(File f) {
@@ -253,6 +258,11 @@ public class AbstractResourceLoader implements IResourceLoader {
         }
         if (clazz.isAnnotationPresent(ModelMapper.class)) {
             loadModelMapperClass(clazz);
+        }
+        if (clazz.isAnnotationPresent(ListenerClass.class)) {
+            info("Registering listener class" + clazz.getName(), Rpg.get().getPluginConfig().DEBUG);
+            container = injector.getInstance(clazz);
+            Rpg.get().registerListeners(container);
         }
         return container;
     }
@@ -358,4 +368,57 @@ public class AbstractResourceLoader implements IResourceLoader {
         }
     }
 
+    @Override
+    public void loadExternalJars() {
+        try {
+            FileUtils.deleteDirectory(addonLoadDir);
+            FileUtils.copyDirectory(addonDir, addonLoadDir, pathname -> pathname.isDirectory() || pathname.getName().endsWith(".jar"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        for (File file : addonLoadDir.listFiles()) {
+            loadJarFile(file, false);
+        }
+    }
+
+    @Override
+    public void initializeComponents() {
+        for (Class aClass : classesToLoad) {
+            initializeComponent(aClass);
+        }
+        classesToLoad.clear();
+    }
+
+    public void initializeComponent(Class<?> clazz) {
+        try {
+            if (loadClass(clazz) != null) {
+                info("ClassLoader for "
+                                + Console.GREEN_BOLD + clazz.getClassLoader() +
+                                Console.RESET + " loaded class " +
+                                Console.GREEN + clazz.getSimpleName() + Console.RESET,
+                        Rpg.get().getPluginConfig().DEBUG);
+            }
+        } catch (IllegalAccessException | InstantiationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public Set<RpgAddon> discoverGuiceModules() {
+        Set<RpgAddon> addons = new HashSet<>();
+
+        for (Class aClass : classesToLoad) {
+            if (RpgAddon.class.isAssignableFrom(aClass)
+                    && !aClass.isInterface()
+                    && !Modifier.isAbstract( aClass.getModifiers())) {
+                try {
+                    addons.add((RpgAddon) aClass.getConstructor().newInstance());
+                } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                    Log.error("Could not call a default constructor on a class " + aClass.getName());
+                }
+            }
+        }
+
+        return addons;
+    }
 }

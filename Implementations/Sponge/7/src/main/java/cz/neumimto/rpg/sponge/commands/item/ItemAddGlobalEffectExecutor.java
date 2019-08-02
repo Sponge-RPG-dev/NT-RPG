@@ -7,7 +7,7 @@ import cz.neumimto.rpg.api.effects.EffectParams;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.api.effects.model.EffectModelFactory;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.inventory.SpongeInventoryService;
 import cz.neumimto.rpg.sponge.utils.TextHelper;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -19,14 +19,20 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+@Singleton
 public class ItemAddGlobalEffectExecutor implements CommandExecutor {
     private static Gson gson = new Gson();
+
+    @Inject
+    private SpongeInventoryService inventorySerivce;
 
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
@@ -86,8 +92,8 @@ public class ItemAddGlobalEffectExecutor implements CommandExecutor {
                 }
             }
 
-            itemStack = NtRpgPlugin.GlobalScope.inventorySerivce.addEffectsToItemStack(itemStack, effect.getName(), map);
-            itemStack = NtRpgPlugin.GlobalScope.inventorySerivce.updateLore(itemStack);
+            itemStack = inventorySerivce.addEffectsToItemStack(itemStack, effect.getName(), map);
+            itemStack = inventorySerivce.updateLore(itemStack);
             player.setItemInHand(HandTypes.MAIN_HAND, itemStack);
             player.sendMessage(TextHelper.parse("Enchantment " + effect.getName() + " added"));
             return CommandResult.success();

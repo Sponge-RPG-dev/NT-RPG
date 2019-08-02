@@ -22,9 +22,11 @@ import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.RpgAddon;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.utils.FileUtils;
+import cz.neumimto.rpg.sponge.commands.CommandService;
 import cz.neumimto.rpg.sponge.configuration.Settings;
 import cz.neumimto.rpg.sponge.inventory.data.*;
 import cz.neumimto.rpg.sponge.inventory.data.manipulators.*;
@@ -41,7 +43,6 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.game.GameRegistryEvent;
 import org.spongepowered.api.event.game.state.GameConstructionEvent;
-import org.spongepowered.api.event.game.state.GamePostInitializationEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.plugin.Dependency;
 import org.spongepowered.api.plugin.Plugin;
@@ -56,9 +57,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static cz.neumimto.rpg.api.logging.Log.info;
 
@@ -84,6 +83,8 @@ public class NtRpgPlugin extends Rpg {
     @Inject
     private PluginContainer plugin;
 
+    private static NtRpgPlugin instance;
+
     @Inject
     private Game game;
 
@@ -100,10 +101,67 @@ public class NtRpgPlugin extends Rpg {
 
     @Listener
     public void initializeApi(GameConstructionEvent event) {
+        long start = System.nanoTime();
+        instance = this;
+        asyncExecutor = Sponge.getGame().getScheduler().createAsyncExecutor(NtRpgPlugin.this);
+
+        Game game = Sponge.getGame();
+        Optional<PluginContainer> gui = game.getPluginManager().getPlugin("MinecraftGUIServer");
+        if (gui.isPresent()) {
+
+        } else {
+            Settings.ENABLED_GUI = false;
+        }
+
+        Path path = Paths.get(workingDir);
+
+        try {
+            Files.createDirectories(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Rpg.get().reloadMainPluginConfig();
+        Rpg.get().getResourceLoader().loadJarFile(pluginjar, true);
+        Rpg.get().getResourceLoader().loadExternalJars();
+
+        Set<RpgAddon> rpgAddons = Rpg.get().getResourceLoader().discoverGuiceModules();
+
+        Map bindings = new HashMap<>();
+        for (RpgAddon rpgAddon : rpgAddons) {
+            bindings.putAll(rpgAddon.getBindings());
+        }
+
         injector = Guice.createInjector(
-                new SpongeGuiceModule(this, logger, game, causeStackManager)
+                new SpongeGuiceModule(this, logger, game, causeStackManager, bindings)
         );
         super.impl = injector.getInstance(SpongeRpg.class);
+
+        Rpg.get().getResourceLoader().initializeComponents();
+
+        for (RpgAddon rpgAddon : rpgAddons) {
+            rpgAddon.processStageEarly(injector);
+        }
+
+        if (pluginConfig.DEBUG.isBalance()) {
+            Sponge.getEventManager().registerListeners(this, injector.getInstance(DebugListener.class));
+        }
+        CommandService commandService = injector.getInstance(CommandService.class);
+        commandService.registerStandartCommands();
+
+
+        if (INTEGRATIONS.contains("Placeholders")) {
+            Placeholders placeholders = injector.getInstance(Placeholders.class);
+            placeholders.init();
+            info("Placeholders Initialized");
+        }
+
+        for (RpgAddon rpgAddon : rpgAddons) {
+            rpgAddon.processStageLate(injector);
+        }
+
+        double elapsedTime = (System.nanoTime() - start) / 1000000000.0;
+        info("NtRpg plugin successfully loaded in " + elapsedTime + " seconds");
     }
 
     @Listener
@@ -126,7 +184,7 @@ public class NtRpgPlugin extends Rpg {
         }
 
 
-        Sponge.getEventManager().registerListeners(this, new PersistenceHandler());
+        //Sponge.getEventManager().registerListeners(this, new PersistenceHandler());
         new NKeys();
         DataRegistration.builder()
                 .manipulatorId("item_attribute_ref")
@@ -302,52 +360,8 @@ public class NtRpgPlugin extends Rpg {
         event.register(NDamageType.DAMAGE_CHECK);
     }
 
-
-    @Listener
-    public void onPluginLoad(GamePostInitializationEvent event) {
-        long start = System.nanoTime();
-
-        Rpg.get().reloadMainPluginConfig();
-        asyncExecutor = Sponge.getGame().getScheduler().createAsyncExecutor(NtRpgPlugin.this);
-
-        Game game = Sponge.getGame();
-        Optional<PluginContainer> gui = game.getPluginManager().getPlugin("MinecraftGUIServer");
-        if (gui.isPresent()) {
-
-        } else {
-            Settings.ENABLED_GUI = false;
-        }
-
-
-        Path path = Paths.get(workingDir);
-        ConfigMapper.init("NtRpg", path);
-
-        try {
-            Files.createDirectories(path);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        GlobalScope.resourceLoader.loadJarFile(pluginjar, true);
-        GlobalScope.resourceLoader.loadExternalJars();
-
-        if (pluginConfig.DEBUG.isBalance()) {
-            Sponge.getEventManager().registerListeners(this, injector.getInstance(DebugListener.class));
-        }
-        GlobalScope.commandService.registerStandartCommands();
-        postInit();
-
-        if (INTEGRATIONS.contains("Placeholders")) {
-            Placeholders placeholders = injector.getInstance(Placeholders.class);
-            placeholders.init();
-            info("Placeholders Initialized");
-        }
-
-
-        double elapsedTime = (System.nanoTime() - start) / 1000000000.0;
-        info("NtRpg plugin successfully loaded in " + elapsedTime + " seconds");
+    public static NtRpgPlugin getInstance() {
+        return instance;
     }
-
-
 
 }

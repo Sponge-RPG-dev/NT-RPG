@@ -20,6 +20,6 @@ import java.util.function.BiConsumer;
 public class Delay implements BiConsumer<Runnable, Long> {
     @Override
     public void accept(Runnable r, Long l) {
-        Sponge.getScheduler().createTaskBuilder().execute(r).delay(l, TimeUnit.MILLISECONDS).submit(NtRpgPlugin.GlobalScope.plugin);
+        Sponge.getScheduler().createTaskBuilder().execute(r).delay(l, TimeUnit.MILLISECONDS).submit(NtRpgPlugin.getInstance());
     }
 }

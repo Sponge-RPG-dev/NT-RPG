@@ -8,7 +8,6 @@ import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.mods.ResultNotificationSkillExecutor;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.utils.TextHelper;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -21,7 +20,7 @@ import org.spongepowered.api.text.Text;
 public class PlayerSkillCastExecutor implements CommandExecutor {
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-        IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter((Player) src);
+        IActiveCharacter character = Rpg.get().getCharacterService().getCharacter(((Player) src).getUniqueId());
 
         if (character == null) return CommandResult.empty(); //Failed
 
@@ -29,7 +28,7 @@ public class PlayerSkillCastExecutor implements CommandExecutor {
 
         PlayerSkillContext info = character.getSkillInfo(skill.getId());
         final LocalizationService localizationService = Rpg.get().getLocalizationService();
-        if (info == PlayerSkillContext.Empty || info == null) {
+        if (info == PlayerSkillContext.EMPTY || info == null) {
             src.sendMessage(TextHelper.parse(localizationService.translate(LocalizationKeys.CHARACTER_DOES_NOT_HAVE_SKILL, Arg.arg("skill", skill.getName()))));
             //TODO: maybe return?
         }

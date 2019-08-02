@@ -1,9 +1,9 @@
 package cz.neumimto.rpg.sponge.inventory.data.manipulators;
 
-import cz.neumimto.rpg.common.inventory.crafting.runewords.ItemUpgrade;
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.common.inventory.sockets.SocketType;
 import cz.neumimto.rpg.common.inventory.sockets.SocketTypes;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.inventory.SpongeItemService;
 import cz.neumimto.rpg.sponge.inventory.data.NKeys;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.DataContainer;
@@ -46,7 +46,7 @@ public class ItemStackUpgradeData extends AbstractSingleData<SocketType, ItemSta
     public Optional<ItemStackUpgradeData> from(DataView view) {
         if (view.contains(NKeys.ITEMSTACK_UPGRADE.getQuery())) {
             String s = view.getString(NKeys.ITEMSTACK_UPGRADE.getQuery()).get();
-            SocketType socketType = NtRpgPlugin.GlobalScope.itemService.getSocketTypes().get(s);
+            SocketType socketType =  ((SpongeItemService) Rpg.get().getItemService()).getSocketTypes().get(s);
             setValue(socketType);
             return Optional.of(this);
         }

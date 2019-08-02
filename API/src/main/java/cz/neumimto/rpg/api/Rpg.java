@@ -7,4 +7,5 @@ public class Rpg {
     public static RpgApi get() {
         return impl;
     }
+
 }

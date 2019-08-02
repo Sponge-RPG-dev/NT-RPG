@@ -19,25 +19,16 @@
 package cz.neumimto.rpg;
 
 import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.localization.LocalizationService;
-import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.common.AbstractResourceLoader;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.commands.CommandBase;
 import cz.neumimto.rpg.sponge.commands.CommandService;
 import org.apache.commons.io.FileUtils;
-import org.spongepowered.api.Sponge;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.Charset;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Properties;
 
 import static cz.neumimto.rpg.api.logging.Log.info;
 
@@ -48,41 +39,14 @@ import static cz.neumimto.rpg.api.logging.Log.info;
 @Singleton
 public class ResourceLoader extends AbstractResourceLoader {
 
-    static {
-        classDir = new File(NtRpgPlugin.workingDir + File.separator + "classes");
-        addonDir = new File(NtRpgPlugin.workingDir + File.separator + "addons");
-        addonLoadDir = new File(NtRpgPlugin.workingDir + File.separator + ".deployed");
-        skilltreeDir = new File(NtRpgPlugin.workingDir + File.separator + "Skilltrees");
-        localizations = new File(NtRpgPlugin.workingDir + File.separator + "localizations");
-        classDir.mkdirs();
-        skilltreeDir.mkdirs();
-        addonDir.mkdirs();
-        localizations.mkdirs();
 
-        try {
-            FileUtils.deleteDirectory(addonLoadDir);
-            FileUtils.copyDirectory(addonDir, addonLoadDir, pathname -> pathname.isDirectory() || pathname.getName().endsWith(".jar"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Inject
-    private LocalizationService localizationService;
 
     @Inject
     private CommandService commandService;
 
-
-
     @Override
     public Object loadClass(Class<?> clazz) throws IllegalAccessException, InstantiationException {
         Object o = super.loadClass(clazz);
-        if (clazz.isAnnotationPresent(ListenerClass.class)) {
-            info("Registering listener class" + clazz.getName(), Rpg.get().getPluginConfig().DEBUG);
-            o = injector.getInstance(clazz);
-            Sponge.getGame().getEventManager().registerListeners(NtRpgPlugin.GlobalScope.plugin, o);
-        }
 
         if (clazz.isAnnotationPresent(Command.class)) {
             o = injector.getInstance(clazz);

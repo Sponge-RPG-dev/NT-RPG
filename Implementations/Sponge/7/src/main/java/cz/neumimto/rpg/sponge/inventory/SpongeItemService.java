@@ -43,6 +43,9 @@ public class SpongeItemService extends AbstractItemService {
     @Inject
     private IEffectService effectService;
 
+    @Inject
+    private NtRpgPlugin plugin;
+
     public Optional<RpgItemType> getRpgItemType(ItemStack itemStack) {
         Optional<Text> text = itemStack.get(Keys.DISPLAY_NAME);
         return getRpgItemType(itemStack.getType().getId(), text.map(Text::toPlain).orElse(null));
@@ -101,7 +104,7 @@ public class SpongeItemService extends AbstractItemService {
     public void loadItemGroups(Path path) {
         File f = path.resolve("ItemGroups.conf").toFile();
         if (!f.exists()) {
-            Optional<Asset> asset = Sponge.getAssetManager().getAsset(NtRpgPlugin.GlobalScope.plugin, "ItemGroups.conf");
+            Optional<Asset> asset = Sponge.getAssetManager().getAsset(plugin, "ItemGroups.conf");
             if (!asset.isPresent()) {
                 throw new IllegalStateException("Could not find an asset ItemGroups.conf");
             }

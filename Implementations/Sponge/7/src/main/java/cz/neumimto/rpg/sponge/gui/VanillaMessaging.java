@@ -43,6 +43,7 @@ import cz.neumimto.rpg.common.effects.InternalEffectSourceProvider;
 import cz.neumimto.rpg.common.inventory.crafting.runewords.ItemUpgrade;
 import cz.neumimto.rpg.common.inventory.crafting.runewords.Rune;
 import cz.neumimto.rpg.common.inventory.runewords.RuneWord;
+import cz.neumimto.rpg.common.persistance.dao.IPlayerDao;
 import cz.neumimto.rpg.common.utils.model.CharacterListModel;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.commands.InfoCommand;
@@ -136,7 +137,7 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
     private SpongeSkillService skillService;
 
     @Inject
-    private PlayerDao playerDao;
+    private IPlayerDao playerDao;
 
     public void load() {
         controlls = new HashMap<>();
@@ -830,7 +831,7 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
 
     @Override
     public void displayCharacterMenu(ISpongeCharacter character) {
-        Inventory i = GuiHelper.createCharacterEmptyInventory(character).build(NtRpgPlugin.GlobalScope.plugin);
+        Inventory i = GuiHelper.createCharacterEmptyInventory(character).build(plugin);
 
         makeBorder(i, DyeColors.ORANGE);
 
@@ -873,7 +874,7 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
                     Optional<Text> text = aFinal.get(Keys.DISPLAY_NAME);
                     if (text.isPresent() && text.get().toPlainSingle().equalsIgnoreCase("+")) {
                         Sponge.getScheduler()
-                                .createSyncExecutor(NtRpgPlugin.GlobalScope.plugin)
+                                .createSyncExecutor(plugin)
                                 .schedule(
                                         () -> {
                                             createAttributeRow(character, inventory);
@@ -887,7 +888,7 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
                         aFinal.get(NKeys.COMMAND).ifPresent(s -> {
                             if (s.equalsIgnoreCase("char tx-attribute-commit")) {
                                 Sponge.getScheduler()
-                                        .createSyncExecutor(NtRpgPlugin.GlobalScope.plugin)
+                                        .createSyncExecutor(plugin)
                                         .schedule(
                                                 () -> Sponge.getCommandManager().process(character.getPlayer(), "char"),
                                                 1L,
@@ -898,7 +899,7 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
                         });
                     }
                 })
-                .build(NtRpgPlugin.GlobalScope.plugin);
+                .build(plugin);
         makeBorder(i, DyeColors.ORANGE);
         i.offer(back("char ", Text.of("back")));
 

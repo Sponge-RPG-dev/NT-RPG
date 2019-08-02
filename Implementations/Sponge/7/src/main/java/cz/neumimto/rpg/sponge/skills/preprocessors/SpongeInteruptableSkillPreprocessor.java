@@ -11,9 +11,9 @@ import cz.neumimto.rpg.api.skills.mods.ActiveSkillPreProcessorWrapper;
 import cz.neumimto.rpg.api.skills.mods.PreProcessorTarget;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.preprocessors.InterruptableSkillPreprocessor;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.effects.common.model.SlowModel;
 import cz.neumimto.rpg.sponge.effects.common.negative.SlowEffect;
+import cz.neumimto.rpg.sponge.inventory.SpongeItemService;
 import org.spongepowered.api.Sponge;
 
 import java.util.Optional;
@@ -49,7 +49,7 @@ public class SpongeInteruptableSkillPreprocessor extends ActiveSkillPreProcessor
             SlowEffect slowEffect = new SlowEffect(character, delay, model);
             Rpg.get().getEffectService().addEffect(slowEffect, this);
         }
-        Sponge.getScheduler().createSyncExecutor(NtRpgPlugin.GlobalScope.plugin).schedule(() -> {
+        Sponge.getScheduler().createSyncExecutor( ((SpongeItemService)Rpg.get().getItemService())).schedule(() -> {
             character.setChanneledSkill(null);
             if (isInterrupted()) {
                 context.continueExecution(false);

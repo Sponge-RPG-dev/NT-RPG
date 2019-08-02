@@ -1,8 +1,9 @@
 package cz.neumimto.rpg.sponge.inventory.data.manipulators;
 
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.sponge.inventory.data.NKeys;
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.common.inventory.sockets.SocketType;
+import cz.neumimto.rpg.sponge.inventory.SpongeItemService;
+import cz.neumimto.rpg.sponge.inventory.data.NKeys;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataHolder;
@@ -104,7 +105,7 @@ public class ItemSocketsData extends AbstractData<ItemSocketsData, ItemSocketsDa
             this.sockets = ((List<String>) view.getList(NKeys.ITEM_SOCKET_CONTAINER.getQuery()).get())
                     .stream()
                     .map(a -> {
-                        return NtRpgPlugin.GlobalScope.itemService.getSocketTypes().get(a);
+                        return ((SpongeItemService)Rpg.get().getItemService()).getSocketTypes().get(a);
                     })
                     .filter(Objects::nonNull)
                     .collect(Collectors.toList());

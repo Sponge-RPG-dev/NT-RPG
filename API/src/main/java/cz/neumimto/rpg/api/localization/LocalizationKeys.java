@@ -109,6 +109,35 @@ public class LocalizationKeys {
     public static final String NO_ATTRIBUTEPOINTS = "player.attributes.not-enough-points.message";
     public static final String NEXT = "item.label.next.button";
     public static final String CASTING_FAILED = "player.skill-castfailed.notification";
+    
+    public static final String COMMAND_ADMIN_EXEC_SKILL_DESC = "command.admin-exec-skill-desc.desc";
+    public static final String COMMAND_ADMIN_EFFECT_ADD = "command.admin-effect-add.desc";
+    public static final String COMMAND_ADMIN_EXP_ADD = "command.admin-exp-add.desc";
+    public static final String COMMAND_ADMIN_RELOAD = "command.admin-reload.desc";
+    public static final String COMMAND_ADMIN_DESC = "command.admin-desc.desc";
+    public static final String COMMAND_CREATE_DESCRIPTION = "command.create-description.desc";
+    public static final String COMMAND_DELETE_DESCRIPTION = "command.delete-description.desc";
+    public static final String COMMAND_CHOOSE_DESC = "command.choose-desc.desc";
+    public static final String COMMAND_CHARACTER_LIST = "command.character-list.desc";
+    public static final String COMMAND_SWITCH_DESC = "command.switch-desc.desc";
+    public static final String COMMAND_SKILL_LEARN = "command.skill-learn.desc";
+    public static final String COMMAND_SKILL_UPGRADE = "command.skill-upgrade.desc";
+    public static final String COMMAND_SKILL_REFUND = "command.skill-refund.desc";
+    public static final String COMMAND_ATTRIBUTE = "command.attribute.desc";
+    public static final String COMMAND_ATTRIBUTE_COMMIT = "command.attribute-commit.desc";
+    public static final String COMMAND_ATTRIBUTE_RESPEC = "command.attribute-respec.desc";
+    public static final String COMMAND_SKILL_DESC = "command.skill-desc.desc";
+    public static final String COMMAND_BIND_DESC = "command.bind-desc.desc";
+    public static final String COMMAND_SKILL_TREE = "command.skill-tree.desc";
+    public static final String COMMAND_CLASSES_DESC = "command.classes-desc.desc";
+    public static final String COMMAND_RACE_DESC = "command.race_desc.desc";
+    public static final String COMMAND_ADMIN_ENCHANT_ADD = "command.admin-enchant-add.desc";
+    public static final String COMMAND_ADMIN_ENCHANT = "command.admin-enchant.desc";
+    public static final String COMMAND_ADMIN_SOCKET = "command.admin-socket.desc";
+    public static final String COMMAND_ADMIN_RUNE = "command.admin-rune.desc";
+    public static final String COMMAND_ADMIN_RARITY = "command.admin-rarity.desc";
+    public static final String COMMAND_ADMIN_ITEM_TYPE = "command.admin-item-type.desc";
+    public static final String COMMAND_ADMIN_RUNEWORD = "command.admin-runeword.desc";
 
     private LocalizationKeys() {
     }

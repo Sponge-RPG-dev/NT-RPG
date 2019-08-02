@@ -23,8 +23,6 @@ import java.util.concurrent.Executor;
 
 public interface RpgApi {
 
-    ItemService getItemService();
-
     void broadcastMessage(String message);
 
     void broadcastLocalizableMessage(String message, Arg arg);
@@ -41,6 +39,8 @@ public interface RpgApi {
 
     void registerListeners(Object listener);
 
+    ItemService getItemService();
+
     EventFactoryService getEventFactory();
 
     SkillService getSkillService();
@@ -51,15 +51,15 @@ public interface RpgApi {
 
     Executor getAsyncExecutor();
 
-    <C extends ICharacterService> C getCharacterService();
+    ICharacterService getCharacterService();
 
-    <E extends EntityService> E getEntityService();
+    EntityService getEntityService();
 
     DamageService getDamageService();
 
     IPropertyService getPropertyService();
 
-    <P extends PartyService> P getPartyService();
+    PartyService getPartyService();
 
     String getWorkingDirectory();
 
@@ -71,7 +71,7 @@ public interface RpgApi {
 
     IScriptEngine getScriptEngine();
 
-    <I extends InventoryService> I getInventoryService();
+    InventoryService getInventoryService();
 
     IExperienceService getExperienceService();
 

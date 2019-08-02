@@ -5,7 +5,8 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
+import cz.neumimto.rpg.sponge.inventory.SpongeInventoryService;
 import cz.neumimto.rpg.sponge.utils.TextHelper;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -17,9 +18,17 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
 import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 
+import javax.inject.Inject;
 import java.util.Optional;
 
 public class SkillBindExecutor implements CommandExecutor {
+
+    @Inject
+    private SpongeCharacterService characterService;
+
+    @Inject
+    private SpongeInventoryService inventoryService;
+
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
         Optional<ISkill> skill = args.getOne("skill");
@@ -31,11 +40,11 @@ public class SkillBindExecutor implements CommandExecutor {
                 return CommandResult.empty();
             }
             Player pl = (Player) src;
-            IActiveCharacter character = NtRpgPlugin.GlobalScope.characterService.getCharacter(pl);
+            IActiveCharacter character = characterService.getCharacter(pl.getUniqueId());
             if (character.isStub()) {
                 return CommandResult.empty();
             }
-            ItemStack is = NtRpgPlugin.GlobalScope.inventorySerivce.createSkillbind(iSkill);
+            ItemStack is = inventoryService.createSkillbind(iSkill);
             pl.getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class)).offer(is);
         }
 

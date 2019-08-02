@@ -27,7 +27,6 @@ import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.api.skills.types.ITargeted;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.entity.living.Living;
@@ -56,7 +55,7 @@ public abstract class Targeted extends ActiveSkill<ISpongeCharacter> implements 
             skillContext.next(caster, info, SkillResult.CANCELLED); //dont chain
             return;
         }
-        IEntity target = NtRpgPlugin.GlobalScope.entityService.get(l);
+        IEntity target = Rpg.get().getEntityService().get(l);
 
         SkillTargetAttemptEvent event = Rpg.get().getEventFactory().createEventInstance(SkillTargetAttemptEvent.class);
         event.setSkill(this);

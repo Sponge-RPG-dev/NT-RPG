@@ -10,7 +10,7 @@ import cz.neumimto.rpg.api.localization.Arg;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.common.inventory.sockets.SocketType;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
 import cz.neumimto.rpg.sponge.inventory.ItemLoreSections;
 import cz.neumimto.rpg.sponge.inventory.LoreSectionDelimiter;
 import cz.neumimto.rpg.sponge.inventory.data.DataConstants;
@@ -26,6 +26,7 @@ import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -56,6 +57,9 @@ public class ItemLoreBuilderService {
     private static Text unknownRarity;
     private static Text metaType;
 
+    @Inject
+    private SpongeDamageService damageService;
+    
     public static ItemLoreBuilder create(ItemStack is, List<Text> t) {
         return new ItemLoreBuilder(is, t);
     }
@@ -161,6 +165,7 @@ public class ItemLoreBuilderService {
         }
 
         public void createItemMetaSection() {
+            SpongeDamageService damageService = (SpongeDamageService) Rpg.get().getDamageService();
             is.get(NKeys.ITEM_META_HEADER).ifPresent(a -> {
                 createDelimiter(a);
                 is.get(NKeys.ITEM_RARITY).ifPresent(r -> {
@@ -171,7 +176,7 @@ public class ItemLoreBuilderService {
                         t.add(Text.builder()
                                 .append(damage)
                                 .append(Text.builder(String.valueOf(r.min))
-                                        .color(NtRpgPlugin.GlobalScope.damageService.getColorByDamage(r.min))
+                                        .color(damageService.getColorByDamage(r.min))
                                         .build())
                                 .append(Text.NEW_LINE)
                                 .build());
@@ -179,11 +184,11 @@ public class ItemLoreBuilderService {
                         t.add(Text.builder()
                                 .append(damage)
                                 .append(Text.builder(String.valueOf(r.min))
-                                        .color(NtRpgPlugin.GlobalScope.damageService.getColorByDamage(r.min))
+                                        .color(damageService.getColorByDamage(r.min))
                                         .build())
                                 .append(Text.builder(" - ").color(TextColors.GRAY).build())
                                 .append(Text.builder(String.valueOf(r.max))
-                                        .color(NtRpgPlugin.GlobalScope.damageService.getColorByDamage(r.max))
+                                        .color(damageService.getColorByDamage(r.max))
                                         .build())
                                 .append(Text.NEW_LINE).build());
                     }
@@ -223,7 +228,7 @@ public class ItemLoreBuilderService {
             for (Map.Entry<String, Integer> stringIntegerEntry : r.entrySet()) {
                 Integer value = stringIntegerEntry.getValue();
                 String group = stringIntegerEntry.getKey();
-                ClassDefinition byName = NtRpgPlugin.GlobalScope.classService.getClassDefinitionByName(group);
+                ClassDefinition byName = Rpg.get().getClassService().getClassDefinitionByName(group);
                 if (byName != null) {
                     if (value > 0) {
                         t.add(

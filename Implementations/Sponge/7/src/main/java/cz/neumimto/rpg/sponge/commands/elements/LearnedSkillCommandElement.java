@@ -1,7 +1,6 @@
 package cz.neumimto.rpg.sponge.commands.elements;
 
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.api.skills.ISkill;
+import cz.neumimto.rpg.api.Rpg;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.PatternMatchingCommandElement;
 import org.spongepowered.api.entity.living.player.Player;
@@ -20,12 +19,12 @@ public class LearnedSkillCommandElement extends PatternMatchingCommandElement {
 
     @Override
     protected Iterable<String> getChoices(CommandSource source) {
-        return NtRpgPlugin.GlobalScope.characterService.getCharacter((Player) source).getSkills().keySet();
+        return Rpg.get().getCharacterService().getCharacter(((Player) source).getUniqueId()).getSkills().keySet();
     }
 
     @Override
     protected Object getValue(String choice) {
-        return NtRpgPlugin.GlobalScope.skillService.getSkillByLocalizedName(choice);
+        return Rpg.get().getSkillService().getSkillByLocalizedName(choice);
     }
 
 }

@@ -1,8 +1,8 @@
 package cz.neumimto.rpg.common.inventory;
 
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.inventory.InventoryService;
 import cz.neumimto.rpg.api.inventory.RpgInventory;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 
 import java.util.HashMap;
 import java.util.Map;

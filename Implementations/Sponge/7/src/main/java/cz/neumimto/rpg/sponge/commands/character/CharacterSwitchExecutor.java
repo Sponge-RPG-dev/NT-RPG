@@ -32,6 +32,9 @@ public class CharacterSwitchExecutor implements CommandExecutor {
     @Inject
     private CharacterCommandFacade characterCommandFacade;
 
+    @Inject
+    private NtRpgPlugin plugin;
+
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
         args.<String>getOne("name").ifPresent(nameNext -> {
@@ -43,7 +46,7 @@ public class CharacterSwitchExecutor implements CommandExecutor {
                     .createTaskBuilder()
                     .name("SetCharacterCallback" + player.getUniqueId())
                     .execute(runnable::run)
-                    .submit(NtRpgPlugin.GlobalScope.plugin));
+                    .submit(plugin));
         });
         return CommandResult.success();
     }

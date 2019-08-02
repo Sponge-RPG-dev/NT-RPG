@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.sponge.assets;
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.logging.Log;
@@ -14,10 +15,13 @@ import java.nio.file.Path;
 @Singleton
 public class SpongeAssetService implements AssetService {
 
+    @Inject
+    private NtRpgPlugin plugin;
+    
     @Override
     public String getAssetAsString(String path) {
         try {
-            return Sponge.getAssetManager().getAsset(NtRpgPlugin.GlobalScope.plugin, "Skills-Definitions.conf").get().readString();
+            return Sponge.getAssetManager().getAsset(plugin, path).get().readString();
         } catch (IOException e) {
             Log.error("Could not copy file Skills-Definition.conf into the directory " + ResourceLoader.addonDir, e);
             throw new IllegalArgumentException(e);
@@ -26,7 +30,7 @@ public class SpongeAssetService implements AssetService {
 
     @Override
     public void copyToFile(String s, Path toPath) {
-        Asset asset = Sponge.getAssetManager().getAsset(NtRpgPlugin.GlobalScope.plugin, "Skills-Definitions.conf").get();
+        Asset asset = Sponge.getAssetManager().getAsset(plugin, s).get();
         try {
             asset.copyToFile(toPath);
         } catch (IOException e) {
