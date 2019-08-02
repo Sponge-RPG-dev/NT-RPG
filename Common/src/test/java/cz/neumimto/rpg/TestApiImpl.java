@@ -9,6 +9,7 @@ import cz.neumimto.rpg.api.effects.IEffectService;
 import cz.neumimto.rpg.api.entity.IPropertyService;
 import cz.neumimto.rpg.api.entity.players.parties.PartyService;
 import cz.neumimto.rpg.api.events.EventFactoryService;
+import cz.neumimto.rpg.api.exp.IExperienceService;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.localization.Arg;
 import cz.neumimto.rpg.api.localization.LocalizationService;
@@ -72,6 +73,9 @@ public class TestApiImpl implements RpgApi {
 
     @Inject
     private PartyService partyService;
+
+    @Inject
+    private IExperienceService experienceService;
 
     @Override
     public IResourceLoader getResourceLoader() {
@@ -200,5 +204,25 @@ public class TestApiImpl implements RpgApi {
     @Override
     public TestInventoryService getInventoryService() {
         return null;
+    }
+
+    @Override
+    public IExperienceService getExperienceService() {
+        return experienceService;
+    }
+
+    @Override
+    public void reloadMainPluginConfig() {
+
+    }
+
+    @Override
+    public void postInit() {
+
+    }
+
+    @Override
+    public void scheduleSyncLater(Runnable runnable) {
+        runnable.run();
     }
 }

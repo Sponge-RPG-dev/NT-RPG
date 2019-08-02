@@ -11,4 +11,9 @@ public class TestDamageService extends DamageServiceImpl {
     public void damageEntity(IEntity character, double maxValue) {
 
     }
+
+    @Override
+    public void init() {
+
+    }
 }

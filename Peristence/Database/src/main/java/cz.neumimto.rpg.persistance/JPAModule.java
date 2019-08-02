@@ -41,8 +41,8 @@ import static cz.neumimto.rpg.api.logging.Log.info;
 public class JPAModule implements RpgAddon {
 
     @Override
-    public Map<Class<?>, Object> getBindings() {
-        Map<Class<?>, Object> bindings = new HashMap<>();
+    public Map<Class<?>, Class<?>> getBindings() {
+        Map bindings = new HashMap<>();
         bindings.put(ICharacterClassDao.class, JPACharacterClassDao.class);
         bindings.put(IPlayerDao.class, JPAPlayerDao.class);
         bindings.put(IPersistenceHandler.class, JPAPersistenceHandler.class);

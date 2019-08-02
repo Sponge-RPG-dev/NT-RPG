@@ -2,7 +2,7 @@ package cz.neumimto.rpg;
 
 import cz.neumimto.rpg.api.entity.IPropertyService;
 import cz.neumimto.rpg.api.items.ItemClass;
-import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
+import cz.neumimto.rpg.common.entity.PropertyService;
 
 import javax.inject.Inject;
 
@@ -22,11 +22,11 @@ public class TestPropertyValueResolving {
         String m1 = "test_mult2";
         String m2 = "test_mult2";
 
-        propertyService.registerProperty(b1, PropertyServiceImpl.getAndIncrement.get());
-        propertyService.registerProperty(b2, PropertyServiceImpl.getAndIncrement.get());
+        propertyService.registerProperty(b1, PropertyService.getAndIncrement.get());
+        propertyService.registerProperty(b2, PropertyService.getAndIncrement.get());
 
-        propertyService.registerProperty(m1, PropertyServiceImpl.getAndIncrement.get());
-        propertyService.registerProperty(m2, PropertyServiceImpl.getAndIncrement.get());
+        propertyService.registerProperty(m1, PropertyService.getAndIncrement.get());
+        propertyService.registerProperty(m2, PropertyService.getAndIncrement.get());
 
         propertyService.registerDefaultValue(propertyService.getIdByName(m1), 1);
         propertyService.registerDefaultValue(propertyService.getIdByName(m2), 1);

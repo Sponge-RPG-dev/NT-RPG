@@ -55,7 +55,7 @@ public class PropertyService implements IPropertyService {
 
     private Map<String, AttributeConfig> attributeMap = new HashMap<>();
 
-    private float[] maxValues;
+    protected float[] maxValues;
 
     @Override
     public int getLastId() {

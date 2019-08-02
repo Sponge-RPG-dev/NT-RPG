@@ -1,13 +1,11 @@
 package cz.neumimto.rpg.common.entity;
 
 import com.google.inject.Singleton;
-import cz.neumimto.rpg.api.configuration.AttributeConfig;
 
 import java.nio.file.Path;
-import java.util.Map;
 
 @Singleton
-public class TestPropertyService extends PropertyServiceImpl {
+public class TestPropertyService extends PropertyService {
 
     public TestPropertyService() {
         LAST_ID = 100;
@@ -27,8 +25,4 @@ public class TestPropertyService extends PropertyServiceImpl {
 
     }
 
-    @Override
-    public Map<String, AttributeConfig> getAttributes() {
-        return attributeMap;
-    }
 }

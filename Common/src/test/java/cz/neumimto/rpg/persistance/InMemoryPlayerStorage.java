@@ -28,6 +28,11 @@ public class InMemoryPlayerStorage implements IPlayerDao {
         map.put(characterBase.getUuid(), characterBase);
     }
 
+    @Override
+    public void removePersitantSkill(CharacterSkill characterSkill) {
+        characterSkill.getCharacterBase().getCharacterSkills().remove(characterSkill);
+    }
+
     public CharacterBase getLastPlayed(UUID uuid) {
         throw new RuntimeException("In mememory storage");
     }

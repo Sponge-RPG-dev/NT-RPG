@@ -3,7 +3,6 @@ package cz.neumimto.rpg.common.impl;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
 import cz.neumimto.rpg.common.entity.PropertyService;
-import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.common.entity.TestCharacter;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
 
@@ -36,7 +35,7 @@ public class TestCharacterService extends CharacterService<TestCharacter> {
 
     @Override
     public TestCharacter buildDummyChar(UUID uuid) {
-        return new TestCharacter(uuid, createCharacterBase(), PropertyServiceImpl.LAST_ID) {
+        return new TestCharacter(uuid, createCharacterBase(), PropertyService.LAST_ID) {
 
             @Override
             public boolean isStub(){

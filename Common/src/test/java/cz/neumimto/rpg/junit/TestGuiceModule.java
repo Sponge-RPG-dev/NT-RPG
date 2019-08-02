@@ -17,6 +17,7 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.ICharacterService;
 import cz.neumimto.rpg.api.entity.players.parties.PartyService;
 import cz.neumimto.rpg.api.events.EventFactoryService;
+import cz.neumimto.rpg.api.exp.IExperienceService;
 import cz.neumimto.rpg.api.gui.IPlayerMessage;
 import cz.neumimto.rpg.api.inventory.CharacterInventoryInteractionHandler;
 import cz.neumimto.rpg.api.inventory.InventoryService;
@@ -38,6 +39,7 @@ import cz.neumimto.rpg.common.entity.configuration.MobSettingsDao;
 import cz.neumimto.rpg.common.entity.configuration.TestMobSettingsDao;
 import cz.neumimto.rpg.common.events.TestEventFactory;
 import cz.neumimto.rpg.common.exp.ExperienceDAO;
+import cz.neumimto.rpg.common.experience.TestExperienceService;
 import cz.neumimto.rpg.common.impl.TestCharacterService;
 import cz.neumimto.rpg.common.impl.TestItemService;
 import cz.neumimto.rpg.common.inventory.InventoryHandler;
@@ -79,7 +81,7 @@ public class TestGuiceModule extends AbstractModule {
         bind(ICharacterClassDao.class).toProvider(() -> c -> {});
         bind(ClassDefinitionDao.class);
         bind(IPlayerDao.class).to(InMemoryPlayerStorage.class);
-
+        bind(IExperienceService.class).to(TestExperienceService.class);
         bind(ClassGenerator.class).toProvider(() -> new ClassGenerator() {
             @Override
             public Object generateDynamicListener(List<ScriptObjectMirror> list) {

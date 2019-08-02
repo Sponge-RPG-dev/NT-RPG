@@ -1,6 +1,7 @@
 package cz.neumimto.rpg.common.inventory;
 
 import cz.neumimto.rpg.api.persistance.model.EquipedSlot;
+import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.mods.ActiveSkillPreProcessorWrapper;
 import cz.neumimto.rpg.common.entity.TestCharacter;
@@ -31,5 +32,10 @@ public class TestInventoryService extends AbstractInventoryService<TestCharacter
     @Override
     public EquipedSlot createEquipedSlot(String className, int slotId) {
         return () -> slotId;
+    }
+
+    @Override
+    public String getItemIconForSkill(ISkill iSkill) {
+        return "null";
     }
 }
