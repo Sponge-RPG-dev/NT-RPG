@@ -69,6 +69,20 @@ public class JPAPlayerDao extends GenericDao<CharacterBase> implements IPlayerDa
     }
 
     @Override
+    public void removePersitantSkill(CharacterSkill characterSkill) {
+        CharacterBase characterBase = characterSkill.getCharacterBase();
+        characterBase.getCharacterSkills().remove(characterSkill);
+        Session session = getFactory().openSession();
+        session.beginTransaction();
+        //re-attach with merge, also pushes object state
+        session.merge(characterBase);
+        session.getTransaction().commit();
+
+        //detach object
+        session.close();
+    }
+
+    @Override
     public CharacterBase getLastPlayed(UUID uuid) {
         Session session = getFactory().openSession();
         List r = session.createCriteria(JPACharacterBase.class)

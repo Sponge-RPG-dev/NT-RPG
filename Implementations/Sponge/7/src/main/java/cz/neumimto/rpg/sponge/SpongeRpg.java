@@ -90,6 +90,11 @@ public final class SpongeRpg extends AbstractRpg {
         rwService.load();
     }
 
+    @Override
+    public void scheduleSyncLater(Runnable runnable) {
+        Sponge.getScheduler().createTaskBuilder().execute(runnable).submit(NtRpgPlugin.getInstance());
+    }
+
     public VanillaMessaging getVanillaMessaging() {
         return vanillaMessaging;
     }

@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.common.persistance.dao;
 
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
-import cz.neumimto.rpg.api.persistance.model.CharacterClass;
+import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
 
 import java.util.List;
 import java.util.UUID;
@@ -30,4 +30,6 @@ public interface IPlayerDao {
     CharacterBase fetchCharacterBase(CharacterBase characterBase);
 
     void update(CharacterBase characterBase);
+
+    void removePersitantSkill(CharacterSkill characterSkill);
 }

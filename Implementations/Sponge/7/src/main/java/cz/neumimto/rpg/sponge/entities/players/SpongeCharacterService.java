@@ -136,7 +136,7 @@ public class SpongeCharacterService extends CharacterService<ISpongeCharacter> {
 
     @Override
     public void removePersistantSkill(CharacterSkill characterSkill) {
-        playerDao.removePeristantSkill(characterSkill);
+        playerDao.removePersitantSkill(characterSkill);
     }
 
     @Override
