@@ -8,6 +8,7 @@ import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.entity.players.leveling.ILevelProgression;
 import cz.neumimto.rpg.api.entity.players.leveling.Linear;
+import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.gui.IPlayerMessage;
 import cz.neumimto.rpg.api.persistance.model.CharacterClass;
 import cz.neumimto.rpg.common.commands.AdminCommandFacade;
@@ -49,6 +50,7 @@ public class AdminCommandTests {
     @BeforeEach
     public void before(){
         new RpgTest(rpgApi);
+        new Gui(vanillaMessaging);
     }
 
     @Test

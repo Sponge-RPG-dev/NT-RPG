@@ -8,6 +8,7 @@ import cz.neumimto.rpg.api.events.EventFactoryService;
 import cz.neumimto.rpg.api.gui.IPlayerMessage;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.effects.core.DefaultManaRegeneration;
+import cz.neumimto.rpg.common.entity.PropertyService;
 import cz.neumimto.rpg.junit.CharactersExtension;
 import cz.neumimto.rpg.junit.CharactersExtension.Stage;
 import cz.neumimto.rpg.junit.NtRpgExtension;
@@ -31,6 +32,9 @@ public class ManaRegenerationTest {
     private EffectService iEffectService;
 
     @Inject
+    private PropertyService propertyService;
+
+    @Inject
     private PluginConfig pluginConfig;
 
     @Inject
@@ -46,6 +50,7 @@ public class ManaRegenerationTest {
     public void before() {
 
         pluginConfig.MANA_REGENERATION_RATE = 1;
+
     }
 
     @Test
