@@ -23,6 +23,7 @@ import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.effects.SpongeEffectService;
 import cz.neumimto.rpg.sponge.entities.SpongeEntityService;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
 import cz.neumimto.rpg.sponge.events.damage.SpongeDamageIEntityEarlyEvent;
 import cz.neumimto.rpg.sponge.events.damage.SpongeDamageIEntityLateEvent;
@@ -83,7 +84,7 @@ public class SkillListener {
 	private NtRpgPlugin plugin;
 
 	@Inject
-	private SpongeCharacterServise characterService;
+	private SpongeCharacterService characterService;
 
 	@Inject
 	private SpongeEntityService entityService;
@@ -92,7 +93,7 @@ public class SkillListener {
 	private SpongeEffectService effectService;
 
 	@Inject
-	private SpongePropertyService spongePropertyService;
+	private SpongeCharacterService spongePropertyService;
 
 	@Inject
 	private Game game;

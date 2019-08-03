@@ -10,7 +10,6 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
-import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -32,7 +31,7 @@ public class ClickComboActionComponent extends EffectBase implements IEffectCont
 
     private boolean notifyIfCancelled;
 
-    private ISpongeCharacter character;
+    private IActiveCharacter character;
 
     private long lastTimeUsed;
 
@@ -42,10 +41,10 @@ public class ClickComboActionComponent extends EffectBase implements IEffectCont
 
     @Generate.Constructor
     public ClickComboActionComponent(IEffectConsumer t) {
-        this((ISpongeCharacter) t);
+        this((IActiveCharacter) t);
     }
 
-    private ClickComboActionComponent(ISpongeCharacter t) {
+    private ClickComboActionComponent(IActiveCharacter t) {
         super(name, t);
         character = t;
         setPeriod(pluginConfig.CLICK_COMBO_MAX_INVERVAL_BETWEEN_ACTIONS);

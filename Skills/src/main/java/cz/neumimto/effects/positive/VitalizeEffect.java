@@ -1,6 +1,7 @@
 package cz.neumimto.effects.positive;
 
 import cz.neumimto.model.VitalizeEffectModel;
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.Generate;
 import cz.neumimto.rpg.api.effects.IEffect;
@@ -9,9 +10,7 @@ import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.IReservable;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
-import cz.neumimto.rpg.sponge.entities.players.CharacterMana;
-import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
+import cz.neumimto.rpg.common.entity.players.CharacterMana;
 
 /**
  * Created by NeumimTo on 16.9.2018.
@@ -22,14 +21,14 @@ public class VitalizeEffect extends EffectBase<VitalizeEffectModel> {
 
     public static final String name = "Vitalize";
 
-    private ISpongeCharacter character;
+    private IActiveCharacter character;
 
     public VitalizeEffect(IEffectConsumer consumer, long duration, VitalizeEffectModel effectModel) {
         super(name, consumer);
         setValue(effectModel);
         setStackable(false, null);
         if (consumer instanceof IActiveCharacter) {
-            character = (ISpongeCharacter) consumer;
+            character = (IActiveCharacter) consumer;
         }
         setDuration(duration);
         setPeriod(effectModel.period);
@@ -37,11 +36,11 @@ public class VitalizeEffect extends EffectBase<VitalizeEffectModel> {
 
     @Override
     public void onTick(IEffect self) {
-        NtRpgPlugin.GlobalScope.entityService.healEntity((IEntity) getConsumer(), getValue().healthPerTick, this);
+        Rpg.get().getEntityService().healEntity((IEntity) getConsumer(), getValue().healthPerTick, this);
         if (character != null) {
             IReservable mana = character.getMana();
             if (mana instanceof CharacterMana) {
-                NtRpgPlugin.GlobalScope.characterService.gainMana(character, getValue().manaPerTick, this);
+                Rpg.get().getCharacterService().gainMana(character, getValue().manaPerTick, this);
             }
         }
     }

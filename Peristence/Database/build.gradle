@@ -7,7 +7,7 @@ version = '2.0.0-SNAPSHOT-12'
 
 dependencies {
     compile project(':API')
-    annotationProcessor project(':Common')
+    compileOnly project(':Common')
     api 'org.hibernate:hibernate-entitymanager:5.3.6.Final'
     compileOnly 'com.google.inject:guice:4.2.2'
     compileOnly 'com.github.Sponge-RPG-dev:ConfigurateButWithBlackjackAndHookers:39d5fc8afd'
