@@ -54,10 +54,7 @@ public abstract class SkillServiceimpl implements SkillService {
 
     @Override
     public void load() {
-        init();
         skillTrees.putAll(skillTreeDao.getAll());
-        scriptSkillsParents.put("active", ActiveScriptSkill.class);
-        scriptSkillsParents.put("passive", PassiveScriptSkill.class);
     }
 
     @Override
@@ -283,6 +280,8 @@ public abstract class SkillServiceimpl implements SkillService {
 
     @Override
     public void init() {
+        scriptSkillsParents.put("active", ActiveScriptSkill.class);
+        scriptSkillsParents.put("passive", PassiveScriptSkill.class);
         Stream.of(SkillType.values()).forEach(this::registerSkillType);
     }
 }

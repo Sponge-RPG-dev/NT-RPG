@@ -18,8 +18,6 @@
 
 package cz.neumimto.rpg.common.scripting;
 
-import static cz.neumimto.rpg.api.logging.Log.error;
-import static cz.neumimto.rpg.api.logging.Log.info;
 import com.google.inject.Injector;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
@@ -38,16 +36,18 @@ import net.bytebuddy.dynamic.loading.MultipleParentClassLoader;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMapper;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import javax.script.*;
 import java.io.*;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.*;
 import java.util.*;
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import javax.script.*;
+
+import static cz.neumimto.rpg.api.logging.Log.error;
+import static cz.neumimto.rpg.api.logging.Log.info;
 
 /**
  * Created by NeumimTo on 13.3.2015.
@@ -239,6 +239,7 @@ public class JSLoader implements IScriptEngine {
 
 
         for (File confFile : ResourceLoader.addonDir.listFiles(pathname -> pathname.isFile() && pathname.getName().endsWith(".conf"))) {
+            info("Loading file " + confFile);
             loadSkillDefinitionFile(urlClassLoader, confFile);
         }
     }
