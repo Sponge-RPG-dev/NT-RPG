@@ -58,4 +58,9 @@ public final class SpigotRpg extends AbstractRpg {
         return null;
     }
 
+    @Override
+    public void scheduleSyncLater(Runnable runnable) {
+        Bukkit.getScheduler().scheduleSyncDelayedTask(SpigotRpgPlugin.getInstance(), runnable);
+    }
+
 }

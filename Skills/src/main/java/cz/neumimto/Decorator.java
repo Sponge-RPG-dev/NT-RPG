@@ -28,7 +28,7 @@ public class Decorator {
 			.build();
 
 	static {
-		decorator = NtRpgPlugin.GlobalScope.injector.getInstance(ParticleDecorator.class);
+		decorator = NtRpgPlugin.getInstance().injector.getInstance(ParticleDecorator.class);
 	}
 
 	public static void strikeLightning(Entity entity) {

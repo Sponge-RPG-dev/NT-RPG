@@ -60,13 +60,13 @@ public class ManaShieldEffect extends EffectBase<ManaShieldEffectModel> {
         Sponge.getScheduler().createTaskBuilder()
                 .execute(new ParticleSpawner(pe, e, 0.3d, 1d, 4, 0, ParticleDecorator.tinyCircle))
                 .interval(2, TimeUnit.MILLISECONDS)
-                .submit(NtRpgPlugin.GlobalScope.plugin);
+                .submit(NtRpgPlugin.getInstance());
     }
 
     public void remove(ParticleEffect pe, Entity e) {
         Sponge.getScheduler().createTaskBuilder()
                 .execute(new ParticleSpawner(pe, e, -0.3d, -1d, 4, 2, ParticleDecorator.tinyCircle))
                 .interval(2, TimeUnit.MILLISECONDS)
-                .submit(NtRpgPlugin.GlobalScope.plugin);
+                .submit(NtRpgPlugin.getInstance());
     }
 }

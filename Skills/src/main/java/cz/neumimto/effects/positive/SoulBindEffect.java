@@ -1,6 +1,5 @@
 package cz.neumimto.effects.positive;
 
-import cz.neumimto.EffectLocalization;
 import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
@@ -20,7 +19,6 @@ public class SoulBindEffect extends EffectBase implements IEffectContainer {
     public SoulBindEffect(IEffectConsumer caster, IEffectConsumer target) {
         super("souldbind", caster);
         this.target = target;
-        setExpireMessage(EffectLocalization.SOULBIND_EXPIRE);
     }
 
     public IEffectConsumer getTarget() {

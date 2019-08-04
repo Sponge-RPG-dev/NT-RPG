@@ -1,6 +1,7 @@
 package cz.neumimto.rpg.spigot.inventory;
 
 import cz.neumimto.rpg.api.persistance.model.EquipedSlot;
+import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.mods.ActiveSkillPreProcessorWrapper;
 import cz.neumimto.rpg.common.inventory.AbstractInventoryService;
@@ -34,5 +35,10 @@ public class SpigotInventoryService extends AbstractInventoryService<ISpigotChar
     @Override
     public EquipedSlot createEquipedSlot(String className, int slotId) {
         return () -> slotId;
+    }
+
+    @Override
+    public String getItemIconForSkill(ISkill iSkill) {
+        return null;
     }
 }

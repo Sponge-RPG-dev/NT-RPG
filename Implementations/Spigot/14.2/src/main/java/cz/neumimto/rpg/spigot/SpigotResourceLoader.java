@@ -1,6 +1,9 @@
 package cz.neumimto.rpg.spigot;
 
-import cz.neumimto.rpg.api.IResourceLoader;
+import com.google.inject.Singleton;
+import cz.neumimto.rpg.common.AbstractResourceLoader;
 
-public class SpigotResourceLoader implements IResourceLoader {
+@Singleton
+public class SpigotResourceLoader extends AbstractResourceLoader {
+
 }

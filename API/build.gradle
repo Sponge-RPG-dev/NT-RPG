@@ -6,7 +6,7 @@ group = 'cz.neumimto.rpg'
 version = '2.1.0-SNAPSHOT'
 
 dependencies {
-    implementation 'commons-io:commons-io:2.4'
+    compileOnly 'commons-io:commons-io:2.4'
     compile 'com.github.Sponge-RPG-dev:ConfigurateButWithBlackjackAndHookers:39d5fc8afd'
 
     annotationProcessor project(':Generator')

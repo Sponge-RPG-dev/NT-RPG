@@ -1,10 +1,10 @@
 package cz.neumimto.effects.negative;
 
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.damage.SkillDamageSource;
 import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
@@ -38,7 +38,7 @@ public class PandemicEffect extends EffectBase {
         if (Utils.canDamage(caster, entity)) {
             entity.damage(damage, damageSource);
             //todo some particles
-            NtRpgPlugin.GlobalScope.entityService.healEntity(caster, damage, damageSource.getSkill());
+            Rpg.get().getEntityService().healEntity(caster, damage, damageSource.getSkill());
         }
     }
 

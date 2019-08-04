@@ -97,7 +97,7 @@ public class NtRpgPlugin extends Rpg {
 
     public static final Set<String> INTEGRATIONS = new HashSet<>();
 
-    private Injector injector;
+    public Injector injector;
 
     @Listener
     public void initializeApi(GameConstructionEvent event) {

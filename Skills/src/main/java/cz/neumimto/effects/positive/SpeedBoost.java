@@ -28,7 +28,6 @@ import cz.neumimto.rpg.api.entity.CommonProperties;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
 import cz.neumimto.rpg.sponge.gui.ParticleDecorator;
-import cz.neumimto.rpg.sponge.properties.SpongeDefaultProperties;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.particle.ParticleTypes;
 import org.spongepowered.api.world.Location;
@@ -76,7 +75,7 @@ public class SpeedBoost extends EffectBase {
     @Override
     public void onApply(IEffect self) {
         super.onApply(self);
-        getConsumer().setProperty(CommonProperties.walk_speed, getConsumer().getProperty(SpongeDefaultProperties.walk_speed) + speedbonus);
+        getConsumer().setProperty(CommonProperties.walk_speed, getConsumer().getProperty(CommonProperties.walk_speed) + speedbonus);
         ISpongeEntity consumer = (ISpongeEntity) getConsumer();
         Rpg.get().getEntityService().updateWalkSpeed(consumer);
         Location<World> location = consumer.getLocation();
@@ -94,7 +93,7 @@ public class SpeedBoost extends EffectBase {
     public void onRemove(IEffect self) {
         super.onRemove(self);
         getConsumer().setProperty(CommonProperties.walk_speed,
-                Rpg.get().getEntityService().getEntityProperty(getConsumer(), SpongeDefaultProperties.walk_speed) - speedbonus);
+                Rpg.get().getEntityService().getEntityProperty(getConsumer(), CommonProperties.walk_speed) - speedbonus);
         Rpg.get().getEntityService().updateWalkSpeed((ISpongeEntity) getConsumer());
     }
 

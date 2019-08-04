@@ -9,19 +9,19 @@ version = '2.1.0-SNAPSHOT'
 dependencies {
     annotationProcessor project(':Generator')
     compile project(':API')
-    
-    implementation 'commons-io:commons-io:2.4'
-    
-    compile 'com.google.inject:guice:4.2.2'
+
+    compileOnly 'commons-io:commons-io:2.4'
+
+    compileOnly 'com.google.inject:guice:4.2.2'
     compile 'com.github.Sponge-RPG-dev:ConfigurateButWithBlackjackAndHookers:39d5fc8afd'
-    compile 'ninja.leaping.configurate:configurate-hocon:3.3'
+    compileOnly 'ninja.leaping.configurate:configurate-hocon:3.3'
     
     compile 'com.scireum:parsii:1.5'
-    compile 'com.google.inject:guice:4.2.2'
-    compile 'org.slf4j:slf4j-api:1.7.26'
-    compile 'com.google.code.gson:gson:2.8.5'
+    compileOnly 'com.google.inject:guice:4.2.2'
+    compileOnly 'org.slf4j:slf4j-api:1.7.26'
+    compileOnly 'com.google.code.gson:gson:2.8.5'
     compile 'net.bytebuddy:byte-buddy:1.9.14'
-    compile 'org.apache.commons:commons-lang3:3.9'
+    compileOnly 'org.apache.commons:commons-lang3:3.9'
 
     testCompile 'com.github.JeffreyFalgout:junit5-extensions:89fa6cb1e7'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.1'
@@ -33,13 +33,4 @@ dependencies {
     testCompile 'com.github.Sponge-RPG-dev:ConfigurateButWithBlackjackAndHookers:39d5fc8afd'
     testCompile group: 'it.unimi.dsi', name: 'fastutil', version: '8.2.1'
     testCompile 'org.slf4j:slf4j-simple:1.7.26'
-    
-
-    jar {
-        manifest {
-            attributes(
-                    'Build-Timestamp': new Date()
-            )
-        }
-    }
 }
