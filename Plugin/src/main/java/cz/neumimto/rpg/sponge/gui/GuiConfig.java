@@ -10,7 +10,7 @@ import java.util.Map;
 @ConfigSerializable
 public class GuiConfig {
 
-    @Setting
+    @Setting("SkillIcons")
     private Map<String, ItemType> skillIcons = new HashMap<>();
 
     public Map<String, ItemType> getSkillIcons() {
