@@ -254,7 +254,7 @@ public class GuiHelper {
         List<Text> lore;
         TextColor nameColor;
         Pair<List<Text>, TextColor> fromCache = model.getFromCache(skill);
-        ItemStack itemStack = itemStack(NtRpgPlugin.GlobalScope.inventorySerivce.getItemIconForSkill(skill));
+        ItemStack itemStack = itemStack(GuiDictionary.getSkillIcon(skill.getId()));
         if (fromCache == null) {
             lore = new ArrayList<>();
             nameColor = getSkillTextColor(character, skill, skillData, skillTree);

@@ -31,6 +31,7 @@ import cz.neumimto.rpg.api.effects.EffectParams;
 import cz.neumimto.rpg.api.effects.IEffectService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.inventory.CharacterInventoryInteractionHandler;
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.inventory.RpgInventory;
@@ -62,6 +63,7 @@ import cz.neumimto.rpg.sponge.inventory.data.manipulators.*;
 import cz.neumimto.rpg.sponge.inventory.runewords.RWService;
 import cz.neumimto.rpg.sponge.persistance.EquipedSlotImpl;
 import cz.neumimto.rpg.sponge.properties.SpongePropertyService;
+import cz.neumimto.rpg.sponge.utils.io.FileUtils;
 import ninja.leaping.configurate.SimpleConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMapper;
@@ -93,6 +95,7 @@ import java.nio.file.Paths;
 import java.util.*;
 
 import static cz.neumimto.rpg.api.logging.Log.error;
+import static cz.neumimto.rpg.api.logging.Log.info;
 import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 
 /**
@@ -323,15 +326,16 @@ public class SpongeInventoryService extends AbstractInventoryService<ISpongeChar
         List<String> itemMetaSubtypes = c.getStringList("ItemMetaSubtypes");
 
         itemMetaSubtypes.stream().map(ItemSubtype::new).forEach(a -> itemService.getItemSubtypes().get(a));
-
-        loadSkillGuis();
     }
 
-    private void loadSkillGuis() {
+    public void loadSkillGuis() {
+        info("Loading Gui.conf");
         Path path = Paths.get(Rpg.get().getWorkingDirectory(), "Gui.conf");
         File file = path.toFile();
         if (!file.exists()) {
             try {
+                info("File not found, will be created");
+                FileUtils.generateConfigFile(new GuiConfig(), file);
                 file.createNewFile();
             } catch (IOException e) {
                 Log.error("Could not create a file " + path.toString(), e);
@@ -437,10 +441,6 @@ public class SpongeInventoryService extends AbstractInventoryService<ISpongeChar
             e.printStackTrace();
             Log.error("Class not found - " + className, e);
         }
-        return null;
-    }
-
-    public String getItemIconForSkill(ISkill iSkill) {
         return null;
     }
 }
