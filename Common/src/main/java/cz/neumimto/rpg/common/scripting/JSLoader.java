@@ -240,6 +240,7 @@ public class JSLoader implements IScriptEngine {
         File[] files = file1.listFiles(pathname -> pathname.isFile() && pathname.getName().endsWith(".conf"));
         if (files != null) {
             for (File confFile : files) {
+                info("Loading file " + confFile);
                 loadSkillDefinitionFile(urlClassLoader, confFile);
             }
         }

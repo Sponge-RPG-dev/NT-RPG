@@ -230,12 +230,12 @@ public abstract class AbstractRpg implements RpgApi {
         getInventoryService().load();
         getEventFactory().registerEventProviders();
         getExperienceService().load();
-        getSkillService().load();
+        getSkillService().init();
         getPropertyService().init(Paths.get(getWorkingDirectory() + "/Attributes.conf"), Paths.get(getWorkingDirectory() + File.separator + "properties_dump.info"));
         getPropertyService().reLoadAttributes(Paths.get(getWorkingDirectory() + "/Attributes.conf"));
         getPropertyService().loadMaximalServerPropertyValues(Paths.get(getWorkingDirectory(), "max_server_property_values.properties"));
         getScriptEngine().initEngine();
-
+        getSkillService().load();
         getClassService().loadClasses();
         getEffectService().load();
         getEffectService().startEffectScheduler();
