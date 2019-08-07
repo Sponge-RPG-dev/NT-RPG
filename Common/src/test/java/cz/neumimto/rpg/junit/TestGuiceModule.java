@@ -35,6 +35,7 @@ import cz.neumimto.rpg.common.classes.ClassServiceImpl;
 import cz.neumimto.rpg.common.configuration.SkillTreeLoaderImpl;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.entity.TestPropertyService;
+import cz.neumimto.rpg.common.entity.TestPropertyService;
 import cz.neumimto.rpg.common.entity.configuration.MobSettingsDao;
 import cz.neumimto.rpg.common.entity.configuration.TestMobSettingsDao;
 import cz.neumimto.rpg.common.events.TestEventFactory;

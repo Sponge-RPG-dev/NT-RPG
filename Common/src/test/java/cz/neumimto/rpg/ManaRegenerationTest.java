@@ -1,10 +1,13 @@
 package cz.neumimto.rpg;
 
+import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.RpgApi;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.entity.CommonProperties;
 import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.events.EventFactoryService;
+import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.gui.IPlayerMessage;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.effects.core.DefaultManaRegeneration;
@@ -46,11 +49,14 @@ public class ManaRegenerationTest {
     @Inject
     private EventFactoryService eventFactoryService;
 
+    @Inject
+    private RpgApi rpgApi;
+
     @BeforeEach
     public void before() {
-
-        pluginConfig.MANA_REGENERATION_RATE = 1;
-
+        new RpgTest(rpgApi);
+        new Gui(vanillaMessaging);
+        Rpg.get().getPluginConfig().MANA_REGENERATION_RATE = 1;
     }
 
     @Test

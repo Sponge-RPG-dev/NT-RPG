@@ -7,20 +7,27 @@ import cz.neumimto.rpg.api.skills.SkillData;
 import cz.neumimto.rpg.api.skills.SkillSettings;
 import cz.neumimto.rpg.common.entity.TestCharacter;
 import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
+import cz.neumimto.rpg.junit.NtRpgExtension;
 import cz.neumimto.rpg.junit.TestDictionary;
+import cz.neumimto.rpg.junit.TestGuiceModule;
 import cz.neumimto.rpg.persistance.model.JPACharacterBase;
 import it.unimi.dsi.fastutil.objects.AbstractObject2FloatMap;
 import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;
+import name.falgout.jeffrey.testing.junit.guice.GuiceExtension;
+import name.falgout.jeffrey.testing.junit.guice.IncludeModule;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+@ExtendWith({NtRpgExtension.class, GuiceExtension.class})
+@IncludeModule(TestGuiceModule.class)
 public class TestSkillExecutorChain {
 
     ActiveCharacter activeCharacter;
@@ -41,11 +48,13 @@ public class TestSkillExecutorChain {
 
         complexKeySuffixes = new HashSet<>();
         complexKeySuffixes.add(SkillSettings.BONUS_SUFFIX);
-        complexKeySuffixes.add("_per_ntrpg:strength");
-        complexKeySuffixes.add("_per_ntrpg:agility");
+
 
         str = TestDictionary.STR;
         agi = TestDictionary.AGI;
+
+        complexKeySuffixes.add("_per_"+str.getId());
+        complexKeySuffixes.add("_per_"+agi.getId());
 
         attributes = new HashSet<>();
         attributes.add(str);
