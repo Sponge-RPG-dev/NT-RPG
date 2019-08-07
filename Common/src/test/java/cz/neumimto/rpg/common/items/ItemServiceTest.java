@@ -41,7 +41,7 @@ public class ItemServiceTest {
 
     @Test
     public void getItemTypesByWeaponClassUnknown() {
-        new ItemServiceTest().registerWeaponClassSubClassesExists();
+        registerWeaponClassSubClassesExists();
 
         RpgItemTypeImpl rpgItemType = new RpgItemTypeImpl("testItem", "testModel", null, 0D, 0D);
         itemService.getWeaponClassByName("test").get().getItems().add(rpgItemType);

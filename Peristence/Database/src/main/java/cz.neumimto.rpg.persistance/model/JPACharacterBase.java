@@ -360,4 +360,6 @@ public class JPACharacterBase extends JPATimestampEntity implements CharacterBas
             cachedAttributes.put(characterAttribute.getName(), characterAttribute.getLevel());
         }
     }
+
+
 }

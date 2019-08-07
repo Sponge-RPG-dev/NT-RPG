@@ -23,8 +23,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.UUID;
 
-import static cz.neumimto.rpg.junit.TestDictionary.CLASS_PRIMARY;
-import static cz.neumimto.rpg.junit.TestDictionary.CLASS_SECONDARY;
+import static cz.neumimto.rpg.junit.TestDictionary.*;
 
 public class CharactersExtension implements ParameterResolver {
 
@@ -52,7 +51,8 @@ public class CharactersExtension implements ParameterResolver {
 
     private TestCharacter initializedCharacter() {
         CharacterBase characterBase = new JPACharacterBase();
-
+        characterBase.getAttributes().put(STR.getId(), 0);
+        characterBase.getAttributes().put(AGI.getId(), 0);
         TestCharacter activeCharacter = new TestCharacter(UUID.randomUUID(), characterBase, TestPropertyService.LAST_ID);
 
 

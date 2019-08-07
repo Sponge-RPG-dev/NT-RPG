@@ -236,9 +236,12 @@ public class JSLoader implements IScriptEngine {
             }
         };
 
-
-        for (File confFile : addonDir.toFile().listFiles(pathname -> pathname.isFile() && pathname.getName().endsWith(".conf"))) {
-            loadSkillDefinitionFile(urlClassLoader, confFile);
+        File file1 = addonDir.toFile();
+        File[] files = file1.listFiles(pathname -> pathname.isFile() && pathname.getName().endsWith(".conf"));
+        if (files != null) {
+            for (File confFile : files) {
+                loadSkillDefinitionFile(urlClassLoader, confFile);
+            }
         }
     }
 
