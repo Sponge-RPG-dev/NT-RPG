@@ -448,13 +448,14 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
         ItemStack of = back(g);
         i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0, 0))).offer(of);
 
-        TreeSet<ClassItem> treeSet = new TreeSet<>(Comparator.comparingInt(o -> (int) o.getDamage()));
         Set<ClassItem> weapons = g.getWeapons();
-        treeSet.addAll(weapons);
 
-        for (ClassItem configRPGItemType : treeSet) {
-            SpongeRpgItemType type = (SpongeRpgItemType) configRPGItemType.getType();
-            ItemStack q = GuiHelper.rpgItemTypeToItemStack(type);
+        List<ClassItem> sortedList = new ArrayList<>(weapons);
+        sortedList.sort((o1, o2) -> (int) (o2.getDamage() - o1.getDamage()));
+
+        for (ClassItem classItem : sortedList) {
+            SpongeRpgItemType type = (SpongeRpgItemType) classItem.getType();
+            ItemStack q = GuiHelper.rpgItemTypeToItemStack(type, classItem);
             i.offer(q);
         }
 

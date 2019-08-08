@@ -76,7 +76,8 @@ public abstract class AbstractItemService implements ItemService {
     @Override
     public void registerRpgItemType(RpgItemType rpgItemType) {
         rpgItemType.getItemClass().getItems().add(rpgItemType);
-        items.put(RpgItemType.KEY_BUILDER.apply(rpgItemType.getId(), rpgItemType.getModelId()), rpgItemType);
+        items.put(rpgItemType.getKey(), rpgItemType);
+        info("   - Added managed Item " + rpgItemType.getItemClass().getName() + "/" + rpgItemType.getKey());
     }
 
     @Override
@@ -141,13 +142,16 @@ public abstract class AbstractItemService implements ItemService {
 
     @Override
     public void loadItemGroups(Config config) {
+        info("Loading Weapon configuration");
         List<? extends Config> itemGroups = config.getConfigList("ItemGroups");
         loadWeaponGroups(itemGroups, null);
 
+        info("Loading Armor configuration");
         for (String shield : config.getStringList("Armor")) {
             Optional<RpgItemType> rpgItemType = createRpgItemType(ItemString.parse(shield), ItemClass.ARMOR);
             rpgItemType.ifPresent(this::registerRpgItemType);
         }
+        info("Loading Shields configuration");
         for (String shield : config.getStringList("Shields")) {
             Optional<RpgItemType> rpgItemType = createRpgItemType(ItemString.parse(shield), ItemClass.SHIELD);
             rpgItemType.ifPresent(this::registerRpgItemType);
@@ -159,7 +163,7 @@ public abstract class AbstractItemService implements ItemService {
             String weaponClass;
             try {
                 weaponClass = itemGroup.getString("WeaponClass");
-                info(" - Loading WeaponClass" + weaponClass);
+                info(" - Loading WeaponClass " + weaponClass);
                 ItemClass weapons = new ItemClass(weaponClass);
                 weapons.setParent(parent);
                 if (parent != null) {
@@ -181,8 +185,10 @@ public abstract class AbstractItemService implements ItemService {
             for (String item : items) {
                 ItemString parsed = ItemString.parse(item);
                 Optional<RpgItemType> rpgItemType = createRpgItemType(parsed, weapons);
-                rpgItemType.ifPresent(this::registerRpgItemType);
-                rpgItemType.ifPresent(a -> weapons.getItems().add(a));
+                rpgItemType.ifPresent(a-> {
+                    registerRpgItemType(a);
+                    weapons.getItems().add(a);
+                });
             }
         } catch (ConfigException e) {
             try {

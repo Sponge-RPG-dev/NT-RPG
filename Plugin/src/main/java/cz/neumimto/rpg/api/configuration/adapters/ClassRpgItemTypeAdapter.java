@@ -40,9 +40,9 @@ public class ClassRpgItemTypeAdapter implements TypeSerializer<Set<ClassItem>> {
 
         Iterator<String> iterator = list.iterator();
         while (iterator.hasNext()) {
-            String s = iterator.next().toLowerCase();
-            String[] data = s.split(":");
-            if (s.startsWith("weaponclass:")) {
+            String s = iterator.next();
+            if (s.toLowerCase().startsWith("weaponclass:")) {
+                String[] data = s.split(":");
                 String clazz = data[1];
                 Set<RpgItemType> itemTypes = Rpg.get().getItemService().getItemTypesByWeaponClass(clazz);
                 for (RpgItemType itemType : itemTypes) {
