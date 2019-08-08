@@ -5,6 +5,7 @@ import cz.neumimto.rpg.api.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
+import cz.neumimto.rpg.api.items.ClassItem;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.logging.Log;
@@ -505,12 +506,14 @@ public class GuiHelper {
         return md;
     }
 
-    public static ItemStack rpgItemTypeToItemStack(SpongeRpgItemType configRPGItemType) {
+
+
+    public static ItemStack rpgItemTypeToItemStack(SpongeRpgItemType configRPGItemType, ClassItem classItem)  {
         ItemStack q = itemStack(configRPGItemType.getItemType());
         Text lore = Text.builder().append(translate(LocalizationKeys.ITEM_DAMAGE))
-                .append(Text.builder(": " + configRPGItemType.getDamage())
+                .append(Text.builder(": " + classItem.getDamage())
                         .style(TextStyles.BOLD)
-                        .color(((SpongeDamageService)Rpg.get().getDamageService()).getColorByDamage(configRPGItemType.getDamage()))
+                        .color(((SpongeDamageService)Rpg.get().getDamageService()).getColorByDamage(classItem.getDamage()))
                         .build())
                 .build();
         q.offer(Keys.ITEM_LORE, Collections.singletonList(lore));

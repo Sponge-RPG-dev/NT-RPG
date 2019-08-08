@@ -19,7 +19,7 @@ public interface ItemService {
     default Set<RpgItemType> getItemTypesByWeaponClass(String clazz) {
         Optional<ItemClass> weaponClassByName = getWeaponClassByName(clazz);
         if (weaponClassByName.isPresent()) {
-            return getItemTypesByWeaponClass(weaponClassByName.get().getName());
+            return getItemTypesByWeaponClass(weaponClassByName.get());
         }
         return Collections.emptySet();
     }
