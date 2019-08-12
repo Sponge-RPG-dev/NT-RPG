@@ -31,10 +31,10 @@ public class CommonProperties {
     @Property(name = "health_regen", default_ = 1)
     public static int health_regen;
 
-    @Property(name = "mana_regen", default_ = 1)
+    @Property(name = "mana_regen")
     public static int mana_regen;
 
-    @Property(name = "mana_regen_mult")
+    @Property(name = "mana_regen_mult", default_ = 1)
     public static int mana_regen_mult;
 
     @Property(name = "experience_mult", default_ = 1)

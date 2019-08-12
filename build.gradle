@@ -19,7 +19,7 @@ subprojects {
         classifier = 'sources'
         from sourceSets.main.allSource
     }
-
+    buildDir("build")
     artifacts {
         archives sourcesJar
     }
