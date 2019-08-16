@@ -87,11 +87,11 @@ public class SpongeGuiceModule extends AbstractRpgGuiceModule {
         map.put(EventFactoryService.class, SpongeEventFactory.class);
         map.put(CharacterInventoryInteractionHandler.class, InventoryHandler.class);
         map.put(IResourceLoader.class, ResourceLoader.class);
-        map.put(CommandService.class, CommandService.class);
-        map.put(ParticleDecorator.class, ParticleDecorator.class);
-        map.put(ItemLoreBuilderService.class, ItemLoreBuilderService.class);
-        map.put(RWDao.class, RWDao.class);
-        map.put(RWService.class, RWService.class);
+        map.put(CommandService.class, null);
+        map.put(ParticleDecorator.class, null);
+        map.put(ItemLoreBuilderService.class, null);
+        map.put(RWDao.class, null);
+        map.put(RWService.class, null);
         //map.put(ICharacterClassDao.class).to(JPACharacterClassDao.class);
         //map.put(IPlayerDao.class).to(JPAPlayerDao.class);
         map.putAll(extraBindings);

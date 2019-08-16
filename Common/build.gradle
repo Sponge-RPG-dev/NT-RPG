@@ -23,12 +23,13 @@ dependencies {
     compile 'net.bytebuddy:byte-buddy:1.9.14'
     compileOnly 'org.apache.commons:commons-lang3:3.9'
 
+    testCompile project(':Database-Persistence')
+
     testCompile 'com.github.JeffreyFalgout:junit5-extensions:89fa6cb1e7'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.1'
     testCompile 'org.junit.jupiter:junit-jupiter-engine:5.4.1'
     testCompile 'org.junit.jupiter:junit-jupiter-params:5.4.1'
-    
-    testCompile project(':Database-Persistence')
+
     testCompile 'ninja.leaping.configurate:configurate-hocon:3.3'
     testCompile 'com.github.Sponge-RPG-dev:ConfigurateButWithBlackjackAndHookers:39d5fc8afd'
     testCompile group: 'it.unimi.dsi', name: 'fastutil', version: '8.2.1'

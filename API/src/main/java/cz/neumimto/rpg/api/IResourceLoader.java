@@ -26,7 +26,7 @@ public interface IResourceLoader {
 
     void initializeComponents();
 
-    Set<RpgAddon> discoverGuiceModules();
+    //Set<RpgAddon> discoverGuiceModules();
 
     @Retention(RetentionPolicy.RUNTIME)
     @interface Skill {

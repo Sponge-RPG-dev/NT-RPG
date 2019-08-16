@@ -9,7 +9,7 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 
 import javax.inject.Inject;
 
-public abstract class DamageServiceImpl<T> implements DamageService<T> {
+public abstract class AbstractDamageService<T> implements DamageService<T> {
 
     @Inject
     protected EntityService entityService;

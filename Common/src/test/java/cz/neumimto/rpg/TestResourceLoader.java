@@ -52,9 +52,4 @@ public class TestResourceLoader implements IResourceLoader {
     public void initializeComponents() {
 
     }
-
-    @Override
-    public Set<RpgAddon> discoverGuiceModules() {
-        return null;
-    }
 }

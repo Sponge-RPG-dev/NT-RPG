@@ -23,7 +23,7 @@ import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.items.ClassItem;
-import cz.neumimto.rpg.common.damage.DamageServiceImpl;
+import cz.neumimto.rpg.common.damage.AbstractDamageService;
 import cz.neumimto.rpg.sponge.properties.SpongeDefaultProperties;
 import cz.neumimto.rpg.sponge.skills.NDamageType;
 import org.spongepowered.api.Sponge;
@@ -44,7 +44,7 @@ import java.util.stream.Collectors;
  * Created by NeumimTo on 4.8.15.
  */
 @Singleton
-public class SpongeDamageService extends DamageServiceImpl<Living> {
+public class SpongeDamageService extends AbstractDamageService<Living> {
 
     private Map<Double, TextColor> doubleColorMap = new TreeMap<>();
 

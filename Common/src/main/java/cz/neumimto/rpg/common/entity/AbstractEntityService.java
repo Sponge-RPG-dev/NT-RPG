@@ -4,6 +4,7 @@ import cz.neumimto.rpg.api.IRpgElement;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.effects.IEffectService;
 import cz.neumimto.rpg.api.entity.*;
+import cz.neumimto.rpg.api.entity.players.ICharacterService;
 import cz.neumimto.rpg.api.events.skill.SkillHealEvent;
 import cz.neumimto.rpg.common.entity.configuration.MobSettingsDao;
 import cz.neumimto.rpg.common.entity.configuration.MobsConfig;
@@ -21,7 +22,7 @@ public abstract class AbstractEntityService<T, I extends IMob<T>> implements Ent
     private HashMap<UUID, I> entityHashMap;
 
     @Inject
-    private CharacterService characterService;
+    private ICharacterService characterService;
 
     @Inject
     private IPropertyService propertyService;

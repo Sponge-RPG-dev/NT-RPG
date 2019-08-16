@@ -25,19 +25,22 @@ public class AbstractRpgGuiceModule extends AbstractModule {
         map.put(IPropertyService.class, PropertyService.class);
         map.put(IScriptEngine.class, JSLoader.class);
         map.put(ClassService.class, ClassServiceImpl.class);
-        map.put(ClassDefinitionDao.class, ClassDefinitionDao.class);
-        map.put(ExperienceDAO.class, ExperienceDAO.class);
+        map.put(ClassDefinitionDao.class, null);
+        map.put(ExperienceDAO.class, null);
         map.put(LocalizationService.class, LocalizationServiceImpl.class);
         return map;
     }
 
     @Override
     protected void configure() {
-        super.configure();
         for (Map.Entry<Class<Object>, Class<?>> classClassEntry : getBindings().entrySet()) {
             Class<?> value = classClassEntry.getValue();
             Class<Object> key = classClassEntry.getKey();
-            bind(key).to(value);
+            if (value == null) {
+                bind(key);
+            } else {
+                bind(key).to(value);
+            }
         }
     }
 }

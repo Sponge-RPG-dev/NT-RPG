@@ -75,7 +75,7 @@ public abstract class AbstractResourceLoader implements IResourceLoader {
 
     private static boolean reload = false;
 
-    private Set<Class> classesToLoad = new HashSet<>();
+    private static Set<Class> classesToLoad = new HashSet<>();
 
     @Override
     public void init() {
@@ -403,8 +403,7 @@ public abstract class AbstractResourceLoader implements IResourceLoader {
         }
     }
 
-    @Override
-    public Set<RpgAddon> discoverGuiceModules() {
+    public static Set<RpgAddon> discoverGuiceModules() {
         Set<RpgAddon> addons = new HashSet<>();
 
         for (Class aClass : classesToLoad) {

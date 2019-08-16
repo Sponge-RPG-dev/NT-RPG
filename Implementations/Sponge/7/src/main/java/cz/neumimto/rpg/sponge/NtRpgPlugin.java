@@ -26,6 +26,7 @@ import cz.neumimto.rpg.api.RpgAddon;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.utils.FileUtils;
+import cz.neumimto.rpg.common.AbstractResourceLoader;
 import cz.neumimto.rpg.sponge.commands.CommandService;
 import cz.neumimto.rpg.sponge.configuration.Settings;
 import cz.neumimto.rpg.sponge.inventory.data.*;
@@ -101,6 +102,17 @@ public class NtRpgPlugin extends Rpg {
     @Listener
     public void initializeApi(GameConstructionEvent event) {
         long start = System.nanoTime();
+
+        Log.setLogger(logger);
+        try {
+            workingDir = config.toString();
+            URL url = FileUtils.getPluginUrl();
+            pluginjar = new File(url.toURI());
+        } catch (URISyntaxException us) {
+            us.printStackTrace();
+        }
+
+
         instance = this;
         asyncExecutor = Sponge.getGame().getScheduler().createAsyncExecutor(NtRpgPlugin.this);
 
@@ -120,11 +132,7 @@ public class NtRpgPlugin extends Rpg {
             e.printStackTrace();
         }
 
-        Rpg.get().reloadMainPluginConfig();
-        Rpg.get().getResourceLoader().loadJarFile(pluginjar, true);
-        Rpg.get().getResourceLoader().loadExternalJars();
-
-        Set<RpgAddon> rpgAddons = Rpg.get().getResourceLoader().discoverGuiceModules();
+        Set<RpgAddon> rpgAddons = AbstractResourceLoader.discoverGuiceModules();
 
         Map bindings = new HashMap<>();
         for (RpgAddon rpgAddon : rpgAddons) {
@@ -136,11 +144,18 @@ public class NtRpgPlugin extends Rpg {
         );
         super.impl = injector.getInstance(SpongeRpg.class);
 
-        Rpg.get().getResourceLoader().initializeComponents();
+        Rpg.get().reloadMainPluginConfig();
+
+        Rpg.get().getResourceLoader().loadJarFile(pluginjar, true);
+        Rpg.get().getResourceLoader().loadExternalJars();
 
         for (RpgAddon rpgAddon : rpgAddons) {
             rpgAddon.processStageEarly(injector);
         }
+
+        Rpg.get().getResourceLoader().initializeComponents();
+
+
 
         if (pluginConfig.DEBUG.isBalance()) {
             Sponge.getEventManager().registerListeners(this, injector.getInstance(DebugListener.class));
@@ -165,14 +180,6 @@ public class NtRpgPlugin extends Rpg {
 
     @Listener
     public void preinit(GamePreInitializationEvent e) {
-        Log.setLogger(logger);
-        try {
-            workingDir = config.toString();
-            URL url = FileUtils.getPluginUrl();
-            pluginjar = new File(url.toURI());
-        } catch (URISyntaxException us) {
-            us.printStackTrace();
-        }
 
         try {
             Class.forName("me.rojo8399.placeholderapi.PlaceholderService");

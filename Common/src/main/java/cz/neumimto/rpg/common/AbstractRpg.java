@@ -9,6 +9,7 @@ import cz.neumimto.rpg.api.damage.DamageService;
 import cz.neumimto.rpg.api.effects.IEffectService;
 import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.entity.IPropertyService;
+import cz.neumimto.rpg.api.entity.players.ICharacterService;
 import cz.neumimto.rpg.api.entity.players.parties.PartyService;
 import cz.neumimto.rpg.api.events.EventFactoryService;
 import cz.neumimto.rpg.api.exp.IExperienceService;
@@ -77,7 +78,7 @@ public abstract class AbstractRpg implements RpgApi {
     private IResourceLoader iresourceLoader;
 
     @Inject
-    private CharacterService characterService;
+    private ICharacterService characterService;
 
     @Inject
     private IExperienceService experienceService;
@@ -124,7 +125,7 @@ public abstract class AbstractRpg implements RpgApi {
     }
     
     @Override
-    public CharacterService getCharacterService() {
+    public ICharacterService getCharacterService() {
         return characterService;
     }
 
