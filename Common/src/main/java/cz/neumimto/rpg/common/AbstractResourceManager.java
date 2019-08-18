@@ -40,7 +40,7 @@ import java.util.jar.JarFile;
 import static cz.neumimto.rpg.api.logging.Log.error;
 import static cz.neumimto.rpg.api.logging.Log.info;
 
-public abstract class AbstractResourceLoader implements IResourceLoader {
+public abstract class AbstractResourceManager implements IResourceLoader {
 
     private final static String INNERCLASS_SEPARATOR = "$";
     public static File classDir, addonDir, skilltreeDir, addonLoadDir, localizations;

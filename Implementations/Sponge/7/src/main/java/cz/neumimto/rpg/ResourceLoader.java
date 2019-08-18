@@ -19,16 +19,12 @@
 package cz.neumimto.rpg;
 
 import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.common.AbstractResourceLoader;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.common.AbstractResourceManager;
 import cz.neumimto.rpg.sponge.commands.CommandBase;
 import cz.neumimto.rpg.sponge.commands.CommandService;
-import org.apache.commons.io.FileUtils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.io.File;
-import java.io.IOException;
 
 import static cz.neumimto.rpg.api.logging.Log.info;
 
@@ -37,7 +33,7 @@ import static cz.neumimto.rpg.api.logging.Log.info;
  */
 @SuppressWarnings("unchecked")
 @Singleton
-public class ResourceLoader extends AbstractResourceLoader {
+public class ResourceLoader extends AbstractResourceManager {
 
 
 
