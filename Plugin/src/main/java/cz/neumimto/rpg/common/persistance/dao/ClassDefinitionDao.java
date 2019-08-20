@@ -33,6 +33,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static cz.neumimto.rpg.api.logging.Log.error;
 import static cz.neumimto.rpg.api.logging.Log.info;
@@ -69,14 +70,8 @@ public class ClassDefinitionDao {
                     if (result.getLevelProgression() != null) {
                         result.getLevelProgression().setLevelMargins(result.getLevelProgression().initCurve());
                     }
-                    Iterator<String> iterator = result.getExperienceSource().iterator();
-
-                    while (iterator.hasNext()) {
-                        String next = iterator.next();
-                        result.getExperienceSource().add(next.toUpperCase());
-                        iterator.remove();
-                    }
-
+                    Set<String> expU = result.getExperienceSource().stream().map(String::toUpperCase).collect(Collectors.toSet());
+                    result.setExperienceSources(expU);
 
                     set.add(result);
                 } catch (Exception e) {

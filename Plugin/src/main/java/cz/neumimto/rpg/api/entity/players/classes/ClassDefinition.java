@@ -313,4 +313,8 @@ public class ClassDefinition implements IEffectSourceProvider {
                 ", type=" + type +
                 '}';
     }
+
+    public void setExperienceSources(Set<String> expU) {
+        this.experienceSourceSet = expU;
+    }
 }
