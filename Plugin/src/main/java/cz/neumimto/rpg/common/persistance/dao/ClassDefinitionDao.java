@@ -32,10 +32,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static cz.neumimto.rpg.api.logging.Log.error;
 import static cz.neumimto.rpg.api.logging.Log.info;
@@ -72,6 +69,15 @@ public class ClassDefinitionDao {
                     if (result.getLevelProgression() != null) {
                         result.getLevelProgression().setLevelMargins(result.getLevelProgression().initCurve());
                     }
+                    Iterator<String> iterator = result.getExperienceSource().iterator();
+
+                    while (iterator.hasNext()) {
+                        String next = iterator.next();
+                        result.getExperienceSource().add(next.toUpperCase());
+                        iterator.remove();
+                    }
+
+
                     set.add(result);
                 } catch (Exception e) {
                     error("Could not read class file: ", e);

@@ -302,6 +302,10 @@ public class ClassDefinition implements IEffectSourceProvider {
         return skillTreeType;
     }
 
+    public Set<String> getExperienceSource() {
+        return experienceSourceSet;
+    }
+
     @Override
     public String toString() {
         return "ClassDefinition{" +

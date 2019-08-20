@@ -172,8 +172,8 @@ public class InventoryListener {
                         ManagedSlot managedSlot = managedSlots.get(selectedSlotIndex);
                         if (inventoryHandler.handleCharacterEquipActionPre(character, managedSlot, rpgItemType1)) {
                             inventoryHandler.handleInventoryInitializationPost(character);
-                            character.setLastHotbarSlotInteraction(last);
-                            character.setMainHand(rpgItemType1, last);
+                            character.setLastHotbarSlotInteraction(selectedSlotIndex);
+                            character.setMainHand(rpgItemType1, selectedSlotIndex);
                         } else {
                             ItemStackUtils.dropItem(player, itemStack);
                             player.setItemInHand(HandTypes.MAIN_HAND, ItemStack.empty());
@@ -183,6 +183,10 @@ public class InventoryListener {
                         }
                     }
                 }
+            } else {
+                character.setMainHand(null, -1);
+                character.setLastHotbarSlotInteraction(-1);
+                character.setRequiresDamageRecalculation(true);
             }
         }
     }
