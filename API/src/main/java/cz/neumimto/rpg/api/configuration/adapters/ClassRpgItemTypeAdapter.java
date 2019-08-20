@@ -46,7 +46,9 @@ public class ClassRpgItemTypeAdapter implements TypeSerializer<Set<ClassItem>> {
                 String clazz = data[1];
                 Set<RpgItemType> itemTypes = Rpg.get().getItemService().getItemTypesByWeaponClass(clazz);
                 for (RpgItemType itemType : itemTypes) {
-                    map.put(itemType, itemType.getDamage());
+                    if (!map.containsKey(itemType)) {
+                        map.put(itemType, itemType.getDamage());
+                    }
                 }
             } else {
                 ItemString parsed = ItemString.parse(s);

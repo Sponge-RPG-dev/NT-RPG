@@ -95,7 +95,7 @@ public class InventoryListener {
         }
 
         SlotTransaction slotTransaction = event.getTransactions().get(0);
-        Map<Class<?>,RpgInventory> managedInventory = character.getManagedInventory();
+        Map<Class<?>, RpgInventory> managedInventory = character.getManagedInventory();
         RpgInventory rpgInventory = managedInventory.get(targetInventory.getClass());
 
         if (rpgInventory != null) {
@@ -165,15 +165,15 @@ public class InventoryListener {
 
                 int last = character.getLastHotbarSlotInteraction();
                 if (selectedSlotIndex != last) {
-                    Map<Class<?>,RpgInventory> managedInventory = character.getManagedInventory();
+                    Map<Class<?>, RpgInventory> managedInventory = character.getManagedInventory();
                     Map<Integer, ManagedSlot> managedSlots = managedInventory.get(inventory.getClass()).getManagedSlots();
 
                     if (managedSlots.containsKey(selectedSlotIndex)) {
                         ManagedSlot managedSlot = managedSlots.get(selectedSlotIndex);
                         if (inventoryHandler.handleCharacterEquipActionPre(character, managedSlot, rpgItemType1)) {
                             inventoryHandler.handleInventoryInitializationPost(character);
-                            character.setLastHotbarSlotInteraction(last);
-                            character.setMainHand(rpgItemType1, last);
+                            character.setLastHotbarSlotInteraction(selectedSlotIndex);
+                            character.setMainHand(rpgItemType1, selectedSlotIndex);
                         } else {
                             ItemStackUtils.dropItem(player, itemStack);
                             player.setItemInHand(HandTypes.MAIN_HAND, ItemStack.empty());
@@ -183,9 +183,14 @@ public class InventoryListener {
                         }
                     }
                 }
+            } else {
+                character.setMainHand(null, -1);
+                character.setLastHotbarSlotInteraction(-1);
+                character.setRequiresDamageRecalculation(true);
             }
         }
     }
+
 
     @Listener
     @Include({
@@ -227,7 +232,7 @@ public class InventoryListener {
                 }
                 IActiveCharacter character = characterService.getCharacter(player);
                 Map<Class<?>, RpgInventory> managedInventory = character.getManagedInventory();
-                RpgInventory rpgInventory =managedInventory.get(aClass);
+                RpgInventory rpgInventory = managedInventory.get(aClass);
                 ManagedSlot managedSlot = rpgInventory.getManagedSlots().get(slotId);
                 Optional<RpgItemStack> future = itemService.getRpgItemStack(slotTransaction.getFinal().createStack());
                 Optional<RpgItemStack> original = itemService.getRpgItemStack(slotTransaction.getOriginal().createStack());

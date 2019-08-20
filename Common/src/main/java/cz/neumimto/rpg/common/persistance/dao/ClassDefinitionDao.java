@@ -36,6 +36,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static cz.neumimto.rpg.api.logging.Log.error;
 import static cz.neumimto.rpg.api.logging.Log.info;
@@ -72,6 +73,9 @@ public class ClassDefinitionDao {
                     if (result.getLevelProgression() != null) {
                         result.getLevelProgression().setLevelMargins(result.getLevelProgression().initCurve());
                     }
+                    Set<String> expU = result.getExperienceSource().stream().map(String::toUpperCase).collect(Collectors.toSet());
+
+                    result.setExperienceSources(expU);
                     set.add(result);
                 } catch (Exception e) {
                     error("Could not read class file: ", e);
