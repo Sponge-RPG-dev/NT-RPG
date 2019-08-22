@@ -1,16 +1,11 @@
 package cz.neumimto.rpg.common;
 
-import com.google.inject.Singleton;
 import cz.neumimto.rpg.api.IResourceLoader;
-import cz.neumimto.rpg.api.RpgAddon;
 import cz.neumimto.rpg.api.logging.Log;
-import cz.neumimto.rpg.common.skills.PlayerSkillHandlers;
-import jdk.internal.org.objectweb.asm.ClassReader;
-import jdk.internal.org.objectweb.asm.tree.ClassNode;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -21,27 +16,20 @@ import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import static cz.neumimto.rpg.api.logging.Log.info;
-
 public class AddonScanner {
 
     private static boolean stage;
 
     private static Path addonDir;
 
-    private static Set<String> annotations = new HashSet<>();
-    private static Set<String> classesToLoad = new HashSet<>();
+    private static Set<Class<?>> annotations = new HashSet<>();
+    private static Set<Class<?>> classesToLoad = new HashSet<>();
 
     static {
-        annotations.add(simpleName(IResourceLoader.Skill.class));
-        annotations.add(simpleName(IResourceLoader.Command.class));
-        annotations.add(simpleName(IResourceLoader.ModelMapper.class));
-        annotations.add(simpleName(IResourceLoader.ListenerClass.class));
-        annotations.add(simpleName(Singleton.class));
-    }
-
-    private static String simpleName(Class c) {
-        return "L"+c.getCanonicalName().replaceAll("\\.", "\\\\") + ";";
+        annotations.add(IResourceLoader.Skill.class);
+        annotations.add(IResourceLoader.Command.class);
+        annotations.add(IResourceLoader.ModelMapper.class);
+        annotations.add(IResourceLoader.ListenerClass.class);
     }
 
     public static void setDeployedDir(Path deployedDir) {
@@ -56,6 +44,13 @@ public class AddonScanner {
 
     public static void onlyReloads() {
         AddonScanner.stage = true;
+    }
+
+    public static Set<Class<?>> getClassesToLoad() {
+        Set<Class<?>> classes = new HashSet<>();
+        classes.addAll(classesToLoad);
+        classesToLoad.clear();
+        return classes;
     }
 
     public static void prepareAddons() {
@@ -84,32 +79,39 @@ public class AddonScanner {
             Enumeration<JarEntry> entries = jarFile.entries();
             while (entries.hasMoreElements()) {
                 JarEntry jarEntry = entries.nextElement();
-                if (isClassFile(jarEntry)) {
+                String s = getValidClassName(jarEntry);
+                if (s == null) {
                     continue;
                 }
-                try (InputStream is = jarFile.getInputStream(jarEntry)) {
-                    ClassReader classReader = new ClassReader(is);
-                    ClassNode classNode = new ClassNode();
-                    classReader.accept(classNode, 0);
 
+                Class<?> aClass = Class.forName(s);
 
-                    String className = classReader.getClassName();
-                    if (classNode.visibleAnnotations != null) {
-                        if (classNode.visibleAnnotations.stream().anyMatch(a -> annotations.contains(a.desc)))
-                            classesToLoad.add(className);
-                    }
+                if (hasComponentAnnotation(aClass)) {
+                    classesToLoad.add(aClass);
                 }
+
             }
         } catch (Exception e) {
-
+            throw new RuntimeException(e);
         }
+    }
+
+    private static boolean hasComponentAnnotation(Class aClass) {
+        Annotation[] annotations = aClass.getAnnotations();
+        for (Annotation annotation : annotations) {
+            Class<? extends Annotation> annotationType  = annotation.annotationType();
+            if (AddonScanner.annotations.contains(annotationType)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static boolean isClassFile(JarEntry jarEntry) {
         if (!jarEntry.getName().endsWith(".class")) {
             return true;
         }
-        if (jarEntry.getName().startsWith("META-INF")) {
+        if (jarEntry.getName().contains("META-INF")) {
             return true;
         }
         return false;
@@ -167,27 +169,22 @@ public class AddonScanner {
         Enumeration<JarEntry> entries = jarFile.entries();
         while (entries.hasMoreElements()) {
             JarEntry jarEntry = entries.nextElement();
-
-            if (isClassFile(jarEntry)) {
-                continue;
+            if (jarEntry.getName().startsWith("META-INF/rpg-addon")) {
+                return true;
             }
-            try (InputStream inputStream = jarFile.getInputStream(jarEntry)) {
-                ClassReader classReader = new ClassReader(inputStream);
-                String[] interfaces = classReader.getInterfaces();
-                for (String anInterface : interfaces) {
-                    if (anInterface.equalsIgnoreCase(RpgAddon.class.getCanonicalName())) {
-                        info("Found a module - " + classReader.getClassName() + " in " + jarFile.getName());
-
-                        return true;
-                    }
-                }
-            } catch (IllegalArgumentException | IOException e) {
-                continue;
-            }
-
-
         }
         return false;
+    }
+
+    private static String getValidClassName(JarEntry jarEntry) {
+        if (isClassFile(jarEntry)) {
+            return null;
+        }
+
+        String s = jarEntry.getName().replaceAll("/", ".");
+        s = s.substring(0, s.length() - 6);
+
+        return s;
     }
 
     private static class CannotReadOrWriteFS extends RuntimeException {
