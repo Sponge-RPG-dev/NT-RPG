@@ -13,14 +13,8 @@ import javax.persistence.*;
 @Entity(name = "rpg_character_skill")
 public class JPACharacterSkill extends JPATimestampEntity implements CharacterSkill {
 
-    @Id
-    @GeneratedValue(generator = "native")
-    @GenericGenerator(name = "native", strategy = "native")
-    @Column(name = "skill_id")
     private Long skillId;
 
-    @ManyToOne(targetEntity = JPACharacterBase.class)
-    @JoinColumn(name = "character_id")
     private CharacterBase characterBase;
 
     private int level;
@@ -29,10 +23,8 @@ public class JPACharacterSkill extends JPATimestampEntity implements CharacterSk
     @JoinColumn(name = "class_id")
     private CharacterClass fromClass;
 
-    @Column(name = "catalog_id")
     private String catalogId;
 
-    @Column(name = "cooldown")
     private Long cooldown;
 
     @Override

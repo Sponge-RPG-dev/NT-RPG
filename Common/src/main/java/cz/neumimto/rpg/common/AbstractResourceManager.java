@@ -406,7 +406,7 @@ public abstract class AbstractResourceManager implements IResourceLoader {
     public static Set<RpgAddon> discoverGuiceModules() {
         Set<RpgAddon> addons = new HashSet<>();
 
-        for (Class aClass : classesToLoad) {
+        for (Class aClass : AddonScanner.getClassesToLoad()) {
             if (RpgAddon.class.isAssignableFrom(aClass)
                     && !aClass.isInterface()
                     && !Modifier.isAbstract( aClass.getModifiers())) {

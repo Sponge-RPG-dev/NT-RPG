@@ -1,6 +1,7 @@
 package cz.neumimto.rpg.common;
 
 import cz.neumimto.rpg.api.IResourceLoader;
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.logging.Log;
 
 import java.io.File;
@@ -18,18 +19,28 @@ import java.util.jar.JarFile;
 
 public class AddonScanner {
 
+    private final static String INNERCLASS_SEPARATOR = "$";
+
     private static boolean stage;
 
     private static Path addonDir;
 
     private static Set<Class<?>> annotations = new HashSet<>();
     private static Set<Class<?>> classesToLoad = new HashSet<>();
+    private static Set<String> exclusions = new HashSet<>();
 
     static {
         annotations.add(IResourceLoader.Skill.class);
         annotations.add(IResourceLoader.Command.class);
         annotations.add(IResourceLoader.ModelMapper.class);
         annotations.add(IResourceLoader.ListenerClass.class);
+
+
+        //Hibernate dep
+        exclusions.add("javax");
+        exclusions.add("org.hibernate");
+        exclusions.add("org.glassfish");
+        exclusions.add("org.javassist");
     }
 
     public static void setDeployedDir(Path deployedDir) {
@@ -83,17 +94,30 @@ public class AddonScanner {
                 if (s == null) {
                     continue;
                 }
+                if (s.lastIndexOf(INNERCLASS_SEPARATOR) > 1) {
+                    continue;
+                }
+                if (skip(s)) {
+                    continue;
+                }
 
-                Class<?> aClass = Class.forName(s);
-
-                if (hasComponentAnnotation(aClass)) {
-                    classesToLoad.add(aClass);
+                try {
+                    Class<?> aClass = Class.forName(s);
+                    if (hasComponentAnnotation(aClass) || Rpg.class.isAssignableFrom(aClass)) {
+                        classesToLoad.add(aClass);
+                    }
+                } catch (NoClassDefFoundError ignored) {
+                    int i = 0;
                 }
 
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private static boolean skip(String s) {
+        return exclusions.stream().anyMatch(s::startsWith);
     }
 
     private static boolean hasComponentAnnotation(Class aClass) {
@@ -128,7 +152,7 @@ public class AddonScanner {
     }
 
     private static void addPath(URL url) throws Exception {
-        URLClassLoader urlClassLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
+        URLClassLoader urlClassLoader = (URLClassLoader) AddonScanner.class.getClassLoader();
         Class urlClass = URLClassLoader.class;
         Method method = urlClass.getDeclaredMethod("addURL", new Class[]{URL.class});
         method.setAccessible(true);
@@ -180,7 +204,9 @@ public class AddonScanner {
         if (isClassFile(jarEntry)) {
             return null;
         }
-
+        if (jarEntry.getName().contains("module-info")) {
+            return null;
+        }
         String s = jarEntry.getName().replaceAll("/", ".");
         s = s.substring(0, s.length() - 6);
 

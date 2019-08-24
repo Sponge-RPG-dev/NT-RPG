@@ -27,6 +27,7 @@ import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.utils.FileUtils;
 import cz.neumimto.rpg.common.AbstractResourceManager;
+import cz.neumimto.rpg.common.AddonScanner;
 import cz.neumimto.rpg.sponge.commands.CommandService;
 import cz.neumimto.rpg.sponge.configuration.Settings;
 import cz.neumimto.rpg.sponge.inventory.data.*;
@@ -132,8 +133,11 @@ public class NtRpgPlugin extends Rpg {
             e.printStackTrace();
         }
 
+        AddonScanner.setDeployedDir(Paths.get(workingDir, ".deployed"));
+        AddonScanner.setAddonDir(Paths.get(workingDir, "addons"));
+        AddonScanner.prepareAddons();
         Set<RpgAddon> rpgAddons = AbstractResourceManager.discoverGuiceModules();
-
+        AddonScanner.onlyReloads();
         Map bindings = new HashMap<>();
         for (RpgAddon rpgAddon : rpgAddons) {
             bindings.putAll(rpgAddon.getBindings());

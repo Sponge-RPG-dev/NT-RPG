@@ -9,8 +9,11 @@ dependencies {
     compileOnly project(':API')
     compileOnly project(':Common')
 
-    compile 'org.hibernate:hibernate-entitymanager:5.3.6.Final'
+    def withoutX = { exclude group: 'net.bytebuddy', module: 'byte-buddy' }
 
+    compile 'org.hibernate:hibernate-entitymanager:5.4.4.Final'//, withoutX
+
+    compileOnly 'com.zaxxer:HikariCP:2.5.1'
     compileOnly 'com.google.inject:guice:4.2.2'
     compileOnly 'com.github.Sponge-RPG-dev:ConfigurateButWithBlackjackAndHookers:39d5fc8afd'
     compileOnly 'ninja.leaping.configurate:configurate-hocon:3.3'
