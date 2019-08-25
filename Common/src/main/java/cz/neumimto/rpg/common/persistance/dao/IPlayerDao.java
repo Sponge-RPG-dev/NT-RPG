@@ -27,8 +27,6 @@ public interface IPlayerDao {
 
     int markCharacterForRemoval(UUID player, String charName);
 
-    CharacterBase fetchCharacterBase(CharacterBase characterBase);
-
     void update(CharacterBase characterBase);
 
     void removePersitantSkill(CharacterSkill characterSkill);

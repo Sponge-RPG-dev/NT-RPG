@@ -1,7 +1,5 @@
 package cz.neumimto.rpg.persistance.dao;
 
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
 import cz.neumimto.rpg.api.persistance.model.TimestampEntity;
@@ -16,25 +14,47 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-import java.util.UUID;
+import java.util.*;
 
 public class JdbcPlayerDao implements IPlayerDao {
 
     private final DataSource dataSource;
-    private static final String SQL_FIND_CHAR = "SELECT * FROM rpg_character_base WHERE uuid = ? and marked_for_removal = false order by updated desc limit 1";
-    private static final String SQL_FIND_SKILLS = "SELECT sk.*, cl.class_id as class FROM rpg_character_skill as sk left join rpg_character_base as c on sk.character_id = c.character_id left join rpg_character_class as cl on sk.class_id = cl.class_id WHERE c.uuid = ?";
-    private static final String SQL_FIND_CLASSES_BY_CHAR = "SELECT cl.* from rpg_character_class as cl left join rpg_character_base as cb on cb.character_id = cl.character_id WHERE cb.uuid = ?";
+
+    private static final String FIND_CHAR = "SELECT * FROM rpg_character_base WHERE uuid = ? and marked_for_removal = false order by updated desc limit 1";
+    private static final String FIND_CHARS = "SELECT * FROM rpg_character_base WHERE uuid = ? and marked_for_removal = false";
+    private static final String FIND_CHAR_BY_NAME = "SELECT * FROM rpg_character_base WHERE uuid = ? and marked_for_removal = false and name = ?";
+    private static final String FIND_SKILLS = "SELECT sk.*, cl.class_id as class FROM rpg_character_skill as sk left join rpg_character_base as c on sk.character_id = c.character_id left join rpg_character_class as cl on sk.class_id = cl.class_id WHERE c.uuid = ?";
+    private static final String FIND_CLASSES_BY_CHAR = "SELECT cl.* from rpg_character_class as cl left join rpg_character_base as cb on cb.character_id = cl.character_id WHERE cb.uuid = ?";
 
     public JdbcPlayerDao(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
     @Override
-    public List<CharacterBase> getPlayersCharacters(UUID uuid) {
-        return null;
+    public List getPlayersCharacters(UUID uuid) {
+        List<JPACharacterBase> list = new ArrayList<>();
+
+        try (Connection con = dataSource.getConnection()) {
+            try (PreparedStatement pst = con.prepareStatement(FIND_CHARS)) {
+                pst.setString(0, uuid.toString());
+                try (ResultSet rs = pst.executeQuery()){
+                    while (rs.next()) {
+                        JPACharacterBase characterBase = new JPACharacterBase();
+                        loadCharacterBase(characterBase, rs);
+                        list.add(characterBase);
+                    }
+                }
+            }
+        } catch (SQLException s) {
+
+        }
+
+        for (JPACharacterBase characterBase : list) {
+            List<JPACharacterClass> jpaCharacterClasses = loadClasses(uuid, characterBase);
+            loadSkills(uuid, characterBase, jpaCharacterClasses);
+        }
+
+        return list;
     }
 
     @Override
@@ -42,9 +62,9 @@ public class JdbcPlayerDao implements IPlayerDao {
         JPACharacterBase characterBase = new JPACharacterBase();
 
         try (Connection con = dataSource.getConnection()) {
-            try (PreparedStatement pst = con.prepareStatement(SQL_FIND_CHAR)) {
+            try (PreparedStatement pst = con.prepareStatement(FIND_CHAR)) {
                 pst.setString(0, uuid.toString());
-                try (ResultSet rs = pst.executeQuery();){
+                try (ResultSet rs = pst.executeQuery()){
                     while (rs.next()) {
                         loadCharacterBase(characterBase, rs);
                     }
@@ -54,9 +74,18 @@ public class JdbcPlayerDao implements IPlayerDao {
 
         }
 
+        List<JPACharacterClass> characterClasses = loadClasses(uuid, characterBase);
+        loadSkills(uuid, characterBase, characterClasses);
+
+
+        characterBase.postLoad();
+        return characterBase;
+    }
+
+    protected List<JPACharacterClass> loadClasses(UUID uuid, JPACharacterBase characterBase) {
         List<JPACharacterClass> characterClasses = new ArrayList<>();
         try (Connection con = dataSource.getConnection()) {
-            try (PreparedStatement pst = con.prepareStatement(SQL_FIND_CLASSES_BY_CHAR)) {
+            try (PreparedStatement pst = con.prepareStatement(FIND_CLASSES_BY_CHAR)) {
                 pst.setString(0, uuid.toString());
                 try (ResultSet rs = pst.executeQuery()) {
                     JPACharacterClass characterClass = loadCharacterClass(characterBase, rs);
@@ -66,10 +95,14 @@ public class JdbcPlayerDao implements IPlayerDao {
         } catch (SQLException e) {
 
         }
+        characterBase.setCharacterClasses(new HashSet<>(characterClasses));
+        return characterClasses;
+    }
 
+    protected List<JPACharacterSkill> loadSkills(UUID uuid, JPACharacterBase characterBase, List<JPACharacterClass> characterClasses) {
         List<JPACharacterSkill> characterSkills = new ArrayList<>();
         try (Connection con = dataSource.getConnection()) {
-            try (PreparedStatement pst = con.prepareStatement(SQL_FIND_SKILLS)) {
+            try (PreparedStatement pst = con.prepareStatement(FIND_SKILLS)) {
                 pst.setString(0, uuid.toString());
                 try (ResultSet rs = pst.executeQuery();) {
                     while (rs.next()) {
@@ -81,9 +114,8 @@ public class JdbcPlayerDao implements IPlayerDao {
         } catch (SQLException e) {
 
         }
-
-        characterBase.postLoad();
-        return characterBase;
+        characterBase.setCharacterSkills(new HashSet<>(characterSkills));
+        return characterSkills;
     }
 
     private JPACharacterSkill loadCharacterSkills(JPACharacterBase characterBase, List<JPACharacterClass> characterClasses, ResultSet rs) throws SQLException {
@@ -145,8 +177,29 @@ public class JdbcPlayerDao implements IPlayerDao {
     }
 
     @Override
-    public CharacterBase getCharacter(UUID player, String name) {
-        return null;
+    public CharacterBase getCharacter(UUID uuid, String name) {
+        JPACharacterBase characterBase = new JPACharacterBase();
+        try (Connection con = dataSource.getConnection()) {
+            try (PreparedStatement pst = con.prepareStatement(FIND_CHAR_BY_NAME)) {
+                pst.setString(0, uuid.toString());
+                pst.setString(1, name);
+                try (ResultSet rs = pst.executeQuery()){
+                    while (rs.next()) {
+                        loadCharacterBase(characterBase, rs);
+                    }
+                }
+            }
+        } catch (SQLException s) {
+
+        }
+
+        List<JPACharacterClass> characterClasses = loadClasses(uuid, characterBase);
+        List<JPACharacterSkill> characterSkills = loadSkills(uuid, characterBase, characterClasses);
+
+        characterBase.setCharacterClasses(new HashSet<>(characterClasses));
+        characterBase.setCharacterSkills(new HashSet<>(characterSkills));
+        characterBase.postLoad();
+        return characterBase;
     }
 
     @Override
@@ -180,18 +233,35 @@ public class JdbcPlayerDao implements IPlayerDao {
     }
 
     @Override
-    public void createAndUpdate(CharacterBase base) {
+    public int markCharacterForRemoval(UUID uniqueId, String charName) {
+        try (Connection con = dataSource.getConnection()) {
+            try (PreparedStatement pst = con.prepareStatement("update rpg_character_base set marked_for_removal = true where uuid = ? and name = ?")) {
+                pst.setString(0, uniqueId.toString());
+                pst.setString(1, charName);
+                return pst.executeUpdate();
+            }
+        } catch (SQLException e) {
 
-    }
-
-    @Override
-    public int markCharacterForRemoval(UUID player, String charName) {
+        }
         return 0;
     }
 
+
     @Override
-    public CharacterBase fetchCharacterBase(CharacterBase characterBase) {
-        return null;
+    public void removePersitantSkill(CharacterSkill characterSkill) {
+        try (Connection con = dataSource.getConnection()) {
+            try (PreparedStatement pst = con.prepareStatement("delete from rpg_character_skill where skill_id = ?")) {
+                pst.setLong(0, characterSkill.getId());
+                pst.executeUpdate();
+            }
+        } catch (SQLException e) {
+
+        }
+    }
+
+    @Override
+    public void createAndUpdate(CharacterBase base) {
+
     }
 
     @Override
@@ -199,8 +269,4 @@ public class JdbcPlayerDao implements IPlayerDao {
 
     }
 
-    @Override
-    public void removePersitantSkill(CharacterSkill characterSkill) {
-
-    }
 }

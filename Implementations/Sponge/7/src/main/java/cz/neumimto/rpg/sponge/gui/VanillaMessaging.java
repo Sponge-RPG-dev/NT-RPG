@@ -290,7 +290,6 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
             List<CharacterBase> playersCharacters = characterService.getPlayersCharacters(player.getPlayer().getUniqueId());
             List<CharacterListModel> list = new ArrayList<>();
             for (CharacterBase playersCharacter : playersCharacters) {
-                playerDao.fetchCharacterBase(playersCharacter);
                 Set<CharacterClass> characterClasses = playersCharacter.getCharacterClasses();
                 Integer pcExp = 0;
                 for (CharacterClass characterClass : characterClasses) {

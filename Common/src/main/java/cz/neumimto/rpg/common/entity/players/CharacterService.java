@@ -511,7 +511,6 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
     @SuppressWarnings("unchecked")
     @Override
     public T createActiveCharacter(UUID player, CharacterBase characterBase) {
-        characterBase = playerDao.fetchCharacterBase(characterBase);
         T activeCharacter = createCharacter(player, characterBase);
         Set<String> strings = propertyService.getAttributes().keySet();
         for (String string : strings) {
