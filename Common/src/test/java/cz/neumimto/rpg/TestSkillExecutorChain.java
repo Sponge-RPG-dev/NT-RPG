@@ -10,7 +10,7 @@ import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.junit.NtRpgExtension;
 import cz.neumimto.rpg.junit.TestDictionary;
 import cz.neumimto.rpg.junit.TestGuiceModule;
-import cz.neumimto.rpg.persistance.model.JPACharacterBase;
+import cz.neumimto.rpg.model.CharacterBaseTest;
 import it.unimi.dsi.fastutil.objects.AbstractObject2FloatMap;
 import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;
 import name.falgout.jeffrey.testing.junit.guice.GuiceExtension;
@@ -72,7 +72,7 @@ public class TestSkillExecutorChain {
         skillData.setSkillSettings(skillSettings);
 
 
-        CharacterBase characterBase = new JPACharacterBase();
+        CharacterBase characterBase = new CharacterBaseTest();
         HashMap<Object, Object> objectObjectHashMap = new HashMap<>();
         objectObjectHashMap.put(str.getId(), 0);
         objectObjectHashMap.put(agi.getId(), 0);

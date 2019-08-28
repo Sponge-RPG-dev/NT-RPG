@@ -11,8 +11,8 @@ import cz.neumimto.rpg.common.entity.TestCharacter;
 import cz.neumimto.rpg.common.entity.TestPropertyService;
 import cz.neumimto.rpg.common.inventory.FilteredManagedSlotImpl;
 import cz.neumimto.rpg.common.inventory.RpgInventoryImpl;
-import cz.neumimto.rpg.persistance.model.JPACharacterBase;
-import cz.neumimto.rpg.persistance.model.JPACharacterClass;
+import cz.neumimto.rpg.model.CharacterBaseTest;
+import cz.neumimto.rpg.model.CharacterClassTest;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
@@ -50,13 +50,13 @@ public class CharactersExtension implements ParameterResolver {
 
 
     private TestCharacter initializedCharacter() {
-        CharacterBase characterBase = new JPACharacterBase();
+        CharacterBase characterBase = new CharacterBaseTest();
         characterBase.getAttributes().put(STR.getId(), 0);
         characterBase.getAttributes().put(AGI.getId(), 0);
         TestCharacter activeCharacter = new TestCharacter(UUID.randomUUID(), characterBase, TestPropertyService.LAST_ID);
 
 
-        CharacterClass primaryCC = new JPACharacterClass();
+        CharacterClass primaryCC = new CharacterClassTest();
         primaryCC.setId(1L);
         primaryCC.setCharacterBase(characterBase);
 
@@ -66,7 +66,7 @@ public class CharactersExtension implements ParameterResolver {
         activeCharacter.getClasses().put(playerClassData.getClassDefinition().getName(), playerClassData);
 
 
-        CharacterClass secondaryCC = new JPACharacterClass();
+        CharacterClass secondaryCC = new CharacterClassTest();
         secondaryCC.setId(2L);
         secondaryCC.setCharacterBase(characterBase);
 

@@ -30,4 +30,5 @@ public interface IPlayerDao {
     void update(CharacterBase characterBase);
 
     void removePersitantSkill(CharacterSkill characterSkill);
+
 }

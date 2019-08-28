@@ -19,7 +19,7 @@ import cz.neumimto.rpg.junit.CharactersExtension;
 import cz.neumimto.rpg.junit.CharactersExtension.Stage;
 import cz.neumimto.rpg.junit.NtRpgExtension;
 import cz.neumimto.rpg.junit.TestGuiceModule;
-import cz.neumimto.rpg.persistance.model.JPACharacterClass;
+import cz.neumimto.rpg.model.CharacterClassTest;
 import name.falgout.jeffrey.testing.junit.guice.GuiceExtension;
 import name.falgout.jeffrey.testing.junit.guice.IncludeModule;
 import org.junit.jupiter.api.Assertions;
@@ -82,7 +82,7 @@ public class AdminCommandTests {
                 return linear;
             }
         };
-        CharacterClass jpaCharacterClass = new JPACharacterClass();
+        CharacterClass jpaCharacterClass = new CharacterClassTest();
         jpaCharacterClass.setLevel(0);
         jpaCharacterClass.setExperiences(0);
         PlayerClassData data = new PlayerClassData(classDefinition, jpaCharacterClass) {

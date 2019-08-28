@@ -16,94 +16,44 @@
  *
  */
 
-package cz.neumimto.rpg.persistance.model;
+package cz.neumimto.rpg.model;
 
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.persistance.model.*;
 import cz.neumimto.rpg.api.skills.ISkill;
 
-import cz.neumimto.rpg.persistance.converters.EquipedSlot2Json;
-import cz.neumimto.rpg.persistance.converters.UUID2String;
-import org.hibernate.annotations.GenericGenerator;
-
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
+import javax.persistence.PostLoad;
 import java.util.*;
 
 /**
  * Created by NeumimTo on 27.1.2015.
  */
+public class CharacterBaseTest extends TimestampEntityTest implements CharacterBase {
 
-@Entity
-@Table(name = "rpg_character_base",
-        indexes = {@Index(columnList = "uuid")})
-public class JPACharacterBase extends JPATimestampEntity implements CharacterBase {
-
-    @Id
-    @GeneratedValue(generator = "native")
-    @GenericGenerator(name = "native", strategy = "native")
-    @Column(name = "character_id")
     private Long characterId;
-    //todo locking
-    //@Version
-    private Long version;
-
-    @Convert(converter = UUID2String.class)
     private UUID uuid;
-
-    @Column(length = 40)
     private String name;
-
     private String info;
-
-    @Column(name = "attribute_points")
     private Integer attributePoints;
-
-    @Column(name = "can_reset_skills")
     private Boolean canResetskills;
-
-    @Column(name = "guild_id")
-    private Long guildid;
-
-    @Column(name = "health_scale")
     private Double healthScale;
-
-    @Column(name = "last_known_player_name", length = 16)
     private String lastKnownPlayerName;
-
-    @Column(name = "last_reset_time")
-    @Temporal(TemporalType.TIMESTAMP)
     private Date lastReset;
-
-    @OneToMany(targetEntity = JPACharacterSkill.class, fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "characterBase")
     private Set<CharacterSkill> characterSkills = new HashSet<>();
-
-    @OneToMany(targetEntity = JPACharacterClass.class, fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "characterBase")
     private Set<CharacterClass> characterClasses = new HashSet<>();
-
-    @OneToMany(targetEntity = JPABaseCharacterAttribute.class, fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "characterBase")
-    @Access(AccessType.FIELD)
     private Set<BaseCharacterAttribute> baseCharacterAttribute = new HashSet<>();
-
-    @Transient
-    private Map<String, Integer> cachedAttributes = new HashMap<>();
-
-    @Convert(converter = EquipedSlot2Json.class)
-    @Column(name = "inventory_equip_slot_order", columnDefinition = "TEXT")
     private List<EquipedSlot> inventoryEquipSlotOrder = new ArrayList<>();
-
-    @Column(name = "marked_for_removal")
     private Boolean markedForRemoval;
-
-    @Column(name = "attribute_points_spent")
-    private Integer attributePointsSpent = 0;
-
+    private Integer attributePointsSpent;
     private Integer X;
-
     private Integer Y;
-
     private Integer Z;
-
     private String world;
+
+    private transient Map<String, Integer> cachedAttributes = new HashMap<>();
 
     @Override
     public Map<String, Integer> getAttributes() {
@@ -138,16 +88,6 @@ public class JPACharacterBase extends JPATimestampEntity implements CharacterBas
     @Override
     public void setInfo(String info) {
         this.info = info;
-    }
-
-    @Override
-    public Long getGuildid() {
-        return guildid;
-    }
-
-    @Override
-    public void setGuildid(Long guildid) {
-        this.guildid = guildid;
     }
 
     @Override
@@ -188,16 +128,6 @@ public class JPACharacterBase extends JPATimestampEntity implements CharacterBas
     @Override
     public void setLastReset(Date lastReset) {
         this.lastReset = lastReset;
-    }
-
-    @Override
-    public long getVersion() {
-        return version;
-    }
-
-    @Override
-    public void setVersion(long version) {
-        this.version = version;
     }
 
     @Override
@@ -271,7 +201,7 @@ public class JPACharacterBase extends JPATimestampEntity implements CharacterBas
     }
 
     @Override
-    @OneToMany(targetEntity = JPABaseCharacterAttribute.class, fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "characterBase")
+    @OneToMany(targetEntity = BaseCharacterAttributeTest.class, fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "characterBase")
     public Set<BaseCharacterAttribute> getBaseCharacterAttribute() {
         return baseCharacterAttribute;
     }

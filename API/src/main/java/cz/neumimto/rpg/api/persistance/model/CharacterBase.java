@@ -20,10 +20,6 @@ public interface CharacterBase extends TimestampEntity {
 
     void setInfo(String info);
 
-    Long getGuildid();
-
-    void setGuildid(Long guildid);
-
     String getLastKnownPlayerName();
 
     void setLastKnownPlayerName(String lastKnownPlayerName);
@@ -39,10 +35,6 @@ public interface CharacterBase extends TimestampEntity {
     Date getLastReset();
 
     void setLastReset(Date lastReset);
-
-    long getVersion();
-
-    void setVersion(long version);
 
     Integer getX();
 

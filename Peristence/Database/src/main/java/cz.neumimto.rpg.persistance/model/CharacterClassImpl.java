@@ -2,40 +2,20 @@ package cz.neumimto.rpg.persistance.model;
 
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterClass;
-import org.hibernate.annotations.GenericGenerator;
-
-import javax.persistence.*;
 
 /**
  * Created by ja on 8.10.2016.
  */
-@Entity(name = "rpg_character_class")
-public class JPACharacterClass extends JPATimestampEntity implements CharacterClass {
+public class CharacterClassImpl extends TimestampEntityImpl implements CharacterClass {
 
-    @Id
-    @GeneratedValue(generator = "native")
-    @GenericGenerator(name = "native", strategy = "native")
-    @Column(name = "class_id")
     private Long classId;
-
-    @ManyToOne(targetEntity = JPACharacterBase.class)
-    @JoinColumn(name = "character_id")
-    private CharacterBase characterBase;
-
-    @Column(name = "experiences")
     private Double experiences;
-
-    @Column(name = "level")
     private Integer level;
-
-    @Column(name = "name")
     private String name;
-
-    @Column(name = "used_skil_points")
     private Integer usedSkillPoints;
+    private Integer skillPoints;
 
-    @Column(name = "skillpoints")
-    protected Integer skillPoints;
+    private CharacterBase characterBase;
 
     @Override
     public Long getId() {
@@ -118,7 +98,7 @@ public class JPACharacterClass extends JPATimestampEntity implements CharacterCl
             return false;
         }
 
-        JPACharacterClass that = (JPACharacterClass) o;
+        CharacterClassImpl that = (CharacterClassImpl) o;
 
         return name.equals(that.name);
 

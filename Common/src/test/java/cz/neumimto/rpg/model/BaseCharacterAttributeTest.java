@@ -1,29 +1,16 @@
-package cz.neumimto.rpg.persistance.model;
+package cz.neumimto.rpg.model;
 
 import cz.neumimto.rpg.api.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
-import org.hibernate.annotations.GenericGenerator;
-
-import javax.persistence.*;
 
 /**
  * Created by NeumimTo on 8.10.2016.
  */
-@Entity(name = "rpg_character_attribute")
-public class JPABaseCharacterAttribute extends JPATimestampEntity implements BaseCharacterAttribute {
+public class BaseCharacterAttributeTest extends TimestampEntityTest implements BaseCharacterAttribute {
 
-    @Id
-    @GeneratedValue(generator = "native")
-    @GenericGenerator(name = "native", strategy = "native")
-    @Column(name = "attribute_id")
     private Long id;
-
-    @ManyToOne(targetEntity = JPACharacterBase.class, cascade = CascadeType.ALL)
-    @JoinColumn(name = "character_id", nullable = false)
     private CharacterBase characterBase;
-
     private String name;
-
     private int level;
 
     @Override
@@ -75,7 +62,7 @@ public class JPABaseCharacterAttribute extends JPATimestampEntity implements Bas
             return false;
         }
 
-        JPABaseCharacterAttribute that = (JPABaseCharacterAttribute) o;
+        BaseCharacterAttributeTest that = (BaseCharacterAttributeTest) o;
 
         return id.equals(that.id);
 

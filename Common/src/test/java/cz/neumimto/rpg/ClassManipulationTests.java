@@ -13,7 +13,7 @@ import cz.neumimto.rpg.junit.CharactersExtension;
 import cz.neumimto.rpg.junit.CharactersExtension.Stage;
 import cz.neumimto.rpg.junit.NtRpgExtension;
 import cz.neumimto.rpg.junit.TestGuiceModule;
-import cz.neumimto.rpg.persistance.model.JPACharacterClass;
+import cz.neumimto.rpg.model.CharacterClassTest;
 import name.falgout.jeffrey.testing.junit.guice.GuiceExtension;
 import name.falgout.jeffrey.testing.junit.guice.IncludeModule;
 import org.junit.jupiter.api.Assertions;
@@ -82,7 +82,7 @@ public class ClassManipulationTests {
 
     @Test
     public void may_not_select_same_type() {
-        CharacterClass characterClass = new JPACharacterClass();
+        CharacterClass characterClass = new CharacterClassTest();
         PlayerClassData playerClassData = new PlayerClassData(pc1, characterClass);
         character.addClass(playerClassData);
         ActionResult result = characterService.canGainClass(character, pc2);
@@ -107,7 +107,7 @@ public class ClassManipulationTests {
     @Test
     public void select_secondary_class() {
         Rpg.get().getPluginConfig().RESPECT_CLASS_SELECTION_ORDER = true;
-        CharacterClass characterClass = new JPACharacterClass();
+        CharacterClass characterClass = new CharacterClassTest();
         PlayerClassData playerClassData = new PlayerClassData(pc1, characterClass);
         character.addClass(playerClassData);
 

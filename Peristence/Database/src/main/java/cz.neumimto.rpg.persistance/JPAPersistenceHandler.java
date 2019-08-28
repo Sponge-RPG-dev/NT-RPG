@@ -10,10 +10,10 @@ import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
 import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.persistance.dao.IPersistenceHandler;
 import cz.neumimto.rpg.persistance.migrations.DbMigrationsService;
-import cz.neumimto.rpg.persistance.model.JPABaseCharacterAttribute;
-import cz.neumimto.rpg.persistance.model.JPACharacterBase;
-import cz.neumimto.rpg.persistance.model.JPACharacterClass;
-import cz.neumimto.rpg.persistance.model.JPACharacterSkill;
+import cz.neumimto.rpg.persistance.model.BaseCharacterAttributeImpl;
+import cz.neumimto.rpg.persistance.model.CharacterBaseImpl;
+import cz.neumimto.rpg.persistance.model.CharacterClassImpl;
+import cz.neumimto.rpg.persistance.model.CharacterSkillImpl;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -61,21 +61,21 @@ public class JPAPersistenceHandler implements IPersistenceHandler {
 
     @Override
     public BaseCharacterAttribute createCharacterAttribute() {
-        return new JPABaseCharacterAttribute();
+        return new BaseCharacterAttributeImpl();
     }
 
     @Override
     public CharacterClass createCharacterClass() {
-        return new JPACharacterClass();
+        return new CharacterClassImpl();
     }
 
     @Override
     public CharacterSkill createCharacterSkill() {
-        return new JPACharacterSkill();
+        return new CharacterSkillImpl();
     }
 
     @Override
     public CharacterBase createCharacterBase() {
-        return new JPACharacterBase();
+        return new CharacterBaseImpl();
     }
 }

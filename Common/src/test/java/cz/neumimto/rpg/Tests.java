@@ -8,7 +8,7 @@ import cz.neumimto.rpg.api.entity.players.classes.PlayerClassPermission;
 import cz.neumimto.rpg.api.persistance.model.CharacterClass;
 import cz.neumimto.rpg.common.classes.ClassServiceImpl;
 import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
-import cz.neumimto.rpg.persistance.model.JPACharacterClass;
+import cz.neumimto.rpg.model.CharacterClassTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -61,7 +61,7 @@ public class Tests {
             }});
         }});
 
-        CharacterClass characterClass = new JPACharacterClass();
+        CharacterClass characterClass = new CharacterClassTest();
         characterClass.setLevel(2);
 
         PlayerClassData nClass = new PlayerClassData(race, characterClass);
@@ -88,7 +88,7 @@ public class Tests {
         map.put(race.getName(), new PlayerClassData(race, characterClass));
 
 
-        CharacterClass characterClass2 = new JPACharacterClass();
+        CharacterClass characterClass2 = new CharacterClassTest();
         characterClass.setLevel(2);
 
         map.put(c.getName(), new PlayerClassData(c, characterClass2));

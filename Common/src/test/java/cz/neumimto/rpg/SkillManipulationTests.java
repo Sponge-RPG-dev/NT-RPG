@@ -17,7 +17,7 @@ import cz.neumimto.rpg.common.entity.TestCharacter;
 import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.junit.NtRpgExtension;
 import cz.neumimto.rpg.junit.TestGuiceModule;
-import cz.neumimto.rpg.persistance.model.JPACharacterBase;
+import cz.neumimto.rpg.model.CharacterBaseTest;
 import name.falgout.jeffrey.testing.junit.guice.GuiceExtension;
 import name.falgout.jeffrey.testing.junit.guice.IncludeModule;
 import org.junit.jupiter.api.Assertions;
@@ -125,7 +125,7 @@ public class SkillManipulationTests {
             getSkills().put(softDepending1.getId(), ssoftDepending1);
         }});
 
-        characterBase = new JPACharacterBase();
+        characterBase = new CharacterBaseTest();
         characterBase.getCharacterClasses().add(characterClass);
 
         character = new TestCharacter(UUID.randomUUID(), characterBase, 0);

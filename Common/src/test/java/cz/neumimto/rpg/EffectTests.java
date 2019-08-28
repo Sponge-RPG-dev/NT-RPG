@@ -7,7 +7,7 @@ import cz.neumimto.rpg.common.effects.InternalEffectSourceProvider;
 import cz.neumimto.rpg.common.entity.TestCharacter;
 import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.effects.TestEffectService;
-import cz.neumimto.rpg.persistance.model.JPACharacterBase;
+import cz.neumimto.rpg.model.CharacterBaseTest;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import org.junit.jupiter.api.Assertions;
@@ -38,7 +38,7 @@ public class EffectTests {
     @BeforeEach
     public void before() {
         processedEffects = effectService.getEffects();
-        characterBase = new JPACharacterBase();
+        characterBase = new CharacterBaseTest();
         character = new TestCharacter(UUID.randomUUID(), characterBase, 1);
 
         effect = createEffectMock("test");

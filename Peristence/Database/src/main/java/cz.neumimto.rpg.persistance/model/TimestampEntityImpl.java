@@ -29,23 +29,15 @@ import java.util.Date;
 /**
  * Created by NeumimTo on 24.7.2015.
  */
-@MappedSuperclass
-public abstract class JPATimestampEntity  implements TimestampEntity {
+public abstract class TimestampEntityImpl implements TimestampEntity {
 
-    @Column(name = "updated")
     private Date updated;
-
-    @Column(name = "created")
     private Date created;
 
-    @Override
-    @PrePersist
     public void onCreate() {
         updated = created = new Date();
     }
 
-    @Override
-    @PreUpdate
     public void onUpdate() {
         updated = new Date();
     }

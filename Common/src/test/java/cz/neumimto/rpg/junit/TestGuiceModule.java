@@ -54,8 +54,8 @@ import cz.neumimto.rpg.common.persistance.dao.IPlayerDao;
 import cz.neumimto.rpg.common.scripting.JSLoader;
 import cz.neumimto.rpg.effects.TestEffectService;
 import cz.neumimto.rpg.entity.TestEntityService;
+import cz.neumimto.rpg.model.TestPersistanceHandler;
 import cz.neumimto.rpg.persistance.InMemoryPlayerStorage;
-import cz.neumimto.rpg.persistance.JPAPersistenceHandler;
 import cz.neumimto.rpg.sponge.permission.TestPermissionService;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import net.bytebuddy.ByteBuddy;
@@ -78,7 +78,7 @@ public class TestGuiceModule extends AbstractModule {
         bind(SkillService.class).to(TestSkillService.class);
         bind(IPropertyService.class).to(TestPropertyService.class);
         bind(PartyService.class).to(TestPartyService.class);
-        bind(IPersistenceHandler.class).to(JPAPersistenceHandler.class);
+        bind(IPersistenceHandler.class).to(TestPersistanceHandler.class);
         bind(ICharacterClassDao.class).toProvider(() -> c -> {});
         bind(ClassDefinitionDao.class);
         bind(IPlayerDao.class).to(InMemoryPlayerStorage.class);

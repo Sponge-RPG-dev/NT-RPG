@@ -8,12 +8,12 @@ import cz.neumimto.rpg.common.persistance.dao.ICharacterClassDao;
 import cz.neumimto.rpg.common.persistance.dao.IPersistenceHandler;
 import cz.neumimto.rpg.common.persistance.dao.IPlayerDao;
 import cz.neumimto.rpg.persistance.dao.JPACharacterClassDao;
-import cz.neumimto.rpg.persistance.dao.JPAPlayerDao;
+import cz.neumimto.rpg.persistance.dao.JdbcPlayerDao;
 import cz.neumimto.rpg.persistance.migrations.DbMigrationsService;
-import cz.neumimto.rpg.persistance.model.JPABaseCharacterAttribute;
-import cz.neumimto.rpg.persistance.model.JPACharacterBase;
-import cz.neumimto.rpg.persistance.model.JPACharacterClass;
-import cz.neumimto.rpg.persistance.model.JPACharacterSkill;
+import cz.neumimto.rpg.persistance.model.BaseCharacterAttributeImpl;
+import cz.neumimto.rpg.persistance.model.CharacterBaseImpl;
+import cz.neumimto.rpg.persistance.model.CharacterClassImpl;
+import cz.neumimto.rpg.persistance.model.CharacterSkillImpl;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
@@ -44,7 +44,7 @@ public class JPAModule implements RpgAddon {
     public Map<Class<?>, Class<?>> getBindings() {
         Map bindings = new HashMap<>();
         bindings.put(ICharacterClassDao.class, JPACharacterClassDao.class);
-        bindings.put(IPlayerDao.class, JPAPlayerDao.class);
+        bindings.put(IPlayerDao.class, JdbcPlayerDao.class);
         bindings.put(IPersistenceHandler.class, JPAPersistenceHandler.class);
         final SessionFactory sessionFactory = setupHibernate();
 
@@ -124,10 +124,10 @@ public class JPAModule implements RpgAddon {
     }
 
     public void addJPAClasses(Configuration configuration) {
-        configuration.addAnnotatedClass(JPACharacterClass.class);
-        configuration.addAnnotatedClass(JPACharacterBase.class);
-        configuration.addAnnotatedClass(JPABaseCharacterAttribute.class);
-        configuration.addAnnotatedClass(JPACharacterSkill.class);
+        configuration.addAnnotatedClass(CharacterClassImpl.class);
+        configuration.addAnnotatedClass(CharacterBaseImpl.class);
+        configuration.addAnnotatedClass(BaseCharacterAttributeImpl.class);
+        configuration.addAnnotatedClass(CharacterSkillImpl.class);
     }
 
     public Properties loadDatabaseProperties(Path p) {

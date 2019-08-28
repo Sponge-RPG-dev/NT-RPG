@@ -3,28 +3,17 @@ package cz.neumimto.rpg.persistance.model;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterClass;
 import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
-import org.hibernate.annotations.GenericGenerator;
-
-import javax.persistence.*;
 
 /**
  * Created by ja on 8.10.2016.
  */
-@Entity(name = "rpg_character_skill")
-public class JPACharacterSkill extends JPATimestampEntity implements CharacterSkill {
+public class CharacterSkillImpl extends TimestampEntityImpl implements CharacterSkill {
 
     private Long skillId;
-
     private CharacterBase characterBase;
-
     private int level;
-
-    @ManyToOne(targetEntity = JPACharacterClass.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "class_id")
     private CharacterClass fromClass;
-
     private String catalogId;
-
     private Long cooldown;
 
     @Override
