@@ -6,12 +6,7 @@ group = 'cz.neumimto.rpg'
 version = '2.0.0-SNAPSHOT-12'
 
 dependencies {
-    compileOnly project(':API')
     compileOnly project(':Common')
-
-    def withoutX = { exclude group: 'net.bytebuddy', module: 'byte-buddy' }
-
-    compile 'org.hibernate:hibernate-entitymanager:5.4.4.Final'//, withoutX
 
     compileOnly 'com.zaxxer:HikariCP:2.5.1'
     compileOnly 'com.google.inject:guice:4.2.2'

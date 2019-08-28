@@ -20,10 +20,6 @@ package cz.neumimto.rpg.persistance.model;
 
 import cz.neumimto.rpg.api.persistance.model.TimestampEntity;
 
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import java.util.Date;
 
 /**

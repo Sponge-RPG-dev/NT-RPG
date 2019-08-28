@@ -10,7 +10,6 @@ import cz.neumimto.rpg.persistance.model.CharacterClassImpl;
 import cz.neumimto.rpg.persistance.model.CharacterSkillImpl;
 
 import javax.sql.DataSource;
-import javax.swing.text.AttributeSet;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

@@ -30,6 +30,7 @@ import cz.neumimto.rpg.common.AbstractResourceManager;
 import cz.neumimto.rpg.common.AddonScanner;
 import cz.neumimto.rpg.sponge.commands.CommandService;
 import cz.neumimto.rpg.sponge.configuration.Settings;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacter;
 import cz.neumimto.rpg.sponge.inventory.data.*;
 import cz.neumimto.rpg.sponge.inventory.data.manipulators.*;
 import cz.neumimto.rpg.sponge.listeners.DebugListener;
@@ -50,6 +51,7 @@ import org.spongepowered.api.plugin.Dependency;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.scheduler.SpongeExecutorService;
+import org.spongepowered.api.service.sql.SqlService;
 
 import javax.annotation.Resource;
 import java.io.File;
@@ -112,7 +114,6 @@ public class NtRpgPlugin extends Rpg {
         } catch (URISyntaxException us) {
             us.printStackTrace();
         }
-
 
         instance = this;
         asyncExecutor = Sponge.getGame().getScheduler().createAsyncExecutor(NtRpgPlugin.this);

@@ -19,10 +19,6 @@ public class InMemoryPlayerStorage implements IPlayerDao {
         throw new RuntimeException("In mememory storage");
     }
 
-    public CharacterBase fetchCharacterBase(CharacterBase base) {
-        throw new RuntimeException("In mememory storage");
-    }
-
     @Override
     public void update(CharacterBase characterBase) {
         map.put(characterBase.getUuid(), characterBase);

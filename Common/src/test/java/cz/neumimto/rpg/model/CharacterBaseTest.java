@@ -22,10 +22,6 @@ import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.persistance.model.*;
 import cz.neumimto.rpg.api.skills.ISkill;
 
-import javax.persistence.CascadeType;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import javax.persistence.PostLoad;
 import java.util.*;
 
 /**
@@ -201,7 +197,6 @@ public class CharacterBaseTest extends TimestampEntityTest implements CharacterB
     }
 
     @Override
-    @OneToMany(targetEntity = BaseCharacterAttributeTest.class, fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "characterBase")
     public Set<BaseCharacterAttribute> getBaseCharacterAttribute() {
         return baseCharacterAttribute;
     }
@@ -284,7 +279,6 @@ public class CharacterBaseTest extends TimestampEntityTest implements CharacterB
         this.attributePointsSpent = attributePointsSpent;
     }
 
-    @PostLoad
     public void postLoad() {
         for (BaseCharacterAttribute characterAttribute : baseCharacterAttribute) {
             cachedAttributes.put(characterAttribute.getName(), characterAttribute.getLevel());

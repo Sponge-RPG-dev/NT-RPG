@@ -2,25 +2,22 @@ package cz.neumimto.rpg.persistance.dao;
 
 import cz.neumimto.rpg.api.persistance.model.CharacterClass;
 import cz.neumimto.rpg.common.persistance.dao.ICharacterClassDao;
-import org.hibernate.SessionFactory;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
  * Created by NeumimTo on 24.2.2019.
  */
 @Singleton
-public class JPACharacterClassDao implements ICharacterClassDao {
+public class JDBCCharacterClassDao implements ICharacterClassDao {
 
     private final DataSource dataSource;
 
-    public JPACharacterClassDao(DataSource dataSource) {
+    public JDBCCharacterClassDao(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
