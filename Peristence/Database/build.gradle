@@ -1,9 +1,9 @@
 plugins {
     id "org.sonarqube" version "2.7"
 }
-
+apply plugin: 'java'
 group = 'cz.neumimto.rpg'
-version = '2.0.0-SNAPSHOT-12'
+version = '2.1.0-SNAPSHOT'
 
 dependencies {
     compileOnly project(':Common')
@@ -16,6 +16,7 @@ dependencies {
     compileOnly 'org.slf4j:slf4j-api:1.7.26'
     compileOnly 'com.google.code.gson:gson:2.8.5'
 
+    testCompile group: 'mysql', name: 'mysql-connector-java', version: '8.0.17'
     testCompile 'com.github.JeffreyFalgout:junit5-extensions:89fa6cb1e7'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.1'
     testCompile 'org.junit.jupiter:junit-jupiter-engine:5.4.1'

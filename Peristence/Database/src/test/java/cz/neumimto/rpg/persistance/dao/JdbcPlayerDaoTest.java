@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.sql.SQLException;
 
 
-class JdbcPlayerDaoTest {
+public class JdbcPlayerDaoTest {
 
     @BeforeAll
     public static void before() throws ManagedProcessException, SQLException {

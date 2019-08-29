@@ -69,7 +69,7 @@ public class DbMigrationsService {
         ResultSet resultSet = null;
         PreparedStatement preparedStatement = null;
         try {
-            InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream("check.sql");
+            InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream("sql/check.sql");
             String s = CharStreams.toString(new InputStreamReader(resourceAsStream, Charset.forName("UTF-8")));
             preparedStatement = connection.prepareStatement(s.replaceAll("%s", migration.getId()));
             resultSet = preparedStatement.executeQuery();
