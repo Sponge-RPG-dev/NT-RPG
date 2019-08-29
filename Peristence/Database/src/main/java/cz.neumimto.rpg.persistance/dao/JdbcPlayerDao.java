@@ -261,7 +261,7 @@ public class JdbcPlayerDao implements IPlayerDao {
 
 
     @Override
-    public void createAndUpdate(CharacterBase base) {
+    public void create(CharacterBase base) {
         String sql = "insert into rpg_character_base VALUES" +
                 "(" +
                 "uuid, name, info, health_scale, " +
@@ -274,31 +274,35 @@ public class JdbcPlayerDao implements IPlayerDao {
         base.onUpdate();
         try (Connection con = dataSource.getConnection()) {
             try (PreparedStatement pst = con.prepareStatement(sql)) {
-                pst.setString(0, base.getUuid().toString());
-                pst.setString(1, base.getName());
-                pst.setString(2, base.getInfo());
-                pst.setDouble(3, base.getHealthScale());
+                pst.setString(1, base.getUuid().toString());
+                pst.setString(2, base.getName());
+                pst.setString(3, base.getInfo());
+                pst.setDouble(4, base.getHealthScale());
 
-                pst.setInt(4, base.getAttributePoints());
-                pst.setInt(5, base.getAttributePointsSpent());
+                pst.setInt(5, base.getAttributePoints());
+                pst.setInt(6, base.getAttributePointsSpent());
 
-                pst.setBoolean(6, base.isCanResetskills());
-                pst.setBoolean(7, base.getMarkedForRemoval());
+                pst.setBoolean(7, base.isCanResetskills());
+                pst.setBoolean(8, base.getMarkedForRemoval());
 
-                pst.setString(8, base.getLastKnownPlayerName());
-                pst.setDate(9, null);
-                pst.setString(10, new EquipedSlot2Json().convertToDatabaseColumn(base.getInventoryEquipSlotOrder()));
+                pst.setString(9, base.getLastKnownPlayerName());
+                pst.setDate(10,null);
+                pst.setString(11, new EquipedSlot2Json().convertToDatabaseColumn(base.getInventoryEquipSlotOrder()));
 
 
                 pst.setInt(11,base.getX());
                 pst.setInt(12,base.getY());
                 pst.setInt(13,base.getZ());
                 pst.setString(14, base.getWorld());
-
+                ResultSet generatedKeys = pst.getGeneratedKeys();
+                while (generatedKeys.next()) {
+                    long aLong = generatedKeys.getLong(0);
+                    base.setId(aLong);
+                }
 
             }
         } catch (SQLException e) {
-
+            e.printStackTrace();
         }
     }
 

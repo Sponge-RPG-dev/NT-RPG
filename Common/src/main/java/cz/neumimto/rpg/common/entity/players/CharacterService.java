@@ -161,7 +161,7 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
             PluginConfig pluginConfig = Rpg.get().getPluginConfig();
             if (playerCharacters.isEmpty() && pluginConfig.CREATE_FIRST_CHAR_AFTER_LOGIN) {
                 CharacterBase cb = createCharacterBase(playerName, id);
-                createAndUpdate(cb);
+                create(cb);
 
                 playerCharacters = Collections.singletonList(cb);
                 info("Automatically created character for a player " + id + ", " + playerName);
@@ -251,9 +251,9 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
     }
 
     @Override
-    public void createAndUpdate(CharacterBase base) {
+    public void create(CharacterBase base) {
         base.onCreate();
-        playerDao.createAndUpdate(base);
+        playerDao.create(base);
     }
 
 

@@ -75,7 +75,7 @@ public class CharacterCommandFacade {
             } else if (i == 0) {
                 CharacterBase characterBase = characterService.createCharacterBase(name, uuid);
 
-                characterService.createAndUpdate(characterBase);
+                characterService.create(characterBase);
 
                 String text = localizationService.translate(LocalizationKeys.CHARACTER_CREATED, Arg.arg("name", characterBase.getName()));
 

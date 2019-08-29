@@ -23,7 +23,7 @@ public interface IPlayerDao {
 
     int deleteData(UUID uniqueId);
 
-    void createAndUpdate(CharacterBase base);
+    void create(CharacterBase base);
 
     int markCharacterForRemoval(UUID player, String charName);
 

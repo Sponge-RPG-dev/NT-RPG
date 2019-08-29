@@ -1,0 +1,1 @@
+insert into nt_core_migrations(author,id,executed,note) VALUES ('%s', '%s', now(), '%s');

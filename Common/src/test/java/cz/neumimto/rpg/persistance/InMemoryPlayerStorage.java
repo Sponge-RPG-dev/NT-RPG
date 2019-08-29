@@ -50,7 +50,7 @@ public class InMemoryPlayerStorage implements IPlayerDao {
     }
 
 
-    public void createAndUpdate(CharacterBase base) {
+    public void create(CharacterBase base) {
         map.put(base.getUuid(), base);
     }
 

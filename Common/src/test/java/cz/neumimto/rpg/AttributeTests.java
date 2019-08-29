@@ -63,7 +63,7 @@ public class AttributeTests {
     @Test
     public void testAttributeAdd_ok(@Stage(READY)IActiveCharacter iActiveCharacter) {
         iActiveCharacter.getCharacterBase().setUuid(UUID.randomUUID());
-        characterService.createAndUpdate(iActiveCharacter.getCharacterBase());
+        characterService.create(iActiveCharacter.getCharacterBase());
         iActiveCharacter.setAttributePoints(2);
         HashMap<AttributeConfig, Integer> map = new HashMap<>();
         map.put(TestDictionary.AGI, 2);

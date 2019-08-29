@@ -15,7 +15,7 @@ public class MariaDbBootstrap {
 
     public static final int port = 50978;
     public static DB db;
-
+    public static final String NAME = "RpgTesting";
     private static DBConfigurationBuilder config;
 
     public static void initializeDatabase() throws ManagedProcessException {
@@ -23,7 +23,7 @@ public class MariaDbBootstrap {
         config.setPort(port);
         db = DB.newEmbeddedDB(config.build());
         db.start();
-        db.createDB("NtRpgTest");
+        db.createDB(NAME);
     }
 
     public static void tearDown() throws ManagedProcessException {
@@ -32,7 +32,7 @@ public class MariaDbBootstrap {
 
     public static void runMigrations() throws SQLException {
         DbMigrationsService dbMigrationsService = new DbMigrationsService();
-        dbMigrationsService.setConnection(DriverManager.getConnection(config.getURL("NtRpgTest"), "root", ""));
+        dbMigrationsService.setConnection(DriverManager.getConnection(config.getURL(NAME), "root", ""));
 
         runMigration(dbMigrationsService, "sql/mysql/040918-init-db.sql");
         runMigration(dbMigrationsService, "sql/mysql/060119-update-2.0.0.sql");

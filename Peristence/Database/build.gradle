@@ -16,6 +16,9 @@ dependencies {
     compileOnly 'org.slf4j:slf4j-api:1.7.26'
     compileOnly 'com.google.code.gson:gson:2.8.5'
 
+    testCompile project(':Common')
+    testCompile project(':API')
+    testCompile group: 'com.zaxxer', name: 'HikariCP', version: '3.3.1'
     testCompile group: 'mysql', name: 'mysql-connector-java', version: '8.0.17'
     testCompile 'com.github.JeffreyFalgout:junit5-extensions:89fa6cb1e7'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.1'

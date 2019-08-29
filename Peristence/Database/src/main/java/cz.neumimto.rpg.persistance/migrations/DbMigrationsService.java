@@ -35,7 +35,7 @@ public class DbMigrationsService {
 
     public void startMigration() throws SQLException, IOException {
         Statement statement = connection.createStatement();
-        InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream("create-migration-table.sql");
+        InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream("sql/create-migration-table.sql");
         String s = CharStreams.toString(new InputStreamReader(resourceAsStream, Charset.forName("UTF-8")));
         statement.execute(s);
         Collections.sort(migrations);
@@ -98,16 +98,18 @@ public class DbMigrationsService {
         PreparedStatement preparedStatement1 = null;
         PreparedStatement preparedStatement2 = null;
         try {
-            preparedStatement1 = connection.prepareStatement(migration.getSql());
-            preparedStatement1.execute();
-            connection.commit();
+            for (String s : migration.getSql().split(";")) {
+                preparedStatement1 = connection.prepareStatement(s);
+                preparedStatement1.execute();
+                connection.commit();
 
-            InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream("insert.sql");
-            String s = CharStreams.toString(new InputStreamReader(resourceAsStream, Charset.forName("UTF-8")));
+                InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream("sql/insert.sql");
+                s = CharStreams.toString(new InputStreamReader(resourceAsStream, Charset.forName("UTF-8")));
 
-            preparedStatement2 = connection.prepareStatement(String.format(s, migration.getAuthor(), migration.getId(), migration.getNote()));
-            preparedStatement2.execute();
-            connection.commit();
+                preparedStatement2 = connection.prepareStatement(String.format(s, migration.getAuthor(), migration.getId(), migration.getNote()));
+                preparedStatement2.execute();
+                connection.commit();
+            }
         } catch (Exception e) {
             try {
                 e.printStackTrace();

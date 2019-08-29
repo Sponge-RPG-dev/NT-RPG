@@ -48,7 +48,7 @@ public interface ICharacterService<T extends IActiveCharacter> {
 
     void save(CharacterBase base);
 
-    void createAndUpdate(CharacterBase base);
+    void create(CharacterBase base);
 
     IActiveCharacter setActiveCharacter(UUID uuid, T character);
 
