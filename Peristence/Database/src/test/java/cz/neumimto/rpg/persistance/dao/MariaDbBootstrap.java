@@ -1,46 +1,45 @@
 package cz.neumimto.rpg.persistance.dao;
 
-import ch.vorburger.exec.ManagedProcessException;
-import ch.vorburger.mariadb4j.DB;
-import ch.vorburger.mariadb4j.DBConfigurationBuilder;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import cz.neumimto.rpg.persistance.migrations.DbMigrationsService;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Scanner;
 
 public class MariaDbBootstrap {
 
-    public static final int port = 50978;
-    public static DB db;
+    public static final int port = 3306;
+    public static HikariDataSource ds;
     public static final String NAME = "RpgTesting";
-    private static DBConfigurationBuilder config;
 
-    public static void initializeDatabase() throws ManagedProcessException {
-        config = DBConfigurationBuilder.newBuilder();
-        config.setPort(port);
-        db = DB.newEmbeddedDB(config.build());
-        db.start();
-        db.createDB(NAME);
+    public static void initializeDataSource() {
+        HikariConfig cfg = new HikariConfig();
+        cfg.setJdbcUrl("jdbc:mysql://localhost:"+MariaDbBootstrap.port+"/"+MariaDbBootstrap.NAME);
+        cfg.setPassword("chleba");
+        cfg.setUsername("root");
+        ds = new HikariDataSource(cfg);
     }
 
-    public static void tearDown() throws ManagedProcessException {
-        db.stop();
+    public static void tearDown() {
+        ds.close();
     }
 
-    public static void runMigrations() throws SQLException {
-        DbMigrationsService dbMigrationsService = new DbMigrationsService();
-        dbMigrationsService.setConnection(DriverManager.getConnection(config.getURL(NAME), "root", ""));
-
-        runMigration(dbMigrationsService, "sql/mysql/040918-init-db.sql");
-        runMigration(dbMigrationsService, "sql/mysql/060119-update-2.0.0.sql");
-        runMigration(dbMigrationsService, "sql/mysql/240219-fix-null-levels.sql");
-        runMigration(dbMigrationsService, "sql/mysql/250619-attrpoints-spent.sql");
+    public static void runMigrations() {
         try {
+            initializeDataSource();
+            DbMigrationsService dbMigrationsService = new DbMigrationsService();
+            dbMigrationsService.setConnection(ds.getConnection());
+
+            runMigration(dbMigrationsService, "sql/mysql/040918-init-db.sql");
+            runMigration(dbMigrationsService, "sql/mysql/060119-update-2.0.0.sql");
+            runMigration(dbMigrationsService, "sql/mysql/240219-fix-null-levels.sql");
+            runMigration(dbMigrationsService, "sql/mysql/250619-attrpoints-spent.sql");
+
             dbMigrationsService.startMigration();
-        } catch (IOException e) {
+        } catch (SQLException | IOException e) {
             e.printStackTrace();
         }
     }

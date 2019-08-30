@@ -1,9 +1,5 @@
 package cz.neumimto.rpg.persistance.dao;
 
-import ch.vorburger.exec.ManagedProcessException;
-
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
 import cz.neumimto.rpg.api.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.persistance.model.BaseCharacterAttributeImpl;
@@ -13,27 +9,17 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import javax.sql.DataSource;
 import java.util.*;
 
 public class JdbcPlayerDaoTest {
 
-    private static DataSource dataSource;
     private static JdbcPlayerDao jdbcPlayerDao;
+
     @BeforeAll
     public static void before() {
         try {
-            MariaDbBootstrap.initializeDatabase();
             MariaDbBootstrap.runMigrations();
-
-
-            HikariConfig cfg = new HikariConfig();
-            cfg.setJdbcUrl("jdbc:mysql://localhost:"+MariaDbBootstrap.port+"/"+MariaDbBootstrap.NAME);
-            cfg.setPassword("");
-            cfg.setUsername("root");
-
-            dataSource = new HikariDataSource(cfg);
-            jdbcPlayerDao = new JdbcPlayerDao(dataSource);
+            jdbcPlayerDao = new JdbcPlayerDao(MariaDbBootstrap.ds);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -41,6 +27,41 @@ public class JdbcPlayerDaoTest {
 
     @Test
     public void test() {
+        CharacterBase characterBase = createCharacterBase();
+        CharacterBase loadded = null;
+        try {
+            jdbcPlayerDao.create(characterBase);
+            loadded = jdbcPlayerDao.getCharacter(characterBase.getUuid(), characterBase.getName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Assertions.assertNotNull(characterBase.getId());
+        Assertions.assertNotNull(loadded);
+
+        Assertions.assertEquals(characterBase.getAttributePoints(), loadded.getAttributePoints());
+        Assertions.assertEquals(characterBase.getAttributePointsSpent(), loadded.getAttributePointsSpent());
+        Assertions.assertEquals(characterBase.getAttributes(), loadded.getAttributes());
+        Assertions.assertEquals(characterBase.getBaseCharacterAttribute(), loadded.getBaseCharacterAttribute());
+        Assertions.assertEquals(characterBase.getCharacterClasses(), loadded.getCharacterClasses());
+        Assertions.assertEquals(characterBase.getCharacterSkills(), loadded.getCharacterSkills());
+        Assertions.assertEquals(characterBase.getHealthScale(), loadded.getHealthScale());
+        Assertions.assertEquals(characterBase.getId(), loadded.getId());
+        Assertions.assertEquals(characterBase.getInfo(), loadded.getInfo());
+        Assertions.assertEquals(characterBase.getInventoryEquipSlotOrder(), loadded.getInventoryEquipSlotOrder());
+        Assertions.assertEquals(characterBase.getLastKnownPlayerName(), loadded.getLastKnownPlayerName());
+        Assertions.assertEquals(characterBase.getLastReset(), loadded.getLastReset());
+        Assertions.assertEquals(characterBase.getMarkedForRemoval(), loadded.getMarkedForRemoval());
+        Assertions.assertEquals(characterBase.getName(), loadded.getName());
+        Assertions.assertEquals(characterBase.getUuid(), loadded.getUuid());
+        Assertions.assertEquals(characterBase.getWorld(), loadded.getWorld());
+        Assertions.assertEquals(characterBase.getX(), loadded.getX());
+        Assertions.assertEquals(characterBase.getY(), loadded.getY());
+        Assertions.assertEquals(characterBase.getZ(), loadded.getZ());
+
+    }
+
+    private CharacterBaseImpl createCharacterBase() {
         CharacterBaseImpl characterBase = new CharacterBaseImpl();
         characterBase.setId(null);
         characterBase.setAttributePoints(1);
@@ -58,14 +79,7 @@ public class JdbcPlayerDaoTest {
         characterBase.setX(10);
         characterBase.setY(15);
         characterBase.setZ(-31);
-        try {
-            jdbcPlayerDao.create(characterBase);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        Assertions.assertNotNull(characterBase.getId());
-
+        return characterBase;
     }
 
     public void fillAttributes(CharacterBase characterBase) {
@@ -84,7 +98,7 @@ public class JdbcPlayerDaoTest {
     }
 
     @AfterAll
-    public static void stop() throws ManagedProcessException {
+    public static void stop() {
         MariaDbBootstrap.tearDown();
     }
 }

@@ -1,6 +1,7 @@
 package cz.neumimto.rpg.persistance.dao;
 
 import com.google.j2objc.annotations.ReflectionSupport;
+import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.persistance.model.*;
 import cz.neumimto.rpg.common.persistance.dao.IPlayerDao;
 import cz.neumimto.rpg.persistance.converters.EquipedSlot2Json;
@@ -10,10 +11,7 @@ import cz.neumimto.rpg.persistance.model.CharacterClassImpl;
 import cz.neumimto.rpg.persistance.model.CharacterSkillImpl;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.*;
 
 public class JdbcPlayerDao implements IPlayerDao {
@@ -153,7 +151,7 @@ public class JdbcPlayerDao implements IPlayerDao {
 
     private void loadCharacterBase(CharacterBaseImpl characterBase, ResultSet rs) throws SQLException {
         characterBase.setId(rs.getLong("character_id"));
-        characterBase.setUuid(rs.getObject("uuid", UUID.class));
+        characterBase.setUuid(UUID.fromString(rs.getString("uuid")));
         characterBase.setName(rs.getString("name"));
         characterBase.setName(rs.getString("info"));
         characterBase.setAttributePoints(rs.getInt("attribute_points"));
@@ -181,16 +179,16 @@ public class JdbcPlayerDao implements IPlayerDao {
         CharacterBaseImpl characterBase = new CharacterBaseImpl();
         try (Connection con = dataSource.getConnection()) {
             try (PreparedStatement pst = con.prepareStatement(FIND_CHAR_BY_NAME)) {
-                pst.setString(0, uuid.toString());
-                pst.setString(1, name);
+                pst.setString(1, uuid.toString());
+                pst.setString(2, name);
                 try (ResultSet rs = pst.executeQuery()) {
-                    while (rs.next()) {
+                    if (rs.next()) {
                         loadCharacterBase(characterBase, rs);
                     }
                 }
             }
         } catch (SQLException s) {
-
+            throw new CannotFetchCharacterBaseSQL();
         }
 
         List<CharacterClassImpl> characterClasses = loadClasses(uuid, characterBase);
@@ -262,47 +260,59 @@ public class JdbcPlayerDao implements IPlayerDao {
 
     @Override
     public void create(CharacterBase base) {
-        String sql = "insert into rpg_character_base VALUES" +
+        String sql = "insert into rpg_character_base" +
                 "(" +
                 "uuid, name, info, health_scale, " +
                 "attribute_points, attribute_points_spent," +
                 "can_reset_skills, marked_for_removal," +
                 "last_known_player_name, last_reset_time, inventory_equip_slot_order," +
                 "x, y, z, world" +
+                ") VALUES (" +
+                "?,?,?," +
+                "?,?,?," +
+                "?,?,?," +
+                "?,?,?," +
+                "?,?,?" +
                 ")";
         base.onCreate();
         base.onUpdate();
-        try (Connection con = dataSource.getConnection()) {
-            try (PreparedStatement pst = con.prepareStatement(sql)) {
-                pst.setString(1, base.getUuid().toString());
-                pst.setString(2, base.getName());
-                pst.setString(3, base.getInfo());
-                pst.setDouble(4, base.getHealthScale());
+        try (Connection con = dataSource.getConnection();
+             PreparedStatement pst = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
-                pst.setInt(5, base.getAttributePoints());
-                pst.setInt(6, base.getAttributePointsSpent());
+            pst.setString(1, base.getUuid().toString());
+            pst.setString(2, base.getName());
+            pst.setString(3, base.getInfo());
+            pst.setDouble(4, base.getHealthScale());
 
-                pst.setBoolean(7, base.isCanResetskills());
-                pst.setBoolean(8, base.getMarkedForRemoval());
+            pst.setInt(5, base.getAttributePoints());
+            pst.setInt(6, base.getAttributePointsSpent());
 
-                pst.setString(9, base.getLastKnownPlayerName());
-                pst.setDate(10,null);
-                pst.setString(11, new EquipedSlot2Json().convertToDatabaseColumn(base.getInventoryEquipSlotOrder()));
+            pst.setBoolean(7, base.isCanResetskills());
+            pst.setBoolean(8, base.getMarkedForRemoval());
+
+            pst.setString(9, base.getLastKnownPlayerName());
+            pst.setDate(10, null);
+            pst.setString(11, new EquipedSlot2Json().convertToDatabaseColumn(base.getInventoryEquipSlotOrder()));
 
 
-                pst.setInt(11,base.getX());
-                pst.setInt(12,base.getY());
-                pst.setInt(13,base.getZ());
-                pst.setString(14, base.getWorld());
-                ResultSet generatedKeys = pst.getGeneratedKeys();
-                while (generatedKeys.next()) {
-                    long aLong = generatedKeys.getLong(0);
-                    base.setId(aLong);
-                }
-
+            pst.setInt(12, base.getX());
+            pst.setInt(13, base.getY());
+            pst.setInt(14, base.getZ());
+            pst.setString(15, base.getWorld());
+            int i = pst.executeUpdate();
+            if (i == 0) {
+                throw new CannotCreateCharacterBaseSQL();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+            try (ResultSet generatedKeys = pst.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    long id = generatedKeys.getInt(1);
+                    base.setId(id);
+                }
+            }
+
+        } catch (SQLException ex) {
+            Log.error("Could not execute SQL to insert a new rectord to rpg_character_base table", ex);
+            throw new CannotCreateCharacterBaseSQL();
         }
     }
 
@@ -311,4 +321,7 @@ public class JdbcPlayerDao implements IPlayerDao {
 
     }
 
+    private static class CannotCreateCharacterBaseSQL extends RuntimeException {}
+    private static class CannotFetchCharacterBaseSQL extends RuntimeException {}
+    private static class NonUniqueResultSql extends RuntimeException {}
 }

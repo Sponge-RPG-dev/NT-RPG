@@ -102,14 +102,14 @@ public class DbMigrationsService {
                 preparedStatement1 = connection.prepareStatement(s);
                 preparedStatement1.execute();
                 connection.commit();
-
-                InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream("sql/insert.sql");
-                s = CharStreams.toString(new InputStreamReader(resourceAsStream, Charset.forName("UTF-8")));
-
-                preparedStatement2 = connection.prepareStatement(String.format(s, migration.getAuthor(), migration.getId(), migration.getNote()));
-                preparedStatement2.execute();
-                connection.commit();
             }
+            InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream("sql/insert.sql");
+            String s = CharStreams.toString(new InputStreamReader(resourceAsStream, Charset.forName("UTF-8")));
+
+            preparedStatement2 = connection.prepareStatement(String.format(s, migration.getAuthor(), migration.getId(), migration.getNote()));
+            preparedStatement2.execute();
+            connection.commit();
+
         } catch (Exception e) {
             try {
                 e.printStackTrace();

@@ -6,6 +6,7 @@ group = 'cz.neumimto.rpg'
 version = '2.1.0-SNAPSHOT'
 
 dependencies {
+    compileOnly project(':API')
     compileOnly project(':Common')
 
     compileOnly 'com.zaxxer:HikariCP:2.5.1'
@@ -18,14 +19,15 @@ dependencies {
 
     testCompile project(':Common')
     testCompile project(':API')
+    testCompile group: 'com.google.code.gson', name: 'gson', version: '2.8.5'
+    testCompile 'com.google.guava:guava:28.1-jre'
     testCompile group: 'com.zaxxer', name: 'HikariCP', version: '3.3.1'
     testCompile group: 'mysql', name: 'mysql-connector-java', version: '8.0.17'
-    testCompile 'com.github.JeffreyFalgout:junit5-extensions:89fa6cb1e7'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.1'
     testCompile 'org.junit.jupiter:junit-jupiter-engine:5.4.1'
     testCompile 'org.junit.jupiter:junit-jupiter-params:5.4.1'
     testCompile 'com.h2database:h2:1.4.199'
-    testCompile 'ch.vorburger.mariaDB4j:mariaDB4j:2.3.0'
+
     jar {
         manifest {
             attributes(
