@@ -10,7 +10,7 @@ import org.bukkit.entity.Tameable;
 
 import java.util.UUID;
 
-public class SpigotMob extends AbstractMob<LivingEntity> implements ISpigorEntity<LivingEntity> {
+public class SpigotMob extends AbstractMob<LivingEntity> implements ISpigotEntity<LivingEntity> {
 
     private LivingEntity entity;
 

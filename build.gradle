@@ -24,16 +24,11 @@ subprojects {
         archives sourcesJar
     }
 
-    task testJUnitJupiter(type: Test) {
-        description = "Runs JUnit Jupiter tests."
-
-        useJUnitPlatform {
-            includeEngines "junit-jupiter"
-            excludeTags "failing-test-case"
+    test {
+        useJUnitPlatform()
+        testLogging {
+            events "passed", "skipped", "failed"
         }
-
-        reports.junitXml.destination = file("$buildDir/test-results")
-
     }
 
 }

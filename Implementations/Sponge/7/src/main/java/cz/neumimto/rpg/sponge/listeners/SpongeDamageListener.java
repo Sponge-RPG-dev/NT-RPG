@@ -35,7 +35,7 @@ import javax.inject.Inject;
 
 @Singleton
 @IResourceLoader.ListenerClass
-public class DamageListener {
+public class SpongeDamageListener {
 
     @Inject
     private SpongeDamageService spongeDamageService;
