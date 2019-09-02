@@ -55,4 +55,25 @@ public class CommonProperties {
     @Property(name = "walk_speed", default_ = 0.1f)
     public static int walk_speed;
 
+    @Property(name = "physical_damage_bonus_mult", default_ = 1)
+    public static int physical_damage_bonus_mult;
+
+    @Property(name = "magic_damage_bonus_mult", default_ = 1)
+    public static int magic_damage_bonus_mult;
+
+    @Property(name = "fire_damage_bonus_mult", default_ = 1)
+    public static int fire_damage_bonus_mult;
+
+    @Property(name = "lightning_damage_bonus_mult", default_ = 1)
+    public static int lightning_damage_bonus_mult;
+
+    @Property(name = "all_skills_bonus")
+    public static int all_skills_bonus;
+
+    @Property(name = "projectile_damage_bonus", default_ = 1)
+    public static int projectile_damage_bonus;
+
+    @Property(name = "arrow_damage_mult", default_ = 1)
+
+    public static int arrow_damage_mult;
 }

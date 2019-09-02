@@ -2,18 +2,24 @@ package cz.neumimto.rpg.spigot.listeners;
 
 import com.google.inject.Singleton;
 import cz.neumimto.rpg.api.IResourceLoader;
-import cz.neumimto.rpg.api.IRpgElement;
 import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.effects.IEffect;
+import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.IEntityType;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.events.damage.IEntityWeaponDamageEarlyEvent;
+import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.skills.ISkill;
+import cz.neumimto.rpg.common.damage.AbstractDamageListener;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
 import cz.neumimto.rpg.spigot.entities.ISpigotEntity;
+import cz.neumimto.rpg.spigot.entities.ProjectileCache;
 import cz.neumimto.rpg.spigot.entities.SpigotEntityService;
 import cz.neumimto.rpg.spigot.events.damage.SpigotEntitySkillDamageEarlyEvent;
+import cz.neumimto.rpg.spigot.events.damage.SpigotEntityWeaponDamageEarlyEvent;
+import cz.neumimto.rpg.spigot.inventory.SpigotItemService;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -21,19 +27,27 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.projectiles.ProjectileSource;
 
 import javax.inject.Inject;
+import java.util.Optional;
 
 @Singleton
 @IResourceLoader.ListenerClass
-public class SpigotDamageListener implements Listener {
+public class SpigotDamageListener extends AbstractDamageListener implements Listener {
 
     @Inject
     private SpigotEntityService entityService;
 
     @Inject
     private SpigotDamageService spigotDamageService;
+
+    @Inject
+    private SpigotItemService itemService;
+
+    @Inject
+    private PluginConfig pluginConfig;
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onEntityDamageEarly(EntityDamageByEntityEvent event) {
@@ -42,17 +56,27 @@ public class SpigotDamageListener implements Listener {
         }
         Entity damager = event.getDamager();
         Entity entity = event.getEntity();
-        EntityDamageEvent.DamageCause cause = event.getCause();
 
         LivingEntity living = (LivingEntity) entity;
         ISpigotEntity target = (ISpigotEntity) entityService.get(living);
 
         IEntity attacker;
         if (event.getCause() == EntityDamageEvent.DamageCause.PROJECTILE) {
-            ProjectileSource shooter = ((Projectile) damager).getShooter();
+            Projectile projectile = (Projectile) damager;
+            ProjectileSource shooter = projectile.getShooter();
+
+            ProjectileCache projectileProperties = ProjectileCache.cache.get(projectile);
+            if (projectileProperties != null) {
+                event.setCancelled(true);
+                ProjectileCache.cache.remove(projectile);
+                projectileProperties.consumer.accept(event, attacker, target);
+                return;
+            }
+
             if (shooter instanceof LivingEntity) {
                 attacker = entityService.get((LivingEntity) shooter);
             }
+            processProjectileDamageEarly(event, attacker, target, projectile);
         } else {
             attacker = entityService.get((LivingEntity) damager);
         }
@@ -60,24 +84,61 @@ public class SpigotDamageListener implements Listener {
         if (target.skillOrEffectDamageCayse() != null) {
             processSkillDamageEarly(event, target.skillOrEffectDamageCayse(), attacker, target);
         } else {
-
-        } else if (damageSource instanceof IndirectEntityDamageSource) {
-            IndirectEntityDamageSource indirectEntityDamageSource = (IndirectEntityDamageSource) damageSource;
-            Projectile projectile = (Projectile) indirectEntityDamageSource.getSource();
-            ProjectileProperties projectileProperties = ProjectileProperties.cache.get(projectile);
-            if (projectileProperties != null) {
-                event.setCancelled(true);
-                ProjectileProperties.cache.remove(projectile);
-                projectileProperties.consumer.accept(event, attacker, target);
-                return;
-            }
-
-            processProjectileDamageEarly(event, indirectEntityDamageSource, attacker, target, projectile);
-        } else {
-            processWeaponDamageEarly(event, damageSource, attacker, target);
+            processWeaponDamageEarly(event, event.getCause(), attacker, target);
         }
 
 
+    }
+
+    private void processWeaponDamageEarly(EntityDamageByEntityEvent event, EntityDamageEvent.DamageCause cause, IEntity attacker, ISpigotEntity target) {
+        double newdamage = event.getDamage();
+
+        RpgItemStack rpgItemStack = null;
+        if (attacker.getType() == IEntityType.CHARACTER) {
+            IActiveCharacter character = (IActiveCharacter) attacker;
+            if (character.requiresDamageRecalculation()) {
+                RpgItemStack mainHand = character.getMainHand();
+                spigotDamageService.recalculateCharacterWeaponDamage(character, mainHand);
+                character.setRequiresDamageRecalculation(false);
+            }
+            newdamage = character.getWeaponDamage();
+            rpgItemStack = character.getMainHand();
+        } else {
+            LivingEntity entity = (LivingEntity) attacker.getEntity();
+            if (!pluginConfig.OVERRIDE_MOBS) {
+                newdamage = entityService.getMobDamage(entity.getWorld().getName(), entity.getType().name());
+            }
+            if (entity instanceof HumanEntity) {
+                ItemStack itemStack = ((HumanEntity) entity).getItemInHand();
+
+                Optional<RpgItemStack> rpgItemStack1 = itemService.getRpgItemStack(itemStack);
+                if (rpgItemStack1.isPresent()) {
+                    rpgItemStack = rpgItemStack1.get();
+                }
+
+            }
+        }
+        newdamage *= spigotDamageService.getEntityDamageMult(attacker, event.getCause());
+
+        IEntityWeaponDamageEarlyEvent e = getWeaponDamage(event, target, newdamage, rpgItemStack, SpigotEntityWeaponDamageEarlyEvent.class;);
+        event.setDamage(e.getDamage());
+    }
+
+    protected IEntityWeaponDamageEarlyEvent getWeaponDamage(EntityDamageByEntityEvent event, IEntity target, double newdamage, RpgItemStack rpgItemStack, Class<? extends IEntityWeaponDamageEarlyEvent> impl) {
+        IEntityWeaponDamageEarlyEvent e = Rpg.get().getEventFactory().createEventInstance(impl);
+        e.setTarget(target);
+        e.setDamage(newdamage);
+        e.setWeapon(rpgItemStack);
+
+        if (Rpg.get().postEvent(e)) {
+            event.setCancelled(true);
+            return null;
+        }
+
+        if (e.getDamage() <= 0) {
+            return null;
+        }
+        return e;
     }
 
 

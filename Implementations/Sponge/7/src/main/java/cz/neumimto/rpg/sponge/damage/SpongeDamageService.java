@@ -19,6 +19,7 @@
 package cz.neumimto.rpg.sponge.damage;
 
 import com.google.common.collect.Lists;
+import cz.neumimto.rpg.api.entity.CommonProperties;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
@@ -63,9 +64,9 @@ public class SpongeDamageService extends AbstractDamageService<Living> {
             return 1;
         }
         double base = character.getBaseProjectileDamage(type.getId())
-                + entityService.getEntityProperty(character, SpongeDefaultProperties.projectile_damage_bonus);
+                + entityService.getEntityProperty(character, CommonProperties.projectile_damage_bonus);
         if (type == EntityTypes.SPECTRAL_ARROW || type == EntityTypes.TIPPED_ARROW) {
-            base *= entityService.getEntityProperty(character, SpongeDefaultProperties.arrow_damage_mult);
+            base *= entityService.getEntityProperty(character, CommonProperties.arrow_damage_mult);
         } else {
             base *= entityService.getEntityProperty(character, SpongeDefaultProperties.other_projectile_damage_mult);
         }
@@ -93,16 +94,16 @@ public class SpongeDamageService extends AbstractDamageService<Living> {
 
     public double getEntityDamageMult(IEntity entity, DamageType source) {
         if (source == DamageTypes.ATTACK) {
-            return entityService.getEntityProperty(entity, SpongeDefaultProperties.physical_damage_bonus_mult);
+            return entityService.getEntityProperty(entity, CommonProperties.physical_damage_bonus_mult);
         }
         if (source == DamageTypes.MAGIC) {
-            return entityService.getEntityProperty(entity, SpongeDefaultProperties.magic_damage_bonus_mult);
+            return entityService.getEntityProperty(entity, CommonProperties.magic_damage_bonus_mult);
         }
         if (source == NDamageType.FIRE) {
-            return entityService.getEntityProperty(entity, SpongeDefaultProperties.fire_damage_bonus_mult);
+            return entityService.getEntityProperty(entity, CommonProperties.fire_damage_bonus_mult);
         }
         if (source == NDamageType.LIGHTNING) {
-            return entityService.getEntityProperty(entity, SpongeDefaultProperties.lightning_damage_bonus_mult);
+            return entityService.getEntityProperty(entity, CommonProperties.lightning_damage_bonus_mult);
         }
         if (source == NDamageType.ICE) {
             return entityService.getEntityProperty(entity, SpongeDefaultProperties.ice_damage_bonus_mult);

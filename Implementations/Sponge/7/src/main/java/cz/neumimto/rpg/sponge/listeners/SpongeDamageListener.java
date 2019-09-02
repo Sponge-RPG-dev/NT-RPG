@@ -1,6 +1,5 @@
 package cz.neumimto.rpg.sponge.listeners;
 
-import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 import com.google.inject.Singleton;
 import cz.neumimto.rpg.api.IResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
@@ -10,6 +9,7 @@ import cz.neumimto.rpg.api.entity.IEntityType;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.skills.ISkill;
+import cz.neumimto.rpg.common.damage.AbstractDamageListener;
 import cz.neumimto.rpg.sponge.damage.SkillDamageSource;
 import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
 import cz.neumimto.rpg.sponge.entities.SpongeEntityService;
@@ -30,12 +30,14 @@ import org.spongepowered.api.event.cause.entity.damage.source.IndirectEntityDama
 import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.filter.cause.First;
 
-import java.util.Optional;
 import javax.inject.Inject;
+import java.util.Optional;
+
+import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 
 @Singleton
 @IResourceLoader.ListenerClass
-public class SpongeDamageListener {
+public class SpongeDamageListener extends AbstractDamageListener {
 
     @Inject
     private SpongeDamageService spongeDamageService;
