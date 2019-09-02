@@ -6,13 +6,16 @@ include ':NT-RPG-Skills'
 include ':API'
 include ':Common'
 include ':Database-Persistence'
+include ':FlatFiles-Persistence'
 include ':Spigot-14.2'
 include ':Sponge-7'
+
 
 project(':API').projectDir = file('API')
 project(':Common').projectDir = file('Common')
 
 project(':Database-Persistence').projectDir = file('Peristence/Database')
+project(':FlatFiles-Persistence').projectDir = file('FlatFiles/Database')
 
 project(':NT-RPG-Skills').projectDir = file('Skills')
 

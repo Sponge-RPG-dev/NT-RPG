@@ -1,0 +1,56 @@
+plugins {
+    id "org.sonarqube" version "2.7"
+}
+
+apply plugin: 'java'
+
+group = 'cz.neumimto.rpg'
+version = '2.1.0-SNAPSHOT'
+
+dependencies {
+    compileOnly project(':API')
+    compileOnly project(':Common')
+
+    compileOnly 'com.google.inject:guice:4.2.2'
+    compileOnly 'com.github.Sponge-RPG-dev:ConfigurateButWithBlackjackAndHookers:39d5fc8afd'
+    compileOnly 'ninja.leaping.configurate:configurate-hocon:3.3'
+    compileOnly 'org.slf4j:slf4j-api:1.7.26'
+
+    testCompile project(':Common')
+    testCompile project(':API')
+    testCompile("junit:junit:4.12")
+
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.4.1'
+    testCompile 'org.junit.jupiter:junit-jupiter-params:5.4.1'
+
+    jar {
+        manifest {
+            attributes(
+                    'Build-Timestamp': new Date()
+            )
+        }
+        from {
+            configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+        }
+    }
+
+
+}
+
+
+test {
+    useJUnitPlatform()
+    dependsOn 'cleanTest'
+
+    testLogging.showStandardStreams = true
+    testLogging {
+        events "passed", "skipped", "failed"
+
+    }
+
+    afterTest { desc, result ->
+        logger.quiet "Executing test ${desc.name} [${desc.className}] with result: ${result.resultType}"
+    }
+}
