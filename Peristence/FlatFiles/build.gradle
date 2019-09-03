@@ -8,14 +8,17 @@ group = 'cz.neumimto.rpg'
 version = '2.1.0-SNAPSHOT'
 
 dependencies {
+    compile project(':Common-Persistence')
     compileOnly project(':API')
     compileOnly project(':Common')
+    compile 'com.electronwill.night-config:toml:3.6.0'
 
     compileOnly 'com.google.inject:guice:4.2.2'
     compileOnly 'com.github.Sponge-RPG-dev:ConfigurateButWithBlackjackAndHookers:39d5fc8afd'
     compileOnly 'ninja.leaping.configurate:configurate-hocon:3.3'
     compileOnly 'org.slf4j:slf4j-api:1.7.26'
 
+    testCompile project(':Common-Persistence')
     testCompile project(':Common')
     testCompile project(':API')
     testCompile("junit:junit:4.12")
