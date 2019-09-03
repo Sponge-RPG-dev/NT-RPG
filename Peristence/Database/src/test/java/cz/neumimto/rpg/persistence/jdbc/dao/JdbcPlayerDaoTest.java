@@ -2,8 +2,8 @@ package cz.neumimto.rpg.persistence.jdbc.dao;
 
 import cz.neumimto.rpg.api.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
-import cz.neumimto.rpg.persistence.jdbc.model.BaseCharacterAttributeImpl;
-import cz.neumimto.rpg.persistence.jdbc.model.CharacterBaseImpl;
+import cz.neumimto.rpg.persistence.model.BaseCharacterAttributeImpl;
+import cz.neumimto.rpg.persistence.model.CharacterBaseImpl;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;

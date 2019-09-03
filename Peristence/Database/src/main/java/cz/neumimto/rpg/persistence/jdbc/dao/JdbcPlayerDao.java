@@ -46,7 +46,7 @@ public class JdbcPlayerDao implements IPlayerDao {
                 }
             }
         } catch (SQLException s) {
-
+            Log.error("Could not retrieve Players characters from database", s);
         }
 
         for (CharacterBaseImpl characterBase : list) {
@@ -71,7 +71,7 @@ public class JdbcPlayerDao implements IPlayerDao {
                 }
             }
         } catch (SQLException s) {
-
+            Log.error("Could not retrieve last played character from database", s);
         }
 
         List<CharacterClassImpl> characterClasses = loadClasses(uuid, characterBase);
@@ -280,18 +280,8 @@ public class JdbcPlayerDao implements IPlayerDao {
         try (Connection con = dataSource.getConnection();
              NamedPreparedStatement pst = new NamedPreparedStatement(con, sql, Statement.RETURN_GENERATED_KEYS)) {
             bindCharacterBaseToStatement(pst, base);
-            PreparedStatement preparedStatement = pst.getPreparedStatement();
-            int i = preparedStatement.executeUpdate();
-            if (i == 0) {
-                throw new CannotCreateCharacterBaseSQL();
-            }
-            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    long id = generatedKeys.getInt(1);
-                    base.setId(id);
-                }
-            }
-
+            long l = pst.executeQueryAndGetId();
+            base.setId(l);
         } catch (SQLException ex) {
             Log.error("Could not execute SQL to insert a new rectord to rpg_character_base table", ex);
             throw new CannotCreateCharacterBaseSQL();
@@ -321,29 +311,69 @@ public class JdbcPlayerDao implements IPlayerDao {
     }
 
     private void updateCharacterSkill(CharacterSkill characterSkill) {
-
+        String sql = "update rpg_character_skill set level=:level: where skill_id = :skill_id:";
+        try (Connection con = dataSource.getConnection();
+             NamedPreparedStatement pst = new NamedPreparedStatement(con, sql, Statement.RETURN_GENERATED_KEYS)) {
+            bindCharacterSkill(pst, characterSkill);
+            long id = pst.executeQueryAndGetId();
+            characterSkill.setId(id);
+        } catch (SQLException e) {
+            Log.error("Could not create CharacterClass " + characterSkill.toString(), e);
+        }
     }
 
     private void createCharacterSkill(CharacterSkill characterSkill) {
+        String sql = "insert into rpg_character_skill(catalog_id,level,character_id,class_id) values (:catalog_id:,:level:,:character_id:,:class_id:)";
+        try (Connection con = dataSource.getConnection();
+             NamedPreparedStatement pst = new NamedPreparedStatement(con, sql, Statement.RETURN_GENERATED_KEYS)) {
+            bindCharacterSkill(pst, characterSkill);
+            long id = pst.executeQueryAndGetId();
+            characterSkill.setId(id);
+        } catch (SQLException e) {
+            Log.error("Could not create CharacterClass " + characterSkill.toString(), e);
+        }
+    }
 
+    private void bindCharacterSkill(NamedPreparedStatement pst, CharacterSkill characterSkill) throws SQLException {
+        pst.setLong(":skill_id:", characterSkill.getId());
+        pst.setString(":catalog_id:",characterSkill.getCatalogId());
+        pst.setInt(":level:", characterSkill.getLevel());
+        pst.setLong(":character_id:", characterSkill.getCharacterBase().getId());
+        if (characterSkill.getFromClass() != null) {
+            pst.setLong(":class_id:", characterSkill.getFromClass().getId());
+        }
     }
 
     private void updateCharacterClass(CharacterClass characterClass) {
-
+        String sql = "update rpg_character_class set experiences = :experiences: ,name = :name:,skillpoints = :skillpoints: ,used_skil_points = :used_skil_points: where class_id = :class_id:";
+        try (Connection con = dataSource.getConnection();
+             NamedPreparedStatement pst = new NamedPreparedStatement(con, sql)) {
+            pst.executeQuery();
+            bindCharacterClass(pst, characterClass);
+        } catch (SQLException e) {
+            Log.error("Could not update Character class  " + characterClass.toString(), e);
+        }
     }
 
     private void createCharacterClass(CharacterClass characterClass) {
-        String sql = "insert into rpg_character_base(experiences,name,skillpoints,used_skil_points,character_id) VALUES(:exp:,:name:,:sp:,:usp:,:charid:)";
+        String sql = "insert into rpg_character_class(experiences,name,skillpoints,used_skil_points,character_id) VALUES(:experiences:,:name:,:skillpoints:,:used_skil_points:,:character_id:)";
         try (Connection con = dataSource.getConnection();
-             NamedPreparedStatement pst = new NamedPreparedStatement(con, sql)) {
-            pst.setDouble(":exp:", characterClass.getExperiences());
-            pst.setString(":name:", characterClass.getName());
-            pst.setInt(":sp:", characterClass.getSkillPoints());
-            pst.setInt(":usp:", characterClass.getUsedSkillPoints());
-            pst.setLong(":charid:", characterClass.getCharacterBase().getId());
+             NamedPreparedStatement pst = new NamedPreparedStatement(con, sql, Statement.RETURN_GENERATED_KEYS)) {
+            bindCharacterClass(pst, characterClass);
+            long id = pst.executeQueryAndGetId();
+            characterClass.setId(id);
         } catch (SQLException e) {
-
+            Log.error("Could not create CharacterClass " + characterClass.toString(), e);
         }
+    }
+
+    private void bindCharacterClass(NamedPreparedStatement pst, CharacterClass characterClass) throws SQLException {
+        pst.setLong(":class_id:", characterClass.getId());
+        pst.setDouble(":exp:", characterClass.getExperiences());
+        pst.setString(":name:", characterClass.getName());
+        pst.setInt(":sp:", characterClass.getSkillPoints());
+        pst.setInt(":usp:", characterClass.getUsedSkillPoints());
+        pst.setLong(":charid:", characterClass.getCharacterBase().getId());
     }
 
     private void updateCharacterBase(CharacterBase characterBase) {
@@ -364,7 +394,7 @@ public class JdbcPlayerDao implements IPlayerDao {
     }
 
 
-    private void bindCharacterBaseToStatement(NamedPreparedStatement pspt, CharacterBase characterBase) throws SQLException{
+    private void bindCharacterBaseToStatement(NamedPreparedStatement pspt, CharacterBase characterBase) throws SQLException {
         pspt.setString(":uuid:", characterBase.getUuid().toString());
         pspt.setString(":char_name:", characterBase.getName());
         pspt.setInt(":attribute_points:", characterBase.getAttributePoints());
@@ -373,7 +403,7 @@ public class JdbcPlayerDao implements IPlayerDao {
         pspt.setBoolean(":marked_for_removal:", characterBase.getMarkedForRemoval());
         pspt.setString(":last_known_player_name:", characterBase.getLastKnownPlayerName());
         pspt.setDate(":last_reset_time:", characterBase.getLastReset());
-        pspt.setInt(":inventory_equip_slot_order:", new EquipedSlot2Json().convertToDatabaseColumn(characterBase.getInventoryEquipSlotOrder());
+        pspt.setString(":inventory_equip_slot_order:", new EquipedSlot2Json().convertToDatabaseColumn(characterBase.getInventoryEquipSlotOrder()));
         pspt.setInt(":x:", characterBase.getX());
         pspt.setInt(":y:", characterBase.getY());
         pspt.setInt(":z:", characterBase.getZ());

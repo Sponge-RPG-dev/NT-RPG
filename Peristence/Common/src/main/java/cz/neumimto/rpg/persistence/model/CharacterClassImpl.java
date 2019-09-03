@@ -9,11 +9,11 @@ import cz.neumimto.rpg.api.persistance.model.CharacterClass;
 public class CharacterClassImpl extends TimestampEntityImpl implements CharacterClass {
 
     private Long classId;
-    private Double experiences;
-    private Integer level;
+    private double experiences;
+    private int level;
     private String name;
-    private Integer usedSkillPoints;
-    private Integer skillPoints;
+    private int usedSkillPoints;
+    private int skillPoints;
 
     private CharacterBase characterBase;
 
@@ -109,5 +109,16 @@ public class CharacterClassImpl extends TimestampEntityImpl implements Character
         return classId != null ? classId.hashCode() : name.hashCode();
     }
 
-
+    @Override
+    public String toString() {
+        return "CharacterClassImpl{" +
+                "classId=" + String.valueOf(classId) +
+                ", experiences=" + experiences +
+                ", level=" + level +
+                ", name='" + String.valueOf(name) + '\'' +
+                ", usedSkillPoints=" + usedSkillPoints +
+                ", skillPoints=" + skillPoints +
+                ", characterBase=" + characterBase +
+                '}';
+    }
 }

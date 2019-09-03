@@ -7,23 +7,22 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class NamedPreparedStatement implements AutoCloseable {
 
     private PreparedStatement prepStmt;
     private List<String> fields = new ArrayList<>();
+    private static Pattern findParametersPattern = Pattern.compile("(?<!')(:[\\w]*:)(?!')");
 
     public NamedPreparedStatement(Connection conn, String sql, int... params) throws SQLException {
-        int pos;
-        while ((pos = sql.indexOf(":")) != -1) {
-            int end = sql.substring(pos).indexOf(":");
-            if (end == -1)
-                end = sql.length();
-            else
-                end += pos;
-            fields.add(sql.substring(pos + 1, end));
-            sql = sql.substring(0, pos) + "?" + sql.substring(end);
+        Matcher matcher = findParametersPattern.matcher(sql);
+        while (matcher.find()) {
+            String group = matcher.group();
+            fields.add(group);
         }
+        prepStmt = conn.prepareStatement(sql.replaceAll(findParametersPattern.pattern(), "?"));
         prepStmt = conn.prepareStatement(sql, params);
     }
 
@@ -49,9 +48,8 @@ public class NamedPreparedStatement implements AutoCloseable {
     public void setString(String name, String value) throws SQLException {
         int index = getIndex(name);
         if (index > 0) {
-
+            prepStmt.setString(index, value);
         }
-        prepStmt.setString(index, value);
     }
 
     public void setLong(String name, long value) throws SQLException {
@@ -81,5 +79,18 @@ public class NamedPreparedStatement implements AutoCloseable {
 
     public void setDate(String s, Date lastReset) {
 
+    }
+
+    public long executeQueryAndGetId() throws SQLException {
+        int i = getPreparedStatement().executeUpdate();
+        if (i == 0) {
+            throw new SQLException("More than one id created");
+        }
+        try (ResultSet generatedKeys = getPreparedStatement().getGeneratedKeys()) {
+            if (generatedKeys.next()) {
+                return generatedKeys.getInt(1);
+            }
+        }
+        throw new SQLException("Database does not support JDBC RETURN_GENERATED_KEYS");
     }
 }
