@@ -84,16 +84,17 @@ public class JdbcPlayerDao implements IPlayerDao {
 
     protected List<CharacterClassImpl> loadClasses(UUID uuid, CharacterBaseImpl characterBase) {
         List<CharacterClassImpl> characterClasses = new ArrayList<>();
-        try (Connection con = dataSource.getConnection()) {
-            try (PreparedStatement pst = con.prepareStatement(FIND_CLASSES_BY_CHAR)) {
-                pst.setString(0, uuid.toString());
+        try (Connection con = dataSource.getConnection();
+            PreparedStatement pst = con.prepareStatement(FIND_CLASSES_BY_CHAR)) {
+                pst.setString(1, uuid.toString());
                 try (ResultSet rs = pst.executeQuery()) {
-                    CharacterClassImpl characterClass = loadCharacterClass(characterBase, rs);
-                    characterClasses.add(characterClass);
+                    while (rs.next()) {
+                        CharacterClassImpl characterClass = loadCharacterClass(characterBase, rs);
+                        characterClasses.add(characterClass);
+                    }
                 }
-            }
         } catch (SQLException e) {
-
+            Log.error("Could not load classes for character " + characterBase.toString());
         }
         characterBase.setCharacterClasses(new HashSet<>(characterClasses));
         return characterClasses;
@@ -147,7 +148,6 @@ public class JdbcPlayerDao implements IPlayerDao {
         characterClass.setName(rs.getString("name"));
         characterClass.setSkillPoints(rs.getInt("skillpoints"));
         characterClass.setUsedSkillPoints(rs.getInt("used_skil_points"));
-        populateCommonDateFields(characterBase, rs);
         return characterClass;
     }
 
@@ -335,7 +335,9 @@ public class JdbcPlayerDao implements IPlayerDao {
     }
 
     private void bindCharacterSkill(NamedPreparedStatement pst, CharacterSkill characterSkill) throws SQLException {
-        pst.setLong(":skill_id:", characterSkill.getId());
+        if (characterSkill.getId() != null) {
+            pst.setLong(":skill_id:", characterSkill.getId());
+        }
         pst.setString(":catalog_id:",characterSkill.getCatalogId());
         pst.setInt(":level:", characterSkill.getLevel());
         pst.setLong(":character_id:", characterSkill.getCharacterBase().getId());
@@ -356,7 +358,7 @@ public class JdbcPlayerDao implements IPlayerDao {
     }
 
     private void createCharacterClass(CharacterClass characterClass) {
-        String sql = "insert into rpg_character_class(experiences,name,skillpoints,used_skil_points,character_id) VALUES(:experiences:,:name:,:skillpoints:,:used_skil_points:,:character_id:)";
+        String sql = "insert into rpg_character_class(experiences,name,level,skillpoints,used_skil_points,character_id) VALUES(:experiences:,:name:,:level:,:skillpoints:,:used_skil_points:,:character_id:)";
         try (Connection con = dataSource.getConnection();
              NamedPreparedStatement pst = new NamedPreparedStatement(con, sql, Statement.RETURN_GENERATED_KEYS)) {
             bindCharacterClass(pst, characterClass);
@@ -368,12 +370,16 @@ public class JdbcPlayerDao implements IPlayerDao {
     }
 
     private void bindCharacterClass(NamedPreparedStatement pst, CharacterClass characterClass) throws SQLException {
-        pst.setLong(":class_id:", characterClass.getId());
-        pst.setDouble(":exp:", characterClass.getExperiences());
+        if (characterClass.getId() != null) {
+            pst.setLong(":class_id:", characterClass.getId());
+        }
+
+        pst.setDouble(":experiences:", characterClass.getExperiences());
         pst.setString(":name:", characterClass.getName());
-        pst.setInt(":sp:", characterClass.getSkillPoints());
-        pst.setInt(":usp:", characterClass.getUsedSkillPoints());
-        pst.setLong(":charid:", characterClass.getCharacterBase().getId());
+        pst.setDouble(":level:", characterClass.getLevel());
+        pst.setInt(":skillpoints:", characterClass.getSkillPoints());
+        pst.setInt(":used_skil_points:", characterClass.getUsedSkillPoints());
+        pst.setLong(":character_id:", characterClass.getCharacterBase().getId());
     }
 
     private void updateCharacterBase(CharacterBase characterBase) {

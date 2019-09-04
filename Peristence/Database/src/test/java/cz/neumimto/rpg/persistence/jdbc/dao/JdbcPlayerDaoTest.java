@@ -3,10 +3,13 @@ package cz.neumimto.rpg.persistence.jdbc.dao;
 import cz.neumimto.persistence.TestHelper;
 import cz.neumimto.rpg.api.RpgJdbcTests;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
+import cz.neumimto.rpg.api.persistance.model.CharacterClass;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import java.util.Optional;
 
 public class JdbcPlayerDaoTest {
 
@@ -61,6 +64,25 @@ public class JdbcPlayerDaoTest {
             for (int i = 0; i < characterBase.getInventoryEquipSlotOrder().size(); i++) {
                 Assertions.assertEquals(characterBase.getInventoryEquipSlotOrder().get(i).getSlotIndex(), loadded.getInventoryEquipSlotOrder().get(i).getSlotIndex());
             }
+        }
+
+        TestHelper.addClasses(characterBase);
+        jdbcPlayerDao.update(characterBase);
+        loadded = jdbcPlayerDao.getCharacter(characterBase.getUuid(), characterBase.getName());
+        for (CharacterClass characterClass : characterBase.getCharacterClasses()) {
+            Optional<CharacterClass> first = loadded.getCharacterClasses().stream().filter(a -> a.getName().equals(characterClass.getName())).findFirst();
+            if (!first.isPresent()) {
+                throw new IllegalStateException("");
+            }
+            CharacterClass loadedClass = first.get();
+
+            Assertions.assertNotNull(loadedClass.getId());
+
+            Assertions.assertEquals(characterClass.getCharacterBase().getId(), loadedClass.getCharacterBase().getId());
+            Assertions.assertEquals(characterClass.getExperiences(), loadedClass.getExperiences());
+            Assertions.assertEquals(characterClass.getLevel(), loadedClass.getLevel());
+            Assertions.assertEquals(characterClass.getSkillPoints(), loadedClass.getSkillPoints());
+            Assertions.assertEquals(characterClass.getUsedSkillPoints(), loadedClass.getUsedSkillPoints());
         }
     }
 
