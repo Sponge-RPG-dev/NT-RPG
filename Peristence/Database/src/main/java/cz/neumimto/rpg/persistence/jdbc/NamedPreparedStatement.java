@@ -22,7 +22,8 @@ public class NamedPreparedStatement implements AutoCloseable {
             String group = matcher.group();
             fields.add(group);
         }
-        prepStmt = conn.prepareStatement(sql.replaceAll(findParametersPattern.pattern(), "?"));
+        sql = sql.replaceAll(findParametersPattern.pattern(), "?");
+        prepStmt = conn.prepareStatement(sql);
         prepStmt = conn.prepareStatement(sql, params);
     }
 
@@ -77,8 +78,13 @@ public class NamedPreparedStatement implements AutoCloseable {
         return fields.indexOf(name) + 1;
     }
 
-    public void setDate(String s, Date lastReset) {
-
+    public void setDate(String name, Date date) throws SQLException {
+        int index = getIndex(name);
+        if (index > 0) {
+            long time = date.getTime();
+            java.sql.Timestamp timestamp = new java.sql.Timestamp(time);
+            prepStmt.setTimestamp(index, timestamp);
+        }
     }
 
     public long executeQueryAndGetId() throws SQLException {

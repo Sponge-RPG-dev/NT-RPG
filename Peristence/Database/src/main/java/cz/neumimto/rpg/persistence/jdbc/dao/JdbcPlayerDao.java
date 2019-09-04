@@ -155,7 +155,7 @@ public class JdbcPlayerDao implements IPlayerDao {
         characterBase.setId(rs.getLong("character_id"));
         characterBase.setUuid(UUID.fromString(rs.getString("uuid")));
         characterBase.setName(rs.getString("name"));
-        characterBase.setName(rs.getString("info"));
+        characterBase.setInfo(rs.getString("info"));
         characterBase.setAttributePoints(rs.getInt("attribute_points"));
         characterBase.setCanResetskills(rs.getBoolean("can_reset_skills"));
         characterBase.setHealthScale(rs.getDouble("health_scale"));
@@ -269,7 +269,7 @@ public class JdbcPlayerDao implements IPlayerDao {
                 "last_known_player_name, last_reset_time, inventory_equip_slot_order," +
                 "x, y, z, world" +
                 ") VALUES (" +
-                ":uuid:, :name:, :info:, :health_scale:, " +
+                ":uuid:, :char_name:, :info:, :health_scale:, " +
                 ":attribute_points:, :attribute_points_spent:," +
                 ":can_reset_skills:, :marked_for_removal:," +
                 ":last_known_player_name:, :last_reset_time:, :inventory_equip_slot_order:," +
@@ -382,7 +382,7 @@ public class JdbcPlayerDao implements IPlayerDao {
                 "attribute_points = :attribute_points:, attribute_points_spent = :attribute_points_spent:," +
                 "can_reset_skills = :can_reset_skills:, marked_for_removal = :marked_for_removal:," +
                 "last_known_player_name = :last_known_player_name:, last_reset_time = :last_reset_time:, inventory_equip_slot_order = :inventory_equip_slot_order:," +
-                "x = :x:, y = :y:, z = :z:, world = :w:" +
+                "x = :x:, y = :y:, z = :z:, world = :world:" +
                 " where uuid = :uuid: AND name = :char_name:";
 
         try (Connection con = dataSource.getConnection();
@@ -397,6 +397,8 @@ public class JdbcPlayerDao implements IPlayerDao {
     private void bindCharacterBaseToStatement(NamedPreparedStatement pspt, CharacterBase characterBase) throws SQLException {
         pspt.setString(":uuid:", characterBase.getUuid().toString());
         pspt.setString(":char_name:", characterBase.getName());
+        pspt.setString(":info:", characterBase.getInfo());
+        pspt.setDouble(":health_scale:", characterBase.getHealthScale());
         pspt.setInt(":attribute_points:", characterBase.getAttributePoints());
         pspt.setInt(":attribute_points_spent:", characterBase.getAttributePointsSpent());
         pspt.setBoolean(":can_reset_skills:", characterBase.isCanResetskills());
@@ -407,7 +409,7 @@ public class JdbcPlayerDao implements IPlayerDao {
         pspt.setInt(":x:", characterBase.getX());
         pspt.setInt(":y:", characterBase.getY());
         pspt.setInt(":z:", characterBase.getZ());
-        pspt.setString(":w:", characterBase.getWorld());
+        pspt.setString(":world:", characterBase.getWorld());
     }
 
     private static class CannotCreateCharacterBaseSQL extends RuntimeException {

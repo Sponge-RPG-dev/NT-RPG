@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.persistence.jdbc.dao;
 
+import cz.neumimto.rpg.api.RpgJdbcTests;
 import cz.neumimto.rpg.api.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.persistence.model.BaseCharacterAttributeImpl;
@@ -17,6 +18,7 @@ public class JdbcPlayerDaoTest {
 
     @BeforeAll
     public static void before() {
+        new RpgJdbcTests();
         try {
             MariaDbBootstrap.runMigrations();
             jdbcPlayerDao = new JdbcPlayerDao(MariaDbBootstrap.ds);

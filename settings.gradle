@@ -1,7 +1,6 @@
 rootProject.name = 'NtRpgParent'
 
 include ':Generator'
-include ':NT-RPG'
 include ':NT-RPG-Skills'
 include ':API'
 include ':Common'
