@@ -255,7 +255,7 @@ public class JdbcPlayerDao implements IPlayerDao {
                 pst.executeUpdate();
             }
         } catch (SQLException e) {
-
+            Log.error("Could not delete " + characterSkill, e);
         }
     }
 
@@ -283,7 +283,7 @@ public class JdbcPlayerDao implements IPlayerDao {
             long l = pst.executeQueryAndGetId();
             base.setId(l);
         } catch (SQLException ex) {
-            Log.error("Could not execute SQL to insert a new rectord to rpg_character_base table", ex);
+            Log.error("Could not execute SQL to insert a new record to rpg_character_base table", ex);
             throw new CannotCreateCharacterBaseSQL();
         }
     }
@@ -389,7 +389,7 @@ public class JdbcPlayerDao implements IPlayerDao {
              NamedPreparedStatement pst = new NamedPreparedStatement(con, sql)) {
             bindCharacterBaseToStatement(pst, characterBase);
         } catch (SQLException e) {
-
+            Log.error("Could not update " + characterBase, e);
         }
     }
 

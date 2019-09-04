@@ -286,5 +286,12 @@ public class CharacterBaseImpl extends TimestampEntityImpl implements CharacterB
         }
     }
 
-
+    @Override
+    public String toString() {
+        return "CharacterBaseImpl{" +
+                "characterId=" + characterId +
+                ", uuid=" + uuid +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

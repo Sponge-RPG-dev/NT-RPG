@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.api;
 
+import cz.neumimto.persistence.TestHelper;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.damage.DamageService;
@@ -183,7 +184,7 @@ public class RpgJdbcTests implements RpgApi {
 
             @Override
             public EquipedSlot createEquipedSlot(String className, int slotId) {
-                return () -> slotId;
+                return new TestHelper.EquipedSlotImpl(slotId);
             }
 
             @Override

@@ -75,4 +75,16 @@ public class CharacterSkillTest extends TimestampEntityTest implements Character
     public void setCooldown(Long cooldown) {
         this.cooldown = cooldown;
     }
+
+
+    @Override
+    public String toString() {
+        return "CharacterSkillTest{" +
+                "skillId=" + skillId +
+                ", level=" + level +
+                ", fromClass=" + fromClass +
+                ", catalogId='" + catalogId + '\'' +
+                ", cooldown=" + cooldown +
+                '}';
+    }
 }

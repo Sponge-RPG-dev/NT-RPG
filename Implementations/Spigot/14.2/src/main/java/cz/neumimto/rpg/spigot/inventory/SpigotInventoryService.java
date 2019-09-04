@@ -6,6 +6,7 @@ import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.mods.ActiveSkillPreProcessorWrapper;
 import cz.neumimto.rpg.common.inventory.AbstractInventoryService;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.persistance.SpigotEquipedSlot;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.PlayerInventory;
 
@@ -34,7 +35,7 @@ public class SpigotInventoryService extends AbstractInventoryService<ISpigotChar
 
     @Override
     public EquipedSlot createEquipedSlot(String className, int slotId) {
-        return () -> slotId;
+        return new SpigotEquipedSlot(slotId);
     }
 
     @Override
