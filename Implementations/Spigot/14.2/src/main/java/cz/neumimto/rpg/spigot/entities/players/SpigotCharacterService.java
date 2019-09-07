@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.spigot.entities.players;
 
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
 import cz.neumimto.rpg.common.entity.PropertyService;
@@ -7,6 +8,7 @@ import cz.neumimto.rpg.common.entity.players.CharacterMana;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import javax.inject.Singleton;
 import java.util.List;
@@ -52,5 +54,9 @@ public class SpigotCharacterService extends CharacterService<ISpigotCharacter> {
     @Override
     protected void scheduleNextTick(Runnable r) {
         Bukkit.getScheduler().runTaskLater(SpigotRpgPlugin.getInstance(),r,1L);
+    }
+
+    public IActiveCharacter getCharacter(Player target) {
+        return getCharacter(target.getUniqueId());
     }
 }

@@ -7,5 +7,6 @@ public class ConfigConverter {
 
     public Config toConfig(CharacterBase characterBase) {
         Config config = Config.inMemory();
+        return config;
     }
 }

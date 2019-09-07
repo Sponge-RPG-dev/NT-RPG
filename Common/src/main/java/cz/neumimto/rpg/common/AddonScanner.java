@@ -2,8 +2,10 @@ package cz.neumimto.rpg.common;
 
 import cz.neumimto.rpg.api.IResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.RpgAddon;
 import cz.neumimto.rpg.api.logging.Log;
 
+import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -35,12 +37,8 @@ public class AddonScanner {
         annotations.add(IResourceLoader.ModelMapper.class);
         annotations.add(IResourceLoader.ListenerClass.class);
 
-
         //Hibernate dep
         exclusions.add("javax");
-        exclusions.add("org.hibernate");
-        exclusions.add("org.glassfish");
-        exclusions.add("org.javassist");
     }
 
     public static void setDeployedDir(Path deployedDir) {
@@ -103,7 +101,7 @@ public class AddonScanner {
 
                 try {
                     Class<?> aClass = Class.forName(s);
-                    if (hasComponentAnnotation(aClass) || Rpg.class.isAssignableFrom(aClass)) {
+                    if (hasComponentAnnotation(aClass) || RpgAddon.class.isAssignableFrom(aClass)) {
                         classesToLoad.add(aClass);
                     }
                 } catch (NoClassDefFoundError ignored) {

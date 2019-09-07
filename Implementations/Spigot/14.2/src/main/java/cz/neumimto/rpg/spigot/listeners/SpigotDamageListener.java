@@ -48,7 +48,7 @@ public class SpigotDamageListener extends AbstractDamageListener implements List
 
     @Inject
     private PluginConfig pluginConfig;
-
+/*
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onEntityDamageEarly(EntityDamageByEntityEvent event) {
         if (event.getCause() == EntityDamageEvent.DamageCause.CUSTOM) {
@@ -171,4 +171,6 @@ public class SpigotDamageListener extends AbstractDamageListener implements List
         event.setDamage(e.getDamage());
 
     }
+
+ */
 }

@@ -2,6 +2,7 @@ package cz.neumimto.rpg.spigot.entities;
 
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.party.IParty;
+import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.common.entity.AbstractMob;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import org.bukkit.entity.AnimalTamer;
@@ -13,6 +14,7 @@ import java.util.UUID;
 public class SpigotMob extends AbstractMob<LivingEntity> implements ISpigotEntity<LivingEntity> {
 
     private LivingEntity entity;
+    private ISkill soedc;
 
     public SpigotMob(LivingEntity entity) {
         this.entity = entity;
@@ -62,6 +64,16 @@ public class SpigotMob extends AbstractMob<LivingEntity> implements ISpigotEntit
     @Override
     public UUID getUUID() {
         return entity.getUniqueId();
+    }
+
+    @Override
+    public ISkill skillOrEffectDamageCayse() {
+        return soedc;
+    }
+
+    @Override
+    public void setSkillOrEffectDamageCause(ISkill rpgElement) {
+        this.soedc = rpgElement;
     }
 
 }
