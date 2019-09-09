@@ -47,10 +47,12 @@ public class SpigotGuiceModule extends AbstractRpgGuiceModule {
 
     private final SpigotRpgPlugin ntRpgPlugin;
     private Map extraBindings;
+    private Map<Class, Object> providers;
 
-    public SpigotGuiceModule(SpigotRpgPlugin ntRpgPlugin, Map extraBindings) {
+    public SpigotGuiceModule(SpigotRpgPlugin ntRpgPlugin, Map extraBindings, Map providers) {
         this.ntRpgPlugin = ntRpgPlugin;
         this.extraBindings = extraBindings;
+        this.providers = providers;
     }
 
     @Override
@@ -91,8 +93,11 @@ public class SpigotGuiceModule extends AbstractRpgGuiceModule {
         bind(new TypeLiteral<ICharacterService<? super IActiveCharacter>>() {
         }).toProvider(SpigotCharacterServiceProvider1.class);
 
-        
         bind(SpigotRpgPlugin.class).toProvider(() -> ntRpgPlugin);
+
+        for (Map.Entry<Class, Object> entry : providers.entrySet()) {
+            bind(entry.getKey()).toProvider(() -> entry.getValue());
+        }
     }
     
     private static SpigotCharacterService scs;

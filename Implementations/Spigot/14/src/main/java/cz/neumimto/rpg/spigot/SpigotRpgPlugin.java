@@ -6,17 +6,21 @@ import com.google.inject.Injector;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.RpgAddon;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
+import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.common.AddonScanner;
 import cz.neumimto.rpg.spigot.commands.SpigotAdminCommands;
 import cz.neumimto.rpg.spigot.resources.SpigotGuiceModule;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.java.annotation.plugin.*;
 import org.bukkit.plugin.java.annotation.plugin.author.Author;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+
 
 @Plugin(name = "NT-RPG", version = "0.0.1-SNAPSHOT")
 @Description("Complete combat overhaul with classes and skills")
@@ -28,6 +32,8 @@ public class SpigotRpgPlugin extends JavaPlugin {
 
     private static SpigotRpgPlugin plugin;
 
+    private static Logger logger = LoggerFactory.getLogger(SpigotRpgPlugin.class);
+
     public static SpigotRpgPlugin getInstance() {
         return plugin;
     }
@@ -35,6 +41,12 @@ public class SpigotRpgPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        Log.setLogger(logger);
+
+        if (!getDataFolder().exists()) {
+            getDataFolder().mkdir();
+        }
+
 
         AddonScanner.setAddonDir(getDataFolder().toPath().resolve("addons"));
         AddonScanner.setDeployedDir(getDataFolder().toPath().resolve(".deployed"));
@@ -59,8 +71,14 @@ public class SpigotRpgPlugin extends JavaPlugin {
                 iterator.remove();
             }
         }
+        Injector injector;
+        try {
+             injector = Guice.createInjector(new SpigotGuiceModule(this, extraBindings));
+        } catch (Exception e) {
+            Log.error("Could not create Guice Injector", e);
+            return;
+        }
 
-        Injector injector = Guice.createInjector(new SpigotGuiceModule(this, extraBindings));
         Rpg.get().getResourceLoader().initializeComponents();
         PaperCommandManager manager = new PaperCommandManager(this);
 

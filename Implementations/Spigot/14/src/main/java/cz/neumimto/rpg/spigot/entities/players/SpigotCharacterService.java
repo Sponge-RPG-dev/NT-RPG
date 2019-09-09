@@ -11,7 +11,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import javax.inject.Singleton;
-import java.util.List;
 import java.util.UUID;
 
 @Singleton

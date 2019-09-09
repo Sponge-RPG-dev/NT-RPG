@@ -20,7 +20,7 @@ public class JdbcPlayerDaoTest {
         new RpgJdbcTests();
         try {
             MariaDbBootstrap.runMigrations();
-            jdbcPlayerDao = new JdbcPlayerDao(MariaDbBootstrap.ds);
+            jdbcPlayerDao = new JdbcPlayerDao().setDataSource(MariaDbBootstrap.ds);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -3,6 +3,7 @@ package cz.neumimto.rpg.persistence.jdbc.dao;
 import cz.neumimto.rpg.api.persistance.model.CharacterClass;
 import cz.neumimto.rpg.common.persistance.dao.ICharacterClassDao;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -15,12 +16,12 @@ import java.sql.SQLException;
 @Singleton
 public class JDBCCharacterClassDao implements ICharacterClassDao {
 
-    private final DataSource dataSource;
+    @Inject
+    private DataSource dataSource;
 
-    public JDBCCharacterClassDao(DataSource dataSource) {
+    public void setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;
     }
-
 
     @Override
     public void update(CharacterClass characterClass) {

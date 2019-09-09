@@ -1,5 +1,8 @@
 package cz.neumimto.rpg.persistence.jdbc;
 
+import com.google.inject.Injector;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.RpgAddon;
 import cz.neumimto.rpg.api.logging.Log;
@@ -11,6 +14,7 @@ import cz.neumimto.rpg.persistence.jdbc.dao.JdbcPlayerDao;
 import cz.neumimto.rpg.persistence.jdbc.migrations.DbMigrationsService;
 
 import javax.sql.DataSource;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -39,27 +43,42 @@ public class JPAModule implements RpgAddon {
         return bindings;
     }
 
-    public void setup(DataSource dataSource) {
-        info("Initializing Database Persistance Module .... ");
+    @Override
+    public Map<Class<?>, ?> getProviders(Map<String, Object> implementationScope) {
+        Map map = new HashMap();
+        if (implementationScope.containsKey("DATASOURCE")) {
+            map.put(DataSource.class, implementationScope.get("DATASOURCE"));
+        } else {
+            Path props = getOrCreateDatabaseProperties();
+            Properties properties = new Properties();
+            try (FileReader fileReader = new FileReader(props.toFile())){
+                properties.load(fileReader);
 
-        processMigrations(dataSource);
+                HikariConfig cfg = new HikariConfig();
+                cfg.setUsername(getAndLog(properties, "username"));
+                cfg.setJdbcUrl(getAndLog(properties, "connection"));
+                cfg.setPassword(properties.getProperty("password"));
+                DataSource ds = new HikariDataSource(cfg);
+            } catch (IOException e) {
+                Log.error("Could not read database.properties file", e);
+            }
 
+        }
+        return map;
     }
 
-    public void loadDriver(Properties properties) {
-        String className = properties.get("hibernate.connection.driver_class").toString();
-        try {
-
-            info("Loading driver class " + className);
-            getClass().getClassLoader().loadClass(className);
-        } catch (ClassNotFoundException e) {
-            error("====================================================");
-            error("Class " + className + " not found on the classpath! ");
-            error("Possible causes: ");
-            error("       - The database driver is not on the classpath");
-            error("       - The classname is miss spelled");
-            error("====================================================");
+    private String getAndLog(Properties properties, String property) {
+        if (properties.containsKey(property)) {
+            Log.info("Setting up DataSource - " + property + "=" + properties.get(property));
+            return properties.getProperty(property);
         }
+        return "";
+    }
+
+    @Override
+    public void processStageEarly(Injector injector) {
+        DataSource instance = injector.getInstance(DataSource.class);
+        processMigrations(instance);
     }
 
     public void processMigrations(DataSource dataSource) {

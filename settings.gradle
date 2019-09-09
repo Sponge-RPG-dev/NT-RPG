@@ -9,7 +9,7 @@ include ':FlatFiles-Persistence'
 include ':Common-Persistence'
 include ':Common-Persistence-Test'
 
-include ':Spigot-14.2'
+include ':Spigot-14'
 include ':Sponge-7'
 
 
@@ -23,5 +23,5 @@ project(':Common-Persistence-Test').projectDir = file('Peristence/Common-Tests')
 
 project(':NT-RPG-Skills').projectDir = file('Skills')
 
-project(':Spigot-14.2').projectDir = file('Implementations/Spigot/14.2')
+project(':Spigot-14').projectDir = file('Implementations/Spigot/14')
 project(':Sponge-7').projectDir = file('Implementations/Sponge/7')

@@ -1,11 +1,9 @@
 package cz.neumimto.rpg.common;
 
 import cz.neumimto.rpg.api.IResourceLoader;
-import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.RpgAddon;
 import cz.neumimto.rpg.api.logging.Log;
 
-import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -43,12 +41,27 @@ public class AddonScanner {
 
     public static void setDeployedDir(Path deployedDir) {
         AddonScanner.deployedDir = deployedDir;
+        if (!Files.exists(deployedDir)) {
+            try {
+                Files.createDirectory(deployedDir);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
+
 
     private static Path deployedDir;
 
     public static void setAddonDir(Path addonDir) {
         AddonScanner.addonDir = addonDir;
+        if (!Files.exists(addonDir)) {
+            try {
+                Files.createDirectory(addonDir);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public static void onlyReloads() {
@@ -159,9 +172,6 @@ public class AddonScanner {
 
     private static void copyReloadableJarModulesToDeployedDir(Map<Boolean, Set<Path>> map) {
         try {
-            if (!Files.exists(deployedDir)) {
-                Files.createDirectory(deployedDir);
-            }
             DirectoryStream<Path> paths = Files.newDirectoryStream(deployedDir, "*.jar");
             paths.forEach(p -> p.toFile().delete());
             for (Path path : map.get(true)) {

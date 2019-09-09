@@ -2,36 +2,14 @@ package cz.neumimto.rpg.spigot.listeners;
 
 import com.google.inject.Singleton;
 import cz.neumimto.rpg.api.IResourceLoader;
-import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
-import cz.neumimto.rpg.api.entity.IEntity;
-import cz.neumimto.rpg.api.entity.IEntityType;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.events.damage.IEntityWeaponDamageEarlyEvent;
-import cz.neumimto.rpg.api.items.RpgItemStack;
-import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.common.damage.AbstractDamageListener;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
-import cz.neumimto.rpg.spigot.entities.ISpigotEntity;
-import cz.neumimto.rpg.spigot.entities.ProjectileCache;
 import cz.neumimto.rpg.spigot.entities.SpigotEntityService;
-import cz.neumimto.rpg.spigot.events.damage.SpigotEntitySkillDamageEarlyEvent;
-import cz.neumimto.rpg.spigot.events.damage.SpigotEntityWeaponDamageEarlyEvent;
 import cz.neumimto.rpg.spigot.inventory.SpigotItemService;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Projectile;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.projectiles.ProjectileSource;
 
 import javax.inject.Inject;
-import java.util.Optional;
 
 @Singleton
 @IResourceLoader.ListenerClass

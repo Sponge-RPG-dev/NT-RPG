@@ -26,8 +26,9 @@ compileJava {
 dependencies {
     compileOnly "org.spigotmc:spigot-api:1.14.2-R0.1-SNAPSHOT"
     compileOnly "org.spigotmc:plugin-annotations:1.2.2-SNAPSHOT"
+    annotationProcessor "org.spigotmc:plugin-annotations:1.2.2-SNAPSHOT"
 
-
+    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.28'
     compile project(':Common')
     compile 'com.google.inject:guice:4.2.2'
     compile 'com.github.Sponge-RPG-dev:ConfigurateButWithBlackjackAndHookers:39d5fc8afd'

@@ -12,13 +12,17 @@ import cz.neumimto.rpg.persistence.model.CharacterBaseImpl;
 import cz.neumimto.rpg.persistence.model.CharacterClassImpl;
 import cz.neumimto.rpg.persistence.model.CharacterSkillImpl;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.*;
 
+@Singleton
 public class JdbcPlayerDao implements IPlayerDao {
 
-    private final DataSource dataSource;
+    @Inject
+    private DataSource dataSource;
 
     private static final String FIND_CHAR = "SELECT * FROM rpg_character_base WHERE uuid = ? and marked_for_removal = false order by updated desc limit 1";
     private static final String FIND_CHARS = "SELECT * FROM rpg_character_base WHERE uuid = ? and marked_for_removal = false";
@@ -26,8 +30,9 @@ public class JdbcPlayerDao implements IPlayerDao {
     private static final String FIND_SKILLS = "SELECT sk.*, cl.class_id as class FROM rpg_character_skill as sk left join rpg_character_base as c on sk.character_id = c.character_id left join rpg_character_class as cl on sk.class_id = cl.class_id WHERE c.uuid = ?";
     private static final String FIND_CLASSES_BY_CHAR = "SELECT cl.* from rpg_character_class as cl left join rpg_character_base as cb on cb.character_id = cl.character_id WHERE cb.uuid = ?";
 
-    public JdbcPlayerDao(DataSource dataSource) {
+    public JdbcPlayerDao setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;
+        return this;
     }
 
     @Override
