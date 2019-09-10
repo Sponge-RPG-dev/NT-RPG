@@ -31,7 +31,7 @@ import cz.neumimto.rpg.api.persistance.model.CharacterClass;
 import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.common.inventory.runewords.RuneWord;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
 import cz.neumimto.rpg.sponge.gui.SkillTreeViewModel;
@@ -71,7 +71,7 @@ public class InfoCommand extends CommandBase {
     private LocalizationService localizationService;
 
     @Inject
-    private NtRpgPlugin plugin;
+    private SpongeRpgPlugin plugin;
 
     @Inject
     private ClassService classService;
@@ -207,7 +207,7 @@ public class InfoCommand extends CommandBase {
 
 
     private void printPlayerInfo(CommandSource commandSource, String[] args, Player player) {
-        NtRpgPlugin.asyncExecutor.execute(() -> {
+        SpongeRpgPlugin.asyncExecutor.execute(() -> {
             List<CharacterBase> characters = characterService.getPlayersCharacters(player.getUniqueId());
             if (characters.isEmpty()) {
                 commandSource.sendMessage(Text.of("Player has no character"));

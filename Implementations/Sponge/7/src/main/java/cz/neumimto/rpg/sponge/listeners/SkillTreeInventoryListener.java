@@ -7,7 +7,7 @@ import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
 import cz.neumimto.rpg.sponge.gui.SkillTreeControllsButton;
@@ -49,32 +49,32 @@ public class SkillTreeInventoryListener {
                         viewModel.getLocation().key -= 1;
                         Sponge.getScheduler().createTaskBuilder()
                                 .execute(() -> Gui.moveSkillTreeMenu(character))
-                                .submit(NtRpgPlugin.getInstance());
+                                .submit(SpongeRpgPlugin.getInstance());
                         break;
                     case SOUTH:
                         viewModel.getLocation().key += 1;
                         Sponge.getScheduler().createTaskBuilder()
                                 .execute(() -> Gui.moveSkillTreeMenu(character))
-                                .submit(NtRpgPlugin.getInstance());
+                                .submit(SpongeRpgPlugin.getInstance());
                         break;
                     case WEST:
                         viewModel.getLocation().value += 1;
                         Sponge.getScheduler().createTaskBuilder()
                                 .execute(() -> Gui.moveSkillTreeMenu(character))
-                                .submit(NtRpgPlugin.getInstance());
+                                .submit(SpongeRpgPlugin.getInstance());
                         break;
                     case EAST:
                         viewModel.getLocation().value -= 1;
                         Sponge.getScheduler().createTaskBuilder()
                                 .execute(() -> Gui.moveSkillTreeMenu(character))
-                                .submit(NtRpgPlugin.getInstance());
+                                .submit(SpongeRpgPlugin.getInstance());
                         break;
                     case MODE:
                         viewModel.setInteractiveMode(viewModel.getInteractiveMode().opposite());
                         //just redraw
                         Sponge.getScheduler().createTaskBuilder()
                                 .execute(() -> Gui.moveSkillTreeMenu(character))
-                                .submit(NtRpgPlugin.getInstance());
+                                .submit(SpongeRpgPlugin.getInstance());
                         break;
                     default:
                         String node = t.getOriginal().get(NKeys.SKILLTREE_NODE).get();
@@ -93,13 +93,13 @@ public class SkillTreeInventoryListener {
                             //redraw
                             Sponge.getScheduler().createTaskBuilder()
                                     .execute(() -> Gui.moveSkillTreeMenu(character))
-                                    .submit(NtRpgPlugin.getInstance());
+                                    .submit(SpongeRpgPlugin.getInstance());
                         } else {
                             SkillTree tree = viewModel.getSkillTree();
                             event.setCancelled(true);
                             Sponge.getScheduler().createTaskBuilder()
                                     .execute(() -> Gui.displaySkillDetailsInventoryMenu(character, tree, node))
-                                    .submit(NtRpgPlugin.getInstance());
+                                    .submit(SpongeRpgPlugin.getInstance());
 
                         }
 

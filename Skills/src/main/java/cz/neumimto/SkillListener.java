@@ -19,7 +19,7 @@ import cz.neumimto.rpg.api.entity.IReservable;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.utils.rng.XORShiftRnd;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
 import cz.neumimto.rpg.sponge.effects.SpongeEffectService;
 import cz.neumimto.rpg.sponge.entities.SpongeEntityService;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
@@ -79,7 +79,7 @@ import java.util.function.Consumer;
 public class SkillListener {
 
 	@Inject
-	private NtRpgPlugin plugin;
+	private SpongeRpgPlugin plugin;
 
 	@Inject
 	private SpongeCharacterService characterService;

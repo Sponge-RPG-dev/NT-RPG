@@ -33,7 +33,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
+import static cz.neumimto.rpg.sponge.SpongeRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 3.1.2016.

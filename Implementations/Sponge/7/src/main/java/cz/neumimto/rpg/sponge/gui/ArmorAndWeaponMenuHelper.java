@@ -5,7 +5,7 @@ import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.common.items.RpgItemTypeImpl;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
 import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
 import cz.neumimto.rpg.sponge.items.SpongeRpgItemType;
 import cz.neumimto.rpg.sponge.utils.TextHelper;
@@ -134,7 +134,7 @@ public class ArmorAndWeaponMenuHelper {
         Inventory i = Inventory.builder()
                 .of(InventoryArchetypes.DOUBLE_CHEST)
                 .property(InventoryTitle.of(Text.of(title)))
-                .build(NtRpgPlugin.getInstance());
+                .build(SpongeRpgPlugin.getInstance());
         GuiHelper.makeBorder(i, DyeColors.ORANGE);
         String translate = Rpg.get().getLocalizationService().translate(LocalizationKeys.BACK);
 

@@ -1,8 +1,8 @@
 package cz.neumimto.rpg.sponge.skills.scripting;
 
-import cz.neumimto.rpg.common.skills.scripting.SkillComponent;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
+import cz.neumimto.rpg.common.skills.scripting.SkillComponent;
+import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
 import org.spongepowered.api.Sponge;
 
 import java.util.concurrent.TimeUnit;
@@ -20,6 +20,6 @@ import java.util.function.BiConsumer;
 public class Delay implements BiConsumer<Runnable, Long> {
     @Override
     public void accept(Runnable r, Long l) {
-        Sponge.getScheduler().createTaskBuilder().execute(r).delay(l, TimeUnit.MILLISECONDS).submit(NtRpgPlugin.getInstance());
+        Sponge.getScheduler().createTaskBuilder().execute(r).delay(l, TimeUnit.MILLISECONDS).submit(SpongeRpgPlugin.getInstance());
     }
 }

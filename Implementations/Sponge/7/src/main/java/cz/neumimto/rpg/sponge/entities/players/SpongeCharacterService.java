@@ -10,20 +10,19 @@ import cz.neumimto.rpg.common.entity.PropertyService;
 import cz.neumimto.rpg.common.entity.players.CharacterMana;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.common.entity.players.UserActionType;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
 import cz.neumimto.rpg.sponge.effects.common.def.ClickComboActionComponent;
 import cz.neumimto.rpg.sponge.entities.SpongeEntityService;
 import cz.neumimto.rpg.sponge.entities.players.party.SpongePartyService;
-import cz.neumimto.rpg.sponge.events.PlayerDataPreloadComplete;
 import cz.neumimto.rpg.sponge.utils.PermissionUtils;
-import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.*;
+import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import static cz.neumimto.rpg.api.logging.Log.error;
@@ -34,7 +33,7 @@ import static cz.neumimto.rpg.api.logging.Log.info;
 public class SpongeCharacterService extends CharacterService<ISpongeCharacter> {
 
     @Inject
-    private NtRpgPlugin plugin;
+    private SpongeRpgPlugin plugin;
 
     @Inject
     private SpongeEntityService spongeEntityService;

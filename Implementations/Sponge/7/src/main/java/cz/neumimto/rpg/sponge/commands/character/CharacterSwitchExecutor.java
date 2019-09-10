@@ -4,7 +4,7 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.parties.PartyService;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.common.commands.CharacterCommandFacade;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
@@ -33,7 +33,7 @@ public class CharacterSwitchExecutor implements CommandExecutor {
     private CharacterCommandFacade characterCommandFacade;
 
     @Inject
-    private NtRpgPlugin plugin;
+    private SpongeRpgPlugin plugin;
 
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {

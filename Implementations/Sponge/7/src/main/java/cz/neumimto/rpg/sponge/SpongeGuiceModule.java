@@ -54,13 +54,13 @@ import java.util.Map;
 
 public class SpongeGuiceModule extends AbstractRpgGuiceModule {
 
-    private final NtRpgPlugin ntRpgPlugin;
+    private final SpongeRpgPlugin ntRpgPlugin;
     private final Logger logger;
     private final Game game;
     private CauseStackManager causeStackManager;
     private Map extraBindings;
 
-    public SpongeGuiceModule(NtRpgPlugin ntRpgPlugin, Logger logger, Game game, CauseStackManager causeStackManager, Map extraBindings) {
+    public SpongeGuiceModule(SpongeRpgPlugin ntRpgPlugin, Logger logger, Game game, CauseStackManager causeStackManager, Map extraBindings) {
         this.ntRpgPlugin = ntRpgPlugin;
         this.logger = logger;
         this.game = game;
@@ -102,7 +102,7 @@ public class SpongeGuiceModule extends AbstractRpgGuiceModule {
     protected void configure() {
         super.configure();
 
-        if (NtRpgPlugin.INTEGRATIONS.contains("Placeholders")) {
+        if (SpongeRpgPlugin.INTEGRATIONS.contains("Placeholders")) {
             bind(Placeholders.class);
         }
 
@@ -114,7 +114,7 @@ public class SpongeGuiceModule extends AbstractRpgGuiceModule {
         }).toProvider(SpongeCharacterServiceProvider1.class);
 
         bind(Game.class).toProvider(() -> game);
-        bind(NtRpgPlugin.class).toProvider(() -> ntRpgPlugin);
+        bind(SpongeRpgPlugin.class).toProvider(() -> ntRpgPlugin);
         bind(Logger.class).toProvider(() -> logger);
         bind(CauseStackManager.class).toProvider(() -> causeStackManager);
     }

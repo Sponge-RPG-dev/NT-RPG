@@ -2,7 +2,7 @@ package cz.neumimto.rpg.sponge.gui;
 
 import com.flowpowered.math.TrigMath;
 import com.flowpowered.math.vector.Vector3d;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
 import cz.neumimto.rpg.sponge.utils.math.VectorUtils;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.effect.particle.ParticleEffect;
@@ -30,7 +30,7 @@ public class ParticleDecorator implements IActionDecorator {
     public static Vector3d[][] smallCylinder;
 
     @Inject
-    private NtRpgPlugin plugin;
+    private SpongeRpgPlugin plugin;
 
     @Override
     public void strikeLightning(Location<World> location) {

@@ -33,7 +33,7 @@ import org.spongepowered.api.event.filter.cause.First;
 import javax.inject.Inject;
 import java.util.Optional;
 
-import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
+import static cz.neumimto.rpg.sponge.SpongeRpgPlugin.pluginConfig;
 
 @Singleton
 @IResourceLoader.ListenerClass

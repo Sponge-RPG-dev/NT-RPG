@@ -18,7 +18,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
+import static cz.neumimto.rpg.sponge.SpongeRpgPlugin.pluginConfig;
 
 @Singleton
 public class ItemAddRarityExecutor implements CommandExecutor {

@@ -9,7 +9,7 @@ import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.effect.particle.ParticleEffect;
@@ -48,7 +48,7 @@ public class GrapplingHook extends ActiveSkill<ISpongeCharacter> {
 	};
 
 	@Inject
-	private NtRpgPlugin plugin;
+	private SpongeRpgPlugin plugin;
 
 	public void init() {
 		super.init();

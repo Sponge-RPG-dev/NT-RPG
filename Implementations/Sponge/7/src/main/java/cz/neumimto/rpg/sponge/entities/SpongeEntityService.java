@@ -13,7 +13,7 @@ import javax.inject.Singleton;
 import java.util.UUID;
 
 import static cz.neumimto.rpg.api.logging.Log.info;
-import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
+import static cz.neumimto.rpg.sponge.SpongeRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 19.12.2015.

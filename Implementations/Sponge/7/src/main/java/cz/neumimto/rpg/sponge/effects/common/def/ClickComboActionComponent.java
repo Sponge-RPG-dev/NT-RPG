@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
+import static cz.neumimto.rpg.sponge.SpongeRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 28.8.2017.

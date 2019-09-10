@@ -45,7 +45,7 @@ import cz.neumimto.rpg.common.inventory.crafting.runewords.Rune;
 import cz.neumimto.rpg.common.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.common.persistance.dao.IPlayerDao;
 import cz.neumimto.rpg.common.utils.model.CharacterListModel;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
 import cz.neumimto.rpg.sponge.commands.InfoCommand;
 import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
 import cz.neumimto.rpg.sponge.effects.common.def.BossBarExpNotifier;
@@ -94,7 +94,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
+import static cz.neumimto.rpg.sponge.SpongeRpgPlugin.pluginConfig;
 import static cz.neumimto.rpg.sponge.gui.GuiHelper.*;
 
 /**
@@ -119,7 +119,7 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
     private IEffectService effectService;
 
     @Inject
-    private NtRpgPlugin plugin;
+    private SpongeRpgPlugin plugin;
 
     @Inject
     private RWService rwService;
@@ -285,7 +285,7 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
     public void sendListOfCharacters(final ISpongeCharacter player, CharacterBase currentlyCreated) {
         PaginationService paginationService = Sponge.getServiceManager().provide(PaginationService.class).get();
         PaginationList.Builder builder = paginationService.builder();
-        NtRpgPlugin.asyncExecutor.execute(() -> {
+        SpongeRpgPlugin.asyncExecutor.execute(() -> {
 
             List<CharacterBase> playersCharacters = characterService.getPlayersCharacters(player.getPlayer().getUniqueId());
             List<CharacterListModel> list = new ArrayList<>();
@@ -297,7 +297,7 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
                     if (classDefinitionByName == null) {
                         continue;
                     }
-                    if (classDefinitionByName.getClassType().equalsIgnoreCase(NtRpgPlugin.pluginConfig.PRIMARY_CLASS_TYPE)) {
+                    if (classDefinitionByName.getClassType().equalsIgnoreCase(SpongeRpgPlugin.pluginConfig.PRIMARY_CLASS_TYPE)) {
                         pcExp = characterClass.getLevel();
                         break;
                     }

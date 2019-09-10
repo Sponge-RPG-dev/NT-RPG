@@ -24,7 +24,7 @@ import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
 import cz.neumimto.rpg.sponge.commands.admin.*;
 import cz.neumimto.rpg.sponge.commands.arguments.CommandSkillArgument;
 import cz.neumimto.rpg.sponge.commands.character.*;
@@ -61,7 +61,7 @@ import java.util.List;
 public class CommandService {
 
     @Inject
-    private NtRpgPlugin plugin;
+    private SpongeRpgPlugin plugin;
 
     @Inject
     private Injector injector;

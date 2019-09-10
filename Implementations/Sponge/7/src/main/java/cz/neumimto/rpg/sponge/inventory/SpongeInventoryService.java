@@ -50,7 +50,7 @@ import cz.neumimto.rpg.common.inventory.SlotEffectSource;
 import cz.neumimto.rpg.common.inventory.items.ItemMetaType;
 import cz.neumimto.rpg.common.inventory.items.subtypes.ItemSubtype;
 import cz.neumimto.rpg.common.inventory.items.subtypes.ItemSubtypes;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
 import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
@@ -93,7 +93,7 @@ import java.nio.file.Paths;
 import java.util.*;
 
 import static cz.neumimto.rpg.api.logging.Log.error;
-import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
+import static cz.neumimto.rpg.sponge.SpongeRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 22.7.2015.
@@ -130,7 +130,7 @@ public class SpongeInventoryService extends AbstractInventoryService<ISpongeChar
     private ClassService classService;
 
     @Inject
-    private NtRpgPlugin plugin;
+    private SpongeRpgPlugin plugin;
 
     @Inject
     private SpongeItemService itemService;
@@ -160,7 +160,7 @@ public class SpongeInventoryService extends AbstractInventoryService<ISpongeChar
             }
             try {
                 ObjectMapper.BoundInstance configMapper = ObjectMapper.forObject(itemDump);
-                File properties = new File(NtRpgPlugin.workingDir, "itemDump.conf");
+                File properties = new File(SpongeRpgPlugin.workingDir, "itemDump.conf");
                 if (properties.exists()) {
                     properties.delete();
                 }

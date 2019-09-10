@@ -21,14 +21,14 @@ package cz.neumimto.rpg;
 import com.google.inject.Injector;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.effects.IEffectService;
-import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.api.entity.IPropertyService;
 import cz.neumimto.rpg.api.events.EventFactoryService;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.scripting.IScriptEngine;
+import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.common.assets.AssetService;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
 import cz.neumimto.rpg.sponge.commands.CommandService;
 import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
 import cz.neumimto.rpg.sponge.entities.SpongeEntityService;
@@ -67,7 +67,7 @@ public class GlobalScope {
     public SkillService skillService;
 
     @Inject
-    public NtRpgPlugin plugin;
+    public SpongeRpgPlugin plugin;
 
     @Inject
     public Game game;

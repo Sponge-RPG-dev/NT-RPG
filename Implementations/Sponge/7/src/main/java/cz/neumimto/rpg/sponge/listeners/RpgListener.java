@@ -32,7 +32,7 @@ import org.spongepowered.api.event.Order;
 import javax.inject.Inject;
 import java.util.UUID;
 
-import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
+import static cz.neumimto.rpg.sponge.SpongeRpgPlugin.pluginConfig;
 
 
 /**

@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.sponge.scripting;
 
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
+import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
 import org.spongepowered.api.Sponge;
 
 import java.util.concurrent.TimeUnit;
@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 public class SpongeScriptUtils {
 
     public void runTaskWithDelay(Runnable runnable, int delay) {
-        Sponge.getScheduler().createTaskBuilder().delay(delay, TimeUnit.MILLISECONDS).execute(runnable).submit(NtRpgPlugin.getInstance());
+        Sponge.getScheduler().createTaskBuilder().delay(delay, TimeUnit.MILLISECONDS).execute(runnable).submit(SpongeRpgPlugin.getInstance());
     }
 
 }

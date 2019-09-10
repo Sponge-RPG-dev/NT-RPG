@@ -16,10 +16,7 @@ import org.bukkit.plugin.java.annotation.plugin.author.Author;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 
 @Plugin(name = "NT-RPG", version = "0.0.1-SNAPSHOT")
@@ -32,7 +29,7 @@ public class SpigotRpgPlugin extends JavaPlugin {
 
     private static SpigotRpgPlugin plugin;
 
-    private static Logger logger = LoggerFactory.getLogger(SpigotRpgPlugin.class);
+    private static Logger logger = LoggerFactory.getLogger("NTRPG");
 
     public static SpigotRpgPlugin getInstance() {
         return plugin;
@@ -58,27 +55,32 @@ public class SpigotRpgPlugin extends JavaPlugin {
         Iterator<Class<?>> iterator = classesToLoad.iterator();
 
         Map extraBindings = Collections.emptyMap();
-
-        while (iterator.hasNext()) {
-            Class<?> next = iterator.next();
-            if (RpgAddon.class.isAssignableFrom(next)) {
-                try {
-                    RpgAddon addon = (RpgAddon) next.getConstructor().newInstance();
-                    extraBindings = addon.getBindings();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                iterator.remove();
-            }
-        }
+        Map<Class<?>, ?> providers = Collections.emptyMap();
         Injector injector;
         try {
-             injector = Guice.createInjector(new SpigotGuiceModule(this, extraBindings));
+            while (iterator.hasNext()) {
+                Class<?> next = iterator.next();
+                if (RpgAddon.class.isAssignableFrom(next)) {
+                    try {
+                        RpgAddon addon = (RpgAddon) next.getConstructor().newInstance();
+                        extraBindings = addon.getBindings();
+                        Map map = new HashMap<>();
+                        map.put("WORKINGDIR", getDataFolder().getAbsolutePath().toString());
+                        providers = addon.getProviders(map);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+             injector = Guice.createInjector(new SpigotGuiceModule(this, extraBindings, providers));
         } catch (Exception e) {
             Log.error("Could not create Guice Injector", e);
             return;
         }
-
+        SpigotRpg spigotRpg = new SpigotRpg(getDataFolder().getAbsolutePath());
+        injector.injectMembers(spigotRpg);
+        new RpgImpl(spigotRpg);
         Rpg.get().getResourceLoader().initializeComponents();
         PaperCommandManager manager = new PaperCommandManager(this);
 

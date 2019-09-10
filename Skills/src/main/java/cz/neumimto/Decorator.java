@@ -1,7 +1,7 @@
 package cz.neumimto;
 
 import com.flowpowered.math.vector.Vector3d;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
 import cz.neumimto.rpg.sponge.gui.ParticleDecorator;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.particle.ParticleTypes;
@@ -28,7 +28,7 @@ public class Decorator {
 			.build();
 
 	static {
-		decorator = NtRpgPlugin.getInstance().injector.getInstance(ParticleDecorator.class);
+		decorator = SpongeRpgPlugin.getInstance().injector.getInstance(ParticleDecorator.class);
 	}
 
 	public static void strikeLightning(Entity entity) {

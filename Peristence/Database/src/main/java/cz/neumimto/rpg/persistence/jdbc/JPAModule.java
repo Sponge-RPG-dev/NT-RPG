@@ -3,7 +3,6 @@ package cz.neumimto.rpg.persistence.jdbc;
 import com.google.inject.Injector;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.RpgAddon;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.common.persistance.dao.ICharacterClassDao;
@@ -49,7 +48,7 @@ public class JPAModule implements RpgAddon {
         if (implementationScope.containsKey("DATASOURCE")) {
             map.put(DataSource.class, implementationScope.get("DATASOURCE"));
         } else {
-            Path props = getOrCreateDatabaseProperties();
+            Path props = getOrCreateDatabaseProperties((String) implementationScope.get("WORKINGDIR"));
             Properties properties = new Properties();
             try (FileReader fileReader = new FileReader(props.toFile())){
                 properties.load(fileReader);
@@ -59,6 +58,7 @@ public class JPAModule implements RpgAddon {
                 cfg.setJdbcUrl(getAndLog(properties, "connection"));
                 cfg.setPassword(properties.getProperty("password"));
                 DataSource ds = new HikariDataSource(cfg);
+                map.put(DataSource.class, ds);
             } catch (IOException e) {
                 Log.error("Could not read database.properties file", e);
             }
@@ -99,8 +99,8 @@ public class JPAModule implements RpgAddon {
         }
     }
 
-    protected Path getOrCreateDatabaseProperties() {
-        Path path = Paths.get(Rpg.get().getWorkingDirectory(), "database.properties");
+    protected Path getOrCreateDatabaseProperties(String string) {
+        Path path = Paths.get(string, "database.properties");
         if (!Files.exists(path, LinkOption.NOFOLLOW_LINKS)) {
             InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream("database.properties");
             try {

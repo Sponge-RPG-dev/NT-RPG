@@ -13,7 +13,7 @@ import cz.neumimto.rpg.api.persistance.model.CharacterClass;
 import cz.neumimto.rpg.api.skills.*;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.utils.Pair;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
 import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.inventory.data.InventoryCommandItemMenuData;
@@ -109,8 +109,8 @@ public class GuiHelper {
     static Inventory createMenuInventoryClassDefView(ClassDefinition w) {
         Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST)
                 .property(InventoryTitle.of(Text.of(w.getName(), toTextColor(w.getPreferedColor()), TextStyles.BOLD)))
-                .build(NtRpgPlugin.getInstance());
-        String dyeColor = NtRpgPlugin.pluginConfig.CLASS_TYPES.get(w.getClassType()).getDyeColor();
+                .build(SpongeRpgPlugin.getInstance());
+        String dyeColor = SpongeRpgPlugin.pluginConfig.CLASS_TYPES.get(w.getClassType()).getDyeColor();
         makeBorder(i, toDyeColor(dyeColor));
         i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(1, 4))).offer(toItemStack(w));
 
@@ -130,14 +130,14 @@ public class GuiHelper {
     }
 
     static Inventory createMenuInventoryClassTypeView(String type) {
-        ClassTypeDefinition classTypeDefinition = NtRpgPlugin.pluginConfig.CLASS_TYPES.get(type);
+        ClassTypeDefinition classTypeDefinition = SpongeRpgPlugin.pluginConfig.CLASS_TYPES.get(type);
         Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST)
                 .property(InventoryTitle.of(
                         Text.builder("[ ").color(toTextColor(classTypeDefinition.getSecondaryColor()))
                                 .append(Text.builder(type).color(toTextColor(classTypeDefinition.getPrimaryColor())).style(TextStyles.BOLD).build())
                                 .append(Text.builder(" ]").color(toTextColor(classTypeDefinition.getSecondaryColor())).build())
                                 .build()))
-                .build(NtRpgPlugin.getInstance());
+                .build(SpongeRpgPlugin.getInstance());
         GuiHelper.makeBorder(i, toDyeColor(classTypeDefinition.getDyeColor()));
 
         Rpg.get().getClassService().getClassDefinitions().stream()
@@ -152,11 +152,11 @@ public class GuiHelper {
     public static Inventory createMenuInventoryClassTypesView() {
         Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST)
                 .property(InventoryTitle.of(translate(LocalizationKeys.CLASS_TYPES)))
-                .build(NtRpgPlugin.getInstance());
+                .build(SpongeRpgPlugin.getInstance());
 
         makeBorder(i, DyeColors.WHITE);
 
-        for (String type : NtRpgPlugin.pluginConfig.CLASS_TYPES.keySet()) {
+        for (String type : SpongeRpgPlugin.pluginConfig.CLASS_TYPES.keySet()) {
             i.offer(createClassTypeDefinitionCommand(type));
         }
 
@@ -318,7 +318,7 @@ public class GuiHelper {
                         event -> new SkillTreeInventoryListener().onOptionSelect(event, (Player) event.getCause().root()))
                 .listener(ClickInventoryEvent.Secondary.class,
                         event -> new SkillTreeInventoryListener().onOptionSelect(event, (Player) event.getCause().root()))
-                .build(NtRpgPlugin.getInstance());
+                .build(SpongeRpgPlugin.getInstance());
 
         i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(7, 0))).offer(unclickableInterface(DyeColors.YELLOW));
         i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(7, 1))).offer(unclickableInterface(DyeColors.YELLOW));
@@ -368,7 +368,7 @@ public class GuiHelper {
                 .of(InventoryArchetypes.DOUBLE_CHEST)
                 .property(InventoryTitle.of(Text.builder(skillData.getSkill().getLocalizableName()).color(TextColors.DARK_GREEN).style(TextStyles.BOLD)
                         .build()))
-                .build(NtRpgPlugin.getInstance());
+                .build(SpongeRpgPlugin.getInstance());
 
         SkillTreeViewModel skillTreeViewModel = character.getLastTimeInvokedSkillTreeView();
         ItemStack back = back("skilltree " + skillTreeViewModel.getViewedClass().getName(), translate(LocalizationKeys.SKILLTREE));

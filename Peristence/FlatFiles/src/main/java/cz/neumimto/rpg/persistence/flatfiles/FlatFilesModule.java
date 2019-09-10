@@ -8,11 +8,12 @@ import cz.neumimto.rpg.persistence.flatfiles.dao.FlatFileCharacterClassDao;
 import cz.neumimto.rpg.persistence.flatfiles.dao.FlatFilePersistenceHandler;
 import cz.neumimto.rpg.persistence.flatfiles.dao.FlatFilePlayerDao;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 
-public class JPAModule implements RpgAddon {
+public class FlatFilesModule implements RpgAddon {
 
     @Override
     public Map<Class<?>, Class<?>> getBindings() {
@@ -22,6 +23,11 @@ public class JPAModule implements RpgAddon {
         bindings.put(IPersistenceHandler.class, FlatFilePersistenceHandler.class);
 
         return bindings;
+    }
+
+    @Override
+    public Map<Class<?>, ?> getProviders(Map<String, Object> implementationScope) {
+        return Collections.emptyMap();
     }
 
 }

@@ -1,7 +1,10 @@
 package cz.neumimto.rpg.spigot.commands;
 
 import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.*;
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.Default;
+import co.aikar.commands.annotation.Description;
+import co.aikar.commands.annotation.Subcommand;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.commands.AdminCommandFacade;
@@ -23,8 +26,6 @@ public class SpigotAdminCommands extends BaseCommand {
     private SpigotCharacterService characterService;
 
     @Subcommand("effect-add")
-    @Syntax("player effect:id  {param json map}")
-    @CommandCompletion("@")
     @Description("Adds effect, managed by rpg plugin, to the player")
     public void effectAddCommand(Player executor, Player target, IGlobalEffect effect, long duration, @Default("{}") String[] args) {
         String data = String.join("", args);

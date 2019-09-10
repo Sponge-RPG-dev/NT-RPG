@@ -5,7 +5,7 @@ import com.google.inject.Singleton;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.common.assets.AssetService;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.asset.Asset;
 
@@ -16,7 +16,7 @@ import java.nio.file.Path;
 public class SpongeAssetService implements AssetService {
 
     @Inject
-    private NtRpgPlugin plugin;
+    private SpongeRpgPlugin plugin;
     
     @Override
     public String getAssetAsString(String path) {

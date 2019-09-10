@@ -7,7 +7,7 @@ import cz.neumimto.rpg.api.effects.Generate;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
 import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
 import cz.neumimto.rpg.sponge.gui.ParticleDecorator;
 import org.spongepowered.api.Sponge;
@@ -60,13 +60,13 @@ public class ManaShieldEffect extends EffectBase<ManaShieldEffectModel> {
         Sponge.getScheduler().createTaskBuilder()
                 .execute(new ParticleSpawner(pe, e, 0.3d, 1d, 4, 0, ParticleDecorator.tinyCircle))
                 .interval(2, TimeUnit.MILLISECONDS)
-                .submit(NtRpgPlugin.getInstance());
+                .submit(SpongeRpgPlugin.getInstance());
     }
 
     public void remove(ParticleEffect pe, Entity e) {
         Sponge.getScheduler().createTaskBuilder()
                 .execute(new ParticleSpawner(pe, e, -0.3d, -1d, 4, 2, ParticleDecorator.tinyCircle))
                 .interval(2, TimeUnit.MILLISECONDS)
-                .submit(NtRpgPlugin.getInstance());
+                .submit(SpongeRpgPlugin.getInstance());
     }
 }

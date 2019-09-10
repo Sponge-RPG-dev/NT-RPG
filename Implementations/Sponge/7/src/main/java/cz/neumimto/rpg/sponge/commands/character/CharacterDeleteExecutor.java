@@ -5,7 +5,7 @@ import com.google.inject.Singleton;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
 import cz.neumimto.rpg.sponge.utils.TextHelper;
 import org.spongepowered.api.command.CommandException;
@@ -35,7 +35,7 @@ public class CharacterDeleteExecutor implements CommandExecutor {
             characterService.markCharacterForRemoval(player.getUniqueId(), a);
             String translated = Rpg.get().getLocalizationService().translate(LocalizationKeys.CHAR_DELETED_FEEDBACK);
             player.sendMessage(TextHelper.parse(translated));
-        }, NtRpgPlugin.asyncExecutor);
+        }, SpongeRpgPlugin.asyncExecutor);
         return CommandResult.success();
     }
 }

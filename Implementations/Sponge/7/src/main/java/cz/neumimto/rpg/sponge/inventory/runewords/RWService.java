@@ -13,7 +13,7 @@ import cz.neumimto.rpg.common.inventory.crafting.runewords.RuneWordTemplate;
 import cz.neumimto.rpg.common.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.common.inventory.sockets.SocketType;
 import cz.neumimto.rpg.common.inventory.sockets.SocketTypes;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
 import cz.neumimto.rpg.sponge.events.RebuildRunewordEvent;
 import cz.neumimto.rpg.sponge.inventory.ItemUpgradeTransactionResult;
 import cz.neumimto.rpg.sponge.inventory.SpongeInventoryService;
@@ -42,7 +42,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static cz.neumimto.rpg.api.logging.Log.warn;
-import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
+import static cz.neumimto.rpg.sponge.SpongeRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 29.10.2015.
@@ -50,7 +50,7 @@ import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
 @Singleton
 public class RWService {
 
-    private final Path file = Paths.get(NtRpgPlugin.workingDir, "Runes.conf");
+    private final Path file = Paths.get(SpongeRpgPlugin.workingDir, "Runes.conf");
 
     @Inject
     private RWDao dao;

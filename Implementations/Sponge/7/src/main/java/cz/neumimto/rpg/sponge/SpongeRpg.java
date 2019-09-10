@@ -30,7 +30,7 @@ public final class SpongeRpg extends AbstractRpg {
     private RWService rwService;
 
     @Inject
-    private NtRpgPlugin plugin;
+    private SpongeRpgPlugin plugin;
 
     protected SpongeRpg(String workingDir) {
         super(workingDir);
@@ -76,7 +76,7 @@ public final class SpongeRpg extends AbstractRpg {
 
     @Override
     public Executor getAsyncExecutor() {
-        return NtRpgPlugin.asyncExecutor;
+        return SpongeRpgPlugin.asyncExecutor;
     }
 
 
@@ -92,7 +92,7 @@ public final class SpongeRpg extends AbstractRpg {
 
     @Override
     public void scheduleSyncLater(Runnable runnable) {
-        Sponge.getScheduler().createTaskBuilder().execute(runnable).submit(NtRpgPlugin.getInstance());
+        Sponge.getScheduler().createTaskBuilder().execute(runnable).submit(SpongeRpgPlugin.getInstance());
     }
 
     public VanillaMessaging getVanillaMessaging() {

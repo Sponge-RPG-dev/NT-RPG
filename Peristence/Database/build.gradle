@@ -14,7 +14,8 @@ dependencies {
     compileOnly project(':API')
     compileOnly project(':Common')
 
-    compileOnly 'com.zaxxer:HikariCP:2.5.1'
+    compile group: 'com.zaxxer', name: 'HikariCP', version: '3.3.1'
+
     compileOnly 'com.google.inject:guice:4.2.2'
     compileOnly 'com.github.Sponge-RPG-dev:ConfigurateButWithBlackjackAndHookers:39d5fc8afd'
     compileOnly 'ninja.leaping.configurate:configurate-hocon:3.3'

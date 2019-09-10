@@ -31,7 +31,7 @@ import javax.inject.Singleton;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
+import static cz.neumimto.rpg.sponge.SpongeRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 20.1.2018.

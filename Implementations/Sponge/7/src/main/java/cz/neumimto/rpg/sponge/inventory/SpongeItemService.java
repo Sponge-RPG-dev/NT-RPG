@@ -14,7 +14,7 @@ import cz.neumimto.rpg.api.items.RpgItemType;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.common.items.AbstractItemService;
 import cz.neumimto.rpg.common.items.RpgItemStackImpl;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
 import cz.neumimto.rpg.sponge.inventory.data.NKeys;
 import cz.neumimto.rpg.sponge.items.SpongeRpgItemType;
 import org.spongepowered.api.Sponge;
@@ -44,7 +44,7 @@ public class SpongeItemService extends AbstractItemService {
     private IEffectService effectService;
 
     @Inject
-    private NtRpgPlugin plugin;
+    private SpongeRpgPlugin plugin;
 
     public Optional<RpgItemType> getRpgItemType(ItemStack itemStack) {
         Optional<Text> text = itemStack.get(Keys.DISPLAY_NAME);

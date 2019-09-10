@@ -63,7 +63,7 @@ import javax.inject.Singleton;
 import java.util.List;
 import java.util.Optional;
 
-import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
+import static cz.neumimto.rpg.sponge.SpongeRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 12.2.2015.

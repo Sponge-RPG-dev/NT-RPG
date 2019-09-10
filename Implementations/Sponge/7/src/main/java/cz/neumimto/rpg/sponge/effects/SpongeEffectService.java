@@ -6,7 +6,7 @@ import cz.neumimto.rpg.api.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.common.effects.EffectService;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
 import cz.neumimto.rpg.sponge.events.effects.SpongeEffectApplyEvent;
 import cz.neumimto.rpg.sponge.events.effects.SpongeEffectRemoveEvent;
 import org.spongepowered.api.Game;
@@ -28,7 +28,7 @@ public class SpongeEffectService extends EffectService {
     private Game game;
 
     @Inject
-    private NtRpgPlugin plugin;
+    private SpongeRpgPlugin plugin;
 
     private Task effectTask;
 
