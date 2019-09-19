@@ -9,7 +9,6 @@ import cz.neumimto.rpg.sponge.utils.TextHelper;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public interface ISpongeCharacter extends IActiveCharacter<Player, SpongeParty>, ISpongeEntity<Player>, IEntity<Player> {
@@ -32,7 +31,5 @@ public interface ISpongeCharacter extends IActiveCharacter<Player, SpongeParty>,
 
     SkillTreeViewModel getLastTimeInvokedSkillTreeView();
 
-    Map<String, Integer> getAttributesTransaction();
 
-    void setAttributesTransaction(HashMap<String, Integer> map);
 }

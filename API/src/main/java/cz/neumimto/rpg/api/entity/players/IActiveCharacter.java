@@ -18,6 +18,7 @@
 
 package cz.neumimto.rpg.api.entity.players;
 
+import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.effects.EffectType;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
@@ -25,7 +26,6 @@ import cz.neumimto.rpg.api.entity.EntityHand;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.IEntityType;
 import cz.neumimto.rpg.api.entity.IReservable;
-import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.entity.players.party.IParty;
@@ -274,4 +274,8 @@ public interface IActiveCharacter<T, P extends IParty> extends IEntity<T> {
     void setChanneledSkill(InterruptableSkillPreprocessor o);
 
     Optional<InterruptableSkillPreprocessor> getChanneledSkill();
+
+    Map<String, Integer> getAttributesTransaction();
+
+    void setAttributesTransaction(HashMap<String, Integer> map);
 }

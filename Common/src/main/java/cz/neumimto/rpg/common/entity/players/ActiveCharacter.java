@@ -118,6 +118,9 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
     private int lastHotbarSlotInteraction = -1;
     private InterruptableSkillPreprocessor channeledSkill;
 
+    private Map<String, Integer> attrTransaction;
+
+
     public ActiveCharacter(UUID uuid, CharacterBase base, int propertyCount) {
         this.pl = uuid;
         this.primaryProperties = new float[propertyCount];
@@ -751,6 +754,17 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
         ActiveCharacter that = (ActiveCharacter) o;
         return that.getCharacterBase().getId().equals(this.getCharacterBase().getId());
     }
+
+    @Override
+    public Map<String, Integer> getAttributesTransaction() {
+        return attrTransaction;
+    }
+
+    @Override
+    public void setAttributesTransaction(HashMap<String, Integer> map) {
+        attrTransaction = map;
+    }
+
 
     @Override
     public java.lang.String toString() {

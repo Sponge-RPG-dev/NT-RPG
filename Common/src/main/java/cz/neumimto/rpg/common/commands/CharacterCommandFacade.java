@@ -1,9 +1,9 @@
 package cz.neumimto.rpg.common.commands;
 
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.ICharacterService;
-import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.parties.PartyService;
 import cz.neumimto.rpg.api.gui.Gui;
@@ -13,12 +13,11 @@ import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.permissions.PermissionService;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.utils.ActionResult;
+import cz.neumimto.rpg.common.entity.PropertyService;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
@@ -38,7 +37,18 @@ public class CharacterCommandFacade {
     @Inject
     private PartyService partyService;
 
-    public void commandCommitAttribute(IActiveCharacter character, Map<AttributeConfig, Integer> map) {
+    @Inject
+    private PropertyService propertyService;
+
+    public void commandCommitAttribute(IActiveCharacter character) {
+        Map<String, Integer> attributesTransaction = character.getAttributesTransaction();
+        Map<AttributeConfig, Integer> map = new HashMap<>();
+        for (Map.Entry<String, Integer> entry : attributesTransaction.entrySet()) {
+            Optional<AttributeConfig> attributeById = propertyService.getAttributeById(entry.getKey());
+            if (attributeById.isPresent()) {
+                map.put(attributeById.get(), entry.getValue());
+            }
+        }
         ActionResult actionResult = characterService.addAttribute(character, map);
         if (actionResult.isOk()) {
             characterService.putInSaveQueue(character.getCharacterBase());

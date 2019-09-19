@@ -17,7 +17,6 @@ import java.util.UUID;
 public class SpongeCharacter extends ActiveCharacter<Player, SpongeParty> implements ISpongeCharacter {
 
     protected Map<String, SkillTreeViewModel> skillTreeViewLocation = new HashMap<>();
-    private Map<String, Integer> attrTransaction;
 
     public SpongeCharacter(UUID uuid, CharacterBase base, int propertyCount) {
         super(uuid, base, propertyCount);
@@ -67,15 +66,6 @@ public class SpongeCharacter extends ActiveCharacter<Player, SpongeParty> implem
         return null;
     }
 
-    @Override
-    public Map<String, Integer> getAttributesTransaction() {
-        return attrTransaction;
-    }
-
-    @Override
-    public void setAttributesTransaction(HashMap<String, Integer> map) {
-        attrTransaction = map;
-    }
 
     @Override
     public IActiveCharacter updateItemRestrictions() {

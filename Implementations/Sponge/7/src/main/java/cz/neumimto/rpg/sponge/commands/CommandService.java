@@ -27,13 +27,10 @@ import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
 import cz.neumimto.rpg.sponge.commands.admin.*;
 import cz.neumimto.rpg.sponge.commands.arguments.CommandSkillArgument;
-import cz.neumimto.rpg.sponge.commands.character.*;
+import cz.neumimto.rpg.sponge.commands.character.CharacterShowClassExecutor;
+import cz.neumimto.rpg.sponge.commands.character.CharacterShowClassesExecutor;
 import cz.neumimto.rpg.sponge.commands.elements.*;
 import cz.neumimto.rpg.sponge.commands.item.*;
-import cz.neumimto.rpg.sponge.commands.party.PartyAcceptExecutor;
-import cz.neumimto.rpg.sponge.commands.party.PartyCreateExecutor;
-import cz.neumimto.rpg.sponge.commands.party.PartyInviteExecutor;
-import cz.neumimto.rpg.sponge.commands.party.PartyKickExecutor;
 import cz.neumimto.rpg.sponge.commands.skill.*;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
 import cz.neumimto.rpg.sponge.inventory.SpongeItemService;
@@ -193,55 +190,6 @@ public class CommandService {
 
     private void registerCharacterCommands() {
 
-        //==========CHARACTER MANIPULATION==========
-
-        CommandSpec characterCreate = CommandSpec.builder()
-                .description(translate(LocalizationKeys.COMMAND_CREATE_DESCRIPTION))
-                .arguments(
-                        GenericArguments.remainingJoinedStrings(Text.of("name"))
-                )
-                .permission("ntrpg.player.character.create")
-                .executor(injector.getInstance(CharacterCreateExecutor.class))
-                .build();
-
-        CommandSpec characterDelete = CommandSpec.builder()
-                .description(translate(LocalizationKeys.COMMAND_DELETE_DESCRIPTION))
-                .arguments(
-                        GenericArguments.remainingJoinedStrings(Text.of("name"))
-                )
-                .permission("ntrpg.player.character.delete")
-                .executor(new CharacterDeleteExecutor())
-                .build();
-
-        CommandSpec characterSwitch = CommandSpec.builder()
-                .description(translate(LocalizationKeys.COMMAND_SWITCH_DESC))
-                .arguments(
-                        GenericArguments.remainingJoinedStrings(Text.of("name"))
-                )
-                .executor(injector.getInstance(CharacterSwitchExecutor.class))
-                .build();
-
-        CommandSpec characterList = CommandSpec.builder()
-                .description(translate(LocalizationKeys.COMMAND_CHARACTER_LIST))
-                .executor(new CharacterListExecutor())
-                .build();
-
-        //==========CHARACTER CLASS==========
-
-        CommandSpec characterChooseClass = CommandSpec.builder()
-                .description(translate(LocalizationKeys.COMMAND_CHOOSE_DESC))
-                .arguments(
-                        new AnyClassDefCommandElement(Text.of("class"))
-                )
-                .permission("ntrpg.player.choose.class")
-                .executor(injector.getInstance(CharacterChooseClassExecutor.class))
-                .build();
-
-
-        CommandSpec characterChoose = CommandSpec.builder()
-                .child(characterChooseClass, "class", "c")
-                .build();
-
         //==========CHARACTER SKILLS==========
 
         CommandSpec characterSkillLearn = CommandSpec.builder()
@@ -280,63 +228,13 @@ public class CommandService {
                 .child(characterSkillRefund, "refund", "r")
                 .build();
 
-        //==========CHARACTER ATTRIBUTES==========
 
-        CommandSpec characterAttribute = CommandSpec.builder()
-                .description(TextSerializers.FORMATTING_CODE
-                        .deserialize(LocalizationKeys.COMMAND_ATTRIBUTE))
-                .arguments(
-                        new CharacterAttributeCommandElement(Text.of("attribute")),
-                        GenericArguments.integer(Text.of("amount"))
-                )
-                .executor(injector.getInstance(CharacterAttributeExecutor.class))
-                .build();
-
-
-        CommandSpec characterAttributeCommit = CommandSpec.builder()
-                .description(TextSerializers.FORMATTING_CODE
-                        .deserialize(LocalizationKeys.COMMAND_ATTRIBUTE_COMMIT))
-                .executor(injector.getInstance(CharacterAttributeCommitExecutor.class))
-                .build();
-
-        CommandSpec characterAttributeRespec = CommandSpec.builder()
-                .description(TextSerializers.FORMATTING_CODE
-                        .deserialize(LocalizationKeys.COMMAND_ATTRIBUTE_RESPEC))
-                .executor(injector.getInstance(CharacterAttributeRespecExecutor.class))
-                .build();
-
-        CommandSpec characterAttributes = CommandSpec.builder()
-                .executor(new CharacterAttributesExecutor())
-                .build();
-
-        CommandSpec characterArmor = CommandSpec.builder()
-                .arguments(GenericArguments.integer(Text.of("page")))
-                .executor(new CharacterArmorExecutor())
-                .build();
-
-        CommandSpec characterWeapons = CommandSpec.builder()
-                .arguments(GenericArguments.integer(Text.of("page")))
-                .executor(new CharacterWeaponsExecutor())
-                .build();
 
         CommandSpec characterRoot = CommandSpec.builder()
                 .description(translate(LocalizationKeys.COMMAND_CHOOSE_DESC))
-                .child(characterCreate, "create", "c")
-                .child(characterDelete, "delete", "remove", "rm")
-                .child(characterSwitch, "switch")
-                .child(characterList, "list")
-
-                .child(characterChoose, "choose", "set")
 
                 .child(characterSkill, "skill", "s", "sk")
 
-                .child(characterArmor, "armor", "armr", "a")
-                .child(characterWeapons, "weapon", "wpn", "w")
-                .child(characterAttributeRespec, "attributes-respec", "arspc")
-                .child(characterAttributeCommit, "tx-attribute-commit", "tac")
-                .child(characterAttribute, "attribute", "attr", "a")
-                .child(characterAttributes, "attributes", "al")
-                .executor(new CharacterMenuExecutor()) //default fallback for char list
                 .build();
 
         Sponge.getCommandManager().register(plugin, characterRoot, "character", "char", "nc");
@@ -374,47 +272,6 @@ public class CommandService {
 
         Sponge.getCommandManager().register(plugin, skilltree, "skilltree");
 
-        //==========PARTY==========
-
-        CommandSpec partyCreate = CommandSpec.builder()
-                .description(translate(LocalizationKeys.COMMAND_BIND_DESC))
-                .permission("ntrpg.player.party")
-                .executor(new PartyCreateExecutor())
-                .build();
-
-        CommandSpec partyKick = CommandSpec.builder()
-                .description(translate(LocalizationKeys.COMMAND_BIND_DESC))
-                .permission("ntrpg.player.party")
-                .arguments(
-                        new PartyMemberCommandElement(Text.of("player"), characterService)
-                )
-                .executor(new PartyKickExecutor())
-                .build();
-
-        CommandSpec partyInvite = CommandSpec.builder()
-                .description(translate(LocalizationKeys.COMMAND_BIND_DESC))
-                .permission("ntrpg.player.party")
-                .arguments(
-                        GenericArguments.onlyOne(GenericArguments.player(Text.of("player")))
-                )
-                .executor(new PartyInviteExecutor())
-                .build();
-
-        CommandSpec partyAccept = CommandSpec.builder()
-                .description(translate(LocalizationKeys.COMMAND_BIND_DESC))
-                .permission("ntrpg.player.party")
-                .executor(new PartyAcceptExecutor())
-                .build();
-
-        CommandSpec partyRoot = CommandSpec.builder()
-                .description(translate(LocalizationKeys.COMMAND_CHOOSE_DESC))
-                .child(partyCreate, "create", "c")
-                .child(partyKick, "kick", "k")
-                .child(partyInvite, "invite", "i")
-                .child(partyAccept, "accept", "a")
-                .build();
-
-        Sponge.getCommandManager().register(plugin, partyRoot, "party", "np", "nparty");
 
         //==========GROUPS==========
 
