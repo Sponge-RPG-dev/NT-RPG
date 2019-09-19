@@ -5,6 +5,7 @@ import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Description;
 import co.aikar.commands.annotation.Subcommand;
+import co.aikar.commands.bukkit.contexts.OnlinePlayer;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.commands.AdminCommandFacade;
@@ -27,10 +28,10 @@ public class SpigotAdminCommands extends BaseCommand {
 
     @Subcommand("effect-add")
     @Description("Adds effect, managed by rpg plugin, to the player")
-    public void effectAddCommand(Player executor, Player target, IGlobalEffect effect, long duration, @Default("{}") String[] args) {
+    public void effectAddCommand(Player executor, OnlinePlayer target, IGlobalEffect effect, long duration, @Default("{}") String[] args) {
         String data = String.join("", args);
 
-        IActiveCharacter character = characterService.getCharacter(target);
+        IActiveCharacter character = characterService.getCharacter(target.player);
 
         try {
             adminCommandFacade.commandAddEffectToPlayer(data, effect, duration, character);

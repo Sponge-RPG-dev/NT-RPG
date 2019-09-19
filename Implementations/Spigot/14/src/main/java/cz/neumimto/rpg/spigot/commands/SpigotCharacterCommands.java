@@ -3,12 +3,12 @@ package cz.neumimto.rpg.spigot.commands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Subcommand;
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.common.commands.CharacterCommandFacade;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import javax.inject.Inject;
@@ -18,7 +18,6 @@ import java.util.UUID;
 @Singleton
 @CommandAlias("char|c")
 public class SpigotCharacterCommands extends BaseCommand {
-
 
     @Inject
     private CharacterCommandFacade characterCommandFacade;
@@ -48,7 +47,7 @@ public class SpigotCharacterCommands extends BaseCommand {
     public void deleteCharacter(Player executor, String name) {
         IActiveCharacter character = characterService.getCharacter(executor);
         characterCommandFacade.commandSwitchCharacter(character, name, runnable -> {
-            Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, runnable);
+            Rpg.get().scheduleSyncLater(runnable);
         });
     }
 }

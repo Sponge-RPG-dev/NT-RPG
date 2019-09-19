@@ -1,14 +1,16 @@
 package cz.neumimto.rpg.spigot;
 
+import co.aikar.commands.CommandManager;
 import co.aikar.commands.PaperCommandManager;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.RpgAddon;
-import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.common.AddonScanner;
+import cz.neumimto.rpg.common.commands.ACFBootstrap;
 import cz.neumimto.rpg.spigot.commands.SpigotAdminCommands;
+import cz.neumimto.rpg.spigot.commands.SpigotCharacterCommands;
 import cz.neumimto.rpg.spigot.resources.SpigotGuiceModule;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.java.annotation.plugin.*;
@@ -82,16 +84,12 @@ public class SpigotRpgPlugin extends JavaPlugin {
         injector.injectMembers(spigotRpg);
         new RpgImpl(spigotRpg);
         Rpg.get().getResourceLoader().initializeComponents();
-        PaperCommandManager manager = new PaperCommandManager(this);
 
-        manager.getCommandContexts().registerIssuerAwareContext(IGlobalEffect.class, c -> {
-            String s = c.popFirstArg();
-            return Rpg.get().getEffectService().getGlobalEffect(s.toLowerCase());
-        });
-        manager.getCommandCompletions().registerAsyncCompletion("effect", c ->
-            Rpg.get().getEffectService().getGlobalEffects().keySet()
-        );
-        manager.registerCommand(injector.getInstance(SpigotAdminCommands.class));
+        CommandManager manager = new PaperCommandManager(this);
+
+        ACFBootstrap.initializeACF(manager,
+                                    injector.getInstance(SpigotAdminCommands.class),
+                                    injector.getInstance(SpigotCharacterCommands.class));
 
 
     }

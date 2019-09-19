@@ -10,6 +10,12 @@ blossom {
     replaceToken '@VERSION@', getVersion().toString(), str
 }
 
+compileJava {
+    options.compilerArgs += ["-parameters"]
+    options.fork = true
+    options.forkOptions.executable = 'javac'
+}
+
 dependencies {
     compile project(':Common')
 
