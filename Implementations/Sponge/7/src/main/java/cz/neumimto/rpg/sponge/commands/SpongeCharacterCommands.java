@@ -124,11 +124,5 @@ public class SpongeCharacterCommands extends BaseCommand {
         characterService.putInSaveQueue(character.getCharacterBase());
     }
 
-    @Subcommand("show classes")
-    public void showClasses(Player executor) {
-        ISpongeCharacter character = characterService.getCharacter(executor);
-        characterService.resetAttributes(character);
-        characterService.putInSaveQueue(character.getCharacterBase());
-    }
 }
 

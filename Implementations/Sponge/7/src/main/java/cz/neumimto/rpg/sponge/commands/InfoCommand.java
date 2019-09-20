@@ -21,16 +21,13 @@ package cz.neumimto.rpg.sponge.commands;
 import com.google.inject.Singleton;
 import cz.neumimto.rpg.ResourceLoader;
 import cz.neumimto.rpg.api.classes.ClassService;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.gui.Gui;
-import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterClass;
 import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
-import cz.neumimto.rpg.common.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
@@ -48,7 +45,6 @@ import org.spongepowered.api.text.format.TextColors;
 
 import javax.inject.Inject;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -94,87 +90,7 @@ public class InfoCommand extends CommandBase {
             commandSource.sendMessage(getUsage(commandSource));
             return CommandResult.empty();
         }
-        if (args[0].equalsIgnoreCase("player")) {
-            if (args.length != 2) {
-                commandSource.sendMessage(Text.of(getUsage(commandSource)));
-                return CommandResult.success();
-            }
-            Optional<Player> o = game.getServer().getPlayer(args[1]);
-            if (o.isPresent()) {
-                Player player = o.get();
-                if (player != commandSource && !player.hasPermission("list.character.others")) {
-                    player.sendMessage(translate(LocalizationKeys.NO_PERMISSIONS));
-                    return CommandResult.empty();
-                }
-                printPlayerInfo(commandSource, args, player);
-                return CommandResult.success();
-            } else {
-                commandSource.sendMessage(translate(LocalizationKeys.PLAYER_IS_OFFLINE_MSG));
-            }
-        } else if (args[0].equalsIgnoreCase("character")) {
-            if (commandSource instanceof Player) {
-                if (args.length != 2) {
-                    Player player = (Player) commandSource;
-                    IActiveCharacter target = characterService.getCharacter(player.getUniqueId());
-                    Gui.showCharacterInfo(target, target);
-                }
-            }
-        } else if (args[0].equalsIgnoreCase("character")) {
-            if (commandSource instanceof Player) {
-                if (args.length != 2) {
-                    Player player = (Player) commandSource;
-                    IActiveCharacter target = characterService.getCharacter(player.getUniqueId());
-                    Gui.sendListOfCharacters(target, target.getCharacterBase());
-                }
-            }
-        } else if (args[0].equalsIgnoreCase("runeword")) {
-            Player player = (Player) commandSource;
-            if (args.length == 2) {
-                RuneWord rw = rwService.getRuneword(args[1]);
-                if (rw != null) {
-                    ISpongeCharacter character = characterService.getCharacter(player.getUniqueId());
-                    messaging.displayRuneword(character, rw, true);
-                }
-            } else if (args.length == 3) {
-                RuneWord rw = rwService.getRuneword(args[1]);
-                if (rw != null) {
-                    ISpongeCharacter character = characterService.getCharacter(player.getUniqueId());
-                    String a = args[2];
-                    if (a.equalsIgnoreCase("allowed-items")) {
-                        messaging.displayRunewordAllowedItems(character, rw);
-                    } else if (a.equalsIgnoreCase("allowed-classes")) {
-                        messaging.displayRunewordAllowedGroups(character, rw);
-                    } else if (a.equalsIgnoreCase("required-classes")) {
-                        messaging.displayRunewordRequiredGroups(character, rw);
-                    } else if (a.equalsIgnoreCase("blocked-classes")) {
-                        messaging.displayRunewordBlockedGroups(character, rw);
-                    }
-                }
-            }
-        } else if (args[0].equalsIgnoreCase("attributes-initial")) {
-            ClassDefinition byName = classService.getClassDefinitionByName(args[1]);
-            if (byName == null) {
-                return CommandResult.empty();
-            }
-            IActiveCharacter character = characterService.getCharacter((Player) commandSource);
-            Gui.displayInitialAttributes(byName, character);
-        } else if (args[0].equalsIgnoreCase("properties-initial")) {
-            ClassDefinition byName = classService.getClassDefinitionByName(args[1]);
-            if (byName == null) {
-                return CommandResult.empty();
-            }
-            IActiveCharacter character = characterService.getCharacter((Player) commandSource);
-            Gui.displayInitialProperties(byName, character);
-        } else if (args[0].equalsIgnoreCase("stats")) {
-            Player player = (Player) commandSource;
-            IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
-            if (!character.isStub()) {
-                Gui.sendStatus(character);
-            } else {
-                player.sendMessage(translate(LocalizationKeys.CHARACTER_IS_REQUIRED));
-
-            }
-        } else if (args[0].equalsIgnoreCase("skilltree")) {
+        if (args[0].equalsIgnoreCase("skilltree")) {
             ISpongeCharacter character = characterService.getCharacter(((Player) commandSource).getUniqueId());
             SkillTree skillTree = character.getPrimaryClass().getClassDefinition().getSkillTree();
             if (args.length == 2) {
