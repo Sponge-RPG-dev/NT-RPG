@@ -1,7 +1,10 @@
 package cz.neumimto.rpg.sponge.commands;
 
 import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.*;
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandPermission;
+import co.aikar.commands.annotation.Subcommand;
+import co.aikar.commands.sponge.contexts.OnlinePlayer;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.gui.Gui;
@@ -15,6 +18,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
+@CommandPermission("ntrpg.info.")
 @CommandAlias("show|ninfo")
 public class SpongeInfoCommands extends BaseCommand {
 
@@ -25,32 +29,46 @@ public class SpongeInfoCommands extends BaseCommand {
     private VanillaMessaging messaging;
 
     @Subcommand("classes")
+    @CommandPermission("%.classes")
     public void showClassesCommand(Player executor) {
         ISpongeCharacter character = characterService.getCharacter(executor);
         characterService.resetAttributes(character);
         characterService.putInSaveQueue(character.getCharacterBase());
     }
 
-    @CommandPermission("list.character.others")
-    @Subcommand("player")
-    public void showPlayerClasses(Player executor, @Optional @Flags("target") Player target) {
-        printPlayerInfo(executor, target);
+    @Subcommand("character")
+    @CommandPermission("%.player.characters.other")
+    public void showOtherPlayerCharacterCommand(Player executor, OnlinePlayer target) {
+        IActiveCharacter targett = characterService.getCharacter(executor);
+        IActiveCharacter targett1 = characterService.getCharacter(target.player);
+        Gui.showCharacterInfo(targett, targett1);
     }
 
     @Subcommand("character")
+    @CommandPermission("%.player.characters.self")
     public void showPlayerCharacterCommand(Player executor) {
-        IActiveCharacter target = characterService.getCharacter(executor);
-        Gui.showCharacterInfo(target, target);
+        IActiveCharacter targett = characterService.getCharacter(executor);
+        Gui.showCharacterInfo(targett, targett);
     }
 
+    //todo remove select button
     @Subcommand("characters")
     public void showPlayerCharactersCommand(Player executor) {
         IActiveCharacter target = characterService.getCharacter(executor);
         Gui.sendListOfCharacters(target, target.getCharacterBase());
     }
 
+    @Subcommand("character")
+    @CommandPermission("%.player.characters.other")
+    public void showOtherPlayerCharactersCommand(Player executor, OnlinePlayer target) {
+        IActiveCharacter targett = characterService.getCharacter(executor);
+        IActiveCharacter targett1 = characterService.getCharacter(target.player);
+        Gui.sendListOfCharacters(targett, targett1.getCharacterBase());
+    }
+
 
     @Subcommand("runeword")
+    @CommandPermission("%.player.characters.other")
     public void showRunewordInfoCommand(Player executor, RuneWord runeword) {
         ISpongeCharacter character = characterService.getCharacter(executor);
         messaging.displayRuneword(character, runeword, true);

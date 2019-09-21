@@ -21,9 +21,9 @@ dependencies {
     compileOnly 'com.google.inject:guice:4.2.2'
     compileOnly 'org.slf4j:slf4j-api:1.7.26'
     compileOnly 'com.google.code.gson:gson:2.8.5'
+    compile "co.aikar:acf-core:0.5.0-SNAPSHOT"
 
     compile group: 'net.bytebuddy', name: 'byte-buddy', version: '1.10.1'
-    compile "co.aikar:acf-paper:0.5.0-SNAPSHOT"
 
     compileOnly 'org.apache.commons:commons-lang3:3.9'
 

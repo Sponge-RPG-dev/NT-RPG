@@ -33,6 +33,7 @@ dependencies {
     compile 'com.google.inject:guice:4.2.2'
     compile 'com.github.Sponge-RPG-dev:ConfigurateButWithBlackjackAndHookers:39d5fc8afd'
     compile 'ninja.leaping.configurate:configurate-hocon:3.3'
+    compile "co.aikar:acf-paper:0.5.0-SNAPSHOT"
 
     jar {
         manifest {
@@ -49,4 +50,15 @@ dependencies {
     }
 }
 
+compileJava {
+    options.compilerArgs += ["-parameters"]
+    options.fork = true
+    options.forkOptions.executable = 'javac'
+}
+
+shadowJar {
+    relocate 'co.aikar.commands', 'cz.neumimto.acf'
+}
+
+build.dependsOn shadowJar
 
