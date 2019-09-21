@@ -30,14 +30,14 @@ import static cz.neumimto.rpg.api.logging.Log.error;
 import static cz.neumimto.rpg.api.logging.Log.info;
 
 
-public class JPAModule implements RpgAddon {
+public class JDBCModule implements RpgAddon {
 
     @Override
     public Map<Class<?>, Class<?>> getBindings() {
         Map bindings = new HashMap<>();
         bindings.put(ICharacterClassDao.class, JDBCCharacterClassDao.class);
         bindings.put(IPlayerDao.class, JdbcPlayerDao.class);
-        bindings.put(IPersistenceHandler.class, JPAPersistenceHandler.class);
+        bindings.put(IPersistenceHandler.class, JDBCersistenceHandler.class);
 
         return bindings;
     }

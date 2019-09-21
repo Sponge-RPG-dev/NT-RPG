@@ -59,7 +59,7 @@ public class ACFBootstrap {
             c.popFirstArg();
             return Rpg.get().getPropertyService().getAttributeById(firstArg);
         });
-
+                
         for (BaseCommand o : commandClasses) {
             manager.registerCommand(o);
         }

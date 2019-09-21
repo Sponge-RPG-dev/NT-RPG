@@ -23,7 +23,7 @@ import java.util.List;
  * Created by NeumimTo on 1.12.2018.
  */
 @Singleton
-public class JPAPersistenceHandler implements IPersistenceHandler {
+public class JDBCersistenceHandler implements IPersistenceHandler {
 
     @Inject
     private Injector injector;

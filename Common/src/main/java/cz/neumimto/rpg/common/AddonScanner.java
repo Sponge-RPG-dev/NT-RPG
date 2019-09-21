@@ -118,7 +118,7 @@ public class AddonScanner {
                         classesToLoad.add(aClass);
                     }
                 } catch (NoClassDefFoundError ignored) {
-                    int i = 0;
+
                 }
 
             }

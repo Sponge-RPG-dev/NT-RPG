@@ -192,65 +192,6 @@ public class CommandService {
 
         //==========CHARACTER SKILLS==========
 
-        CommandSpec characterSkillLearn = CommandSpec.builder()
-                .description(translate(LocalizationKeys.COMMAND_SKILL_LEARN))
-                .arguments(
-                        new UnlearnedSkillCommandElement(Text.of("skill")),
-                        new PlayerClassCommandElement(Text.of("class"))
-                )
-                .permission("ntrpg.player.skills")
-                .executor(injector.getInstance(SkillLearnExecutor.class))
-                .build();
-
-        CommandSpec characterSkillUpgrade = CommandSpec.builder()
-                .description(translate(LocalizationKeys.COMMAND_SKILL_UPGRADE))
-                .arguments(
-                        new LearnedSkillCommandElement(Text.of("skill")),
-                        new PlayerClassCommandElement(Text.of("class"))
-                )
-                .permission("ntrpg.player.skills")
-                .executor(injector.getInstance(SkillUpgradeExecutor.class))
-                .build();
-
-        CommandSpec characterSkillRefund = CommandSpec.builder()
-                .description(translate(LocalizationKeys.COMMAND_SKILL_REFUND))
-                .arguments(
-                        new LearnedSkillCommandElement(Text.of("skill")),
-                        new PlayerClassCommandElement(Text.of("class"))
-                )
-                .permission("ntrpg.player.skills.refund")
-                .executor(injector.getInstance(SkillRefundExecutor.class))
-                .build();
-
-        CommandSpec characterSkill = CommandSpec.builder()
-                .child(characterSkillLearn, "learn", "l")
-                .child(characterSkillUpgrade, "upgrade", "u")
-                .child(characterSkillRefund, "refund", "r")
-                .build();
-
-
-
-        CommandSpec characterRoot = CommandSpec.builder()
-                .description(translate(LocalizationKeys.COMMAND_CHOOSE_DESC))
-
-                .child(characterSkill, "skill", "s", "sk")
-
-                .build();
-
-        Sponge.getCommandManager().register(plugin, characterRoot, "character", "char", "nc");
-
-        //==========SKILLS==========
-
-        CommandSpec skillCast = CommandSpec.builder()
-                .description(translate(LocalizationKeys.COMMAND_SKILL_DESC))
-                .arguments(
-                        new LearnedSkillCommandElement(Text.of("skill"))
-                )
-                .executor(new PlayerSkillCastExecutor())
-                .build();
-
-        Sponge.getCommandManager().register(plugin, skillCast, "skill", "skl", "ns");
-
         CommandSpec skillBind = CommandSpec.builder()
                 .description(translate(LocalizationKeys.COMMAND_BIND_DESC))
                 .permission("ntrpg.player.skillbind")
@@ -262,40 +203,8 @@ public class CommandService {
 
         Sponge.getCommandManager().register(plugin, skillBind, "bind", "nb");
 
-        CommandSpec skilltree = CommandSpec.builder()
-                .description(translate(LocalizationKeys.COMMAND_SKILL_TREE))
-                .arguments(
-                        GenericArguments.optional(new AnyClassDefCommandElement(Text.of("class")))
-                )
-                .executor(new SkilltreeExecutor())
-                .build();
-
-        Sponge.getCommandManager().register(plugin, skilltree, "skilltree");
-
 
         //==========GROUPS==========
-
-        CommandSpec showClassTypesOrClasses = CommandSpec.builder()
-                .description(translate(LocalizationKeys.COMMAND_CLASSES_DESC))
-                .arguments(
-                        GenericArguments.optional(new ClassTypeCommandElement(Text.of("type")))
-                )
-                .permission("ntrpg.classes.list")
-                .executor(new CharacterShowClassesExecutor())
-                .build();
-
-        Sponge.getCommandManager().register(plugin, showClassTypesOrClasses, "classes");
-
-        CommandSpec showClass = CommandSpec.builder()
-                .description(translate(LocalizationKeys.COMMAND_RACE_DESC))
-                .arguments(
-                        GenericArguments.optional(new AnyClassDefCommandElement(Text.of("class")))
-                )
-                .executor(new CharacterShowClassExecutor())
-                .build();
-
-        Sponge.getCommandManager().register(plugin, showClass, "class");
-
         CommandSpec showClassWeapons = CommandSpec.builder()
                 .arguments(new ClassDefCommandElement(Text.of("class")))
                 .executor((src, args) -> {

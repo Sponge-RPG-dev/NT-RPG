@@ -1,42 +1,41 @@
 package cz.neumimto.rpg.spigot.commands;
 
-import co.aikar.commands.BaseCommand;
+
 import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Description;
+import co.aikar.commands.annotation.Flags;
 import co.aikar.commands.annotation.Subcommand;
-import co.aikar.commands.bukkit.contexts.OnlinePlayer;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.common.commands.AdminCommandFacade;
-import cz.neumimto.rpg.common.commands.CommandProcessingException;
-import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.lang.annotation.Inherited;
 
 @Singleton
 @CommandAlias("nadmin|na")
-public class SpigotAdminCommands extends BaseCommand {
+public class SpigotAdminCommands extends AbstractAdminCommands<CommandSender, Player> {
 
-    @Inject
-    private AdminCommandFacade adminCommandFacade;
+    @Override
+    protected IActiveCharacter toCharacter(Player player) {
+        return characterService.getCharacter(player.getUniqueId());
+    }
 
-    @Inject
-    private SpigotCharacterService characterService;
-
-    @Subcommand("effect-add")
+    @Override
+    @Subcommand("effect add")
     @Description("Adds effect, managed by rpg plugin, to the player")
-    public void effectAddCommand(Player executor, OnlinePlayer target, IGlobalEffect effect, long duration, @Default("{}") String[] args) {
-        String data = String.join("", args);
+    public void effectAddCommand(CommandSender commandSender, @Flags("taget") Player target, IGlobalEffect effect, long duration, String[] args) {
+        super.effectAddCommand(commandSender, target, effect, duration, args);
+    }
 
-        IActiveCharacter character = characterService.getCharacter(target.player);
+    @Override
+    protected void sendMessageC(CommandSender commandSender, String message) {
+        commandSender.sendMessage(message);
+    }
 
-        try {
-            adminCommandFacade.commandAddEffectToPlayer(data, effect, duration, character);
-        } catch (CommandProcessingException e) {
-            executor.sendMessage(e.getMessage());
-        }
+    @Override
+    protected void sendMessageT(Player player, String message) {
+        player.sendMessage(message);
     }
 }

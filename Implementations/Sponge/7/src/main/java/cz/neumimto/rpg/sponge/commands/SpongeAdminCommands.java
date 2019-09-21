@@ -1,24 +1,31 @@
 package cz.neumimto.rpg.sponge.commands;
 
 import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.Default;
-import co.aikar.commands.annotation.Optional;
-import co.aikar.commands.annotation.Subcommand;
+import co.aikar.commands.annotation.*;
 import co.aikar.commands.sponge.contexts.OnlinePlayer;
 import com.sun.org.glassfish.gmbal.Description;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.api.skills.ISkill;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.SkillData;
+import cz.neumimto.rpg.api.skills.SkillSettings;
+import cz.neumimto.rpg.api.skills.mods.SkillContext;
+import cz.neumimto.rpg.api.skills.mods.SkillExecutorCallback;
+import cz.neumimto.rpg.api.skills.types.IActiveSkill;
 import cz.neumimto.rpg.common.commands.AdminCommandFacade;
 import cz.neumimto.rpg.common.commands.CommandProcessingException;
+import cz.neumimto.rpg.sponge.entities.commandblocks.ConsoleSkillExecutor;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
+import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.concurrent.TimeUnit;
 
 @Singleton
 @CommandAlias("nadmin|na")
@@ -56,5 +63,38 @@ public class SpongeAdminCommands extends BaseCommand {
         }
     }
 
+    @Subcommand("skill")
+    public void adminExecuteSkillCommand(Player executor, ISkill skill, @Flags("level") @Default("1") int level) {
+        IActiveCharacter character = characterService.getCharacter(executor);
+        if (character.isStub()) {
+            throw new RuntimeException("Character is required even for an admin.");
+        }
+        SkillSettings defaultSkillSettings = skill.getSettings();
+
+        Long l = System.nanoTime();
+
+        PlayerSkillContext playerSkillContext = new PlayerSkillContext(null, skill, character);
+        playerSkillContext.setLevel(level);
+        SkillData skillData = new SkillData(skill.getId());
+        skillData.setSkillSettings(defaultSkillSettings);
+        playerSkillContext.setSkillData(skillData);
+        playerSkillContext.setSkill(skill);
+
+        SkillContext skillContext = new SkillContext((IActiveSkill) skill, playerSkillContext) {{
+            wrappers.add(new SkillExecutorCallback() {
+                @Override
+                public void doNext(IActiveCharacter character, PlayerSkillContext info, SkillContext skillResult) {
+                    Long e = System.nanoTime();
+                    character.sendMessage("Exec Time: " + TimeUnit.MILLISECONDS.convert(e - l, TimeUnit.NANOSECONDS));
+                    if (character instanceof ConsoleSkillExecutor) {
+                        Living entity = (Living) character.getEntity();
+                        entity.remove();
+                    }
+                }
+            });
+        }};
+        skillContext.sort();
+        skillContext.next(character, playerSkillContext, skillContext);
+    }
 
 }

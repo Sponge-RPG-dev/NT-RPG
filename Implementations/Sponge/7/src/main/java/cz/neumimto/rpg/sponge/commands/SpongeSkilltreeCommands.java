@@ -20,7 +20,7 @@ import javax.inject.Singleton;
 
 @Singleton
 @CommandAlias("skilltree")
-public class SkillTreeCommands {
+public class SpongeSkilltreeCommands {
 
     @Inject
     private SpongeCharacterService characterService;
@@ -32,10 +32,10 @@ public class SkillTreeCommands {
     private SkillsCommandFacade skillsCommandFacade;
 
     @Default
-    public void openSkillTreeCommand(Player executor, @Optional ClassDefinition classDefinition) {
+    public void openSkillTreeCommand(Player executor, ClassDefinition classDefinition) {
         ISpongeCharacter character = characterService.getCharacter(executor);
 
-        openSkillTreeCommand(executor, classDefinition);
+        openSkillTreeCommand(character, classDefinition);
     }
 
     public void openSkillTreeCommand(ISpongeCharacter character, ClassDefinition classDefinition) {
