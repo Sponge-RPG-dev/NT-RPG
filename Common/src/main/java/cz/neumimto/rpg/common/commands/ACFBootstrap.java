@@ -10,6 +10,7 @@ import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.skills.ISkill;
 
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class ACFBootstrap {
 
@@ -42,8 +43,16 @@ public class ACFBootstrap {
         });
 
 
+        manager.getCommandCompletions().registerAsyncCompletion("class-any", c ->
+                Rpg.get().getClassService().getClasses().keySet()
+        );
+
         manager.getCommandCompletions().registerAsyncCompletion("class", c ->
-                Rpg.get().getClassService().getClasses().keySet());
+                Rpg.get().getClassService().getClassDefinitions().stream()
+                .filter(a -> c.getIssuer().hasPermission("ntrpg.class." + a.getName().toLowerCase()))
+                .map(ClassDefinition::getName)
+                .collect(Collectors.toList())
+        );
 
         manager.getCommandContexts().registerContext(ClassDefinition.class, c -> {
             String firstArg = c.getFirstArg();
@@ -52,14 +61,20 @@ public class ACFBootstrap {
         });
 
         manager.getCommandCompletions().registerAsyncCompletion("attribute", c ->
-                Rpg.get().getPropertyService().getAttributes().keySet());
+                Rpg.get().getPropertyService().getAttributes().keySet()
+        );
 
         manager.getCommandContexts().registerContext(AttributeConfig.class, c -> {
             String firstArg = c.getFirstArg();
             c.popFirstArg();
             return Rpg.get().getPropertyService().getAttributeById(firstArg);
         });
-                
+
+        manager.getCommandCompletions().registerAsyncCompletion("classtype", c ->
+                Rpg.get().getPluginConfig().CLASS_TYPES.keySet()
+        );
+
+
         for (BaseCommand o : commandClasses) {
             manager.registerCommand(o);
         }
