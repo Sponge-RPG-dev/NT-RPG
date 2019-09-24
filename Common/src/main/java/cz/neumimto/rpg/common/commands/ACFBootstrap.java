@@ -74,6 +74,20 @@ public class ACFBootstrap {
                 Rpg.get().getPluginConfig().CLASS_TYPES.keySet()
         );
 
+        manager.getCommandCompletions().registerCompletion("party-current", c-> {
+            UUID uniqueId = c.getIssuer().getUniqueId();
+            return Rpg.get().getCharacterService().getCharacter(uniqueId)
+                    .getParty()
+                    .getPlayers()
+                    .stream()
+                    .map(ISpongeCharacter::getPlayer)
+                    .map(Player::getName)
+                    .collect(Collectors.toList());
+        });
+
+        manager.getCommandCompletions().registerAsyncCompletion("learned-skill", c->
+                Rpg.get().getCharacterService().getCharacter(c.getIssuer().getUniqueId()).getSkills().keySet()
+        );
 
         for (BaseCommand o : commandClasses) {
             manager.registerCommand(o);
