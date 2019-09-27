@@ -25,13 +25,14 @@ import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
-import cz.neumimto.rpg.sponge.commands.admin.*;
+import cz.neumimto.rpg.sponge.commands.admin.InspectPropertyExecutor;
+import cz.neumimto.rpg.sponge.commands.admin.InvokeExecutorExecutor;
+import cz.neumimto.rpg.sponge.commands.admin.ReloadExecutor;
 import cz.neumimto.rpg.sponge.commands.arguments.CommandSkillArgument;
-import cz.neumimto.rpg.sponge.commands.character.CharacterShowClassExecutor;
-import cz.neumimto.rpg.sponge.commands.character.CharacterShowClassesExecutor;
-import cz.neumimto.rpg.sponge.commands.elements.*;
+import cz.neumimto.rpg.sponge.commands.elements.CommandElementMapLookup;
+import cz.neumimto.rpg.sponge.commands.elements.GlobalEffectCommandElement;
+import cz.neumimto.rpg.sponge.commands.elements.RuneCommandElement;
 import cz.neumimto.rpg.sponge.commands.item.*;
-import cz.neumimto.rpg.sponge.commands.skill.*;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
 import cz.neumimto.rpg.sponge.inventory.SpongeItemService;
 import cz.neumimto.rpg.sponge.inventory.runewords.RWService;
@@ -189,19 +190,6 @@ public class CommandService {
     }
 
     private void registerCharacterCommands() {
-
-        //==========CHARACTER SKILLS==========
-
-        CommandSpec skillBind = CommandSpec.builder()
-                .description(translate(LocalizationKeys.COMMAND_BIND_DESC))
-                .permission("ntrpg.player.skillbind")
-                .arguments(
-                        new LearnedSkillCommandElement(Text.of("skill"))
-                )
-                .executor(new SkillBindExecutor())
-                .build();
-
-        Sponge.getCommandManager().register(plugin, skillBind, "bind", "nb");
 
 
         //==========GROUPS==========

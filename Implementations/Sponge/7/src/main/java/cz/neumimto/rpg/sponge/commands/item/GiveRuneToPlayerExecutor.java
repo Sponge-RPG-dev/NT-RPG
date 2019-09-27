@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.sponge.commands.item;
 
+import cz.neumimto.rpg.api.items.sockets.SocketTypes;
 import cz.neumimto.rpg.common.inventory.crafting.runewords.Rune;
-import cz.neumimto.rpg.common.inventory.sockets.SocketTypes;
 import cz.neumimto.rpg.sponge.inventory.runewords.RWService;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;

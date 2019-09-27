@@ -2,13 +2,13 @@ package cz.neumimto.rpg.sponge.inventory.data;
 
 import com.google.common.reflect.TypeToken;
 import cz.neumimto.rpg.api.effects.EffectParams;
+import cz.neumimto.rpg.api.items.sockets.SocketType;
+import cz.neumimto.rpg.common.inventory.items.ItemMetaType;
+import cz.neumimto.rpg.common.inventory.items.subtypes.ItemSubtype;
+import cz.neumimto.rpg.sponge.gui.SkillTreeControllsButton;
 import cz.neumimto.rpg.sponge.inventory.ItemDamage;
 import cz.neumimto.rpg.sponge.inventory.LoreDurability;
 import cz.neumimto.rpg.sponge.inventory.LoreSectionDelimiter;
-import cz.neumimto.rpg.common.inventory.items.ItemMetaType;
-import cz.neumimto.rpg.common.inventory.items.subtypes.ItemSubtype;
-import cz.neumimto.rpg.common.inventory.sockets.SocketType;
-import cz.neumimto.rpg.sponge.gui.SkillTreeControllsButton;
 import org.spongepowered.api.data.DataQuery;
 import org.spongepowered.api.data.key.Key;
 import org.spongepowered.api.data.value.mutable.ListValue;

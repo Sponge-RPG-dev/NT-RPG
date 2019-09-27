@@ -9,6 +9,7 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.skills.ISkill;
 
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -76,17 +77,18 @@ public class ACFBootstrap {
 
         manager.getCommandCompletions().registerCompletion("party-current", c-> {
             UUID uniqueId = c.getIssuer().getUniqueId();
-            return Rpg.get().getCharacterService().getCharacter(uniqueId)
+            Set<IActiveCharacter> players = Rpg.get().getCharacterService().getCharacter(uniqueId)
                     .getParty()
-                    .getPlayers()
-                    .stream()
-                    .map(ISpongeCharacter::getPlayer)
-                    .map(Player::getName)
-                    .collect(Collectors.toList());
+                    .getPlayers();
+            return players.stream().map(a -> a.getPlayerAccountName()).collect(Collectors.toList());
         });
 
         manager.getCommandCompletions().registerAsyncCompletion("learned-skill", c->
                 Rpg.get().getCharacterService().getCharacter(c.getIssuer().getUniqueId()).getSkills().keySet()
+        );
+
+        manager.getCommandCompletions().registerAsyncCompletion("socket-type", c->
+                Rpg.get().getItemService().getSocketTypes();
         );
 
         for (BaseCommand o : commandClasses) {

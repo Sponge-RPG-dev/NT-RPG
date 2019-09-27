@@ -278,4 +278,6 @@ public interface IActiveCharacter<T, P extends IParty> extends IEntity<T> {
     Map<String, Integer> getAttributesTransaction();
 
     void setAttributesTransaction(HashMap<String, Integer> map);
+
+    String getPlayerAccountName();
 }

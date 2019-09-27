@@ -72,4 +72,9 @@ public class SpongeCharacter extends ActiveCharacter<Player, SpongeParty> implem
         ArmorAndWeaponMenuHelper.reset(this);
         return super.updateItemRestrictions();
     }
+
+    @Override
+    public String getPlayerAccountName() {
+        return getPlayer().getName();
+    }
 }

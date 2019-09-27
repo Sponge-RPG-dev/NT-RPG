@@ -2,10 +2,11 @@ package cz.neumimto.rpg.api.items;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
-import cz.neumimto.rpg.api.inventory.ManagedSlot;
+import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.configuration.AttributeConfig;
+import cz.neumimto.rpg.api.inventory.ManagedSlot;
+import cz.neumimto.rpg.api.items.sockets.SocketType;
 
 import java.nio.file.Path;
 import java.util.*;
@@ -49,4 +50,5 @@ public interface ItemService {
 
     void registerItemAttributes(Collection<AttributeConfig> attributes);
 
+    Map<String, SocketType> getSocketTypes();
 }

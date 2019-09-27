@@ -3,19 +3,19 @@ package cz.neumimto.rpg.common.items;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.configuration.AttributeConfig;
+import cz.neumimto.rpg.api.configuration.ItemString;
 import cz.neumimto.rpg.api.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.api.entity.IPropertyService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
-import cz.neumimto.rpg.api.configuration.ItemString;
 import cz.neumimto.rpg.api.items.*;
+import cz.neumimto.rpg.api.items.sockets.SocketType;
 import cz.neumimto.rpg.common.entity.PropertyService;
 import cz.neumimto.rpg.common.inventory.items.ItemMetaType;
 import cz.neumimto.rpg.common.inventory.items.subtypes.ItemSubtype;
-import cz.neumimto.rpg.common.inventory.sockets.SocketType;
 
 import javax.inject.Inject;
 import java.util.*;
@@ -247,6 +247,7 @@ public abstract class AbstractItemService implements ItemService {
         }
     }
 
+    @Override
     public Map<String, SocketType> getSocketTypes() {
         return socketTypes;
     }

@@ -68,4 +68,8 @@ public class SpongePreloadCharacter extends PreloadCharacter<Player, SpongeParty
         getPlayer().sendMessage(ChatTypes.ACTION_BAR, TextHelper.parse(message));
     }
 
+    @Override
+    public String getPlayerAccountName() {
+        return getPlayer().getName();
+    }
 }

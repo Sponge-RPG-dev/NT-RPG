@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.sponge.inventory.data;
 
+import cz.neumimto.rpg.api.items.sockets.SocketTypes;
 import cz.neumimto.rpg.common.inventory.crafting.runewords.ItemUpgrade;
-import cz.neumimto.rpg.common.inventory.sockets.SocketTypes;
 
 public class ItemSocket {
 

@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.common.inventory.sockets;
+package cz.neumimto.rpg.api.items.sockets;
 
 
 public class SocketType {
