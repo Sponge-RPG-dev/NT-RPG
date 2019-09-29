@@ -46,7 +46,7 @@ import cz.neumimto.rpg.common.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.common.persistance.dao.IPlayerDao;
 import cz.neumimto.rpg.common.utils.model.CharacterListModel;
 import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
-import cz.neumimto.rpg.sponge.commands.InfoCommand;
+import cz.neumimto.rpg.sponge.commands.SpongeInfoCommand;
 import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
 import cz.neumimto.rpg.sponge.effects.common.def.BossBarExpNotifier;
 import cz.neumimto.rpg.sponge.effects.common.def.ManaBarNotifier;
@@ -125,7 +125,7 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
     private RWService rwService;
 
     @Inject
-    private InfoCommand infoCommand;
+    private SpongeInfoCommand infoCommand;
 
     @Inject
     private SpongeDamageService spongeDamageService;

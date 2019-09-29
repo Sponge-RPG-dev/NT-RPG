@@ -12,6 +12,7 @@ import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.permissions.PermissionService;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
+import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.utils.ActionResult;
 import cz.neumimto.rpg.common.entity.PropertyService;
 

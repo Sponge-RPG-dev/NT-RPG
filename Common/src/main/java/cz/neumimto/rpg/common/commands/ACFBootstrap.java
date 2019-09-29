@@ -88,7 +88,7 @@ public class ACFBootstrap {
         );
 
         manager.getCommandCompletions().registerAsyncCompletion("socket-type", c->
-                Rpg.get().getItemService().getSocketTypes();
+                Rpg.get().getItemService().getSocketTypes().keySet()
         );
 
         for (BaseCommand o : commandClasses) {
