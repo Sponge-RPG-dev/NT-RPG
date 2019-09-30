@@ -14,7 +14,7 @@ public class CharacterSkillImpl extends TimestampEntityImpl implements Character
     private int level;
     private CharacterClass fromClass;
     private String catalogId;
-    private Long cooldown;
+    private long cooldown;
 
     @Override
     public Long getId() {
