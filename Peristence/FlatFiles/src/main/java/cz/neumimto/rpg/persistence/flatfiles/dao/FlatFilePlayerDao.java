@@ -1,12 +1,13 @@
 package cz.neumimto.rpg.persistence.flatfiles.dao;
 
-import com.electronwill.nightconfig.core.Config;
+import com.electronwill.nightconfig.core.file.FileConfig;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
 import cz.neumimto.rpg.common.persistance.dao.IPlayerDao;
 import cz.neumimto.rpg.persistence.flatfiles.converters.ConfigConverter;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -46,7 +47,23 @@ public class FlatFilePlayerDao implements IPlayerDao {
 
     @Override
     public int getCharacterCount(UUID uuid) {
-        return 0;
+        Path resolve = getPlayerDataDirectory(uuid);
+        File file = resolve.toFile();
+        File[] files = file.listFiles();
+        int counter = 0;
+        if (files != null) {
+            for (File file1 : files) {
+                if (file1.isFile() && file1.getName().endsWith(".hocon")) {
+                    FileConfig of = FileConfig.of(file1);
+                    boolean forRemoval = of.getOrElse(ConfigConverter.MARKED_FOR_REMOVAL, false));
+                    if (!forRemoval) {
+                        counter++;
+                    }
+                    of.close();
+                }
+            }
+        }
+        return counter;
     }
 
     @Override
@@ -62,17 +79,24 @@ public class FlatFilePlayerDao implements IPlayerDao {
 
     @Override
     public int markCharacterForRemoval(UUID player, String charName) {
-        return 0;
+        Path resolve = getPlayerDataDirectory(player).resolve(charName.toLowerCase() + ".hocon");
+        FileConfig of = FileConfig.of(resolve);
+        of.set(ConfigConverter.MARKED_FOR_REMOVAL, true);
+        of.close();
+        return 1;
     }
 
     @Override
     public void update(CharacterBase characterBase) {
         characterBase.setUpdated(new Date());
-        Config config = ConfigConverter.toConfig(characterBase);
+        Path resolve = getPlayerDataDirectory(characterBase.getUuid()).resolve(characterBase.getName().toLowerCase() + ".hocon");
+        FileConfig of = FileConfig.of(resolve);
+        ConfigConverter.toConfig(characterBase, of);
+        of.close();
     }
 
     @Override
     public void removePersitantSkill(CharacterSkill characterSkill) {
-
+        update(characterSkill.getCharacterBase());
     }
 }

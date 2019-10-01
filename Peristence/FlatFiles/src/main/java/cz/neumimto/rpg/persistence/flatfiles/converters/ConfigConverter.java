@@ -1,6 +1,7 @@
 package cz.neumimto.rpg.persistence.flatfiles.converters;
 
 import com.electronwill.nightconfig.core.Config;
+import com.electronwill.nightconfig.core.file.FileConfig;
 import cz.neumimto.rpg.api.persistance.model.*;
 
 import java.util.Date;
@@ -23,11 +24,10 @@ public class ConfigConverter {
     private static final String CLASSES = "Classes";
     private static final String ATTRIBUTES = "Attributes";
     private static final String INVENTOY_EQUIP_ORDER = "InventoryEquipOrder";
-    private static final String MARKED_FOR_REMOVAL = "Remove";
+    public static final String MARKED_FOR_REMOVAL = "Remove";
     private static final String HEALTH_SCALING = "HEALT_SCALE";
 
-    public static Config toConfig(CharacterBase c) {
-        Config config = Config.inMemory();
+    public static Config toConfig(CharacterBase c, FileConfig config) {
 
         UUID uuid = c.getUuid();
         config.set(UUID, uuid);
@@ -56,13 +56,13 @@ public class ConfigConverter {
         attributePoints = c.getAttributePointsSpent();
         config.set(AttributePointsSpent, attributePoints);
 
-        List<Config> characterSkills = c.getCharacterSkills().stream().map(this::toConfig).collect(Collectors.toList());
+        List<Config> characterSkills = c.getCharacterSkills().stream().map(ConfigConverter::toConfig).collect(Collectors.toList());
         config.set(SKILLS, characterSkills);
 
-        List<Config> characterClasses = c.getCharacterClasses().stream().map(this::toConfig).collect(Collectors.toList());
+        List<Config> characterClasses = c.getCharacterClasses().stream().map(ConfigConverter::toConfig).collect(Collectors.toList());
         config.set(CLASSES, characterClasses);
 
-        List<Config> characterAttributes = c.getBaseCharacterAttribute().stream().map(this::toConfig).collect(Collectors.toList());
+        List<Config> characterAttributes = c.getBaseCharacterAttribute().stream().map(ConfigConverter::toConfig).collect(Collectors.toList());
         config.set(ATTRIBUTES, characterAttributes);
 
         List<EquipedSlot> inventoryEquipSlotOrder = c.getInventoryEquipSlotOrder();
