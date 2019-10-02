@@ -1,27 +1,24 @@
 package cz.neumimto.rpg.api.configuration.adapters;
 
-import com.google.common.reflect.TypeToken;
+import com.electronwill.nightconfig.core.conversion.Converter;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.IPropertyService;
 import cz.neumimto.rpg.api.logging.Log;
-import ninja.leaping.configurate.ConfigurationNode;
-import ninja.leaping.configurate.objectmapping.ObjectMappingException;
-import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class PropertiesMapAdapter implements TypeSerializer<Map<Integer, Float>> {
+public class PropertiesMapAdapter implements Converter<Map<Integer, Float>, Map<String, Float>> {
+
 
     @Override
-    public Map<Integer, Float> deserialize(TypeToken<?> typeToken, ConfigurationNode configurationNode) throws ObjectMappingException {
+    public Map<Integer, Float> convertToField(Map<String, Float> value) {
         Map<Integer, Float> map = new HashMap<>();
 
-        Map<Object, ? extends ConfigurationNode> childrenMap = configurationNode.getChildrenMap();
         IPropertyService propertyService = Rpg.get().getPropertyService();
-        for (Map.Entry<Object, ? extends ConfigurationNode> objectEntry : childrenMap.entrySet()) {
-            String propertyName = ((String) objectEntry.getKey()).toLowerCase();
-            float f = ((Number) objectEntry.getValue().getValue()).floatValue();
+        for (Map.Entry<String, Float> objectEntry : value.entrySet()) {
+            String propertyName = (objectEntry.getKey()).toLowerCase();
+            float f = objectEntry.getValue();
             if (propertyService.exists(propertyName)) {
                 int idByName = propertyService.getIdByName(propertyName);
                 map.put(idByName, f);
@@ -34,14 +31,12 @@ public class PropertiesMapAdapter implements TypeSerializer<Map<Integer, Float>>
     }
 
     @Override
-    public void serialize(TypeToken<?> type, Map<Integer, Float> obj, ConfigurationNode value) throws ObjectMappingException {
-        if (obj == null) {
-            return;
-        }
+    public Map<String, Float> convertFromField(Map<Integer, Float> value) {
+
         Map<String, Float> floatMap = new HashMap<>();
         IPropertyService propertyService = Rpg.get().getPropertyService();
 
-        for (Map.Entry<Integer, Float> integerFloatEntry : obj.entrySet()) {
+        for (Map.Entry<Integer, Float> integerFloatEntry : value.entrySet()) {
             Integer key = integerFloatEntry.getKey();
             String nameById = propertyService.getNameById(key);
             if (nameById == null) {
@@ -49,7 +44,6 @@ public class PropertiesMapAdapter implements TypeSerializer<Map<Integer, Float>>
             }
             floatMap.put(nameById, integerFloatEntry.getValue());
         }
-        value.setValue(floatMap);
+        return floatMap;
     }
-
 }

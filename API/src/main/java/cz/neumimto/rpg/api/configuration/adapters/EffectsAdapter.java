@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.api.configuration.adapters;
 
+import com.electronwill.nightconfig.core.conversion.Path;
 import com.google.common.reflect.TypeToken;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.effects.EffectParams;
@@ -7,8 +8,6 @@ import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.api.logging.Log;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
-import ninja.leaping.configurate.objectmapping.Setting;
-import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;
 
 import java.util.ArrayList;
@@ -52,13 +51,12 @@ public class EffectsAdapter implements TypeSerializer<Map<IGlobalEffect, EffectP
         value.setValue(list);
     }
 
-    @ConfigSerializable
     protected static class EffectConfigModel {
 
-        @Setting("Id")
+        @Path("Id")
         private String type;
 
-        @Setting("Settings")
+        @Path("Settings")
         private Map<String, String> settings;
     }
 }

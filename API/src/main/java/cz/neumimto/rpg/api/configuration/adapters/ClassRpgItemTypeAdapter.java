@@ -62,12 +62,6 @@ public class ClassRpgItemTypeAdapter implements Converter<Set<ClassItem>, List<S
     }
 
     @Override
-    public void serialize(TypeToken<?> typeToken, Set<ClassItem> classItems, ConfigurationNode configurationNode) {
-
-        configurationNode.setValue(toSerialize);
-    }
-
-    @Override
     public Set<ClassItem> convertToField(List<String> value) {
         return null;
     }

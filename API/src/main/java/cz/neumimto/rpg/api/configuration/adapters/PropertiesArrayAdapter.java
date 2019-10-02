@@ -44,5 +44,6 @@ public class PropertiesArrayAdapter implements Converter<float[], Map<String, Fl
                 map.put(nameById, floats[i]);
             }
         }
+        return map;
     }
 }

@@ -18,14 +18,11 @@
 
 package cz.neumimto.rpg.common.persistance.dao;
 
-import cz.neumimto.config.blackjack.and.hookers.NotSoStupidObjectMapper;
+import com.electronwill.nightconfig.core.file.FileConfig;
+import com.electronwill.nightconfig.core.file.NoFormatFoundException;
 import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.configuration.ClassTypeDefinition;
-import ninja.leaping.configurate.commented.CommentedConfigurationNode;
-import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
-import ninja.leaping.configurate.objectmapping.ObjectMapper;
-import ninja.leaping.configurate.objectmapping.ObjectMappingException;
+import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 
 import javax.inject.Singleton;
 import java.io.IOException;
@@ -47,7 +44,7 @@ import static cz.neumimto.rpg.api.logging.Log.info;
 @Singleton
 public class ClassDefinitionDao {
 
-    public Set<ClassDefinition> parseClassFiles() throws ObjectMappingException {
+    public Set<ClassDefinition> parseClassFiles() {
         Path path = Paths.get(Rpg.get().getWorkingDirectory(), "classes");
         Set<ClassDefinition> set = new HashSet<>();
         try {
@@ -97,15 +94,14 @@ public class ClassDefinitionDao {
                 .filter(Files::isRegularFile)
                 .forEach(p -> {
                     info("Preloading class definition file " + p.getFileName());
-                    HoconConfigurationLoader build = HoconConfigurationLoader.builder().setPath(p).build();
+
                     ClassDefinition classDefinition = null;
-                    try {
-                        CommentedConfigurationNode load = build.load();
-                        if (!load.getChildrenMap().containsKey("Name") && !load.getChildrenMap().containsKey("ClassType")) {
+                    try (FileConfig fileConfig = FileConfig.of(p)) {
+                        if (!fileConfig.contains("Name") && !fileConfig.contains("ClassType")) {
                             error(" - Nodes Name and ClassType are mandatory");
                         } else {
-                            String name = (String) load.getNode("Name").getValue();
-                            String classType = (String) load.getNode("ClassType").getValue();
+                            String name = fileConfig.get("Name");
+                            String classType = fileConfig.get("ClassType");
                             Map<String, ClassTypeDefinition> types = Rpg.get().getPluginConfig().CLASS_TYPES;
                             ClassTypeDefinition classTypeDefinition = null;
 
@@ -125,7 +121,7 @@ public class ClassDefinitionDao {
                                 set.add(classDefinition);
                             }
                         }
-                    } catch (IOException e) {
+                    } catch (NoFormatFoundException e) {
                         error(" - File malformed", e);
                     }
                 });

@@ -101,7 +101,6 @@ public class ClassDefinition implements IEffectSourceProvider {
     protected Set<ClassItem> offHandWeapons = new HashSet<>();
 
     @Path("Experiences")
-    @Conversion(ClassExpAdapter.class)
     protected Map<String, Map<String, Double>> experiences = new HashMap<>();
 
     @Path("SkillTreeId")
@@ -121,15 +120,14 @@ public class ClassDefinition implements IEffectSourceProvider {
     protected SkillTreeType skillTreeType;
 
     @Path("ExperienceSources")
-    @Conversion(StringHashSetAdapter.class)
     protected Set<String> experienceSourceSet;
 
     @Path("Default")
     protected boolean defaultClass;
 
-    @Path("Dependencies")
-    @Conversion(ClassDependencyGraphAdapter.class)
-    protected DependencyGraph classDefinitionDependencyGraph;
+  //  @Path("Dependencies")
+//    @Conversion(ClassDependencyGraphAdapter.class)
+    protected transient DependencyGraph classDefinitionDependencyGraph;
 
     @Path("CustomLore")
     protected List<String> customLore;
