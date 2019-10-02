@@ -3,6 +3,7 @@ package cz.neumimto.rpg.persistence.flatfiles.converters;
 import com.electronwill.nightconfig.core.Config;
 import com.electronwill.nightconfig.core.file.FileConfig;
 import cz.neumimto.rpg.api.persistance.model.*;
+import cz.neumimto.rpg.persistence.model.CharacterBaseImpl;
 
 import java.util.Date;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.stream.Collectors;
 
 public class ConfigConverter {
 
-    private static final String UUID = "UUID";
+    private static final String UUID_ = "UUID";
     private static final String NAME = "Name";
     private static final String INFO = "Info";
     private static final String LASTNAME = "LastPlayerName";
@@ -30,7 +31,7 @@ public class ConfigConverter {
     public static Config toConfig(CharacterBase c, FileConfig config) {
 
         UUID uuid = c.getUuid();
-        config.set(UUID, uuid);
+        config.set(UUID_, uuid);
 
         String name = c.getName();
         config.set(NAME, name);
@@ -155,5 +156,43 @@ public class ConfigConverter {
         config.set(SKILL_UPDATED, updated);
 
         return config;
+    }
+
+    public static CharacterBase fromConfig(FileConfig config) {
+        CharacterBase characterBase = new CharacterBaseImpl();
+        characterBase.setUuid(UUID.fromString(config.get(UUID_)));
+        
+        characterBase.setName(config.get(NAME));
+        characterBase.setInfo(config.get(INFO));;
+        characterBase.setLastKnownPlayerName(config.get(LASTNAME));
+        
+        characterBase.setCanResetskills(config.get(RESET_SKILL));;
+
+        characterBase.setLastReset(config.get(LAST_RESET));
+
+        String string = config.get(LAST_POSITION);
+        String[] split = string.split(";");
+        characterBase.setWorld(split[0]);;
+        characterBase.setX(Integer.parseInt(split[1]));
+        characterBase.setY(Integer.parseInt(split[2]));;
+        characterBase.setZ(Integer.parseInt(split[3]));;
+
+        characterBase.setAttributePoints(config.get(AttributePoints));;
+        characterBase.setAttributePointsSpent(config.get(AttributePointsSpent));
+
+        Config config1 = config.get(SKILLS);
+
+        config.get(CLASSES);
+
+        config.get(ATTRIBUTES);
+
+        /*List<EquipedSlot> inventoryEquipSlotOrder = c.getInventoryEquipSlotOrder();
+        String collect = inventoryEquipSlotOrder.stream().map(equipedSlot -> equipedSlot.toString()).collect(Collectors.joining(";"));
+        config.get(INVENTOY_EQUIP_ORDER, collect);
+*/
+
+        characterBase.setHealthScale(config.get(HEALTH_SCALING));
+        characterBase.setMarkedForRemoval(config.get(MARKED_FOR_REMOVAL));
+        return characterBase;
     }
 }

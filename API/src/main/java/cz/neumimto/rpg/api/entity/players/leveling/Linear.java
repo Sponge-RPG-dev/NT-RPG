@@ -1,18 +1,16 @@
 package cz.neumimto.rpg.api.entity.players.leveling;
 
-import ninja.leaping.configurate.objectmapping.Setting;
-import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
+import com.electronwill.nightconfig.core.conversion.Path;
 
 /**
  * Created by NeumimTo on 27.1.2019.
  */
-@ConfigSerializable
 public class Linear extends AbstractLevelProgression {
 
-    @Setting("Sequence")
+    @Path("Sequence")
     private double sequence;
 
-    @Setting("FirstLevelExp")
+    @Path("FirstLevelExp")
     private double firstLevel;
 
     @Override

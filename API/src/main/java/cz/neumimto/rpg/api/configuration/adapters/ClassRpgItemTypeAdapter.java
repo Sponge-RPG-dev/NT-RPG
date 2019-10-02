@@ -1,17 +1,14 @@
 package cz.neumimto.rpg.api.configuration.adapters;
 
+import com.electronwill.nightconfig.core.conversion.Converter;
 import com.google.common.reflect.TypeToken;
-import cz.neumimto.config.blackjack.and.hookers.annotations.EnableSetterInjection;
-import cz.neumimto.config.blackjack.and.hookers.annotations.Setter;
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.configuration.ItemString;
 import cz.neumimto.rpg.api.items.ClassItem;
 import cz.neumimto.rpg.api.items.RpgItemType;
 import cz.neumimto.rpg.api.logging.Log;
-import cz.neumimto.rpg.api.configuration.ItemString;
-import cz.neumimto.rpg.api.effects.IEffectSourceProvider;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
-import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -19,15 +16,9 @@ import java.util.stream.Collectors;
 /**
  * Created by NeumimTo on 5.1.2019.
  */
-@EnableSetterInjection
-public class ClassRpgItemTypeAdapter implements TypeSerializer<Set<ClassItem>> {
 
-    private IEffectSourceProvider provider;
+public class ClassRpgItemTypeAdapter implements Converter<Set<ClassItem>, List<String>> {
 
-    @Setter
-    public void setProvider(IEffectSourceProvider provider) {
-        this.provider = provider;
-    }
 
     @Override
     public Set<ClassItem> deserialize(TypeToken<?> typeToken, ConfigurationNode configurationNode)
@@ -72,15 +63,24 @@ public class ClassRpgItemTypeAdapter implements TypeSerializer<Set<ClassItem>> {
 
     @Override
     public void serialize(TypeToken<?> typeToken, Set<ClassItem> classItems, ConfigurationNode configurationNode) {
-        List<String> toSerialize = new ArrayList<>();
 
-        for (ClassItem classItem : classItems) {
+        configurationNode.setValue(toSerialize);
+    }
+
+    @Override
+    public Set<ClassItem> convertToField(List<String> value) {
+        return null;
+    }
+
+    @Override
+    public List<String> convertFromField(Set<ClassItem> value) {
+        List<String> toSerialize = new ArrayList<>();
+        for (ClassItem classItem : value) {
             RpgItemType type = classItem.getType();
             double damage = classItem.getDamage();
             toSerialize.add(type.getKey().concat(";").concat(String.valueOf(damage)));
         }
-
-        configurationNode.setValue(toSerialize);
+        return toSerialize;
     }
 }
 

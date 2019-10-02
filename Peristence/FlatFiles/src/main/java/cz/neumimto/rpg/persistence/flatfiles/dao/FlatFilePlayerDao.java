@@ -18,6 +18,10 @@ import java.util.UUID;
 
 public class FlatFilePlayerDao implements IPlayerDao {
 
+    private String getCharacterConfigFileName(String charName) {
+        return charName.toLowerCase() + ".hocon";
+    }
+
     private Path getPlayerDataDirectory(UUID uuid) {
         Path path = Paths.get(Rpg.get().getWorkingDirectory(), "storage", uuid.toString());
         if (Files.exists(path)) {
@@ -42,6 +46,17 @@ public class FlatFilePlayerDao implements IPlayerDao {
 
     @Override
     public CharacterBase getCharacter(UUID player, String name) {
+        Path pdd = getPlayerDataDirectory(player);
+        Path resolve = pdd.resolve(getCharacterConfigFileName(name));
+        if (Files.isRegularFile(resolve)) {
+            try (FileConfig fileConfig = FileConfig.of(resolve)) {
+                boolean r = fileConfig.getOrElse(ConfigConverter.MARKED_FOR_REMOVAL, false);
+                if (r) {
+                    return null;
+                }
+                return ConfigConverter.fromConfig(fileConfig);
+            }
+        }
         return null;
     }
 
@@ -55,7 +70,7 @@ public class FlatFilePlayerDao implements IPlayerDao {
             for (File file1 : files) {
                 if (file1.isFile() && file1.getName().endsWith(".hocon")) {
                     FileConfig of = FileConfig.of(file1);
-                    boolean forRemoval = of.getOrElse(ConfigConverter.MARKED_FOR_REMOVAL, false));
+                    boolean forRemoval = of.getOrElse(ConfigConverter.MARKED_FOR_REMOVAL, false);
                     if (!forRemoval) {
                         counter++;
                     }
@@ -79,7 +94,7 @@ public class FlatFilePlayerDao implements IPlayerDao {
 
     @Override
     public int markCharacterForRemoval(UUID player, String charName) {
-        Path resolve = getPlayerDataDirectory(player).resolve(charName.toLowerCase() + ".hocon");
+        Path resolve = getPlayerDataDirectory(player).resolve(getCharacterConfigFileName(charName));
         FileConfig of = FileConfig.of(resolve);
         of.set(ConfigConverter.MARKED_FOR_REMOVAL, true);
         of.close();
@@ -89,7 +104,7 @@ public class FlatFilePlayerDao implements IPlayerDao {
     @Override
     public void update(CharacterBase characterBase) {
         characterBase.setUpdated(new Date());
-        Path resolve = getPlayerDataDirectory(characterBase.getUuid()).resolve(characterBase.getName().toLowerCase() + ".hocon");
+        Path resolve = getPlayerDataDirectory(characterBase.getUuid()).resolve(getCharacterConfigFileName(characterBase.getName()));
         FileConfig of = FileConfig.of(resolve);
         ConfigConverter.toConfig(characterBase, of);
         of.close();

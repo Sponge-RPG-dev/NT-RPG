@@ -1,17 +1,15 @@
 package cz.neumimto.rpg.api.entity.players.leveling;
 
-import ninja.leaping.configurate.objectmapping.Setting;
-import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
+import com.electronwill.nightconfig.core.conversion.Path;
 
 import java.util.Arrays;
 
 /**
  * Created by NeumimTo on 26.1.2019.
  */
-@ConfigSerializable
 public abstract class AbstractLevelProgression implements ILevelProgression {
 
-    @Setting("MaxLevel")
+    @Path("MaxLevel")
     protected int maxLevel;
 
     protected double[] levelMargins;

@@ -1,11 +1,9 @@
 package cz.neumimto.rpg.api.configuration.adapters;
 
-import com.google.common.reflect.TypeToken;
+import com.electronwill.nightconfig.core.conversion.Converter;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.IPropertyService;
-import ninja.leaping.configurate.ConfigurationNode;
-import ninja.leaping.configurate.objectmapping.ObjectMappingException;
-import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;
+import cz.neumimto.rpg.api.logging.Log;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,24 +11,23 @@ import java.util.Map;
 /**
  * Created by NeumimTo on 5.1.2019.
  */
-public class PropertiesArrayAdapter implements TypeSerializer<float[]> {
+public class PropertiesArrayAdapter implements Converter<float[], Map<String, Float>> {
 
     @Override
-    public float[] deserialize(TypeToken<?> typeToken, ConfigurationNode configurationNode) throws ObjectMappingException {
+    public float[] convertToField(Map<String, Float> value) {
         int lastId = Rpg.get().getPropertyService().getLastId();
         float[] arr = new float[lastId];
 
-        Map<Object, ? extends ConfigurationNode> childrenMap = configurationNode.getChildrenMap();
         IPropertyService propertyService = Rpg.get().getPropertyService();
-        for (Map.Entry<Object, ? extends ConfigurationNode> objectEntry : childrenMap.entrySet()) {
+        for (Map.Entry<String, Float> objectEntry : value.entrySet()) {
             String propertyName = ((String) objectEntry.getKey()).toLowerCase();
-            float f = ((Number) objectEntry.getValue().getValue()).floatValue();
+            float f = ((Number) objectEntry.getValue()).floatValue();
 
             if (propertyService.exists(propertyName)) {
                 int idByName = propertyService.getIdByName(propertyName);
                 arr[idByName] = f;
             } else {
-                throw new ObjectMappingException("Unknown property " + propertyName);
+                Log.error("Unknown property " + propertyName);
             }
         }
 
@@ -38,7 +35,7 @@ public class PropertiesArrayAdapter implements TypeSerializer<float[]> {
     }
 
     @Override
-    public void serialize(TypeToken<?> typeToken, float[] floats, ConfigurationNode configurationNode) throws ObjectMappingException {
+    public Map<String, Float> convertFromField(float[] floats) {
         Map<String, Float> map = new HashMap<>();
         IPropertyService propertyService = Rpg.get().getPropertyService();
         for (int i = 0; i < floats.length; i++) {
@@ -47,6 +44,5 @@ public class PropertiesArrayAdapter implements TypeSerializer<float[]> {
                 map.put(nameById, floats[i]);
             }
         }
-        configurationNode.setValue(map);
     }
 }

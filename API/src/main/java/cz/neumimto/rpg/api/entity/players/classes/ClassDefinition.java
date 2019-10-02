@@ -18,131 +18,120 @@
 
 package cz.neumimto.rpg.api.entity.players.classes;
 
-import cz.neumimto.config.blackjack.and.hookers.annotations.AsCollectionImpl;
-import cz.neumimto.config.blackjack.and.hookers.annotations.CustomAdapter;
-import cz.neumimto.config.blackjack.and.hookers.annotations.Default;
-import cz.neumimto.rpg.api.effects.EffectParams;
-import cz.neumimto.rpg.api.effects.IEffectSource;
-import cz.neumimto.rpg.api.effects.IEffectSourceProvider;
-import cz.neumimto.rpg.api.effects.IGlobalEffect;
-import cz.neumimto.rpg.api.items.ClassItem;
-import cz.neumimto.rpg.api.skills.tree.SkillTree;
-import cz.neumimto.rpg.api.effects.EffectSourceType;
+import com.electronwill.nightconfig.core.conversion.Conversion;
+import com.electronwill.nightconfig.core.conversion.Path;
+import com.electronwill.nightconfig.core.conversion.SpecValidator;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
+import cz.neumimto.rpg.api.configuration.adapters.*;
+import cz.neumimto.rpg.api.effects.*;
 import cz.neumimto.rpg.api.entity.players.leveling.EmptyLevelProgression;
 import cz.neumimto.rpg.api.entity.players.leveling.ILevelProgression;
 import cz.neumimto.rpg.api.entity.players.leveling.SkillTreeType;
-import cz.neumimto.rpg.api.configuration.adapters.*;
-import ninja.leaping.configurate.objectmapping.Setting;
-import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
+import cz.neumimto.rpg.api.items.ClassItem;
+import cz.neumimto.rpg.api.skills.tree.SkillTree;
 
 import java.util.*;
 
 /**
  * Created by NeumimTo on 27.12.2014.
  */
-@ConfigSerializable
 public class ClassDefinition implements IEffectSourceProvider {
 
-    @Setting("Name")
+    @Path("Name")
     protected String name;
 
-    @Setting("Description")
+    @Path("Description")
     protected String description;
 
-    @Setting("WelcomeMessage")
+    @Path("WelcomeMessage")
     protected String welcomeMessage;
 
-    @Setting("PreferredTextColor")
+    @Path("PreferredTextColor")
     protected String preferedColor;
 
-    @Setting("ItemType")
+    @Path("ItemType")
     protected String itemType;
 
-    @Setting("Visible")
+    @Path("Visible")
     protected boolean showsInMenu = true;
 
-    @Setting("ClassType")
-    @CustomAdapter(ClassTypeAdapter.class)
+    @Path("ClassType")
+    @SpecValidator(ClassTypeAdapter.class)
     protected String type;
 
-    @Setting("Properties")
-    @CustomAdapter(PropertiesArrayAdapter.class)
+    @Path("Properties")
+    @Conversion(PropertiesArrayAdapter.class)
     protected float[] propBonus;
 
-    @Setting("AllowedArmor")
-    @CustomAdapter(ClassRpgItemTypeAdapter.class)
+    @Path("AllowedArmor")
+    @Conversion(ClassRpgItemTypeAdapter.class)
     protected Set<ClassItem> allowedArmor = new HashSet<>();
 
-    @Setting("Permissions")
-    @CustomAdapter(ClassPermissionAdapter.class)
+    @Path("Permissions")
+    @Conversion(ClassPermissionAdapter.class)
     protected Set<PlayerClassPermission> permissions;
 
-    @Setting("PropertiesLevelBonus")
-    @CustomAdapter(PropertiesArrayAdapter.class)
+    @Path("PropertiesLevelBonus")
+    @Conversion(PropertiesArrayAdapter.class)
     protected float[] propLevelBonus;
 
-    @Setting("ExitCommands")
-    @AsCollectionImpl(ArrayList.class)
+    @Path("ExitCommands")
     protected List<String> exitCommands;
 
-    @Setting("EnterCommands")
-    @AsCollectionImpl(ArrayList.class)
+    @Path("EnterCommands")
     protected List<String> enterCommands;
 
-    @Setting("ProjectileDamage")
+    @Path("ProjectileDamage")
     protected Map<String, Double> projectileDamage = new HashMap<>();
 
-    @Setting("Weapons")
-    @CustomAdapter(ClassRpgItemTypeAdapter.class)
+    @Path("Weapons")
+    @Conversion(ClassRpgItemTypeAdapter.class)
     protected Set<ClassItem> weapons = new HashSet<>();
 
-    @Setting("Attributes")
-    @CustomAdapter(AttributeMapAdapter.class)
+    @Path("Attributes")
+    @Conversion(AttributeMapAdapter.class)
     protected Map<AttributeConfig, Integer> startingAttributes = new HashMap<>();
 
-    @Setting("Effects")
-    @CustomAdapter(EffectsAdapter.class)
+    @Path("Effects")
+    @Conversion(EffectsAdapter.class)
     protected Map<IGlobalEffect, EffectParams> effects = new HashMap<>();
 
-    @Setting("Offhand")
-    @CustomAdapter(ClassRpgItemTypeAdapter.class)
+    @Path("Offhand")
+    @Conversion(ClassRpgItemTypeAdapter.class)
     protected Set<ClassItem> offHandWeapons = new HashSet<>();
 
-    @Setting("Experiences")
-    @CustomAdapter(ClassExpAdapter.class)
+    @Path("Experiences")
+    @Conversion(ClassExpAdapter.class)
     protected Map<String, Map<String, Double>> experiences = new HashMap<>();
 
-    @Setting("SkillTreeId")
-    @CustomAdapter(SkillTreeLookupAdapter.class)
+    @Path("SkillTreeId")
+    @Conversion(SkillTreeLookupAdapter.class)
     protected SkillTree skillTree;
 
-    @Setting("SkillPointsPerLevel")
+    @Path("SkillPointsPerLevel")
     protected int skillpointsPerLevel;
 
-    @Setting("AttributePointsPerLevel")
+    @Path("AttributePointsPerLevel")
     protected int attributepointsPerLevel;
 
-    @Setting("Leveling")
-    @Default(EmptyLevelProgression.class)
-    protected ILevelProgression levels;
+    @Path("Leveling")
+    protected ILevelProgression levels = new EmptyLevelProgression();
 
-    @Setting("SkillTreeType")
+    @Path("SkillTreeType")
     protected SkillTreeType skillTreeType;
 
-    @Setting("ExperienceSources")
-    @CustomAdapter(StringHashSetAdapter.class)
+    @Path("ExperienceSources")
+    @Conversion(StringHashSetAdapter.class)
     protected Set<String> experienceSourceSet;
 
-    @Setting("Default")
+    @Path("Default")
     protected boolean defaultClass;
 
-    @Setting("Dependencies")
-    @CustomAdapter(ClassDependencyGraphAdapter.class)
+    @Path("Dependencies")
+    @Conversion(ClassDependencyGraphAdapter.class)
     protected DependencyGraph classDefinitionDependencyGraph;
 
-    @Setting("CustomLore")
-    @AsCollectionImpl(ArrayList.class)
+    @Path("CustomLore")
     protected List<String> customLore;
 
     public ClassDefinition(String name, String classType) {

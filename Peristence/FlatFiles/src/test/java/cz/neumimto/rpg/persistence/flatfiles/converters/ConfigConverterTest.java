@@ -1,44 +1,33 @@
-package cz.neumimto.rpg.persistence.jdbc.dao;
+package cz.neumimto.rpg.persistence.flatfiles.converters;
 
 import cz.neumimto.persistence.TestHelper;
 import cz.neumimto.rpg.api.RpgTests;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterClass;
-import org.junit.jupiter.api.AfterAll;
+import cz.neumimto.rpg.persistence.flatfiles.dao.FlatFilePlayerDao;
+import cz.neumimto.rpg.persistence.model.CharacterBaseImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
 
-public class JdbcPlayerDaoTest {
+class ConfigConverterTest {
 
-    private static JdbcPlayerDao jdbcPlayerDao;
 
     @BeforeAll
     public static void before() {
         new RpgTests();
-        try {
-            MariaDbBootstrap.runMigrations();
-            jdbcPlayerDao = new JdbcPlayerDao().setDataSource(MariaDbBootstrap.ds);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @Test
-    public void test() {
-        CharacterBase characterBase = TestHelper.createCharacterBase();
-        CharacterBase loadded = null;
-        try {
-            jdbcPlayerDao.create(characterBase);
-            loadded = jdbcPlayerDao.getCharacter(characterBase.getUuid(), characterBase.getName());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void testCharacterLoadAndSave() {
+        CharacterBaseImpl characterBase = TestHelper.createCharacterBase();
 
-        Assertions.assertNotNull(characterBase.getId());
-        Assertions.assertNotNull(loadded);
+        FlatFilePlayerDao flatFilePlayerDao = new FlatFilePlayerDao();
+        flatFilePlayerDao.create(characterBase);
+
+        CharacterBase loadded = flatFilePlayerDao.getCharacter(characterBase.getUuid(), characterBase.getName());
 
         Assertions.assertEquals(characterBase.getAttributePoints(), loadded.getAttributePoints());
         Assertions.assertEquals(characterBase.getAttributePointsSpent(), loadded.getAttributePointsSpent());
@@ -67,8 +56,8 @@ public class JdbcPlayerDaoTest {
         }
 
         TestHelper.addClasses(characterBase);
-        jdbcPlayerDao.update(characterBase);
-        loadded = jdbcPlayerDao.getCharacter(characterBase.getUuid(), characterBase.getName());
+        flatFilePlayerDao.update(characterBase);
+        loadded = flatFilePlayerDao.getCharacter(characterBase.getUuid(), characterBase.getName());
         for (CharacterClass characterClass : characterBase.getCharacterClasses()) {
             Optional<CharacterClass> first = loadded.getCharacterClasses().stream().filter(a -> a.getName().equals(characterClass.getName())).findFirst();
             if (!first.isPresent()) {
@@ -86,10 +75,4 @@ public class JdbcPlayerDaoTest {
         }
     }
 
-
-
-    @AfterAll
-    public static void stop() {
-        MariaDbBootstrap.tearDown();
-    }
 }

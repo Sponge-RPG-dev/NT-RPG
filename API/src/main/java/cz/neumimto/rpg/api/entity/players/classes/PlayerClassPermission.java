@@ -1,7 +1,6 @@
 package cz.neumimto.rpg.api.entity.players.classes;
 
-import ninja.leaping.configurate.objectmapping.Setting;
-import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
+import com.electronwill.nightconfig.core.conversion.Path;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,13 +8,12 @@ import java.util.List;
 /**
  * Created by ja on 22.7.2017.
  */
-@ConfigSerializable
 public class PlayerClassPermission implements Comparable<PlayerClassPermission> {
 
-    @Setting("Level")
+    @Path("Level")
     private int level;
 
-    @Setting("Permissions")
+    @Path("Permissions")
     private List<String> permissions;
 
     public int getLevel() {

@@ -28,9 +28,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Executor;
 
-public class RpgJdbcTests implements RpgApi {
+public class RpgTests implements RpgApi {
 
-    public RpgJdbcTests() {
+    public RpgTests() {
         Rpg.impl = this;
     }
 
@@ -131,7 +131,7 @@ public class RpgJdbcTests implements RpgApi {
 
     @Override
     public String getWorkingDirectory() {
-        return null;
+        return "/tmp/";
     }
 
     @Override

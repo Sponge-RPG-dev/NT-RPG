@@ -1,17 +1,15 @@
 package cz.neumimto.rpg.api.entity.players.leveling;
 
-import ninja.leaping.configurate.objectmapping.Setting;
-import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
+import com.electronwill.nightconfig.core.conversion.Path;
 
 import java.util.List;
 
 /**
  * Created by NeumimTo on 26.1.2019.
  */
-@ConfigSerializable
 public class Custom extends AbstractLevelProgression {
 
-    @Setting("Levels")
+    @Path("Levels")
     private List<Double> lvlMgrs;
 
     //because configurate and lightbend/config are extremly useless libraries once you stopE doing stupid hello fucking world applications.
