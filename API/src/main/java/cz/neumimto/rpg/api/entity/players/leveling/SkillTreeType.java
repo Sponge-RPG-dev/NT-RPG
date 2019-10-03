@@ -1,15 +1,14 @@
 package cz.neumimto.rpg.api.entity.players.leveling;
 
 
-import cz.neumimto.rpg.api.localization.Arg;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.ICharacterService;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.events.character.CharacterGainedLevelEvent;
+import cz.neumimto.rpg.api.localization.Arg;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
-import cz.neumimto.rpg.api.messaging.MessageLevel;
 import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
@@ -49,7 +48,7 @@ public enum SkillTreeType {
                 characterService.learnSkill(character, playerClassData, iSkill);
                 characterService.putInSaveQueue(character.getCharacterBase());
             } else {
-                MessageLevel.ERROR.sendMessage(character, actionResult.getMessage());
+                character.sendMessage(actionResult.getMessage());
             }
         }
 
@@ -63,7 +62,7 @@ public enum SkillTreeType {
                 characterService.upgradeSkill(character, skillInfo, iSkill);
                 characterService.putInSaveQueue(character.getCharacterBase());
             } else {
-                MessageLevel.ERROR.sendMessage(character, actionResult.getMessage());
+                character.sendMessage(actionResult.getMessage());
             }
         }
 
@@ -81,7 +80,7 @@ public enum SkillTreeType {
                     Rpg.get().getCharacterService().removePersistantSkill(characterSkill);
                 }, Rpg.get().getAsyncExecutor());
             } else {
-                MessageLevel.ERROR.sendMessage(character, actionResult.getMessage());
+                character.sendMessage(actionResult.getMessage());
             }
         }
     },
@@ -105,7 +104,7 @@ public enum SkillTreeType {
             Map<String, SkillData> skills = skillTree.getSkills();
             for (Map.Entry<String, SkillData> stringSkillDataEntry : skills.entrySet()) {
                 if (stringSkillDataEntry.getValue().getMinPlayerLevel() == level) {
-                    SkillData skillData = skillTree.getSkills().get(skillTree.getId());
+                    SkillData skillData = stringSkillDataEntry.getValue();
                     PlayerSkillContext playerSkillContext = new PlayerSkillContext(classDefinition, skillData.getSkill(), character);
                     playerSkillContext.setLevel(1);
                     playerSkillContext.setSkillData(skillData);

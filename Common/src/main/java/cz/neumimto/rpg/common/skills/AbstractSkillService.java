@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.common.skills;
 
+import com.google.inject.Injector;
 import cz.neumimto.rpg.api.IResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.classes.ClassService;
@@ -39,6 +40,9 @@ public abstract class AbstractSkillService implements SkillService {
 
     @Inject
     private ClassService classService;
+
+    @Inject
+    private Injector injector;
 
     protected Map<String, ISkill> skills = new HashMap<>();
 
@@ -228,7 +232,7 @@ public abstract class AbstractSkillService implements SkillService {
                 .getLoaded();
         try {
 
-            ScriptSkill s = (ScriptSkill) sk.newInstance();
+            ScriptSkill s = (ScriptSkill) injector.getInstance(sk);
 
             SkillSettings settings = new SkillSettings();
             Map<String, Float> settings2 = scriptSkillModel.getSettings();
@@ -247,7 +251,7 @@ public abstract class AbstractSkillService implements SkillService {
                 info("+ Script:\n " + s.bindScriptToTemplate(scriptSkillModel));
             }
             return (ISkill) s;
-        } catch (InstantiationException | IllegalAccessException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
