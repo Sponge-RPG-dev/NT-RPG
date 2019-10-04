@@ -1,7 +1,6 @@
 package cz.neumimto.rpg.common.effects;
 
-import ninja.leaping.configurate.objectmapping.Setting;
-import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
+import com.electronwill.nightconfig.core.conversion.Path;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,13 +8,12 @@ import java.util.Map;
 /**
  * Created by NeumimTo on 8.7.2018.
  */
-@ConfigSerializable
 public class EffectDumpConfiguration {
 
-    @Setting
+    @Path("description")
     private String description;
 
-    @Setting
+    @Path("settingNodes")
     private Map<String, String> settingNodes;
 
     public EffectDumpConfiguration() {

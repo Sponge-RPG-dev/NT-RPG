@@ -1,5 +1,7 @@
 package cz.neumimto.rpg.common;
 
+import com.electronwill.nightconfig.core.conversion.ObjectConverter;
+import com.electronwill.nightconfig.core.file.FileConfig;
 import cz.neumimto.rpg.api.IResourceLoader;
 import cz.neumimto.rpg.api.RpgApi;
 import cz.neumimto.rpg.api.classes.ClassService;
@@ -22,14 +24,9 @@ import cz.neumimto.rpg.api.scripting.IScriptEngine;
 import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.api.utils.FileUtils;
 import cz.neumimto.rpg.api.utils.rng.PseudoRandomDistribution;
-import cz.neumimto.rpg.common.entity.players.CharacterService;
-import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
-import ninja.leaping.configurate.objectmapping.ObjectMapper;
-import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 
 import javax.inject.Inject;
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.*;
 
@@ -194,21 +191,17 @@ public abstract class AbstractRpg implements RpgApi {
             FileUtils.generateConfigFile(new PluginConfig(), properties);
         }
 
-        try {
-            ObjectMapper<PluginConfig> mapper = ObjectMapper.forClass(PluginConfig.class);
-            HoconConfigurationLoader hcl = HoconConfigurationLoader.builder().setPath(properties.toPath()).build();
-            pluginConfig = mapper.bind(new PluginConfig()).populate(hcl.load());
+        try (FileConfig fileConfig = FileConfig.of(properties.getPath())) {
+            this.pluginConfig = new ObjectConverter().toObject(fileConfig, PluginConfig::new);
 
-            List<Map.Entry<String, ClassTypeDefinition>> list = new ArrayList<>(pluginConfig.CLASS_TYPES.entrySet());
+            List<Map.Entry<String, ClassTypeDefinition>> list = new ArrayList<>(this.pluginConfig.CLASS_TYPES.entrySet());
             list.sort(Map.Entry.comparingByValue());
 
             Map<String, ClassTypeDefinition> result = new LinkedHashMap<>();
             for (Map.Entry<String, ClassTypeDefinition> entry : list) {
                 result.put(entry.getKey(), entry.getValue());
             }
-            pluginConfig.CLASS_TYPES = result;
-        } catch (ObjectMappingException | IOException e) {
-            e.printStackTrace();
+            this.pluginConfig.CLASS_TYPES = result;
         }
     }
 

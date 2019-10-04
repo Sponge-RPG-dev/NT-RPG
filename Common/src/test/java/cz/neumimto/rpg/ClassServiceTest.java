@@ -12,19 +12,17 @@ import cz.neumimto.rpg.junit.TestGuiceModule;
 import cz.neumimto.rpg.sponge.permission.TestPermissionService;
 import name.falgout.jeffrey.testing.junit.guice.GuiceExtension;
 import name.falgout.jeffrey.testing.junit.guice.IncludeModule;
-import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import javax.inject.Inject;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import static cz.neumimto.rpg.junit.CharactersExtension.Stage.Stages.*;
+import static cz.neumimto.rpg.junit.CharactersExtension.Stage.Stages.READY;
 
 @ExtendWith({CharactersExtension.class, GuiceExtension.class, NtRpgExtension.class})
 @IncludeModule(TestGuiceModule.class)
@@ -69,7 +67,7 @@ public class ClassServiceTest {
     public void testLoadClasses() {
         ClassDefinitionDao dao = new ClassDefinitionDao() {
             @Override
-            public Set<ClassDefinition> parseClassFiles() throws ObjectMappingException {
+            public Set<ClassDefinition> parseClassFiles() {
                 return new HashSet<>(Arrays.asList(classDefinition, classDefinition2));
             }
         };

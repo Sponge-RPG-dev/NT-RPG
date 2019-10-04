@@ -1,7 +1,6 @@
 package cz.neumimto.rpg.common.entity.configuration;
 
-import ninja.leaping.configurate.objectmapping.Setting;
-import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
+import com.electronwill.nightconfig.core.conversion.Path;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,16 +8,15 @@ import java.util.Map;
 /**
  * Created by NeumimTo on 7.5.2018.
  */
-@ConfigSerializable
 public class MobsConfig {
 
-    @Setting(value = "damage", comment = "Entity Damage")
+    @Path("damage")
     private Map<String, Double> damage;
 
-    @Setting(value = "experiences", comment = "Entity experience gain")
+    @Path("experiences")
     private Map<String, Double> experiences;
 
-    @Setting(value = "health", comment = "Entity Maximum health")
+    @Path("health")
     private Map<String, Double> health;
 
     public MobsConfig() {

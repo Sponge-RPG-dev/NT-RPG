@@ -55,7 +55,7 @@ public class CharacterCommandTests {
         Integer value = iActiveCharacter.getAttributeValue(attributeConfig);
         HashMap<AttributeConfig, Integer> map = new HashMap<>();
         map.put(attributeConfig, 1);
-        characterCommandFacade.commandCommitAttribute(iActiveCharacter, map);
+        characterCommandFacade.commandCommitAttribute(iActiveCharacter);
         Assertions.assertEquals(iActiveCharacter.getAttributeValue(attributeConfig), value + 1);
         Assertions.assertEquals(iActiveCharacter.getCharacterBase().getAttributePoints(), 0);
         Assertions.assertEquals(iActiveCharacter.getCharacterBase().getAttributePointsSpent(), 1);

@@ -9,7 +9,6 @@ import cz.neumimto.rpg.api.entity.players.classes.PlayerClassPermission;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.permissions.PermissionService;
 import cz.neumimto.rpg.common.persistance.dao.ClassDefinitionDao;
-import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -105,7 +104,7 @@ public class ClassServiceImpl implements ClassService {
 
     @Override
     public void loadClasses() {
-        try {
+
             Set<ClassDefinition> classDefinitions = classDefinitionDao.parseClassFiles();
             classes.clear();
 
@@ -126,8 +125,5 @@ public class ClassServiceImpl implements ClassService {
 
             Log.info("Successfully loaded " + classes.size() + " classes");
 
-        } catch (ObjectMappingException e) {
-            Log.error("Could not load classes, ", e);
-        }
     }
 }

@@ -18,9 +18,8 @@
 
 package cz.neumimto.rpg.common.scripting;
 
-import static cz.neumimto.rpg.api.logging.Log.error;
-import static cz.neumimto.rpg.api.logging.Log.info;
-
+import com.electronwill.nightconfig.core.conversion.ObjectConverter;
+import com.electronwill.nightconfig.core.file.FileConfig;
 import com.google.inject.Injector;
 import cz.neumimto.rpg.api.IResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
@@ -34,18 +33,19 @@ import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.bytecode.ClassGenerator;
 import cz.neumimto.rpg.common.skills.scripting.SkillComponent;
 import net.bytebuddy.dynamic.loading.MultipleParentClassLoader;
-import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
-import ninja.leaping.configurate.objectmapping.ObjectMapper;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import javax.script.*;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.*;
 import java.util.*;
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import javax.script.*;
+
+import static cz.neumimto.rpg.api.logging.Log.error;
+import static cz.neumimto.rpg.api.logging.Log.info;
 
 /**
  * Created by NeumimTo on 13.3.2015.
@@ -249,10 +249,8 @@ public class JSLoader implements IScriptEngine {
     @Override
     public void loadSkillDefinitionFile(URLClassLoader urlClassLoader, File confFile) {
         info("Loading skills from file " + confFile.getName());
-        try {
-            ObjectMapper<SkillsDefinition> mapper = ObjectMapper.forClass(SkillsDefinition.class);
-            HoconConfigurationLoader hcl = HoconConfigurationLoader.builder().setPath(confFile.toPath()).build();
-            SkillsDefinition definition = mapper.bind(new SkillsDefinition()).populate(hcl.load());
+        try (FileConfig fc = FileConfig.of(confFile.getPath())) {
+            SkillsDefinition definition = new ObjectConverter().toObject(fc, SkillsDefinition::new);
             definition.getSkills().stream()
                     .map(a -> skillService.skillDefinitionToSkill(a, urlClassLoader))
                     .forEach(a -> skillService.registerAdditionalCatalog(a));

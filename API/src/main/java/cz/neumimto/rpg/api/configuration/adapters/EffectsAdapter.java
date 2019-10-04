@@ -1,26 +1,25 @@
 package cz.neumimto.rpg.api.configuration.adapters;
 
+import com.electronwill.nightconfig.core.Config;
+import com.electronwill.nightconfig.core.conversion.Converter;
+import com.electronwill.nightconfig.core.conversion.ObjectConverter;
 import com.electronwill.nightconfig.core.conversion.Path;
-import com.google.common.reflect.TypeToken;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.effects.EffectParams;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.api.logging.Log;
-import ninja.leaping.configurate.ConfigurationNode;
-import ninja.leaping.configurate.objectmapping.ObjectMappingException;
-import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class EffectsAdapter implements TypeSerializer<Map<IGlobalEffect, EffectParams>> {
-
+public class EffectsAdapter implements Converter<Map<IGlobalEffect, EffectParams>, Config> {
 
     @Override
-    public Map<IGlobalEffect, EffectParams> deserialize(TypeToken<?> type, ConfigurationNode value) throws ObjectMappingException {
-        List<EffectConfigModel> list = value.getList(TypeToken.of(EffectConfigModel.class));
+    public Map<IGlobalEffect, EffectParams> convertToField(Config value) {
+        Effects effects = new ObjectConverter().toObject(value, Effects::new);
+        List<EffectConfigModel> list = effects.list;
         Map<IGlobalEffect, EffectParams> params = new HashMap<>();
         for (EffectConfigModel model : list) {
             if (model.type == null) {
@@ -41,14 +40,16 @@ public class EffectsAdapter implements TypeSerializer<Map<IGlobalEffect, EffectP
     }
 
     @Override
-    public void serialize(TypeToken<?> type, Map<IGlobalEffect, EffectParams> obj, ConfigurationNode value) throws ObjectMappingException {
+    public Config convertFromField(Map<IGlobalEffect, EffectParams> value) {
         List<EffectConfigModel> list = new ArrayList<>();
-        for (Map.Entry<IGlobalEffect, EffectParams> entry : obj.entrySet()) {
+        for (Map.Entry<IGlobalEffect, EffectParams> entry : value.entrySet()) {
             EffectConfigModel model = new EffectConfigModel();
             model.settings = entry.getValue();
             model.type = entry.getKey().getName();
         }
-        value.setValue(list);
+        Config config = Config.inMemory();
+        config.set("effects", list);
+        return config;
     }
 
     protected static class EffectConfigModel {
@@ -57,6 +58,12 @@ public class EffectsAdapter implements TypeSerializer<Map<IGlobalEffect, EffectP
         private String type;
 
         @Path("Settings")
-        private Map<String, String> settings;
+        private Map<String, String> settings = new HashMap<>();
+    }
+
+    static class Effects {
+
+        @Path("effects")
+        List<EffectConfigModel> list = new ArrayList<>();
     }
 }

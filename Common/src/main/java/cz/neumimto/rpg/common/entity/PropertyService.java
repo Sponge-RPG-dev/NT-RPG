@@ -1,18 +1,16 @@
 package cz.neumimto.rpg.common.entity;
 
-import cz.neumimto.config.blackjack.and.hookers.NotSoStupidObjectMapper;
+import com.electronwill.nightconfig.core.conversion.ObjectConverter;
+import com.electronwill.nightconfig.core.file.FileConfig;
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.configuration.Attributes;
 import cz.neumimto.rpg.api.entity.IPropertyService;
-import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.properties.Property;
 import cz.neumimto.rpg.api.utils.Console;
 import cz.neumimto.rpg.common.assets.AssetService;
-import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
-import ninja.leaping.configurate.objectmapping.ObjectMapper;
-import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -225,15 +223,10 @@ public class PropertyService implements IPropertyService {
 
     @Override
     public void reLoadAttributes(Path attributeFilePath) {
-        try {
-            ObjectMapper<Attributes> mapper = NotSoStupidObjectMapper.forClass(Attributes.class);
-            HoconConfigurationLoader hcl = HoconConfigurationLoader.builder().setPath(attributeFilePath).build();
-            Attributes attributes = mapper.bind(new Attributes()).populate(hcl.load());
-            attributes.getAttributes().forEach(a -> attributeMap.put(a.getId(), a));
-            itemService.registerItemAttributes(Rpg.get().getPropertyService().getAttributes().values());
-        } catch (ObjectMappingException | IOException e) {
-            e.printStackTrace();
-        }
+        FileConfig fc = FileConfig.of(attributeFilePath);
+        Attributes attributes = new ObjectConverter().toObject(fc, Attributes::new);
+        attributes.getAttributes().forEach(a -> attributeMap.put(a.getId(), a));
+        itemService.registerItemAttributes(Rpg.get().getPropertyService().getAttributes().values());
     }
 
     @Override

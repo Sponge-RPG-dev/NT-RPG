@@ -35,6 +35,11 @@ public class TestCharacter extends ActiveCharacter<UUID, TestParty> implements I
     }
 
     @Override
+    public String getPlayerAccountName() {
+        return "null";
+    }
+
+    @Override
     public UUID getEntity() {
         return pl;
     }

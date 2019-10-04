@@ -1,7 +1,6 @@
 package cz.neumimto.rpg.common.entity.configuration;
 
-import ninja.leaping.configurate.objectmapping.Setting;
-import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
+import com.electronwill.nightconfig.core.conversion.Path;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,10 +8,9 @@ import java.util.Map;
 /**
  * Created by NeumimTo on 7.5.2018.
  */
-@ConfigSerializable
 public class RootMobConfig {
 
-    @Setting(value = "dimensions", comment = "Dimensions")
+    @Path("dimmensions")
     private Map<String, MobsConfig> dimmensions;
 
     public RootMobConfig() {

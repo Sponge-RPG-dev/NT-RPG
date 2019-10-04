@@ -11,7 +11,6 @@ import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Created by NeumimTo on 5.1.2019.
@@ -20,7 +19,6 @@ import java.util.stream.Collectors;
 public class ClassRpgItemTypeAdapter implements Converter<Set<ClassItem>, List<String>> {
 
 
-    @Override
     public Set<ClassItem> deserialize(TypeToken<?> typeToken, ConfigurationNode configurationNode)
             throws ObjectMappingException {
 
@@ -54,11 +52,14 @@ public class ClassRpgItemTypeAdapter implements Converter<Set<ClassItem>, List<S
         }
 
         map.putAll(map2);
+        return null;
 
-        return map.entrySet()
+        /*return map.entrySet()
                 .stream()
                 .map(a -> Rpg.get().getItemService().createClassItemSpecification(a.getKey(), a.getValue(), provider))
                 .collect(Collectors.toSet());
+
+         */
     }
 
     @Override

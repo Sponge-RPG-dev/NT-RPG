@@ -18,6 +18,7 @@
 
 package cz.neumimto.rpg.common.persistance.dao;
 
+import com.electronwill.nightconfig.core.conversion.ObjectConverter;
 import com.electronwill.nightconfig.core.file.FileConfig;
 import com.electronwill.nightconfig.core.file.NoFormatFoundException;
 import cz.neumimto.rpg.api.Rpg;
@@ -47,25 +48,25 @@ public class ClassDefinitionDao {
     public Set<ClassDefinition> parseClassFiles() {
         Path path = Paths.get(Rpg.get().getWorkingDirectory(), "classes");
         Set<ClassDefinition> set = new HashSet<>();
-        try {
+        try (FileConfig of = FileConfig.of(path)){
             Map<String, Path> stringPathMap = preloadClassDefs(path, set);
-            final ObjectMapper<ClassDefinition> mapper = NotSoStupidObjectMapper.forClass(ClassDefinition.class);
+
             for (Map.Entry<String, Path> stringPathEntry : stringPathMap.entrySet()) {
                 String key = stringPathEntry.getKey();
                 Path p = stringPathEntry.getValue();
 
                 try {
                     info("Loading class definition file " + p.getFileName());
-                    HoconConfigurationLoader hcl = HoconConfigurationLoader.builder().setPath(p).build();
-                    ClassDefinition definition = null;
+
+                    ClassDefinition result = null;
                     for (ClassDefinition classDefinition : set) {
                         if (classDefinition.getName().equalsIgnoreCase(key)) {
-                            definition = classDefinition;
+                            result = new ObjectConverter().toObject(of, () -> {
+                                return classDefinition;
+                            });
                             break;
                         }
                     }
-
-                    ClassDefinition result = mapper.bind(definition).populate(hcl.load());
 
                     if (result.getLevelProgression() != null) {
                         result.getLevelProgression().setLevelMargins(result.getLevelProgression().initCurve());
@@ -76,13 +77,12 @@ public class ClassDefinitionDao {
                     set.add(result);
                 } catch (Exception e) {
                     error("Could not read class file: ", e);
-                    throw new ObjectMappingException(e);
+
                 }
 
             }
         } catch (IOException e) {
             error("Could not read class file: ", e);
-            throw new ObjectMappingException(e);
         }
         return set;
     }

@@ -8,12 +8,12 @@ import cz.neumimto.rpg.api.persistance.model.CharacterClass;
  */
 public class CharacterClassTest extends TimestampEntityTest implements CharacterClass {
 
-    private Long classId;
-    private Double experiences;
-    private Integer level;
+    private long classId;
+    private double experiences;
+    private int level;
     private String name;
-    private Integer usedSkillPoints;
-    private Integer skillPoints;
+    private int usedSkillPoints;
+    private int skillPoints;
 
     private CharacterBase characterBase;
 
@@ -103,11 +103,5 @@ public class CharacterClassTest extends TimestampEntityTest implements Character
         return name.equals(that.name);
 
     }
-
-    @Override
-    public int hashCode() {
-        return classId != null ? classId.hashCode() : name.hashCode();
-    }
-
 
 }

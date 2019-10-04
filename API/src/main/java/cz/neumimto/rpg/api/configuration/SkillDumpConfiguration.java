@@ -1,18 +1,17 @@
 package cz.neumimto.rpg.api.configuration;
 
-import ninja.leaping.configurate.objectmapping.Setting;
-import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
+import com.electronwill.nightconfig.core.conversion.Path;
 
 import java.util.HashSet;
 import java.util.Set;
 
-@ConfigSerializable
+
 public class SkillDumpConfiguration {
 
-    @Setting
+    @Path("skillId")
     private String skillId;
 
-    @Setting
+    @Path("settings")
     private Set<String> floatNodes;
 
     public SkillDumpConfiguration() {
