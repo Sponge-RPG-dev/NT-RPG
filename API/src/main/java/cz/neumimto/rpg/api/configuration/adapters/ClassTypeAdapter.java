@@ -13,6 +13,9 @@ public class ClassTypeAdapter implements Predicate<Object> {
 
     @Override
     public boolean test(Object string) {
+        if (string == null) {
+            return false;
+        }
         if (string.getClass() == String.class) {
             return false;
         }

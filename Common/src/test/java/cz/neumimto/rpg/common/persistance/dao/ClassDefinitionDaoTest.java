@@ -11,7 +11,6 @@ import cz.neumimto.rpg.junit.TestDictionary;
 import cz.neumimto.rpg.junit.TestGuiceModule;
 import name.falgout.jeffrey.testing.junit.guice.GuiceExtension;
 import name.falgout.jeffrey.testing.junit.guice.IncludeModule;
-import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,7 +47,7 @@ public class ClassDefinitionDaoTest {
     }
 
     @Test
-    void testClassConfigLoading() throws ObjectMappingException {
+    void testClassConfigLoading() {
         Set<ClassDefinition> classDefinitions = classDefinitionDao.parseClassFiles();
         Assertions.assertSame(classDefinitions.size(), 1);
         ClassDefinition c = classDefinitions.iterator().next();

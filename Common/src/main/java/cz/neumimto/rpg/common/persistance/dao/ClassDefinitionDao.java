@@ -48,38 +48,35 @@ public class ClassDefinitionDao {
     public Set<ClassDefinition> parseClassFiles() {
         Path path = Paths.get(Rpg.get().getWorkingDirectory(), "classes");
         Set<ClassDefinition> set = new HashSet<>();
-        try (FileConfig of = FileConfig.of(path)){
+        try {
             Map<String, Path> stringPathMap = preloadClassDefs(path, set);
-
             for (Map.Entry<String, Path> stringPathEntry : stringPathMap.entrySet()) {
                 String key = stringPathEntry.getKey();
                 Path p = stringPathEntry.getValue();
+                try (FileConfig of = FileConfig.of(p)) {
+                    of.load();
+                        info("Loading class definition file " + p.getFileName());
 
-                try {
-                    info("Loading class definition file " + p.getFileName());
-
-                    ClassDefinition result = null;
-                    for (ClassDefinition classDefinition : set) {
-                        if (classDefinition.getName().equalsIgnoreCase(key)) {
-                            result = new ObjectConverter().toObject(of, () -> {
-                                return classDefinition;
-                            });
-                            break;
+                        ClassDefinition result = null;
+                        for (ClassDefinition classDefinition : set) {
+                            if (classDefinition.getName().equalsIgnoreCase(key)) {
+                                result = new ObjectConverter().toObject(of, () -> {
+                                    return classDefinition;
+                                });
+                                break;
+                            }
                         }
-                    }
 
-                    if (result.getLevelProgression() != null) {
-                        result.getLevelProgression().setLevelMargins(result.getLevelProgression().initCurve());
-                    }
-                    Set<String> expU = result.getExperienceSource().stream().map(String::toUpperCase).collect(Collectors.toSet());
+                        if (result.getLevelProgression() != null) {
+                            result.getLevelProgression().setLevelMargins(result.getLevelProgression().initCurve());
+                        }
+                        Set<String> expU = result.getExperienceSource().stream().map(String::toUpperCase).collect(Collectors.toSet());
 
-                    result.setExperienceSources(expU);
-                    set.add(result);
-                } catch (Exception e) {
-                    error("Could not read class file: ", e);
+                        result.setExperienceSources(expU);
+                        set.add(result);
+
 
                 }
-
             }
         } catch (IOException e) {
             error("Could not read class file: ", e);
@@ -97,6 +94,7 @@ public class ClassDefinitionDao {
 
                     ClassDefinition classDefinition = null;
                     try (FileConfig fileConfig = FileConfig.of(p)) {
+                        fileConfig.load();
                         if (!fileConfig.contains("Name") && !fileConfig.contains("ClassType")) {
                             error(" - Nodes Name and ClassType are mandatory");
                         } else {

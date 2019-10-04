@@ -19,6 +19,7 @@
 package cz.neumimto.rpg.api.entity.players.classes;
 
 import com.electronwill.nightconfig.core.conversion.Conversion;
+import com.electronwill.nightconfig.core.conversion.Converter;
 import com.electronwill.nightconfig.core.conversion.Path;
 import com.electronwill.nightconfig.core.conversion.SpecValidator;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
@@ -53,6 +54,7 @@ public class ClassDefinition implements IEffectSourceProvider {
     protected String itemType;
 
     @Path("Visible")
+    @Conversion(BooleanConverter.class)
     protected boolean showsInMenu = true;
 
     @Path("ClassType")
@@ -303,5 +305,22 @@ public class ClassDefinition implements IEffectSourceProvider {
                 "name='" + name + '\'' +
                 ", type=" + type +
                 '}';
+    }
+
+
+    private static class BooleanConverter implements Converter<String, Boolean> {
+
+        @Override
+        public Boolean convertFromField(String value) {
+            if (value == null) {
+                return false;
+            }
+            return Boolean.valueOf(value);
+        }
+
+        @Override
+        public String convertToField(Boolean value) {
+            return value.toString();
+        }
     }
 }
