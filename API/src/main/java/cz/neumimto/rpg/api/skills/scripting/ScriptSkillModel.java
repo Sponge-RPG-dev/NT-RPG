@@ -1,42 +1,40 @@
 package cz.neumimto.rpg.api.skills.scripting;
 
-import ninja.leaping.configurate.objectmapping.Setting;
-import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
+import com.electronwill.nightconfig.core.conversion.Path;
 
 import java.util.List;
 import java.util.Map;
 
-@ConfigSerializable
 public class ScriptSkillModel {
 
-    @Setting("Id")
+    @Path("Id")
     private String id;
 
-    @Setting("Name")
+    @Path("Name")
     private String name;
 
-    @Setting("Parent")
+    @Path("Parent")
     private String parent;
 
-    @Setting("Skill-Types")
+    @Path("Skill-Types")
     private List<String> skillTypes;
 
-    @Setting("Damage-Type")
+    @Path("Damage-Type")
     private String damageType;
 
-    @Setting("Lore")
+    @Path("Lore")
     private List<String> lore;
 
-    @Setting("Description")
+    @Path("Description")
     private List<String> description;
 
-    @Setting("Settings")
+    @Path("Paths")
     private Map<String, Float> settings;
 
-    @Setting("Loader")
+    @Path("Loader")
     private String loader;
 
-    @Setting("Script")
+    @Path("Script")
     private String script;
 
     public String getId() {

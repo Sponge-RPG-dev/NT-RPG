@@ -250,6 +250,7 @@ public class JSLoader implements IScriptEngine {
     public void loadSkillDefinitionFile(URLClassLoader urlClassLoader, File confFile) {
         info("Loading skills from file " + confFile.getName());
         try (FileConfig fc = FileConfig.of(confFile.getPath())) {
+            fc.load();
             SkillsDefinition definition = new ObjectConverter().toObject(fc, SkillsDefinition::new);
             definition.getSkills().stream()
                     .map(a -> skillService.skillDefinitionToSkill(a, urlClassLoader))
