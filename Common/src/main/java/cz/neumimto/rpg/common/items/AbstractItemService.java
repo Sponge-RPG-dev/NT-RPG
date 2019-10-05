@@ -5,7 +5,6 @@ import com.typesafe.config.ConfigException;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.configuration.ItemString;
-import cz.neumimto.rpg.api.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.api.entity.IPropertyService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
@@ -99,7 +98,7 @@ public abstract class AbstractItemService implements ItemService {
     }
 
     @Override
-    public ClassItem createClassItemSpecification(RpgItemType key, Double value, IEffectSourceProvider provider) {
+    public ClassItem createClassItemSpecification(RpgItemType key, Double value) {
         value = Rpg.get().getPluginConfig().ITEM_DAMAGE_PROCESSOR.get(value, key.getDamage());
         return new ClassItemImpl(key, value, 0);
     }

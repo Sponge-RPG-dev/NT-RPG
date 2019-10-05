@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.api.configuration.adapters;
 
+import com.electronwill.nightconfig.core.Config;
 import com.electronwill.nightconfig.core.conversion.Converter;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.IPropertyService;
@@ -11,15 +12,15 @@ import java.util.Map;
 /**
  * Created by NeumimTo on 5.1.2019.
  */
-public class PropertiesArrayAdapter implements Converter<float[], Map<String, Float>> {
+public class PropertiesArrayAdapter implements Converter<float[], Config> {
 
     @Override
-    public float[] convertToField(Map<String, Float> value) {
+    public float[] convertToField(Config value) {
         int lastId = Rpg.get().getPropertyService().getLastId();
         float[] arr = new float[lastId];
 
         IPropertyService propertyService = Rpg.get().getPropertyService();
-        for (Map.Entry<String, Float> objectEntry : value.entrySet()) {
+        for (Map.Entry<String, Object> objectEntry : value.valueMap().entrySet()) {
             String propertyName = ((String) objectEntry.getKey()).toLowerCase();
             float f = ((Number) objectEntry.getValue()).floatValue();
 
@@ -32,10 +33,12 @@ public class PropertiesArrayAdapter implements Converter<float[], Map<String, Fl
         }
 
         return arr;
+
+
     }
 
     @Override
-    public Map<String, Float> convertFromField(float[] floats) {
+    public Config convertFromField(float[] floats) {
         Map<String, Float> map = new HashMap<>();
         IPropertyService propertyService = Rpg.get().getPropertyService();
         for (int i = 0; i < floats.length; i++) {
@@ -44,6 +47,6 @@ public class PropertiesArrayAdapter implements Converter<float[], Map<String, Fl
                 map.put(nameById, floats[i]);
             }
         }
-        return map;
+        return Config.inMemory();
     }
 }

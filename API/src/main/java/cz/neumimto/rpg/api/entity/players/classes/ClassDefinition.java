@@ -84,6 +84,7 @@ public class ClassDefinition implements IEffectSourceProvider {
     protected List<String> enterCommands;
 
     @Path("ProjectileDamage")
+    @Conversion(MapStringDoubleAdapter.class)
     protected Map<String, Double> projectileDamage = new HashMap<>();
 
     @Path("Weapons")
@@ -308,19 +309,19 @@ public class ClassDefinition implements IEffectSourceProvider {
     }
 
 
-    private static class BooleanConverter implements Converter<String, Boolean> {
+    private static class BooleanConverter implements Converter<Boolean, Boolean> {
 
         @Override
-        public Boolean convertFromField(String value) {
+        public Boolean convertToField(Boolean value) {
             if (value == null) {
                 return false;
             }
-            return Boolean.valueOf(value);
+            return value;
         }
 
         @Override
-        public String convertToField(Boolean value) {
-            return value.toString();
+        public Boolean convertFromField(Boolean value) {
+            return value;
         }
     }
 }

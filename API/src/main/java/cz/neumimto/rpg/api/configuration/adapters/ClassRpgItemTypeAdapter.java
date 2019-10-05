@@ -1,16 +1,14 @@
 package cz.neumimto.rpg.api.configuration.adapters;
 
 import com.electronwill.nightconfig.core.conversion.Converter;
-import com.google.common.reflect.TypeToken;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.ItemString;
 import cz.neumimto.rpg.api.items.ClassItem;
 import cz.neumimto.rpg.api.items.RpgItemType;
 import cz.neumimto.rpg.api.logging.Log;
-import ninja.leaping.configurate.ConfigurationNode;
-import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by NeumimTo on 5.1.2019.
@@ -19,14 +17,10 @@ import java.util.*;
 public class ClassRpgItemTypeAdapter implements Converter<Set<ClassItem>, List<String>> {
 
 
-    public Set<ClassItem> deserialize(TypeToken<?> typeToken, ConfigurationNode configurationNode)
-            throws ObjectMappingException {
-
-        List<String> list = configurationNode.getList(TypeToken.of(String.class));
-
+    @Override
+    public Set<ClassItem> convertToField(List<String> list) {
         Map<RpgItemType, Double> map = new HashMap<>();
         Map<RpgItemType, Double> map2 = new HashMap<>();
-
         Iterator<String> iterator = list.iterator();
         while (iterator.hasNext()) {
             String s = iterator.next();
@@ -52,19 +46,11 @@ public class ClassRpgItemTypeAdapter implements Converter<Set<ClassItem>, List<S
         }
 
         map.putAll(map2);
-        return null;
 
-        /*return map.entrySet()
+        return map.entrySet()
                 .stream()
-                .map(a -> Rpg.get().getItemService().createClassItemSpecification(a.getKey(), a.getValue(), provider))
+                .map(a -> Rpg.get().getItemService().createClassItemSpecification(a.getKey(), a.getValue()))
                 .collect(Collectors.toSet());
-
-         */
-    }
-
-    @Override
-    public Set<ClassItem> convertToField(List<String> value) {
-        return null;
     }
 
     @Override

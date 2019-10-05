@@ -1,32 +1,30 @@
 package cz.neumimto.rpg.api.configuration;
 
 import com.electronwill.nightconfig.core.conversion.Conversion;
+import com.electronwill.nightconfig.core.conversion.Path;
 import cz.neumimto.rpg.api.configuration.adapters.PropertiesMapAdapter;
-import ninja.leaping.configurate.objectmapping.Setting;
-import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 
 import java.util.Map;
 
-@ConfigSerializable
 public class AttributeConfig {
 
-    @Setting("Id")
+    @Path("Id")
     private String id;
 
-    @Setting("Name")
+    @Path("Name")
     private String name;
 
-    @Setting("MaxValue")
+    @Path("MaxValue")
     private float maxValue;
 
-    @Setting("Properties")
+    @Path("Properties")
     @Conversion(PropertiesMapAdapter.class)
     private Map<Integer, Float> propBonus;
 
-    @Setting("ItemType")
+    @Path("ItemType")
     private String itemType;
 
-    @Setting("Description")
+    @Path("Description")
     private String description;
 
     public AttributeConfig(String id, String name, float maxValue, Map<Integer, Float> propBonus, String itemType, String description) {

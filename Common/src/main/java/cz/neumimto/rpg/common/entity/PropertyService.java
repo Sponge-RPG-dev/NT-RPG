@@ -205,7 +205,7 @@ public class PropertyService implements IPropertyService {
 
     @Override
     public Optional<AttributeConfig> getAttributeById(String attribute) {
-        return Optional.ofNullable(getAttributes().get(attribute));
+        return Optional.ofNullable(getAttributes().get(attribute.toLowerCase()));
     }
 
     @Override

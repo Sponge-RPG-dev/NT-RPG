@@ -16,7 +16,7 @@ public class ClassTypeAdapter implements Predicate<Object> {
         if (string == null) {
             return false;
         }
-        if (string.getClass() == String.class) {
+        if (string.getClass() != String.class) {
             return false;
         }
         if (!Rpg.get().getPluginConfig().CLASS_TYPES.containsKey(string)) {

@@ -3,7 +3,6 @@ package cz.neumimto.rpg.api.items;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
-import cz.neumimto.rpg.api.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.items.sockets.SocketType;
@@ -33,7 +32,7 @@ public interface ItemService {
 
     void registerProperty(ItemClass itemClass, String property);
 
-    ClassItem createClassItemSpecification(RpgItemType key, Double value, IEffectSourceProvider provider);
+    ClassItem createClassItemSpecification(RpgItemType key, Double value);
 
     default void loadItemGroups(Path path) {
         Config config = ConfigFactory.parseFile(path.toFile());

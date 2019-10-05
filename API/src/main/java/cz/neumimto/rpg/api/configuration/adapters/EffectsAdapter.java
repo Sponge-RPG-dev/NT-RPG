@@ -14,14 +14,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class EffectsAdapter implements Converter<Map<IGlobalEffect, EffectParams>, Config> {
+public class EffectsAdapter implements Converter<Map<IGlobalEffect, EffectParams>, List<Config>> {
 
     @Override
-    public Map<IGlobalEffect, EffectParams> convertToField(Config value) {
-        Effects effects = new ObjectConverter().toObject(value, Effects::new);
-        List<EffectConfigModel> list = effects.list;
+    public Map<IGlobalEffect, EffectParams> convertToField(List<Config> value) {
         Map<IGlobalEffect, EffectParams> params = new HashMap<>();
-        for (EffectConfigModel model : list) {
+
+        for (Config config : value) {
+
+            EffectConfigModel model = new ObjectConverter().toObject(config, EffectConfigModel::new);
+
             if (model.type == null) {
                 Log.warn("Cannot read effects section - Missing node Id");
                 continue;
@@ -35,12 +37,15 @@ public class EffectsAdapter implements Converter<Map<IGlobalEffect, EffectParams
                 model.settings = new HashMap<>();
             }
             params.put(globalEffect, new EffectParams(model.settings));
+
         }
+
+
         return params;
     }
 
     @Override
-    public Config convertFromField(Map<IGlobalEffect, EffectParams> value) {
+    public List<Config> convertFromField(Map<IGlobalEffect, EffectParams> value) {
         List<EffectConfigModel> list = new ArrayList<>();
         for (Map.Entry<IGlobalEffect, EffectParams> entry : value.entrySet()) {
             EffectConfigModel model = new EffectConfigModel();
@@ -49,7 +54,7 @@ public class EffectsAdapter implements Converter<Map<IGlobalEffect, EffectParams
         }
         Config config = Config.inMemory();
         config.set("effects", list);
-        return config;
+        return new ArrayList<>();
     }
 
     protected static class EffectConfigModel {
@@ -61,9 +66,4 @@ public class EffectsAdapter implements Converter<Map<IGlobalEffect, EffectParams
         private Map<String, String> settings = new HashMap<>();
     }
 
-    static class Effects {
-
-        @Path("effects")
-        List<EffectConfigModel> list = new ArrayList<>();
-    }
 }
