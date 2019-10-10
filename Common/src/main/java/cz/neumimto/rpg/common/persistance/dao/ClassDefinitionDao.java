@@ -55,25 +55,25 @@ public class ClassDefinitionDao {
                 Path p = stringPathEntry.getValue();
                 try (FileConfig of = FileConfig.of(p)) {
                     of.load();
-                        info("Loading class definition file " + p.getFileName());
+                    info("Loading class definition file " + p.getFileName());
 
-                        ClassDefinition result = null;
-                        for (ClassDefinition classDefinition : set) {
-                            if (classDefinition.getName().equalsIgnoreCase(key)) {
-                                result = new ObjectConverter().toObject(of, () -> {
-                                    return classDefinition;
-                                });
-                                break;
-                            }
+                    ClassDefinition result = null;
+                    for (ClassDefinition classDefinition : set) {
+                        if (classDefinition.getName().equalsIgnoreCase(key)) {
+                            result = new ObjectConverter().toObject(of, () -> {
+                                return classDefinition;
+                            });
+                            break;
                         }
+                    }
 
-                        if (result.getLevelProgression() != null) {
-                            result.getLevelProgression().setLevelMargins(result.getLevelProgression().initCurve());
-                        }
-                        Set<String> expU = result.getExperienceSource().stream().map(String::toUpperCase).collect(Collectors.toSet());
+                    if (result.getLevelProgression() != null) {
+                        result.getLevelProgression().setLevelMargins(result.getLevelProgression().initCurve());
+                    }
+                    Set<String> expU = result.getExperienceSource().stream().map(String::toUpperCase).collect(Collectors.toSet());
 
-                        result.setExperienceSources(expU);
-                        set.add(result);
+                    result.setExperienceSources(expU);
+                    set.add(result);
 
 
                 }

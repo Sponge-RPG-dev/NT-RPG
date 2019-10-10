@@ -1,6 +1,7 @@
 package cz.neumimto.rpg.api.configuration.adapters;
 
 import com.electronwill.nightconfig.core.Config;
+import com.electronwill.nightconfig.core.conversion.Conversion;
 import com.electronwill.nightconfig.core.conversion.Converter;
 import com.electronwill.nightconfig.core.conversion.ObjectConverter;
 import com.electronwill.nightconfig.core.conversion.Path;
@@ -63,7 +64,25 @@ public class EffectsAdapter implements Converter<Map<IGlobalEffect, EffectParams
         private String type;
 
         @Path("Settings")
+        @Conversion(EffectSettingsConverter.class)
         private Map<String, String> settings = new HashMap<>();
     }
 
+    private static class EffectSettingsConverter implements Converter<Map<String, String>, Config> {
+
+        @Override
+        public Map<String, String> convertToField(Config value) {
+            Map<String, String> map = new HashMap<>();
+            Map<String, Object> stringObjectMap = value.valueMap();
+            for (Map.Entry<String, Object> a : stringObjectMap.entrySet()) {
+                map.put(a.getKey(), String.valueOf(a.getValue()));
+            }
+            return map;
+        }
+
+        @Override
+        public Config convertFromField(Map<String, String> value) {
+            return Config.inMemory();
+        }
+    }
 }

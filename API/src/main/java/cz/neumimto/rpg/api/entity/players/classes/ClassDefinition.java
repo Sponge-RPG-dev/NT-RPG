@@ -104,6 +104,7 @@ public class ClassDefinition implements IEffectSourceProvider {
     protected Set<ClassItem> offHandWeapons = new HashSet<>();
 
     @Path("Experiences")
+    @Conversion(DimExperiencesAdapter.class)
     protected Map<String, Map<String, Double>> experiences = new HashMap<>();
 
     @Path("SkillTreeId")
@@ -117,12 +118,14 @@ public class ClassDefinition implements IEffectSourceProvider {
     protected int attributepointsPerLevel;
 
     @Path("Leveling")
+    @Conversion(LevelProgressionConverter.class)
     protected ILevelProgression levels = new EmptyLevelProgression();
 
     @Path("SkillTreeType")
     protected SkillTreeType skillTreeType;
 
     @Path("ExperienceSources")
+    @Conversion(StringSet.class)
     protected Set<String> experienceSourceSet;
 
     @Path("Default")
@@ -322,6 +325,18 @@ public class ClassDefinition implements IEffectSourceProvider {
         @Override
         public Boolean convertFromField(Boolean value) {
             return value;
+        }
+    }
+
+    private static class StringSet implements Converter<Set<String>, List<String>> {
+        @Override
+        public Set<String> convertToField(List<String> value) {
+            return new HashSet<>(value);
+        }
+
+        @Override
+        public List<String> convertFromField(Set<String> value) {
+            return new ArrayList<>(value);
         }
     }
 }

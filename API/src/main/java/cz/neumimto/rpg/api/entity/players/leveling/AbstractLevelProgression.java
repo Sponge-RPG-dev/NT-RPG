@@ -12,9 +12,9 @@ public abstract class AbstractLevelProgression implements ILevelProgression {
     @Path("MaxLevel")
     protected int maxLevel;
 
-    protected double[] levelMargins;
+    protected transient double[] levelMargins;
 
-    protected double totalExpAmount;
+    protected transient double totalExpAmount;
 
     @Override
     public double[] getLevelMargins() {

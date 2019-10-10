@@ -13,5 +13,4 @@ public interface ILevelProgression {
 
     double[] initCurve();
 
-
 }

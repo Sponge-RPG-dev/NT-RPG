@@ -12,6 +12,9 @@ public class SkillTreeLookupAdapter implements Converter<SkillTree, String> {
 
     @Override
     public SkillTree convertToField(String skillTreeId) {
+        if (skillTreeId == null) {
+            return SkillTree.Default;
+        }
         SkillTree skillTree = Rpg.get().getSkillService().getSkillTrees().get(skillTreeId);
         if (skillTree == null) {
             Log.info("Unknown skilltree " + skillTreeId);

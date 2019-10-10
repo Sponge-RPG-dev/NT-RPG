@@ -6,7 +6,6 @@ import cz.neumimto.rpg.api.entity.CommonProperties;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
-import cz.neumimto.rpg.api.entity.players.leveling.ILevelProgression;
 import cz.neumimto.rpg.api.entity.players.leveling.Linear;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.gui.IPlayerMessage;
@@ -48,13 +47,13 @@ public class AdminCommandTests {
     private RpgApi rpgApi;
 
     @BeforeEach
-    public void before(){
+    public void before() {
         new RpgTest(rpgApi);
         new Gui(vanillaMessaging);
     }
 
     @Test
-    public void testAddEffectCommand(@Stage(READY)IActiveCharacter iActiveCharacter) {
+    public void testAddEffectCommand(@Stage(READY) IActiveCharacter iActiveCharacter) {
         effectService.registerGlobalEffect(new TestEffectFloatGlobal());
 
         IGlobalEffect globalEffect = effectService.getGlobalEffect(TestEffectFloat.name);
@@ -63,25 +62,29 @@ public class AdminCommandTests {
     }
 
     @Test
-    public void testAddExpCommand(@Stage(READY)IActiveCharacter iActiveCharacter) {
-        ClassDefinition classDefinition = new ClassDefinition("test", "test") {
-            @Override
-            public ILevelProgression getLevelProgression() {
-                Linear linear = new Linear() {
-                    @Override
-                    public int getMaxLevel() {
-                        return 100;
-                    }
+    public void testAddExpCommand(@Stage(READY) IActiveCharacter iActiveCharacter) {
+        ClassDefinition classDefinition = new ClassDefinition("test", "test");
 
-                    @Override
-                    public double[] getLevelMargins() {
-                        return new double[] {100.D};
-                    }
-                };
-                linear.initCurve();
-                return linear;
+
+        Linear linear = new Linear() {
+            @Override
+            public int getMaxLevel() {
+                return 5;
+            }
+
+            @Override
+            public double[] getLevelMargins() {
+                return new double[]{100.D,200,300,400,500};
             }
         };
+        linear.initCurve();
+
+        try {
+            TestHelper.setField(classDefinition, "levels", linear);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         CharacterClass jpaCharacterClass = new CharacterClassTest();
         jpaCharacterClass.setLevel(0);
         jpaCharacterClass.setExperiences(0);
