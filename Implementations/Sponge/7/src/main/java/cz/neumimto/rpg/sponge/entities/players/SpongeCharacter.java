@@ -73,8 +73,5 @@ public class SpongeCharacter extends ActiveCharacter<Player, SpongeParty> implem
         return super.updateItemRestrictions();
     }
 
-    @Override
-    public String getPlayerAccountName() {
-        return getPlayer().getName();
-    }
+
 }

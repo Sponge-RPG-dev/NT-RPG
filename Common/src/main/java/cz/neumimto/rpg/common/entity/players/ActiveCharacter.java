@@ -765,6 +765,10 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
         attrTransaction = map;
     }
 
+    @Override
+    public String getPlayerAccountName() {
+        return getCharacterBase().getLastKnownPlayerName();
+    }
 
     @Override
     public java.lang.String toString() {

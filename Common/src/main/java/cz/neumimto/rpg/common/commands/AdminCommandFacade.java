@@ -11,6 +11,7 @@ import cz.neumimto.rpg.api.entity.players.ICharacterService;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.logging.Log;
+import cz.neumimto.rpg.api.utils.ActionResult;
 import cz.neumimto.rpg.common.effects.InternalEffectSourceProvider;
 
 import javax.inject.Inject;
@@ -99,5 +100,14 @@ public class AdminCommandFacade {
             throw new CommandProcessingException("Specify class or experience source!");
         }
         return true;
+    }
+
+
+    public ActionResult addCharacterClass(IActiveCharacter c, ClassDefinition classDefinition) {
+        ActionResult actionResult = characterService.canGainClass(c, classDefinition);
+        if (actionResult.isOk()) {
+            characterService.addNewClass(c, classDefinition);
+        }
+        return actionResult;
     }
 }

@@ -58,8 +58,4 @@ public class SpigotCharacter extends ActiveCharacter<Player, SpigotParty> implem
         return Bukkit.getPlayer(getUUID());
     }
 
-    @Override
-    public String getPlayerAccountName() {
-        return getPlayer().getName();
-    }
 }

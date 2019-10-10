@@ -169,6 +169,7 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
 
             if (pluginConfig.PLAYER_AUTO_CHOOSE_LAST_PLAYED_CHAR || playerCharacters.size() == 1) {
                 T activeCharacter = createActiveCharacter(id, playerCharacters.get(0));
+                activeCharacter.getCharacterBase().setLastKnownPlayerName(playerName);
                 Rpg.get().scheduleSyncLater(() -> {
                     addCharacter(id, activeCharacter);
                     assignPlayerToCharacter(id);
@@ -1173,6 +1174,14 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
                                 arg("class", klass.getName()));
                     }
                     character.sendMessage(message);
+                    scheduleNextTick(() -> {
+                        List<String> enterCommands = klass.getEnterCommands();
+                        if (enterCommands != null) {
+                            Map<String, String> args = new HashMap<>();
+                            args.put("{{player}}", character.getPlayerAccountName());
+                            Rpg.get().executeCommandBatch(args, enterCommands);
+                        }
+                    });
                 });
             });
         });

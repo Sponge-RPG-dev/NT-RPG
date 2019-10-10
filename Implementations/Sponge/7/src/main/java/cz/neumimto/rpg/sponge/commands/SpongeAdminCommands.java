@@ -20,6 +20,7 @@ import cz.neumimto.rpg.api.skills.SkillSettings;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.mods.SkillExecutorCallback;
 import cz.neumimto.rpg.api.skills.types.IActiveSkill;
+import cz.neumimto.rpg.api.utils.ActionResult;
 import cz.neumimto.rpg.common.commands.AdminCommandFacade;
 import cz.neumimto.rpg.common.commands.CommandProcessingException;
 import cz.neumimto.rpg.common.effects.EffectService;
@@ -28,7 +29,7 @@ import cz.neumimto.rpg.common.persistance.dao.ClassDefinitionDao;
 import cz.neumimto.rpg.sponge.entities.commandblocks.ConsoleSkillExecutor;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
-import ninja.leaping.configurate.objectmapping.ObjectMappingException;
+import cz.neumimto.rpg.sponge.utils.TextHelper;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.entity.living.player.Player;
@@ -220,8 +221,19 @@ public class SpongeAdminCommands extends BaseCommand {
                 characterService.invalidateCaches(activeCharacter);
                 characterService.assignPlayerToCharacter(player.getUniqueId());
             }
-        } catch (ObjectMappingException e) {
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
+    @Subcommand("add-class")
+    public void addClassToCharacterCommand(Player executor, OnlinePlayer target, ClassDefinition klass) {
+        ISpongeCharacter character = characterService.getCharacter(target.player);
+        ActionResult actionResult = adminCommandFacade.addCharacterClass(character, klass);
+        if (actionResult.isOk()) {
+            executor.sendMessage(TextHelper.parse(Rpg.get().getLocalizationService().translate("class.set.ok")));
+        } else {
+            executor.sendMessage(TextHelper.parse(actionResult.getMessage()));
         }
     }
 }
