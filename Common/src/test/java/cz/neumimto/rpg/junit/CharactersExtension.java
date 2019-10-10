@@ -21,6 +21,7 @@ import org.junit.jupiter.api.extension.ParameterResolver;
 import java.lang.annotation.Annotation;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.HashMap;
 import java.util.UUID;
 
 import static cz.neumimto.rpg.junit.TestDictionary.*;
@@ -96,6 +97,8 @@ public class CharactersExtension implements ParameterResolver {
 
         activeCharacter.setHealth(new TestPool());
         activeCharacter.setMana(new TestPool());
+
+        activeCharacter.setAttributesTransaction(new HashMap<>());
 
         return activeCharacter;
     }

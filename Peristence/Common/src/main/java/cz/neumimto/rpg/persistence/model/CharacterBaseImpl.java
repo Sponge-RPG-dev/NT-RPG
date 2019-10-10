@@ -43,10 +43,10 @@ public class CharacterBaseImpl extends TimestampEntityImpl implements CharacterB
     private Set<BaseCharacterAttribute> baseCharacterAttribute = new HashSet<>();
     private List<EquipedSlot> inventoryEquipSlotOrder = new ArrayList<>();
     private Boolean markedForRemoval;
-    private Integer attributePointsSpent;
-    private Integer X;
-    private Integer Y;
-    private Integer Z;
+    private int attributePointsSpent;
+    private int X;
+    private int Y;
+    private int Z;
     private String world;
 
     private transient Map<String, Integer> cachedAttributes = new HashMap<>();
@@ -270,7 +270,7 @@ public class CharacterBaseImpl extends TimestampEntityImpl implements CharacterB
     }
 
     @Override
-    public Integer getAttributePointsSpent() {
+    public int getAttributePointsSpent() {
         return attributePointsSpent;
     }
 

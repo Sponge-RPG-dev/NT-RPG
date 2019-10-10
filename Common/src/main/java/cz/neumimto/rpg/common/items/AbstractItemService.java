@@ -130,7 +130,7 @@ public abstract class AbstractItemService implements ItemService {
             Integer value = entry.getValue();
             Integer requirement = inventoryRequirements.get(key);
 
-            Integer bonus = bonusAttributes.get(entry.getKey());
+            Integer bonus = bonusAttributes.getOrDefault(entry.getKey(), 0);
             if (character.getAttributeValue(key) - bonus < Math.max(value, requirement)) {
                 return false;
             }
