@@ -6,8 +6,6 @@ import cz.neumimto.rpg.api.utils.FileUtils;
 import cz.neumimto.rpg.common.entity.configuration.MobSettingsDao;
 import cz.neumimto.rpg.common.entity.configuration.MobsConfig;
 import cz.neumimto.rpg.common.entity.configuration.RootMobConfig;
-import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
-import ninja.leaping.configurate.objectmapping.ObjectMapper;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.living.Human;
@@ -52,13 +50,7 @@ public class SpongeMobSettingsDao extends MobSettingsDao {
             FileUtils.generateConfigFile(rootMobConfig, properties);
 
         }
-        try {
-            ObjectMapper<RootMobConfig> mapper = ObjectMapper.forClass(RootMobConfig.class);
-            HoconConfigurationLoader hcl = HoconConfigurationLoader.builder().setPath(properties.toPath()).build();
-            return mapper.bind(new RootMobConfig()).populate(hcl.load());
-        } catch (Exception e) {
-            throw new RuntimeException("Could not load file MobSettings.conf", e);
-        }
+        return loadFile(properties.toPath());
     }
 
 

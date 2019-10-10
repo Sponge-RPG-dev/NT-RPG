@@ -5,8 +5,6 @@ import cz.neumimto.rpg.api.utils.FileUtils;
 import cz.neumimto.rpg.common.entity.configuration.MobSettingsDao;
 import cz.neumimto.rpg.common.entity.configuration.MobsConfig;
 import cz.neumimto.rpg.common.entity.configuration.RootMobConfig;
-import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
-import ninja.leaping.configurate.objectmapping.ObjectMapper;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.EntityType;
@@ -25,6 +23,7 @@ public class SpigotMobSettingsDao extends MobSettingsDao {
     @Override
     protected RootMobConfig createDefaults() {
         File properties = new File(Rpg.get().getWorkingDirectory(), "MobSettings.conf");
+
         if (!properties.exists()) {
             EntityType[] values = EntityType.values();
             List<EntityType> livingEntities = Stream.of(values)
@@ -49,12 +48,6 @@ public class SpigotMobSettingsDao extends MobSettingsDao {
 
 
         }
-        try {
-            ObjectMapper<RootMobConfig> mapper = ObjectMapper.forClass(RootMobConfig.class);
-            HoconConfigurationLoader hcl = HoconConfigurationLoader.builder().setPath(properties.toPath()).build();
-            return mapper.bind(new RootMobConfig()).populate(hcl.load());
-        } catch (Exception e) {
-            throw new RuntimeException("Could not load file MobSettings.conf", e);
-        }
+        return loadFile(properties.toPath());
     }
 }
