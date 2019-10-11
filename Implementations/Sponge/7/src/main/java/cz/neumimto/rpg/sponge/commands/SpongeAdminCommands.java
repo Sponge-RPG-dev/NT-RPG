@@ -1,15 +1,21 @@
 package cz.neumimto.rpg.sponge.commands;
 
 import co.aikar.commands.BaseCommand;
+import co.aikar.commands.annotation.Optional;
 import co.aikar.commands.annotation.*;
 import co.aikar.commands.sponge.contexts.OnlinePlayer;
 import com.google.inject.Injector;
 import com.sun.org.glassfish.gmbal.Description;
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.damage.DamageService;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
+import cz.neumimto.rpg.api.items.ClassItem;
+import cz.neumimto.rpg.api.items.ItemClass;
+import cz.neumimto.rpg.api.items.RpgItemType;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.scripting.IScriptEngine;
@@ -29,10 +35,13 @@ import cz.neumimto.rpg.common.persistance.dao.ClassDefinitionDao;
 import cz.neumimto.rpg.sponge.entities.commandblocks.ConsoleSkillExecutor;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
+import cz.neumimto.rpg.sponge.inventory.SpongeItemService;
 import cz.neumimto.rpg.sponge.utils.TextHelper;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
@@ -40,11 +49,9 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
 import static cz.neumimto.rpg.api.logging.Log.info;
 
@@ -69,6 +76,12 @@ public class SpongeAdminCommands extends BaseCommand {
 
     @Inject
     private EntityService entityService;
+
+    @Inject
+    private SpongeItemService itemService;
+
+    @Inject
+    private DamageService damageService;
 
     @Subcommand("effect add")
     @Description("Adds effect, managed by rpg plugin, to the player")
@@ -128,32 +141,6 @@ public class SpongeAdminCommands extends BaseCommand {
         }};
         skillContext.sort();
         skillContext.next(character, playerSkillContext, skillContext);
-    }
-
-    @Subcommand("inspect-property")
-    public void inspectPropertyCommand(Player executor, OnlinePlayer target, String property) {
-        try {
-            int idByName = propertyService.getIdByName(property);
-            IActiveCharacter character = characterService.getCharacter(target.player);
-            executor.sendMessage(Text.of(TextColors.GOLD, "=================="));
-            executor.sendMessage(Text.of(TextColors.GREEN, property));
-
-            executor.sendMessage(Text.of(TextColors.GOLD, "Value", TextColors.WHITE, "/",
-                    TextColors.AQUA, "Effective Value", TextColors.WHITE, "/",
-                    TextColors.GRAY, "Cap",
-                    TextColors.DARK_GRAY, " .##"));
-
-            NumberFormat formatter = new DecimalFormat("#0.00");
-            executor.sendMessage(Text.of(TextColors.GOLD, formatter.format(character.getProperty(idByName)), TextColors.WHITE, "/",
-                    TextColors.AQUA, formatter.format(entityService.getEntityProperty(character, idByName)), TextColors.WHITE, "/",
-                    TextColors.GRAY, formatter.format(propertyService.getMaxPropertyValue(idByName))));
-
-            executor.sendMessage(Text.of(TextColors.GOLD, "=================="));
-            executor.sendMessage(Text.of(TextColors.GRAY, "Memory/1 player: " + (character.getPrimaryProperties().length * 2 * 4) / 1024.0 + "kb"));
-
-        } catch (Throwable t) {
-            executor.sendMessage(Text.of("No such property"));
-        }
     }
 
     @Subcommand("reload")
@@ -236,4 +223,122 @@ public class SpongeAdminCommands extends BaseCommand {
             executor.sendMessage(TextHelper.parse(actionResult.getMessage()));
         }
     }
+
+
+    @Subcommand("inspect property")
+    public void inspectPropertyCommand(Player executor, OnlinePlayer target, String property) {
+        try {
+            int idByName = propertyService.getIdByName(property);
+            IActiveCharacter character = characterService.getCharacter(target.player);
+            executor.sendMessage(Text.of(TextColors.GOLD, "=================="));
+            executor.sendMessage(Text.of(TextColors.GREEN, property));
+
+            executor.sendMessage(Text.of(TextColors.GOLD, "Value", TextColors.WHITE, "/",
+                    TextColors.AQUA, "Effective Value", TextColors.WHITE, "/",
+                    TextColors.GRAY, "Cap",
+                    TextColors.DARK_GRAY, " .##"));
+
+            NumberFormat formatter = new DecimalFormat("#0.00");
+            executor.sendMessage(Text.of(TextColors.GOLD, formatter.format(character.getProperty(idByName)), TextColors.WHITE, "/",
+                    TextColors.AQUA, formatter.format(entityService.getEntityProperty(character, idByName)), TextColors.WHITE, "/",
+                    TextColors.GRAY, formatter.format(propertyService.getMaxPropertyValue(idByName))));
+
+            executor.sendMessage(Text.of(TextColors.GOLD, "=================="));
+            executor.sendMessage(Text.of(TextColors.GRAY, "Memory/1 player: " + (character.getPrimaryProperties().length * 2 * 4) / 1024.0 + "kb"));
+
+        } catch (Throwable t) {
+            executor.sendMessage(Text.of("No such property"));
+        }
+    }
+
+    @Subcommand("inspect item-damage")
+    public void inspectItemDamageCommand(Player executor, OnlinePlayer oplayer) {
+        Player player = oplayer.player;
+        java.util.Optional<ItemStack> itemInHand = player.getItemInHand(HandTypes.MAIN_HAND);
+        if (!itemInHand.isPresent()) {
+            executor.sendMessage(Text.of(player.getName() + " has no item in main hand"));
+            return;
+        }
+        ItemStack itemStack = itemInHand.get();
+        java.util.Optional<RpgItemType> rpgItemType = itemService.getRpgItemType(itemStack);
+        if (!rpgItemType.isPresent()) {
+            executor.sendMessage(Text.of(player.getName() + " has no Managed item in main hand"));
+            return;
+        }
+        RpgItemType fromItemStack = rpgItemType.get();
+        ItemClass itemClass = fromItemStack.getItemClass();
+        List<ItemClass> parents = new LinkedList<>();
+        ItemClass parent = itemClass.getParent();
+        List<Integer> o = new ArrayList<>();
+        o.addAll(itemClass.getProperties());
+        o.addAll(itemClass.getPropertiesMults());
+        while (parent != null) {
+            parents.add(parent);
+            o.addAll(parent.getPropertiesMults());
+            o.addAll(parent.getProperties());
+            parent = parent.getParent();
+        }
+        parents.add(itemClass);
+        Collections.reverse(parents);
+
+        List<Text> a = new ArrayList<>();
+        for (ItemClass wc : parents) {
+            a.addAll(TO_TEXT.apply(wc));
+        }
+        for (Text text : a) {
+            executor.sendMessage(text);
+        }
+        executor.sendMessage(Text.of(TextColors.GOLD, "=================="));
+
+
+        IActiveCharacter character = characterService.getCharacter(player);
+        executor.sendMessage(Text.of(TextColors.RED, "Damage: ", damageService.getCharacterItemDamage(character, fromItemStack)));
+        executor.sendMessage(Text.of(TextColors.RED, "Details: "));
+        executor.sendMessage(Text.of(TextColors.GRAY, " - From Item: ", character.getBaseWeaponDamage(fromItemStack)));
+
+        Collection<PlayerClassData> values = character.getClasses().values();
+        for (PlayerClassData value : values) {
+            Set<ClassItem> weapons = value.getClassDefinition().getWeapons();
+            for (ClassItem weapon : weapons) {
+                if (weapon.getType() == fromItemStack) {
+                    executor.sendMessage(Text.of(TextColors.GRAY, "  - From Class: " + weapon.getDamage()));
+                }
+            }
+        }
+
+
+        executor.sendMessage(Text.of(TextColors.GRAY, " - From ItemClass: "));
+        Iterator<Integer> iterator = o.iterator();
+        while (iterator.hasNext()) {
+            int integer = iterator.next();
+            String nameById = propertyService.getNameById(integer);
+
+            if (nameById != null && !nameById.endsWith("_mult")) {
+                iterator.remove();
+            } else continue;
+
+            executor.sendMessage(Text.of(TextColors.GRAY, "   - ", nameById, ":", entityService.getEntityProperty(character, integer)));
+        }
+        executor.sendMessage(Text.of(TextColors.GRAY, "   - Mult: "));
+        iterator = o.iterator();
+        while (iterator.hasNext()) {
+            int integer = iterator.next();
+            String nameById = propertyService.getNameById(integer);
+            executor.sendMessage(Text.of(TextColors.GRAY, "   - ", nameById, ":", entityService.getEntityProperty(character, integer)));
+        }
+    }
+
+    private Function<ItemClass, List<Text>> TO_TEXT = weaponClass -> {
+        List<Text> list = new ArrayList<>();
+
+        list.add(Text.of(TextColors.GOLD, weaponClass.getName()));
+        for (Integer property : weaponClass.getProperties()) {
+            list.add(Text.of(TextColors.GRAY, " -> ", propertyService.getNameById(property)));
+        }
+        for (Integer property : weaponClass.getPropertiesMults()) {
+            list.add(Text.of(TextColors.GRAY, " -> ", propertyService.getNameById(property)));
+        }
+        return list;
+    };
+
 }

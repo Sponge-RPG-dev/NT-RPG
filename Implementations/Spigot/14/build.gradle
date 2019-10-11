@@ -30,6 +30,8 @@ dependencies {
 
     compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.28'
     compile project(':Common')
+    compile project(':FlatFiles-Persistence')
+
     compile 'com.google.inject:guice:4.1.0'
     compile 'com.github.Sponge-RPG-dev:ConfigurateButWithBlackjackAndHookers:39d5fc8afd'
     compile 'ninja.leaping.configurate:configurate-hocon:3.3'

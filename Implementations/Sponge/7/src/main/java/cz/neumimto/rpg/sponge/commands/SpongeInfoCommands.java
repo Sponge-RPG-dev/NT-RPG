@@ -16,8 +16,6 @@ import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
 import cz.neumimto.rpg.sponge.gui.SkillTreeViewModel;
 import cz.neumimto.rpg.sponge.gui.VanillaMessaging;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.format.TextColors;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -38,7 +36,7 @@ public class SpongeInfoCommands extends BaseCommand {
         ISpongeCharacter character = characterService.getCharacter(executor);
         SkillTree skillTree = classDefinition.getSkillTree();
         if (skillTree == SkillTree.Default || skillTree == null) {
-            character.sendMessage("Unknown class, or the class has no skilltree defined"));
+            character.sendMessage("Unknown class, or the class has no skilltree defined");
             return;
         }
         for (SkillTreeViewModel treeViewModel : character.getSkillTreeViewLocation().values()) {

@@ -28,6 +28,7 @@ import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.utils.FileUtils;
 import cz.neumimto.rpg.common.AbstractResourceManager;
 import cz.neumimto.rpg.common.AddonScanner;
+import cz.neumimto.rpg.persistence.flatfiles.FlatFilesModule;
 import cz.neumimto.rpg.sponge.commands.CommandService;
 import cz.neumimto.rpg.sponge.configuration.Settings;
 import cz.neumimto.rpg.sponge.inventory.data.*;
@@ -138,6 +139,8 @@ public class SpongeRpgPlugin extends Rpg {
         Set<RpgAddon> rpgAddons = AbstractResourceManager.discoverGuiceModules();
         AddonScanner.onlyReloads();
         Map bindings = new HashMap<>();
+        FlatFilesModule flatFilesModule = new FlatFilesModule();
+        bindings.putAll(flatFilesModule.getBindings());
         for (RpgAddon rpgAddon : rpgAddons) {
             bindings.putAll(rpgAddon.getBindings());
         }

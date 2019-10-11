@@ -9,6 +9,7 @@ import cz.neumimto.rpg.api.RpgAddon;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.common.AddonScanner;
 import cz.neumimto.rpg.common.commands.ACFBootstrap;
+import cz.neumimto.rpg.persistence.flatfiles.FlatFilesModule;
 import cz.neumimto.rpg.spigot.commands.SpigotAdminCommands;
 import cz.neumimto.rpg.spigot.commands.SpigotCharacterCommands;
 import cz.neumimto.rpg.spigot.resources.SpigotGuiceModule;
@@ -18,7 +19,10 @@ import org.bukkit.plugin.java.annotation.plugin.author.Author;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 
 @Plugin(name = "NT-RPG", version = "0.0.1-SNAPSHOT")
@@ -56,8 +60,10 @@ public class SpigotRpgPlugin extends JavaPlugin {
         Set<Class<?>> classesToLoad = AddonScanner.getClassesToLoad();
         Iterator<Class<?>> iterator = classesToLoad.iterator();
 
-        Map extraBindings = Collections.emptyMap();
-        Map<Class<?>, ?> providers = Collections.emptyMap();
+        Map extraBindings = new HashMap();
+        FlatFilesModule flatFilesModule = new FlatFilesModule();
+        extraBindings.putAll(flatFilesModule.getBindings());
+        Map<Class<?>, ?> providers = new HashMap();
         Injector injector;
         try {
             while (iterator.hasNext()) {
