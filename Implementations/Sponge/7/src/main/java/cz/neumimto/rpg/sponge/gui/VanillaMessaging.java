@@ -46,7 +46,6 @@ import cz.neumimto.rpg.common.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.common.persistance.dao.IPlayerDao;
 import cz.neumimto.rpg.common.utils.model.CharacterListModel;
 import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
-import cz.neumimto.rpg.sponge.commands.SpongeInfoCommand;
 import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
 import cz.neumimto.rpg.sponge.effects.common.def.BossBarExpNotifier;
 import cz.neumimto.rpg.sponge.effects.common.def.ManaBarNotifier;
@@ -123,9 +122,6 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
 
     @Inject
     private RWService rwService;
-
-    @Inject
-    private SpongeInfoCommand infoCommand;
 
     @Inject
     private SpongeDamageService spongeDamageService;
@@ -608,7 +604,6 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
 
     private Inventory displayGroupRequirements(ISpongeCharacter character, RuneWord rw, Set<ClassDefinition> groups) {
         Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST).build(plugin);
-        String cmd = infoCommand.getAliases().get(0);
         i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0, 0)))
                 .offer(back("runeword " + rw.getName(), translate(LocalizationKeys.RUNEWORD_DETAILS_MENU)));
 

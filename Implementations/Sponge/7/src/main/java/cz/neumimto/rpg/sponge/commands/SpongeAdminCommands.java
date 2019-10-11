@@ -5,7 +5,6 @@ import co.aikar.commands.annotation.Optional;
 import co.aikar.commands.annotation.*;
 import co.aikar.commands.sponge.contexts.OnlinePlayer;
 import com.google.inject.Injector;
-import com.sun.org.glassfish.gmbal.Description;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.damage.DamageService;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
@@ -32,14 +31,12 @@ import cz.neumimto.rpg.common.commands.CommandProcessingException;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.entity.PropertyService;
 import cz.neumimto.rpg.common.persistance.dao.ClassDefinitionDao;
-import cz.neumimto.rpg.sponge.entities.commandblocks.ConsoleSkillExecutor;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
 import cz.neumimto.rpg.sponge.inventory.SpongeItemService;
 import cz.neumimto.rpg.sponge.utils.TextHelper;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.type.HandTypes;
-import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
@@ -132,10 +129,6 @@ public class SpongeAdminCommands extends BaseCommand {
                 public void doNext(IActiveCharacter character, PlayerSkillContext info, SkillContext skillResult) {
                     Long e = System.nanoTime();
                     character.sendMessage("Exec Time: " + TimeUnit.MILLISECONDS.convert(e - l, TimeUnit.NANOSECONDS));
-                    if (character instanceof ConsoleSkillExecutor) {
-                        Living entity = (Living) character.getEntity();
-                        entity.remove();
-                    }
                 }
             });
         }};
