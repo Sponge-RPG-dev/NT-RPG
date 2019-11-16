@@ -664,7 +664,7 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
             return ActionResult.withErrorMessage(text);
         }
 
-        if (character.getLevel() < info.getMinPlayerLevel()) {
+        if (clazz.getLevel() < info.getMinPlayerLevel()) {
             Map<java.lang.String, Object> map = new HashMap<>();
             map.put("skill", skill.getName());
             map.put("level", info.getMinPlayerLevel());

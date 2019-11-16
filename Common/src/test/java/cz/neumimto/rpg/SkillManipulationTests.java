@@ -1,6 +1,7 @@
 package cz.neumimto.rpg;
 
 import cz.neumimto.rpg.api.configuration.PluginConfig;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.ICharacterService;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
@@ -15,6 +16,8 @@ import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.utils.ActionResult;
 import cz.neumimto.rpg.common.entity.TestCharacter;
 import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
+import cz.neumimto.rpg.junit.CharactersExtension;
+import cz.neumimto.rpg.junit.CharactersExtension.Stage;
 import cz.neumimto.rpg.junit.NtRpgExtension;
 import cz.neumimto.rpg.junit.TestGuiceModule;
 import cz.neumimto.rpg.model.CharacterBaseTest;
@@ -29,7 +32,9 @@ import org.mockito.Mockito;
 import javax.inject.Inject;
 import java.util.UUID;
 
-@ExtendWith({NtRpgExtension.class, GuiceExtension.class})
+import static cz.neumimto.rpg.junit.CharactersExtension.Stage.Stages.READY;
+
+@ExtendWith({NtRpgExtension.class, GuiceExtension.class, CharactersExtension.class})
 @IncludeModule(TestGuiceModule.class)
 public class SkillManipulationTests {
 
@@ -39,6 +44,8 @@ public class SkillManipulationTests {
     @Inject
     private EventFactoryService eventFactoryService;
 
+    @Inject
+    private TestApiImpl api;
 
     ISkill main;
     ISkill conflicting;
@@ -66,7 +73,7 @@ public class SkillManipulationTests {
 
     @BeforeEach
     public void before() throws Exception {
-
+        new RpgTest(api);
         //lets not invoke constructor
         PluginConfig o = (PluginConfig) TestHelper.getUnsafe().allocateInstance(PluginConfig.class);
         o.PRIMARY_CLASS_TYPE = "Primary";
@@ -276,5 +283,24 @@ public class SkillManipulationTests {
         Assertions.assertTrue(actionResult.isOk());
     }
 
+    @Test
+    public void mayLearnSkills_multiclass_different_levels(@Stage(READY) IActiveCharacter character) {
+        PlayerClassData primary = character.getClassByType("Primary");
+        PlayerClassData secondary = character.getClassByType("Secondary");
+        secondary.setLevel(5);
+        primary.setLevel(10);
+
+        SkillTree skillTree = new SkillTree();
+        skillTree.getSkills().put(skillData.getSkillId(), skillData);
+        skillData.setMinPlayerLevel(4);
+        primary.getClassDefinition().setSkillTree(skillTree);
+
+        skillData.getConflicts().clear();
+        skillData.getSoftDepends().clear();
+        skillData.getHardDepends().clear();
+
+        character.getCharacterBase().getCharacterClass(primary.getClassDefinition()).setSkillPoints(1);
+        Assertions.assertTrue(characterService.canLearnSkill(character, primary.getClassDefinition(), skillData.getSkill()).isOk());
+    }
 
 }

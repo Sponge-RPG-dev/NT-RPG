@@ -60,7 +60,7 @@ public class CharactersExtension implements ParameterResolver {
         CharacterClass primaryCC = new CharacterClassTest();
         primaryCC.setId(1L);
         primaryCC.setCharacterBase(characterBase);
-
+        primaryCC.setName("Primary");
         PlayerClassData playerClassData = new PlayerClassData(CLASS_PRIMARY, primaryCC);
         playerClassData.setLevel(5);
         characterBase.getCharacterClasses().add(primaryCC);
@@ -70,6 +70,7 @@ public class CharactersExtension implements ParameterResolver {
         CharacterClass secondaryCC = new CharacterClassTest();
         secondaryCC.setId(2L);
         secondaryCC.setCharacterBase(characterBase);
+        secondaryCC.setName("Secondary");
 
         PlayerClassData playerClassDataSecondary = new PlayerClassData(CLASS_SECONDARY, secondaryCC);
         playerClassDataSecondary.setLevel(10);
