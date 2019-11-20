@@ -18,10 +18,11 @@
 
 package cz.neumimto.rpg.api.utils;
 
+import com.electronwill.nightconfig.core.CommentedConfig;
+import com.electronwill.nightconfig.core.conversion.ObjectConverter;
+import com.electronwill.nightconfig.core.io.WritingMode;
+import com.electronwill.nightconfig.hocon.HoconWriter;
 import cz.neumimto.rpg.api.RpgApi;
-import ninja.leaping.configurate.commented.SimpleCommentedConfigurationNode;
-import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
-import ninja.leaping.configurate.objectmapping.ObjectMapper;
 
 import java.io.File;
 import java.io.IOException;
@@ -77,22 +78,10 @@ public class FileUtils {
 
 
     public static void generateConfigFile(Object data, File file) {
-        try {
-            if (file.exists()) {
-                file.delete();
-            }
-            file.createNewFile();
-            ObjectMapper.BoundInstance configMapper = ObjectMapper.forObject(data);
-            HoconConfigurationLoader hcl = HoconConfigurationLoader.builder()
-                    .setPath(file.toPath())
-                    .build();
-            SimpleCommentedConfigurationNode scn = SimpleCommentedConfigurationNode.root();
-            configMapper.serialize(scn);
-
-            hcl.save(scn);
-        } catch (Exception e) {
-            throw new RuntimeException("Could not create file " + file, e);
-        }
+        CommentedConfig c = CommentedConfig.inMemory();
+        new ObjectConverter().toConfig(data, c);
+        HoconWriter hoconWriter = new HoconWriter();
+        hoconWriter.write(c, file, WritingMode.REPLACE);
     }
 }
 
