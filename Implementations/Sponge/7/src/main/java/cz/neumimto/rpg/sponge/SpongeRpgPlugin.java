@@ -148,7 +148,8 @@ public class SpongeRpgPlugin extends Rpg {
         injector = Guice.createInjector(
                 new SpongeGuiceModule(this, logger, game, causeStackManager, bindings)
         );
-        super.impl = injector.getInstance(SpongeRpg.class);
+        super.impl = new SpongeRpg(workingDir);
+        injector.injectMembers(super.impl);
 
         Rpg.get().reloadMainPluginConfig();
 
