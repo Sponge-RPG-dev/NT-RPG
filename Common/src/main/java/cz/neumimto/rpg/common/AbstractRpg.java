@@ -192,7 +192,9 @@ public abstract class AbstractRpg implements RpgApi {
         }
 
         try (FileConfig fileConfig = FileConfig.of(properties.getPath())) {
-            this.pluginConfig = new ObjectConverter().toObject(fileConfig, PluginConfig::new);
+            fileConfig.load();
+            PluginConfig pluginConfig = new PluginConfig();
+            this.pluginConfig = new ObjectConverter().toObject(fileConfig, () -> pluginConfig);
 
             List<Map.Entry<String, ClassTypeDefinition>> list = new ArrayList<>(this.pluginConfig.CLASS_TYPES.entrySet());
             list.sort(Map.Entry.comparingByValue());

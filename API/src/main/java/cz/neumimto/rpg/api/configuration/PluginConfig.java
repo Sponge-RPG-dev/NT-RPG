@@ -19,7 +19,9 @@
 package cz.neumimto.rpg.api.configuration;
 
 import com.electronwill.nightconfig.core.conversion.Conversion;
+import com.electronwill.nightconfig.core.conversion.Converter;
 import com.electronwill.nightconfig.core.conversion.Path;
+import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.utils.DebugLevel;
 
 import java.util.*;
@@ -72,6 +74,7 @@ public class PluginConfig {
     public boolean ALLOW_COMBAT_FOR_CHARACTERLESS_PLAYERS = true;
 
     @Path("ALLOWED_RUNES_ITEMTYPES")
+    @Conversion(SetToListConverter.class)
     public Set<String> ALLOWED_RUNES_ITEMTYPES = new HashSet<String>() {{
         add("minecraft:nether_star");
     }};
@@ -141,6 +144,7 @@ public class PluginConfig {
             "REQUIREMENTS");
 
     @Path("ITEM_DAMAGE_PROCESSOR")
+    @Conversion(ItemDamageProcessorConverter.class)
     public ItemDamageProcessor ITEM_DAMAGE_PROCESSOR = new Max();
 
 
@@ -179,7 +183,7 @@ public class PluginConfig {
     public String LOCALE = "en";
 
     @Path("MAX_CLICK_COMBO_LENGTH")
-    public byte MAX_CLICK_COMBO_LENGTH = new Byte("6");
+    public int MAX_CLICK_COMBO_LENGTH = 6;
 
     @Path("PRIMARY_CLASS_TYPE")
     public String PRIMARY_CLASS_TYPE = "Primary";
@@ -197,4 +201,39 @@ public class PluginConfig {
 
     @Path("RESPEC_ATTRIBUTES")
     public boolean RESPEC_ATTRIBUTES = false;
+
+    private static class ItemDamageProcessorConverter implements Converter<ItemDamageProcessor, String> {
+
+        @Override
+        public String convertFromField(ItemDamageProcessor value) {
+            return value.getClass().getCanonicalName();
+        }
+
+        @Override
+        public ItemDamageProcessor convertToField(String value) {
+            try {
+                return (ItemDamageProcessor) Class.forName(value).newInstance();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            Log.error("Unknown item damage processor definition - Could not find class " + value + ". SEtting to Max()");
+            return new Max();
+        }
+    }
+
+    private static class SetToListConverter implements Converter<Set, List> {
+        @Override
+        public Set convertToField(List value) {
+            HashSet hashSet = new HashSet();
+            hashSet.addAll(value);
+            return hashSet;
+        }
+
+        @Override
+        public List convertFromField(Set value) {
+            List list = new ArrayList();
+            list.addAll(value);
+            return list;
+        }
+    }
 }

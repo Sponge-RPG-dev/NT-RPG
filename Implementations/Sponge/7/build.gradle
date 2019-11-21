@@ -72,6 +72,7 @@ compileJava {
 
 shadowJar {
     relocate 'co.aikar.commands', 'cz.neumimto.acf'
+    exclude '**/module-info.class'
 }
 
 build.dependsOn shadowJar

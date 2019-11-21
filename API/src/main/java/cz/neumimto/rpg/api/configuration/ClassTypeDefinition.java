@@ -1,26 +1,24 @@
 package cz.neumimto.rpg.api.configuration;
 
-import ninja.leaping.configurate.objectmapping.Setting;
-import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
+import com.electronwill.nightconfig.core.conversion.Path;
 
 import java.util.Objects;
 
-@ConfigSerializable
 public class ClassTypeDefinition implements Comparable<ClassTypeDefinition> {
 
-    @Setting("PrimaryColor")
+    @Path("PrimaryColor")
     private String primaryColor;
 
-    @Setting("SecondaryColor")
+    @Path("SecondaryColor")
     private String secondaryColor;
 
-    @Setting("DyeColor")
+    @Path("DyeColor")
     private String dyeColor;
 
-    @Setting("Changeable")
+    @Path("Changeable")
     private boolean changeable;
 
-    @Setting("Order")
+    @Path("Order")
     private int order;
 
     public ClassTypeDefinition(String primaryColor, String secondaryColor, String dyeColor, boolean changeable, int order) {
