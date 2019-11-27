@@ -5,7 +5,6 @@ import com.electronwill.nightconfig.core.Config;
 import com.electronwill.nightconfig.core.conversion.Converter;
 import com.electronwill.nightconfig.core.conversion.ObjectConverter;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -25,7 +24,7 @@ public class ClassTypesDeserializer implements Converter<Map<String, ClassTypeDe
             map.put(key, new ObjectConverter().toObject(v, ClassTypeDefinition::new));
         }
 
-        return new HashMap<>();
+        return map;
     }
 
     @Override
