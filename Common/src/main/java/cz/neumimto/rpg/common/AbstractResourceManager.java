@@ -82,7 +82,7 @@ public abstract class AbstractResourceManager implements IResourceLoader {
         String workingDirectory = Rpg.get().getWorkingDirectory();
         classDir = new File(workingDirectory + File.separator + "classes");
         addonDir = new File(workingDirectory + File.separator + "addons");
-        addonLoadDir = new File(workingDirectory + File.separator + ".deployed");
+        addonLoadDir = new File(workingDirectory + File.separator + "deployed");
         skilltreeDir = new File(workingDirectory + File.separator + "Skilltrees");
         localizations = new File(workingDirectory + File.separator + "localizations");
         classDir.mkdirs();
@@ -372,6 +372,7 @@ public abstract class AbstractResourceManager implements IResourceLoader {
     public void loadExternalJars() {
         try {
             FileUtils.deleteDirectory(addonLoadDir);
+            addonLoadDir.mkdir();
             FileUtils.copyDirectory(addonDir, addonLoadDir, pathname -> pathname.isDirectory() || pathname.getName().endsWith(".jar"));
         } catch (IOException e) {
             e.printStackTrace();

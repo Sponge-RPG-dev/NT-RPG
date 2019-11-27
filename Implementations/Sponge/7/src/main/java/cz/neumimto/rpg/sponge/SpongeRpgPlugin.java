@@ -150,7 +150,7 @@ public class SpongeRpgPlugin extends Rpg {
         );
         super.impl = new SpongeRpg(workingDir);
         injector.injectMembers(super.impl);
-
+        Rpg.get().getResourceLoader().init();
         Rpg.get().reloadMainPluginConfig();
 
         Rpg.get().getResourceLoader().loadJarFile(pluginjar, true);
@@ -161,8 +161,6 @@ public class SpongeRpgPlugin extends Rpg {
         }
 
         Rpg.get().getResourceLoader().initializeComponents();
-
-
 
         if (pluginConfig.DEBUG.isBalance()) {
             Sponge.getEventManager().registerListeners(this, injector.getInstance(DebugListener.class));

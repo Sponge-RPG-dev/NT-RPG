@@ -226,6 +226,7 @@ public abstract class AbstractRpg implements RpgApi {
         getInventoryService().load();
         getEventFactory().registerEventProviders();
         getExperienceService().load();
+
         getSkillService().init();
         getPropertyService().init(Paths.get(getWorkingDirectory() + "/Attributes.conf"), Paths.get(getWorkingDirectory() + File.separator + "properties_dump.info"));
         getPropertyService().reLoadAttributes(Paths.get(getWorkingDirectory() + "/Attributes.conf"));
