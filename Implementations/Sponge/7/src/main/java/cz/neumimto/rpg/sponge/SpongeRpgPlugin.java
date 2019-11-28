@@ -162,7 +162,7 @@ public class SpongeRpgPlugin extends Rpg {
 
         Rpg.get().getResourceLoader().initializeComponents();
 
-        if (pluginConfig.DEBUG.isBalance()) {
+        if (Rpg.get().getPluginConfig().DEBUG.isBalance()) {
             Sponge.getEventManager().registerListeners(this, injector.getInstance(DebugListener.class));
         }
         CommandService commandService = injector.getInstance(CommandService.class);

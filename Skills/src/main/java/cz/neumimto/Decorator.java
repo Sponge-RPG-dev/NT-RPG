@@ -1,7 +1,6 @@
 package cz.neumimto;
 
 import com.flowpowered.math.vector.Vector3d;
-import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
 import cz.neumimto.rpg.sponge.gui.ParticleDecorator;
 import org.spongepowered.api.effect.particle.ParticleEffect;
 import org.spongepowered.api.effect.particle.ParticleTypes;
@@ -26,11 +25,11 @@ public class Decorator {
 			.offset(new Vector3d(1, 0, 1))
 			.velocity(new Vector3d(0, 1, 0).normalize())
 			.build();
-
+/*
 	static {
 		decorator = SpongeRpgPlugin.getInstance().injector.getInstance(ParticleDecorator.class);
 	}
-
+*/
 	public static void strikeLightning(Entity entity) {
 		strikeLightning(entity.getLocation());
 	}
