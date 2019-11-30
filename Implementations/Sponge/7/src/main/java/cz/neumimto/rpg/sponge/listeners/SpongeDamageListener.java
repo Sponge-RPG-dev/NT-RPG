@@ -3,6 +3,7 @@ package cz.neumimto.rpg.sponge.listeners;
 import com.google.inject.Singleton;
 import cz.neumimto.rpg.api.IResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.IEntityType;
@@ -33,7 +34,6 @@ import org.spongepowered.api.event.filter.cause.First;
 import javax.inject.Inject;
 import java.util.Optional;
 
-import static cz.neumimto.rpg.sponge.SpongeRpgPlugin.pluginConfig;
 
 @Singleton
 @IResourceLoader.ListenerClass
@@ -118,6 +118,7 @@ public class SpongeDamageListener extends AbstractDamageListener {
             rpgItemStack = character.getMainHand();
         } else {
             Living entity = (Living) attacker.getEntity();
+            PluginConfig pluginConfig = Rpg.get().getPluginConfig();
             if (!pluginConfig.OVERRIDE_MOBS) {
                 newdamage = entityService.getMobDamage(entity);
             }
@@ -269,6 +270,7 @@ public class SpongeDamageListener extends AbstractDamageListener {
             IActiveCharacter c = (IActiveCharacter) attacker;
             newdamage = spongeDamageService.getCharacterProjectileDamage(c, projectile.getType());
         } else if (attacker.getType() == IEntityType.MOB) {
+            PluginConfig pluginConfig = Rpg.get().getPluginConfig();
             if (!pluginConfig.OVERRIDE_MOBS) {
                 newdamage = entityService.getMobDamage((Living) attacker.getEntity());
             }

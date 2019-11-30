@@ -1,6 +1,7 @@
 package cz.neumimto.rpg.sponge.effects.common.def;
 
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.Generate;
 import cz.neumimto.rpg.api.effects.IEffect;
@@ -15,7 +16,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import static cz.neumimto.rpg.sponge.SpongeRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 28.8.2017.
@@ -47,6 +47,7 @@ public class ClickComboActionComponent extends EffectBase implements IEffectCont
     private ClickComboActionComponent(IActiveCharacter t) {
         super(name, t);
         character = t;
+        PluginConfig pluginConfig = Rpg.get().getPluginConfig();
         setPeriod(pluginConfig.CLICK_COMBO_MAX_INVERVAL_BETWEEN_ACTIONS);
         setDuration(-1L);
     }
@@ -55,6 +56,7 @@ public class ClickComboActionComponent extends EffectBase implements IEffectCont
         if (!hasStarted()) {
             combination = new StringBuilder();
         }
+        PluginConfig pluginConfig = Rpg.get().getPluginConfig();
         if (lastTimeUsed > System.currentTimeMillis() || length >= pluginConfig.MAX_CLICK_COMBO_LENGTH) {
             return;
         }
@@ -64,6 +66,7 @@ public class ClickComboActionComponent extends EffectBase implements IEffectCont
     }
 
     public void processLMB() {
+        PluginConfig pluginConfig = Rpg.get().getPluginConfig();
         if (lastTimeUsed > System.currentTimeMillis() || length >= pluginConfig.MAX_CLICK_COMBO_LENGTH) {
             return;
         }
@@ -73,6 +76,7 @@ public class ClickComboActionComponent extends EffectBase implements IEffectCont
     }
 
     public void processShift() {
+        PluginConfig pluginConfig = Rpg.get().getPluginConfig();
         if (pluginConfig.SHIFT_CANCELS_COMBO) {
             cancel(true);
         } else {
@@ -86,6 +90,7 @@ public class ClickComboActionComponent extends EffectBase implements IEffectCont
     }
 
     public void processQ() {
+        PluginConfig pluginConfig = Rpg.get().getPluginConfig();
         if (lastTimeUsed > System.currentTimeMillis() || length >= pluginConfig.MAX_CLICK_COMBO_LENGTH) {
             return;
         }
@@ -95,6 +100,7 @@ public class ClickComboActionComponent extends EffectBase implements IEffectCont
     }
 
     public void processE() {
+        PluginConfig pluginConfig = Rpg.get().getPluginConfig();
         if (lastTimeUsed > System.currentTimeMillis() || length >= pluginConfig.MAX_CLICK_COMBO_LENGTH) {
             return;
         }

@@ -1,5 +1,7 @@
 package cz.neumimto.rpg.sponge.utils;
 
+import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.configuration.PluginConfig;
 import me.lucko.luckperms.api.LuckPermsApi;
 import me.lucko.luckperms.api.Node;
 import me.lucko.luckperms.api.User;
@@ -9,7 +11,6 @@ import org.spongepowered.api.service.ProviderRegistration;
 import java.util.SortedSet;
 import java.util.UUID;
 
-import static cz.neumimto.rpg.sponge.SpongeRpgPlugin.pluginConfig;
 
 public class PermissionUtils {
 
@@ -25,6 +26,7 @@ public class PermissionUtils {
     }
 
     public static int getMaximalCharacterLimit(UUID player) {
+        PluginConfig pluginConfig = Rpg.get().getPluginConfig();
         if (!luckPermsInstalled) {
             return pluginConfig.PLAYER_MAX_CHARS;
         }

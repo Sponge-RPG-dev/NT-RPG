@@ -1,5 +1,7 @@
 package cz.neumimto.rpg.sponge.commands.item;
 
+import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.sponge.inventory.SpongeInventoryService;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -18,7 +20,6 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-import static cz.neumimto.rpg.sponge.SpongeRpgPlugin.pluginConfig;
 
 @Singleton
 public class ItemAddRarityExecutor implements CommandExecutor {
@@ -30,6 +31,7 @@ public class ItemAddRarityExecutor implements CommandExecutor {
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
         Integer integer = args.<Integer>getOne("level").get();
         Set<Integer> i = new HashSet<>();
+        PluginConfig pluginConfig = Rpg.get().getPluginConfig();
         for (String s : pluginConfig.ITEM_RARITY) {
             i.add(Integer.parseInt(s.split(",")[0]));
         }

@@ -3,6 +3,7 @@ package cz.neumimto.rpg.sponge.gui;
 import cz.neumimto.rpg.api.IResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
+import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.effects.EffectParams;
 import cz.neumimto.rpg.api.entity.IPropertyService;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
@@ -31,7 +32,7 @@ import javax.inject.Singleton;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static cz.neumimto.rpg.sponge.SpongeRpgPlugin.pluginConfig;
+
 
 /**
  * Created by NeumimTo on 20.1.2018.
@@ -70,6 +71,7 @@ public class ItemLoreBuilderService {
     }
 
     public void setupColor() {
+        PluginConfig pluginConfig = Rpg.get().getPluginConfig();
         effectName = Sponge.getRegistry().getType(TextColor.class, pluginConfig.ITEM_LORE_EFFECT_NAME_COLOR).get();
         doubleColon = Sponge.getRegistry().getType(TextColor.class, pluginConfig.ITEM_LORE_EFFECT_COLON_COLOR).get();
         value = Sponge.getRegistry().getType(TextColor.class, pluginConfig.ITEM_LORE_EFFECT_VALUE_COLOR).get();

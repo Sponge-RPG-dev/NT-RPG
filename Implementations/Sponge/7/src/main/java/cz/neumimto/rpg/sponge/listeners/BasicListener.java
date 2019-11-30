@@ -19,6 +19,8 @@
 package cz.neumimto.rpg.sponge.listeners;
 
 import cz.neumimto.rpg.api.IResourceLoader;
+import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.IEntityType;
@@ -63,7 +65,6 @@ import javax.inject.Singleton;
 import java.util.List;
 import java.util.Optional;
 
-import static cz.neumimto.rpg.sponge.SpongeRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 12.2.2015.
@@ -106,6 +107,7 @@ public class BasicListener {
 
         if (entity.getType() == IEntityType.CHARACTER) {
             IActiveCharacter target = characterService.getCharacter(event.getTargetEntity().getUniqueId());
+            PluginConfig pluginConfig = Rpg.get().getPluginConfig();
             if (target.isStub() && !pluginConfig.ALLOW_COMBAT_FOR_CHARACTERLESS_PLAYERS) {
                 event.setCancelled(true);
                 return;

@@ -1,5 +1,7 @@
 package cz.neumimto.rpg.sponge.entities;
 
+import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.entity.CommonProperties;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.IMob;
@@ -13,7 +15,6 @@ import javax.inject.Singleton;
 import java.util.UUID;
 
 import static cz.neumimto.rpg.api.logging.Log.info;
-import static cz.neumimto.rpg.sponge.SpongeRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 19.12.2015.
@@ -60,6 +61,7 @@ public class SpongeEntityService extends AbstractEntityService<Living, SpongeMob
     public void updateWalkSpeed(IEntity<? extends Living> entity) {
         double speed = getEntityProperty(entity, CommonProperties.walk_speed);
         entity.getEntity().offer(Keys.WALKING_SPEED, speed);
+        PluginConfig pluginConfig = Rpg.get().getPluginConfig();
         if (pluginConfig.DEBUG.isBalance()) {
             info(entity + " setting walk speed to " + speed);
         }

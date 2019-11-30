@@ -2,6 +2,8 @@ package cz.neumimto.rpg.sponge.listeners;
 
 import com.google.inject.Singleton;
 import cz.neumimto.rpg.api.IResourceLoader;
+import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.effects.IEffectService;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.IEntityType;
@@ -33,7 +35,6 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-import static cz.neumimto.rpg.sponge.SpongeRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 3.1.2016.
@@ -81,6 +82,7 @@ public class EntityLifecycleListener {
 
     @Listener
     public void onUserBan(BanUserEvent event) {
+        PluginConfig pluginConfig = Rpg.get().getPluginConfig();
         if (pluginConfig.REMOVE_PLAYERDATA_AFTER_PERMABAN) {
             if (!event.getBan().getExpirationDate().isPresent()) {
                 characterService.removePlayerData(event.getTargetUser().getUniqueId());
@@ -128,6 +130,7 @@ public class EntityLifecycleListener {
                     String experienceSource = targetEntity.getType() == EntityTypes.PLAYER ? ExperienceSources.PVP : ExperienceSources.PVE;
 
                     if (character.hasParty()) {
+                        PluginConfig pluginConfig = Rpg.get().getPluginConfig();
                         exp *= pluginConfig.PARTY_EXPERIENCE_MULTIPLIER;
                         double dist = Math.pow(pluginConfig.PARTY_EXPERIENCE_SHARE_DISTANCE, 2);
                         Set<ISpongeCharacter> set = new HashSet<>();

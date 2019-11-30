@@ -20,7 +20,9 @@ package cz.neumimto.rpg.sponge.listeners;
 
 import com.google.inject.Singleton;
 import cz.neumimto.rpg.api.IResourceLoader;
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.classes.ClassService;
+import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.permissions.PermissionService;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
 import cz.neumimto.rpg.sponge.events.PlayerGuiModInitEvent;
@@ -32,7 +34,6 @@ import org.spongepowered.api.event.Order;
 import javax.inject.Inject;
 import java.util.UUID;
 
-import static cz.neumimto.rpg.sponge.SpongeRpgPlugin.pluginConfig;
 
 
 /**
@@ -60,6 +61,7 @@ public class RpgListener {
 
     @Listener(order = Order.EARLY)
     public void onPartyJoin(SpongePartyJoinEvent event) {
+        PluginConfig pluginConfig = Rpg.get().getPluginConfig();
         if (pluginConfig.MAX_PARTY_SIZE > -1) {
             if (event.getParty().getPlayers().size() > pluginConfig.MAX_PARTY_SIZE) {
                 event.setCancelled(true);

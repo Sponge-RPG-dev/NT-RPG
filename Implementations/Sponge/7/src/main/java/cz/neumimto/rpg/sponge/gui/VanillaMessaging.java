@@ -22,6 +22,7 @@ import cz.neumimto.rpg.api.IResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
+import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.effects.EffectStatusType;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
@@ -93,7 +94,6 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import static cz.neumimto.rpg.sponge.SpongeRpgPlugin.pluginConfig;
 import static cz.neumimto.rpg.sponge.gui.GuiHelper.*;
 
 /**
@@ -137,6 +137,7 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
 
     public void load() {
         controlls = new HashMap<>();
+        PluginConfig pluginConfig = Rpg.get().getPluginConfig();
         for (String a : pluginConfig.SKILLTREE_BUTTON_CONTROLLS) {
             String[] split = a.split(",");
 
@@ -903,6 +904,7 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
 
 
         createAttributeRow(character, i);
+        PluginConfig pluginConfig = Rpg.get().getPluginConfig();
         if (pluginConfig.RESPEC_ATTRIBUTES) {
             SlotPos respecSp = SlotPos.of(7, 5);
             ItemStack btnRespec = GuiHelper.itemStack(ItemTypes.BARRIER);

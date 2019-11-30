@@ -1,6 +1,8 @@
 package cz.neumimto.rpg.sponge.inventory.runewords;
 
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.classes.ClassService;
+import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.effects.EffectParams;
 import cz.neumimto.rpg.api.effects.IEffectService;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
@@ -42,7 +44,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static cz.neumimto.rpg.api.logging.Log.warn;
-import static cz.neumimto.rpg.sponge.SpongeRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 29.10.2015.
@@ -94,6 +95,7 @@ public class RWService {
         for (RuneWordTemplate runeWord : allRws) {
             registerRuneword(getRuneword(runeWord));
         }
+        PluginConfig pluginConfig = Rpg.get().getPluginConfig();
         for (String s : pluginConfig.ALLOWED_RUNES_ITEMTYPES) {
             Optional<ItemType> type = Sponge.getGame().getRegistry().getType(ItemType.class, s);
             type.ifPresent(itemType -> allowedRuneItemTypes.add(itemType));
@@ -278,6 +280,7 @@ public class RWService {
 
     public ItemStack reBuildRuneword(ItemStack i, RuneWord rw) {
         if (rw == null) {
+            PluginConfig pluginConfig = Rpg.get().getPluginConfig();
             if (pluginConfig.AUTOREMOVE_NONEXISTING_RUNEWORDS) {
                 i.offer(Keys.DISPLAY_NAME, Text.of(i.getType().getName()));
                 i.offer(Keys.ITEM_LORE, Collections.emptyList());

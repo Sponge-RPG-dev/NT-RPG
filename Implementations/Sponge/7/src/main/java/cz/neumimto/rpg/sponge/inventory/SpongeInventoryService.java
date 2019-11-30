@@ -93,7 +93,6 @@ import java.nio.file.Paths;
 import java.util.*;
 
 import static cz.neumimto.rpg.api.logging.Log.error;
-import static cz.neumimto.rpg.sponge.SpongeRpgPlugin.pluginConfig;
 
 /**
  * Created by NeumimTo on 22.7.2015.
@@ -139,7 +138,7 @@ public class SpongeInventoryService extends AbstractInventoryService<ISpongeChar
     @Listener
     //Dump items once game started, so we can assume that registries wont change anymore
     public void dumpItems(GameStartedServerEvent event) {
-        if (pluginConfig.AUTODISCOVER_ITEMS) {
+        if (Rpg.get().getPluginConfig().AUTODISCOVER_ITEMS) {
             Collection<ItemType> allOf = Sponge.getRegistry().getAllOf(ItemType.class);
             ItemDumpConfig itemDump = new ItemDumpConfig();
 
