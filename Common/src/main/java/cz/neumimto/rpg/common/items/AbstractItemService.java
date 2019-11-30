@@ -13,7 +13,6 @@ import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.items.*;
 import cz.neumimto.rpg.api.items.sockets.SocketType;
-import cz.neumimto.rpg.common.AbstractResourceManager;
 import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.entity.PropertyService;
 import cz.neumimto.rpg.common.inventory.items.ItemMetaType;
@@ -21,7 +20,6 @@ import cz.neumimto.rpg.common.inventory.items.subtypes.ItemSubtype;
 
 import javax.inject.Inject;
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.*;
 
