@@ -7,6 +7,8 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.items.sockets.SocketType;
 
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.*;
 
@@ -34,10 +36,7 @@ public interface ItemService {
 
     ClassItem createClassItemSpecification(RpgItemType key, Double value);
 
-    default void loadItemGroups(Path path) {
-        Config config = ConfigFactory.parseFile(path.toFile());
-        loadItemGroups(config);
-    }
+    void loadItemGroups(Path path);
 
     void loadItemGroups(Config c);
 

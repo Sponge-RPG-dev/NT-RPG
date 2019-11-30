@@ -223,10 +223,12 @@ public class PropertyService implements IPropertyService {
 
     @Override
     public void reLoadAttributes(Path attributeFilePath) {
-        FileConfig fc = FileConfig.of(attributeFilePath);
-        Attributes attributes = new ObjectConverter().toObject(fc, Attributes::new);
-        attributes.getAttributes().forEach(a -> attributeMap.put(a.getId(), a));
-        itemService.registerItemAttributes(Rpg.get().getPropertyService().getAttributes().values());
+        try (FileConfig fc = FileConfig.of(attributeFilePath)) {
+            fc.load();
+            Attributes attributes = new ObjectConverter().toObject(fc, Attributes::new);
+            attributes.getAttributes().forEach(a -> attributeMap.put(a.getId(), a));
+            itemService.registerItemAttributes(Rpg.get().getPropertyService().getAttributes().values());
+        }
     }
 
     @Override

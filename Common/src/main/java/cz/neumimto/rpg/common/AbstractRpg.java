@@ -222,7 +222,8 @@ public abstract class AbstractRpg implements RpgApi {
         } catch (Exception e) {
             Log.error("Could not read localizations in locale " + locale.toString() + " - " + e.getMessage());
         }
-        getItemService().loadItemGroups(Paths.get(getWorkingDirectory()));
+
+        getItemService().loadItemGroups(Paths.get(getWorkingDirectory()).resolve("ItemGroups.conf"));
         getInventoryService().load();
         getEventFactory().registerEventProviders();
         getExperienceService().load();

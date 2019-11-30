@@ -90,6 +90,7 @@ public class SpigotRpgPlugin extends JavaPlugin {
         injector.injectMembers(spigotRpg);
         new RpgImpl(spigotRpg);
         Rpg.get().getResourceLoader().initializeComponents();
+        spigotRpg.postInit();
 
         CommandManager manager = new PaperCommandManager(this);
 

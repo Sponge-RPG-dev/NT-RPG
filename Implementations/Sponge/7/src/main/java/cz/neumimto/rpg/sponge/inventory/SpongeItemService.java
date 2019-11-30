@@ -1,7 +1,5 @@
 package cz.neumimto.rpg.sponge.inventory;
 
-import com.typesafe.config.Config;
-import com.typesafe.config.ConfigFactory;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.configuration.ItemString;
 import cz.neumimto.rpg.api.effects.EffectParams;
@@ -18,7 +16,6 @@ import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
 import cz.neumimto.rpg.sponge.inventory.data.NKeys;
 import cz.neumimto.rpg.sponge.items.SpongeRpgItemType;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.asset.Asset;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
@@ -26,9 +23,6 @@ import org.spongepowered.api.text.Text;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
@@ -99,24 +93,5 @@ public class SpongeItemService extends AbstractItemService {
         return Optional.of(new SpongeRpgItemType(parsed.itemId, parsed.variant, wClass, parsed.damage, parsed.armor, itemType));
     }
 
-
-    @Override
-    public void loadItemGroups(Path path) {
-        File f = path.resolve("ItemGroups.conf").toFile();
-        if (!f.exists()) {
-            Optional<Asset> asset = Sponge.getAssetManager().getAsset(plugin, "ItemGroups.conf");
-            if (!asset.isPresent()) {
-                throw new IllegalStateException("Could not find an asset ItemGroups.conf");
-            }
-            try {
-                asset.get().copyToFile(f.toPath());
-            } catch (IOException e) {
-                throw new IllegalStateException("Could not create ItemGroups.conf file", e);
-            }
-        }
-
-        Config c = ConfigFactory.parseFile(f);
-        loadItemGroups(c);
-    }
 
 }

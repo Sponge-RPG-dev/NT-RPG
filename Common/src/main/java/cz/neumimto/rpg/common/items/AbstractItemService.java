@@ -2,6 +2,7 @@ package cz.neumimto.rpg.common.items;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
+import com.typesafe.config.ConfigFactory;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.configuration.ItemString;
@@ -12,11 +13,16 @@ import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.items.*;
 import cz.neumimto.rpg.api.items.sockets.SocketType;
+import cz.neumimto.rpg.common.AbstractResourceManager;
+import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.entity.PropertyService;
 import cz.neumimto.rpg.common.inventory.items.ItemMetaType;
 import cz.neumimto.rpg.common.inventory.items.subtypes.ItemSubtype;
 
 import javax.inject.Inject;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.*;
 
 import static cz.neumimto.rpg.api.logging.Log.*;
@@ -25,6 +31,9 @@ public abstract class AbstractItemService implements ItemService {
 
     @Inject
     protected IPropertyService propertyService;
+
+    @Inject
+    private AssetService assetService;
 
     protected Map<String, RpgItemType> items = new HashMap<>();
 
@@ -140,6 +149,18 @@ public abstract class AbstractItemService implements ItemService {
     }
 
     @Override
+    public void loadItemGroups(Path path) {
+        File f = path.toFile();
+        if (!f.exists()) {
+            assetService.copyToFile("ItemGroups.conf", f.toPath());
+        }
+
+        Config c = ConfigFactory.parseFile(f);
+        loadItemGroups(c);
+
+    }
+
+    @Override
     public void loadItemGroups(Config config) {
         info("Loading Weapon configuration");
         List<? extends Config> itemGroups = config.getConfigList("ItemGroups");
@@ -184,7 +205,7 @@ public abstract class AbstractItemService implements ItemService {
             for (String item : items) {
                 ItemString parsed = ItemString.parse(item);
                 Optional<RpgItemType> rpgItemType = createRpgItemType(parsed, weapons);
-                rpgItemType.ifPresent(a-> {
+                rpgItemType.ifPresent(a -> {
                     registerRpgItemType(a);
                     weapons.getItems().add(a);
                 });

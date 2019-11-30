@@ -19,8 +19,7 @@ public abstract class AbstractAdminCommands<C, T> extends BaseCommand {
     @Inject
     protected ICharacterService characterService;
 
-    @Subcommand("effect add")
-    @Description("Adds effect, managed by rpg plugin, to the player")
+
     public void effectAddCommand(C c, @Flags("target") T target, IGlobalEffect effect, long duration, @Default("{}") String[] args) {
         String data = String.join("", args);
         IActiveCharacter character = toCharacter(target);

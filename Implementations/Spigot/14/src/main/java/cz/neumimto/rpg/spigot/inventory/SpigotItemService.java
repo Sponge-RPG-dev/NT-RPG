@@ -60,7 +60,7 @@ public class SpigotItemService extends AbstractItemService {
 
     @Override
     protected Optional<RpgItemType> createRpgItemType(ItemString parsed, ItemClass wClass) {
-        Material type = Material.getMaterial(parsed.itemId);
+        Material type = Material.matchMaterial(parsed.itemId);
         if (type == null) {
             Log.error(" - Not Managed ItemType " + parsed.itemId);
             return Optional.empty();
