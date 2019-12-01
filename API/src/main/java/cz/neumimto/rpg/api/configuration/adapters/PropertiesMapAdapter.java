@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.api.configuration.adapters;
 
+import com.electronwill.nightconfig.core.Config;
 import com.electronwill.nightconfig.core.conversion.Converter;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.IPropertyService;
@@ -8,17 +9,17 @@ import cz.neumimto.rpg.api.logging.Log;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PropertiesMapAdapter implements Converter<Map<Integer, Float>, Map<String, Float>> {
+public class PropertiesMapAdapter implements Converter<Map<Integer, Float>, Config> {
 
 
     @Override
-    public Map<Integer, Float> convertToField(Map<String, Float> value) {
+    public Map<Integer, Float> convertToField(Config c) {
         Map<Integer, Float> map = new HashMap<>();
-
+        Map<String, Object> valueMap = c.valueMap();
         IPropertyService propertyService = Rpg.get().getPropertyService();
-        for (Map.Entry<String, Float> objectEntry : value.entrySet()) {
+        for (Map.Entry<String, Object> objectEntry : valueMap.entrySet()) {
             String propertyName = (objectEntry.getKey()).toLowerCase();
-            float f = objectEntry.getValue();
+            float f = ((Number)objectEntry.getValue()).floatValue();
             if (propertyService.exists(propertyName)) {
                 int idByName = propertyService.getIdByName(propertyName);
                 map.put(idByName, f);
@@ -31,9 +32,9 @@ public class PropertiesMapAdapter implements Converter<Map<Integer, Float>, Map<
     }
 
     @Override
-    public Map<String, Float> convertFromField(Map<Integer, Float> value) {
+    public Config convertFromField(Map<Integer, Float> value) {
+        Config config = Config.inMemory();
 
-        Map<String, Float> floatMap = new HashMap<>();
         IPropertyService propertyService = Rpg.get().getPropertyService();
 
         for (Map.Entry<Integer, Float> integerFloatEntry : value.entrySet()) {
@@ -42,8 +43,9 @@ public class PropertiesMapAdapter implements Converter<Map<Integer, Float>, Map<
             if (nameById == null) {
                 continue;
             }
-            floatMap.put(nameById, integerFloatEntry.getValue());
+            config.add(nameById, integerFloatEntry.getValue());
         }
-        return floatMap;
+
+        return config;
     }
 }

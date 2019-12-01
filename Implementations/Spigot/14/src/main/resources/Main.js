@@ -8,9 +8,6 @@ var File = Java.type("java.io.File");
 var TimeUnit = Java.type("java.util.concurrent.TimeUnit");
 var Runnable = Java.type("java.lang.Runnable");
 var Consumer = Java.type("java.util.function.Consumer");
-/* sponge */
-var Texts = Java.type("org.spongepowered.api.text.Text");
-var Keys = Java.type("org.spongepowered.api.data.key.Keys");
 /* libs */
 var Vector3d = Java.type("com.flowpowered.math.vector.Vector3d");
 var Optional = Java.type("com.google.common.base.Optional");

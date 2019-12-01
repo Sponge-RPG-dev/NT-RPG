@@ -79,5 +79,6 @@ var eventConsumer = new (Java.extend(Consumer, {
 }))
 
 //Only "consumer" property in second parameter is mandatory
-var DamageEntityEvent = Java.type('org.spongepowered.api.event.network.ClientConnectionEvent')
+/*var DamageEntityEvent = Java.type('org.spongepowered.api.event.network.ClientConnectionEvent')
 registerEventListener({type: DamageEntityEvent, consumer: eventConsumer, order:"BEFORE_POST", beforeModifications: false});
+*/
