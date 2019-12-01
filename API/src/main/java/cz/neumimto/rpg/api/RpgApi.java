@@ -1,5 +1,7 @@
 package cz.neumimto.rpg.api;
 
+import com.google.inject.Injector;
+import com.google.inject.Module;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.damage.DamageService;
@@ -17,9 +19,12 @@ import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.scripting.IScriptEngine;
 import cz.neumimto.rpg.api.skills.SkillService;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executor;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
 
 public interface RpgApi {
 
@@ -77,7 +82,9 @@ public interface RpgApi {
 
     void reloadMainPluginConfig();
 
-    void postInit();
-
     void scheduleSyncLater(Runnable runnable);
+
+    void init(Path workingDirPath, Object commandManager, Class[] commandClasses, RpgAddon defaultStorageImpl,
+                     BiFunction<Map, Map<Class<?>, ?>, Module> fnInjProv, Consumer<Injector> injectorc);
+
 }

@@ -4,11 +4,12 @@ import co.aikar.commands.CommandManager;
 import co.aikar.commands.PaperCommandManager;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Module;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.RpgAddon;
 import cz.neumimto.rpg.api.logging.Log;
+import cz.neumimto.rpg.common.AbstractResourceManager;
 import cz.neumimto.rpg.common.AddonScanner;
-import cz.neumimto.rpg.common.commands.ACFBootstrap;
 import cz.neumimto.rpg.persistence.flatfiles.FlatFilesModule;
 import cz.neumimto.rpg.spigot.commands.SpigotAdminCommands;
 import cz.neumimto.rpg.spigot.commands.SpigotCharacterCommands;
@@ -19,10 +20,12 @@ import org.bukkit.plugin.java.annotation.plugin.author.Author;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BiFunction;
 
 
 @Plugin(name = "NT-RPG", version = "0.0.1-SNAPSHOT")
@@ -50,54 +53,27 @@ public class SpigotRpgPlugin extends JavaPlugin {
             getDataFolder().mkdir();
         }
 
+        plugin = this;
 
-        AddonScanner.setAddonDir(getDataFolder().toPath().resolve("addons"));
-        AddonScanner.setDeployedDir(getDataFolder().toPath().resolve(".deployed"));
+        Path workingDirPath = getDataFolder().toPath();
 
-        AddonScanner.prepareAddons();
-        AddonScanner.onlyReloads();
+        SpigotRpg spigotRpg = new SpigotRpg(workingDirPath.toString());
 
-        Set<Class<?>> classesToLoad = AddonScanner.getClassesToLoad();
-        Iterator<Class<?>> iterator = classesToLoad.iterator();
-
-        Map extraBindings = new HashMap();
-        FlatFilesModule flatFilesModule = new FlatFilesModule();
-        extraBindings.putAll(flatFilesModule.getBindings());
-        Map<Class<?>, ?> providers = new HashMap();
-        Injector injector;
-        try {
-            while (iterator.hasNext()) {
-                Class<?> next = iterator.next();
-                if (RpgAddon.class.isAssignableFrom(next)) {
-                    try {
-                        RpgAddon addon = (RpgAddon) next.getConstructor().newInstance();
-                        extraBindings = addon.getBindings();
-                        Map map = new HashMap<>();
-                        map.put("WORKINGDIR", getDataFolder().getAbsolutePath().toString());
-                        providers = addon.getProviders(map);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-             injector = Guice.createInjector(new SpigotGuiceModule(this, extraBindings, providers));
-        } catch (Exception e) {
-            Log.error("Could not create Guice Injector", e);
-            return;
-        }
-        SpigotRpg spigotRpg = new SpigotRpg(getDataFolder().getAbsolutePath());
-        injector.injectMembers(spigotRpg);
-        new RpgImpl(spigotRpg);
-        Rpg.get().getResourceLoader().initializeComponents();
-        spigotRpg.postInit();
 
         CommandManager manager = new PaperCommandManager(this);
 
-        ACFBootstrap.initializeACF(manager,
-                                    injector.getInstance(SpigotAdminCommands.class),
-                                    injector.getInstance(SpigotCharacterCommands.class));
+        spigotRpg.init(
+                getDataFolder().toPath(),
+                manager,
+                new Class[]{SpigotAdminCommands.class, SpigotCharacterCommands.class},
+                new FlatFilesModule(),
+                (bindings, providers) -> new SpigotGuiceModule(this,  bindings, providers),
+                injector -> {
+                    injector.injectMembers(spigotRpg);
+                    new RpgImpl(spigotRpg);
+                }
 
+        );
 
     }
 }

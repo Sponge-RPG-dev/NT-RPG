@@ -18,6 +18,7 @@
 
 package cz.neumimto.rpg.sponge;
 
+import co.aikar.commands.SpongeCommandManager;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
@@ -30,7 +31,8 @@ import cz.neumimto.rpg.common.AbstractResourceManager;
 import cz.neumimto.rpg.common.AddonScanner;
 import cz.neumimto.rpg.persistence.flatfiles.FlatFilesModule;
 import cz.neumimto.rpg.sponge.commands.CommandService;
-import cz.neumimto.rpg.sponge.configuration.Settings;
+import cz.neumimto.rpg.sponge.commands.SpongeAdminCommands;
+import cz.neumimto.rpg.sponge.commands.SpongeCharacterCommands;
 import cz.neumimto.rpg.sponge.inventory.data.*;
 import cz.neumimto.rpg.sponge.inventory.data.manipulators.*;
 import cz.neumimto.rpg.sponge.listeners.DebugListener;
@@ -118,65 +120,43 @@ public class SpongeRpgPlugin extends Rpg {
         asyncExecutor = Sponge.getGame().getScheduler().createAsyncExecutor(SpongeRpgPlugin.this);
 
         Game game = Sponge.getGame();
-        Optional<PluginContainer> gui = game.getPluginManager().getPlugin("MinecraftGUIServer");
-        if (gui.isPresent()) {
 
-        } else {
-            Settings.ENABLED_GUI = false;
-        }
-
-        Path path = Paths.get(workingDir);
+        Path workingDirPath = Paths.get(workingDir);
 
         try {
-            Files.createDirectories(path);
+            Files.createDirectories(workingDirPath);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        AddonScanner.setDeployedDir(Paths.get(workingDir, ".deployed"));
-        AddonScanner.setAddonDir(Paths.get(workingDir, "addons"));
-        AddonScanner.prepareAddons();
-        Set<RpgAddon> rpgAddons = AbstractResourceManager.discoverGuiceModules();
-        AddonScanner.onlyReloads();
-        Map bindings = new HashMap<>();
-        FlatFilesModule flatFilesModule = new FlatFilesModule();
-        bindings.putAll(flatFilesModule.getBindings());
-        for (RpgAddon rpgAddon : rpgAddons) {
-            bindings.putAll(rpgAddon.getBindings());
-        }
+        CommandService commandService = injector.getInstance(CommandService.class);
+        commandService.registerStandartCommands();
 
-        injector = Guice.createInjector(
-                new SpongeGuiceModule(this, logger, game, causeStackManager, bindings)
+        PluginContainer pluginContainer = Sponge.getPluginManager().fromInstance(this).get();
+
+        SpongeCommandManager manager = new SpongeCommandManager(pluginContainer);
+
+        impl.init(
+                workingDirPath,
+                manager,
+                new Class[]{SpongeAdminCommands.class, SpongeCharacterCommands.class},
+                new FlatFilesModule(),
+                (bindings, providers) -> new SpongeGuiceModule(this, logger, game, causeStackManager, bindings),
+                injector -> {
+                    super.impl = new SpongeRpg(workingDir);
+                    injector.injectMembers(impl);
+                }
+
         );
-        super.impl = new SpongeRpg(workingDir);
-        injector.injectMembers(super.impl);
-        Rpg.get().getResourceLoader().init();
-        Rpg.get().reloadMainPluginConfig();
-
-        Rpg.get().getResourceLoader().loadJarFile(pluginjar, true);
-        Rpg.get().getResourceLoader().loadExternalJars();
-
-        for (RpgAddon rpgAddon : rpgAddons) {
-            rpgAddon.processStageEarly(injector);
-        }
-
-        Rpg.get().getResourceLoader().initializeComponents();
 
         if (Rpg.get().getPluginConfig().DEBUG.isBalance()) {
             Sponge.getEventManager().registerListeners(this, injector.getInstance(DebugListener.class));
         }
-        CommandService commandService = injector.getInstance(CommandService.class);
-        commandService.registerStandartCommands();
-
 
         if (INTEGRATIONS.contains("Placeholders")) {
             Placeholders placeholders = injector.getInstance(Placeholders.class);
             placeholders.init();
             info("Placeholders Initialized");
-        }
-
-        for (RpgAddon rpgAddon : rpgAddons) {
-            rpgAddon.processStageLate(injector);
         }
 
         double elapsedTime = (System.nanoTime() - start) / 1000000000.0;

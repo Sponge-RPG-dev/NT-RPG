@@ -1,5 +1,8 @@
 package cz.neumimto.rpg.sponge;
 
+import com.google.inject.Injector;
+import com.google.inject.Module;
+import cz.neumimto.rpg.api.RpgAddon;
 import cz.neumimto.rpg.common.AbstractRpg;
 import cz.neumimto.rpg.sponge.gui.ParticleDecorator;
 import cz.neumimto.rpg.sponge.gui.VanillaMessaging;
@@ -13,9 +16,12 @@ import org.spongepowered.api.text.Text;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executor;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
 
 @Singleton
 public final class SpongeRpg extends AbstractRpg {
@@ -79,15 +85,15 @@ public final class SpongeRpg extends AbstractRpg {
         return SpongeRpgPlugin.asyncExecutor;
     }
 
-
     @Override
-    public void postInit() {
-        super.postInit();
+    public void init(Path workingDirPath, Object commandManager, Class[] commandClasses, RpgAddon defaultStorageImpl, BiFunction<Map, Map<Class<?>, ?>, Module> fnInjProv, Consumer<Injector> injectorc) {
+        super.init(workingDirPath, commandManager, commandClasses, defaultStorageImpl, fnInjProv, injectorc);
 
         vanillaMessaging.load();
         particleDecorator.initModels();
 
         rwService.load();
+
     }
 
     @Override

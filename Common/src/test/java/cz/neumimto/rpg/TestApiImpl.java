@@ -217,7 +217,7 @@ public class TestApiImpl implements RpgApi {
     }
 
     @Override
-    public void postInit() {
+    public void postInit(CommandManager manager) {
 
     }
 

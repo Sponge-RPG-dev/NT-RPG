@@ -1,8 +1,15 @@
 package cz.neumimto.rpg.common;
 
+import co.aikar.commands.BaseCommand;
+import co.aikar.commands.CommandManager;
 import com.electronwill.nightconfig.core.conversion.ObjectConverter;
 import com.electronwill.nightconfig.core.file.FileConfig;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.Module;
 import cz.neumimto.rpg.api.IResourceLoader;
+import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.RpgAddon;
 import cz.neumimto.rpg.api.RpgApi;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.configuration.ClassTypeDefinition;
@@ -24,11 +31,17 @@ import cz.neumimto.rpg.api.scripting.IScriptEngine;
 import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.api.utils.FileUtils;
 import cz.neumimto.rpg.api.utils.rng.PseudoRandomDistribution;
+import cz.neumimto.rpg.common.commands.ACFBootstrap;
 
 import javax.inject.Inject;
 import java.io.File;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 public abstract class AbstractRpg implements RpgApi {
 
@@ -79,6 +92,9 @@ public abstract class AbstractRpg implements RpgApi {
 
     @Inject
     private IExperienceService experienceService;
+
+    @Inject
+    private Injector injector;
     
     private final String workingDirectory;
 
@@ -208,7 +224,8 @@ public abstract class AbstractRpg implements RpgApi {
     }
 
     @Override
-    public void postInit() {
+    public void init(Path workingDirPath, Object commandManager, Class[] commandClasses, RpgAddon defaultStorageImpl,
+                     BiFunction<Map, Map<Class<?>, ?>, Module> fnInjProv, Consumer<Injector> injectorc) {
         int a = 0;
         PseudoRandomDistribution p = new PseudoRandomDistribution();
         PseudoRandomDistribution.C = new double[101];
@@ -216,6 +233,50 @@ public abstract class AbstractRpg implements RpgApi {
             PseudoRandomDistribution.C[a] = p.c(i);
             a++;
         }
+
+        AddonScanner.setDeployedDir(workingDirPath.resolve(".deployed"));
+        AddonScanner.setAddonDir(workingDirPath.resolve("addons"));
+        AddonScanner.prepareAddons();
+        Set<RpgAddon> rpgAddons = AbstractResourceManager.discoverGuiceModules();
+        AddonScanner.onlyReloads();
+
+        Map bindings = new HashMap<>();
+        bindings.putAll(defaultStorageImpl.getBindings());
+        for (RpgAddon rpgAddon : rpgAddons) {
+            bindings.putAll(rpgAddon.getBindings());
+        }
+
+        Map<Class<?>, ?> providers = new HashMap();
+        Set<Class<?>> classesToLoad = AddonScanner.getClassesToLoad();
+        Iterator<Class<?>> iterator = classesToLoad.iterator();
+        try {
+            while (iterator.hasNext()) {
+                Class<?> next = iterator.next();
+                if (RpgAddon.class.isAssignableFrom(next)) {
+                    try {
+                        RpgAddon addon = (RpgAddon) next.getConstructor().newInstance();
+                        bindings.putAll(addon.getBindings());
+                        Map map = new HashMap<>();
+                        map.put("WORKINGDIR", workingDirPath.toAbsolutePath().toString());
+                        providers = addon.getProviders(map);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            injector = Guice.createInjector(fnInjProv.apply(bindings, providers));
+        } catch (Exception e) {
+            Log.error("Could not create Guice Injector", e);
+            return;
+        }
+        injectorc.accept(injector);
+
+        for (RpgAddon rpgAddon : rpgAddons) {
+            rpgAddon.processStageEarly(injector);
+        }
+
+        Rpg.get().getResourceLoader().initializeComponents();
         Locale locale = Locale.forLanguageTag(pluginConfig.LOCALE);
         try {
             getResourceLoader().reloadLocalizations(locale);
@@ -238,6 +299,14 @@ public abstract class AbstractRpg implements RpgApi {
         getEffectService().load();
         getEffectService().startEffectScheduler();
         getDamageService().init();
+
+        BaseCommand[] objects = (BaseCommand[]) Stream.of(commandClasses).map(c -> injector.getInstance(c)).toArray();
+        ACFBootstrap.initializeACF(((CommandManager) commandManager), objects);
+
+        for (RpgAddon rpgAddon : rpgAddons) {
+            rpgAddon.processStageLate(injector);
+        }
+
     }
 
 }

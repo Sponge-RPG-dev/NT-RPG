@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.api;
 
+import com.google.inject.Module;
 import cz.neumimto.persistence.TestHelper;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
@@ -23,10 +24,13 @@ import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.api.skills.mods.ActiveSkillPreProcessorWrapper;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Executor;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
 
 public class RpgTests implements RpgApi {
 
@@ -204,13 +208,15 @@ public class RpgTests implements RpgApi {
 
     }
 
-    @Override
-    public void postInit() {
 
-    }
 
     @Override
     public void scheduleSyncLater(Runnable runnable) {
+
+    }
+
+    public void init(Path workingDirPath, Object commandManager, Class[] commandClasses, RpgAddon defaultStorageImpl,
+                     BiFunction<Map, Map<Class<?>, ?>, Module> fnInjProv, Consumer<com.google.inject.Injector> injectorc) {
 
     }
 }

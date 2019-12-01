@@ -70,7 +70,7 @@ public class CommandService {
     private RWService rwService;
 
     public void registerStandartCommands() {
-        registerAdminCommands();
+
         registerCharacterCommands();
         registerItemCommands();
     }
@@ -78,12 +78,7 @@ public class CommandService {
     private Text translate(String key) {
         return TextHelper.parse(localizationService.translate(key));
     }
-    
-    private void registerAdminCommands() {
 
-        //==========UTILITY==========
-
-    }
 
     private void registerCharacterCommands() {
 
