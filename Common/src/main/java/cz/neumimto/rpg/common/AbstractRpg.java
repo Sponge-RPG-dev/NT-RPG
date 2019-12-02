@@ -35,12 +35,12 @@ import cz.neumimto.rpg.common.commands.ACFBootstrap;
 
 import javax.inject.Inject;
 import java.io.File;
+import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
 public abstract class AbstractRpg implements RpgApi {
@@ -236,6 +236,7 @@ public abstract class AbstractRpg implements RpgApi {
 
         AddonScanner.setDeployedDir(workingDirPath.resolve(".deployed"));
         AddonScanner.setAddonDir(workingDirPath.resolve("addons"));
+
         AddonScanner.prepareAddons();
         Set<RpgAddon> rpgAddons = AbstractResourceManager.discoverGuiceModules();
         AddonScanner.onlyReloads();
@@ -271,6 +272,10 @@ public abstract class AbstractRpg implements RpgApi {
             return;
         }
         injectorc.accept(injector);
+
+        URL pluginUrl = FileUtils.getPluginUrl();
+        File file = new File(pluginUrl.getFile());
+        Rpg.get().getResourceLoader().loadJarFile(file, true);
 
         for (RpgAddon rpgAddon : rpgAddons) {
             rpgAddon.processStageEarly(injector);

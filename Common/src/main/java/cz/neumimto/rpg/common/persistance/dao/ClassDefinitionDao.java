@@ -47,8 +47,11 @@ public class ClassDefinitionDao {
 
     public Set<ClassDefinition> parseClassFiles() {
         Path path = Paths.get(Rpg.get().getWorkingDirectory(), "classes");
+
+
         Set<ClassDefinition> set = new HashSet<>();
         try {
+            Files.createDirectories(path);
             Map<String, Path> stringPathMap = preloadClassDefs(path, set);
             for (Map.Entry<String, Path> stringPathEntry : stringPathMap.entrySet()) {
                 String key = stringPathEntry.getKey();
