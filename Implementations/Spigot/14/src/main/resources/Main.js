@@ -9,8 +9,7 @@ var TimeUnit = Java.type("java.util.concurrent.TimeUnit");
 var Runnable = Java.type("java.lang.Runnable");
 var Consumer = Java.type("java.util.function.Consumer");
 /* libs */
-var Vector3d = Java.type("com.flowpowered.math.vector.Vector3d");
-var Optional = Java.type("com.google.common.base.Optional");
+
 /* https://wiki.openjdk.java.net/display/Nashorn/Nashorn+extensions */
 
 /* Also available:
