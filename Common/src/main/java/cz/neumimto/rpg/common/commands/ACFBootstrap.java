@@ -9,6 +9,7 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.skills.ISkill;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -16,7 +17,7 @@ import java.util.stream.Collectors;
 public class ACFBootstrap {
 
 
-    public static void initializeACF(CommandManager manager, BaseCommand... commandClasses) {
+    public static void initializeACF(CommandManager manager, List<BaseCommand> commandClasses) {
 
         manager.getCommandCompletions().registerAsyncCompletion("effect", c ->
                 Rpg.get().getEffectService().getGlobalEffects().keySet()

@@ -49,11 +49,6 @@ dependencies {
     testCompile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.26'
 
     jar {
-        manifest {
-            attributes(
-                    'Build-Timestamp': new Date()
-            )
-        }
 
         from {
             configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }

@@ -63,9 +63,7 @@ public class ClassDefinitionDao {
                     ClassDefinition result = null;
                     for (ClassDefinition classDefinition : set) {
                         if (classDefinition.getName().equalsIgnoreCase(key)) {
-                            result = new ObjectConverter().toObject(of, () -> {
-                                return classDefinition;
-                            });
+                            result = new ObjectConverter().toObject(of, () -> classDefinition);
                             break;
                         }
                     }

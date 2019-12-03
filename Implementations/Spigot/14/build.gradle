@@ -38,11 +38,6 @@ dependencies {
     compile "co.aikar:acf-paper:0.5.0-SNAPSHOT"
 
     jar {
-        manifest {
-            attributes(
-                    'Build-Timestamp': new Date()
-            )
-        }
 
         from {
             configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }

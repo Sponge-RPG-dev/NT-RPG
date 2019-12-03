@@ -41,7 +41,6 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
-import java.util.stream.Stream;
 
 public abstract class AbstractRpg implements RpgApi {
 
@@ -305,8 +304,12 @@ public abstract class AbstractRpg implements RpgApi {
         getEffectService().startEffectScheduler();
         getDamageService().init();
 
-        BaseCommand[] objects = (BaseCommand[]) Stream.of(commandClasses).map(c -> injector.getInstance(c)).toArray();
-        ACFBootstrap.initializeACF(((CommandManager) commandManager), objects);
+        List<BaseCommand> commands = new ArrayList<>();
+        for (Class commandClass : commandClasses) {
+            Object instance = injector.getInstance(commandClass);
+            commands.add((BaseCommand) instance);
+        }
+        ACFBootstrap.initializeACF(((CommandManager) commandManager), commands);
 
         for (RpgAddon rpgAddon : rpgAddons) {
             rpgAddon.processStageLate(injector);

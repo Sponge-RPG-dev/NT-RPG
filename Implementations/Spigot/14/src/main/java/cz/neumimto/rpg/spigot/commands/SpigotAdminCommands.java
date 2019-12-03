@@ -11,7 +11,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import javax.inject.Singleton;
-import java.lang.annotation.Inherited;
 
 @Singleton
 @CommandAlias("nadmin|na")
@@ -22,11 +21,10 @@ public class SpigotAdminCommands extends AbstractAdminCommands<CommandSender, Pl
         return characterService.getCharacter(player.getUniqueId());
     }
 
-    @Override
     @Subcommand("effect add")
     @Description("Adds effect, managed by rpg plugin, to the player")
     public void effectAddCommand(CommandSender commandSender, @Flags("taget") Player target, IGlobalEffect effect, long duration, String[] args) {
-        super.effectAddCommand(commandSender, target, effect, duration, args);
+        super._effectAddCommand(commandSender, target, effect, duration, args);
     }
 
     @Override
