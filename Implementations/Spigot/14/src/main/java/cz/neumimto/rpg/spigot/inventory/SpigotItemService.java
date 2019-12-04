@@ -66,6 +66,6 @@ public class SpigotItemService extends AbstractItemService {
             return Optional.empty();
         }
 
-        return Optional.of(new SpigotRpgItemType(parsed.itemId, parsed.variant, wClass, parsed.damage, parsed.armor, type));
+        return Optional.of(new SpigotRpgItemType(type.getKey().toString(), parsed.variant, wClass, parsed.damage, parsed.armor, type));
     }
 }

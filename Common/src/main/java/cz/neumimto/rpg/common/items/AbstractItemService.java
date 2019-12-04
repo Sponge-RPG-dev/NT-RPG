@@ -59,7 +59,7 @@ public abstract class AbstractItemService implements ItemService {
         for (ItemClass subClass : clazz.getSubClass()) {
             itemTypes.addAll(subClass.getItems());
 
-            getItemTypesByWeaponClass(clazz, itemTypes);
+            getItemTypesByWeaponClass(subClass, itemTypes);
         }
         return itemTypes;
     }
