@@ -2,14 +2,7 @@ package cz.neumimto.rpg.spigot;
 
 import co.aikar.commands.CommandManager;
 import co.aikar.commands.PaperCommandManager;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.Module;
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.RpgAddon;
 import cz.neumimto.rpg.api.logging.Log;
-import cz.neumimto.rpg.common.AbstractResourceManager;
-import cz.neumimto.rpg.common.AddonScanner;
 import cz.neumimto.rpg.persistence.flatfiles.FlatFilesModule;
 import cz.neumimto.rpg.spigot.commands.SpigotAdminCommands;
 import cz.neumimto.rpg.spigot.commands.SpigotCharacterCommands;
@@ -21,11 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.BiFunction;
 
 
 @Plugin(name = "NT-RPG", version = "0.0.1-SNAPSHOT")

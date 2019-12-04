@@ -25,7 +25,6 @@ import com.electronwill.nightconfig.core.conversion.SpecValidator;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.configuration.adapters.*;
 import cz.neumimto.rpg.api.effects.*;
-import cz.neumimto.rpg.api.entity.players.leveling.EmptyLevelProgression;
 import cz.neumimto.rpg.api.entity.players.leveling.ILevelProgression;
 import cz.neumimto.rpg.api.entity.players.leveling.SkillTreeType;
 import cz.neumimto.rpg.api.items.ClassItem;
@@ -119,7 +118,7 @@ public class ClassDefinition implements IEffectSourceProvider {
 
     @Path("Leveling")
     @Conversion(LevelProgressionConverter.class)
-    protected ILevelProgression levels = new EmptyLevelProgression();
+    protected ILevelProgression levels;
 
     @Path("SkillTreeType")
     protected SkillTreeType skillTreeType;
@@ -127,9 +126,6 @@ public class ClassDefinition implements IEffectSourceProvider {
     @Path("ExperienceSources")
     @Conversion(StringSet.class)
     protected Set<String> experienceSourceSet;
-
-    @Path("Default")
-    protected boolean defaultClass;
 
   //  @Path("Dependencies")
 //    @Conversion(ClassDependencyGraphAdapter.class)

@@ -47,7 +47,7 @@ public final class ItemString {
             default:
                 throw new InvalidItemStringException("Not possible to resolve argument " + string);
         }
-        return new ItemString(id, damage, 0, model);
+        return new ItemString(id.toLowerCase(), damage, 0, model);
     }
 
     public static class InvalidItemStringException extends RuntimeException {
