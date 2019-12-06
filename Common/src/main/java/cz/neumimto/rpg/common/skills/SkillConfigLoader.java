@@ -35,7 +35,7 @@ public class SkillConfigLoader {
 
     public ISkill build(String id) {
         info("Generating class for the skill " + id, DebugLevel.DEVELOP);
-
+        //todo use another classloadern
         ByteBuddy byteBuddy = new ByteBuddy();
         String[] split = id.split(":");
         String name = split[split.length - 1];
@@ -46,7 +46,7 @@ public class SkillConfigLoader {
                         .define("value", id)
                         .build())
                 .make()
-                .load(rl.getConfigClassLoader())
+                .load(rl.getClass().getClassLoader())
                 .getLoaded();
         Object o = null;
         try {

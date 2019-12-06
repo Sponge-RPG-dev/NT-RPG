@@ -11,6 +11,9 @@ public class DimExperiencesAdapter implements Converter<Map<String, Map<String, 
     @Override
     public Map<String, Map<String, Double>> convertToField(Config value) {
         Map<String, Map<String, Double>> map = new HashMap<>();
+        if (value == null) {
+            return map;
+        }
         Map<String, Object> stringObjectMap = value.valueMap();
         for (Map.Entry<String, Object> entry : stringObjectMap.entrySet()) {
             Map<String, Double> expMap = new HashMap<>();

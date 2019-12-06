@@ -143,14 +143,16 @@ public class SpongeRpgPlugin extends Rpg {
 
                     CommandService commandService = injector.getInstance(CommandService.class);
                     commandService.registerStandartCommands();
+
+                    if (Rpg.get().getPluginConfig().DEBUG.isBalance()) {
+                        Sponge.getEventManager().registerListeners(this, injector.getInstance(DebugListener.class));
+                    }
                 }
 
         );
 
 
-        if (Rpg.get().getPluginConfig().DEBUG.isBalance()) {
-            Sponge.getEventManager().registerListeners(this, injector.getInstance(DebugListener.class));
-        }
+
 
         if (INTEGRATIONS.contains("Placeholders")) {
             Placeholders placeholders = injector.getInstance(Placeholders.class);

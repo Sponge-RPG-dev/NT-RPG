@@ -19,6 +19,9 @@ public class ClassRpgItemTypeAdapter implements Converter<Set<ClassItem>, List<S
 
     @Override
     public Set<ClassItem> convertToField(List<String> list) {
+        if (list == null) {
+            return new HashSet<>();
+        }
         Map<RpgItemType, Double> map = new HashMap<>();
         Map<RpgItemType, Double> map2 = new HashMap<>();
         Iterator<String> iterator = list.iterator();

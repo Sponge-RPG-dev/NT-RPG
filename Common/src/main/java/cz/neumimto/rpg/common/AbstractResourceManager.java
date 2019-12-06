@@ -417,6 +417,7 @@ public abstract class AbstractResourceManager implements IResourceLoader {
                     Log.error("Could not call a default constructor on a class " + aClass.getName());
                 }
             }
+            classesToLoad.add(aClass);
         }
 
         return addons;

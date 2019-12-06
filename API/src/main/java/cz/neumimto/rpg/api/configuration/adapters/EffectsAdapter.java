@@ -10,10 +10,7 @@ import cz.neumimto.rpg.api.effects.EffectParams;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.api.logging.Log;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class EffectsAdapter implements Converter<Map<IGlobalEffect, EffectParams>, List<Config>> {
 
@@ -72,6 +69,9 @@ public class EffectsAdapter implements Converter<Map<IGlobalEffect, EffectParams
 
         @Override
         public Map<String, String> convertToField(Config value) {
+            if (value == null) {
+                return Collections.emptyMap();
+            }
             Map<String, String> map = new HashMap<>();
             Map<String, Object> stringObjectMap = value.valueMap();
             for (Map.Entry<String, Object> a : stringObjectMap.entrySet()) {

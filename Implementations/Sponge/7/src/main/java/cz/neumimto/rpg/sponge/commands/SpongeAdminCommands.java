@@ -7,6 +7,7 @@ import co.aikar.commands.sponge.contexts.OnlinePlayer;
 import com.google.inject.Injector;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.damage.DamageService;
+import cz.neumimto.rpg.api.effects.IEffectService;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
@@ -28,7 +29,6 @@ import cz.neumimto.rpg.api.skills.types.IActiveSkill;
 import cz.neumimto.rpg.api.utils.ActionResult;
 import cz.neumimto.rpg.common.commands.AdminCommandFacade;
 import cz.neumimto.rpg.common.commands.CommandProcessingException;
-import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.entity.PropertyService;
 import cz.neumimto.rpg.common.persistance.dao.ClassDefinitionDao;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
@@ -66,7 +66,7 @@ public class SpongeAdminCommands extends BaseCommand {
     private Injector injector;
 
     @Inject
-    private EffectService effectService;
+    private IEffectService effectService;
 
     @Inject
     private PropertyService propertyService;
