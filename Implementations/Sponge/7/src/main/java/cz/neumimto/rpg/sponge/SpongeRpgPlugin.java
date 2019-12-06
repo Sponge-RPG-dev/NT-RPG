@@ -19,16 +19,12 @@
 package cz.neumimto.rpg.sponge;
 
 import co.aikar.commands.SpongeCommandManager;
-import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.RpgAddon;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.utils.FileUtils;
-import cz.neumimto.rpg.common.AbstractResourceManager;
-import cz.neumimto.rpg.common.AddonScanner;
 import cz.neumimto.rpg.persistence.flatfiles.FlatFilesModule;
 import cz.neumimto.rpg.sponge.commands.CommandService;
 import cz.neumimto.rpg.sponge.commands.SpongeAdminCommands;
@@ -47,7 +43,6 @@ import org.spongepowered.api.event.CauseStackManager;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.game.GameRegistryEvent;
-import org.spongepowered.api.event.game.state.GameConstructionEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.plugin.Dependency;
 import org.spongepowered.api.plugin.Plugin;
@@ -62,7 +57,8 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 import static cz.neumimto.rpg.api.logging.Log.info;
 
@@ -104,7 +100,7 @@ public class SpongeRpgPlugin extends Rpg {
     public Injector injector;
 
     @Listener
-    public void initializeApi(GameConstructionEvent event) {
+    public void initializeApi(GamePreInitializationEvent event) {
         long start = System.nanoTime();
 
         Log.setLogger(logger);
@@ -129,12 +125,12 @@ public class SpongeRpgPlugin extends Rpg {
             e.printStackTrace();
         }
 
-        CommandService commandService = injector.getInstance(CommandService.class);
-        commandService.registerStandartCommands();
+
 
         PluginContainer pluginContainer = Sponge.getPluginManager().fromInstance(this).get();
 
         SpongeCommandManager manager = new SpongeCommandManager(pluginContainer);
+        super.impl = new SpongeRpg(workingDir);
 
         impl.init(
                 workingDirPath,
@@ -143,11 +139,14 @@ public class SpongeRpgPlugin extends Rpg {
                 new FlatFilesModule(),
                 (bindings, providers) -> new SpongeGuiceModule(this, logger, game, causeStackManager, bindings),
                 injector -> {
-                    super.impl = new SpongeRpg(workingDir);
                     injector.injectMembers(impl);
+
+                    CommandService commandService = injector.getInstance(CommandService.class);
+                    commandService.registerStandartCommands();
                 }
 
         );
+
 
         if (Rpg.get().getPluginConfig().DEBUG.isBalance()) {
             Sponge.getEventManager().registerListeners(this, injector.getInstance(DebugListener.class));
@@ -160,11 +159,7 @@ public class SpongeRpgPlugin extends Rpg {
         }
 
         double elapsedTime = (System.nanoTime() - start) / 1000000000.0;
-        info("NtRpg plugin successfully loaded in " + elapsedTime + " seconds");
-    }
 
-    @Listener
-    public void preinit(GamePreInitializationEvent e) {
 
         try {
             Class.forName("me.rojo8399.placeholderapi.PlaceholderService");
@@ -341,6 +336,7 @@ public class SpongeRpgPlugin extends Rpg {
                 .builder(new SkillBindData.Builder())
                 .buildAndRegister(plugin);
 
+        info("NtRpg plugin successfully loaded in " + elapsedTime + " seconds");
     }
 
     @Listener
