@@ -24,6 +24,7 @@ import com.electronwill.nightconfig.core.file.NoFormatFoundException;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.api.entity.players.leveling.EmptyLevelProgression;
 
 import javax.inject.Singleton;
 import java.io.IOException;
@@ -68,7 +69,7 @@ public class ClassDefinitionDao {
                         }
                     }
 
-                    if (result.getLevelProgression() != null) {
+                    if (result.getLevelProgression() != null && !(result.getLevelProgression() instanceof EmptyLevelProgression)) {
                         result.getLevelProgression().setLevelMargins(result.getLevelProgression().initCurve());
                     }
                     Set<String> expU = result.getExperienceSource().stream().map(String::toUpperCase).collect(Collectors.toSet());
