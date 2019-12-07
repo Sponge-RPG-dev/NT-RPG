@@ -1,7 +1,7 @@
 package cz.neumimto.skills.active;
 
 import cz.neumimto.Decorator;
-import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.SpongeResourceLoader;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
@@ -23,7 +23,7 @@ import java.util.Set;
  * Created by NeumimTo on 29.12.2015.
  */
 @Singleton
-@ResourceLoader.Skill("ntrpg:megabolt")
+@SpongeResourceLoader.Skill("ntrpg:megabolt")
 public class SkillMegabolt extends ActiveSkill<ISpongeCharacter> {
 
 	@Override

@@ -18,7 +18,7 @@
 
 package cz.neumimto.rpg.sponge.listeners;
 
-import cz.neumimto.rpg.api.IResourceLoader;
+import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.entity.EntityService;
@@ -70,7 +70,7 @@ import java.util.Optional;
  * Created by NeumimTo on 12.2.2015.
  */
 @Singleton
-@IResourceLoader.ListenerClass
+@ResourceLoader.ListenerClass
 public class BasicListener {
 
     @Inject
@@ -185,7 +185,7 @@ public class BasicListener {
         for (Transaction<BlockSnapshot> transaction : event.getTransactions()) {
             String type = transaction.getOriginal().getState().getType().getId();
 
-            Double d = spongeExperienceService.getMinningExperiences(type);
+            Double d = spongeExperienceService.getMiningExperiences(type);
             if (d != null) {
                 characterService.addExperiences(character, d, ExperienceSources.MINING);
                 return;

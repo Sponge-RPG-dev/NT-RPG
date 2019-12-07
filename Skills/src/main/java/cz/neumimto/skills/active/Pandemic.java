@@ -1,8 +1,8 @@
 package cz.neumimto.skills.active;
 
 import cz.neumimto.effects.negative.PandemicEffect;
-import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.SpongeResourceLoader;
+import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
@@ -27,11 +27,11 @@ import java.util.Set;
  * Created by NeumimTo on 6.8.2017.
  */
 @Singleton
-@ResourceLoader.Skill("ntrpg:pandemic")
+@SpongeResourceLoader.Skill("ntrpg:pandemic")
 public class Pandemic extends ActiveSkill<ISpongeCharacter> {
 
 	@Inject
-	private IEffectService effectService;
+	private EffectService effectService;
 
 	@Inject
 	private EntityService entityService;

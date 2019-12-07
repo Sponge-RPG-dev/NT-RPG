@@ -3,7 +3,7 @@ package cz.neumimto.skills.passive;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import cz.neumimto.effects.positive.PotionEffect;
-import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.SpongeResourceLoader;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.types.PassiveSkill;
@@ -19,7 +19,7 @@ import java.util.Map;
  * Created by NeumimTo on 20.8.2017.
  */
 @Singleton
-@ResourceLoader.Skill("ntrpg:potion")
+@SpongeResourceLoader.Skill("ntrpg:potion")
 public class SkillPotion extends PassiveSkill {
 
 	private Gson gson = new GsonBuilder().setPrettyPrinting().create();

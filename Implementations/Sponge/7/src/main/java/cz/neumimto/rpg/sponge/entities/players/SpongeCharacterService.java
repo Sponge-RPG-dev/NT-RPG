@@ -1,14 +1,16 @@
 package cz.neumimto.rpg.sponge.entities.players;
 
+import static cz.neumimto.rpg.api.logging.Log.error;
+import static cz.neumimto.rpg.api.logging.Log.info;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
-import cz.neumimto.rpg.common.entity.PropertyService;
+import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
+import cz.neumimto.rpg.common.entity.players.AbstractCharacterService;
 import cz.neumimto.rpg.common.entity.players.CharacterMana;
-import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.common.entity.players.UserActionType;
 import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
 import cz.neumimto.rpg.sponge.effects.common.def.ClickComboActionComponent;
@@ -19,18 +21,15 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-
-import static cz.neumimto.rpg.api.logging.Log.error;
-import static cz.neumimto.rpg.api.logging.Log.info;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 
 @Singleton
-public class SpongeCharacterService extends CharacterService<ISpongeCharacter> {
+public class SpongeCharacterService extends AbstractCharacterService<ISpongeCharacter> {
 
     @Inject
     private SpongeRpgPlugin plugin;
@@ -43,7 +42,7 @@ public class SpongeCharacterService extends CharacterService<ISpongeCharacter> {
 
     @Override
     public ISpongeCharacter createCharacter(UUID player, CharacterBase characterBase) {
-        SpongeCharacter spongeCharacter = new SpongeCharacter(player, characterBase, PropertyService.LAST_ID);
+        SpongeCharacter spongeCharacter = new SpongeCharacter(player, characterBase, PropertyServiceImpl.LAST_ID);
         spongeCharacter.setMana(new CharacterMana(spongeCharacter));
         spongeCharacter.setHealth(new SpongeCharacterHealth(spongeCharacter));
         return spongeCharacter;

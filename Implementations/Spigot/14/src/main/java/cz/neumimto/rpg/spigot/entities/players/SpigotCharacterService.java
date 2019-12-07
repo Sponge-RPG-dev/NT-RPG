@@ -3,22 +3,22 @@ package cz.neumimto.rpg.spigot.entities.players;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
-import cz.neumimto.rpg.common.entity.PropertyService;
+import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
+import cz.neumimto.rpg.common.entity.players.AbstractCharacterService;
 import cz.neumimto.rpg.common.entity.players.CharacterMana;
-import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import javax.inject.Singleton;
 import java.util.UUID;
+import javax.inject.Singleton;
 
 @Singleton
-public class SpigotCharacterService extends CharacterService<ISpigotCharacter> {
+public class SpigotCharacterService extends AbstractCharacterService<ISpigotCharacter> {
 
     @Override
     protected ISpigotCharacter createCharacter(UUID player, CharacterBase characterBase) {
-        SpigotCharacter iActiveCharacter = new SpigotCharacter(player, characterBase, PropertyService.LAST_ID);
+        SpigotCharacter iActiveCharacter = new SpigotCharacter(player, characterBase, PropertyServiceImpl.LAST_ID);
         iActiveCharacter.setMana(new CharacterMana(iActiveCharacter));
         iActiveCharacter.setHealth(new SpigotCharacterHealth(iActiveCharacter));
         return iActiveCharacter;
@@ -52,7 +52,7 @@ public class SpigotCharacterService extends CharacterService<ISpigotCharacter> {
 
     @Override
     protected void scheduleNextTick(Runnable r) {
-        Bukkit.getScheduler().runTaskLater(SpigotRpgPlugin.getInstance(),r,1L);
+        Bukkit.getScheduler().runTaskLater(SpigotRpgPlugin.getInstance(), r, 1L);
     }
 
     public IActiveCharacter getCharacter(Player target) {

@@ -10,7 +10,7 @@ import cz.neumimto.events.CriticalStrikeEvent;
 import cz.neumimto.events.DamageDodgedEvent;
 import cz.neumimto.events.ManaDrainEvent;
 import cz.neumimto.model.*;
-import cz.neumimto.rpg.api.IResourceLoader;
+import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.api.entity.CommonProperties;
 import cz.neumimto.rpg.api.entity.IEntity;
@@ -75,7 +75,7 @@ import java.util.function.Consumer;
  */
 @Singleton
 @SuppressWarnings("unchecked")
-@IResourceLoader.ListenerClass
+@ResourceLoader.ListenerClass
 public class SkillListener {
 
 	@Inject

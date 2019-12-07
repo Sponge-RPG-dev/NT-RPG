@@ -1,6 +1,6 @@
 package cz.neumimto.skills.active;
 
-import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.SpongeResourceLoader;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
@@ -14,7 +14,7 @@ import javax.inject.Singleton;
  * Created by NeumimTo on 1.8.2017.
  */
 @Singleton
-@ResourceLoader.Skill("ntrpg:conductivity")
+@SpongeResourceLoader.Skill("ntrpg:conductivity")
 public class Conductivity extends ActiveSkill {
 
 	public void init() {

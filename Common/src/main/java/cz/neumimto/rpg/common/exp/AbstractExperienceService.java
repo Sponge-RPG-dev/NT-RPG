@@ -1,12 +1,12 @@
 package cz.neumimto.rpg.common.exp;
 
-import cz.neumimto.rpg.api.exp.IExperienceService;
+import cz.neumimto.rpg.api.exp.ExperienceService;
 
-import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
+import javax.inject.Inject;
 
-public abstract class ExperienceService implements IExperienceService {
+public abstract class AbstractExperienceService implements ExperienceService {
 
     @Inject
     protected ExperienceDAO experienceDAO;
@@ -17,7 +17,7 @@ public abstract class ExperienceService implements IExperienceService {
     protected Map<String, Double> fishing = new HashMap<>();
 
     @Override
-    public Double getMinningExperiences(String type) {
+    public Double getMiningExperiences(String type) {
         return minerals.get(type);
     }
 

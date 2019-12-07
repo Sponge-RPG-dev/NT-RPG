@@ -1,8 +1,8 @@
 package cz.neumimto.skills.active;
 
 import cz.neumimto.effects.positive.FissureEffect;
-import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.SpongeResourceLoader;
+import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
@@ -13,11 +13,11 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-@ResourceLoader.Skill("ntrpg:fissure")
+@SpongeResourceLoader.Skill("ntrpg:fissure")
 public class Fissure extends ActiveSkill {
 
     @Inject
-    private IEffectService effectService;
+    private EffectService effectService;
 
     @Override
     public void init() {

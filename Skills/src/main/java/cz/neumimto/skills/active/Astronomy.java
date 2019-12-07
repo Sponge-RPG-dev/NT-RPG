@@ -3,7 +3,7 @@ package cz.neumimto.skills.active;
 import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.SkillLocalization;
 import cz.neumimto.Utils;
-import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.SpongeResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillResult;
@@ -21,7 +21,7 @@ import javax.inject.Singleton;
  * Created by NeumimTo on 3.8.2017.
  */
 @Singleton
-@ResourceLoader.Skill("ntrpg:astronomy")
+@SpongeResourceLoader.Skill("ntrpg:astronomy")
 public class Astronomy extends ActiveSkill<ISpongeCharacter> {
 
 	private static final long start = 14000;

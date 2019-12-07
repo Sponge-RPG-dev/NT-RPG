@@ -1,21 +1,19 @@
 package cz.neumimto.rpg;
 
+import static cz.neumimto.rpg.junit.CharactersExtension.Stage.Stages.READY;
 import com.google.inject.Injector;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.SkillTreeDao;
 import cz.neumimto.rpg.api.entity.CommonProperties;
 import cz.neumimto.rpg.api.entity.EntityService;
-import cz.neumimto.rpg.api.entity.IPropertyService;
+import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.events.EventFactoryService;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.scripting.IScriptEngine;
 import cz.neumimto.rpg.api.skills.*;
-import cz.neumimto.rpg.api.skills.mods.ActiveSkillPreProcessorWrapper;
-import cz.neumimto.rpg.api.skills.mods.PreProcessorTarget;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
-import cz.neumimto.rpg.api.skills.mods.SkillExecutorCallback;
+import cz.neumimto.rpg.api.skills.mods.*;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.junit.CharactersExtension;
 import cz.neumimto.rpg.junit.CharactersExtension.Stage;
@@ -28,10 +26,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import javax.inject.Inject;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import static cz.neumimto.rpg.junit.CharactersExtension.Stage.Stages.READY;
+import javax.inject.Inject;
 
 @ExtendWith({NtRpgExtension.class, GuiceExtension.class, CharactersExtension.class})
 @IncludeModule(TestGuiceModule.class)
@@ -53,7 +49,7 @@ public class SkillExecutionTests {
     private EventFactoryService eventFactoryService;
 
     @Inject
-    private IPropertyService propertyService;
+    private PropertyService propertyService;
 
     @Inject
     private EntityService entityService;

@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 
-public interface IEffectService {
+public interface EffectService {
     void registerEffectType(EffectType effectType);
 
     void registerEffectTypes(Class<? extends Enum> e);

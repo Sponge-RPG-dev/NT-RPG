@@ -1,7 +1,10 @@
 package cz.neumimto.rpg.common.skills;
 
+import static cz.neumimto.rpg.api.logging.Log.error;
+import static cz.neumimto.rpg.api.logging.Log.info;
+import static cz.neumimto.rpg.api.logging.Log.warn;
 import com.google.inject.Injector;
-import cz.neumimto.rpg.api.IResourceLoader;
+import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.configuration.SkillTreeDao;
@@ -22,37 +25,26 @@ import cz.neumimto.rpg.common.skills.preprocessors.SkillPreprocessors;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.description.annotation.AnnotationDescription;
 
-import javax.inject.Inject;
 import java.lang.reflect.Field;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
-
-import static cz.neumimto.rpg.api.logging.Log.*;
+import javax.inject.Inject;
 
 public abstract class AbstractSkillService implements SkillService {
 
+    protected Map<String, ISkill> skills = new HashMap<>();
+    protected Map<String, SkillTree> skillTrees = new ConcurrentHashMap<>();
+    protected Map<String, ISkill> skillByNames = new HashMap<>();
+    protected Map<String, ISkillType> skillTypes = new HashMap<>();
+    protected Map<String, Class<?>> scriptSkillsParents = new HashMap<>();
+
     @Inject
     private SkillTreeDao skillTreeDao;
-
     @Inject
     private ClassService classService;
-
     @Inject
     private Injector injector;
-
-    protected Map<String, ISkill> skills = new HashMap<>();
-
-    protected Map<String, SkillTree> skillTrees = new ConcurrentHashMap<>();
-
-    protected Map<String, ISkill> skillByNames = new HashMap<>();
-
-    protected Map<String, ISkillType> skillTypes = new HashMap<>();
-
-    protected Map<String, Class<?>> scriptSkillsParents = new HashMap<>();
 
     @Override
     public void load() {
@@ -224,7 +216,7 @@ public abstract class AbstractSkillService implements SkillService {
         Class sk = new ByteBuddy()
                 .subclass(type)
                 .name("cz.neumimto.skills.scripts." + scriptSkillModel.getName())
-                .annotateType(AnnotationDescription.Builder.ofType(IResourceLoader.Skill.class)
+                .annotateType(AnnotationDescription.Builder.ofType(ResourceLoader.Skill.class)
                         .define("value", scriptSkillModel.getId())
                         .build())
                 .make()
@@ -284,6 +276,7 @@ public abstract class AbstractSkillService implements SkillService {
     public void init() {
         scriptSkillsParents.put("active", ActiveScriptSkill.class);
         scriptSkillsParents.put("passive", PassiveScriptSkill.class);
+
         Stream.of(SkillType.values()).forEach(this::registerSkillType);
     }
 }

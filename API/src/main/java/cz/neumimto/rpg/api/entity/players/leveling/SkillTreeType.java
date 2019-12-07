@@ -3,7 +3,7 @@ package cz.neumimto.rpg.api.entity.players.leveling;
 
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.entity.players.ICharacterService;
+import cz.neumimto.rpg.api.entity.players.CharacterService;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.events.character.CharacterGainedLevelEvent;
@@ -40,7 +40,7 @@ public enum SkillTreeType {
 
         @Override
         public void processLearnSkill(IActiveCharacter character, PlayerClassData playerClassData, ISkill iSkill) {
-            ICharacterService<IActiveCharacter> characterService = Rpg.get().getCharacterService();
+            CharacterService<IActiveCharacter> characterService = Rpg.get().getCharacterService();
             ClassDefinition classDefinition = playerClassData.getClassDefinition();
 
             ActionResult actionResult = characterService.canLearnSkill(character, classDefinition, iSkill);
@@ -54,7 +54,7 @@ public enum SkillTreeType {
 
         @Override
         public void processUpgradeSkill(IActiveCharacter character, PlayerClassData playerClassData, ISkill iSkill) {
-            ICharacterService<IActiveCharacter> characterService = Rpg.get().getCharacterService();
+            CharacterService<IActiveCharacter> characterService = Rpg.get().getCharacterService();
             ClassDefinition classDefinition = playerClassData.getClassDefinition();
             ActionResult actionResult = characterService.canUpgradeSkill(character, classDefinition, iSkill);
             if (actionResult.isOk()) {
@@ -68,7 +68,7 @@ public enum SkillTreeType {
 
         @Override
         public void processRefundSkill(IActiveCharacter character, PlayerClassData playerClassData, ISkill iSkill) {
-            ICharacterService<IActiveCharacter> characterService = Rpg.get().getCharacterService();
+            CharacterService<IActiveCharacter> characterService = Rpg.get().getCharacterService();
             ClassDefinition classDefinition = playerClassData.getClassDefinition();
             ActionResult actionResult = characterService.canRefundSkill(character, classDefinition, iSkill);
             if (actionResult.isOk()) {

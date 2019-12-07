@@ -18,7 +18,7 @@
 
 package cz.neumimto.rpg.sponge.gui;
 
-import cz.neumimto.rpg.api.IResourceLoader;
+import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
@@ -26,7 +26,7 @@ import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.effects.EffectStatusType;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
-import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.gui.IPlayerMessage;
@@ -100,7 +100,7 @@ import static cz.neumimto.rpg.sponge.gui.GuiHelper.*;
  * Created by NeumimTo on 6.8.2015.
  */
 @Singleton
-@IResourceLoader.ListenerClass
+@ResourceLoader.ListenerClass
 public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
 
     public static Map<SkillTreeControllsButton, SkillTreeInterfaceModel> controlls;
@@ -115,7 +115,7 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
     private ClassService classService;
 
     @Inject
-    private IEffectService effectService;
+    private EffectService effectService;
 
     @Inject
     private SpongeRpgPlugin plugin;

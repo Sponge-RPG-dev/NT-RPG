@@ -18,7 +18,7 @@
 
 package cz.neumimto.rpg.api.skills.types;
 
-import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.localization.Arg;
 import cz.neumimto.rpg.api.inventory.InventoryService;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
@@ -39,7 +39,7 @@ import javax.inject.Inject;
 public abstract class PassiveSkill extends AbstractSkill {
 
     @Inject
-    protected IEffectService effectService;
+    protected EffectService effectService;
 
     @Inject
     protected InventoryService inventoryService;

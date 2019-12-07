@@ -18,6 +18,7 @@
 
 package cz.neumimto.rpg.sponge.utils;
 
+import static cz.neumimto.rpg.api.logging.Log.info;
 import com.flowpowered.math.imaginary.Quaterniond;
 import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.rpg.api.Rpg;
@@ -25,7 +26,7 @@ import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.utils.Console;
 import cz.neumimto.rpg.api.utils.MathUtils;
-import cz.neumimto.rpg.common.entity.PropertyService;
+import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.skills.NDamageType;
@@ -53,8 +54,6 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static cz.neumimto.rpg.api.logging.Log.info;
 
 /**
  * Created by NeumimTo on 25.7.2015.
@@ -163,7 +162,7 @@ public class Utils {
      * @param player
      */
     public static void resetPlayerToDefault(Player player) {
-        player.offer(Keys.WALKING_SPEED, PropertyService.WALKING_SPEED);
+        player.offer(Keys.WALKING_SPEED, PropertyServiceImpl.WALKING_SPEED);
     }
 
     /**

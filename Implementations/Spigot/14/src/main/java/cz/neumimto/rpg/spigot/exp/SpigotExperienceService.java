@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.spigot.exp;
 
-import cz.neumimto.rpg.common.exp.ExperienceService;
+import cz.neumimto.rpg.common.exp.AbstractExperienceService;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 
@@ -10,7 +10,7 @@ import java.util.Map;
 import static cz.neumimto.rpg.api.logging.Log.warn;
 
 @Singleton
-public class SpigotExperienceService extends ExperienceService {
+public class SpigotExperienceService extends AbstractExperienceService {
 
     @Override
     public void load() {

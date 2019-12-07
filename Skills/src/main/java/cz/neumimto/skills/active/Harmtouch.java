@@ -2,7 +2,7 @@ package cz.neumimto.skills.active;
 
 import com.flowpowered.math.imaginary.Quaterniond;
 import com.flowpowered.math.vector.Vector3d;
-import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.SpongeResourceLoader;
 import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
@@ -28,7 +28,7 @@ import javax.inject.Singleton;
  * Created by NeumimTo on 20.8.2017.
  */
 @Singleton
-@ResourceLoader.Skill("ntrpg:harmtouch")
+@SpongeResourceLoader.Skill("ntrpg:harmtouch")
 public class Harmtouch extends Targeted {
 
 	@Inject

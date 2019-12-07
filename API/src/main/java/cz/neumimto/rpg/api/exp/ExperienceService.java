@@ -1,8 +1,8 @@
 package cz.neumimto.rpg.api.exp;
 
-public interface IExperienceService {
+public interface ExperienceService {
 
-    Double getMinningExperiences(String type);
+    Double getMiningExperiences(String type);
 
     Double getLoggingExperiences(String type);
 

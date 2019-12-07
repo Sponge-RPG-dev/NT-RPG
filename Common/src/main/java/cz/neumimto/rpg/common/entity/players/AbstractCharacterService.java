@@ -17,18 +17,21 @@
  */
 package cz.neumimto.rpg.common.entity.players;
 
+import static cz.neumimto.rpg.api.localization.Arg.arg;
+import static cz.neumimto.rpg.api.logging.Log.info;
+import static cz.neumimto.rpg.api.logging.Log.warn;
 import cz.neumimto.rpg.api.IRpgElement;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.damage.DamageService;
-import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.entity.CommonProperties;
 import cz.neumimto.rpg.api.entity.EntityService;
-import cz.neumimto.rpg.api.entity.IPropertyService;
+import cz.neumimto.rpg.api.entity.PropertyService;
+import cz.neumimto.rpg.api.entity.players.CharacterService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.entity.players.ICharacterService;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.DependencyGraph;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
@@ -40,10 +43,7 @@ import cz.neumimto.rpg.api.inventory.InventoryService;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.permissions.PermissionService;
-import cz.neumimto.rpg.api.persistance.model.BaseCharacterAttribute;
-import cz.neumimto.rpg.api.persistance.model.CharacterBase;
-import cz.neumimto.rpg.api.persistance.model.CharacterClass;
-import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
+import cz.neumimto.rpg.api.persistance.model.*;
 import cz.neumimto.rpg.api.skills.*;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.skills.tree.SkillTreeSpecialization;
@@ -56,19 +56,15 @@ import cz.neumimto.rpg.common.persistance.dao.IPersistenceHandler;
 import cz.neumimto.rpg.common.persistance.dao.IPlayerDao;
 import cz.neumimto.rpg.common.utils.exceptions.MissingConfigurationException;
 
-import javax.inject.Inject;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
-
-import static cz.neumimto.rpg.api.localization.Arg.arg;
-import static cz.neumimto.rpg.api.logging.Log.info;
-import static cz.neumimto.rpg.api.logging.Log.warn;
+import javax.inject.Inject;
 
 /**
  * Created by NeumimTo on 26.12.2014.
  */
-public abstract class CharacterService<T extends IActiveCharacter> implements ICharacterService<T> {
+public abstract class AbstractCharacterService<T extends IActiveCharacter> implements CharacterService<T> {
 
     @Inject
     private SkillService skillService;
@@ -89,7 +85,7 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
     private DamageService damageService;
 
     @Inject
-    private IPropertyService propertyService;
+    private PropertyService propertyService;
 
     @Inject
     private LocalizationService localizationService;
@@ -104,7 +100,7 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
     private IPersistenceHandler persistanceHandler;
 
     @Inject
-    protected IEffectService effectService;
+    protected EffectService effectService;
 
     @Inject
     private PermissionService permissionService;
@@ -541,7 +537,6 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
 
         return activeCharacter;
     }
-
 
 
     @Override
@@ -1004,7 +999,6 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
     }
 
 
-
     @Override
     public ActionResult addAttribute(T character, AttributeConfig attribute) {
         return addAttribute(character, new HashMap<AttributeConfig, Integer>() {{
@@ -1096,7 +1090,7 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
             return ActionResult.withErrorMessage(text);
         }
 
-        if (!permissionService.hasPermission(character,"ntrpg.class." + klass.getName().toLowerCase())) {
+        if (!permissionService.hasPermission(character, "ntrpg.class." + klass.getName().toLowerCase())) {
             String text = localizationService.translate(LocalizationKeys.NO_PERMISSIONS);
             return ActionResult.withErrorMessage(text);
         }

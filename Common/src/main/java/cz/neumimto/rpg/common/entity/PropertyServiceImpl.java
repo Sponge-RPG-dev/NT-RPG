@@ -1,19 +1,18 @@
 package cz.neumimto.rpg.common.entity;
 
+import static cz.neumimto.rpg.api.logging.Log.info;
 import com.electronwill.nightconfig.core.conversion.ObjectConverter;
 import com.electronwill.nightconfig.core.file.FileConfig;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.configuration.Attributes;
-import cz.neumimto.rpg.api.entity.IPropertyService;
+import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.properties.Property;
 import cz.neumimto.rpg.api.utils.Console;
 import cz.neumimto.rpg.common.assets.AssetService;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
@@ -22,38 +21,27 @@ import java.nio.file.StandardOpenOption;
 import java.text.Collator;
 import java.util.*;
 import java.util.function.Supplier;
-
-import static cz.neumimto.rpg.api.logging.Log.info;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 @Singleton
-public class PropertyService implements IPropertyService {
+public class PropertyServiceImpl implements PropertyService {
 
     public static final double WALKING_SPEED = 0.1d;
 
     public static int LAST_ID = 0;
-    public static final Supplier<Integer> getAndIncrement = () -> {
-        int t = new Integer(LAST_ID);
-        LAST_ID++;
-        return t;
-    };
-
-    @Inject
-    private ItemService itemService;
-
-    @Inject
-    private AssetService assetService;
-
-    private Map<String, Integer> idMap = new HashMap<>();
-
-    private Map<Integer, String> nameMap = new HashMap<>();
-
-    private Map<Integer, Float> defaults = new HashMap<>();
-
-    private Set<Integer> damageRecalc = new HashSet<>();
-
-    private Map<String, AttributeConfig> attributeMap = new HashMap<>();
+    public static final Supplier<Integer> getAndIncrement = () -> LAST_ID++;
 
     protected float[] maxValues;
+    @Inject
+    private ItemService itemService;
+    @Inject
+    private AssetService assetService;
+    private Map<String, Integer> idMap = new HashMap<>();
+    private Map<Integer, String> nameMap = new HashMap<>();
+    private Map<Integer, Float> defaults = new HashMap<>();
+    private Set<Integer> damageRecalc = new HashSet<>();
+    private Map<String, AttributeConfig> attributeMap = new HashMap<>();
 
     @Override
     public int getLastId() {

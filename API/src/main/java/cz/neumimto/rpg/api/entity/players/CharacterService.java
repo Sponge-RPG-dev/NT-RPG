@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public interface ICharacterService<T extends IActiveCharacter> {
+public interface CharacterService<T extends IActiveCharacter> {
 
     T buildDummyChar(UUID uuid);
 

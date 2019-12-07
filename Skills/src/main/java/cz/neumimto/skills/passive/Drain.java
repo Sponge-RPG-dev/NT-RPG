@@ -1,9 +1,9 @@
 package cz.neumimto.skills.passive;
 
 import cz.neumimto.effects.ManaDrainEffect;
-import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.SpongeResourceLoader;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
-import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
@@ -18,11 +18,11 @@ import javax.inject.Singleton;
  * Created by NeumimTo on 7.7.2017.
  */
 @Singleton
-@ResourceLoader.Skill("ntrpg:drain")
+@SpongeResourceLoader.Skill("ntrpg:drain")
 public class Drain extends PassiveSkill {
 
 	@Inject
-	private IEffectService effectService;
+	private EffectService effectService;
 
 	public Drain() {
 		super(ManaDrainEffect.name);

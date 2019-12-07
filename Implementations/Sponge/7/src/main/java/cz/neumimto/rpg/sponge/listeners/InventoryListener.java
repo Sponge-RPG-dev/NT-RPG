@@ -19,7 +19,7 @@
 package cz.neumimto.rpg.sponge.listeners;
 
 import com.google.inject.Singleton;
-import cz.neumimto.rpg.api.IResourceLoader;
+import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.inventory.InventoryService;
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
@@ -67,7 +67,7 @@ import java.util.Optional;
  * Created by NeumimTo on 22.7.2015.
  */
 @Singleton
-@IResourceLoader.ListenerClass
+@ResourceLoader.ListenerClass
 public class InventoryListener {
 
     @Inject

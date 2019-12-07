@@ -5,13 +5,13 @@ import com.google.inject.Module;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.damage.DamageService;
-import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.entity.EntityService;
-import cz.neumimto.rpg.api.entity.IPropertyService;
-import cz.neumimto.rpg.api.entity.players.ICharacterService;
+import cz.neumimto.rpg.api.entity.PropertyService;
+import cz.neumimto.rpg.api.entity.players.CharacterService;
 import cz.neumimto.rpg.api.entity.players.parties.PartyService;
 import cz.neumimto.rpg.api.events.EventFactoryService;
-import cz.neumimto.rpg.api.exp.IExperienceService;
+import cz.neumimto.rpg.api.exp.ExperienceService;
 import cz.neumimto.rpg.api.inventory.InventoryService;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.localization.Arg;
@@ -56,35 +56,35 @@ public interface RpgApi {
 
     Executor getAsyncExecutor();
 
-    ICharacterService getCharacterService();
+    CharacterService getCharacterService();
 
     EntityService getEntityService();
 
     DamageService getDamageService();
 
-    IPropertyService getPropertyService();
+    PropertyService getPropertyService();
 
     PartyService getPartyService();
 
     String getWorkingDirectory();
 
-    IResourceLoader getResourceLoader();
+    ResourceLoader getResourceLoader();
 
     ClassService getClassService();
 
-    IEffectService getEffectService();
+    EffectService getEffectService();
 
     IScriptEngine getScriptEngine();
 
     InventoryService getInventoryService();
 
-    IExperienceService getExperienceService();
+    ExperienceService getExperienceService();
 
     void reloadMainPluginConfig();
 
     void scheduleSyncLater(Runnable runnable);
 
     void init(Path workingDirPath, Object commandManager, Class[] commandClasses, RpgAddon defaultStorageImpl,
-                     BiFunction<Map, Map<Class<?>, ?>, Module> fnInjProv, Consumer<Injector> injectorc);
+              BiFunction<Map, Map<Class<?>, ?>, Module> fnInjProv, Consumer<Injector> injectorc);
 
 }

@@ -3,11 +3,11 @@ package cz.neumimto.rpg.common.commands;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import cz.neumimto.rpg.api.effects.EffectParams;
-import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.api.effects.model.EffectModelFactory;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.entity.players.ICharacterService;
+import cz.neumimto.rpg.api.entity.players.CharacterService;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.logging.Log;
@@ -26,10 +26,10 @@ import java.util.Map;
 public class AdminCommandFacade {
 
     @Inject
-    private IEffectService effectService;
+    private EffectService effectService;
 
     @Inject
-    private ICharacterService<? super IActiveCharacter> characterService;
+    private CharacterService<? super IActiveCharacter> characterService;
 
     private Gson gson = new Gson();
 

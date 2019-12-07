@@ -1,7 +1,7 @@
 package cz.neumimto.skills.active;
 
 import com.flowpowered.math.vector.Vector3d;
-import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.SpongeResourceLoader;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
@@ -25,7 +25,7 @@ import java.util.Optional;
  * Created by NeumimTo on 29.12.2015.
  */
 @Singleton
-@ResourceLoader.Skill("ntrpg:teleport")
+@SpongeResourceLoader.Skill("ntrpg:teleport")
 public class SkillTeleport extends ActiveSkill<ISpongeCharacter> {
 
 	public void init() {

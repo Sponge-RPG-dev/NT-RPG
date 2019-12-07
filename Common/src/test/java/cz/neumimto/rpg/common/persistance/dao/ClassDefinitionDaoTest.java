@@ -3,7 +3,7 @@ package cz.neumimto.rpg.common.persistance.dao;
 import cz.neumimto.rpg.RpgTest;
 import cz.neumimto.rpg.api.RpgApi;
 import cz.neumimto.rpg.api.classes.ClassService;
-import cz.neumimto.rpg.api.entity.IPropertyService;
+import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.junit.NtRpgExtension;
@@ -16,8 +16,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import javax.inject.Inject;
 import java.util.Set;
+import javax.inject.Inject;
 
 @ExtendWith({GuiceExtension.class, NtRpgExtension.class})
 @IncludeModule(TestGuiceModule.class)
@@ -30,7 +30,7 @@ public class ClassDefinitionDaoTest {
     private ItemService itemService;
 
     @Inject
-    private IPropertyService propertyService;
+    private PropertyService propertyService;
 
     @Inject
     private ClassService classService;
@@ -43,7 +43,7 @@ public class ClassDefinitionDaoTest {
         new RpgTest(api);
         propertyService.getAttributes().put(TestDictionary.STR.getId(), TestDictionary.STR);
         propertyService.getAttributes().put(TestDictionary.AGI.getId(), TestDictionary.AGI);
-        propertyService.registerProperty("max_mana",1);
+        propertyService.registerProperty("max_mana", 1);
     }
 
     @Test

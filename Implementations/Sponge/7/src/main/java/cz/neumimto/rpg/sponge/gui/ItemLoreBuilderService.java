@@ -1,11 +1,11 @@
 package cz.neumimto.rpg.sponge.gui;
 
-import cz.neumimto.rpg.api.IResourceLoader;
+import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.effects.EffectParams;
-import cz.neumimto.rpg.api.entity.IPropertyService;
+import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.items.sockets.SocketType;
 import cz.neumimto.rpg.api.localization.Arg;
@@ -27,18 +27,17 @@ import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.*;
 import java.util.stream.Collectors;
-
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 
 /**
  * Created by NeumimTo on 20.1.2018.
  */
 @Singleton
-@IResourceLoader.ListenerClass
+@ResourceLoader.ListenerClass
 public class ItemLoreBuilderService {
 
     private static TextColor effectName;
@@ -60,7 +59,7 @@ public class ItemLoreBuilderService {
 
     @Inject
     private SpongeDamageService damageService;
-    
+
     public static ItemLoreBuilder create(ItemStack is, List<Text> t) {
         return new ItemLoreBuilder(is, t);
     }
@@ -124,7 +123,7 @@ public class ItemLoreBuilderService {
 
         public void attributeMapToItemLorePart(Map<String, Integer> a) {
             int k = 0;
-            IPropertyService propertyService = Rpg.get().getPropertyService();
+            PropertyService propertyService = Rpg.get().getPropertyService();
             for (Map.Entry<String, Integer> e : a.entrySet()) {
                 AttributeConfig attribute = propertyService.getAttributeById(e.getKey()).get();
                 String name = attribute.getName();

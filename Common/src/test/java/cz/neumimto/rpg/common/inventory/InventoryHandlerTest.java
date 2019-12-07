@@ -1,9 +1,11 @@
 package cz.neumimto.rpg.common.inventory;
 
+import static cz.neumimto.rpg.junit.CharactersExtension.Stage;
+import static cz.neumimto.rpg.junit.CharactersExtension.Stage.Stages.READY;
 import cz.neumimto.rpg.RpgTest;
 import cz.neumimto.rpg.api.RpgApi;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
-import cz.neumimto.rpg.api.entity.IPropertyService;
+import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
@@ -12,10 +14,7 @@ import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.common.entity.TestCharacter;
 import cz.neumimto.rpg.common.items.RpgItemStackImpl;
-import cz.neumimto.rpg.junit.CharactersExtension;
-import cz.neumimto.rpg.junit.NtRpgExtension;
-import cz.neumimto.rpg.junit.TestDictionary;
-import cz.neumimto.rpg.junit.TestGuiceModule;
+import cz.neumimto.rpg.junit.*;
 import name.falgout.jeffrey.testing.junit.guice.GuiceExtension;
 import name.falgout.jeffrey.testing.junit.guice.IncludeModule;
 import org.junit.jupiter.api.Assertions;
@@ -26,14 +25,11 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import javax.inject.Inject;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
-
-import static cz.neumimto.rpg.junit.CharactersExtension.Stage;
-import static cz.neumimto.rpg.junit.CharactersExtension.Stage.Stages.READY;
+import javax.inject.Inject;
 
 @ExtendWith({GuiceExtension.class, NtRpgExtension.class, CharactersExtension.class})
 @IncludeModule(TestGuiceModule.class)
@@ -46,7 +42,7 @@ class InventoryHandlerTest {
     private ItemService itemService;
 
     @Inject
-    private IPropertyService propertyService;
+    private PropertyService propertyService;
 
 
     private TestCharacter character;

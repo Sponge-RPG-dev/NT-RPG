@@ -5,7 +5,7 @@ import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.api.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.entity.IEntity;
-import cz.neumimto.rpg.common.effects.EffectService;
+import cz.neumimto.rpg.common.effects.AbstractEffectService;
 import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
 import cz.neumimto.rpg.sponge.events.effects.SpongeEffectApplyEvent;
 import cz.neumimto.rpg.sponge.events.effects.SpongeEffectRemoveEvent;
@@ -19,7 +19,7 @@ import javax.inject.Singleton;
 import java.util.concurrent.TimeUnit;
 
 @Singleton
-public class SpongeEffectService extends EffectService {
+public class SpongeEffectService extends AbstractEffectService {
 
     @Inject
     private CauseStackManager causeStackManager;

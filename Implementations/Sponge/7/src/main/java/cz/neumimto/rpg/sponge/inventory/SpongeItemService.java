@@ -3,7 +3,7 @@ package cz.neumimto.rpg.sponge.inventory;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.configuration.ItemString;
 import cz.neumimto.rpg.api.effects.EffectParams;
-import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.items.ItemClass;
@@ -35,7 +35,7 @@ import java.util.Optional;
 public class SpongeItemService extends AbstractItemService {
 
     @Inject
-    private IEffectService effectService;
+    private EffectService effectService;
 
     @Inject
     private SpongeRpgPlugin plugin;

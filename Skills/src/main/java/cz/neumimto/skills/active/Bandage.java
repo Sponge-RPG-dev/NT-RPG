@@ -2,8 +2,8 @@ package cz.neumimto.skills.active;
 
 import cz.neumimto.Decorator;
 import cz.neumimto.effects.negative.Bleeding;
-import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.SpongeResourceLoader;
+import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
@@ -22,14 +22,14 @@ import javax.inject.Singleton;
  * Created by NeumimTo on 5.8.2017.
  */
 @Singleton
-@ResourceLoader.Skill("ntrpg:bandage")
+@SpongeResourceLoader.Skill("ntrpg:bandage")
 public class Bandage extends Targeted {
 
 	@Inject
 	private EntityService entityService;
 
 	@Inject
-	private IEffectService effectService;
+	private EffectService effectService;
 
 	@Override
 	public void init() {

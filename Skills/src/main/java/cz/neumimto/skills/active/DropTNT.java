@@ -1,6 +1,6 @@
 package cz.neumimto.skills.active;
 
-import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.SpongeResourceLoader;
 import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
@@ -27,7 +27,7 @@ import java.util.UUID;
  * Created by NeumimTo on 27.12.2018.
  */
 @Singleton
-@ResourceLoader.Skill("ntrpg:droptnt")
+@SpongeResourceLoader.Skill("ntrpg:droptnt")
 public class DropTNT extends ActiveSkill<ISpongeCharacter> {
 
     public static Map<UUID, Float> DROPPED_TNTS = new HashMap<>();

@@ -50,7 +50,6 @@ import java.util.function.BiConsumer;
  */
 public class DebugListener {
 
-
     @Listener(order = Order.LAST)
     public void debug(DamageEntityEvent event, @First(typeFilter = EntityDamageSource.class) EntityDamageSource entityDamageSource) {
         Entity targetEntity = event.getTargetEntity();
@@ -65,8 +64,7 @@ public class DebugListener {
     }
 
     @Listener(order = Order.LAST)
-    public void debugi(DamageEntityEvent event, @First(typeFilter = IndirectEntityDamageSource.class) IndirectEntityDamageSource
-            entityDamageSource) {
+    public void debugi(DamageEntityEvent event, @First(typeFilter = IndirectEntityDamageSource.class) IndirectEntityDamageSource entityDamageSource) {
         Entity targetEntity = event.getTargetEntity();
 
         Entity source = entityDamageSource.getIndirectSource();

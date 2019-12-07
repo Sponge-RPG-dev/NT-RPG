@@ -1,7 +1,6 @@
 plugins {
     id "net.kyori.blossom" version "1.1.0"
     id 'com.github.johnrengelman.shadow' version '4.0.4'
-
 }
 
 group = 'cz.neumimto.rpg'
@@ -32,7 +31,7 @@ dependencies {
     }
     compileOnly 'me.lucko.luckperms:luckperms-api:4.2'
     compileOnly 'com.github.rojo8399:PlaceholderAPI:4.5.1'
-    compileOnly group: 'it.unimi.dsi', name: 'fastutil', version: '8.2.1'
+    compileOnly 'it.unimi.dsi:fastutil:8.2.1'
 
     compile "co.aikar:acf-sponge:0.5.0-SNAPSHOT"
 
@@ -59,13 +58,10 @@ dependencies {
 
 }
 
-compileJava {
-    options.compilerArgs += ["-parameters"]
-    options.fork = true
-    options.forkOptions.executable = 'javac'
-}
-
 shadowJar {
+    baseName = "NT-RPG"
+    classifier = null
+    
     relocate 'co.aikar.commands', 'cz.neumimto.acf'
     exclude '**/module-info.class'
 }

@@ -1,7 +1,7 @@
 package cz.neumimto.rpg;
 
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.entity.players.ICharacterService;
+import cz.neumimto.rpg.api.entity.players.CharacterService;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.junit.NtRpgExtension;
@@ -22,7 +22,7 @@ import java.util.UUID;
 public class CharacterBaseInitTest {
 
     @Inject
-    ICharacterService<IActiveCharacter> characterService;
+    CharacterService<IActiveCharacter> characterService;
 
     @Test
     public void testInitialization() {

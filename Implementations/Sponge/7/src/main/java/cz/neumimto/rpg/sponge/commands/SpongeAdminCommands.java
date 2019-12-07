@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.sponge.commands;
 
+import static cz.neumimto.rpg.api.logging.Log.info;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.Optional;
 import co.aikar.commands.annotation.*;
@@ -7,7 +8,7 @@ import co.aikar.commands.sponge.contexts.OnlinePlayer;
 import com.google.inject.Injector;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.damage.DamageService;
-import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
@@ -19,17 +20,14 @@ import cz.neumimto.rpg.api.items.RpgItemType;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.scripting.IScriptEngine;
-import cz.neumimto.rpg.api.skills.ISkill;
-import cz.neumimto.rpg.api.skills.PlayerSkillContext;
-import cz.neumimto.rpg.api.skills.SkillData;
-import cz.neumimto.rpg.api.skills.SkillSettings;
+import cz.neumimto.rpg.api.skills.*;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.mods.SkillExecutorCallback;
 import cz.neumimto.rpg.api.skills.types.IActiveSkill;
 import cz.neumimto.rpg.api.utils.ActionResult;
 import cz.neumimto.rpg.common.commands.AdminCommandFacade;
 import cz.neumimto.rpg.common.commands.CommandProcessingException;
-import cz.neumimto.rpg.common.entity.PropertyService;
+import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.common.persistance.dao.ClassDefinitionDao;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
@@ -42,15 +40,13 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
-
-import static cz.neumimto.rpg.api.logging.Log.info;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 @Singleton
 @CommandAlias("nadmin|na")
@@ -66,10 +62,10 @@ public class SpongeAdminCommands extends BaseCommand {
     private Injector injector;
 
     @Inject
-    private IEffectService effectService;
+    private EffectService effectService;
 
     @Inject
-    private PropertyService propertyService;
+    private PropertyServiceImpl propertyService;
 
     @Inject
     private EntityService entityService;

@@ -2,7 +2,7 @@ package cz.neumimto.skills.active;
 
 import com.flowpowered.math.imaginary.Quaterniond;
 import com.flowpowered.math.vector.Vector3d;
-import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.SpongeResourceLoader;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
@@ -18,7 +18,7 @@ import javax.inject.Singleton;
  * Created by NeumimTo on 23.12.2015.
  */
 @Singleton
-@ResourceLoader.Skill("ntrpg:jump")
+@SpongeResourceLoader.Skill("ntrpg:jump")
 public class SkillJump extends ActiveSkill<ISpongeCharacter> {
 
 	public void init() {

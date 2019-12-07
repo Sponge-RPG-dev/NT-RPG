@@ -18,7 +18,7 @@
 
 package cz.neumimto.rpg.api.skills.types;
 
-import cz.neumimto.rpg.api.IResourceLoader;
+import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.localization.Arg;
@@ -64,7 +64,7 @@ public abstract class AbstractSkill implements ISkill {
     private String damageType = null;
 
     public AbstractSkill() {
-        IResourceLoader.Skill sk = this.getClass().getAnnotation(IResourceLoader.Skill.class);
+        ResourceLoader.Skill sk = this.getClass().getAnnotation(ResourceLoader.Skill.class);
         if (sk != null) {
             catalogId = sk.value().toLowerCase();
         }

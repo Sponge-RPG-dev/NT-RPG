@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.common;
 
-import cz.neumimto.rpg.api.IResourceLoader;
+import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.RpgAddon;
 import cz.neumimto.rpg.api.logging.Log;
 
@@ -28,12 +28,13 @@ public class AddonScanner {
     private static Set<Class<?>> annotations = new HashSet<>();
     private static Set<Class<?>> classesToLoad = new HashSet<>();
     private static Set<String> exclusions = new HashSet<>();
+    private static Path deployedDir;
 
     static {
-        annotations.add(IResourceLoader.Skill.class);
-        annotations.add(IResourceLoader.Command.class);
-        annotations.add(IResourceLoader.ModelMapper.class);
-        annotations.add(IResourceLoader.ListenerClass.class);
+        annotations.add(ResourceLoader.Skill.class);
+        annotations.add(ResourceLoader.Command.class);
+        annotations.add(ResourceLoader.ModelMapper.class);
+        annotations.add(ResourceLoader.ListenerClass.class);
 
         //Hibernate dep
         exclusions.add("javax");
@@ -49,9 +50,6 @@ public class AddonScanner {
             }
         }
     }
-
-
-    private static Path deployedDir;
 
     public static void setAddonDir(Path addonDir) {
         AddonScanner.addonDir = addonDir;
@@ -69,8 +67,7 @@ public class AddonScanner {
     }
 
     public static Set<Class<?>> getClassesToLoad() {
-        Set<Class<?>> classes = new HashSet<>();
-        classes.addAll(classesToLoad);
+        Set<Class<?>> classes = new HashSet<>(classesToLoad);
         classesToLoad.clear();
         return classes;
     }
@@ -80,13 +77,12 @@ public class AddonScanner {
         copyReloadableJarModulesToDeployedDir(map);
 
         if (!stage) {
-            findRelevantClassCandidatesinPath(map.get(false));
+            findRelevantClassCandidatesInPath(map.get(false));
         }
-        findRelevantClassCandidatesinPath(map.get(true));
-
+        findRelevantClassCandidatesInPath(map.get(true));
     }
 
-    private static void findRelevantClassCandidatesinPath(Set<Path> paths) {
+    private static void findRelevantClassCandidatesInPath(Set<Path> paths) {
         for (Path path : paths) {
             addToClassPath(path);
         }
@@ -134,7 +130,7 @@ public class AddonScanner {
     private static boolean hasComponentAnnotation(Class aClass) {
         Annotation[] annotations = aClass.getAnnotations();
         for (Annotation annotation : annotations) {
-            Class<? extends Annotation> annotationType  = annotation.annotationType();
+            Class<? extends Annotation> annotationType = annotation.annotationType();
             if (AddonScanner.annotations.contains(annotationType)) {
                 return true;
             }
@@ -167,7 +163,7 @@ public class AddonScanner {
         Class urlClass = URLClassLoader.class;
         Method method = urlClass.getDeclaredMethod("addURL", new Class[]{URL.class});
         method.setAccessible(true);
-        method.invoke(urlClassLoader, new Object[]{url});
+        method.invoke(urlClassLoader, url);
     }
 
     private static void copyReloadableJarModulesToDeployedDir(Map<Boolean, Set<Path>> map) {

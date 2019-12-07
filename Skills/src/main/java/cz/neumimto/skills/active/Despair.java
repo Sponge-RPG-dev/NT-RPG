@@ -3,8 +3,8 @@ package cz.neumimto.skills.active;
 import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.Decorator;
 import cz.neumimto.effects.negative.Blindness;
-import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.SpongeResourceLoader;
+import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
@@ -33,14 +33,14 @@ import java.util.Set;
  * Created by NeumimTo on 15.7.2017.
  */
 @Singleton
-@ResourceLoader.Skill("ntrpg:despair")
+@SpongeResourceLoader.Skill("ntrpg:despair")
 public class Despair extends ActiveSkill<ISpongeCharacter> {
 
 	@Inject
 	private EntityService entityService;
 
 	@Inject
-	private IEffectService effectService;
+	private EffectService effectService;
 
 	@Override
 	public void init() {

@@ -1,7 +1,7 @@
 package cz.neumimto.skills.active;
 
 import cz.neumimto.Decorator;
-import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.SpongeResourceLoader;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
@@ -21,7 +21,7 @@ import javax.inject.Singleton;
  * Created by NeumimTo on 29.12.2015.
  */
 @Singleton
-@ResourceLoader.Skill("ntrpg:lightning")
+@SpongeResourceLoader.Skill("ntrpg:lightning")
 public class SkillLightning extends Targeted {
 
 	@Override

@@ -1,8 +1,8 @@
 package cz.neumimto.skills.active;
 
 import cz.neumimto.effects.positive.ArrowstormEffect;
-import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.SpongeResourceLoader;
+import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
@@ -20,11 +20,11 @@ import java.util.concurrent.ThreadLocalRandom;
  * Created by NeumimTo on 4.7.2017.
  */
 @Singleton
-@ResourceLoader.Skill("ntrpg:arrowstorm")
+@SpongeResourceLoader.Skill("ntrpg:arrowstorm")
 public class Arrowstorm extends ActiveSkill {
 
 	@Inject
-	private IEffectService effectService;
+	private EffectService effectService;
 
 	@Override
 	public void init() {

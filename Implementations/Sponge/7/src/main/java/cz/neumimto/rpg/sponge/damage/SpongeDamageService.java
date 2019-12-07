@@ -37,9 +37,9 @@ import org.spongepowered.api.event.cause.entity.damage.source.DamageSource;
 import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 
-import javax.inject.Singleton;
 import java.util.*;
 import java.util.stream.Collectors;
+import javax.inject.Singleton;
 
 /**
  * Created by NeumimTo on 4.8.15.
@@ -121,7 +121,6 @@ public class SpongeDamageService extends AbstractDamageService<Living> {
             list = classItems.stream().map(ClassItem::getDamage).collect(Collectors.toCollection(TreeSet::new));
         }
 
-
         int size = list.size();
         if (size >= colorScale.length) {
             int l = list.size() / colorScale.length;
@@ -150,7 +149,7 @@ public class SpongeDamageService extends AbstractDamageService<Living> {
 
     @Override
     public void damageEntity(IEntity<Living> entity, double value) {
-        entity.getEntity().damage(value, DamageSource.builder().build());
+        entity.getEntity().damage(value, DamageSource.builder().absolute().type(DamageTypes.ATTACK).build());
     }
 
     public DamageType damageTypeById(String damageType) {

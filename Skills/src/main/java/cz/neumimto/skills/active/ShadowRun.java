@@ -2,8 +2,8 @@ package cz.neumimto.skills.active;
 
 import cz.neumimto.effects.positive.ShadowRunEffect;
 import cz.neumimto.model.ShadowRunModel;
-import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.SpongeResourceLoader;
+import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
@@ -21,11 +21,11 @@ import javax.inject.Singleton;
 import java.util.Optional;
 
 @Singleton
-@ResourceLoader.Skill("ntrpg:shadowrun")
+@SpongeResourceLoader.Skill("ntrpg:shadowrun")
 public class ShadowRun extends ActiveSkill<ISpongeCharacter> {
 
 	@Inject
-	private IEffectService effectService;
+	private EffectService effectService;
 
 	@Override
 	public void init() {

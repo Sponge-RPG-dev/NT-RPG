@@ -1,10 +1,10 @@
 package cz.neumimto.rpg.sponge.listeners;
 
 import com.google.inject.Singleton;
-import cz.neumimto.rpg.api.IResourceLoader;
+import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
-import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.IEntityType;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
@@ -40,14 +40,14 @@ import java.util.Set;
  * Created by NeumimTo on 3.1.2016.
  */
 @Singleton
-@IResourceLoader.ListenerClass
+@ResourceLoader.ListenerClass
 public class EntityLifecycleListener {
 
     @Inject
     private SpongeCharacterService characterService;
 
     @Inject
-    private IEffectService effectService;
+    private EffectService effectService;
 
     @Inject
     private SpongeEntityService entityService;

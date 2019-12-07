@@ -1,8 +1,8 @@
 package cz.neumimto.skills.active;
 
 import cz.neumimto.effects.positive.AllSkillsBonus;
-import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.SpongeResourceLoader;
+import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
@@ -20,14 +20,14 @@ import javax.inject.Singleton;
  * Created by NeumimTo on 10.8.17.
  */
 @Singleton
-@ResourceLoader.Skill("ntrpg:dementia")
+@SpongeResourceLoader.Skill("ntrpg:dementia")
 public class Dementia extends Targeted {
 
 	@Inject
 	private EntityService entityService;
 
 	@Inject
-	private IEffectService effectService;
+	private EffectService effectService;
 
 	@Override
 	public void init() {

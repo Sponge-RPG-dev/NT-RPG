@@ -1,8 +1,8 @@
 package cz.neumimto.skills.active;
 
 import cz.neumimto.effects.positive.SpeedBoost;
-import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.SpongeResourceLoader;
+import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
@@ -17,11 +17,11 @@ import javax.inject.Singleton;
  * Created by NeumimTo on 6.8.2017.
  */
 @Singleton
-@ResourceLoader.Skill("ntrpg:battlecharge")
+@SpongeResourceLoader.Skill("ntrpg:battlecharge")
 public class BattleCharge extends ActiveSkill<ISpongeCharacter> {
 
 	@Inject
-	private IEffectService effectService;
+	private EffectService effectService;
 
 	@Override
 	public void init() {

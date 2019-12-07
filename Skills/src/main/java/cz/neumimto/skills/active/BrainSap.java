@@ -1,7 +1,7 @@
 package cz.neumimto.skills.active;
 
-import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.api.IResourceLoader;
+import cz.neumimto.rpg.SpongeResourceLoader;
+import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
@@ -30,8 +30,8 @@ import javax.inject.Singleton;
  * Created by NeumimTo on 5.2.2016.
  */
 @Singleton
-@IResourceLoader.ListenerClass
-@ResourceLoader.Skill("ntrpg:brainsap")
+@ResourceLoader.ListenerClass
+@SpongeResourceLoader.Skill("ntrpg:brainsap")
 public class BrainSap extends Targeted {
 
 	@Inject

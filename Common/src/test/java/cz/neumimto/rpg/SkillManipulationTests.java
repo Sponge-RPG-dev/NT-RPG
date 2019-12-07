@@ -1,8 +1,8 @@
 package cz.neumimto.rpg;
 
 import cz.neumimto.rpg.api.configuration.PluginConfig;
+import cz.neumimto.rpg.api.entity.players.CharacterService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.entity.players.ICharacterService;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.events.EventFactoryService;
@@ -39,7 +39,7 @@ import static cz.neumimto.rpg.junit.CharactersExtension.Stage.Stages.READY;
 public class SkillManipulationTests {
 
     @Inject
-    private ICharacterService characterService;
+    private CharacterService characterService;
 
     @Inject
     private EventFactoryService eventFactoryService;

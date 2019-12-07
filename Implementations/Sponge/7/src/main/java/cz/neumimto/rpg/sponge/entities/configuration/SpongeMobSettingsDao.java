@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.sponge.entities.configuration;
 
-import cz.neumimto.rpg.api.IResourceLoader;
+import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.utils.FileUtils;
 import cz.neumimto.rpg.common.entity.configuration.MobSettingsDao;
@@ -21,7 +21,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Singleton
-@IResourceLoader.ListenerClass
+@ResourceLoader.ListenerClass
 public class SpongeMobSettingsDao extends MobSettingsDao {
 
     @Override

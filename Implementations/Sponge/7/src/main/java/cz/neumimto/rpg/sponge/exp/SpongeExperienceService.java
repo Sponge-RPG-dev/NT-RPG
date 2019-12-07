@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.sponge.exp;
 
-import cz.neumimto.rpg.common.exp.ExperienceService;
+import cz.neumimto.rpg.common.exp.AbstractExperienceService;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.data.type.Fish;
@@ -15,7 +15,7 @@ import static cz.neumimto.rpg.api.logging.Log.warn;
  * Created by NeumimTo on 8.4.2017.
  */
 @Singleton
-public class SpongeExperienceService extends ExperienceService {
+public class SpongeExperienceService extends AbstractExperienceService {
 
     @Override
     public void load() {

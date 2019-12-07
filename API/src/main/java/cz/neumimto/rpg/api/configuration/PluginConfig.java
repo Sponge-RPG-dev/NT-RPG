@@ -92,14 +92,13 @@ public class PluginConfig {
     public double MAX_PARTY_SIZE = -1;
 
 
+    /* "If a player chooses a race and a class, where both those classes define damage value for one specific weapon, or "
+            + "projectile" +
+            " this option specifies how the weapon damage will be calculated." +
+            "1 = sum" +
+            "2 = take highest value")
 
-            /* "If a player chooses a race and a class, where both those classes define damage value for one specific weapon, or "
-                    + "projectile" +
-                    " this option specifies how the weapon damage will be calculated." +
-                    "1 = sum" +
-                    "2 = take highest value")
-
-             */
+     */
     @Path("WEAPON_MERGE_STRATEGY")
     public int WEAPON_MERGE_STRATEGY = 2;
 

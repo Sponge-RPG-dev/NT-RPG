@@ -1,11 +1,13 @@
 package cz.neumimto.rpg.common;
 
+import static cz.neumimto.rpg.api.logging.Log.error;
+import static cz.neumimto.rpg.api.logging.Log.info;
 import com.google.inject.Injector;
-import cz.neumimto.rpg.api.IResourceLoader;
+import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.RpgAddon;
 import cz.neumimto.rpg.api.classes.ClassService;
-import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.api.effects.model.EffectModelFactory;
 import cz.neumimto.rpg.api.effects.model.EffectModelMapper;
@@ -21,11 +23,10 @@ import cz.neumimto.rpg.api.utils.Console;
 import cz.neumimto.rpg.api.utils.DebugLevel;
 import cz.neumimto.rpg.api.utils.Pair;
 import cz.neumimto.rpg.common.bytecode.ClassGenerator;
-import cz.neumimto.rpg.common.entity.PropertyService;
+import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.common.utils.ResourceClassLoader;
 import org.apache.commons.io.FileUtils;
 
-import javax.inject.Inject;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
@@ -36,46 +37,63 @@ import java.nio.charset.Charset;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import javax.inject.Inject;
 
-import static cz.neumimto.rpg.api.logging.Log.error;
-import static cz.neumimto.rpg.api.logging.Log.info;
-
-public abstract class AbstractResourceManager implements IResourceLoader {
+public abstract class AbstractResourceManager implements ResourceLoader {
 
     private final static String INNERCLASS_SEPARATOR = "$";
+
     public static File classDir, addonDir, skilltreeDir, addonLoadDir, localizations;
-
-    @Inject
-    private SkillService skillService;
-
-    @Inject
-    private ClassService classService;
-
-    @Inject
-    private IEffectService effectService;
-
-    @Inject
-    private PropertyService propertyService;
-
-    @Inject
-    private ClassGenerator classGenerator;
-
-    @Inject
-    private LocalizationService localizationService;
+    private static boolean reload = false;
+    private static Set<Class> classesToLoad = new HashSet<>();
 
     @Inject
     protected IScriptEngine jsEngine;
-
-    private Map<String, URLClassLoader> classLoaderMap = new HashMap<>();
-
-    private URLClassLoader configClassLaoder;
-
     @Inject
     protected Injector injector;
+    @Inject
+    private SkillService skillService;
+    @Inject
+    private ClassService classService;
+    @Inject
+    private EffectService effectService;
+    @Inject
+    private PropertyServiceImpl propertyService;
+    @Inject
+    private ClassGenerator classGenerator;
+    @Inject
+    private LocalizationService localizationService;
+    private Map<String, URLClassLoader> classLoaderMap = new HashMap<>();
+    private URLClassLoader configClassLaoder;
 
-    private static boolean reload = false;
+    private static <T> T newInstance(Class<T> excepted, Class<?> clazz) {
+        T t = null;
+        try {
+            t = (T) clazz.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return t;
+    }
 
-    private static Set<Class> classesToLoad = new HashSet<>();
+    public static Set<RpgAddon> discoverGuiceModules() {
+        Set<RpgAddon> addons = new HashSet<>();
+
+        for (Class aClass : AddonScanner.getClassesToLoad()) {
+            if (RpgAddon.class.isAssignableFrom(aClass)
+                    && !aClass.isInterface()
+                    && !Modifier.isAbstract(aClass.getModifiers())) {
+                try {
+                    addons.add((RpgAddon) aClass.getConstructor().newInstance());
+                } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                    Log.error("Could not call a default constructor on a class " + aClass.getName());
+                }
+            }
+            classesToLoad.add(aClass);
+        }
+
+        return addons;
+    }
 
     @Override
     public void init() {
@@ -93,23 +111,12 @@ public abstract class AbstractResourceManager implements IResourceLoader {
 
     }
 
-
-    private static <T> T newInstance(Class<T> excepted, Class<?> clazz) {
-        T t = null;
-        try {
-            t = (T) clazz.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        return t;
-    }
-
     @Override
     public void loadJarFile(File f, boolean main) {
         if (f == null) {
             return;
         }
-        JarFile file = null;
+        JarFile file;
         try {
             file = new JarFile(f);
         } catch (IOException e) {
@@ -117,13 +124,12 @@ public abstract class AbstractResourceManager implements IResourceLoader {
             return;
         }
         info("Loading jarfile " + file.getName());
-        Enumeration<JarEntry> entries = file.entries();
-        JarEntry next = null;
 
         if (!main) {
             prepareClassLoader(f);
         }
-        ClassLoader classLoader = null;
+
+        ClassLoader classLoader;
         if (main) {
             classLoader = Rpg.get().getClass().getClassLoader();
         } else {
@@ -133,6 +139,8 @@ public abstract class AbstractResourceManager implements IResourceLoader {
         Set<Pair<File, String>> localizationsToLoad = new HashSet<>();
         Set<String> classesToLoad = new HashSet<>();
 
+        JarEntry next;
+        Enumeration<JarEntry> entries = file.entries();
         while (entries.hasMoreElements()) {
             next = entries.nextElement();
             if (next.isDirectory() || !next.getName().endsWith(".class")) {
@@ -152,8 +160,7 @@ public abstract class AbstractResourceManager implements IResourceLoader {
                 continue;
             }
             //todo place this into each modules
-            if (next.getName().startsWith("org")
-                    || next.getName().startsWith("javax")) {
+            if (next.getName().startsWith("org") || next.getName().startsWith("javax")) {
                 continue;
             }
             if (next.getName().lastIndexOf(INNERCLASS_SEPARATOR) > 1) {
@@ -168,8 +175,9 @@ public abstract class AbstractResourceManager implements IResourceLoader {
 
         for (String classToLoad : classesToLoad) {
             Class<?> clazz = loadClass(main, classLoader, classToLoad);
-            this.classesToLoad.add(clazz);
+            AbstractResourceManager.classesToLoad.add(clazz);
         }
+
         info("Finished parsing of jarfile " + file.getName());
     }
 
@@ -339,6 +347,7 @@ public abstract class AbstractResourceManager implements IResourceLoader {
         return configClassLaoder;
     }
 
+    @Override
     public Map<String, URLClassLoader> getClassLoaderMap() {
         return classLoaderMap;
     }
@@ -402,24 +411,5 @@ public abstract class AbstractResourceManager implements IResourceLoader {
         } catch (IllegalAccessException | InstantiationException e) {
             e.printStackTrace();
         }
-    }
-
-    public static Set<RpgAddon> discoverGuiceModules() {
-        Set<RpgAddon> addons = new HashSet<>();
-
-        for (Class aClass : AddonScanner.getClassesToLoad()) {
-            if (RpgAddon.class.isAssignableFrom(aClass)
-                    && !aClass.isInterface()
-                    && !Modifier.isAbstract( aClass.getModifiers())) {
-                try {
-                    addons.add((RpgAddon) aClass.getConstructor().newInstance());
-                } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                    Log.error("Could not call a default constructor on a class " + aClass.getName());
-                }
-            }
-            classesToLoad.add(aClass);
-        }
-
-        return addons;
     }
 }

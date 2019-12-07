@@ -1,7 +1,7 @@
 package cz.neumimto.skills.active;
 
 import cz.neumimto.Decorator;
-import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.SpongeResourceLoader;
 import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
@@ -18,7 +18,7 @@ import javax.inject.Singleton;
  * Created by NeumimTo on 6.8.2017.
  */
 @Singleton
-@ResourceLoader.Skill("ntrpg:groupheal")
+@SpongeResourceLoader.Skill("ntrpg:groupheal")
 public class GroupHeal extends ActiveSkill<ISpongeCharacter> {
 
 	@Inject

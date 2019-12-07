@@ -5,8 +5,8 @@ import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Flags;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
+import cz.neumimto.rpg.api.entity.players.CharacterService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.entity.players.ICharacterService;
 import cz.neumimto.rpg.common.commands.AdminCommandFacade;
 import cz.neumimto.rpg.common.commands.CommandProcessingException;
 
@@ -19,7 +19,7 @@ public abstract class AbstractAdminCommands<C, T> extends BaseCommand {
     private AdminCommandFacade adminCommandFacade;
 
     @Inject
-    protected ICharacterService characterService;
+    protected CharacterService characterService;
 
 
     public void _effectAddCommand(C c, @Flags("target") T target, IGlobalEffect effect, long duration, @Default("{}") String[] args) {

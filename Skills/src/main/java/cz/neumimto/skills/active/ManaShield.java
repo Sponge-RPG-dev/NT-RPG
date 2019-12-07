@@ -2,8 +2,8 @@ package cz.neumimto.skills.active;
 
 import cz.neumimto.effects.positive.ManaShieldEffect;
 import cz.neumimto.model.ManaShieldEffectModel;
-import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.SpongeResourceLoader;
+import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
@@ -16,11 +16,11 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-@ResourceLoader.Skill("ntrpg:manashield")
+@SpongeResourceLoader.Skill("ntrpg:manashield")
 public class ManaShield extends ActiveSkill {
 
 	@Inject
-	private IEffectService effectService;
+	private EffectService effectService;
 
 	@Override
 	public void init() {

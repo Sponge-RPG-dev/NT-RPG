@@ -5,7 +5,7 @@ import com.google.inject.Singleton;
 import java.nio.file.Path;
 
 @Singleton
-public class TestPropertyService extends PropertyService {
+public class TestPropertyService extends PropertyServiceImpl {
 
     public TestPropertyService() {
         LAST_ID = 100;

@@ -20,8 +20,7 @@ package cz.neumimto.rpg;
 
 import com.google.inject.Injector;
 import cz.neumimto.rpg.api.classes.ClassService;
-import cz.neumimto.rpg.api.effects.IEffectService;
-import cz.neumimto.rpg.api.entity.IPropertyService;
+import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.events.EventFactoryService;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.localization.LocalizationService;
@@ -29,8 +28,9 @@ import cz.neumimto.rpg.api.scripting.IScriptEngine;
 import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
-import cz.neumimto.rpg.sponge.commands.CommandService;
+import cz.neumimto.rpg.sponge.commands.SpongeCommandService;
 import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
+import cz.neumimto.rpg.sponge.effects.SpongeEffectService;
 import cz.neumimto.rpg.sponge.entities.SpongeEntityService;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
 import cz.neumimto.rpg.sponge.entities.players.party.SpongePartyService;
@@ -55,13 +55,13 @@ public class GlobalScope {
     public SpongeCharacterService characterService;
 
     @Inject
-    public IEffectService effectService;
+    public SpongeEffectService effectService;
 
     @Inject
     public ClassService classService;
 
     @Inject
-    public CommandService commandService;
+    public SpongeCommandService commandService;
 
     @Inject
     public SkillService skillService;
@@ -76,9 +76,6 @@ public class GlobalScope {
     public SpongeDamageService damageService;
 
     @Inject
-    public SpongeInventoryService inventorySerivce;
-
-    @Inject
     public RWService runewordService;
 
     @Inject
@@ -88,7 +85,7 @@ public class GlobalScope {
     public SpongePartyService partyService;
 
     @Inject
-    public IPropertyService spongePropertyService;
+    public PropertyService propertyService;
 
     @Inject
     public SpongeItemService itemService;
@@ -100,13 +97,13 @@ public class GlobalScope {
     public IScriptEngine jsLoader;
 
     @Inject
-    public ResourceLoader resourceLoader;
+    public SpongeResourceLoader resourceLoader;
 
     @Inject
-    public SpongeExperienceService spongeExperienceService;
+    public SpongeExperienceService experienceService;
 
     @Inject
-    public SpongeInventoryService spongeInventoryService;
+    public SpongeInventoryService inventoryService;
 
     @Inject
     public VanillaMessaging vanillaMessaging;

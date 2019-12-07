@@ -1,10 +1,10 @@
 package cz.neumimto.skills.active;
 
 import cz.neumimto.effects.positive.SoulBindEffect;
-import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.api.IResourceLoader;
+import cz.neumimto.rpg.SpongeResourceLoader;
+import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
-import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
@@ -29,14 +29,14 @@ import java.util.UUID;
  * Created by NeumimTo on 5.2.2016.
  */
 @Singleton
-@ResourceLoader.Skill("ntrpg:soulbind")
-@IResourceLoader.ListenerClass
+@SpongeResourceLoader.Skill("ntrpg:soulbind")
+@ResourceLoader.ListenerClass
 public class SkillSoulbind extends ActiveSkill<ISpongeCharacter> {
 
 	public static final String name = "Soulbind";
 
 	@Inject
-	private IEffectService effectService;
+	private EffectService effectService;
 
 	@Inject
 	private SpongeCharacterService characterServise;

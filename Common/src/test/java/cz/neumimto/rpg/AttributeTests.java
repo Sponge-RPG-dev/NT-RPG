@@ -2,7 +2,7 @@ package cz.neumimto.rpg;
 
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.entity.players.ICharacterService;
+import cz.neumimto.rpg.api.entity.players.CharacterService;
 import cz.neumimto.rpg.api.events.EventFactoryService;
 import cz.neumimto.rpg.api.utils.ActionResult;
 import cz.neumimto.rpg.junit.CharactersExtension;
@@ -29,7 +29,7 @@ import static cz.neumimto.rpg.junit.CharactersExtension.Stage.Stages.READY;
 public class AttributeTests {
 
     @Inject
-    private ICharacterService characterService;
+    private CharacterService characterService;
 
     @Inject
     private EventFactoryService eventFactoryService;

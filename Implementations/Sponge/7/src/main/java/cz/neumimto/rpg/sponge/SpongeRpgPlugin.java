@@ -18,6 +18,7 @@
 
 package cz.neumimto.rpg.sponge;
 
+import static cz.neumimto.rpg.api.logging.Log.info;
 import co.aikar.commands.SpongeCommandManager;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
@@ -26,14 +27,13 @@ import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.utils.FileUtils;
 import cz.neumimto.rpg.persistence.flatfiles.FlatFilesModule;
-import cz.neumimto.rpg.sponge.commands.CommandService;
 import cz.neumimto.rpg.sponge.commands.SpongeAdminCommands;
 import cz.neumimto.rpg.sponge.commands.SpongeCharacterCommands;
+import cz.neumimto.rpg.sponge.commands.SpongeCommandService;
 import cz.neumimto.rpg.sponge.inventory.data.*;
 import cz.neumimto.rpg.sponge.inventory.data.manipulators.*;
 import cz.neumimto.rpg.sponge.listeners.DebugListener;
 import cz.neumimto.rpg.sponge.skills.NDamageType;
-import cz.neumimto.rpg.sponge.utils.Placeholders;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
@@ -49,7 +49,6 @@ import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.scheduler.SpongeExecutorService;
 
-import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -59,8 +58,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Set;
-
-import static cz.neumimto.rpg.api.logging.Log.info;
+import javax.annotation.Resource;
 
 /**
  * Created by NeumimTo on 29.4.2015.
@@ -71,33 +69,26 @@ import static cz.neumimto.rpg.api.logging.Log.info;
 @Resource
 public class SpongeRpgPlugin extends Rpg {
 
+    public static final Set<String> INTEGRATIONS = new HashSet<>();
     public static String workingDir;
     public static File pluginjar;
-
     public static SpongeExecutorService asyncExecutor;
-    public static PluginConfig pluginConfig;;
-
+    public static PluginConfig pluginConfig;
+    private static SpongeRpgPlugin instance;
+    public Injector injector; // Sponge injector ?
     @Inject
-    public Logger logger;
-
+    private Logger logger;
     @Inject
     private PluginContainer plugin;
-
-    private static SpongeRpgPlugin instance;
-
-    @Inject
-    private Game game;
-
     @Inject
     private CauseStackManager causeStackManager;
-
     @Inject
     @ConfigDir(sharedRoot = false)
     private Path config;
 
-    public static final Set<String> INTEGRATIONS = new HashSet<>();
-
-    public Injector injector;
+    public static SpongeRpgPlugin getInstance() {
+        return instance;
+    }
 
     @Listener
     public void initializeApi(GamePreInitializationEvent event) {
@@ -125,12 +116,10 @@ public class SpongeRpgPlugin extends Rpg {
             e.printStackTrace();
         }
 
-
-
         PluginContainer pluginContainer = Sponge.getPluginManager().fromInstance(this).get();
 
         SpongeCommandManager manager = new SpongeCommandManager(pluginContainer);
-        super.impl = new SpongeRpg(workingDir);
+        impl = new SpongeRpg(workingDir);
 
         impl.init(
                 workingDirPath,
@@ -141,28 +130,16 @@ public class SpongeRpgPlugin extends Rpg {
                 injector -> {
                     injector.injectMembers(impl);
 
-                    CommandService commandService = injector.getInstance(CommandService.class);
+                    SpongeCommandService commandService = injector.getInstance(SpongeCommandService.class);
                     commandService.registerStandartCommands();
 
                     if (Rpg.get().getPluginConfig().DEBUG.isBalance()) {
                         Sponge.getEventManager().registerListeners(this, injector.getInstance(DebugListener.class));
                     }
                 }
-
         );
 
-
-
-
-        if (INTEGRATIONS.contains("Placeholders")) {
-            Placeholders placeholders = injector.getInstance(Placeholders.class);
-            placeholders.init();
-            info("Placeholders Initialized");
-        }
-
-        double elapsedTime = (System.nanoTime() - start) / 1000000000.0;
-
-
+        /*
         try {
             Class.forName("me.rojo8399.placeholderapi.PlaceholderService");
             INTEGRATIONS.add("Placeholders");
@@ -171,6 +148,11 @@ public class SpongeRpgPlugin extends Rpg {
             info("Placeholders Disabled");
         }
 
+        if (INTEGRATIONS.contains("Placeholders")) {
+            Placeholders placeholders = injector.getInstance(Placeholders.class); //What injector?
+            placeholders.init();
+            info("Placeholders Initialized");
+        }*/
 
         //Sponge.getEventManager().registerListeners(this, new PersistenceHandler());
         new NKeys();
@@ -305,7 +287,6 @@ public class SpongeRpgPlugin extends Rpg {
                 .builder(new ItemMetaHeader.Builder())
                 .buildAndRegister(plugin);
 
-
         DataRegistration.<MinimalItemGroupRequirementsData, MinimalItemGroupRequirementsData.Immutable>builder()
                 .manipulatorId("item_minimal_group_requirements")
                 .dataName("Item group requirements")
@@ -338,6 +319,7 @@ public class SpongeRpgPlugin extends Rpg {
                 .builder(new SkillBindData.Builder())
                 .buildAndRegister(plugin);
 
+        double elapsedTime = (System.nanoTime() - start) / 1000000000.0;
         info("NtRpg plugin successfully loaded in " + elapsedTime + " seconds");
     }
 
@@ -347,10 +329,6 @@ public class SpongeRpgPlugin extends Rpg {
         event.register(NDamageType.ICE);
         event.register(NDamageType.LIGHTNING);
         event.register(NDamageType.DAMAGE_CHECK);
-    }
-
-    public static SpongeRpgPlugin getInstance() {
-        return instance;
     }
 
 }
