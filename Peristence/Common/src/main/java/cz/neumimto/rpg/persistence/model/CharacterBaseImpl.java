@@ -34,7 +34,7 @@ public class CharacterBaseImpl extends TimestampEntityImpl implements CharacterB
     private String name;
     private String info;
     private Integer attributePoints;
-    private Boolean canResetskills;
+    private Boolean canResetSkills;
     private Double healthScale;
     private String lastKnownPlayerName;
     private Date lastReset;
@@ -107,13 +107,13 @@ public class CharacterBaseImpl extends TimestampEntityImpl implements CharacterB
     }
 
     @Override
-    public Boolean isCanResetskills() {
-        return canResetskills;
+    public Boolean canResetSkills() {
+        return canResetSkills;
     }
 
     @Override
-    public void setCanResetskills(boolean canResetskills) {
-        this.canResetskills = canResetskills;
+    public void setCanResetSkills(boolean canResetSkills) {
+        this.canResetSkills = canResetSkills;
     }
 
     @Override

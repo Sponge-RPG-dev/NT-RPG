@@ -121,6 +121,7 @@ public class FlatFilePlayerDao implements IPlayerDao {
         Path resolve = getPlayerDataDirectory(player).resolve(getCharacterConfigFileName(charName));
         FileConfig of = FileConfig.of(resolve);
         of.set(ConfigConverter.MARKED_FOR_REMOVAL, true);
+        of.save();
         of.close();
         return 1;
     }
@@ -131,6 +132,7 @@ public class FlatFilePlayerDao implements IPlayerDao {
         Path resolve = getPlayerDataDirectory(characterBase.getUuid()).resolve(getCharacterConfigFileName(characterBase.getName()));
         FileConfig of = FileConfig.of(resolve);
         ConfigConverter.toConfig(characterBase, of);
+        of.save();
         of.close();
     }
 

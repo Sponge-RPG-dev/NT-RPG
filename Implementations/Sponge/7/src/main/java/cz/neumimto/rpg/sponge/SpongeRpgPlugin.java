@@ -104,7 +104,7 @@ public class SpongeRpgPlugin extends Rpg {
         }
 
         instance = this;
-        asyncExecutor = Sponge.getGame().getScheduler().createAsyncExecutor(SpongeRpgPlugin.this);
+        asyncExecutor = Sponge.getScheduler().createAsyncExecutor(this);
 
         Game game = Sponge.getGame();
 

@@ -14,13 +14,12 @@ import cz.neumimto.rpg.common.commands.CharacterCommandFacade;
 import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 
+import java.util.UUID;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.UUID;
 
 @Singleton
 @CommandAlias("char|c")
@@ -38,7 +37,9 @@ public class SpongeCharacterCommands extends BaseCommand {
     @Default
     public void displayCharacterMenuCommand(Player executor) {
         IActiveCharacter character = characterService.getCharacter(executor);
-        Gui.displayCharacterMenu(character);
+        if (character == null || character.isStub()) {
+            characterList(executor);
+        } else Gui.displayCharacterMenu(character);
     }
 
     @Subcommand("list")
@@ -50,30 +51,18 @@ public class SpongeCharacterCommands extends BaseCommand {
     @Subcommand("create")
     public void createCharacter(Player executor, String name) {
         UUID uuid = executor.getUniqueId();
-
-        characterCommandFacade.commandCreateCharacter(uuid, name, actionResult -> {
-            executor.sendMessage(Text.of(actionResult.getMessage()));
-        });
+        characterCommandFacade.commandCreateCharacter(uuid, name, actionResult -> executor.sendMessage(Text.of(actionResult.getMessage())));
     }
 
-    @Subcommand("switch")
+    @Subcommand("delete")
     public void deleteCharacter(Player executor, String name) {
-        IActiveCharacter character = characterService.getCharacter(executor);
-        characterCommandFacade.commandSwitchCharacter(character, name, runnable -> {
-            Rpg.get().scheduleSyncLater(runnable);
-        });
+        //TODO
     }
 
     @Subcommand("class|c")
     public void chooseClassCommand(Player executor, ClassDefinition classDefinition) {
         IActiveCharacter character = characterService.getCharacter(executor);
         characterCommandFacade.commandChooseClass(character, classDefinition);
-    }
-
-    @Subcommand("list")
-    public void listCharactersCommand(Player executor) {
-        IActiveCharacter character = characterService.getCharacter((executor).getUniqueId());
-        Gui.sendListOfCharacters(character, character.getCharacterBase());
     }
 
     @Subcommand("armor")
@@ -90,13 +79,8 @@ public class SpongeCharacterCommands extends BaseCommand {
 
     @Subcommand("switch")
     public void switchCharacterCommand(Player executor, String name) {
-        IActiveCharacter current = characterService.getCharacter(executor);
-        characterCommandFacade.commandSwitchCharacter(current, name, runnable ->
-                Sponge.getScheduler()
-                        .createTaskBuilder()
-                        .name("SetCharacterCallback" + executor.getUniqueId())
-                        .execute(runnable::run)
-                        .submit(plugin));
+        IActiveCharacter character = characterService.getCharacter(executor);
+        characterCommandFacade.commandSwitchCharacter(character, name, runnable -> Rpg.get().scheduleSyncLater(runnable));
     }
 
     @Subcommand("attributes")

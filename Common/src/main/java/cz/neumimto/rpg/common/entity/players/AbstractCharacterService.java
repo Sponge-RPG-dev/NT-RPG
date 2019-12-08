@@ -818,8 +818,8 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
     @Override
     public int characterResetSkills(T character, boolean force) {
         CharacterBase characterBase = character.getCharacterBase();
-        if (characterBase.isCanResetskills() || force) {
-            characterBase.setCanResetskills(false);
+        if (characterBase.canResetSkills() || force) {
+            characterBase.setCanResetSkills(false);
             characterBase.setLastReset(new Date(System.currentTimeMillis()));
             characterBase.getCharacterSkills().clear();
             character.removeAllSkills();

@@ -28,9 +28,9 @@ public interface CharacterBase extends TimestampEntity {
 
     void setUuid(UUID uuid);
 
-    Boolean isCanResetskills();
+    Boolean canResetSkills();
 
-    void setCanResetskills(boolean canResetskills);
+    void setCanResetSkills(boolean canResetSkills);
 
     Date getLastReset();
 

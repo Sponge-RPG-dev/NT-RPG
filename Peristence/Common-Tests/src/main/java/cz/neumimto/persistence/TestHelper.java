@@ -1,10 +1,7 @@
 package cz.neumimto.persistence;
 
 import cz.neumimto.rpg.api.persistance.model.*;
-import cz.neumimto.rpg.persistence.model.BaseCharacterAttributeImpl;
-import cz.neumimto.rpg.persistence.model.CharacterBaseImpl;
-import cz.neumimto.rpg.persistence.model.CharacterClassImpl;
-import cz.neumimto.rpg.persistence.model.CharacterSkillImpl;
+import cz.neumimto.rpg.persistence.model.*;
 
 import java.util.*;
 
@@ -15,10 +12,10 @@ public class TestHelper {
         characterBase.setId(null);
         characterBase.setAttributePoints(1);
         characterBase.setAttributePointsSpent(2);
-        characterBase.setCanResetskills(true);
+        characterBase.setCanResetSkills(true);
         characterBase.setHealthScale(5D);
         characterBase.setInfo("Info");
-        characterBase.setInventoryEquipSlotOrder(Arrays.asList(new EquipedSlotImpl(1),new EquipedSlotImpl(7),new EquipedSlotImpl(5)));
+        characterBase.setInventoryEquipSlotOrder(Arrays.asList(new EquipedSlotImpl(1), new EquipedSlotImpl(7), new EquipedSlotImpl(5)));
         characterBase.setLastKnownPlayerName("TTest");
         characterBase.setLastReset(new Date());
         characterBase.setMarkedForRemoval(false);
@@ -72,7 +69,6 @@ public class TestHelper {
         characterSkill.setFromClass(characterClass);
 
         classes.add(characterClass);
-
 
 
         Set<CharacterSkill> skills = new HashSet<>();
