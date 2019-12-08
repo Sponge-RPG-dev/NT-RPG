@@ -51,7 +51,8 @@ public class TestHelper {
         characterClass.setName("CLass1");
         characterClass.setSkillPoints(5);
         characterClass.setUsedSkillPoints(0);
-
+        characterClass.setCreated(new Date());
+        characterClass.setUpdated(new Date());
         classes.add(characterClass);
         characterClass = new CharacterClassImpl();
         characterClass.setCharacterBase(characterBase);
@@ -59,6 +60,8 @@ public class TestHelper {
         characterClass.setName("CLass2");
         characterClass.setSkillPoints(10);
         characterClass.setUsedSkillPoints(25);
+        characterClass.setCreated(new Date());
+        characterClass.setUpdated(new Date());
         characterBase.setCharacterClasses(classes);
 
         CharacterSkill characterSkill = new CharacterSkillImpl();
@@ -67,7 +70,8 @@ public class TestHelper {
         characterSkill.setLevel(1);
         characterSkill.setCatalogId("SkillId");
         characterSkill.setFromClass(characterClass);
-
+        characterSkill.setCreated(new Date());
+        characterSkill.setUpdated(new Date());
         classes.add(characterClass);
 
 
@@ -88,6 +92,11 @@ public class TestHelper {
         @Override
         public int getSlotIndex() {
             return slotIndex;
+        }
+
+        @Override
+        public String toString() {
+            return String.valueOf(slotIndex);
         }
     }
 }

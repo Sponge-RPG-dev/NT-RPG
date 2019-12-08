@@ -59,7 +59,8 @@ public class FlatFilePlayerDao implements IPlayerDao {
         Path pdd = getPlayerDataDirectory(player);
         Path resolve = pdd.resolve(getCharacterConfigFileName(name));
         if (Files.isRegularFile(resolve)) {
-            try (FileConfig fileConfig = FileConfig.of(resolve)) {
+            try (FileConfig fileConfig = syncConfig(resolve)) {
+                fileConfig.load();
                 boolean r = fileConfig.getOrElse(ConfigConverter.MARKED_FOR_REMOVAL, false);
                 if (r) {
                     return null;
@@ -113,16 +114,25 @@ public class FlatFilePlayerDao implements IPlayerDao {
     @Override
     public void create(CharacterBase base) {
         base.setCreated(new Date());
+        try {
+            Path resolve = getPlayerDataDirectory(base.getUuid()).resolve(getCharacterConfigFileName(base.getName()));
+
+            Files.createDirectories(resolve.getParent());
+            Files.createFile(resolve);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         update(base);
     }
 
     @Override
     public int markCharacterForRemoval(UUID player, String charName) {
         Path resolve = getPlayerDataDirectory(player).resolve(getCharacterConfigFileName(charName));
-        FileConfig of = FileConfig.of(resolve);
-        of.set(ConfigConverter.MARKED_FOR_REMOVAL, true);
-        of.save();
-        of.close();
+        try (FileConfig of = syncConfig(resolve)){
+            of.load();
+            of.set(ConfigConverter.MARKED_FOR_REMOVAL, true);
+            of.save();
+        }
         return 1;
     }
 
@@ -130,10 +140,15 @@ public class FlatFilePlayerDao implements IPlayerDao {
     public void update(CharacterBase characterBase) {
         characterBase.setUpdated(new Date());
         Path resolve = getPlayerDataDirectory(characterBase.getUuid()).resolve(getCharacterConfigFileName(characterBase.getName()));
-        FileConfig of = FileConfig.of(resolve);
-        ConfigConverter.toConfig(characterBase, of);
-        of.save();
-        of.close();
+        try (FileConfig of = syncConfig(resolve)){
+            of.load();
+            ConfigConverter.toConfig(characterBase, of);
+            of.save();
+        }
+    }
+
+    private FileConfig syncConfig(Path resolve) {
+        return FileConfig.builder(resolve).sync().build();
     }
 
     @Override

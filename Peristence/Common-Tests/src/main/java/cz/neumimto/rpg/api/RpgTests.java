@@ -135,7 +135,7 @@ public class RpgTests implements RpgApi {
 
     @Override
     public String getWorkingDirectory() {
-        return "/tmp/";
+        return "./build/tests/tmp/";
     }
 
     @Override

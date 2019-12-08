@@ -2,12 +2,15 @@ package cz.neumimto.rpg.persistence.flatfiles.converters;
 
 import com.electronwill.nightconfig.core.Config;
 import com.electronwill.nightconfig.core.file.FileConfig;
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.persistance.model.*;
 import cz.neumimto.rpg.persistence.model.CharacterBaseImpl;
+import cz.neumimto.rpg.persistence.model.CharacterClassImpl;
+import cz.neumimto.rpg.persistence.model.CharacterSkillImpl;
 
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ConfigConverter {
@@ -62,7 +65,7 @@ public class ConfigConverter {
         config.set(RESET_SKILL, canResetSkills);
 
         Date lastReset = c.getLastReset();
-        config.set(LAST_RESET, lastReset);
+        config.set(LAST_RESET, dateToText(lastReset));
 
         String lastPosition = String.format("%s;%s;%s;%s", c.getWorld(), c.getX(), c.getY(), c.getZ());
         config.set(LAST_POSITION, lastPosition);
@@ -125,10 +128,10 @@ public class ConfigConverter {
         config.set(CLASS_SKILLPOINTS_SPENT, usp);
 
         Date created = c.getCreated();
-        config.set(CLASS_CREATED, created);
+        config.set(CLASS_CREATED, dateToText(created));
 
         Date updated = c.getUpdated();
-        config.set(CLASS_UPDATED, updated);
+        config.set(CLASS_UPDATED, dateToText(updated));
 
         return config;
     }
@@ -151,12 +154,28 @@ public class ConfigConverter {
         config.set(SKILL_LEVEL, level);
 
         Date created = characterSkill.getCreated();
-        config.set(SKILL_CREATED, created);
+        config.set(SKILL_CREATED, dateToText(created));
 
         Date updated = characterSkill.getUpdated();
-        config.set(SKILL_UPDATED, updated);
+        config.set(SKILL_UPDATED, dateToText(updated));
 
         return config;
+    }
+
+    private static SimpleDateFormat getDateFormat() {
+        return new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+    }
+
+    private static String dateToText(Date created) {
+        return getDateFormat().format(created);
+    }
+
+    private static Date textToDate(String text) {
+        try {
+            return getDateFormat().parse(text);
+        } catch (ParseException e) {
+            throw new RuntimeException("Could not parse date " + text);
+        }
     }
 
     public static CharacterBase fromConfig(FileConfig config) {
@@ -169,9 +188,11 @@ public class ConfigConverter {
 
         characterBase.setCanResetSkills(config.get(RESET_SKILL));
 
-        characterBase.setLastReset(config.get(LAST_RESET));
+        String string = config.get(LAST_RESET);
 
-        String string = config.get(LAST_POSITION);
+        characterBase.setLastReset(textToDate(string));
+
+        string = config.get(LAST_POSITION);
         String[] split = string.split(";");
         characterBase.setWorld(split[0]);
         characterBase.setX(Integer.parseInt(split[1]));
@@ -181,19 +202,83 @@ public class ConfigConverter {
         characterBase.setAttributePoints(config.get(AttributePoints));
         characterBase.setAttributePointsSpent(config.get(AttributePointsSpent));
 
-        Config config1 = config.get(SKILLS);
-
-        config.get(CLASSES);
-
+        List<Config> config1 = config.get(SKILLS);
+        characterBase.setCharacterSkills(skillsFromConfig(config1, characterBase));
+        List<Config> classes = config.get(CLASSES);
+        characterBase.setCharacterClasses(classesFromConfig(classes, characterBase));
         config.get(ATTRIBUTES);
 
-        /*List<EquipedSlot> inventoryEquipSlotOrder = c.getInventoryEquipSlotOrder();
-        String collect = inventoryEquipSlotOrder.stream().map(equipedSlot -> equipedSlot.toString()).collect(Collectors.joining(";"));
-        config.get(INVENTOY_EQUIP_ORDER, collect);
-*/
+        List<EquipedSlot> iso = new ArrayList<>();
 
-        characterBase.setHealthScale(config.get(HEALTH_SCALING));
+        String o = config.get(INVENTOY_EQUIP_ORDER);
+        for (String s : o.split(";")) {
+            String[] split1 = s.split("@");
+            if (split1.length == 1) {
+                iso.add(Rpg.get().getInventoryService().createEquipedSlot(null, Integer.parseInt(split1[0])));
+            } else {
+                iso.add(Rpg.get().getInventoryService().createEquipedSlot(split1[0], Integer.parseInt(split1[1])));
+            }
+        }
+        characterBase.setInventoryEquipSlotOrder(iso);
+
+        characterBase.setHealthScale(((Number)config.get(HEALTH_SCALING)).doubleValue());
         characterBase.setMarkedForRemoval(config.get(MARKED_FOR_REMOVAL));
         return characterBase;
+    }
+
+    private static Set<CharacterClass> classesFromConfig(List<Config> classes, CharacterBase c) {
+        Set<CharacterClass> classSet = new HashSet<>();
+        for (Config config : classes) {
+            classSet.add(classFromConfig(config, c));
+        }
+        return classSet;
+    }
+
+    private static Set<CharacterSkill> skillsFromConfig(List<Config> configs, CharacterBase c) {
+        Set<CharacterSkill> skills = new HashSet<>();
+        for (Config config : configs) {
+            skills.add(skillFromConfig(config, c));
+        }
+        return skills;
+    }
+
+    private static CharacterSkill skillFromConfig(Config config, CharacterBase character) {
+        CharacterSkill characterSkill = new CharacterSkillImpl();
+        characterSkill.setCharacterBase(character);
+
+        characterSkill.setCatalogId(config.get(SKILL_ID));
+        characterSkill.setCooldown(config.get(SKILL_CD));
+
+        String o = config.get(SKILL_FROM_CLASS);
+        if (o != null) {
+            for (CharacterClass characterClass : character.getCharacterClasses()) {
+                if (character.getName().equalsIgnoreCase(o)) {
+                    characterSkill.setFromClass(characterClass);
+                    break;
+                }
+            }
+        }
+
+        characterSkill.setLevel(config.getInt(SKILL_LEVEL));
+        characterSkill.setCreated(textToDate(config.get(SKILL_CREATED)));
+        characterSkill.setUpdated(textToDate(config.get(SKILL_UPDATED)));
+
+        return characterSkill;
+    }
+
+    private static CharacterClass classFromConfig(Config config, CharacterBase character) {
+        CharacterClass characterClass = new CharacterClassImpl();
+        characterClass.setId(-1L);
+        characterClass.setName(config.get(CLASS_NAME));
+        characterClass.setExperiences(((Number)config.get(CLASS_EXPERIENCES)).doubleValue());
+        characterClass.setLevel(config.get(CLASS_LEVEL));
+        characterClass.setSkillPoints(config.get(CLASS_SKILLPOINTS));
+        characterClass.setUsedSkillPoints(config.get(CLASS_SKILLPOINTS_SPENT));
+
+        characterClass.setCreated(textToDate(config.get(CLASS_CREATED)));
+        characterClass.setCreated(textToDate(config.get(CLASS_UPDATED)));
+        characterClass.setCharacterBase(character);
+
+        return characterClass;
     }
 }
