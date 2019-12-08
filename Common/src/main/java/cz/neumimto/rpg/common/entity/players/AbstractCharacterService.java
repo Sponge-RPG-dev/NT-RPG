@@ -282,12 +282,11 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
 
     @Override
     public void initActiveCharacter(T character) {
-        info("Initializing character " + character.getCharacterBase().getId());
+        info("Initializing character " + character.getCharacterBase().getName());
         String msg = localizationService.translate(LocalizationKeys.CHARACTER_INITIALIZED, arg("character", character.getName()));
         character.sendMessage(msg);
         addDefaultEffects(character);
         Set<BaseCharacterAttribute> baseCharacterAttribute = character.getCharacterBase().getBaseCharacterAttribute();
-
 
         for (BaseCharacterAttribute at : baseCharacterAttribute) {
             Optional<AttributeConfig> type = propertyService.getAttributeById(at.getName());
@@ -300,13 +299,11 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
 
         Map<String, PlayerClassData> classes = character.getClasses();
         for (PlayerClassData nClass : classes.values()) {
-            applyGroupEffects(character, nClass.getClassDefinition());
+            applyGlobalEffects(character, nClass.getClassDefinition());
         }
 
         inventoryService.initializeCharacterInventory(character);
         damageService.recalculateCharacterWeaponDamage(character);
-
-
         updateMaxHealth(character);
         entityService.updateWalkSpeed(character);
 
@@ -317,7 +314,7 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
 
 
     @Override
-    public void removeGroupEffects(T character, ClassDefinition p) {
+    public void removeGlobalEffects(T character, ClassDefinition p) {
         if (p == null) {
             return;
         }
@@ -325,7 +322,7 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
     }
 
     @Override
-    public void applyGroupEffects(T character, ClassDefinition p) {
+    public void applyGlobalEffects(T character, ClassDefinition p) {
         if (p == null) {
             return;
         }
@@ -340,9 +337,12 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
     @Override
     public void updateMaxMana(T character) {
         float max_mana = entityService.getEntityProperty(character, CommonProperties.max_mana);
-        float actreserved = entityService.getEntityProperty(character, CommonProperties.reserved_mana);
-        float reserved = entityService.getEntityProperty(character, CommonProperties.reserved_mana_multiplier);
-        float maxval = max_mana - (actreserved * reserved);
+        float reserved = entityService.getEntityProperty(character, CommonProperties.reserved_mana);
+        float reservedMult = entityService.getEntityProperty(character, CommonProperties.reserved_mana_multiplier);
+        float maxval = max_mana - (reserved * reservedMult);
+        if (maxval <= 0) {
+            maxval = 0;
+        }
         character.getMana().setMaxValue(maxval);
     }
 
@@ -353,15 +353,16 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
      */
     @Override
     public void updateMaxHealth(T character) {
-        float max_health = entityService.getEntityProperty(character, CommonProperties.max_health)
-                - entityService.getEntityProperty(character, CommonProperties.reserved_health);
-        float actreserved = entityService.getEntityProperty(character, CommonProperties.reserved_health);
-        float reserved = entityService.getEntityProperty(character, CommonProperties.reserved_health_multiplier);
-        float maxval = max_health - (actreserved * reserved);
+        float max_health = entityService.getEntityProperty(character, CommonProperties.max_health);
+        float reserved = entityService.getEntityProperty(character, CommonProperties.reserved_health);
+        float reservedMult = entityService.getEntityProperty(character, CommonProperties.reserved_health_multiplier);
+        float maxval = max_health - (reserved * reservedMult);
         if (maxval <= 0) {
             maxval = 1;
         }
-        info("Setting max health " + character.getName() + " to " + maxval);
+        if (Rpg.get().getPluginConfig().DEBUG.isBalance()) {
+            info("Setting max health of " + character.getName() + " to " + maxval);
+        }
         character.getHealth().setMaxValue(maxval);
     }
 
@@ -1043,7 +1044,7 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
         character.setRequiresDamageRecalculation(true);
         Map<String, PlayerClassData> classes = character.getClasses();
         for (PlayerClassData nClass : classes.values()) {
-            applyGroupEffects(character, nClass.getClassDefinition());
+            applyGlobalEffects(character, nClass.getClassDefinition());
         }
 
         character.getMana().setValue(0);
@@ -1162,7 +1163,7 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
             permissionService.addPermissions(character, playerClassData);
             scheduleNextTick(() -> {
                 recalculateSecondaryPropertiesOnly(character);
-                applyGroupEffects(character, klass);
+                applyGlobalEffects(character, klass);
                 scheduleNextTick(() -> {
                     invalidateCaches(character);
                     character.updateItemRestrictions();

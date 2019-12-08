@@ -11,10 +11,7 @@ import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillData;
 import cz.neumimto.rpg.api.utils.ActionResult;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public interface CharacterService<T extends IActiveCharacter> {
 
@@ -56,9 +53,9 @@ public interface CharacterService<T extends IActiveCharacter> {
 
     void addDefaultEffects(T character);
 
-    void removeGroupEffects(T character, ClassDefinition p);
+    void removeGlobalEffects(T character, ClassDefinition p);
 
-    void applyGroupEffects(T character, ClassDefinition p);
+    void applyGlobalEffects(T character, ClassDefinition p);
 
     void updateMaxMana(T character);
 
