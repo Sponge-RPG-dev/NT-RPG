@@ -18,8 +18,8 @@ var Optional = Java.type("com.google.common.base.Optional");
 
 /* Also available:
 var Folder // java.nio.file.Path of scripts folder
-var GlobalScope // GlobalScope, containing characterService, effectService, entityService and others.
-See https://github.com/Sponge-RPG-dev/NT-RPG/blob/master/Plugin/src/main/java/cz/neumimto/rpg/GlobalScope.java
+var Bindings //
+var Rpg // Rpg, containing characterService, effectService, entityService and others.
  */
 
 var events = new ArrayList();
@@ -33,8 +33,12 @@ var folder = Folder;
 with (imports) {
     Files.walkFileTree(folder, new (Java.extend(Java.type("java.nio.file.SimpleFileVisitor"), {
         visitFile: function (file, attrs) {
-            if (file.toString().endsWith(".js") && !file.toString().endsWith("Main.js")) {
-                load(file.toString());
+            try {
+                if (file.toString().endsWith(".js") && !file.toString().endsWith("Main.js")) {
+                    load(file.toString());
+                }
+            } catch (e) {
+                e.printStackTrace();
             }
             return FileVisitResult.CONTINUE;
         }
