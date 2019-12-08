@@ -109,7 +109,7 @@ public class GuiHelper {
         Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST)
                 .property(InventoryTitle.of(Text.of(w.getName(), toTextColor(w.getPreferedColor()), TextStyles.BOLD)))
                 .build(SpongeRpgPlugin.getInstance());
-        String dyeColor = SpongeRpgPlugin.pluginConfig.CLASS_TYPES.get(w.getClassType()).getDyeColor();
+        String dyeColor = Rpg.get().getPluginConfig().CLASS_TYPES.get(w.getClassType()).getDyeColor();
         makeBorder(i, toDyeColor(dyeColor));
         i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(1, 4))).offer(toItemStack(w));
 
@@ -129,7 +129,7 @@ public class GuiHelper {
     }
 
     static Inventory createMenuInventoryClassTypeView(String type) {
-        ClassTypeDefinition classTypeDefinition = SpongeRpgPlugin.pluginConfig.CLASS_TYPES.get(type);
+        ClassTypeDefinition classTypeDefinition = Rpg.get().getPluginConfig().CLASS_TYPES.get(type);
         Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST)
                 .property(InventoryTitle.of(
                         Text.builder("[ ").color(toTextColor(classTypeDefinition.getSecondaryColor()))
@@ -169,7 +169,7 @@ public class GuiHelper {
                 Text.builder(type)
                         .color(toTextColor(Rpg.get().getPluginConfig().CLASS_TYPES.get(type).getPrimaryColor()))
                         .build());
-        i.offer(new InventoryCommandItemMenuData("show classes " + type));
+        i.offer(new InventoryCommandItemMenuData("ninfo classes " + type));
         return i;
     }
 

@@ -10,6 +10,7 @@ import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.common.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
+import cz.neumimto.rpg.sponge.gui.GuiHelper;
 import cz.neumimto.rpg.sponge.gui.SkillTreeViewModel;
 import cz.neumimto.rpg.sponge.gui.VanillaMessaging;
 import org.spongepowered.api.entity.living.player.Player;
@@ -18,7 +19,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-@CommandPermission("ntrpg.info.")
+@CommandPermission("ntrpg.info")
 @CommandAlias("show|ninfo")
 public class SpongeInfoCommands extends BaseCommand {
 
@@ -51,10 +52,14 @@ public class SpongeInfoCommands extends BaseCommand {
 
     @Subcommand("classes")
     @CommandPermission("%.classes")
-    public void showClassesCommand(Player executor) {
+    public void showClassesCommand(Player executor, @Optional String type) {
         ISpongeCharacter character = characterService.getCharacter(executor);
-        characterService.resetAttributes(character);
-        characterService.putInSaveQueue(character.getCharacterBase());
+        if (type == null) {
+            Gui.sendClassTypes(character);
+        } else {
+            Gui.sendClassesByType(character, type);
+        }
+
     }
 
     @Subcommand("character")
