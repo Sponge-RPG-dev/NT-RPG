@@ -1,7 +1,9 @@
 package cz.neumimto.rpg;
 
-import co.aikar.commands.CommandManager;
+import com.google.inject.Injector;
+import com.google.inject.Module;
 import cz.neumimto.rpg.api.ResourceLoader;
+import cz.neumimto.rpg.api.RpgAddon;
 import cz.neumimto.rpg.api.RpgApi;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
@@ -22,11 +24,14 @@ import cz.neumimto.rpg.entity.TestEntityService;
 
 import java.io.File;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -218,12 +223,12 @@ public class TestApiImpl implements RpgApi {
     }
 
     @Override
-    public void postInit(CommandManager manager) {
-
+    public void scheduleSyncLater(Runnable runnable) {
+        runnable.run();
     }
 
     @Override
-    public void scheduleSyncLater(Runnable runnable) {
-        runnable.run();
+    public void init(Path workingDirPath, Object commandManager, Class[] commandClasses, RpgAddon defaultStorageImpl, BiFunction<Map, Map<Class<?>, ?>, Module> fnInjProv, Consumer<Injector> injectorc) {
+
     }
 }
