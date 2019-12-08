@@ -27,9 +27,7 @@ import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.utils.FileUtils;
 import cz.neumimto.rpg.persistence.flatfiles.FlatFilesModule;
-import cz.neumimto.rpg.sponge.commands.SpongeAdminCommands;
-import cz.neumimto.rpg.sponge.commands.SpongeCharacterCommands;
-import cz.neumimto.rpg.sponge.commands.SpongeCommandService;
+import cz.neumimto.rpg.sponge.commands.*;
 import cz.neumimto.rpg.sponge.inventory.data.*;
 import cz.neumimto.rpg.sponge.inventory.data.manipulators.*;
 import cz.neumimto.rpg.sponge.listeners.DebugListener;
@@ -124,7 +122,15 @@ public class SpongeRpgPlugin extends Rpg {
         impl.init(
                 workingDirPath,
                 manager,
-                new Class[]{SpongeAdminCommands.class, SpongeCharacterCommands.class},
+                new Class[]{
+                        SpongeAdminCommands.class,
+                        SpongeCharacterCommands.class,
+                        SpongeInfoCommands.class,
+                        SpongePartyCommands.class,
+                        SpongeSkillCommands.class,
+                        SpongeSkilltreeCommands.class,
+                        SpongeSkillBindCommands.class
+                },
                 new FlatFilesModule(),
                 (bindings, providers) -> new SpongeGuiceModule(this, logger, game, causeStackManager, bindings),
                 injector -> {
