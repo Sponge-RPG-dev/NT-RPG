@@ -98,7 +98,7 @@ public class DebugListener {
             ClickInventoryEvent.Secondary.class
     })
     public void onClick(ClickInventoryEvent event, @Root Player player) {
-        if (Rpg.get().getPluginConfig().DEBUG.isBalance()) {
+        if (Rpg.get().getPluginConfig().DEBUG.isDevelop()) {
             List<SlotTransaction> transactions = event.getTransactions();
 
             BiConsumer<Player, String> sendMsg = (player1, s) -> player1.sendMessage(TextHelper.parse(s));
@@ -125,7 +125,7 @@ public class DebugListener {
 
     @Listener(order = Order.FIRST)
     public void onClick(HandInteractEvent event, @Root Player player) {
-        if (Rpg.get().getPluginConfig().DEBUG.isBalance()) {
+        if (Rpg.get().getPluginConfig().DEBUG.isDevelop()) {
             Hotbar hotbar = player.getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
             int selectedSlotIndex = hotbar.getSelectedSlotIndex();
             BiConsumer<Player, String> sendMsg = (player1, s) -> player1.sendMessage(TextHelper.parse(s));
