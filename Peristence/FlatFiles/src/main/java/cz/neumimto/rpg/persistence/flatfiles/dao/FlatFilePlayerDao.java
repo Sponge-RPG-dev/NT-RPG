@@ -45,7 +45,6 @@ public class FlatFilePlayerDao implements IPlayerDao {
                     .peek(FileConfig::load)
                     .peek(FileConfig::close)
                     .map(ConfigConverter::fromConfig)
-                    .peek(f -> System.out.println("Mapped to Character " + f.getName()))
                     .collect(Collectors.toList());
         } catch (IOException e) {
             e.printStackTrace();
