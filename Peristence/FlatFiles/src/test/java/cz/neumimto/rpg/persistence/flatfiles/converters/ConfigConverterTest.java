@@ -41,8 +41,6 @@ class ConfigConverterTest {
         Assertions.assertEquals(characterBase.getCharacterSkills(), loadded.getCharacterSkills());
         Assertions.assertEquals(characterBase.getHealthScale(), loadded.getHealthScale());
         Assertions.assertEquals(characterBase.getId(), loadded.getId());
-        Assertions.assertEquals(characterBase.getInfo(), loadded.getInfo());
-
 
         Assertions.assertEquals(characterBase.getLastKnownPlayerName(), loadded.getLastKnownPlayerName());
         Assertions.assertEquals(characterBase.getMarkedForRemoval(), loadded.getMarkedForRemoval());

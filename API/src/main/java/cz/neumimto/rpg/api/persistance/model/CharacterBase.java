@@ -16,10 +16,6 @@ public interface CharacterBase extends TimestampEntity {
 
     void setName(String name);
 
-    String getInfo();
-
-    void setInfo(String info);
-
     String getLastKnownPlayerName();
 
     void setLastKnownPlayerName(String lastKnownPlayerName);

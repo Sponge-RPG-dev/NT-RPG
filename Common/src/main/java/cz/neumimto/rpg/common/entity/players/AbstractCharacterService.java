@@ -67,46 +67,32 @@ import javax.inject.Inject;
 public abstract class AbstractCharacterService<T extends IActiveCharacter> implements CharacterService<T> {
 
     @Inject
-    private SkillService skillService;
-
-    @Inject
     protected IPlayerDao playerDao;
-
     @Inject
     protected InventoryService inventoryService;
-
-    @Inject
-    private ClassService classService;
-
-    @Inject
-    private EntityService entityService;
-
-    @Inject
-    private DamageService damageService;
-
-    @Inject
-    private PropertyService propertyService;
-
-    @Inject
-    private LocalizationService localizationService;
-
-    @Inject
-    private EventFactoryService eventFactoryService;
-
-    @Inject
-    private ICharacterClassDao characterClassDao;
-
-    @Inject
-    private IPersistenceHandler persistanceHandler;
-
     @Inject
     protected EffectService effectService;
-
+    protected Map<UUID, T> characters = new HashMap<>();
+    @Inject
+    private SkillService skillService;
+    @Inject
+    private ClassService classService;
+    @Inject
+    private EntityService entityService;
+    @Inject
+    private DamageService damageService;
+    @Inject
+    private PropertyService propertyService;
+    @Inject
+    private LocalizationService localizationService;
+    @Inject
+    private EventFactoryService eventFactoryService;
+    @Inject
+    private ICharacterClassDao characterClassDao;
+    @Inject
+    private IPersistenceHandler persistanceHandler;
     @Inject
     private PermissionService permissionService;
-
-    protected Map<UUID, T> characters = new HashMap<>();
-
 
     protected abstract void scheduleNextTick(Runnable r);
 
@@ -185,21 +171,26 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
         CharacterBase characterBase = createCharacterBase();
         characterBase.setName(name);
         characterBase.setUuid(uuid);
+        characterBase.setLastKnownPlayerName(playerName);
+        characterBase.setWorld("");
+        characterBase.setHealthScale(1.0D); // ?
+
+        Date inc = new Date();
+        characterBase.setCreated(inc);
+        characterBase.setLastReset(inc);
+
         PluginConfig pluginConfig = Rpg.get().getPluginConfig();
         characterBase.setAttributePoints(pluginConfig.ATTRIBUTEPOINTS_ON_START);
         characterBase.setAttributePointsSpent(0);
-        characterBase.setInfo("");
         characterBase.setCanResetSkills(false);
-        characterBase.setLastKnownPlayerName(playerName);
-        Date inc = new Date();
-        characterBase.setLastReset(inc);
-        characterBase.setCreated(inc);
+
         characterBase.setCharacterSkills(new HashSet<>());
         characterBase.setCharacterClasses(new HashSet<>());
         characterBase.setBaseCharacterAttribute(new HashSet<>());
         characterBase.setInventoryEquipSlotOrder(new ArrayList<>());
+
         characterBase.setMarkedForRemoval(false);
-        characterBase.setWorld("");
+
         return characterBase;
     }
 

@@ -9,6 +9,7 @@ dependencies {
     compileOnly 'commons-io:commons-io:2.4'
 
     compile 'com.electronwill.night-config:hocon:3.6.0'
+    compile 'com.electronwill.night-config:json:3.6.0'
 
     annotationProcessor project(':Generator')
     compileOnly 'it.unimi.dsi:fastutil:8.2.1'

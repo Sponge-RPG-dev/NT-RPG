@@ -2,7 +2,6 @@ package cz.neumimto.rpg.persistence.flatfiles.converters;
 
 import com.electronwill.nightconfig.core.Config;
 import com.electronwill.nightconfig.core.file.FileConfig;
-import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.persistance.model.*;
 import cz.neumimto.rpg.persistence.model.CharacterBaseImpl;
 import cz.neumimto.rpg.persistence.model.CharacterClassImpl;
@@ -19,7 +18,6 @@ public class ConfigConverter {
 
     private static final String UUID_ = "UUID";
     private static final String NAME = "Name";
-    private static final String INFO = "Info";
     private static final String LASTNAME = "LastPlayerName";
     private static final String RESET_SKILL = "CanResetSkills";
     private static final String LAST_RESET = "LastReset";
@@ -29,8 +27,8 @@ public class ConfigConverter {
     private static final String SKILLS = "LearnedSkills";
     private static final String CLASSES = "Classes";
     private static final String ATTRIBUTES = "Attributes";
-    private static final String INVENTOY_EQUIP_ORDER = "InventoryEquipOrder";
-    private static final String HEALTH_SCALING = "HEALT_SCALE";
+    private static final String INVENTORY_EQUIP_ORDER = "InventoryEquipOrder";
+    private static final String HEALTH_SCALING = "HealthScale";
     private static final String ATTRIBUTE_NAME = "Name";
     private static final String ATTRIBUTE_LEVEL = "Level";
     private static final String CLASS_NAME = "Name";
@@ -54,9 +52,6 @@ public class ConfigConverter {
 
         String name = c.getName();
         config.set(NAME, name);
-
-        String info = c.getInfo();
-        config.set(INFO, info);
 
         name = c.getLastKnownPlayerName();
         config.set(LASTNAME, name);
@@ -87,7 +82,7 @@ public class ConfigConverter {
 
         List<EquipedSlot> inventoryEquipSlotOrder = c.getInventoryEquipSlotOrder();
         String collect = inventoryEquipSlotOrder.stream().map(Object::toString).collect(Collectors.joining(";"));
-        config.set(INVENTOY_EQUIP_ORDER, collect);
+        config.set(INVENTORY_EQUIP_ORDER, collect);
 
         Double healthScale = c.getHealthScale();
         config.set(HEALTH_SCALING, healthScale);
@@ -183,7 +178,6 @@ public class ConfigConverter {
         characterBase.setUuid(UUID.fromString(config.get(UUID_)));
 
         characterBase.setName(config.get(NAME));
-        characterBase.setInfo(config.get(INFO));
         characterBase.setLastKnownPlayerName(config.get(LASTNAME));
 
         characterBase.setCanResetSkills(config.get(RESET_SKILL));
@@ -208,9 +202,9 @@ public class ConfigConverter {
         characterBase.setCharacterClasses(classesFromConfig(classes, characterBase));
         config.get(ATTRIBUTES);
 
-        List<EquipedSlot> iso = new ArrayList<>();
-
-        String o = config.get(INVENTOY_EQUIP_ORDER);
+        //FIXME
+        /*List<EquipedSlot> iso = new ArrayList<>();
+        String o = config.get(INVENTORY_EQUIP_ORDER);
         for (String s : o.split(";")) {
             String[] split1 = s.split("@");
             if (split1.length == 1) {
@@ -219,9 +213,9 @@ public class ConfigConverter {
                 iso.add(Rpg.get().getInventoryService().createEquipedSlot(split1[0], Integer.parseInt(split1[1])));
             }
         }
-        characterBase.setInventoryEquipSlotOrder(iso);
+        characterBase.setInventoryEquipSlotOrder(iso);*/
 
-        characterBase.setHealthScale(((Number)config.get(HEALTH_SCALING)).doubleValue());
+        characterBase.setHealthScale(((Number) config.get(HEALTH_SCALING)).doubleValue());
         characterBase.setMarkedForRemoval(config.get(MARKED_FOR_REMOVAL));
         return characterBase;
     }
@@ -270,7 +264,7 @@ public class ConfigConverter {
         CharacterClass characterClass = new CharacterClassImpl();
         characterClass.setId(-1L);
         characterClass.setName(config.get(CLASS_NAME));
-        characterClass.setExperiences(((Number)config.get(CLASS_EXPERIENCES)).doubleValue());
+        characterClass.setExperiences(((Number) config.get(CLASS_EXPERIENCES)).doubleValue());
         characterClass.setLevel(config.get(CLASS_LEVEL));
         characterClass.setSkillPoints(config.get(CLASS_SKILLPOINTS));
         characterClass.setUsedSkillPoints(config.get(CLASS_SKILLPOINTS_SPENT));

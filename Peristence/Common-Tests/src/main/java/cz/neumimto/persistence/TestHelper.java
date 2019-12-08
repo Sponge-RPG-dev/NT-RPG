@@ -14,7 +14,6 @@ public class TestHelper {
         characterBase.setAttributePointsSpent(2);
         characterBase.setCanResetSkills(true);
         characterBase.setHealthScale(5D);
-        characterBase.setInfo("Info");
         characterBase.setInventoryEquipSlotOrder(Arrays.asList(new EquipedSlotImpl(1), new EquipedSlotImpl(7), new EquipedSlotImpl(5)));
         characterBase.setLastKnownPlayerName("TTest");
         characterBase.setLastReset(new Date());

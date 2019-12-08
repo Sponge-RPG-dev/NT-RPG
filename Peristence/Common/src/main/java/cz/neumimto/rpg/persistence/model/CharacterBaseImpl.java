@@ -32,7 +32,6 @@ public class CharacterBaseImpl extends TimestampEntityImpl implements CharacterB
     private Long characterId;
     private UUID uuid;
     private String name;
-    private String info;
     private Integer attributePoints;
     private Boolean canResetSkills;
     private Double healthScale;
@@ -74,16 +73,6 @@ public class CharacterBaseImpl extends TimestampEntityImpl implements CharacterB
     @Override
     public void setName(String name) {
         this.name = name;
-    }
-
-    @Override
-    public String getInfo() {
-        return info;
-    }
-
-    @Override
-    public void setInfo(String info) {
-        this.info = info;
     }
 
     @Override

@@ -157,7 +157,6 @@ public class JdbcPlayerDao implements IPlayerDao {
         characterBase.setId(rs.getLong("character_id"));
         characterBase.setUuid(UUID.fromString(rs.getString("uuid")));
         characterBase.setName(rs.getString("name"));
-        characterBase.setInfo(rs.getString("info"));
         characterBase.setAttributePoints(rs.getInt("attribute_points"));
         characterBase.setCanResetSkills(rs.getBoolean("can_reset_skills"));
         characterBase.setHealthScale(rs.getDouble("health_scale"));
@@ -405,7 +404,6 @@ public class JdbcPlayerDao implements IPlayerDao {
     private void bindCharacterBaseToStatement(NamedPreparedStatement pspt, CharacterBase characterBase) throws SQLException {
         pspt.setString(":uuid:", characterBase.getUuid().toString());
         pspt.setString(":char_name:", characterBase.getName());
-        pspt.setString(":info:", characterBase.getInfo());
         pspt.setDouble(":health_scale:", characterBase.getHealthScale());
         pspt.setInt(":attribute_points:", characterBase.getAttributePoints());
         pspt.setInt(":attribute_points_spent:", characterBase.getAttributePointsSpent());

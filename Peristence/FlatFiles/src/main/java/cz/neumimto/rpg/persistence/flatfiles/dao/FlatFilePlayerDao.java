@@ -12,11 +12,14 @@ import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class FlatFilePlayerDao implements IPlayerDao {
 
+    private static final String DATA_FORMAT = ".json";
+
     private String getCharacterConfigFileName(String charName) {
-        return charName.toLowerCase() + ".hocon";
+        return charName.toLowerCase() + DATA_FORMAT;
     }
 
     private Path getPlayerDataDirectory(UUID uuid) {
@@ -34,14 +37,15 @@ public class FlatFilePlayerDao implements IPlayerDao {
     @Override
     public List<CharacterBase> getPlayersCharacters(UUID uuid) {
         Path pdd = getPlayerDataDirectory(uuid);
-        try {
-            return Files.walk(pdd)
+        try (Stream<Path> files = Files.walk(pdd)) {
+            return files
                     .filter(Files::isRegularFile)
-                    .filter(f -> f.getFileName().endsWith(".hocon"))
                     .map(FileConfig::of)
-                    .peek(FileConfig::close)
                     .filter(f -> !f.getOrElse(ConfigConverter.MARKED_FOR_REMOVAL, false))
+                    .peek(FileConfig::load)
+                    .peek(FileConfig::close)
                     .map(ConfigConverter::fromConfig)
+                    .peek(f -> System.out.println("Mapped to Character " + f.getName()))
                     .collect(Collectors.toList());
         } catch (IOException e) {
             e.printStackTrace();
@@ -73,14 +77,13 @@ public class FlatFilePlayerDao implements IPlayerDao {
 
     @Override
     public int getCharacterCount(UUID uuid) {
-        Path path = getPlayerDataDirectory(uuid);
-        try {
-            return (int) Files.walk(path)
+        Path pdd = getPlayerDataDirectory(uuid);
+        try (Stream<Path> files = Files.walk(pdd)) {
+            return (int) files
                     .filter(Files::isRegularFile)
-                    .filter(f -> f.getFileName().endsWith(".hocon"))
                     .map(FileConfig::of)
-                    .peek(FileConfig::close)
                     .filter(f -> !f.getOrElse(ConfigConverter.MARKED_FOR_REMOVAL, false))
+                    .peek(FileConfig::close)
                     .count();
         } catch (IOException e) {
             e.printStackTrace();
@@ -116,8 +119,6 @@ public class FlatFilePlayerDao implements IPlayerDao {
         base.setCreated(new Date());
         try {
             Path resolve = getPlayerDataDirectory(base.getUuid()).resolve(getCharacterConfigFileName(base.getName()));
-
-            Files.createDirectories(resolve.getParent());
             Files.createFile(resolve);
         } catch (IOException e) {
             e.printStackTrace();
@@ -126,9 +127,19 @@ public class FlatFilePlayerDao implements IPlayerDao {
     }
 
     @Override
+    public void update(CharacterBase characterBase) {
+        characterBase.setUpdated(new Date());
+        Path resolve = getPlayerDataDirectory(characterBase.getUuid()).resolve(getCharacterConfigFileName(characterBase.getName()));
+        try (FileConfig of = syncConfig(resolve)) {
+            ConfigConverter.toConfig(characterBase, of);
+            of.save();
+        }
+    }
+
+    @Override
     public int markCharacterForRemoval(UUID player, String charName) {
         Path resolve = getPlayerDataDirectory(player).resolve(getCharacterConfigFileName(charName));
-        try (FileConfig of = syncConfig(resolve)){
+        try (FileConfig of = syncConfig(resolve)) {
             of.load();
             of.set(ConfigConverter.MARKED_FOR_REMOVAL, true);
             of.save();
@@ -137,22 +148,11 @@ public class FlatFilePlayerDao implements IPlayerDao {
     }
 
     @Override
-    public void update(CharacterBase characterBase) {
-        characterBase.setUpdated(new Date());
-        Path resolve = getPlayerDataDirectory(characterBase.getUuid()).resolve(getCharacterConfigFileName(characterBase.getName()));
-        try (FileConfig of = syncConfig(resolve)){
-            of.load();
-            ConfigConverter.toConfig(characterBase, of);
-            of.save();
-        }
+    public void removePersitantSkill(CharacterSkill characterSkill) {
+        update(characterSkill.getCharacterBase());
     }
 
     private FileConfig syncConfig(Path resolve) {
         return FileConfig.builder(resolve).sync().build();
-    }
-
-    @Override
-    public void removePersitantSkill(CharacterSkill characterSkill) {
-        update(characterSkill.getCharacterBase());
     }
 }
