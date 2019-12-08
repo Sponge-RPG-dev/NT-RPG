@@ -1,6 +1,6 @@
 package cz.neumimto.skills.active;
 
-import cz.neumimto.rpg.SpongeResourceLoader;
+import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
@@ -23,36 +23,36 @@ import javax.inject.Singleton;
  * Created by NeumimTo on 7.7.2017.
  */
 @Singleton
-@SpongeResourceLoader.Skill("ntrpg:empathy")
+@ResourceLoader.Skill("ntrpg:empathy")
 public class Empathy extends Targeted {
 
-	@Inject
-	private EntityService entityService;
+    @Inject
+    private EntityService entityService;
 
-	@Override
-	public void init() {
-		super.init();
-		settings.addNode(SkillNodes.MULTIPLIER, 5, 10);
-		settings.addNode("max-damage", 100, 10);
-		setDamageType(DamageTypes.MAGIC.getId());
-	}
+    @Override
+    public void init() {
+        super.init();
+        settings.addNode(SkillNodes.MULTIPLIER, 5, 10);
+        settings.addNode("max-damage", 100, 10);
+        setDamageType(DamageTypes.MAGIC.getId());
+    }
 
-	@Override
-	public void castOn(IEntity target, ISpongeCharacter source, PlayerSkillContext info, SkillContext skillContext) {
-		Player entity = source.getEntity();
-		Double max = entity.get(Keys.MAX_HEALTH).get();
-		Double a = entity.get(Keys.HEALTH).get();
-		a = max - a;
-		a *= skillContext.getFloatNodeValue(SkillNodes.MULTIPLIER);
-		max = skillContext.getDoubleNodeValue("max-damage");
-		if (max > 0) {
-			a = a < max ? max : a;
-		}
-		SkillDamageSource build = new SkillDamageSourceBuilder()
-				.fromSkill(this)
-				.setSource(source)
-				.build();
-		((ISpongeEntity)target).getEntity().damage(a, build);
-		skillContext.next(source, info, SkillResult.OK);
-	}
+    @Override
+    public void castOn(IEntity target, ISpongeCharacter source, PlayerSkillContext info, SkillContext skillContext) {
+        Player entity = source.getEntity();
+        Double max = entity.get(Keys.MAX_HEALTH).get();
+        Double a = entity.get(Keys.HEALTH).get();
+        a = max - a;
+        a *= skillContext.getFloatNodeValue(SkillNodes.MULTIPLIER);
+        max = skillContext.getDoubleNodeValue("max-damage");
+        if (max > 0) {
+            a = a < max ? max : a;
+        }
+        SkillDamageSource build = new SkillDamageSourceBuilder()
+                .fromSkill(this)
+                .setSource(source)
+                .build();
+        ((ISpongeEntity) target).getEntity().damage(a, build);
+        skillContext.next(source, info, SkillResult.OK);
+    }
 }

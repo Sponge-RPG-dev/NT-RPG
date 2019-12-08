@@ -1,7 +1,7 @@
 package cz.neumimto.skills.passive;
 
 import cz.neumimto.effects.ResoluteTechniqueEffect;
-import cz.neumimto.rpg.SpongeResourceLoader;
+import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
@@ -16,21 +16,21 @@ import javax.inject.Singleton;
  * Created by NeumimTo on 6.7.2017.
  */
 @Singleton
-@SpongeResourceLoader.Skill("ntrpg:resolutetechnique")
+@ResourceLoader.Skill("ntrpg:resolutetechnique")
 public class ResoluteTechnique extends PassiveSkill {
 
-	@Inject
-	private EffectService effectService;
+    @Inject
+    private EffectService effectService;
 
-	public ResoluteTechnique() {
-		super(ResoluteTechniqueEffect.name);
-		setDamageType(DamageTypes.ATTACK.getId());
-		addSkillType(SkillType.PHYSICAL);
-	}
+    public ResoluteTechnique() {
+        super(ResoluteTechniqueEffect.name);
+        setDamageType(DamageTypes.ATTACK.getId());
+        addSkillType(SkillType.PHYSICAL);
+    }
 
-	@Override
-	public void applyEffect(PlayerSkillContext info, IActiveCharacter character) {
-		ResoluteTechniqueEffect effect = new ResoluteTechniqueEffect(character, -1);
-		effectService.addEffect(effect, this);
-	}
+    @Override
+    public void applyEffect(PlayerSkillContext info, IActiveCharacter character) {
+        ResoluteTechniqueEffect effect = new ResoluteTechniqueEffect(character, -1);
+        effectService.addEffect(effect, this);
+    }
 }

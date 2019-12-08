@@ -1,7 +1,6 @@
 package cz.neumimto.rpg.sponge;
 
 import com.google.inject.*;
-import cz.neumimto.rpg.SpongeResourceLoader;
 import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.damage.DamageService;
 import cz.neumimto.rpg.api.effects.EffectService;

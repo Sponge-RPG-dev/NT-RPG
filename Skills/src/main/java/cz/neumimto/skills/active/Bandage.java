@@ -2,7 +2,7 @@ package cz.neumimto.skills.active;
 
 import cz.neumimto.Decorator;
 import cz.neumimto.effects.negative.Bleeding;
-import cz.neumimto.rpg.SpongeResourceLoader;
+import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.entity.IEntity;
@@ -22,36 +22,36 @@ import javax.inject.Singleton;
  * Created by NeumimTo on 5.8.2017.
  */
 @Singleton
-@SpongeResourceLoader.Skill("ntrpg:bandage")
+@ResourceLoader.Skill("ntrpg:bandage")
 public class Bandage extends Targeted {
 
-	@Inject
-	private EntityService entityService;
+    @Inject
+    private EntityService entityService;
 
-	@Inject
-	private EffectService effectService;
+    @Inject
+    private EffectService effectService;
 
-	@Override
-	public void init() {
-		super.init();
-		settings.addNode(SkillNodes.HEALED_AMOUNT, 15, 5);
-		addSkillType(SkillType.HEALING);
-		addSkillType(SkillType.PHYSICAL);
-	}
+    @Override
+    public void init() {
+        super.init();
+        settings.addNode(SkillNodes.HEALED_AMOUNT, 15, 5);
+        addSkillType(SkillType.HEALING);
+        addSkillType(SkillType.PHYSICAL);
+    }
 
-	@Override
-	public void castOn(IEntity target, ISpongeCharacter source, PlayerSkillContext info, SkillContext skillContext) {
-		if (target.isFriendlyTo(source)) {
-			float floatNodeValue = skillContext.getFloatNodeValue(SkillNodes.HEALED_AMOUNT);
-			entityService.healEntity(target, floatNodeValue, this);
-			ISpongeEntity entity = (ISpongeEntity) target;
-			Decorator.healEffect(entity.getEntity().getLocation().add(0, 1, 0));
-			if (target.hasEffect(Bleeding.name)) {
-				effectService.removeEffectContainer(target.getEffect(Bleeding.name), target);
-			}
-			skillContext.next(source, info, SkillResult.OK);
-			return;
-		}
-		skillContext.next(source, info, SkillResult.CANCELLED);
-	}
+    @Override
+    public void castOn(IEntity target, ISpongeCharacter source, PlayerSkillContext info, SkillContext skillContext) {
+        if (target.isFriendlyTo(source)) {
+            float floatNodeValue = skillContext.getFloatNodeValue(SkillNodes.HEALED_AMOUNT);
+            entityService.healEntity(target, floatNodeValue, this);
+            ISpongeEntity entity = (ISpongeEntity) target;
+            Decorator.healEffect(entity.getEntity().getLocation().add(0, 1, 0));
+            if (target.hasEffect(Bleeding.name)) {
+                effectService.removeEffectContainer(target.getEffect(Bleeding.name), target);
+            }
+            skillContext.next(source, info, SkillResult.OK);
+            return;
+        }
+        skillContext.next(source, info, SkillResult.CANCELLED);
+    }
 }

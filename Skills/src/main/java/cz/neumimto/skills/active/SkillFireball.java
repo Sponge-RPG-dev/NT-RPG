@@ -4,7 +4,7 @@ import static com.flowpowered.math.TrigMath.cos;
 import static com.flowpowered.math.TrigMath.sin;
 import com.flowpowered.math.imaginary.Quaterniond;
 import com.flowpowered.math.vector.Vector3d;
-import cz.neumimto.rpg.SpongeResourceLoader;
+import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
@@ -31,7 +31,7 @@ import javax.inject.Singleton;
  * Created by NeumimTo on 23.12.2015.
  */
 @Singleton
-@SpongeResourceLoader.Skill("ntrpg:fireball")
+@ResourceLoader.Skill("ntrpg:fireball")
 public class SkillFireball extends ActiveSkill<ISpongeCharacter> {
 
     @Inject

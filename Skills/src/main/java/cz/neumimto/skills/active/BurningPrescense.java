@@ -2,7 +2,7 @@ package cz.neumimto.skills.active;
 
 import cz.neumimto.effects.positive.BurningPrescenseEffect;
 import cz.neumimto.model.BPModel;
-import cz.neumimto.rpg.SpongeResourceLoader;
+import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
@@ -20,7 +20,7 @@ import javax.inject.Singleton;
  * Created by NeumimTo on 4.7.2017.
  */
 @Singleton
-@SpongeResourceLoader.Skill("ntrpg:burningprescense")
+@ResourceLoader.Skill("ntrpg:burningprescense")
 public class BurningPrescense extends ActiveSkill {
 
     @Inject

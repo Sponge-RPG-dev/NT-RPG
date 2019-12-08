@@ -16,7 +16,7 @@
  *
  */
 
-package cz.neumimto.rpg;
+package cz.neumimto.rpg.sponge;
 
 import static cz.neumimto.rpg.api.logging.Log.info;
 import cz.neumimto.rpg.api.Rpg;

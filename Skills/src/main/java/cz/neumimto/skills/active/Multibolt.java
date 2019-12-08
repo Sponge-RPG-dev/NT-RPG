@@ -2,7 +2,7 @@ package cz.neumimto.skills.active;
 
 import cz.neumimto.effects.negative.MultiboltEffect;
 import cz.neumimto.model.MultiboltModel;
-import cz.neumimto.rpg.SpongeResourceLoader;
+import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.entity.IEntity;
@@ -23,29 +23,29 @@ import javax.inject.Singleton;
  * Created by NeumimTo on 6.7.2017.
  */
 @Singleton
-@SpongeResourceLoader.Skill("ntrpg:multibolt")
+@ResourceLoader.Skill("ntrpg:multibolt")
 public class Multibolt extends Targeted {
 
-	@Inject
-	private EffectService effectService;
+    @Inject
+    private EffectService effectService;
 
-	@Override
-	public void init() {
-		super.init();
-		setDamageType(NDamageType.LIGHTNING.getId());
-		settings.addNode(SkillNodes.DAMAGE, 10, 20);
-		settings.addNode("times-hit", 10, 20);
-		addSkillType(SkillType.ELEMENTAL);
-		addSkillType(SkillType.LIGHTNING);
-	}
+    @Override
+    public void init() {
+        super.init();
+        setDamageType(NDamageType.LIGHTNING.getId());
+        settings.addNode(SkillNodes.DAMAGE, 10, 20);
+        settings.addNode("times-hit", 10, 20);
+        addSkillType(SkillType.ELEMENTAL);
+        addSkillType(SkillType.LIGHTNING);
+    }
 
-	@Override
-	public void castOn(IEntity target, ISpongeCharacter source, PlayerSkillContext info, SkillContext skillContext) {
-		float damage = skillContext.getFloatNodeValue(SkillNodes.DAMAGE);
-		int timesToHit = skillContext.getIntNodeValue("times-hit");
-		MultiboltModel model = new MultiboltModel(timesToHit, damage);
-		IEffect effect = new MultiboltEffect(target, source, model);
-		effectService.addEffect(effect, this);
-		skillContext.next(source, info, SkillResult.OK);
-	}
+    @Override
+    public void castOn(IEntity target, ISpongeCharacter source, PlayerSkillContext info, SkillContext skillContext) {
+        float damage = skillContext.getFloatNodeValue(SkillNodes.DAMAGE);
+        int timesToHit = skillContext.getIntNodeValue("times-hit");
+        MultiboltModel model = new MultiboltModel(timesToHit, damage);
+        IEffect effect = new MultiboltEffect(target, source, model);
+        effectService.addEffect(effect, this);
+        skillContext.next(source, info, SkillResult.OK);
+    }
 }

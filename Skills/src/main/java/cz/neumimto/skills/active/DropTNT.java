@@ -1,6 +1,6 @@
 package cz.neumimto.skills.active;
 
-import cz.neumimto.rpg.SpongeResourceLoader;
+import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
@@ -16,18 +16,15 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
+import java.util.*;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
 
 /**
  * Created by NeumimTo on 27.12.2018.
  */
 @Singleton
-@SpongeResourceLoader.Skill("ntrpg:droptnt")
+@ResourceLoader.Skill("ntrpg:droptnt")
 public class DropTNT extends ActiveSkill<ISpongeCharacter> {
 
     public static Map<UUID, Float> DROPPED_TNTS = new HashMap<>();
@@ -35,11 +32,12 @@ public class DropTNT extends ActiveSkill<ISpongeCharacter> {
     @Inject
     private EntityService entityService;
 
+    @Override
     public void init() {
         super.init();
-        settings.addNode(SkillNodes.AMOUNT, 1f ,0f);
-        settings.addNode(SkillNodes.DAMAGE, 100f ,10f);
-        settings.addNode("explosion-radius", 3 ,0.1f);
+        settings.addNode(SkillNodes.AMOUNT, 1f, 0f);
+        settings.addNode(SkillNodes.DAMAGE, 100f, 10f);
+        settings.addNode("explosion-radius", 3, 0.1f);
         addSkillType(SkillType.PHYSICAL);
         addSkillType(SkillType.SUMMON);
     }

@@ -1,7 +1,7 @@
 package cz.neumimto.skills.active;
 
 import cz.neumimto.effects.negative.SlowPotion;
-import cz.neumimto.rpg.SpongeResourceLoader;
+import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
@@ -18,7 +18,7 @@ import javax.inject.Singleton;
  * Created by NeumimTo on 20.8.2017.
  */
 @Singleton
-@SpongeResourceLoader.Skill("ntrpg:slow")
+@ResourceLoader.Skill("ntrpg:slow")
 public class Slow extends Targeted {
 
     @Inject

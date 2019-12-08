@@ -2,9 +2,9 @@ package cz.neumimto.rpg.sponge.assets;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import cz.neumimto.rpg.SpongeResourceLoader;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.common.assets.AssetService;
+import cz.neumimto.rpg.sponge.SpongeResourceLoader;
 import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.asset.Asset;

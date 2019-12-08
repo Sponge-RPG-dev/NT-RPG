@@ -1,7 +1,7 @@
 package cz.neumimto.skills.active;
 
 import cz.neumimto.effects.negative.StunEffect;
-import cz.neumimto.rpg.SpongeResourceLoader;
+import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
@@ -26,48 +26,48 @@ import javax.inject.Singleton;
  * Created by NeumimTo on 7.7.2017.
  */
 @Singleton
-@SpongeResourceLoader.Skill("ntrpg:wrestle")
+@ResourceLoader.Skill("ntrpg:wrestle")
 public class Wrestle extends ActiveSkill<ISpongeCharacter> {
 
-	@Inject
-	private EffectService effectService;
+    @Inject
+    private EffectService effectService;
 
-	@Inject
-	private EntityService entityService;
+    @Inject
+    private EntityService entityService;
 
-	@Override
-	public void init() {
-		super.init();
-		setDamageType(DamageTypes.ATTACK.getId());
-		settings.addNode(SkillNodes.RADIUS, 3, 0.5f);
-		settings.addNode(SkillNodes.DURATION, 1, 0.1f);
-		settings.addNode(SkillNodes.DAMAGE, 1, 0.5f);
-		addSkillType(SkillType.PHYSICAL);
-		addSkillType(SkillType.AOE);
-	}
+    @Override
+    public void init() {
+        super.init();
+        setDamageType(DamageTypes.ATTACK.getId());
+        settings.addNode(SkillNodes.RADIUS, 3, 0.5f);
+        settings.addNode(SkillNodes.DURATION, 1, 0.1f);
+        settings.addNode(SkillNodes.DAMAGE, 1, 0.5f);
+        addSkillType(SkillType.PHYSICAL);
+        addSkillType(SkillType.AOE);
+    }
 
-	@Override
-	public void cast(ISpongeCharacter source, PlayerSkillContext info, SkillContext skillContext) {
-		int radius = skillContext.getIntNodeValue(SkillNodes.RADIUS);
-		float damage = skillContext.getFloatNodeValue(SkillNodes.DAMAGE);
-		long duration = skillContext.getLongNodeValue(SkillNodes.DURATION);
-		for (Entity entity : source.getPlayer().getNearbyEntities(radius)) {
-			if (Utils.isLivingEntity(entity)) {
-				Living l = (Living) entity;
-				if (Utils.canDamage(source, l)) {
-					IEffectConsumer t = entityService.get(l);
-					StunEffect stunEffect = new StunEffect(t, duration);
-					effectService.addEffect(stunEffect, this, source);
-					if (damage > 0) {
-						SkillDamageSource s = new SkillDamageSourceBuilder()
-								.fromSkill(this)
-								.setSource(source)
-								.build();
-						entity.damage(damage, s);
-					}
-				}
-			}
-		}
-		skillContext.next(source, info, skillContext.result(SkillResult.OK));
-	}
+    @Override
+    public void cast(ISpongeCharacter source, PlayerSkillContext info, SkillContext skillContext) {
+        int radius = skillContext.getIntNodeValue(SkillNodes.RADIUS);
+        float damage = skillContext.getFloatNodeValue(SkillNodes.DAMAGE);
+        long duration = skillContext.getLongNodeValue(SkillNodes.DURATION);
+        for (Entity entity : source.getPlayer().getNearbyEntities(radius)) {
+            if (Utils.isLivingEntity(entity)) {
+                Living l = (Living) entity;
+                if (Utils.canDamage(source, l)) {
+                    IEffectConsumer t = entityService.get(l);
+                    StunEffect stunEffect = new StunEffect(t, duration);
+                    effectService.addEffect(stunEffect, this, source);
+                    if (damage > 0) {
+                        SkillDamageSource s = new SkillDamageSourceBuilder()
+                                .fromSkill(this)
+                                .setSource(source)
+                                .build();
+                        entity.damage(damage, s);
+                    }
+                }
+            }
+        }
+        skillContext.next(source, info, skillContext.result(SkillResult.OK));
+    }
 }

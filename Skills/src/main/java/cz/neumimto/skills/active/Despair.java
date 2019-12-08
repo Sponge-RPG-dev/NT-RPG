@@ -3,7 +3,7 @@ package cz.neumimto.skills.active;
 import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.Decorator;
 import cz.neumimto.effects.negative.Blindness;
-import cz.neumimto.rpg.SpongeResourceLoader;
+import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.entity.IEntity;
@@ -25,72 +25,72 @@ import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 import org.spongepowered.api.util.Color;
 
+import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Set;
 
 /**
  * Created by NeumimTo on 15.7.2017.
  */
 @Singleton
-@SpongeResourceLoader.Skill("ntrpg:despair")
+@ResourceLoader.Skill("ntrpg:despair")
 public class Despair extends ActiveSkill<ISpongeCharacter> {
 
-	@Inject
-	private EntityService entityService;
+    @Inject
+    private EntityService entityService;
 
-	@Inject
-	private EffectService effectService;
+    @Inject
+    private EffectService effectService;
 
-	@Override
-	public void init() {
-		super.init();
-		setDamageType(DamageTypes.MAGIC.getId());
-		settings.addNode(SkillNodes.DURATION, 1000L, 500);
-		settings.addNode(SkillNodes.DAMAGE, 10L, 1.5f);
-		settings.addNode(SkillNodes.RADIUS, 7L, 2);
-		addSkillType(SkillType.AOE);
-		addSkillType(SkillType.ESCAPE);
-		addSkillType(SkillType.STEALTH);
-	}
+    @Override
+    public void init() {
+        super.init();
+        setDamageType(DamageTypes.MAGIC.getId());
+        settings.addNode(SkillNodes.DURATION, 1000L, 500);
+        settings.addNode(SkillNodes.DAMAGE, 10L, 1.5f);
+        settings.addNode(SkillNodes.RADIUS, 7L, 2);
+        addSkillType(SkillType.AOE);
+        addSkillType(SkillType.ESCAPE);
+        addSkillType(SkillType.STEALTH);
+    }
 
-	@Override
-	public void cast(ISpongeCharacter character, PlayerSkillContext info, SkillContext skillContext) {
-		int k = skillContext.getIntNodeValue(SkillNodes.RADIUS);
-		Set<Entity> nearbyEntities = Utils.getNearbyEntities(character.getEntity().getLocation(), k);
-		double damage = skillContext.getDoubleNodeValue(SkillNodes.DAMAGE);
-		long duration = skillContext.getLongNodeValue(SkillNodes.DURATION);
+    @Override
+    public void cast(ISpongeCharacter character, PlayerSkillContext info, SkillContext skillContext) {
+        int k = skillContext.getIntNodeValue(SkillNodes.RADIUS);
+        Set<Entity> nearbyEntities = Utils.getNearbyEntities(character.getEntity().getLocation(), k);
+        double damage = skillContext.getDoubleNodeValue(SkillNodes.DAMAGE);
+        long duration = skillContext.getLongNodeValue(SkillNodes.DURATION);
 
-		for (Entity nearbyEntity : nearbyEntities) {
-			if (Utils.isLivingEntity(nearbyEntity)) {
-				Living l = (Living) nearbyEntity;
-				if (Utils.canDamage(character, l)) {
-					IEntity iEntity = entityService.get(l);
-					SkillDamageSource build = new SkillDamageSourceBuilder()
-							.fromSkill(this)
-							.setSource(iEntity)
-							.build();
-					l.damage(damage, build);
-					Blindness blindness = new Blindness(iEntity, duration);
-					effectService.addEffect(blindness, this);
-				}
-			}
-		}
+        for (Entity nearbyEntity : nearbyEntities) {
+            if (Utils.isLivingEntity(nearbyEntity)) {
+                Living l = (Living) nearbyEntity;
+                if (Utils.canDamage(character, l)) {
+                    IEntity iEntity = entityService.get(l);
+                    SkillDamageSource build = new SkillDamageSourceBuilder()
+                            .fromSkill(this)
+                            .setSource(iEntity)
+                            .build();
+                    l.damage(damage, build);
+                    Blindness blindness = new Blindness(iEntity, duration);
+                    effectService.addEffect(blindness, this);
+                }
+            }
+        }
 
-		Vector3d vec = new Vector3d(0, 1, 0);
-		Decorator.circle(character.getEntity().getLocation(), 36, k, location -> {
-			ParticleEffect build = ParticleEffect.builder()
-					.type(ParticleTypes.SPELL)
-					.option(ParticleOptions.COLOR, Color.GRAY)
-					.build();
-			character.getEntity().getLocation().getExtent().spawnParticles(build, location.getPosition().add(vec));
-			build = ParticleEffect.builder()
-					.type(ParticleTypes.MOB_SPELL)
-					.option(ParticleOptions.COLOR, Color.GRAY)
-					.build();
-			character.getEntity().getLocation().getExtent().spawnParticles(build, location.getPosition().add(vec));
-		});
+        Vector3d vec = new Vector3d(0, 1, 0);
+        Decorator.circle(character.getEntity().getLocation(), 36, k, location -> {
+            ParticleEffect build = ParticleEffect.builder()
+                    .type(ParticleTypes.SPELL)
+                    .option(ParticleOptions.COLOR, Color.GRAY)
+                    .build();
+            character.getEntity().getLocation().getExtent().spawnParticles(build, location.getPosition().add(vec));
+            build = ParticleEffect.builder()
+                    .type(ParticleTypes.MOB_SPELL)
+                    .option(ParticleOptions.COLOR, Color.GRAY)
+                    .build();
+            character.getEntity().getLocation().getExtent().spawnParticles(build, location.getPosition().add(vec));
+        });
 
-		skillContext.next(character, info, SkillResult.OK);
-	}
+        skillContext.next(character, info, SkillResult.OK);
+    }
 }

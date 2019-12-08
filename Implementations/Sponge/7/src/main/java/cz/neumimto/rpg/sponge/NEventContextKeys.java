@@ -1,4 +1,4 @@
-package cz.neumimto.rpg;
+package cz.neumimto.rpg.sponge;
 
 import org.spongepowered.api.event.cause.EventContextKey;
 

@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 public class ConfigConverter {
 
     public static final String MARKED_FOR_REMOVAL = "Remove";
+
     private static final String UUID_ = "UUID";
     private static final String NAME = "Name";
     private static final String INFO = "Info";
