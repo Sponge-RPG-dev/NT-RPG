@@ -5,11 +5,8 @@ import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.effects.EffectService;
-import cz.neumimto.rpg.api.entity.IEntity;
-import cz.neumimto.rpg.api.entity.IEntityType;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.exp.ExperienceSources;
-import cz.neumimto.rpg.sponge.damage.SkillDamageSource;
 import cz.neumimto.rpg.sponge.entities.SpongeEntityService;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
@@ -117,7 +114,6 @@ public class EntityLifecycleListener {
                 }
             }
 
-
             if (source != null) {
                 ISpongeCharacter character = characterService.getCharacter(source.getUniqueId());
                 if (character != null) {
@@ -129,38 +125,30 @@ public class EntityLifecycleListener {
                     exp += character.getExperienceBonusFor(targetEntity.getLocation().getExtent().getName(), targetEntity.getType().getId());
                     String experienceSource = targetEntity.getType() == EntityTypes.PLAYER ? ExperienceSources.PVP : ExperienceSources.PVE;
 
-                    if (character.hasParty()) {
-                        PluginConfig pluginConfig = Rpg.get().getPluginConfig();
-                        exp *= pluginConfig.PARTY_EXPERIENCE_MULTIPLIER;
-                        double dist = Math.pow(pluginConfig.PARTY_EXPERIENCE_SHARE_DISTANCE, 2);
-                        Set<ISpongeCharacter> set = new HashSet<>();
-                        for (ISpongeCharacter member : character.getParty().getPlayers()) {
-                            Player player = member.getPlayer();
-                            if (player.getLocation().getPosition()
-                                    .distanceSquared(character.getPlayer().getLocation().getPosition()) <= dist) {
-                                set.add(member);
+                    if (exp > 0) {
+                        if (character.hasParty()) {
+                            PluginConfig pluginConfig = Rpg.get().getPluginConfig();
+                            exp *= pluginConfig.PARTY_EXPERIENCE_MULTIPLIER;
+                            double dist = Math.pow(pluginConfig.PARTY_EXPERIENCE_SHARE_DISTANCE, 2);
+                            Set<ISpongeCharacter> set = new HashSet<>();
+                            for (ISpongeCharacter member : character.getParty().getPlayers()) {
+                                Player player = member.getPlayer();
+                                if (player.getLocation().getPosition()
+                                        .distanceSquared(character.getPlayer().getLocation().getPosition()) <= dist) {
+                                    set.add(member);
+                                }
                             }
+                            exp /= set.size();
+                            for (ISpongeCharacter character1 : set) {
+                                characterService.addExperiences(character1, exp, experienceSource);
+                            }
+                        } else {
+                            characterService.addExperiences(character, exp, experienceSource);
                         }
-                        exp /= set.size();
-                        for (ISpongeCharacter character1 : set) {
-                            characterService.addExperiences(character1, exp, experienceSource);
-                        }
-                    } else {
-                        characterService.addExperiences(character, exp, experienceSource);
                     }
-
                 }
             }
 
-            Optional<SkillDamageSource> sds = event.getCause().first(SkillDamageSource.class);
-            if (sds.isPresent()) {
-                SkillDamageSource skillDamageSource = sds.get();
-                IEntity caster = skillDamageSource.getSourceIEntity();
-                if (caster.getType() == IEntityType.CHARACTER) {
-                    double exp = entityService.getExperiences(event.getTargetEntity().getWorld().getName(), event.getTargetEntity().getType().getId());
-                    characterService.addExperiences((ISpongeCharacter) caster, exp, ExperienceSources.PVE);
-                }
-            }
             entityService.remove(event.getTargetEntity());
         }
     }
