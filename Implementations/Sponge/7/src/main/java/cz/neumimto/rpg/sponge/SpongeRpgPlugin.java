@@ -30,7 +30,6 @@ import cz.neumimto.rpg.persistence.flatfiles.FlatFilesModule;
 import cz.neumimto.rpg.sponge.commands.*;
 import cz.neumimto.rpg.sponge.inventory.data.*;
 import cz.neumimto.rpg.sponge.inventory.data.manipulators.*;
-import cz.neumimto.rpg.sponge.listeners.DebugListener;
 import cz.neumimto.rpg.sponge.skills.NDamageType;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
@@ -139,9 +138,6 @@ public class SpongeRpgPlugin extends Rpg {
                     SpongeCommandService commandService = injector.getInstance(SpongeCommandService.class);
                     commandService.registerStandartCommands();
 
-                    if (Rpg.get().getPluginConfig().DEBUG.isBalance()) {
-                        Sponge.getEventManager().registerListeners(this, injector.getInstance(DebugListener.class));
-                    }
                 }
         );
 
