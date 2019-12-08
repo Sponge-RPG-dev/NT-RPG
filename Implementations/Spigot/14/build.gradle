@@ -28,7 +28,7 @@ dependencies {
     compileOnly "org.spigotmc:plugin-annotations:1.2.2-SNAPSHOT"
     annotationProcessor "org.spigotmc:plugin-annotations:1.2.2-SNAPSHOT"
 
-    compile group: 'org.slf4j:slf4j-api:1.7.28'
+    compile 'org.slf4j:slf4j-api:1.7.28'
     compile project(':Common')
     compile project(':FlatFiles-Persistence')
 
