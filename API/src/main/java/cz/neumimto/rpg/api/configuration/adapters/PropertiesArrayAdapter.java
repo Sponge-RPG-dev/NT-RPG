@@ -18,7 +18,9 @@ public class PropertiesArrayAdapter implements Converter<float[], Config> {
     public float[] convertToField(Config value) {
         int lastId = Rpg.get().getPropertyService().getLastId();
         float[] arr = new float[lastId];
-
+        if (value == null) {
+            return arr;
+        }
         PropertyService propertyService = Rpg.get().getPropertyService();
         for (Map.Entry<String, Object> objectEntry : value.valueMap().entrySet()) {
             String propertyName = ((String) objectEntry.getKey()).toLowerCase();

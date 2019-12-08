@@ -133,7 +133,7 @@ public class SpongeAdminCommands extends BaseCommand {
     }
 
     @Subcommand("reload")
-    public void reload(Player executor) {
+    public void reload() {
         info("[RELOAD] Reading Settings.conf file: ");
         Rpg.get().reloadMainPluginConfig();
         info("[RELOAD] Reading Entity conf files: ");
