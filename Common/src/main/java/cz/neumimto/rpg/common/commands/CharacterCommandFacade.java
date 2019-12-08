@@ -99,7 +99,7 @@ public class CharacterCommandFacade {
 
     public void commandSwitchCharacter(IActiveCharacter current, String nameNext, Consumer<Runnable> syncCallback) {
         if (current != null && current.getName().equalsIgnoreCase(nameNext)) {
-            current.sendMessage(localizationService.translate(LocalizationKeys.ALREADY_CUURENT_CHARACTER));
+            current.sendMessage(localizationService.translate(LocalizationKeys.ALREADY_CURRENT_CHARACTER));
             return;
         }
         CompletableFuture.runAsync(() -> {

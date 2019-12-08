@@ -75,6 +75,86 @@ public class SpongeAdminCommands extends BaseCommand {
 
     @Inject
     private DamageService damageService;
+    private Function<ItemClass, List<Text>> TO_TEXT = weaponClass -> {
+        List<Text> list = new ArrayList<>();
+
+        list.add(Text.of(TextColors.GOLD, weaponClass.getName()));
+        for (Integer property : weaponClass.getProperties()) {
+            list.add(Text.of(TextColors.GRAY, " -> ", propertyService.getNameById(property)));
+        }
+        for (Integer property : weaponClass.getPropertiesMults()) {
+            list.add(Text.of(TextColors.GRAY, " -> ", propertyService.getNameById(property)));
+        }
+        return list;
+    };
+
+    @Subcommand("reload")
+    public void reload() {
+        info("[RELOAD] Saving current state of players");
+        Set<CharacterBase> characterBases = new HashSet<>();
+        for (Player player : Sponge.getServer().getOnlinePlayers()) {
+            IActiveCharacter character = characterService.getCharacter(player);
+            if (character.isStub()) {
+                continue;
+            }
+            characterBases.add(character.getCharacterBase());
+        }
+        for (CharacterBase characterBase : characterBases) {
+            Log.info("[RELOAD] saving character " + characterBase.getLastKnownPlayerName());
+            characterService.save(characterBase);
+        }
+
+        for (Player player : Sponge.getServer().getOnlinePlayers()) {
+            IActiveCharacter character = characterService.getCharacter(player);
+            if (character.isStub()) {
+                continue;
+            }
+            ISpongeCharacter preloadCharacter = characterService.buildDummyChar(player.getUniqueId());
+            characterService.registerDummyChar(preloadCharacter);
+        }
+
+        info("[RELOAD] Reading Settings.conf file: ");
+        Rpg.get().reloadMainPluginConfig();
+        info("[RELOAD] Reading Entity conf files: ");
+        Rpg.get().getEntityService().reload();
+
+        info("[RELOAD] Scripts ");
+        IScriptEngine jsLoader = injector.getInstance(IScriptEngine.class);
+        jsLoader.initEngine();
+        jsLoader.reloadSkills();
+
+        ClassDefinitionDao build = injector.getInstance(ClassDefinitionDao.class);
+        try {
+            info("[RELOAD] Checking class files: ");
+
+            Set<ClassDefinition> classDefinitions = build.parseClassFiles();
+            info("[RELOAD] Class files ok");
+
+            Log.info("[RELOAD] Purging effect caches");
+            effectService.purgeEffectCache();
+            effectService.stopEffectScheduler();
+
+            System.gc();
+
+            effectService.startEffectScheduler();
+
+            Rpg.get().getClassService().loadClasses();
+
+            for (Player player : Sponge.getServer().getOnlinePlayers()) {
+                List<CharacterBase> playersCharacters = characterService.getPlayersCharacters(player.getUniqueId());
+                if (playersCharacters.isEmpty()) {
+                    continue;
+                }
+                CharacterBase max = playersCharacters.stream().max(Comparator.comparing(CharacterBase::getUpdated)).get();
+                ISpongeCharacter activeCharacter = characterService.createActiveCharacter(player.getUniqueId(), max);
+                characterService.setActiveCharacter(player.getUniqueId(), activeCharacter);
+                characterService.invalidateCaches(activeCharacter);
+                characterService.assignPlayerToCharacter(player.getUniqueId());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     @Subcommand("effect add")
     @Description("Adds effect, managed by rpg plugin, to the player")
@@ -89,7 +169,6 @@ public class SpongeAdminCommands extends BaseCommand {
             executor.sendMessage(Text.of(e.getMessage()));
         }
     }
-
 
     @Subcommand("experiences add")
     @Description("Adds N experiences of given source type to a character")
@@ -132,76 +211,6 @@ public class SpongeAdminCommands extends BaseCommand {
         skillContext.next(character, playerSkillContext, skillContext);
     }
 
-    @Subcommand("reload")
-    public void reload() {
-        info("[RELOAD] Reading Settings.conf file: ");
-        Rpg.get().reloadMainPluginConfig();
-        info("[RELOAD] Reading Entity conf files: ");
-        Rpg.get().getEntityService().reload();
-
-        info("[RELOAD] Scripts ");
-        IScriptEngine jsLoader = injector.getInstance(IScriptEngine.class);
-        jsLoader.initEngine();
-        jsLoader.reloadSkills();
-
-        ClassDefinitionDao build = injector.getInstance(ClassDefinitionDao.class);
-        try {
-            info("[RELOAD] Checking class files: ");
-
-            Set<ClassDefinition> classDefinitions = build.parseClassFiles();
-            info("[RELOAD] Class files ok");
-
-            info("[RELOAD] Saving current state of players");
-            Set<CharacterBase> characterBases = new HashSet<>();
-            for (Player player : Sponge.getServer().getOnlinePlayers()) {
-                IActiveCharacter character = characterService.getCharacter(player);
-                if (character.isStub()) {
-                    continue;
-                }
-                characterBases.add(character.getCharacterBase());
-            }
-
-            Log.info("[RELOAD] Purging effect caches");
-            effectService.purgeEffectCache();
-            effectService.stopEffectScheduler();
-
-            for (Player player : Sponge.getServer().getOnlinePlayers()) {
-                IActiveCharacter character = characterService.getCharacter(player);
-                if (character.isStub()) {
-                    continue;
-                }
-                ISpongeCharacter preloadCharacter = characterService.buildDummyChar(player.getUniqueId());
-                characterService.registerDummyChar(preloadCharacter);
-            }
-
-            for (CharacterBase characterBase : characterBases) {
-                Log.info("[RELOAD] saving character " + characterBase.getLastKnownPlayerName());
-                characterService.save(characterBase);
-            }
-
-            System.gc();
-
-            effectService.startEffectScheduler();
-            Rpg.get().getClassService().loadClasses();
-
-            Comparator<CharacterBase> cmp = Comparator.comparing(CharacterBase::getUpdated);
-
-            for (Player player : Sponge.getServer().getOnlinePlayers()) {
-                List<CharacterBase> playersCharacters = characterService.getPlayersCharacters(player.getUniqueId());
-                if (playersCharacters.isEmpty()) {
-                    continue;
-                }
-                CharacterBase max = playersCharacters.stream().max(cmp).get();
-                ISpongeCharacter activeCharacter = characterService.createActiveCharacter(player.getUniqueId(), max);
-                characterService.setActiveCharacter(player.getUniqueId(), activeCharacter);
-                characterService.invalidateCaches(activeCharacter);
-                characterService.assignPlayerToCharacter(player.getUniqueId());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     @Subcommand("add-class")
     public void addClassToCharacterCommand(Player executor, OnlinePlayer target, ClassDefinition klass) {
         ISpongeCharacter character = characterService.getCharacter(target.player);
@@ -212,7 +221,6 @@ public class SpongeAdminCommands extends BaseCommand {
             executor.sendMessage(TextHelper.parse(actionResult.getMessage()));
         }
     }
-
 
     @Subcommand("inspect property")
     public void inspectPropertyCommand(Player executor, OnlinePlayer target, String property) {
@@ -316,18 +324,5 @@ public class SpongeAdminCommands extends BaseCommand {
             executor.sendMessage(Text.of(TextColors.GRAY, "   - ", nameById, ":", entityService.getEntityProperty(character, integer)));
         }
     }
-
-    private Function<ItemClass, List<Text>> TO_TEXT = weaponClass -> {
-        List<Text> list = new ArrayList<>();
-
-        list.add(Text.of(TextColors.GOLD, weaponClass.getName()));
-        for (Integer property : weaponClass.getProperties()) {
-            list.add(Text.of(TextColors.GRAY, " -> ", propertyService.getNameById(property)));
-        }
-        for (Integer property : weaponClass.getPropertiesMults()) {
-            list.add(Text.of(TextColors.GRAY, " -> ", propertyService.getNameById(property)));
-        }
-        return list;
-    };
 
 }

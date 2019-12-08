@@ -1,5 +1,7 @@
 package cz.neumimto.rpg.sponge.gui;
 
+import static cz.neumimto.rpg.sponge.gui.CatalogTypeItemStackBuilder.Block;
+import static cz.neumimto.rpg.sponge.gui.CatalogTypeItemStackBuilder.Item;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
@@ -49,9 +51,6 @@ import org.spongepowered.api.text.format.TextStyles;
 
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static cz.neumimto.rpg.sponge.gui.CatalogTypeItemStackBuilder.Block;
-import static cz.neumimto.rpg.sponge.gui.CatalogTypeItemStackBuilder.Item;
 
 /**
  * Created by ja on 29.12.2016.
@@ -156,7 +155,7 @@ public class GuiHelper {
 
         makeBorder(i, DyeColors.WHITE);
 
-        for (String type : SpongeRpgPlugin.pluginConfig.CLASS_TYPES.keySet()) {
+        for (String type : Rpg.get().getPluginConfig().CLASS_TYPES.keySet()) {
             i.offer(createClassTypeDefinitionCommand(type));
         }
 
@@ -170,7 +169,7 @@ public class GuiHelper {
                 Text.builder(type)
                         .color(toTextColor(Rpg.get().getPluginConfig().CLASS_TYPES.get(type).getPrimaryColor()))
                         .build());
-        i.offer(new InventoryCommandItemMenuData("classes " + type));
+        i.offer(new InventoryCommandItemMenuData("show classes " + type));
         return i;
     }
 
@@ -185,13 +184,13 @@ public class GuiHelper {
     }
 
     private static ItemStack createArmorCommand(ClassDefinition group) {
-        ItemStack i = command("armor " + group.getName(),translate(LocalizationKeys.ARMOR), ItemTypes.DIAMOND_CHESTPLATE);
+        ItemStack i = command("armor " + group.getName(), translate(LocalizationKeys.ARMOR), ItemTypes.DIAMOND_CHESTPLATE);
         i.offer(Keys.ITEM_LORE, Collections.singletonList(translate(LocalizationKeys.ARMOR_MENU_HELP)));
         return i;
     }
 
     private static ItemStack createWeaponCommand(ClassDefinition group) {
-        ItemStack i = command("weapons " + group.getName(),translate(LocalizationKeys.WEAPONS), ItemTypes.DIAMOND_SWORD);
+        ItemStack i = command("weapons " + group.getName(), translate(LocalizationKeys.WEAPONS), ItemTypes.DIAMOND_SWORD);
         i.offer(Keys.ITEM_LORE, Collections.singletonList(translate(LocalizationKeys.WEAPONS_MENU_HELP)));
         return i;
     }
@@ -507,13 +506,12 @@ public class GuiHelper {
     }
 
 
-
-    public static ItemStack rpgItemTypeToItemStack(SpongeRpgItemType configRPGItemType, ClassItem classItem)  {
+    public static ItemStack rpgItemTypeToItemStack(SpongeRpgItemType configRPGItemType, ClassItem classItem) {
         ItemStack q = itemStack(configRPGItemType.getItemType());
         Text lore = Text.builder().append(translate(LocalizationKeys.ITEM_DAMAGE))
                 .append(Text.builder(": " + classItem.getDamage())
                         .style(TextStyles.BOLD)
-                        .color(((SpongeDamageService)Rpg.get().getDamageService()).getColorByDamage(classItem.getDamage()))
+                        .color(((SpongeDamageService) Rpg.get().getDamageService()).getColorByDamage(classItem.getDamage()))
                         .build())
                 .build();
         q.offer(Keys.ITEM_LORE, Collections.singletonList(lore));

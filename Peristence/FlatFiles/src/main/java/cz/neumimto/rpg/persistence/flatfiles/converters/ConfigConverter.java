@@ -21,6 +21,8 @@ public class ConfigConverter {
     private static final String LASTNAME = "LastPlayerName";
     private static final String RESET_SKILL = "CanResetSkills";
     private static final String LAST_RESET = "LastReset";
+    private static final String CHAR_CREATED = "Created";
+    private static final String CHAR_UPDATED = "Updated";
     private static final String LAST_POSITION = "LastPosition";
     private static final String AttributePoints = "AttributePoints";
     private static final String AttributePointsSpent = "AttributePointsSpent";
@@ -61,6 +63,12 @@ public class ConfigConverter {
 
         Date lastReset = c.getLastReset();
         config.set(LAST_RESET, dateToText(lastReset));
+
+        Date created = c.getCreated();
+        config.set(CHAR_CREATED, dateToText(created));
+
+        Date updated = c.getUpdated();
+        config.set(CHAR_UPDATED, dateToText(updated));
 
         String lastPosition = String.format("%s;%s;%s;%s", c.getWorld(), c.getX(), c.getY(), c.getZ());
         config.set(LAST_POSITION, lastPosition);
@@ -157,22 +165,6 @@ public class ConfigConverter {
         return config;
     }
 
-    private static SimpleDateFormat getDateFormat() {
-        return new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
-    }
-
-    private static String dateToText(Date created) {
-        return getDateFormat().format(created);
-    }
-
-    private static Date textToDate(String text) {
-        try {
-            return getDateFormat().parse(text);
-        } catch (ParseException e) {
-            throw new RuntimeException("Could not parse date " + text);
-        }
-    }
-
     public static CharacterBase fromConfig(FileConfig config) {
         CharacterBase characterBase = new CharacterBaseImpl();
         characterBase.setUuid(UUID.fromString(config.get(UUID_)));
@@ -182,12 +174,12 @@ public class ConfigConverter {
 
         characterBase.setCanResetSkills(config.get(RESET_SKILL));
 
-        String string = config.get(LAST_RESET);
+        characterBase.setLastReset(textToDate(config.get(LAST_RESET)));
+        characterBase.setCreated(textToDate(config.get(CHAR_CREATED)));
+        characterBase.setUpdated(textToDate(config.get(CHAR_UPDATED)));
 
-        characterBase.setLastReset(textToDate(string));
-
-        string = config.get(LAST_POSITION);
-        String[] split = string.split(";");
+        String position = config.get(LAST_POSITION);
+        String[] split = position.split(";");
         characterBase.setWorld(split[0]);
         characterBase.setX(Integer.parseInt(split[1]));
         characterBase.setY(Integer.parseInt(split[2]));
@@ -274,5 +266,21 @@ public class ConfigConverter {
         characterClass.setCharacterBase(character);
 
         return characterClass;
+    }
+
+    private static SimpleDateFormat getDateFormat() {
+        return new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+    }
+
+    private static String dateToText(Date created) {
+        return getDateFormat().format(created);
+    }
+
+    private static Date textToDate(String text) {
+        try {
+            return getDateFormat().parse(text);
+        } catch (ParseException e) {
+            throw new RuntimeException("Could not parse date " + text);
+        }
     }
 }

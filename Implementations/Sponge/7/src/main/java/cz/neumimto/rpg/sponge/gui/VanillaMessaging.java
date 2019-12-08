@@ -18,15 +18,13 @@
 
 package cz.neumimto.rpg.sponge.gui;
 
+import static cz.neumimto.rpg.sponge.gui.GuiHelper.*;
 import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
-import cz.neumimto.rpg.api.effects.EffectStatusType;
-import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.api.effects.IEffectContainer;
-import cz.neumimto.rpg.api.effects.EffectService;
+import cz.neumimto.rpg.api.effects.*;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.gui.IPlayerMessage;
@@ -52,10 +50,7 @@ import cz.neumimto.rpg.sponge.effects.common.def.BossBarExpNotifier;
 import cz.neumimto.rpg.sponge.effects.common.def.ManaBarNotifier;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
-import cz.neumimto.rpg.sponge.inventory.data.InventoryCommandItemMenuData;
-import cz.neumimto.rpg.sponge.inventory.data.MenuInventoryData;
-import cz.neumimto.rpg.sponge.inventory.data.NKeys;
-import cz.neumimto.rpg.sponge.inventory.data.SkillTreeInventoryViewControllsData;
+import cz.neumimto.rpg.sponge.inventory.data.*;
 import cz.neumimto.rpg.sponge.inventory.data.manipulators.SkillTreeNode;
 import cz.neumimto.rpg.sponge.inventory.runewords.RWService;
 import cz.neumimto.rpg.sponge.items.SpongeRpgItemType;
@@ -88,13 +83,11 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 import org.spongepowered.api.util.Color;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-
-import static cz.neumimto.rpg.sponge.gui.GuiHelper.*;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Created by NeumimTo on 6.8.2015.
@@ -288,14 +281,14 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
             List<CharacterListModel> list = new ArrayList<>();
             for (CharacterBase playersCharacter : playersCharacters) {
                 Set<CharacterClass> characterClasses = playersCharacter.getCharacterClasses();
-                Integer pcExp = 0;
+                int charLevel = 0;
                 for (CharacterClass characterClass : characterClasses) {
                     ClassDefinition classDefinitionByName = classService.getClassDefinitionByName(characterClass.getName());
                     if (classDefinitionByName == null) {
                         continue;
                     }
                     if (classDefinitionByName.getClassType().equalsIgnoreCase(SpongeRpgPlugin.pluginConfig.PRIMARY_CLASS_TYPE)) {
-                        pcExp = characterClass.getLevel();
+                        charLevel = characterClass.getLevel();
                         break;
                     }
                 }
@@ -303,7 +296,7 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
                 list.add(new CharacterListModel(
                         playersCharacter.getName(),
                         collect,
-                        pcExp
+                        charLevel
                 ));
             }
 
@@ -834,22 +827,22 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
 
         ItemStack itemStack = GuiHelper.itemStack(ItemTypes.BOOK);
         itemStack.offer(Keys.DISPLAY_NAME, translate(LocalizationKeys.ATTRIBUTES));
-        itemStack.offer(new InventoryCommandItemMenuData("char attributes"));
+        itemStack.offer(new InventoryCommandItemMenuData("character attributes"));
         i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(1, 1))).offer(itemStack);
 
         itemStack = GuiHelper.itemStack(ItemTypes.ARMOR_STAND);
         itemStack.offer(Keys.DISPLAY_NAME, translate(LocalizationKeys.CHARACTER_CLASSES));
-        itemStack.offer(new InventoryCommandItemMenuData("char classes"));
+        itemStack.offer(new InventoryCommandItemMenuData("character classes"));
         i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(2, 1))).offer(itemStack);
 
         itemStack = GuiHelper.itemStack(ItemTypes.IRON_CHESTPLATE);
         itemStack.offer(Keys.DISPLAY_NAME, translate(LocalizationKeys.CHARACTER_ARMOR));
-        itemStack.offer(new InventoryCommandItemMenuData("char armor 0"));
+        itemStack.offer(new InventoryCommandItemMenuData("character armor 0"));
         i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(3, 1))).offer(itemStack);
 
         itemStack = GuiHelper.itemStack(ItemTypes.IRON_AXE);
         itemStack.offer(Keys.DISPLAY_NAME, translate(LocalizationKeys.CHARACTER_WEAPONS));
-        itemStack.offer(new InventoryCommandItemMenuData("char weapon 0"));
+        itemStack.offer(new InventoryCommandItemMenuData("character weapon 0"));
         i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(4, 1))).offer(itemStack);
 
         character.getPlayer().openInventory(i);
@@ -877,7 +870,7 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
                                             createAttributeRow(character, inventory);
                                             createCommitAttributeTxButton(commitSP, attributePoints, inventory);
                                         }
-                                            ,
+                                        ,
                                         1L,
                                         TimeUnit.MILLISECONDS
                                 );
@@ -918,7 +911,7 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
 
     public void createAttributeRow(ISpongeCharacter character, Inventory i) {
         Collection<AttributeConfig> allOf = Rpg.get().getPropertyService().getAttributes().values();
-        int attributePoints = character.getAttributePoints() ;
+        int attributePoints = character.getAttributePoints();
         for (Integer value : character.getAttributesTransaction().values()) {
             attributePoints -= value;
         }

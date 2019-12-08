@@ -1,10 +1,7 @@
 package cz.neumimto.rpg.sponge.commands;
 
 import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.CommandPermission;
-import co.aikar.commands.annotation.Optional;
-import co.aikar.commands.annotation.Subcommand;
+import co.aikar.commands.annotation.*;
 import co.aikar.commands.sponge.contexts.OnlinePlayer;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
@@ -82,15 +79,6 @@ public class SpongeInfoCommands extends BaseCommand {
         Gui.sendListOfCharacters(target, target.getCharacterBase());
     }
 
-    @Subcommand("character")
-    @CommandPermission("%.player.characters.other")
-    public void showOtherPlayerCharactersCommand(Player executor, OnlinePlayer target) {
-        IActiveCharacter targett = characterService.getCharacter(executor);
-        IActiveCharacter targett1 = characterService.getCharacter(target.player);
-        Gui.sendListOfCharacters(targett, targett1.getCharacterBase());
-    }
-
-
     @Subcommand("runeword")
     @CommandPermission("%.player.characters.other")
     public void showRunewordInfoCommand(Player executor, RuneWord runeword) {
@@ -113,9 +101,7 @@ public class SpongeInfoCommands extends BaseCommand {
     @Subcommand("runeword required-classes")
     public void displayRunewordRequiredClassesCommand(Player executor, RuneWord runeWord) {
         ISpongeCharacter character = characterService.getCharacter(executor);
-
         messaging.displayRunewordRequiredGroups(character, runeWord);
-
     }
 
     @Subcommand("runeword blocked-classes")

@@ -149,8 +149,9 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
                 info("Automatically created character for a player " + id + ", " + playerName);
             }
 
-            if (pluginConfig.PLAYER_AUTO_CHOOSE_LAST_PLAYED_CHAR || playerCharacters.size() == 1) {
-                T activeCharacter = createActiveCharacter(id, playerCharacters.get(0));
+            if (playerCharacters.size() > 0 && (pluginConfig.PLAYER_AUTO_CHOOSE_LAST_PLAYED_CHAR || playerCharacters.size() == 1)) {
+                CharacterBase latest = playerCharacters.stream().max(Comparator.comparing(CharacterBase::getUpdated)).get();
+                T activeCharacter = createActiveCharacter(id, latest);
                 activeCharacter.getCharacterBase().setLastKnownPlayerName(playerName);
                 Rpg.get().scheduleSyncLater(() -> {
                     addCharacter(id, activeCharacter);

@@ -22,7 +22,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-@CommandAlias("char|c")
+@CommandAlias("character|char|c")
 public class SpongeCharacterCommands extends BaseCommand {
 
     @Inject
@@ -63,6 +63,12 @@ public class SpongeCharacterCommands extends BaseCommand {
     public void chooseClassCommand(Player executor, ClassDefinition classDefinition) {
         IActiveCharacter character = characterService.getCharacter(executor);
         characterCommandFacade.commandChooseClass(character, classDefinition);
+    }
+
+    @Subcommand("classes")
+    public void displayClassesCommand(Player executor) {
+        IActiveCharacter character = characterService.getCharacter(executor);
+        Gui.sendClassTypes(character);
     }
 
     @Subcommand("armor")
