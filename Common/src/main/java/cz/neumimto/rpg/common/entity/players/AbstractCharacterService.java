@@ -933,7 +933,7 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
             inventoryService.initializeCharacterInventory(character);
         }
 
-        Gui.showExpChange(character, aClass.getClassDefinition().getName(), exp);
+        if (exp > 0) Gui.showExpChange(character, aClass.getClassDefinition().getName(), exp);
 
         CompletableFuture.runAsync(() -> {
             info("Saving CharacterClass " + characterClass.getId(), DebugLevel.DEVELOP);

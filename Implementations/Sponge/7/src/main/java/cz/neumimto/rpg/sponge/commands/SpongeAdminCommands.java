@@ -194,7 +194,7 @@ public class SpongeAdminCommands extends BaseCommand {
         }
     }
 
-    @Subcommand("effect add")
+    @Subcommand("effect")
     @Description("Adds effect, managed by rpg plugin, to the player")
     public void effectAddCommand(Player executor, OnlinePlayer target, IGlobalEffect effect, long duration, @Default("{}") String[] args) {
         String data = String.join("", args);
@@ -208,7 +208,7 @@ public class SpongeAdminCommands extends BaseCommand {
         }
     }
 
-    @Subcommand("experiences add")
+    @Subcommand("exp")
     @Description("Adds N experiences of given source type to a character")
     public void addExperiencesCommand(Player executor, OnlinePlayer target, double amount, @Optional ClassDefinition classDefinition, @Optional String source) {
         ISpongeCharacter character = characterService.getCharacter(target.player);
