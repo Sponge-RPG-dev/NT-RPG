@@ -139,7 +139,7 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
             long k = System.currentTimeMillis();
             List<CharacterBase> playerCharacters = playerDao.getPlayersCharacters(id);
             k = System.currentTimeMillis() - k;
-            info("Finished loading of player data" + id + ", loaded " + playerCharacters.size() + " character   [" + k + "]ms");
+            info("Finished loading of player " + id + ", loaded " + playerCharacters.size() + " character   [" + k + "]ms");
             PluginConfig pluginConfig = Rpg.get().getPluginConfig();
             if (playerCharacters.isEmpty() && pluginConfig.CREATE_FIRST_CHAR_AFTER_LOGIN) {
                 CharacterBase cb = createCharacterBase(playerName, id, playerName);
@@ -154,9 +154,9 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
                 T activeCharacter = createActiveCharacter(id, latest);
                 activeCharacter.getCharacterBase().setLastKnownPlayerName(playerName);
                 Rpg.get().scheduleSyncLater(() -> {
-                    addCharacter(id, activeCharacter);
+                    setActiveCharacter(id, activeCharacter);
+                    invalidateCaches(activeCharacter);
                     assignPlayerToCharacter(id);
-                    initActiveCharacter(activeCharacter);
                 });
             }
         }, Rpg.get().getAsyncExecutor());
@@ -1156,7 +1156,6 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
 
         PlayerClassData playerClassData = new PlayerClassData(klass, cc);
         character.addClass(playerClassData);
-
 
         scheduleNextTick(() -> {
             recalculateProperties(character);

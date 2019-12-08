@@ -27,13 +27,15 @@ import java.util.Date;
  */
 public abstract class TimestampEntityImpl implements TimestampEntity {
 
-    private Date updated;
     private Date created;
+    private Date updated;
 
+    @Override
     public void onCreate() {
         updated = created = new Date();
     }
 
+    @Override
     public void onUpdate() {
         updated = new Date();
     }

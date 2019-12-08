@@ -162,6 +162,7 @@ public class Utils {
      * @param player
      */
     public static void resetPlayerToDefault(Player player) {
+        player.offer(Keys.MAX_HEALTH, 20.0D);
         player.offer(Keys.WALKING_SPEED, PropertyServiceImpl.WALKING_SPEED);
     }
 

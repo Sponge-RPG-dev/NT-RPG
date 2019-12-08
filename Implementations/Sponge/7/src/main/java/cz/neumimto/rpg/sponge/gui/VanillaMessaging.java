@@ -138,7 +138,6 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
             ItemType type = Sponge.getRegistry().getType(ItemType.class, split[1]).orElse(ItemTypes.BARRIER);
 
             controlls.put(key, new SkillTreeInterfaceModel(Integer.parseInt(split[3]), type, split[2], (short) 0));
-
         }
     }
 
@@ -275,7 +274,7 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
     public void sendListOfCharacters(final ISpongeCharacter player, CharacterBase currentlyCreated) {
         PaginationService paginationService = Sponge.getServiceManager().provide(PaginationService.class).get();
         PaginationList.Builder builder = paginationService.builder();
-        SpongeRpgPlugin.asyncExecutor.execute(() -> {
+        Rpg.get().getAsyncExecutor().execute(() -> {
 
             List<CharacterBase> playersCharacters = characterService.getPlayersCharacters(player.getPlayer().getUniqueId());
             List<CharacterListModel> list = new ArrayList<>();
@@ -287,7 +286,7 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
                     if (classDefinitionByName == null) {
                         continue;
                     }
-                    if (classDefinitionByName.getClassType().equalsIgnoreCase(SpongeRpgPlugin.pluginConfig.PRIMARY_CLASS_TYPE)) {
+                    if (classDefinitionByName.getClassType().equalsIgnoreCase(Rpg.get().getPluginConfig().PRIMARY_CLASS_TYPE)) {
                         charLevel = characterClass.getLevel();
                         break;
                     }

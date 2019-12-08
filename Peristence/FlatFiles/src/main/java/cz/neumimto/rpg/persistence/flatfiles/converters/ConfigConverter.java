@@ -31,21 +31,20 @@ public class ConfigConverter {
     private static final String ATTRIBUTES = "Attributes";
     private static final String INVENTORY_EQUIP_ORDER = "InventoryEquipOrder";
     private static final String HEALTH_SCALING = "HealthScale";
+
     private static final String ATTRIBUTE_NAME = "Name";
     private static final String ATTRIBUTE_LEVEL = "Level";
+
     private static final String CLASS_NAME = "Name";
     private static final String CLASS_EXPERIENCES = "Experiences";
     private static final String CLASS_LEVEL = "Level";
     private static final String CLASS_SKILLPOINTS = "SkillPoints";
     private static final String CLASS_SKILLPOINTS_SPENT = "SkillPointsSpent";
-    private static final String CLASS_CREATED = "Created";
-    private static final String CLASS_UPDATED = "Updated";
+
     private static final String SKILL_ID = "Skill";
     private static final String SKILL_CD = "Cooldown";
     private static final String SKILL_FROM_CLASS = "FromClass";
     private static final String SKILL_LEVEL = "Level";
-    private static final String SKILL_CREATED = "Created";
-    private static final String SKILL_UPDATED = "Updated";
 
     public static Config toConfig(CharacterBase c, FileConfig config) {
 
@@ -130,12 +129,6 @@ public class ConfigConverter {
         int usp = c.getUsedSkillPoints();
         config.set(CLASS_SKILLPOINTS_SPENT, usp);
 
-        Date created = c.getCreated();
-        config.set(CLASS_CREATED, dateToText(created));
-
-        Date updated = c.getUpdated();
-        config.set(CLASS_UPDATED, dateToText(updated));
-
         return config;
     }
 
@@ -155,12 +148,6 @@ public class ConfigConverter {
 
         int level = characterSkill.getLevel();
         config.set(SKILL_LEVEL, level);
-
-        Date created = characterSkill.getCreated();
-        config.set(SKILL_CREATED, dateToText(created));
-
-        Date updated = characterSkill.getUpdated();
-        config.set(SKILL_UPDATED, dateToText(updated));
 
         return config;
     }
@@ -188,11 +175,13 @@ public class ConfigConverter {
         characterBase.setAttributePoints(config.get(AttributePoints));
         characterBase.setAttributePointsSpent(config.get(AttributePointsSpent));
 
-        List<Config> config1 = config.get(SKILLS);
-        characterBase.setCharacterSkills(skillsFromConfig(config1, characterBase));
+        List<Config> skills = config.get(SKILLS);
+        characterBase.setCharacterSkills(skillsFromConfig(skills, characterBase));
+
         List<Config> classes = config.get(CLASSES);
         characterBase.setCharacterClasses(classesFromConfig(classes, characterBase));
-        config.get(ATTRIBUTES);
+
+        List<Config> attributes = config.get(ATTRIBUTES);
 
         //FIXME
         /*List<EquipedSlot> iso = new ArrayList<>();
@@ -246,23 +235,19 @@ public class ConfigConverter {
         }
 
         characterSkill.setLevel(config.getInt(SKILL_LEVEL));
-        characterSkill.setCreated(textToDate(config.get(SKILL_CREATED)));
-        characterSkill.setUpdated(textToDate(config.get(SKILL_UPDATED)));
 
         return characterSkill;
     }
 
     private static CharacterClass classFromConfig(Config config, CharacterBase character) {
         CharacterClass characterClass = new CharacterClassImpl();
-        characterClass.setId(-1L);
+
         characterClass.setName(config.get(CLASS_NAME));
         characterClass.setExperiences(((Number) config.get(CLASS_EXPERIENCES)).doubleValue());
         characterClass.setLevel(config.get(CLASS_LEVEL));
         characterClass.setSkillPoints(config.get(CLASS_SKILLPOINTS));
         characterClass.setUsedSkillPoints(config.get(CLASS_SKILLPOINTS_SPENT));
 
-        characterClass.setCreated(textToDate(config.get(CLASS_CREATED)));
-        characterClass.setCreated(textToDate(config.get(CLASS_UPDATED)));
         characterClass.setCharacterBase(character);
 
         return characterClass;
