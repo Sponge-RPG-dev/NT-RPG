@@ -21,6 +21,7 @@ import cz.neumimto.rpg.api.entity.players.CharacterService;
 import cz.neumimto.rpg.api.entity.players.parties.PartyService;
 import cz.neumimto.rpg.api.events.EventFactoryService;
 import cz.neumimto.rpg.api.exp.ExperienceService;
+import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.inventory.InventoryService;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.localization.Arg;
@@ -79,6 +80,8 @@ public abstract class AbstractRpg implements RpgApi {
     private ExperienceService experienceService;
     @Inject
     private Injector injector;
+    @Inject
+    private Gui gui;
 
     public AbstractRpg(String workingDirectory) {
         this.workingDirectory = workingDirectory;
