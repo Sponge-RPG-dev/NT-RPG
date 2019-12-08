@@ -51,7 +51,7 @@ public class SpongeCharacterCommands extends BaseCommand {
     @Subcommand("create")
     public void createCharacter(Player executor, String name) {
         UUID uuid = executor.getUniqueId();
-        characterCommandFacade.commandCreateCharacter(uuid, name, actionResult -> executor.sendMessage(Text.of(actionResult.getMessage())));
+        characterCommandFacade.commandCreateCharacter(uuid, name, executor.getName(), actionResult -> executor.sendMessage(Text.of(actionResult.getMessage())));
     }
 
     @Subcommand("delete")

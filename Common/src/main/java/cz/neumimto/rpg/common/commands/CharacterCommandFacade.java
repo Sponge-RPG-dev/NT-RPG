@@ -75,7 +75,7 @@ public class CharacterCommandFacade {
         return true;
     }
 
-    public void commandCreateCharacter(UUID uuid, String name, Consumer<ActionResult> actionResultConsumer) {
+    public void commandCreateCharacter(UUID uuid, String name, String playerName, Consumer<ActionResult> actionResultConsumer) {
         CompletableFuture.runAsync(() -> {
             int i = characterService.canCreateNewCharacter(uuid, name);
             if (i == 1) {
@@ -83,7 +83,7 @@ public class CharacterCommandFacade {
             } else if (i == 2) {
                 actionResultConsumer.accept(ActionResult.withErrorMessage(localizationService.translate(LocalizationKeys.CHARACTER_EXISTS)));
             } else if (i == 0) {
-                CharacterBase characterBase = characterService.createCharacterBase(name, uuid);
+                CharacterBase characterBase = characterService.createCharacterBase(name, uuid, playerName);
 
                 characterService.create(characterBase);
 

@@ -81,7 +81,7 @@ public class CharacterCommandTests {
     @Test
     public void testCharacterCreated() {
         CountDownLatch latch = new CountDownLatch(1);
-        characterCommandFacade.commandCreateCharacter(UUID.randomUUID(), "test", actionResult -> {
+        characterCommandFacade.commandCreateCharacter(UUID.randomUUID(), "test","", actionResult -> {
             Log.info(actionResult.getMessage());
             Assertions.assertTrue(actionResult.isOk());
             latch.countDown();

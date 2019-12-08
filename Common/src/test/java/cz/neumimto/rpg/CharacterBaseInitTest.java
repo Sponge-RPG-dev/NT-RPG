@@ -26,7 +26,7 @@ public class CharacterBaseInitTest {
 
     @Test
     public void testInitialization() {
-        CharacterBase test = characterService.createCharacterBase("test", UUID.randomUUID());
+        CharacterBase test = characterService.createCharacterBase("test", UUID.randomUUID(), "plName");
         Method[] declaredMethods = CharacterBase.class.getDeclaredMethods();
         for (Method declaredMethod : declaredMethods) {
             if (declaredMethod.getName().equals("getVersion"))

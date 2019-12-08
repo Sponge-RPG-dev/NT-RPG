@@ -156,7 +156,7 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
             info("Finished loading of player data" + id + ", loaded " + playerCharacters.size() + " character   [" + k + "]ms");
             PluginConfig pluginConfig = Rpg.get().getPluginConfig();
             if (playerCharacters.isEmpty() && pluginConfig.CREATE_FIRST_CHAR_AFTER_LOGIN) {
-                CharacterBase cb = createCharacterBase(playerName, id);
+                CharacterBase cb = createCharacterBase(playerName, id, playerName);
                 create(cb);
 
                 playerCharacters = Collections.singletonList(cb);
@@ -181,13 +181,25 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
      * @return Initialized CharacterBase in the default state, The entity is not persisted yet
      */
     @Override
-    public CharacterBase createCharacterBase(String name, UUID uuid) {
+    public CharacterBase createCharacterBase(String name, UUID uuid, String playerName) {
         CharacterBase characterBase = createCharacterBase();
         characterBase.setName(name);
         characterBase.setUuid(uuid);
         PluginConfig pluginConfig = Rpg.get().getPluginConfig();
         characterBase.setAttributePoints(pluginConfig.ATTRIBUTEPOINTS_ON_START);
         characterBase.setAttributePointsSpent(0);
+        characterBase.setInfo("");
+        characterBase.setCanResetSkills(false);
+        characterBase.setLastKnownPlayerName(playerName);
+        Date inc = new Date();
+        characterBase.setLastReset(inc);
+        characterBase.setCreated(inc);
+        characterBase.setCharacterSkills(new HashSet<>());
+        characterBase.setCharacterClasses(new HashSet<>());
+        characterBase.setBaseCharacterAttribute(new HashSet<>());
+        characterBase.setInventoryEquipSlotOrder(new ArrayList<>());
+        characterBase.setMarkedForRemoval(false);
+        characterBase.setWorld("");
         return characterBase;
     }
 
