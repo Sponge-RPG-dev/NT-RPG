@@ -46,10 +46,7 @@ import org.spongepowered.api.event.item.inventory.ChangeInventoryEvent;
 import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.event.item.inventory.DropItemEvent;
 import org.spongepowered.api.item.ItemTypes;
-import org.spongepowered.api.item.inventory.Carrier;
-import org.spongepowered.api.item.inventory.Inventory;
-import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.item.inventory.Slot;
+import org.spongepowered.api.item.inventory.*;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
@@ -57,10 +54,10 @@ import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
 import org.spongepowered.api.item.inventory.type.CarriedInventory;
 import org.spongepowered.api.util.Tristate;
 
-import javax.inject.Inject;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import javax.inject.Inject;
 
 
 /**
@@ -70,29 +67,26 @@ import java.util.Optional;
 @ResourceLoader.ListenerClass
 public class InventoryListener {
 
+    private final static int OFFHAND_SLOT_ID = 40;
+
     @Inject
     private SpongeCharacterService characterService;
-
     @Inject
     private InventoryHandler inventoryHandler;
-
     @Inject
     private InventoryService inventoryService;
-
     @Inject
     private SpongeItemService itemService;
-
-    private final static int OFFHAND_SLOT_ID = 40;
 
     @Listener
     @IsCancelled(Tristate.FALSE)
     public void onItemPickup(ChangeInventoryEvent.Pickup event, @Root Player player) {
-        player.getInventory();
-        Inventory targetInventory = player.getInventory();
-        IActiveCharacter character = characterService.getCharacter(player);
+        ISpongeCharacter character = characterService.getCharacter(player);
         if (character.isStub()) {
             return;
         }
+
+        Inventory targetInventory = player.getInventory();
 
         SlotTransaction slotTransaction = event.getTransactions().get(0);
         Map<Class<?>, RpgInventory> managedInventory = character.getManagedInventory();
@@ -108,12 +102,9 @@ public class InventoryListener {
                 Optional<RpgItemStack> rpgItemStack = itemService.getRpgItemStack(slotTransaction.getFinal().createStack());
                 rpgItemStack.ifPresent(itemStack -> {
                     ManagedSlot managedSlot = rpgInventory.getManagedSlots().get(value);
-                    if (inventoryHandler.isValidItemForSlot(managedSlot, itemStack) &&
-                            inventoryHandler.handleCharacterEquipActionPre(character, managedSlot, itemStack)) {
+                    if (inventoryHandler.handleCharacterEquipActionPre(character, managedSlot, itemStack)) {
                         inventoryHandler.handleCharacterEquipActionPost(character, managedSlot, itemStack);
                         character.setRequiresDamageRecalculation(true);
-                    } else {
-                        event.setCancelled(true);
                     }
                 });
             }
@@ -123,14 +114,15 @@ public class InventoryListener {
     @Listener
     @IsCancelled(Tristate.FALSE)
     public void onItemDrop(DropItemEvent.Pre event, @Root Player player) {
+        ISpongeCharacter character = characterService.getCharacter(player);
+        if (character.isStub()) {
+            return;
+        }
+
         if (!player.getOpenInventory().isPresent()) {
             return;
         }
 
-        IActiveCharacter character = characterService.getCharacter(player);
-        if (character.isStub()) {
-            return;
-        }
         CarriedInventory<? extends Carrier> inventory = player.getInventory();
         Hotbar query = inventory.query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
         int selectedSlotIndex = query.getSelectedSlotIndex();
@@ -149,8 +141,12 @@ public class InventoryListener {
 
 
     @Listener
-    public void onHotbarInteract(HandInteractEvent event, @First(typeFilter = Player.class) Player player) {
-        IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
+    public void onHotbarInteract(HandInteractEvent event, @First Player player) {
+        ISpongeCharacter character = characterService.getCharacter(player);
+        if (character.isStub()) {
+            return;
+        }
+
         CarriedInventory<? extends Carrier> inventory = player.getInventory();
 
         Hotbar query = inventory.query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
