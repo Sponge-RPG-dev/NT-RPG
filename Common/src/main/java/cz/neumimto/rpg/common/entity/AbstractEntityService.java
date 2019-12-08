@@ -10,7 +10,6 @@ import cz.neumimto.rpg.api.events.skill.SkillHealEvent;
 import cz.neumimto.rpg.common.entity.configuration.MobSettingsDao;
 import cz.neumimto.rpg.common.entity.configuration.MobsConfig;
 
-import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.UUID;
 import javax.inject.Inject;
@@ -57,7 +56,7 @@ public abstract class AbstractEntityService<T, I extends IMob<T>> implements Ent
     /**
      * Unlike {@link IEntity#getProperty} this method checks for maximal allowed value, defined in config file.
      *
-     * @see PropertyService#loadMaximalServerPropertyValues(Path) ()
+     * @see PropertyService#loadMaximalServerPropertyValues()
      */
     @Override
     public float getEntityProperty(IEffectConsumer entity, int id) {

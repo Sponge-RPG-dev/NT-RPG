@@ -48,5 +48,15 @@ public abstract class AbstractExperienceService implements ExperienceService {
         populateBlockCacheFromConfig(fm, farming);
     }
 
+    @Override
+    public void reload() {
+        minerals.clear();
+        woodenBlocks.clear();
+        farming.clear();
+        fishing.clear();
+
+        load();
+    }
+
     public abstract void populateBlockCacheFromConfig(Map<String, Double> expMap, Map<String, Double> map);
 }

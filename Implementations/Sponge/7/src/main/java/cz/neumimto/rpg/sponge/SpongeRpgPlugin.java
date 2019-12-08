@@ -152,7 +152,7 @@ public class SpongeRpgPlugin extends Rpg {
 
         if (INTEGRATIONS.contains("Placeholders")) {
             Placeholders placeholders = injector.getInstance(Placeholders.class); //What injector?
-            placeholders.init();
+            placeholders.load();
             info("Placeholders Initialized");
         }*/
 

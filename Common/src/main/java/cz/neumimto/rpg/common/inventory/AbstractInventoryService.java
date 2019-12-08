@@ -31,4 +31,10 @@ public abstract class AbstractInventoryService<T extends IActiveCharacter> imple
         ManagedInventory managedInventory = managedInventories.get(aClass);
         return managedInventory != null && managedInventory.getSlots().containsKey(slotId);
     }
+
+    @Override
+    public void reload() {
+        managedInventories.clear();
+        load();
+    }
 }

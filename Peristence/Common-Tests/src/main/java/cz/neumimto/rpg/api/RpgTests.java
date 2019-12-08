@@ -167,6 +167,11 @@ public class RpgTests implements RpgApi {
             }
 
             @Override
+            public void reload() {
+
+            }
+
+            @Override
             public void initializeManagedSlots(IActiveCharacter activeCharacter) {
 
             }

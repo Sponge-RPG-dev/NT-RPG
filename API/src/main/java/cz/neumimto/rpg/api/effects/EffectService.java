@@ -9,6 +9,9 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface EffectService {
+
+    void load();
+
     void registerEffectType(EffectType effectType);
 
     void registerEffectTypes(Class<? extends Enum> e);
@@ -16,8 +19,6 @@ public interface EffectService {
     void stopEffect(IEffect effect);
 
     void startEffectScheduler();
-
-    void load();
 
     <T extends IEffect> boolean addEffect(T effect);
 

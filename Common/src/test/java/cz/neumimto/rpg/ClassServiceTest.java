@@ -72,7 +72,7 @@ public class ClassServiceTest {
             }
         };
         ReflectionTestUtils.set(classService, "classDefinitionDao", dao);
-        classService.loadClasses();
+        classService.load();
         Assertions.assertSame(classService.getClasses().size(), 2);
     }
 }

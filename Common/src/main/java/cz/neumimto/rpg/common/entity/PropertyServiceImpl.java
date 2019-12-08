@@ -15,9 +15,7 @@ import cz.neumimto.rpg.common.assets.AssetService;
 
 import java.io.*;
 import java.lang.reflect.Field;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
+import java.nio.file.*;
 import java.text.Collator;
 import java.util.*;
 import java.util.function.Supplier;
@@ -148,7 +146,9 @@ public class PropertyServiceImpl implements PropertyService {
     }
 
     @Override
-    public void loadMaximalServerPropertyValues(Path path) {
+    public void loadMaximalServerPropertyValues() {
+        Path path = Paths.get(Rpg.get().getWorkingDirectory(), "max_server_property_values.properties");
+
         maxValues = new float[LAST_ID];
         for (int i = 0; i < maxValues.length; i++) {
             maxValues[i] = Float.MAX_VALUE;
@@ -210,8 +210,9 @@ public class PropertyServiceImpl implements PropertyService {
     }
 
     @Override
-    public void reLoadAttributes(Path attributeFilePath) {
-        try (FileConfig fc = FileConfig.of(attributeFilePath)) {
+    public void reLoadAttributes() {
+        Path attributesPath = Paths.get(Rpg.get().getWorkingDirectory() + "/Attributes.conf");
+        try (FileConfig fc = FileConfig.of(attributesPath)) {
             fc.load();
             Attributes attributes = new ObjectConverter().toObject(fc, Attributes::new);
             attributes.getAttributes().forEach(a -> attributeMap.put(a.getId(), a));
@@ -220,7 +221,7 @@ public class PropertyServiceImpl implements PropertyService {
     }
 
     @Override
-    public void init(Path attributeConf, Path propertiesDump) {
+    public void load() {
         StringBuilder s = new StringBuilder();
         List<String> l = new ArrayList<>(idMap.keySet());
         info(" - found " + l.size() + " Properties", Rpg.get().getPluginConfig().DEBUG);
@@ -229,14 +230,25 @@ public class PropertyServiceImpl implements PropertyService {
             s.append(s1).append('\t');
         }
         try {
+            Path propertiesDump = Paths.get(Rpg.get().getWorkingDirectory() + File.separator + "properties_dump.info");
             Files.write(propertiesDump, s.toString().getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+        Path attributeConf = Paths.get(Rpg.get().getWorkingDirectory() + "/Attributes.conf");
         File f = attributeConf.toFile();
         if (!f.exists()) {
             assetService.copyToFile("Attributes.conf", attributeConf);
         }
+
+        reLoadAttributes();
+        loadMaximalServerPropertyValues();
+    }
+
+    @Override
+    public void reload() {
+        attributeMap.clear();
+        load();
     }
 }

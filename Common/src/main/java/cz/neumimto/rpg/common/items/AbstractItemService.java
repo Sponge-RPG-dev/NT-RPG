@@ -22,7 +22,7 @@ import cz.neumimto.rpg.common.inventory.items.ItemMetaType;
 import cz.neumimto.rpg.common.inventory.items.subtypes.ItemSubtype;
 
 import java.io.File;
-import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import javax.inject.Inject;
 
@@ -33,7 +33,7 @@ public abstract class AbstractItemService implements ItemService {
     protected Map<String, SocketType> socketTypes = new HashMap<>();
     protected Map<String, ItemMetaType> itemMetaTypes = new HashMap<>();
     protected Map<String, ItemSubtype> itemSubtypes = new HashMap<>();
-    protected Map<AttributeConfig, Integer> itemAttributesPlaceholder;
+    protected Map<AttributeConfig, Integer> itemAttributesPlaceholder = new HashMap<>();
 
     @Inject
     protected PropertyService propertyService;
@@ -143,8 +143,8 @@ public abstract class AbstractItemService implements ItemService {
     }
 
     @Override
-    public void loadItemGroups(Path path) {
-        File f = path.toFile();
+    public void load() {
+        File f = Paths.get(Rpg.get().getWorkingDirectory()).resolve("ItemGroups.conf").toFile();
         if (!f.exists()) {
             assetService.copyToFile("ItemGroups.conf", f.toPath());
         }
@@ -255,7 +255,6 @@ public abstract class AbstractItemService implements ItemService {
 
     @Override
     public void registerItemAttributes(Collection<AttributeConfig> attributes) {
-        this.itemAttributesPlaceholder = new HashMap<>();
         for (AttributeConfig attribute : attributes) {
             itemAttributesPlaceholder.put(attribute, 0);
         }
@@ -272,6 +271,18 @@ public abstract class AbstractItemService implements ItemService {
 
     public Map<String, ItemSubtype> getItemSubtypes() {
         return itemSubtypes;
+    }
+
+    @Override
+    public void reload() {
+        items.clear();
+        weaponClassMap.clear();
+        socketTypes.clear();
+        itemMetaTypes.clear();
+        itemSubtypes.clear();
+        itemAttributesPlaceholder.clear();
+
+        load();
     }
 }
 

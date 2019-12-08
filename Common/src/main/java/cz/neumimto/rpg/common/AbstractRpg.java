@@ -36,7 +36,6 @@ import cz.neumimto.rpg.common.commands.ACFBootstrap;
 import java.io.File;
 import java.net.URL;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -274,18 +273,16 @@ public abstract class AbstractRpg implements RpgApi {
             Log.error("Could not read localizations in locale " + locale.toString() + " - " + e.getMessage());
         }
 
-        getItemService().loadItemGroups(Paths.get(getWorkingDirectory()).resolve("ItemGroups.conf"));
+        getItemService().load();
         getInventoryService().load();
         getEventFactory().registerEventProviders();
         getExperienceService().load();
 
         getSkillService().init();
-        getPropertyService().init(Paths.get(getWorkingDirectory() + "/Attributes.conf"), Paths.get(getWorkingDirectory() + File.separator + "properties_dump.info"));
-        getPropertyService().reLoadAttributes(Paths.get(getWorkingDirectory() + "/Attributes.conf"));
-        getPropertyService().loadMaximalServerPropertyValues(Paths.get(getWorkingDirectory(), "max_server_property_values.properties"));
+        getPropertyService().load();
         getScriptEngine().initEngine();
         getSkillService().load();
-        getClassService().loadClasses();
+        getClassService().load();
         getEffectService().load();
         getEffectService().startEffectScheduler();
         getDamageService().init();

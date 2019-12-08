@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.common.items;
 
+import com.typesafe.config.ConfigFactory;
 import cz.neumimto.rpg.RpgTest;
 import cz.neumimto.rpg.api.RpgApi;
 import cz.neumimto.rpg.api.items.ItemClass;
@@ -14,10 +15,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import javax.inject.Inject;
 import java.io.File;
-import java.nio.file.Paths;
 import java.util.Optional;
+import javax.inject.Inject;
 
 @ExtendWith({GuiceExtension.class, NtRpgExtension.class})
 @IncludeModule(TestGuiceModule.class)
@@ -36,7 +36,7 @@ public class ItemServiceTest {
 
     @Test
     public void getWeaponClassByNameUnknown() {
-        Assertions.assertFalse(itemService.getWeaponClassByName("unknown").isPresent());;
+        Assertions.assertFalse(itemService.getWeaponClassByName("unknown").isPresent());
     }
 
     @Test
@@ -69,7 +69,7 @@ public class ItemServiceTest {
     public void loadItemGroups01() {
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("testconfig/ItemGroups.conf").getFile());
-        itemService.loadItemGroups(Paths.get(file.getPath()));
+        itemService.loadItemGroups(ConfigFactory.parseFile(file));
 
         Optional<ItemClass> blades = itemService.getWeaponClassByName("Blades");
         Assertions.assertTrue(blades.isPresent());

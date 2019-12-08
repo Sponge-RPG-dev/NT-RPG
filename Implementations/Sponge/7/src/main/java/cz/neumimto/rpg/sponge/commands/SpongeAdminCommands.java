@@ -89,7 +89,14 @@ public class SpongeAdminCommands extends BaseCommand {
     };
 
     @Subcommand("reload")
-    public void reload() {
+    public void reload(@Optional @Default("a") String arg) {
+        boolean reloadAll = arg.equalsIgnoreCase("a");
+        boolean reloadJs = reloadAll || arg.equalsIgnoreCase("js");
+        boolean reloadLocalizations = reloadAll || arg.equalsIgnoreCase("l");
+        boolean reloadItems = reloadAll || arg.equalsIgnoreCase("i");
+        boolean reloadSkills = reloadAll || arg.equalsIgnoreCase("s");
+        boolean reloadClasses = reloadAll || reloadItems || reloadSkills || arg.equalsIgnoreCase("c");
+
         info("[RELOAD] Saving current state of players");
         Set<CharacterBase> characterBases = new HashSet<>();
         for (Player player : Sponge.getServer().getOnlinePlayers()) {
@@ -113,46 +120,77 @@ public class SpongeAdminCommands extends BaseCommand {
             characterService.registerDummyChar(preloadCharacter);
         }
 
-        info("[RELOAD] Reading Settings.conf file: ");
-        Rpg.get().reloadMainPluginConfig();
-        info("[RELOAD] Reading Entity conf files: ");
-        Rpg.get().getEntityService().reload();
+        if (reloadAll) {
+            info("[RELOAD] Reading Settings.conf file: ");
+            Rpg.get().reloadMainPluginConfig();
+        }
 
-        info("[RELOAD] Scripts ");
-        IScriptEngine jsLoader = injector.getInstance(IScriptEngine.class);
-        jsLoader.initEngine();
-        jsLoader.reloadSkills();
-
-        ClassDefinitionDao build = injector.getInstance(ClassDefinitionDao.class);
-        try {
-            info("[RELOAD] Checking class files: ");
-
-            Set<ClassDefinition> classDefinitions = build.parseClassFiles();
-            info("[RELOAD] Class files ok");
-
-            Log.info("[RELOAD] Purging effect caches");
-            effectService.purgeEffectCache();
-            effectService.stopEffectScheduler();
-
-            System.gc();
-
-            effectService.startEffectScheduler();
-
-            Rpg.get().getClassService().loadClasses();
-
-            for (Player player : Sponge.getServer().getOnlinePlayers()) {
-                List<CharacterBase> playersCharacters = characterService.getPlayersCharacters(player.getUniqueId());
-                if (playersCharacters.isEmpty()) {
-                    continue;
-                }
-                CharacterBase max = playersCharacters.stream().max(Comparator.comparing(CharacterBase::getUpdated)).get();
-                ISpongeCharacter activeCharacter = characterService.createActiveCharacter(player.getUniqueId(), max);
-                characterService.setActiveCharacter(player.getUniqueId(), activeCharacter);
-                characterService.invalidateCaches(activeCharacter);
-                characterService.assignPlayerToCharacter(player.getUniqueId());
+        if (reloadLocalizations) {
+            info("[RELOAD] Reading localization files: ");
+            Locale locale = Locale.forLanguageTag(Rpg.get().getPluginConfig().LOCALE);
+            try {
+                Rpg.get().getResourceLoader().reloadLocalizations(locale);
+            } catch (Exception e) {
+                Log.error("Could not read localizations in locale " + locale.toString() + " - " + e.getMessage());
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        }
+
+        if (reloadAll) {
+            info("[RELOAD] Reading Entity conf files: ");
+            Rpg.get().getEntityService().reload();
+        }
+
+        if (reloadJs) {
+            info("[RELOAD] Scripts ");
+            IScriptEngine jsLoader = injector.getInstance(IScriptEngine.class);
+            jsLoader.initEngine();
+            jsLoader.reloadSkills();
+        }
+
+        if (reloadItems) {
+            info("[RELOAD] ItemGroups ");
+            Rpg.get().getItemService().reload();
+            Rpg.get().getInventoryService().reload();
+        }
+
+        if (reloadSkills) {
+            info("[RELOAD] Properties, Attributes, Skills");
+            Rpg.get().getSkillService().init();
+            Rpg.get().getPropertyService().reload();
+        }
+
+        if (reloadClasses) {
+            info("[RELOAD] Experiences");
+            Rpg.get().getExperienceService().reload();
+
+            ClassDefinitionDao build = injector.getInstance(ClassDefinitionDao.class);
+            try {
+                info("[RELOAD] Checking class files: ");
+                Rpg.get().getClassService().load();
+                info("[RELOAD] Class files ok");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        Log.info("[RELOAD] Purging effect caches");
+        effectService.purgeEffectCache();
+        effectService.stopEffectScheduler();
+
+        System.gc();
+
+        effectService.startEffectScheduler();
+
+        for (Player player : Sponge.getServer().getOnlinePlayers()) {
+            List<CharacterBase> playersCharacters = characterService.getPlayersCharacters(player.getUniqueId());
+            if (playersCharacters.isEmpty()) {
+                continue;
+            }
+            CharacterBase max = playersCharacters.stream().max(Comparator.comparing(CharacterBase::getUpdated)).get();
+            ISpongeCharacter activeCharacter = characterService.createActiveCharacter(player.getUniqueId(), max);
+            characterService.setActiveCharacter(player.getUniqueId(), activeCharacter);
+            characterService.invalidateCaches(activeCharacter);
+            characterService.assignPlayerToCharacter(player.getUniqueId());
         }
     }
 

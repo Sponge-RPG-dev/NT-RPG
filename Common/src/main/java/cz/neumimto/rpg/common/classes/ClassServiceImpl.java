@@ -102,7 +102,7 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
-    public void loadClasses() {
+    public void load() {
         Set<ClassDefinition> classDefinitions = classDefinitionDao.parseClassFiles();
         classes.clear();
 

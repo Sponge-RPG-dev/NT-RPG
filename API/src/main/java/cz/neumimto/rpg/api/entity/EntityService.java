@@ -5,6 +5,8 @@ import cz.neumimto.rpg.api.IRpgElement;
 
 public interface EntityService<T> {
 
+    void reload();
+
     IEntity get(T entity);
 
     float getEntityProperty(IEffectConsumer entity, int id);
@@ -19,5 +21,4 @@ public interface EntityService<T> {
 
     void updateWalkSpeed(IEntity<? extends T> activeCharacter);
 
-    void reload();
 }

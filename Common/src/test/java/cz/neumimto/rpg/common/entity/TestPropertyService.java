@@ -2,8 +2,6 @@ package cz.neumimto.rpg.common.entity;
 
 import com.google.inject.Singleton;
 
-import java.nio.file.Path;
-
 @Singleton
 public class TestPropertyService extends PropertyServiceImpl {
 
@@ -16,12 +14,12 @@ public class TestPropertyService extends PropertyServiceImpl {
     }
 
     @Override
-    public void init(Path attributeConf, Path propertiesDump) {
+    public void load() {
 
     }
 
     @Override
-    public void reLoadAttributes(Path attributeFilePath) {
+    public void reLoadAttributes() {
 
     }
 

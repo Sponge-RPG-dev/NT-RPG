@@ -150,7 +150,6 @@ public abstract class AbstractSkillService implements SkillService {
         }
     }
 
-
     @Override
     public void registerAdditionalCatalog(ISkill extraCatalog) {
         if (extraCatalog.getId() == null) {
