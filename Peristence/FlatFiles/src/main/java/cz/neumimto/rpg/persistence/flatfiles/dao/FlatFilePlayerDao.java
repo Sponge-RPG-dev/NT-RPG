@@ -7,14 +7,11 @@ import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
 import cz.neumimto.rpg.common.persistance.dao.IPlayerDao;
 import cz.neumimto.rpg.persistence.flatfiles.converters.ConfigConverter;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class FlatFilePlayerDao implements IPlayerDao {
 
@@ -24,7 +21,7 @@ public class FlatFilePlayerDao implements IPlayerDao {
 
     private Path getPlayerDataDirectory(UUID uuid) {
         Path path = Paths.get(Rpg.get().getWorkingDirectory(), "storage", uuid.toString());
-        if (Files.exists(path)) {
+        if (!Files.exists(path)) {
             try {
                 Files.createDirectories(path);
             } catch (IOException e) {
@@ -36,7 +33,20 @@ public class FlatFilePlayerDao implements IPlayerDao {
 
     @Override
     public List<CharacterBase> getPlayersCharacters(UUID uuid) {
-        return null;
+        Path pdd = getPlayerDataDirectory(uuid);
+        try {
+            return Files.walk(pdd)
+                    .filter(Files::isRegularFile)
+                    .filter(f -> f.getFileName().endsWith(".hocon"))
+                    .map(FileConfig::of)
+                    .peek(FileConfig::close)
+                    .filter(f -> !f.getOrElse(ConfigConverter.MARKED_FOR_REMOVAL, false))
+                    .map(ConfigConverter::fromConfig)
+                    .collect(Collectors.toList());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<>();
     }
 
     @Override
@@ -62,27 +72,41 @@ public class FlatFilePlayerDao implements IPlayerDao {
 
     @Override
     public int getCharacterCount(UUID uuid) {
-        Path resolve = getPlayerDataDirectory(uuid);
-        File file = resolve.toFile();
-        File[] files = file.listFiles();
-        int counter = 0;
-        if (files != null) {
-            for (File file1 : files) {
-                if (file1.isFile() && file1.getName().endsWith(".hocon")) {
-                    FileConfig of = FileConfig.of(file1);
-                    boolean forRemoval = of.getOrElse(ConfigConverter.MARKED_FOR_REMOVAL, false);
-                    if (!forRemoval) {
-                        counter++;
-                    }
-                    of.close();
-                }
-            }
+        Path path = getPlayerDataDirectory(uuid);
+        try {
+            return (int) Files.walk(path)
+                    .filter(Files::isRegularFile)
+                    .filter(f -> f.getFileName().endsWith(".hocon"))
+                    .map(FileConfig::of)
+                    .peek(FileConfig::close)
+                    .filter(f -> !f.getOrElse(ConfigConverter.MARKED_FOR_REMOVAL, false))
+                    .count();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        return counter;
+        return 0;
     }
 
     @Override
-    public int deleteData(UUID uniqueId) {
+    public int deleteData(UUID uuid) {
+        Path path = getPlayerDataDirectory(uuid);
+        try {
+            Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    Files.delete(file);
+                    return super.visitFile(file, attrs);
+                }
+
+                @Override
+                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                    Files.delete(dir);
+                    return super.postVisitDirectory(dir, exc);
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return 0;
     }
 
