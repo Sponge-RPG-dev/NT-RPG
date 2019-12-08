@@ -30,10 +30,10 @@ import org.spongepowered.api.event.world.chunk.UnloadChunkEvent;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-import javax.inject.Inject;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import javax.inject.Inject;
 
 
 /**
@@ -71,7 +71,7 @@ public class EntityLifecycleListener {
             Location loc = player.getLocation();
             World ex = (World) loc.getExtent();
             character.getCharacterBase().setLastKnownPlayerName(event.getTargetEntity().getName());
-            character.updateLastKnownLocation(loc.getBlockX(), loc.getBlockY(), loc.getBlockY(), ex.getName());
+            character.updateLastKnownLocation(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), ex.getName());
             characterService.putInSaveQueue(character.getCharacterBase());
             effectService.removeAllEffects(character);
 			/*Always reset the persistent properties back to vanilla values in a case
