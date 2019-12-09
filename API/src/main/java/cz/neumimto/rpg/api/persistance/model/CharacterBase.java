@@ -16,10 +16,6 @@ public interface CharacterBase extends TimestampEntity {
 
     void setName(String name);
 
-    String getInfo();
-
-    void setInfo(String info);
-
     String getLastKnownPlayerName();
 
     void setLastKnownPlayerName(String lastKnownPlayerName);
@@ -28,9 +24,9 @@ public interface CharacterBase extends TimestampEntity {
 
     void setUuid(UUID uuid);
 
-    Boolean isCanResetskills();
+    Boolean canResetSkills();
 
-    void setCanResetskills(boolean canResetskills);
+    void setCanResetSkills(boolean canResetSkills);
 
     Date getLastReset();
 

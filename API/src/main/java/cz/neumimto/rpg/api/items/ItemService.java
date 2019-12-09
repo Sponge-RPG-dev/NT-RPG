@@ -1,18 +1,18 @@
 package cz.neumimto.rpg.api.items;
 
 import com.typesafe.config.Config;
-import com.typesafe.config.ConfigFactory;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.items.sockets.SocketType;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
 import java.util.*;
 
 public interface ItemService {
+
+    void load();
+
+    void reload();
 
     Optional<ItemClass> getWeaponClassByName(String clazz);
 
@@ -35,8 +35,6 @@ public interface ItemService {
     void registerProperty(ItemClass itemClass, String property);
 
     ClassItem createClassItemSpecification(RpgItemType key, Double value);
-
-    void loadItemGroups(Path path);
 
     void loadItemGroups(Config c);
 

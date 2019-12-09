@@ -112,10 +112,10 @@ public class CharacterClassImpl extends TimestampEntityImpl implements Character
     @Override
     public String toString() {
         return "CharacterClassImpl{" +
-                "classId=" + String.valueOf(classId) +
+                "classId=" + classId +
                 ", experiences=" + experiences +
                 ", level=" + level +
-                ", name='" + String.valueOf(name) + '\'' +
+                ", name='" + name + '\'' +
                 ", usedSkillPoints=" + usedSkillPoints +
                 ", skillPoints=" + skillPoints +
                 ", characterBase=" + characterBase +

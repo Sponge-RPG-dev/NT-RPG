@@ -2,34 +2,35 @@ package cz.neumimto.rpg.common.commands;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.effects.EffectParams;
-import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.api.effects.model.EffectModelFactory;
+import cz.neumimto.rpg.api.entity.players.CharacterService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.entity.players.ICharacterService;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.utils.ActionResult;
 import cz.neumimto.rpg.common.effects.InternalEffectSourceProvider;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 @Singleton
 public class AdminCommandFacade {
 
     @Inject
-    private IEffectService effectService;
+    private EffectService effectService;
 
     @Inject
-    private ICharacterService<? super IActiveCharacter> characterService;
+    private CharacterService<? super IActiveCharacter> characterService;
 
     private Gson gson = new Gson();
 
@@ -86,18 +87,19 @@ public class AdminCommandFacade {
         return false;
     }
 
-    public boolean commandAddExperiences(IActiveCharacter character, Double amount, ClassDefinition classDefinition, String expSource) throws CommandProcessingException{
+    public boolean commandAddExperiences(IActiveCharacter character, Double amount, String classOrSource) throws CommandProcessingException {
         Collection<PlayerClassData> classes = character.getClasses().values();
+
+        ClassDefinition classDefinition = Rpg.get().getClassService().getClassDefinitionByName(classOrSource);
+        String expSource = classOrSource.toUpperCase();
 
         if (classDefinition != null) {
             classes.stream()
                     .filter(PlayerClassData::takesExp)
                     .filter(c -> c.getClassDefinition().getName().equalsIgnoreCase(classDefinition.getName()))
                     .forEach(c -> characterService.addExperiences(character, amount, c));
-        } else if (expSource != null) {
-            characterService.addExperiences(character, amount, expSource);
         } else {
-            throw new CommandProcessingException("Specify class or experience source!");
+            characterService.addExperiences(character, amount, expSource);
         }
         return true;
     }

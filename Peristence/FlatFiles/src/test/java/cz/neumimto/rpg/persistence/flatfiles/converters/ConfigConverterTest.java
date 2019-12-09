@@ -1,6 +1,7 @@
 package cz.neumimto.rpg.persistence.flatfiles.converters;
 
 import cz.neumimto.persistence.TestHelper;
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.RpgTests;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterClass;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.util.Optional;
 
 class ConfigConverterTest {
@@ -18,6 +20,8 @@ class ConfigConverterTest {
     @BeforeAll
     public static void before() {
         new RpgTests();
+        new File(Rpg.get().getWorkingDirectory()).mkdirs();
+
     }
 
     @Test
@@ -37,8 +41,6 @@ class ConfigConverterTest {
         Assertions.assertEquals(characterBase.getCharacterSkills(), loadded.getCharacterSkills());
         Assertions.assertEquals(characterBase.getHealthScale(), loadded.getHealthScale());
         Assertions.assertEquals(characterBase.getId(), loadded.getId());
-        Assertions.assertEquals(characterBase.getInfo(), loadded.getInfo());
-
 
         Assertions.assertEquals(characterBase.getLastKnownPlayerName(), loadded.getLastKnownPlayerName());
         Assertions.assertEquals(characterBase.getMarkedForRemoval(), loadded.getMarkedForRemoval());
@@ -48,6 +50,7 @@ class ConfigConverterTest {
         Assertions.assertEquals(characterBase.getX(), loadded.getX());
         Assertions.assertEquals(characterBase.getY(), loadded.getY());
         Assertions.assertEquals(characterBase.getZ(), loadded.getZ());
+
         if (characterBase.getInventoryEquipSlotOrder() != null) {
             Assertions.assertEquals(characterBase.getInventoryEquipSlotOrder().size(), loadded.getInventoryEquipSlotOrder().size());
             for (int i = 0; i < characterBase.getInventoryEquipSlotOrder().size(); i++) {

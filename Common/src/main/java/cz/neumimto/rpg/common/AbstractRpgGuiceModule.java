@@ -3,12 +3,12 @@ package cz.neumimto.rpg.common;
 import com.google.inject.AbstractModule;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.configuration.SkillTreeDao;
-import cz.neumimto.rpg.api.entity.IPropertyService;
+import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.scripting.IScriptEngine;
 import cz.neumimto.rpg.common.classes.ClassServiceImpl;
 import cz.neumimto.rpg.common.configuration.SkillTreeLoaderImpl;
-import cz.neumimto.rpg.common.entity.PropertyService;
+import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.common.exp.ExperienceDAO;
 import cz.neumimto.rpg.common.localization.LocalizationServiceImpl;
 import cz.neumimto.rpg.common.persistance.dao.ClassDefinitionDao;
@@ -22,7 +22,7 @@ public class AbstractRpgGuiceModule extends AbstractModule {
     protected <T> Map<Class<T>, Class<? extends T>> getBindings() {
         Map map = new HashMap<>();
         map.put(SkillTreeDao.class, SkillTreeLoaderImpl.class);
-        map.put(IPropertyService.class, PropertyService.class);
+        map.put(PropertyService.class, PropertyServiceImpl.class);
         map.put(IScriptEngine.class, JSLoader.class);
         map.put(ClassService.class, ClassServiceImpl.class);
         map.put(ClassDefinitionDao.class, null);

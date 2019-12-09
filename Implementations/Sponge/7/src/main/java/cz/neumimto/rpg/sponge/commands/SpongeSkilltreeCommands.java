@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.sponge.commands;
 
+import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Optional;
@@ -20,7 +21,7 @@ import javax.inject.Singleton;
 
 @Singleton
 @CommandAlias("skilltree")
-public class SpongeSkilltreeCommands {
+public class SpongeSkilltreeCommands extends BaseCommand {
 
     @Inject
     private SpongeCharacterService characterService;

@@ -1,15 +1,18 @@
 package cz.neumimto.rpg;
 
-import cz.neumimto.rpg.api.IResourceLoader;
+import com.google.inject.Injector;
+import com.google.inject.Module;
+import cz.neumimto.rpg.api.ResourceLoader;
+import cz.neumimto.rpg.api.RpgAddon;
 import cz.neumimto.rpg.api.RpgApi;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.damage.DamageService;
-import cz.neumimto.rpg.api.effects.IEffectService;
-import cz.neumimto.rpg.api.entity.IPropertyService;
+import cz.neumimto.rpg.api.effects.EffectService;
+import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.entity.players.parties.PartyService;
 import cz.neumimto.rpg.api.events.EventFactoryService;
-import cz.neumimto.rpg.api.exp.IExperienceService;
+import cz.neumimto.rpg.api.exp.ExperienceService;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.localization.Arg;
 import cz.neumimto.rpg.api.localization.LocalizationService;
@@ -19,15 +22,18 @@ import cz.neumimto.rpg.common.impl.TestCharacterService;
 import cz.neumimto.rpg.common.inventory.TestInventoryService;
 import cz.neumimto.rpg.entity.TestEntityService;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.io.File;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 @Singleton
 public class TestApiImpl implements RpgApi {
@@ -51,13 +57,13 @@ public class TestApiImpl implements RpgApi {
     private TestCharacterService testCharacterService;
 
     @Inject
-    private IResourceLoader resourceLoader;
+    private ResourceLoader resourceLoader;
 
     @Inject
     private ClassService classService;
 
     @Inject
-    private IEffectService effectService;
+    private EffectService effectService;
 
     @Inject
     private IScriptEngine jsLoader;
@@ -69,16 +75,16 @@ public class TestApiImpl implements RpgApi {
     private DamageService damageService;
 
     @Inject
-    private IPropertyService propertyService;
+    private PropertyService propertyService;
 
     @Inject
     private PartyService partyService;
 
     @Inject
-    private IExperienceService experienceService;
+    private ExperienceService experienceService;
 
     @Override
-    public IResourceLoader getResourceLoader() {
+    public ResourceLoader getResourceLoader() {
         return resourceLoader;
     }
 
@@ -88,7 +94,7 @@ public class TestApiImpl implements RpgApi {
     }
 
     @Override
-    public IEffectService getEffectService() {
+    public EffectService getEffectService() {
         return effectService;
     }
 
@@ -108,7 +114,7 @@ public class TestApiImpl implements RpgApi {
     }
 
     @Override
-    public IPropertyService getPropertyService() {
+    public PropertyService getPropertyService() {
         return propertyService;
     }
 
@@ -207,7 +213,7 @@ public class TestApiImpl implements RpgApi {
     }
 
     @Override
-    public IExperienceService getExperienceService() {
+    public ExperienceService getExperienceService() {
         return experienceService;
     }
 
@@ -217,12 +223,12 @@ public class TestApiImpl implements RpgApi {
     }
 
     @Override
-    public void postInit(CommandManager manager) {
-
+    public void scheduleSyncLater(Runnable runnable) {
+        runnable.run();
     }
 
     @Override
-    public void scheduleSyncLater(Runnable runnable) {
-        runnable.run();
+    public void init(Path workingDirPath, Object commandManager, Class[] commandClasses, RpgAddon defaultStorageImpl, BiFunction<Map, Map<Class<?>, ?>, Module> fnInjProv, Consumer<Injector> injectorc) {
+
     }
 }

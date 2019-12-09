@@ -64,7 +64,7 @@ public class GlobalEffectAnnotationProcessor extends AbstractProcessor {
 			+ "import cz.neumimto.rpg.api.skills.scripting.JsBinding;\n"
 			+ "\n"
 			+ "@JsBinding(JsBinding.Type.CLASS)\n"
-			+ "@cz.neumimto.rpg.ResourceLoader.ModelMapper\n"
+			+ "@cz.neumimto.rpg.api.ResourceLoader.ModelMapper\n"
 			+ "public class %stype%Mapper extends EffectModelMapper {\n"
 			+ "\n"
 			+ "        public %stype%Mapper() {\n"

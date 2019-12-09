@@ -70,4 +70,9 @@ public final class EquipedSlotImpl implements EquipedSlot {
         result = 71 * result + slotIndex;
         return result;
     }
+
+    @Override
+    public String toString() {
+        return className + "@" + slotIndex;
+    }
 }

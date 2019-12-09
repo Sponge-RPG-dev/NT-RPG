@@ -29,7 +29,6 @@ import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.api.skills.SkillSettings;
 import cz.neumimto.rpg.common.assets.AssetService;
 
-import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -37,30 +36,27 @@ import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
 import java.util.function.Consumer;
+import javax.inject.Inject;
 
 
 /**
  * Created by NeumimTo on 17.1.2015.
  */
-public abstract class EffectService implements IEffectService {
-
-    @Inject
-    private AssetService assetService;
-
-    @Inject
-    private SkillService skillService;
+public abstract class AbstractEffectService implements EffectService {
 
     public static final long TICK_PERIOD = 5L;
-
     private static final long unlimited_duration = -1;
-
     protected Set<IEffect> effectSet = new HashSet<>();
     protected Set<IEffect> pendingAdditions = new HashSet<>();
     protected Set<IEffect> pendingRemovals = new HashSet<>();
     protected Map<String, IGlobalEffect> globalEffects = new HashMap<>();
+    @Inject
+    private AssetService assetService;
+    @Inject
+    private SkillService skillService;
     private Map<String, EffectType> effectTypes = new HashMap<>();
 
-    public EffectService() {
+    public AbstractEffectService() {
         registerEffectTypes(CommonEffectTypes.class);
         registerEffectTypes(CoreEffectTypes.class);
     }
@@ -410,14 +406,14 @@ public abstract class EffectService implements IEffectService {
 
     @Override
     public void load() {
-        File file1 = new File(Rpg.get().getWorkingDirectory(), "SkillsAndEffects.md");
-        if (file1.exists()) {
-            file1.delete();
+        File file = new File(Rpg.get().getWorkingDirectory(), "SkillsAndEffects.md");
+        if (file.exists()) {
+            file.delete();
         }
 
         try {
-            String finalString = "";
-            file1.createNewFile();
+            StringBuilder finalString = new StringBuilder();
+            file.createNewFile();
             String s = assetService.getAssetAsString("templates/Effect.md");
             for (Map.Entry<String, IGlobalEffect> effect : globalEffects.entrySet()) {
                 Class aClass = effect.getValue().asEffectClass();
@@ -444,16 +440,16 @@ public abstract class EffectService implements IEffectService {
                         for (Field field : fields) {
                             String fname = field.getName();
                             String type = field.getType().getSimpleName();
-                            buffer.append("   * " + fname + " - " + type + "\n\n");
+                            buffer.append("   * ").append(fname).append(" - ").append(type).append("\n\n");
                         }
                         s = s.replaceAll("\\{\\{effect\\.parameters}}", buffer.toString());
                     }
-                    finalString += s;
+                    finalString.append(s);
                 }
             }
 
             s = assetService.getAssetAsString("templates/Skill.md");
-            String skills = "";
+            StringBuilder skills = new StringBuilder();
             for (ISkill iSkill : skillService.getAll()) {
 
                 String damageType = iSkill.getDamageType();
@@ -481,15 +477,15 @@ public abstract class EffectService implements IEffectService {
 
                 StringBuilder buffer = new StringBuilder();
                 for (Map.Entry<String, Float> stringFloatEntry : defaultSkillSettings.getNodes().entrySet()) {
-                    buffer.append("   * " + stringFloatEntry.getKey() + "\n\n");
+                    buffer.append("   * ").append(stringFloatEntry.getKey()).append("\n\n");
                 }
                 s = s.replaceAll("\\{\\{skill\\.parameters}}", buffer.toString());
-                skills += s;
+                skills.append(s);
             }
             s = assetService.getAssetAsString("templates/SE.md");
 
-            Files.write(file1.toPath(), s.replaceAll("\\{\\{effects}}", finalString)
-                    .replaceAll("\\{\\{skills}}", skills).getBytes(), StandardOpenOption.APPEND);
+            Files.write(file.toPath(), s.replaceAll("\\{\\{effects}}", finalString.toString())
+                    .replaceAll("\\{\\{skills}}", skills.toString()).getBytes(), StandardOpenOption.APPEND);
         } catch (IOException e) {
             e.printStackTrace();
         }

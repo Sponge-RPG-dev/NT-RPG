@@ -18,10 +18,12 @@
 
 package cz.neumimto.rpg.common.scripting;
 
+import static cz.neumimto.rpg.api.logging.Log.error;
+import static cz.neumimto.rpg.api.logging.Log.info;
 import com.electronwill.nightconfig.core.conversion.ObjectConverter;
 import com.electronwill.nightconfig.core.file.FileConfig;
 import com.google.inject.Injector;
-import cz.neumimto.rpg.api.IResourceLoader;
+import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.scripting.IScriptEngine;
 import cz.neumimto.rpg.api.skills.SkillService;
@@ -34,18 +36,15 @@ import cz.neumimto.rpg.common.bytecode.ClassGenerator;
 import cz.neumimto.rpg.common.skills.scripting.SkillComponent;
 import net.bytebuddy.dynamic.loading.MultipleParentClassLoader;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import javax.script.*;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.*;
 import java.util.*;
-
-import static cz.neumimto.rpg.api.logging.Log.error;
-import static cz.neumimto.rpg.api.logging.Log.info;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import javax.script.*;
 
 /**
  * Created by NeumimTo on 13.3.2015.
@@ -66,7 +65,7 @@ public class JSLoader implements IScriptEngine {
     private ClassGenerator classGenerator;
 
     @Inject
-    private IResourceLoader resourceLoader;
+    private ResourceLoader resourceLoader;
 
     @Inject
     private SkillService skillService;
@@ -100,6 +99,7 @@ public class JSLoader implements IScriptEngine {
         }
     }
 
+    @Override
     public void loadNashorn() throws Exception {
         Object fct = Class.forName("jdk.nashorn.api.scripting.NashornScriptEngineFactory").newInstance();
         List<ClassLoader> list = new ArrayList<>();
@@ -117,13 +117,13 @@ public class JSLoader implements IScriptEngine {
                 Files.copy(resourceAsStream, path);
             } catch (IOException e) {
                 e.printStackTrace();
-
             }
         }
         List<SkillComponent> skillComponents = new ArrayList<>();
         try (InputStreamReader rs = new InputStreamReader(new FileInputStream(path.toFile()))) {
             Bindings bindings = new SimpleBindings();
             bindings.put("Injector", injector);
+            bindings.put("Folder", scripts_root);
             bindings.put("Rpg", Rpg.get());
             bindings.put("Bindings", new BindingsHelper(engine));
             for (Map.Entry<Class<?>, JsBinding.Type> objectTypeEntry : dataToBind.entrySet()) {
@@ -154,8 +154,6 @@ public class JSLoader implements IScriptEngine {
                 }
             }
             dumpDocumentedFunctions(skillComponents);
-            bindings.put("Folder", scripts_root);
-            bindings.put("Rpg", Rpg.get());
             if (Rpg.get().getPluginConfig().DEBUG.isDevelop()) {
                 info("JSLOADER ====== Bindings");
                 Map<String, Object> sorted = new TreeMap<>(bindings);
@@ -294,8 +292,6 @@ public class JSLoader implements IScriptEngine {
     public Map<Class<?>, JsBinding.Type> getDataToBind() {
         return dataToBind;
     }
-
-
 
 }
 

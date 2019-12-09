@@ -1,10 +1,12 @@
 package cz.neumimto.skills.active;
 
+import static com.flowpowered.math.TrigMath.cos;
+import static com.flowpowered.math.TrigMath.sin;
 import com.flowpowered.math.imaginary.Quaterniond;
 import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.effects.negative.SlowPotion;
-import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.api.ResourceLoader;
+import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
@@ -28,9 +30,6 @@ import org.spongepowered.api.world.World;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import static com.flowpowered.math.TrigMath.cos;
-import static com.flowpowered.math.TrigMath.sin;
-
 /**
  * Created by NeumimTo on 11.8.17.
  */
@@ -38,52 +37,52 @@ import static com.flowpowered.math.TrigMath.sin;
 @ResourceLoader.Skill("ntrpg:icebolt")
 public class IceBolt extends ActiveSkill<ISpongeCharacter> {
 
-	@Inject
-	private IEffectService effectService;
+    @Inject
+    private EffectService effectService;
 
-	@Inject
-	private EntityService entityService;
+    @Inject
+    private EntityService entityService;
 
-	@Override
-	public void init() {
-		super.init();
-		setDamageType(NDamageType.ICE.getId());
-		settings.addNode(SkillNodes.DAMAGE, 10, 10);
-		settings.addNode(SkillNodes.VELOCITY, 0.5f, .5f);
-		settings.addNode(SkillNodes.DURATION, 750, 15);
-		settings.addNode(SkillNodes.AMPLIFIER, 1, 0f);
-		addSkillType(SkillType.SUMMON);
-		addSkillType(SkillType.PROJECTILE);
-		addSkillType(SkillType.ELEMENTAL);
-		addSkillType(SkillType.ICE);
-	}
+    @Override
+    public void init() {
+        super.init();
+        setDamageType(NDamageType.ICE.getId());
+        settings.addNode(SkillNodes.DAMAGE, 10, 10);
+        settings.addNode(SkillNodes.VELOCITY, 0.5f, .5f);
+        settings.addNode(SkillNodes.DURATION, 750, 15);
+        settings.addNode(SkillNodes.AMPLIFIER, 1, 0f);
+        addSkillType(SkillType.SUMMON);
+        addSkillType(SkillType.PROJECTILE);
+        addSkillType(SkillType.ELEMENTAL);
+        addSkillType(SkillType.ICE);
+    }
 
-	@Override
-	public void cast(ISpongeCharacter character, PlayerSkillContext info, SkillContext skillContext) {
-		Player p = character.getPlayer();
-		World world = p.getWorld();
-		Entity optional = world.createEntity(EntityTypes.SNOWBALL, p.getLocation().getPosition()
-				.add(cos((p.getRotation().getX() - 90) % 360) * 0.2, 1.8, sin((p.getRotation().getX() - 90) % 360) * 0.2));
+    @Override
+    public void cast(ISpongeCharacter character, PlayerSkillContext info, SkillContext skillContext) {
+        Player p = character.getPlayer();
+        World world = p.getWorld();
+        Entity optional = world.createEntity(EntityTypes.SNOWBALL, p.getLocation().getPosition()
+                .add(cos((p.getRotation().getX() - 90) % 360) * 0.2, 1.8, sin((p.getRotation().getX() - 90) % 360) * 0.2));
 
-		Vector3d rotation = p.getRotation();
-		Vector3d direction = Quaterniond.fromAxesAnglesDeg(rotation.getX(), -rotation.getY(), rotation.getZ()).getDirection();
-		Snowball sb = (Snowball) optional;
-		sb.offer(Keys.VELOCITY, direction.mul(skillContext.getFloatNodeValue(SkillNodes.VELOCITY)));
-		sb.setShooter(p);
-		world.spawnEntity(sb);
-		ProjectileProperties projectileProperties = new ProjectileProperties(sb, character);
-		projectileProperties.setDamage(skillContext.getDoubleNodeValue(SkillNodes.DAMAGE));
-		SkillDamageSource s = new SkillDamageSourceBuilder()
-				.fromSkill(this)
-				.setSource(character)
-				.build();
+        Vector3d rotation = p.getRotation();
+        Vector3d direction = Quaterniond.fromAxesAnglesDeg(rotation.getX(), -rotation.getY(), rotation.getZ()).getDirection();
+        Snowball sb = (Snowball) optional;
+        sb.offer(Keys.VELOCITY, direction.mul(skillContext.getFloatNodeValue(SkillNodes.VELOCITY)));
+        sb.setShooter(p);
+        world.spawnEntity(sb);
+        ProjectileProperties projectileProperties = new ProjectileProperties(sb, character);
+        projectileProperties.setDamage(skillContext.getDoubleNodeValue(SkillNodes.DAMAGE));
+        SkillDamageSource s = new SkillDamageSourceBuilder()
+                .fromSkill(this)
+                .setSource(character)
+                .build();
 
-		projectileProperties.onHit((event, caster, target) -> {
-			long slowduration = skillContext.getLongNodeValue(SkillNodes.DURATION);
-			int slowamplf = skillContext.getIntNodeValue(SkillNodes.AMPLIFIER);
-			((ISpongeEntity)target).getEntity().damage(projectileProperties.getDamage(), s);
-			effectService.addEffect(new SlowPotion(target, slowduration, slowamplf), this);
-		});
-		skillContext.next(character, info, SkillResult.OK);
-	}
+        projectileProperties.onHit((event, caster, target) -> {
+            long slowduration = skillContext.getLongNodeValue(SkillNodes.DURATION);
+            int slowamplf = skillContext.getIntNodeValue(SkillNodes.AMPLIFIER);
+            ((ISpongeEntity) target).getEntity().damage(projectileProperties.getDamage(), s);
+            effectService.addEffect(new SlowPotion(target, slowduration, slowamplf), this);
+        });
+        skillContext.next(character, info, SkillResult.OK);
+    }
 }

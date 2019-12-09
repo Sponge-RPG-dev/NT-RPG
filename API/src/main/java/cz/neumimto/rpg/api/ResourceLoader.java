@@ -8,7 +8,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-public interface IResourceLoader {
+public interface ResourceLoader {
 
     void init();
 

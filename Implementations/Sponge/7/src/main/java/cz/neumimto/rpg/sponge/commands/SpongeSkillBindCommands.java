@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.sponge.commands;
 
+import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
@@ -22,7 +23,7 @@ import javax.inject.Singleton;
 @Singleton
 @CommandAlias("bind")
 @CommandPermission("ntrpg.player.skillbind")
-public class SpongeSkillBindCommands extends CommandBase {
+public class SpongeSkillBindCommands extends BaseCommand {
 
     @Inject
     private LocalizationService localizationService;

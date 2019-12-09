@@ -30,13 +30,15 @@ public class LevelProgressionConverter implements Converter<ILevelProgression, C
 
     @Override
     public Config convertFromField(ILevelProgression value) {
-        return null;
+        //NOOP
+        return Config.inMemory();
     }
 
-    public static class  UnknownILevelProgressException extends RuntimeException {
+    public static class UnknownILevelProgressException extends RuntimeException {
 
         public UnknownILevelProgressException(String class__) {
             super(class__);
         }
+
     }
 }

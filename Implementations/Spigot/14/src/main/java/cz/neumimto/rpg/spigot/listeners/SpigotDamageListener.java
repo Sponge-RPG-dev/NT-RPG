@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.spigot.listeners;
 
 import com.google.inject.Singleton;
-import cz.neumimto.rpg.api.IResourceLoader;
+import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.common.damage.AbstractDamageListener;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
@@ -12,7 +12,7 @@ import org.bukkit.event.Listener;
 import javax.inject.Inject;
 
 @Singleton
-@IResourceLoader.ListenerClass
+@ResourceLoader.ListenerClass
 public class SpigotDamageListener extends AbstractDamageListener implements Listener {
 
     @Inject

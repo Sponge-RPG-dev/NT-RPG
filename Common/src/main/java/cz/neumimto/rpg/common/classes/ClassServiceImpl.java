@@ -10,9 +10,9 @@ import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.permissions.PermissionService;
 import cz.neumimto.rpg.common.persistance.dao.ClassDefinitionDao;
 
+import java.util.*;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.*;
 
 @Singleton
 public class ClassServiceImpl implements ClassService {
@@ -95,7 +95,6 @@ public class ClassServiceImpl implements ClassService {
             }
         }
 
-
         intersection.removeIf(next -> !toBeRemoved.contains(next));
 
         toBeRemoved.removeAll(intersection);
@@ -103,27 +102,24 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
-    public void loadClasses() {
+    public void load() {
+        Set<ClassDefinition> classDefinitions = classDefinitionDao.parseClassFiles();
+        classes.clear();
 
-            Set<ClassDefinition> classDefinitions = classDefinitionDao.parseClassFiles();
-            classes.clear();
+        classDefinitions.forEach(this::registerClassDefinition);
 
-            classDefinitions.forEach(this::registerClassDefinition);
-
-            for (ClassDefinition result : classDefinitions) {
-                Map<String, ClassDefinition> classes = getClasses();
-                for (ClassDefinition classDefinition : classes.values()) {
-                    if (classDefinition.getName().equalsIgnoreCase(result.getName())) {
-                        continue;
-                    }
-                    if (classDefinition.getClassType().equalsIgnoreCase(result.getClassType())) {
-                        result.getClassDependencyGraph().getConflicts().add(classDefinition);
-                    }
+        for (ClassDefinition result : classDefinitions) {
+            Map<String, ClassDefinition> classes = getClasses();
+            for (ClassDefinition classDefinition : classes.values()) {
+                if (classDefinition.getName().equalsIgnoreCase(result.getName())) {
+                    continue;
                 }
-
+                if (classDefinition.getClassType().equalsIgnoreCase(result.getClassType())) {
+                    result.getClassDependencyGraph().getConflicts().add(classDefinition);
+                }
             }
+        }
 
-            Log.info("Successfully loaded " + classes.size() + " classes");
-
+        Log.info("Successfully loaded " + classes.size() + " classes");
     }
 }

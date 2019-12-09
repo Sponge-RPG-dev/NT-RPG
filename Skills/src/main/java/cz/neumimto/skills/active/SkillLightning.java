@@ -1,7 +1,7 @@
 package cz.neumimto.skills.active;
 
 import cz.neumimto.Decorator;
-import cz.neumimto.rpg.ResourceLoader;
+import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
@@ -24,26 +24,26 @@ import javax.inject.Singleton;
 @ResourceLoader.Skill("ntrpg:lightning")
 public class SkillLightning extends Targeted {
 
-	@Override
-	public void init() {
-		super.init();
-		setDamageType(NDamageType.LIGHTNING.getId());
-		settings.addNode(SkillNodes.DAMAGE, 10, 20);
-		settings.addNode(SkillNodes.RANGE, 10, 10);
-		addSkillType(SkillType.ELEMENTAL);
-		addSkillType(SkillType.LIGHTNING);
-	}
+    @Override
+    public void init() {
+        super.init();
+        setDamageType(NDamageType.LIGHTNING.getId());
+        settings.addNode(SkillNodes.DAMAGE, 10, 20);
+        settings.addNode(SkillNodes.RANGE, 10, 10);
+        addSkillType(SkillType.ELEMENTAL);
+        addSkillType(SkillType.LIGHTNING);
+    }
 
-	@Override
-	public void castOn(IEntity target, ISpongeCharacter source, PlayerSkillContext info, SkillContext skillContext) {
-		float damage = skillContext.getFloatNodeValue(SkillNodes.DAMAGE);
-		SkillDamageSource s = new SkillDamageSourceBuilder()
-				.fromSkill(this)
-				.setSource(source)
-				.build();
-		ISpongeEntity entity = (ISpongeEntity) target.getEntity();
-		entity.getEntity().damage(damage, s);
-		Decorator.strikeLightning(entity.getEntity());
-		skillContext.next(source, info, skillContext.result(SkillResult.OK));
-	}
+    @Override
+    public void castOn(IEntity target, ISpongeCharacter source, PlayerSkillContext info, SkillContext skillContext) {
+        float damage = skillContext.getFloatNodeValue(SkillNodes.DAMAGE);
+        SkillDamageSource s = new SkillDamageSourceBuilder()
+                .fromSkill(this)
+                .setSource(source)
+                .build();
+        ISpongeEntity entity = (ISpongeEntity) target.getEntity();
+        entity.getEntity().damage(damage, s);
+        Decorator.strikeLightning(entity.getEntity());
+        skillContext.next(source, info, skillContext.result(SkillResult.OK));
+    }
 }

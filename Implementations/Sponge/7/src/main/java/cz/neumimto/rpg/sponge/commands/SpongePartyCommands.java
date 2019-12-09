@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.sponge.commands;
 
+import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Flags;
 import co.aikar.commands.annotation.Subcommand;
@@ -17,7 +18,7 @@ import javax.inject.Singleton;
 
 @Singleton
 @CommandAlias("party|nparty")
-public class SpongePartyCommands {
+public class SpongePartyCommands extends BaseCommand {
 
     @Inject
     private SpongeCharacterService characterService;

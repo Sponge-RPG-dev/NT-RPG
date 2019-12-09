@@ -2,8 +2,8 @@ package cz.neumimto.rpg.common.commands;
 
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
+import cz.neumimto.rpg.api.entity.players.CharacterService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.entity.players.ICharacterService;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.parties.PartyService;
 import cz.neumimto.rpg.api.gui.Gui;
@@ -12,22 +12,21 @@ import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.permissions.PermissionService;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
-import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.utils.ActionResult;
-import cz.neumimto.rpg.common.entity.PropertyService;
+import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 @SuppressWarnings("unchecked")
 @Singleton
 public class CharacterCommandFacade {
 
     @Inject
-    private ICharacterService characterService;
+    private CharacterService characterService;
 
     @Inject
     private LocalizationService localizationService;
@@ -39,7 +38,7 @@ public class CharacterCommandFacade {
     private PartyService partyService;
 
     @Inject
-    private PropertyService propertyService;
+    private PropertyServiceImpl propertyService;
 
     public void commandCommitAttribute(IActiveCharacter character) {
         Map<String, Integer> attributesTransaction = character.getAttributesTransaction();
@@ -76,7 +75,7 @@ public class CharacterCommandFacade {
         return true;
     }
 
-    public void commandCreateCharacter(UUID uuid, String name, Consumer<ActionResult> actionResultConsumer) {
+    public void commandCreateCharacter(UUID uuid, String name, String playerName, Consumer<ActionResult> actionResultConsumer) {
         CompletableFuture.runAsync(() -> {
             int i = characterService.canCreateNewCharacter(uuid, name);
             if (i == 1) {
@@ -84,7 +83,7 @@ public class CharacterCommandFacade {
             } else if (i == 2) {
                 actionResultConsumer.accept(ActionResult.withErrorMessage(localizationService.translate(LocalizationKeys.CHARACTER_EXISTS)));
             } else if (i == 0) {
-                CharacterBase characterBase = characterService.createCharacterBase(name, uuid);
+                CharacterBase characterBase = characterService.createCharacterBase(name, uuid, playerName);
 
                 characterService.create(characterBase);
 
@@ -100,7 +99,7 @@ public class CharacterCommandFacade {
 
     public void commandSwitchCharacter(IActiveCharacter current, String nameNext, Consumer<Runnable> syncCallback) {
         if (current != null && current.getName().equalsIgnoreCase(nameNext)) {
-            current.sendMessage(localizationService.translate(LocalizationKeys.ALREADY_CUURENT_CHARACTER));
+            current.sendMessage(localizationService.translate(LocalizationKeys.ALREADY_CURRENT_CHARACTER));
             return;
         }
         CompletableFuture.runAsync(() -> {
@@ -127,6 +126,7 @@ public class CharacterCommandFacade {
     private static class CommandSyncCallback implements Runnable {
         private final IActiveCharacter character;
         private CharacterCommandFacade facade;
+
         private CommandSyncCallback(IActiveCharacter character, CharacterCommandFacade facade) {
             this.character = character;
             this.facade = facade;

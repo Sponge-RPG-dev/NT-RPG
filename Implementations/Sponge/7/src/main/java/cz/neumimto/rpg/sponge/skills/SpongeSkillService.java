@@ -27,9 +27,9 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 
-import javax.inject.Singleton;
 import java.util.HashMap;
 import java.util.Map;
+import javax.inject.Singleton;
 
 /**
  * Created by NeumimTo on 1.1.2015.
@@ -63,7 +63,8 @@ public class SpongeSkillService extends AbstractSkillService {
             guiModelByCharacter.put(split[0].charAt(0), model);
             i++;
         }
-        scriptSkillsParents.put("targetted", TargetedScriptSkill.class);
+
+        scriptSkillsParents.put("targeted", TargetedScriptSkill.class);
     }
 
     @Override

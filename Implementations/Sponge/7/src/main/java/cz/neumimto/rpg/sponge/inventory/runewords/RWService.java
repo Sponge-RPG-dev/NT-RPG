@@ -4,7 +4,7 @@ import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.effects.EffectParams;
-import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.api.items.sockets.SocketType;
 import cz.neumimto.rpg.api.items.sockets.SocketTypes;
@@ -57,7 +57,7 @@ public class RWService {
     private RWDao dao;
 
     @Inject
-    private IEffectService effectService;
+    private EffectService effectService;
 
     @Inject
     private SpongeItemService itemService;

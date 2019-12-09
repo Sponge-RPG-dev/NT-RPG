@@ -16,29 +16,26 @@
  *
  */
 
-package cz.neumimto.rpg;
+package cz.neumimto.rpg.sponge;
 
+import static cz.neumimto.rpg.api.logging.Log.info;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.common.AbstractResourceManager;
 import cz.neumimto.rpg.sponge.commands.CommandBase;
-import cz.neumimto.rpg.sponge.commands.CommandService;
+import cz.neumimto.rpg.sponge.commands.SpongeCommandService;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
-import static cz.neumimto.rpg.api.logging.Log.info;
 
 /**
  * Created by NeumimTo on 27.12.2014.
  */
 @SuppressWarnings("unchecked")
 @Singleton
-public class ResourceLoader extends AbstractResourceManager {
-
-
+public class SpongeResourceLoader extends AbstractResourceManager {
 
     @Inject
-    private CommandService commandService;
+    private SpongeCommandService commandService;
 
     @Override
     public Object loadClass(Class<?> clazz) throws IllegalAccessException, InstantiationException {

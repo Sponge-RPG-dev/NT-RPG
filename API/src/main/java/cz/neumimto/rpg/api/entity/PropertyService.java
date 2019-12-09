@@ -2,16 +2,17 @@ package cz.neumimto.rpg.api.entity;
 
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
 
-import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 
-public interface IPropertyService {
+public interface PropertyService {
 
-    void init(Path attributeConf, Path propertiesDump);
+    void load();
 
-    void reLoadAttributes(Path attributeFilePath);
+    void reload();
+
+    void reLoadAttributes();
 
     int getIdByName(String name);
 
@@ -39,7 +40,7 @@ public interface IPropertyService {
 
     void addPropertyToRequiresDamageRecalc(int i);
 
-    void loadMaximalServerPropertyValues(Path path);
+    void loadMaximalServerPropertyValues();
 
     Optional<AttributeConfig> getAttributeById(String attribute);
 

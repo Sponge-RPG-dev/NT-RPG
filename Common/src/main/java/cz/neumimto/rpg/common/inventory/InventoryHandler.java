@@ -1,9 +1,9 @@
 package cz.neumimto.rpg.common.inventory;
 
 import cz.neumimto.rpg.api.effects.EffectParams;
-import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
-import cz.neumimto.rpg.api.entity.players.ICharacterService;
+import cz.neumimto.rpg.api.entity.players.CharacterService;
 import cz.neumimto.rpg.api.inventory.CharacterInventoryInteractionHandler;
 import cz.neumimto.rpg.api.inventory.InventoryService;
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
@@ -30,10 +30,10 @@ public class InventoryHandler implements CharacterInventoryInteractionHandler {
     private InventoryService inventoryService;
 
     @Inject
-    private IEffectService effectService;
+    private EffectService effectService;
 
     @Inject
-    private ICharacterService<? super IActiveCharacter> characterService;
+    private CharacterService<? super IActiveCharacter> characterService;
 
     @Override
     public boolean handleCharacterEquipActionPre(IActiveCharacter character, ManagedSlot managedSlot, RpgItemStack rpgItemStack) {

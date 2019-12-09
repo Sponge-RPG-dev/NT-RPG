@@ -8,7 +8,7 @@ import javax.inject.Singleton;
 @Singleton
 public class TestDamageService extends AbstractDamageService {
     @Override
-    public void damageEntity(IEntity character, double maxValue) {
+    public void damageEntity(IEntity character, double value) {
 
     }
 

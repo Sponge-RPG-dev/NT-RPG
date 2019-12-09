@@ -1,19 +1,15 @@
 package cz.neumimto.rpg.sponge;
 
-import com.google.inject.Inject;
-import com.google.inject.Injector;
-import com.google.inject.Provider;
-import com.google.inject.TypeLiteral;
-import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.api.IResourceLoader;
+import com.google.inject.*;
+import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.damage.DamageService;
-import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.entity.EntityService;
+import cz.neumimto.rpg.api.entity.players.CharacterService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.entity.players.ICharacterService;
 import cz.neumimto.rpg.api.entity.players.parties.PartyService;
 import cz.neumimto.rpg.api.events.EventFactoryService;
-import cz.neumimto.rpg.api.exp.IExperienceService;
+import cz.neumimto.rpg.api.exp.ExperienceService;
 import cz.neumimto.rpg.api.gui.IPlayerMessage;
 import cz.neumimto.rpg.api.inventory.CharacterInventoryInteractionHandler;
 import cz.neumimto.rpg.api.inventory.InventoryService;
@@ -27,7 +23,7 @@ import cz.neumimto.rpg.common.entity.configuration.MobSettingsDao;
 import cz.neumimto.rpg.common.inventory.InventoryHandler;
 import cz.neumimto.rpg.common.inventory.crafting.runewords.RWDao;
 import cz.neumimto.rpg.sponge.assets.SpongeAssetService;
-import cz.neumimto.rpg.sponge.commands.CommandService;
+import cz.neumimto.rpg.sponge.commands.SpongeCommandService;
 import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
 import cz.neumimto.rpg.sponge.effects.SpongeEffectService;
 import cz.neumimto.rpg.sponge.entities.SpongeEntityService;
@@ -76,18 +72,18 @@ public class SpongeGuiceModule extends AbstractRpgGuiceModule {
         map.put(IPlayerMessage.class, VanillaMessaging.class);
         map.put(ClassGenerator.class, SpongeClassGenerator.class);
         map.put(DamageService.class, SpongeDamageService.class);
-        map.put(IEffectService.class, SpongeEffectService.class);
+        map.put(EffectService.class, SpongeEffectService.class);
         map.put(EntityService.class, SpongeEntityService.class);
         map.put(MobSettingsDao.class, SpongeMobSettingsDao.class);
-        map.put(IExperienceService.class, SpongeExperienceService.class);
+        map.put(ExperienceService.class, SpongeExperienceService.class);
         map.put(ItemService.class, SpongeItemService.class);
         map.put(InventoryService.class, SpongeInventoryService.class);
         map.put(AssetService.class, SpongeAssetService.class);
         map.put(PermissionService.class, SpongePermissionService.class);
         map.put(EventFactoryService.class, SpongeEventFactory.class);
         map.put(CharacterInventoryInteractionHandler.class, InventoryHandler.class);
-        map.put(IResourceLoader.class, ResourceLoader.class);
-        map.put(CommandService.class, null);
+        map.put(ResourceLoader.class, SpongeResourceLoader.class);
+        map.put(SpongeCommandService.class, null);
         map.put(ParticleDecorator.class, null);
         map.put(ItemLoreBuilderService.class, null);
         map.put(RWDao.class, null);
@@ -106,11 +102,11 @@ public class SpongeGuiceModule extends AbstractRpgGuiceModule {
             bind(Placeholders.class);
         }
 
-        bind(new TypeLiteral<ICharacterService>() {
+        bind(new TypeLiteral<CharacterService>() {
         }).toProvider(SpongeCharacterServiceProvider.class);
-        bind(new TypeLiteral<ICharacterService<? extends IActiveCharacter>>() {
+        bind(new TypeLiteral<CharacterService<? extends IActiveCharacter>>() {
         }).to(SpongeCharacterService.class);
-        bind(new TypeLiteral<ICharacterService<? super IActiveCharacter>>() {
+        bind(new TypeLiteral<CharacterService<? super IActiveCharacter>>() {
         }).toProvider(SpongeCharacterServiceProvider1.class);
 
         bind(Game.class).toProvider(() -> game);
@@ -122,14 +118,13 @@ public class SpongeGuiceModule extends AbstractRpgGuiceModule {
 
     private static SpongeCharacterService scs;
 
-    public static class SpongeCharacterServiceProvider implements Provider<ICharacterService<IActiveCharacter>> {
+    public static class SpongeCharacterServiceProvider implements Provider<CharacterService<IActiveCharacter>> {
 
         @Inject
         private Injector injector;
 
-
         @Override
-        public ICharacterService get() {
+        public CharacterService get() {
             if (scs == null) {
                 scs = injector.getInstance(SpongeCharacterService.class);
             }
@@ -137,17 +132,17 @@ public class SpongeGuiceModule extends AbstractRpgGuiceModule {
         }
     }
 
-    public static class SpongeCharacterServiceProvider1 implements Provider<ICharacterService<? super IActiveCharacter>> {
+    public static class SpongeCharacterServiceProvider1 implements Provider<CharacterService<? super IActiveCharacter>> {
 
         @Inject
         private Injector injector;
 
         @Override
-        public ICharacterService<? super IActiveCharacter> get() {
+        public CharacterService<? super IActiveCharacter> get() {
             if (scs == null) {
                 scs = injector.getInstance(SpongeCharacterService.class);
             }
-            return (ICharacterService) scs;
+            return (CharacterService) scs;
         }
     }
 }

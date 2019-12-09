@@ -28,7 +28,9 @@ import java.util.Set;
 /**
  * Created by NeumimTo on 28.12.2014.
  */
-public interface ClassService  {
+public interface ClassService {
+
+    void load();
 
     Map<String, ClassDefinition> getClasses();
 
@@ -44,5 +46,4 @@ public interface ClassService  {
 
     Set<String> getPermissionsToRemove(IActiveCharacter character, ClassDefinition toBeReplaced);
 
-    void loadClasses();
 }

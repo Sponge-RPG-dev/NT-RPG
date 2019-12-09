@@ -18,7 +18,7 @@ import java.util.Optional;
 public class AttributeRefMenuData extends AbstractSingleData<String, AttributeRefMenuData, AttributeRefMenuData.Immutable> {
 
     public AttributeRefMenuData(String value) {
-        super(value, NKeys.COMMAND);
+        super(value, NKeys.MENU_COMMAND);
     }
 
     @Override
@@ -38,8 +38,8 @@ public class AttributeRefMenuData extends AbstractSingleData<String, AttributeRe
     }
 
     public Optional<AttributeRefMenuData> from(DataView view) {
-        if (view.contains(NKeys.COMMAND.getQuery())) {
-            setValue(view.getString(NKeys.COMMAND.getQuery()).get());
+        if (view.contains(NKeys.MENU_COMMAND.getQuery())) {
+            setValue(view.getString(NKeys.MENU_COMMAND.getQuery()).get());
             return Optional.of(this);
         }
         return Optional.empty();
@@ -53,7 +53,7 @@ public class AttributeRefMenuData extends AbstractSingleData<String, AttributeRe
 
     @Override
     protected Value<?> getValueGetter() {
-        return Sponge.getRegistry().getValueFactory().createValue(NKeys.COMMAND, getValue());
+        return Sponge.getRegistry().getValueFactory().createValue(NKeys.MENU_COMMAND, getValue());
     }
 
     @Override
@@ -69,19 +69,19 @@ public class AttributeRefMenuData extends AbstractSingleData<String, AttributeRe
     @Override
     public DataContainer toContainer() {
         return super.toContainer()
-                .set(NKeys.COMMAND.getQuery(), getValue());
+                .set(NKeys.MENU_COMMAND.getQuery(), getValue());
     }
 
     public static class Immutable extends AbstractImmutableSingleData<String, Immutable, AttributeRefMenuData> {
 
 
         public Immutable(String value) {
-            super(value, NKeys.COMMAND);
+            super(value, NKeys.MENU_COMMAND);
         }
 
         @Override
         protected ImmutableValue<?> getValueGetter() {
-            return Sponge.getRegistry().getValueFactory().createValue(NKeys.COMMAND, getValue()).asImmutable();
+            return Sponge.getRegistry().getValueFactory().createValue(NKeys.MENU_COMMAND, getValue()).asImmutable();
         }
 
         @Override
@@ -96,14 +96,14 @@ public class AttributeRefMenuData extends AbstractSingleData<String, AttributeRe
 
         @Override
         public DataContainer toContainer() {
-            return super.toContainer().set(NKeys.COMMAND.getQuery(), getValue());
+            return super.toContainer().set(NKeys.MENU_COMMAND.getQuery(), getValue());
         }
     }
 
-    public static class AttributeRefMenuDataBuilder extends AbstractDataBuilder<AttributeRefMenuData>
+    public static class Builder extends AbstractDataBuilder<AttributeRefMenuData>
             implements DataManipulatorBuilder<AttributeRefMenuData, Immutable> {
 
-        public AttributeRefMenuDataBuilder() {
+        public Builder() {
             super(AttributeRefMenuData.class, 1);
         }
 

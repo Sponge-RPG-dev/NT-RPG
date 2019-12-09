@@ -4,27 +4,15 @@ import cz.neumimto.rpg.api.events.character.*;
 import cz.neumimto.rpg.api.events.damage.*;
 import cz.neumimto.rpg.api.events.effect.EffectApplyEvent;
 import cz.neumimto.rpg.api.events.effect.EffectRemoveEvent;
-import cz.neumimto.rpg.api.events.party.PartyCreateEvent;
-import cz.neumimto.rpg.api.events.party.PartyInviteEvent;
-import cz.neumimto.rpg.api.events.party.PartyJoinEvent;
-import cz.neumimto.rpg.api.events.party.PartyLeaveEvent;
-import cz.neumimto.rpg.api.events.skill.SkillHealEvent;
-import cz.neumimto.rpg.api.events.skill.SkillPostUsageEvent;
-import cz.neumimto.rpg.api.events.skill.SkillPreUsageEvent;
-import cz.neumimto.rpg.api.events.skill.SkillTargetAttemptEvent;
+import cz.neumimto.rpg.api.events.party.*;
+import cz.neumimto.rpg.api.events.skill.*;
 import cz.neumimto.rpg.common.events.EventFactoryImpl;
 import cz.neumimto.rpg.sponge.events.character.*;
 import cz.neumimto.rpg.sponge.events.damage.*;
 import cz.neumimto.rpg.sponge.events.effects.SpongeEffectApplyEvent;
 import cz.neumimto.rpg.sponge.events.effects.SpongeEffectRemoveEvent;
-import cz.neumimto.rpg.sponge.events.party.SpongePartyCreateEvent;
-import cz.neumimto.rpg.sponge.events.party.SpongePartyInviteEvent;
-import cz.neumimto.rpg.sponge.events.party.SpongePartyJoinEvent;
-import cz.neumimto.rpg.sponge.events.party.SpongePartyLeaveEvent;
-import cz.neumimto.rpg.sponge.events.skill.SpongeHealEvent;
-import cz.neumimto.rpg.sponge.events.skill.SpongeSkillPostUsageEvent;
-import cz.neumimto.rpg.sponge.events.skill.SpongeSkillPreUsageEvent;
-import cz.neumimto.rpg.sponge.events.skill.SpongeSkillTargetAttemptEvent;
+import cz.neumimto.rpg.sponge.events.party.*;
+import cz.neumimto.rpg.sponge.events.skill.*;
 
 import javax.inject.Singleton;
 
@@ -89,6 +77,5 @@ public class SpongeEventFactory extends EventFactoryImpl {
         super.registerProvider(SpongeSkillTargetAttemptEvent.class, SpongeSkillTargetAttemptEvent::new);
         super.registerProvider(SpongeEntityProjectileDamageLateEvent.class, SpongeEntityProjectileDamageLateEvent::new);
         super.registerProvider(SpongeEntityProjectileDamageEarlyEvent.class, SpongeEntityProjectileDamageEarlyEvent::new);
-
     }
 }

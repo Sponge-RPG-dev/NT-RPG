@@ -19,7 +19,7 @@
 package cz.neumimto.rpg.sponge.listeners;
 
 import com.google.inject.Singleton;
-import cz.neumimto.rpg.api.IResourceLoader;
+import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.inventory.InventoryService;
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
@@ -29,9 +29,7 @@ import cz.neumimto.rpg.common.inventory.InventoryHandler;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
 import cz.neumimto.rpg.sponge.inventory.SpongeItemService;
-import cz.neumimto.rpg.sponge.inventory.data.NKeys;
 import cz.neumimto.rpg.sponge.utils.ItemStackUtils;
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
@@ -46,10 +44,7 @@ import org.spongepowered.api.event.item.inventory.ChangeInventoryEvent;
 import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.event.item.inventory.DropItemEvent;
 import org.spongepowered.api.item.ItemTypes;
-import org.spongepowered.api.item.inventory.Carrier;
-import org.spongepowered.api.item.inventory.Inventory;
-import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.item.inventory.Slot;
+import org.spongepowered.api.item.inventory.*;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
@@ -57,42 +52,39 @@ import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
 import org.spongepowered.api.item.inventory.type.CarriedInventory;
 import org.spongepowered.api.util.Tristate;
 
-import javax.inject.Inject;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import javax.inject.Inject;
 
 
 /**
  * Created by NeumimTo on 22.7.2015.
  */
 @Singleton
-@IResourceLoader.ListenerClass
+@ResourceLoader.ListenerClass
 public class InventoryListener {
+
+    private final static int OFFHAND_SLOT_ID = 40;
 
     @Inject
     private SpongeCharacterService characterService;
-
     @Inject
     private InventoryHandler inventoryHandler;
-
     @Inject
     private InventoryService inventoryService;
-
     @Inject
     private SpongeItemService itemService;
-
-    private final static int OFFHAND_SLOT_ID = 40;
 
     @Listener
     @IsCancelled(Tristate.FALSE)
     public void onItemPickup(ChangeInventoryEvent.Pickup event, @Root Player player) {
-        player.getInventory();
-        Inventory targetInventory = player.getInventory();
-        IActiveCharacter character = characterService.getCharacter(player);
+        ISpongeCharacter character = characterService.getCharacter(player);
         if (character.isStub()) {
             return;
         }
+
+        Inventory targetInventory = player.getInventory();
 
         SlotTransaction slotTransaction = event.getTransactions().get(0);
         Map<Class<?>, RpgInventory> managedInventory = character.getManagedInventory();
@@ -108,12 +100,9 @@ public class InventoryListener {
                 Optional<RpgItemStack> rpgItemStack = itemService.getRpgItemStack(slotTransaction.getFinal().createStack());
                 rpgItemStack.ifPresent(itemStack -> {
                     ManagedSlot managedSlot = rpgInventory.getManagedSlots().get(value);
-                    if (inventoryHandler.isValidItemForSlot(managedSlot, itemStack) &&
-                            inventoryHandler.handleCharacterEquipActionPre(character, managedSlot, itemStack)) {
+                    if (inventoryHandler.handleCharacterEquipActionPre(character, managedSlot, itemStack)) {
                         inventoryHandler.handleCharacterEquipActionPost(character, managedSlot, itemStack);
                         character.setRequiresDamageRecalculation(true);
-                    } else {
-                        event.setCancelled(true);
                     }
                 });
             }
@@ -123,14 +112,15 @@ public class InventoryListener {
     @Listener
     @IsCancelled(Tristate.FALSE)
     public void onItemDrop(DropItemEvent.Pre event, @Root Player player) {
+        ISpongeCharacter character = characterService.getCharacter(player);
+        if (character.isStub()) {
+            return;
+        }
+
         if (!player.getOpenInventory().isPresent()) {
             return;
         }
 
-        IActiveCharacter character = characterService.getCharacter(player);
-        if (character.isStub()) {
-            return;
-        }
         CarriedInventory<? extends Carrier> inventory = player.getInventory();
         Hotbar query = inventory.query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
         int selectedSlotIndex = query.getSelectedSlotIndex();
@@ -149,8 +139,12 @@ public class InventoryListener {
 
 
     @Listener
-    public void onHotbarInteract(HandInteractEvent event, @First(typeFilter = Player.class) Player player) {
-        IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
+    public void onHotbarInteract(HandInteractEvent event, @First Player player) {
+        ISpongeCharacter character = characterService.getCharacter(player);
+        if (character.isStub()) {
+            return;
+        }
+
         CarriedInventory<? extends Carrier> inventory = player.getInventory();
 
         Hotbar query = inventory.query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
@@ -190,28 +184,6 @@ public class InventoryListener {
             }
         }
     }
-
-
-    @Listener
-    @Include({
-            ClickInventoryEvent.Primary.class,
-            ClickInventoryEvent.Secondary.class
-    })
-    @IsCancelled(Tristate.FALSE)
-    public void onClick(ClickInventoryEvent event, @Root Player player) {
-        List<SlotTransaction> transactions = event.getTransactions();
-        for (SlotTransaction transaction : transactions) {
-            Optional<String> s = transaction.getOriginal().get(NKeys.COMMAND);
-            s.ifPresent(value -> Sponge.getCommandManager().process(player, value));
-            Optional<Boolean> aBoolean = transaction.getOriginal().get(NKeys.MENU_INVENTORY);
-            if (aBoolean.isPresent()) {
-                if (aBoolean.get()) {
-                    event.setCancelled(true);
-                }
-            }
-        }
-    }
-
 
     @Listener
     @Include({

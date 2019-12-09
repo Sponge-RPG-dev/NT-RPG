@@ -1,10 +1,7 @@
 package cz.neumimto.persistence;
 
 import cz.neumimto.rpg.api.persistance.model.*;
-import cz.neumimto.rpg.persistence.model.BaseCharacterAttributeImpl;
-import cz.neumimto.rpg.persistence.model.CharacterBaseImpl;
-import cz.neumimto.rpg.persistence.model.CharacterClassImpl;
-import cz.neumimto.rpg.persistence.model.CharacterSkillImpl;
+import cz.neumimto.rpg.persistence.model.*;
 
 import java.util.*;
 
@@ -15,10 +12,9 @@ public class TestHelper {
         characterBase.setId(null);
         characterBase.setAttributePoints(1);
         characterBase.setAttributePointsSpent(2);
-        characterBase.setCanResetskills(true);
+        characterBase.setCanResetSkills(true);
         characterBase.setHealthScale(5D);
-        characterBase.setInfo("Info");
-        characterBase.setInventoryEquipSlotOrder(Arrays.asList(new EquipedSlotImpl(1),new EquipedSlotImpl(7),new EquipedSlotImpl(5)));
+        characterBase.setInventoryEquipSlotOrder(Arrays.asList(new EquipedSlotImpl(1), new EquipedSlotImpl(7), new EquipedSlotImpl(5)));
         characterBase.setLastKnownPlayerName("TTest");
         characterBase.setLastReset(new Date());
         characterBase.setMarkedForRemoval(false);
@@ -54,7 +50,8 @@ public class TestHelper {
         characterClass.setName("CLass1");
         characterClass.setSkillPoints(5);
         characterClass.setUsedSkillPoints(0);
-
+        characterClass.setCreated(new Date());
+        characterClass.setUpdated(new Date());
         classes.add(characterClass);
         characterClass = new CharacterClassImpl();
         characterClass.setCharacterBase(characterBase);
@@ -62,6 +59,8 @@ public class TestHelper {
         characterClass.setName("CLass2");
         characterClass.setSkillPoints(10);
         characterClass.setUsedSkillPoints(25);
+        characterClass.setCreated(new Date());
+        characterClass.setUpdated(new Date());
         characterBase.setCharacterClasses(classes);
 
         CharacterSkill characterSkill = new CharacterSkillImpl();
@@ -70,9 +69,9 @@ public class TestHelper {
         characterSkill.setLevel(1);
         characterSkill.setCatalogId("SkillId");
         characterSkill.setFromClass(characterClass);
-
+        characterSkill.setCreated(new Date());
+        characterSkill.setUpdated(new Date());
         classes.add(characterClass);
-
 
 
         Set<CharacterSkill> skills = new HashSet<>();
@@ -92,6 +91,11 @@ public class TestHelper {
         @Override
         public int getSlotIndex() {
             return slotIndex;
+        }
+
+        @Override
+        public String toString() {
+            return String.valueOf(slotIndex);
         }
     }
 }

@@ -8,7 +8,9 @@ import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.skills.ISkill;
+import cz.neumimto.rpg.common.inventory.runewords.RuneWord;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -91,6 +93,18 @@ public class ACFBootstrap {
         manager.getCommandCompletions().registerAsyncCompletion("socket-type", c->
                 Rpg.get().getItemService().getSocketTypes().keySet()
         );
+
+        manager.getCommandCompletions().registerAsyncCompletion("runeword", c-> {
+            return Collections.emptyList();
+            //todo
+        });
+
+        manager.getCommandContexts().registerContext(RuneWord.class, c -> {
+            String firstArg = c.getFirstArg();
+            c.popFirstArg();
+            //todo
+            return new RuneWord();
+        });
 
         for (BaseCommand o : commandClasses) {
             manager.registerCommand(o);

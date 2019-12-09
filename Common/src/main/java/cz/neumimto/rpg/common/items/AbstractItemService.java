@@ -1,12 +1,15 @@
 package cz.neumimto.rpg.common.items;
 
+import static cz.neumimto.rpg.api.logging.Log.error;
+import static cz.neumimto.rpg.api.logging.Log.info;
+import static cz.neumimto.rpg.api.logging.Log.warn;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
 import com.typesafe.config.ConfigFactory;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.configuration.ItemString;
-import cz.neumimto.rpg.api.entity.IPropertyService;
+import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
@@ -14,34 +17,28 @@ import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.items.*;
 import cz.neumimto.rpg.api.items.sockets.SocketType;
 import cz.neumimto.rpg.common.assets.AssetService;
-import cz.neumimto.rpg.common.entity.PropertyService;
+import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.common.inventory.items.ItemMetaType;
 import cz.neumimto.rpg.common.inventory.items.subtypes.ItemSubtype;
 
-import javax.inject.Inject;
 import java.io.File;
-import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
-
-import static cz.neumimto.rpg.api.logging.Log.*;
+import javax.inject.Inject;
 
 public abstract class AbstractItemService implements ItemService {
 
-    @Inject
-    protected IPropertyService propertyService;
-
-    @Inject
-    private AssetService assetService;
-
     protected Map<String, RpgItemType> items = new HashMap<>();
-
     protected Map<String, ItemClass> weaponClassMap = new HashMap<>();
     protected Map<String, SocketType> socketTypes = new HashMap<>();
     protected Map<String, ItemMetaType> itemMetaTypes = new HashMap<>();
     protected Map<String, ItemSubtype> itemSubtypes = new HashMap<>();
+    protected Map<AttributeConfig, Integer> itemAttributesPlaceholder = new HashMap<>();
 
-    protected Map<AttributeConfig, Integer> itemAttributesPlaceholder;
-
+    @Inject
+    protected PropertyService propertyService;
+    @Inject
+    private AssetService assetService;
 
     @Override
     public Optional<ItemClass> getWeaponClassByName(String clazz) {
@@ -88,7 +85,7 @@ public abstract class AbstractItemService implements ItemService {
 
     @Override
     public void registerProperty(ItemClass itemClass, String property) {
-        int val = PropertyService.getAndIncrement.get();
+        int val = PropertyServiceImpl.getAndIncrement.get();
 
         if (!propertyService.exists(property)) {
             propertyService.registerProperty(property, val);
@@ -101,7 +98,6 @@ public abstract class AbstractItemService implements ItemService {
         } else {
             itemClass.getProperties().add(val);
         }
-
     }
 
     @Override
@@ -147,15 +143,14 @@ public abstract class AbstractItemService implements ItemService {
     }
 
     @Override
-    public void loadItemGroups(Path path) {
-        File f = path.toFile();
+    public void load() {
+        File f = Paths.get(Rpg.get().getWorkingDirectory()).resolve("ItemGroups.conf").toFile();
         if (!f.exists()) {
             assetService.copyToFile("ItemGroups.conf", f.toPath());
         }
 
         Config c = ConfigFactory.parseFile(f);
         loadItemGroups(c);
-
     }
 
     @Override
@@ -165,10 +160,11 @@ public abstract class AbstractItemService implements ItemService {
         loadWeaponGroups(itemGroups, null);
 
         info("Loading Armor configuration");
-        for (String shield : config.getStringList("Armor")) {
-            Optional<RpgItemType> rpgItemType = createRpgItemType(ItemString.parse(shield), ItemClass.ARMOR);
+        for (String armor : config.getStringList("Armor")) {
+            Optional<RpgItemType> rpgItemType = createRpgItemType(ItemString.parse(armor), ItemClass.ARMOR);
             rpgItemType.ifPresent(this::registerRpgItemType);
         }
+
         info("Loading Shields configuration");
         for (String shield : config.getStringList("Shields")) {
             Optional<RpgItemType> rpgItemType = createRpgItemType(ItemString.parse(shield), ItemClass.SHIELD);
@@ -259,7 +255,6 @@ public abstract class AbstractItemService implements ItemService {
 
     @Override
     public void registerItemAttributes(Collection<AttributeConfig> attributes) {
-        this.itemAttributesPlaceholder = new HashMap<>();
         for (AttributeConfig attribute : attributes) {
             itemAttributesPlaceholder.put(attribute, 0);
         }
@@ -276,6 +271,18 @@ public abstract class AbstractItemService implements ItemService {
 
     public Map<String, ItemSubtype> getItemSubtypes() {
         return itemSubtypes;
+    }
+
+    @Override
+    public void reload() {
+        items.clear();
+        weaponClassMap.clear();
+        socketTypes.clear();
+        itemMetaTypes.clear();
+        itemSubtypes.clear();
+        itemAttributesPlaceholder.clear();
+
+        load();
     }
 }
 

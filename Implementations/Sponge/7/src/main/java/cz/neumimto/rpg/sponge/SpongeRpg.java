@@ -13,8 +13,6 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.Event;
 import org.spongepowered.api.text.Text;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
@@ -22,6 +20,8 @@ import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 @Singleton
 public final class SpongeRpg extends AbstractRpg {
@@ -93,12 +93,11 @@ public final class SpongeRpg extends AbstractRpg {
         particleDecorator.initModels();
 
         rwService.load();
-
     }
 
     @Override
     public void scheduleSyncLater(Runnable runnable) {
-        Sponge.getScheduler().createTaskBuilder().execute(runnable).submit(SpongeRpgPlugin.getInstance());
+        Sponge.getScheduler().createTaskBuilder().delayTicks(1).execute(runnable).submit(SpongeRpgPlugin.getInstance());
     }
 
     public VanillaMessaging getVanillaMessaging() {

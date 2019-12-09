@@ -2,18 +2,15 @@ package cz.neumimto.rpg.common.impl;
 
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
-import cz.neumimto.rpg.common.entity.PropertyService;
+import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.common.entity.TestCharacter;
-import cz.neumimto.rpg.common.entity.players.CharacterService;
+import cz.neumimto.rpg.common.entity.players.AbstractCharacterService;
 
+import java.util.*;
 import javax.inject.Singleton;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
 @Singleton
-public class TestCharacterService extends CharacterService<TestCharacter> {
+public class TestCharacterService extends AbstractCharacterService<TestCharacter> {
 
     private Map<UUID, TestCharacter> characterMap = new HashMap<>();
 
@@ -30,15 +27,15 @@ public class TestCharacterService extends CharacterService<TestCharacter> {
 
     @Override
     protected TestCharacter createCharacter(UUID player, CharacterBase characterBase) {
-        return new TestCharacter(player, characterBase, PropertyService.LAST_ID);
+        return new TestCharacter(player, characterBase, PropertyServiceImpl.LAST_ID);
     }
 
     @Override
     public TestCharacter buildDummyChar(UUID uuid) {
-        return new TestCharacter(uuid, createCharacterBase(), PropertyService.LAST_ID) {
+        return new TestCharacter(uuid, createCharacterBase(), PropertyServiceImpl.LAST_ID) {
 
             @Override
-            public boolean isStub(){
+            public boolean isStub() {
                 return true;
             }
         };

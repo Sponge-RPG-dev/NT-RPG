@@ -3,8 +3,8 @@ package cz.neumimto.rpg;
 
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.ClassTypeDefinition;
+import cz.neumimto.rpg.api.entity.players.CharacterService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.entity.players.ICharacterService;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.persistance.model.CharacterClass;
@@ -41,7 +41,7 @@ public class ClassManipulationTests {
     ClassDefinition ps3;
 
     @Inject
-    ICharacterService<IActiveCharacter> characterService;
+    CharacterService<IActiveCharacter> characterService;
 
     private IActiveCharacter character;
 

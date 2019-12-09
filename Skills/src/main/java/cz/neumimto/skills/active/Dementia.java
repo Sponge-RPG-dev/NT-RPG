@@ -1,8 +1,8 @@
 package cz.neumimto.skills.active;
 
 import cz.neumimto.effects.positive.AllSkillsBonus;
-import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.api.ResourceLoader;
+import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
@@ -23,26 +23,26 @@ import javax.inject.Singleton;
 @ResourceLoader.Skill("ntrpg:dementia")
 public class Dementia extends Targeted {
 
-	@Inject
-	private EntityService entityService;
+    @Inject
+    private EntityService entityService;
 
-	@Inject
-	private IEffectService effectService;
+    @Inject
+    private EffectService effectService;
 
-	@Override
-	public void init() {
-		super.init();
-		settings.addNode(SkillNodes.DURATION, 30000, 1500);
-		settings.addNode("skill-level", 1, 2);
-		addSkillType(SkillType.DISEASE);
-	}
+    @Override
+    public void init() {
+        super.init();
+        settings.addNode(SkillNodes.DURATION, 30000, 1500);
+        settings.addNode("skill-level", 1, 2);
+        addSkillType(SkillType.DISEASE);
+    }
 
-	@Override
-	public void castOn(IEntity target, ISpongeCharacter source, PlayerSkillContext info, SkillContext skillContext) {
-		long duration = skillContext.getLongNodeValue(SkillNodes.DURATION);
-		int skillLevel = skillContext.getIntNodeValue("skill-level");
-		AllSkillsBonus bonus = new AllSkillsBonus(target, duration, -1 * skillLevel);
-		effectService.addEffect(bonus, this);
-		skillContext.next(source, info, SkillResult.OK);
-	}
+    @Override
+    public void castOn(IEntity target, ISpongeCharacter source, PlayerSkillContext info, SkillContext skillContext) {
+        long duration = skillContext.getLongNodeValue(SkillNodes.DURATION);
+        int skillLevel = skillContext.getIntNodeValue("skill-level");
+        AllSkillsBonus bonus = new AllSkillsBonus(target, duration, -1 * skillLevel);
+        effectService.addEffect(bonus, this);
+        skillContext.next(source, info, SkillResult.OK);
+    }
 }

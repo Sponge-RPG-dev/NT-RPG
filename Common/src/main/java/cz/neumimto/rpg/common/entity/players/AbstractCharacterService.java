@@ -17,18 +17,21 @@
  */
 package cz.neumimto.rpg.common.entity.players;
 
+import static cz.neumimto.rpg.api.localization.Arg.arg;
+import static cz.neumimto.rpg.api.logging.Log.info;
+import static cz.neumimto.rpg.api.logging.Log.warn;
 import cz.neumimto.rpg.api.IRpgElement;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.damage.DamageService;
-import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.entity.CommonProperties;
 import cz.neumimto.rpg.api.entity.EntityService;
-import cz.neumimto.rpg.api.entity.IPropertyService;
+import cz.neumimto.rpg.api.entity.PropertyService;
+import cz.neumimto.rpg.api.entity.players.CharacterService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.entity.players.ICharacterService;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.DependencyGraph;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
@@ -40,10 +43,7 @@ import cz.neumimto.rpg.api.inventory.InventoryService;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.permissions.PermissionService;
-import cz.neumimto.rpg.api.persistance.model.BaseCharacterAttribute;
-import cz.neumimto.rpg.api.persistance.model.CharacterBase;
-import cz.neumimto.rpg.api.persistance.model.CharacterClass;
-import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
+import cz.neumimto.rpg.api.persistance.model.*;
 import cz.neumimto.rpg.api.skills.*;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.skills.tree.SkillTreeSpecialization;
@@ -56,61 +56,43 @@ import cz.neumimto.rpg.common.persistance.dao.IPersistenceHandler;
 import cz.neumimto.rpg.common.persistance.dao.IPlayerDao;
 import cz.neumimto.rpg.common.utils.exceptions.MissingConfigurationException;
 
-import javax.inject.Inject;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
-
-import static cz.neumimto.rpg.api.localization.Arg.arg;
-import static cz.neumimto.rpg.api.logging.Log.info;
-import static cz.neumimto.rpg.api.logging.Log.warn;
+import javax.inject.Inject;
 
 /**
  * Created by NeumimTo on 26.12.2014.
  */
-public abstract class CharacterService<T extends IActiveCharacter> implements ICharacterService<T> {
-
-    @Inject
-    private SkillService skillService;
+public abstract class AbstractCharacterService<T extends IActiveCharacter> implements CharacterService<T> {
 
     @Inject
     protected IPlayerDao playerDao;
-
     @Inject
     protected InventoryService inventoryService;
-
+    @Inject
+    protected EffectService effectService;
+    protected Map<UUID, T> characters = new HashMap<>();
+    @Inject
+    private SkillService skillService;
     @Inject
     private ClassService classService;
-
     @Inject
     private EntityService entityService;
-
     @Inject
     private DamageService damageService;
-
     @Inject
-    private IPropertyService propertyService;
-
+    private PropertyService propertyService;
     @Inject
     private LocalizationService localizationService;
-
     @Inject
     private EventFactoryService eventFactoryService;
-
     @Inject
     private ICharacterClassDao characterClassDao;
-
     @Inject
     private IPersistenceHandler persistanceHandler;
-
-    @Inject
-    protected IEffectService effectService;
-
     @Inject
     private PermissionService permissionService;
-
-    protected Map<UUID, T> characters = new HashMap<>();
-
 
     protected abstract void scheduleNextTick(Runnable r);
 
@@ -157,23 +139,23 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
             long k = System.currentTimeMillis();
             List<CharacterBase> playerCharacters = playerDao.getPlayersCharacters(id);
             k = System.currentTimeMillis() - k;
-            info("Finished loading of player data" + id + ", loaded " + playerCharacters.size() + " character   [" + k + "]ms");
+            info("Finished loading of player " + id + ", loaded " + playerCharacters.size() + " character   [" + k + "]ms");
             PluginConfig pluginConfig = Rpg.get().getPluginConfig();
             if (playerCharacters.isEmpty() && pluginConfig.CREATE_FIRST_CHAR_AFTER_LOGIN) {
-                CharacterBase cb = createCharacterBase(playerName, id);
+                CharacterBase cb = createCharacterBase(playerName, id, playerName);
                 create(cb);
 
                 playerCharacters = Collections.singletonList(cb);
                 info("Automatically created character for a player " + id + ", " + playerName);
             }
 
-            if (pluginConfig.PLAYER_AUTO_CHOOSE_LAST_PLAYED_CHAR || playerCharacters.size() == 1) {
-                T activeCharacter = createActiveCharacter(id, playerCharacters.get(0));
+            if (playerCharacters.size() > 0 && (pluginConfig.PLAYER_AUTO_CHOOSE_LAST_PLAYED_CHAR || playerCharacters.size() == 1)) {
+                CharacterBase latest = playerCharacters.stream().max(Comparator.comparing(CharacterBase::getUpdated)).get();
+                T activeCharacter = createActiveCharacter(id, latest);
                 activeCharacter.getCharacterBase().setLastKnownPlayerName(playerName);
                 Rpg.get().scheduleSyncLater(() -> {
-                    addCharacter(id, activeCharacter);
+                    setActiveCharacter(id, activeCharacter);
                     assignPlayerToCharacter(id);
-                    initActiveCharacter(activeCharacter);
                 });
             }
         }, Rpg.get().getAsyncExecutor());
@@ -185,13 +167,30 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
      * @return Initialized CharacterBase in the default state, The entity is not persisted yet
      */
     @Override
-    public CharacterBase createCharacterBase(String name, UUID uuid) {
+    public CharacterBase createCharacterBase(String name, UUID uuid, String playerName) {
         CharacterBase characterBase = createCharacterBase();
         characterBase.setName(name);
         characterBase.setUuid(uuid);
+        characterBase.setLastKnownPlayerName(playerName);
+        characterBase.setWorld("");
+        characterBase.setHealthScale(20.0D);
+
+        Date inc = new Date();
+        characterBase.setCreated(inc);
+        characterBase.setLastReset(inc);
+
         PluginConfig pluginConfig = Rpg.get().getPluginConfig();
         characterBase.setAttributePoints(pluginConfig.ATTRIBUTEPOINTS_ON_START);
         characterBase.setAttributePointsSpent(0);
+        characterBase.setCanResetSkills(false);
+
+        characterBase.setCharacterSkills(new HashSet<>());
+        characterBase.setCharacterClasses(new HashSet<>());
+        characterBase.setBaseCharacterAttribute(new HashSet<>());
+        characterBase.setInventoryEquipSlotOrder(new ArrayList<>());
+
+        characterBase.setMarkedForRemoval(false);
+
         return characterBase;
     }
 
@@ -282,12 +281,11 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
 
     @Override
     public void initActiveCharacter(T character) {
-        info("Initializing character " + character.getCharacterBase().getId());
+        info("Initializing character " + character.getCharacterBase().getName());
         String msg = localizationService.translate(LocalizationKeys.CHARACTER_INITIALIZED, arg("character", character.getName()));
         character.sendMessage(msg);
         addDefaultEffects(character);
         Set<BaseCharacterAttribute> baseCharacterAttribute = character.getCharacterBase().getBaseCharacterAttribute();
-
 
         for (BaseCharacterAttribute at : baseCharacterAttribute) {
             Optional<AttributeConfig> type = propertyService.getAttributeById(at.getName());
@@ -300,15 +298,12 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
 
         Map<String, PlayerClassData> classes = character.getClasses();
         for (PlayerClassData nClass : classes.values()) {
-            applyGroupEffects(character, nClass.getClassDefinition());
+            applyGlobalEffects(character, nClass.getClassDefinition());
         }
 
+        invalidateCaches(character);
         inventoryService.initializeCharacterInventory(character);
         damageService.recalculateCharacterWeaponDamage(character);
-
-
-        updateMaxHealth(character);
-        entityService.updateWalkSpeed(character);
 
         CharacterInitializedEvent event = Rpg.get().getEventFactory().createEventInstance(CharacterInitializedEvent.class);
         event.setTarget(character);
@@ -317,7 +312,7 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
 
 
     @Override
-    public void removeGroupEffects(T character, ClassDefinition p) {
+    public void removeGlobalEffects(T character, ClassDefinition p) {
         if (p == null) {
             return;
         }
@@ -325,7 +320,7 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
     }
 
     @Override
-    public void applyGroupEffects(T character, ClassDefinition p) {
+    public void applyGlobalEffects(T character, ClassDefinition p) {
         if (p == null) {
             return;
         }
@@ -340,9 +335,12 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
     @Override
     public void updateMaxMana(T character) {
         float max_mana = entityService.getEntityProperty(character, CommonProperties.max_mana);
-        float actreserved = entityService.getEntityProperty(character, CommonProperties.reserved_mana);
-        float reserved = entityService.getEntityProperty(character, CommonProperties.reserved_mana_multiplier);
-        float maxval = max_mana - (actreserved * reserved);
+        float reserved = entityService.getEntityProperty(character, CommonProperties.reserved_mana);
+        float reservedMult = entityService.getEntityProperty(character, CommonProperties.reserved_mana_multiplier);
+        float maxval = max_mana - (reserved * reservedMult);
+        if (maxval <= 0) {
+            maxval = 0;
+        }
         character.getMana().setMaxValue(maxval);
     }
 
@@ -353,15 +351,16 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
      */
     @Override
     public void updateMaxHealth(T character) {
-        float max_health = entityService.getEntityProperty(character, CommonProperties.max_health)
-                - entityService.getEntityProperty(character, CommonProperties.reserved_health);
-        float actreserved = entityService.getEntityProperty(character, CommonProperties.reserved_health);
-        float reserved = entityService.getEntityProperty(character, CommonProperties.reserved_health_multiplier);
-        float maxval = max_health - (actreserved * reserved);
+        float max_health = entityService.getEntityProperty(character, CommonProperties.max_health);
+        float reserved = entityService.getEntityProperty(character, CommonProperties.reserved_health);
+        float reservedMult = entityService.getEntityProperty(character, CommonProperties.reserved_health_multiplier);
+        float maxval = max_health - (reserved * reservedMult);
         if (maxval <= 0) {
             maxval = 1;
         }
-        info("Setting max health " + character.getName() + " to " + maxval);
+        if (Rpg.get().getPluginConfig().DEBUG.isBalance()) {
+            info("Setting max health of " + character.getName() + " to " + maxval);
+        }
         character.getHealth().setMaxValue(maxval);
     }
 
@@ -541,7 +540,6 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
 
         return activeCharacter;
     }
-
 
 
     @Override
@@ -823,8 +821,8 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
     @Override
     public int characterResetSkills(T character, boolean force) {
         CharacterBase characterBase = character.getCharacterBase();
-        if (characterBase.isCanResetskills() || force) {
-            characterBase.setCanResetskills(false);
+        if (characterBase.canResetSkills() || force) {
+            characterBase.setCanResetSkills(false);
             characterBase.setLastReset(new Date(System.currentTimeMillis()));
             characterBase.getCharacterSkills().clear();
             character.removeAllSkills();
@@ -897,13 +895,14 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
         }
 
         int level = aClass.getLevel();
-        exp = exp * entityService.getEntityProperty(character, CommonProperties.experiences_mult);
+        if (exp > 0) exp = exp * entityService.getEntityProperty(character, CommonProperties.experiences_mult);
 
         double lvlexp = aClass.getExperiencesFromLevel();
 
         double levellimit = levels[level];
 
         double newcurrentexp = lvlexp + exp;
+        if (newcurrentexp < 0) newcurrentexp = 0;
 
         boolean gotLevel = false;
         while (newcurrentexp > levellimit) {
@@ -1004,7 +1003,6 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
     }
 
 
-
     @Override
     public ActionResult addAttribute(T character, AttributeConfig attribute) {
         return addAttribute(character, new HashMap<AttributeConfig, Integer>() {{
@@ -1045,7 +1043,7 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
         character.setRequiresDamageRecalculation(true);
         Map<String, PlayerClassData> classes = character.getClasses();
         for (PlayerClassData nClass : classes.values()) {
-            applyGroupEffects(character, nClass.getClassDefinition());
+            applyGlobalEffects(character, nClass.getClassDefinition());
         }
 
         character.getMana().setValue(0);
@@ -1096,7 +1094,7 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
             return ActionResult.withErrorMessage(text);
         }
 
-        if (!permissionService.hasPermission(character,"ntrpg.class." + klass.getName().toLowerCase())) {
+        if (!permissionService.hasPermission(character, "ntrpg.class." + klass.getName().toLowerCase())) {
             String text = localizationService.translate(LocalizationKeys.NO_PERMISSIONS);
             return ActionResult.withErrorMessage(text);
         }
@@ -1158,13 +1156,12 @@ public abstract class CharacterService<T extends IActiveCharacter> implements IC
         PlayerClassData playerClassData = new PlayerClassData(klass, cc);
         character.addClass(playerClassData);
 
-
         scheduleNextTick(() -> {
             recalculateProperties(character);
             permissionService.addPermissions(character, playerClassData);
             scheduleNextTick(() -> {
                 recalculateSecondaryPropertiesOnly(character);
-                applyGroupEffects(character, klass);
+                applyGlobalEffects(character, klass);
                 scheduleNextTick(() -> {
                     invalidateCaches(character);
                     character.updateItemRestrictions();

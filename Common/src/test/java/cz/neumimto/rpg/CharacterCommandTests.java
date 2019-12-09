@@ -8,7 +8,7 @@ import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.gui.IPlayerMessage;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.common.commands.CharacterCommandFacade;
-import cz.neumimto.rpg.common.effects.EffectService;
+import cz.neumimto.rpg.common.effects.AbstractEffectService;
 import cz.neumimto.rpg.junit.CharactersExtension;
 import cz.neumimto.rpg.junit.CharactersExtension.Stage;
 import cz.neumimto.rpg.junit.NtRpgExtension;
@@ -37,7 +37,7 @@ public class CharacterCommandTests {
     private CharacterCommandFacade characterCommandFacade;
 
     @Inject
-    private EffectService effectService;
+    private AbstractEffectService effectService;
 
     @Inject
     private IPlayerMessage vanillaMessaging;
@@ -81,7 +81,7 @@ public class CharacterCommandTests {
     @Test
     public void testCharacterCreated() {
         CountDownLatch latch = new CountDownLatch(1);
-        characterCommandFacade.commandCreateCharacter(UUID.randomUUID(), "test", actionResult -> {
+        characterCommandFacade.commandCreateCharacter(UUID.randomUUID(), "test","", actionResult -> {
             Log.info(actionResult.getMessage());
             Assertions.assertTrue(actionResult.isOk());
             latch.countDown();

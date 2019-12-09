@@ -4,15 +4,15 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Provider;
 import com.google.inject.TypeLiteral;
-import cz.neumimto.rpg.api.IResourceLoader;
+import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.damage.DamageService;
-import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.entity.EntityService;
+import cz.neumimto.rpg.api.entity.players.CharacterService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.entity.players.ICharacterService;
 import cz.neumimto.rpg.api.entity.players.parties.PartyService;
 import cz.neumimto.rpg.api.events.EventFactoryService;
-import cz.neumimto.rpg.api.exp.IExperienceService;
+import cz.neumimto.rpg.api.exp.ExperienceService;
 import cz.neumimto.rpg.api.gui.IPlayerMessage;
 import cz.neumimto.rpg.api.inventory.CharacterInventoryInteractionHandler;
 import cz.neumimto.rpg.api.inventory.InventoryService;
@@ -63,17 +63,17 @@ public class SpigotGuiceModule extends AbstractRpgGuiceModule {
         map.put(IPlayerMessage.class, SpigotGui.class);
         map.put(ClassGenerator.class, SpigotClassGenerator.class);
         map.put(DamageService.class, SpigotDamageService.class);
-        map.put(IEffectService.class, SpigotEffectService.class);
+        map.put(EffectService.class, SpigotEffectService.class);
         map.put(EntityService.class, SpigotEntityService.class);
         map.put(MobSettingsDao.class, SpigotMobSettingsDao.class);
-        map.put(IExperienceService.class, SpigotExperienceService.class);
+        map.put(ExperienceService.class, SpigotExperienceService.class);
         map.put(ItemService.class, SpigotItemService.class);
         map.put(InventoryService.class, SpigotInventoryService.class);
         map.put(AssetService.class, SpigotAssetService.class);
         map.put(PermissionService.class, SpigotPermissionService.class);
         map.put(EventFactoryService.class, SpigotEventFactory.class);
         map.put(CharacterInventoryInteractionHandler.class, InventoryHandler.class);
-        map.put(IResourceLoader.class, SpigotResourceManager.class);
+        map.put(ResourceLoader.class, SpigotResourceManager.class);
 
         map.put(RWDao.class, null);
         //map.put(ICharacterClassDao.class).to(JPACharacterClassDao.class);
@@ -86,11 +86,11 @@ public class SpigotGuiceModule extends AbstractRpgGuiceModule {
     protected void configure() {
         super.configure();
 
-        bind(new TypeLiteral<ICharacterService>() {
+        bind(new TypeLiteral<CharacterService>() {
         }).toProvider(SpigotCharacterServiceProvider.class);
-        bind(new TypeLiteral<ICharacterService<? extends IActiveCharacter>>() {
+        bind(new TypeLiteral<CharacterService<? extends IActiveCharacter>>() {
         }).to(SpigotCharacterService.class);
-        bind(new TypeLiteral<ICharacterService<? super IActiveCharacter>>() {
+        bind(new TypeLiteral<CharacterService<? super IActiveCharacter>>() {
         }).toProvider(SpigotCharacterServiceProvider1.class);
 
         bind(SpigotRpgPlugin.class).toProvider(() -> ntRpgPlugin);
@@ -99,17 +99,17 @@ public class SpigotGuiceModule extends AbstractRpgGuiceModule {
             bind(entry.getKey()).toProvider(() -> entry.getValue());
         }
     }
-    
+
     private static SpigotCharacterService scs;
 
-    public static class SpigotCharacterServiceProvider implements Provider<ICharacterService<IActiveCharacter>> {
+    public static class SpigotCharacterServiceProvider implements Provider<CharacterService<IActiveCharacter>> {
 
         @Inject
         private Injector injector;
 
 
         @Override
-        public ICharacterService get() {
+        public CharacterService get() {
             if (scs == null) {
                 scs = injector.getInstance(SpigotCharacterService.class);
             }
@@ -117,17 +117,17 @@ public class SpigotGuiceModule extends AbstractRpgGuiceModule {
         }
     }
 
-    public static class SpigotCharacterServiceProvider1 implements Provider<ICharacterService<? super IActiveCharacter>> {
+    public static class SpigotCharacterServiceProvider1 implements Provider<CharacterService<? super IActiveCharacter>> {
 
         @Inject
         private Injector injector;
 
         @Override
-        public ICharacterService<? super IActiveCharacter> get() {
+        public CharacterService<? super IActiveCharacter> get() {
             if (scs == null) {
                 scs = injector.getInstance(SpigotCharacterService.class);
             }
-            return (ICharacterService) scs;
+            return (CharacterService) scs;
         }
     }
 }

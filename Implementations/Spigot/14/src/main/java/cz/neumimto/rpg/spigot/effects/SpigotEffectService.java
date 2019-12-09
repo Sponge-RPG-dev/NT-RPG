@@ -1,14 +1,14 @@
 package cz.neumimto.rpg.spigot.effects;
 
 import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.common.effects.EffectService;
+import cz.neumimto.rpg.common.effects.AbstractEffectService;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import javax.inject.Singleton;
 
 @Singleton
-public class SpigotEffectService extends EffectService  {
+public class SpigotEffectService extends AbstractEffectService {
 
 
     private BukkitRunnable bukkitRunnable;

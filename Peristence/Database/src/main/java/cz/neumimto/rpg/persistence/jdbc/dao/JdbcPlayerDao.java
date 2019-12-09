@@ -1,10 +1,7 @@
 package cz.neumimto.rpg.persistence.jdbc.dao;
 
 import cz.neumimto.rpg.api.logging.Log;
-import cz.neumimto.rpg.api.persistance.model.CharacterBase;
-import cz.neumimto.rpg.api.persistance.model.CharacterClass;
-import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
-import cz.neumimto.rpg.api.persistance.model.TimestampEntity;
+import cz.neumimto.rpg.api.persistance.model.*;
 import cz.neumimto.rpg.common.persistance.dao.IPlayerDao;
 import cz.neumimto.rpg.persistence.jdbc.NamedPreparedStatement;
 import cz.neumimto.rpg.persistence.jdbc.converters.EquipedSlot2Json;
@@ -12,11 +9,11 @@ import cz.neumimto.rpg.persistence.model.CharacterBaseImpl;
 import cz.neumimto.rpg.persistence.model.CharacterClassImpl;
 import cz.neumimto.rpg.persistence.model.CharacterSkillImpl;
 
+import java.sql.*;
+import java.util.*;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.sql.DataSource;
-import java.sql.*;
-import java.util.*;
 
 @Singleton
 public class JdbcPlayerDao implements IPlayerDao {
@@ -90,14 +87,14 @@ public class JdbcPlayerDao implements IPlayerDao {
     protected List<CharacterClassImpl> loadClasses(UUID uuid, CharacterBaseImpl characterBase) {
         List<CharacterClassImpl> characterClasses = new ArrayList<>();
         try (Connection con = dataSource.getConnection();
-            PreparedStatement pst = con.prepareStatement(FIND_CLASSES_BY_CHAR)) {
-                pst.setString(1, uuid.toString());
-                try (ResultSet rs = pst.executeQuery()) {
-                    while (rs.next()) {
-                        CharacterClassImpl characterClass = loadCharacterClass(characterBase, rs);
-                        characterClasses.add(characterClass);
-                    }
+             PreparedStatement pst = con.prepareStatement(FIND_CLASSES_BY_CHAR)) {
+            pst.setString(1, uuid.toString());
+            try (ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                    CharacterClassImpl characterClass = loadCharacterClass(characterBase, rs);
+                    characterClasses.add(characterClass);
                 }
+            }
         } catch (SQLException e) {
             Log.error("Could not load classes for character " + characterBase.toString());
         }
@@ -110,7 +107,7 @@ public class JdbcPlayerDao implements IPlayerDao {
         try (Connection con = dataSource.getConnection()) {
             try (PreparedStatement pst = con.prepareStatement(FIND_SKILLS)) {
                 pst.setString(0, uuid.toString());
-                try (ResultSet rs = pst.executeQuery();) {
+                try (ResultSet rs = pst.executeQuery()) {
                     while (rs.next()) {
                         CharacterSkillImpl characterSkill = loadCharacterSkills(characterBase, characterClasses, rs);
                         characterSkills.add(characterSkill);
@@ -160,9 +157,8 @@ public class JdbcPlayerDao implements IPlayerDao {
         characterBase.setId(rs.getLong("character_id"));
         characterBase.setUuid(UUID.fromString(rs.getString("uuid")));
         characterBase.setName(rs.getString("name"));
-        characterBase.setInfo(rs.getString("info"));
         characterBase.setAttributePoints(rs.getInt("attribute_points"));
-        characterBase.setCanResetskills(rs.getBoolean("can_reset_skills"));
+        characterBase.setCanResetSkills(rs.getBoolean("can_reset_skills"));
         characterBase.setHealthScale(rs.getDouble("health_scale"));
         characterBase.setLastKnownPlayerName(rs.getString("last_known_player_name"));
         characterBase.setLastReset(rs.getDate("last_reset_time"));
@@ -343,7 +339,7 @@ public class JdbcPlayerDao implements IPlayerDao {
         if (characterSkill.getId() != null) {
             pst.setLong(":skill_id:", characterSkill.getId());
         }
-        pst.setString(":catalog_id:",characterSkill.getCatalogId());
+        pst.setString(":catalog_id:", characterSkill.getCatalogId());
         pst.setInt(":level:", characterSkill.getLevel());
         pst.setLong(":character_id:", characterSkill.getCharacterBase().getId());
         if (characterSkill.getFromClass() != null) {
@@ -408,11 +404,10 @@ public class JdbcPlayerDao implements IPlayerDao {
     private void bindCharacterBaseToStatement(NamedPreparedStatement pspt, CharacterBase characterBase) throws SQLException {
         pspt.setString(":uuid:", characterBase.getUuid().toString());
         pspt.setString(":char_name:", characterBase.getName());
-        pspt.setString(":info:", characterBase.getInfo());
         pspt.setDouble(":health_scale:", characterBase.getHealthScale());
         pspt.setInt(":attribute_points:", characterBase.getAttributePoints());
         pspt.setInt(":attribute_points_spent:", characterBase.getAttributePointsSpent());
-        pspt.setBoolean(":can_reset_skills:", characterBase.isCanResetskills());
+        pspt.setBoolean(":can_reset_skills:", characterBase.canResetSkills());
         pspt.setBoolean(":marked_for_removal:", characterBase.getMarkedForRemoval());
         pspt.setString(":last_known_player_name:", characterBase.getLastKnownPlayerName());
         pspt.setDate(":last_reset_time:", characterBase.getLastReset());

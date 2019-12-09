@@ -3,59 +3,78 @@ package cz.neumimto.rpg.persistence.flatfiles.converters;
 import com.electronwill.nightconfig.core.Config;
 import com.electronwill.nightconfig.core.file.FileConfig;
 import cz.neumimto.rpg.api.persistance.model.*;
-import cz.neumimto.rpg.persistence.model.CharacterBaseImpl;
+import cz.neumimto.rpg.persistence.model.*;
 
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ConfigConverter {
 
+    public static final String MARKED_FOR_REMOVAL = "Remove";
+
     private static final String UUID_ = "UUID";
     private static final String NAME = "Name";
-    private static final String INFO = "Info";
     private static final String LASTNAME = "LastPlayerName";
     private static final String RESET_SKILL = "CanResetSkills";
     private static final String LAST_RESET = "LastReset";
+    private static final String CHAR_CREATED = "Created";
+    private static final String CHAR_UPDATED = "Updated";
     private static final String LAST_POSITION = "LastPosition";
-    private static final String AttributePoints = "AttributePoints";
-    private static final String AttributePointsSpent = "AttributePointsSpent";
-    private static final String SKILLS = "LearnedSkills";
-    private static final String CLASSES = "Classes";
+    private static final String ATTRIBUTE_POINTS = "AttributePoints";
+    private static final String ATTRIBUTE_POINTS_SPENT = "AttributePointsSpent";
+    private static final String INVENTORY_EQUIP_ORDER = "InventoryEquipOrder";
+    private static final String HEALTH_SCALING = "HealthScale";
+
     private static final String ATTRIBUTES = "Attributes";
-    private static final String INVENTOY_EQUIP_ORDER = "InventoryEquipOrder";
-    public static final String MARKED_FOR_REMOVAL = "Remove";
-    private static final String HEALTH_SCALING = "HEALT_SCALE";
+    private static final String ATTRIBUTE_NAME = "Name";
+    private static final String ATTRIBUTE_LEVEL = "Level";
+
+    private static final String CLASSES = "Classes";
+    private static final String CLASS_NAME = "Name";
+    private static final String CLASS_EXPERIENCES = "Experiences";
+    private static final String CLASS_LEVEL = "Level";
+    private static final String CLASS_SKILLPOINTS = "SkillPoints";
+    private static final String CLASS_SKILLPOINTS_SPENT = "SkillPointsSpent";
+
+    private static final String SKILLS = "LearnedSkills";
+    private static final String SKILL_ID = "Skill";
+    private static final String SKILL_CD = "Cooldown";
+    private static final String SKILL_FROM_CLASS = "FromClass";
+    private static final String SKILL_LEVEL = "Level";
 
     public static Config toConfig(CharacterBase c, FileConfig config) {
 
         UUID uuid = c.getUuid();
-        config.set(UUID_, uuid);
+        config.set(UUID_, uuid.toString());
 
         String name = c.getName();
         config.set(NAME, name);
 
-        String info = c.getInfo();
-        config.set(INFO, info);
-
         name = c.getLastKnownPlayerName();
         config.set(LASTNAME, name);
 
-        boolean canResetSkills = c.isCanResetskills();
+        Boolean canResetSkills = c.canResetSkills();
         config.set(RESET_SKILL, canResetSkills);
 
         Date lastReset = c.getLastReset();
-        config.set(LAST_RESET, lastReset);
-        
+        config.set(LAST_RESET, dateToText(lastReset));
+
+        Date created = c.getCreated();
+        config.set(CHAR_CREATED, dateToText(created));
+
+        Date updated = c.getUpdated();
+        config.set(CHAR_UPDATED, dateToText(updated));
+
         String lastPosition = String.format("%s;%s;%s;%s", c.getWorld(), c.getX(), c.getY(), c.getZ());
         config.set(LAST_POSITION, lastPosition);
 
         Integer attributePoints = c.getAttributePoints();
-        config.set(AttributePoints, attributePoints);
+        config.set(ATTRIBUTE_POINTS, attributePoints);
 
         attributePoints = c.getAttributePointsSpent();
-        config.set(AttributePointsSpent, attributePoints);
+        config.set(ATTRIBUTE_POINTS_SPENT, attributePoints);
 
         List<Config> characterSkills = c.getCharacterSkills().stream().map(ConfigConverter::toConfig).collect(Collectors.toList());
         config.set(SKILLS, characterSkills);
@@ -67,8 +86,8 @@ public class ConfigConverter {
         config.set(ATTRIBUTES, characterAttributes);
 
         List<EquipedSlot> inventoryEquipSlotOrder = c.getInventoryEquipSlotOrder();
-        String collect = inventoryEquipSlotOrder.stream().map(equipedSlot -> equipedSlot.toString()).collect(Collectors.joining(";"));
-        config.set(INVENTOY_EQUIP_ORDER, collect);
+        String collect = inventoryEquipSlotOrder.stream().map(Object::toString).collect(Collectors.joining(";"));
+        config.set(INVENTORY_EQUIP_ORDER, collect);
 
         Double healthScale = c.getHealthScale();
         config.set(HEALTH_SCALING, healthScale);
@@ -78,8 +97,6 @@ public class ConfigConverter {
         return config;
     }
 
-    private static final String ATTRIBUTE_NAME = "Name";
-    private static final String ATTRIBUTE_LEVEL = "Level";
     private static Config toConfig(BaseCharacterAttribute a) {
         Config config = Config.inMemory();
 
@@ -92,13 +109,6 @@ public class ConfigConverter {
         return config;
     }
 
-    private static final String CLASS_NAME = "Name";
-    private static final String CLASS_EXPERIENCES = "Experiences";
-    private static final String CLASS_LEVEL = "Level";
-    private static final String CLASS_SKILLPOINTS = "SkillPoints";
-    private static final String CLASS_SKILLPOINTS_SPENT = "SkillPointsSpent";
-    private static final String CLASS_CREATED = "Created";
-    private static final String CLASS_UPDATED = "Updated";
     private static Config toConfig(CharacterClass c) {
         Config config = Config.inMemory();
 
@@ -117,21 +127,9 @@ public class ConfigConverter {
         int usp = c.getUsedSkillPoints();
         config.set(CLASS_SKILLPOINTS_SPENT, usp);
 
-        Date created = c.getCreated();
-        config.set(CLASS_CREATED, created);
-
-        Date updated = c.getUpdated();
-        config.set(CLASS_UPDATED, updated);
-
         return config;
     }
 
-    private static final String SKILL_ID = "Skill";
-    private static final String SKILL_CD = "Cooldown";
-    private static final String SKILL_FROM_CLASS = "FromClass";
-    private static final String SKILL_LEVEL = "Level";
-    private static final String SKILL_CREATED = "Created";
-    private static final String SKILL_UPDATED = "Updated";
     private static Config toConfig(CharacterSkill characterSkill) {
         Config config = Config.inMemory();
 
@@ -149,50 +147,143 @@ public class ConfigConverter {
         int level = characterSkill.getLevel();
         config.set(SKILL_LEVEL, level);
 
-        Date created = characterSkill.getCreated();
-        config.set(SKILL_CREATED, created);
-
-        Date updated = characterSkill.getUpdated();
-        config.set(SKILL_UPDATED, updated);
-
         return config;
     }
 
     public static CharacterBase fromConfig(FileConfig config) {
         CharacterBase characterBase = new CharacterBaseImpl();
         characterBase.setUuid(UUID.fromString(config.get(UUID_)));
-        
+
         characterBase.setName(config.get(NAME));
-        characterBase.setInfo(config.get(INFO));;
         characterBase.setLastKnownPlayerName(config.get(LASTNAME));
-        
-        characterBase.setCanResetskills(config.get(RESET_SKILL));;
 
-        characterBase.setLastReset(config.get(LAST_RESET));
+        characterBase.setCanResetSkills(config.get(RESET_SKILL));
 
-        String string = config.get(LAST_POSITION);
-        String[] split = string.split(";");
-        characterBase.setWorld(split[0]);;
+        characterBase.setLastReset(textToDate(config.get(LAST_RESET)));
+        characterBase.setCreated(textToDate(config.get(CHAR_CREATED)));
+        characterBase.setUpdated(textToDate(config.get(CHAR_UPDATED)));
+
+        String position = config.get(LAST_POSITION);
+        String[] split = position.split(";");
+        characterBase.setWorld(split[0]);
         characterBase.setX(Integer.parseInt(split[1]));
-        characterBase.setY(Integer.parseInt(split[2]));;
-        characterBase.setZ(Integer.parseInt(split[3]));;
+        characterBase.setY(Integer.parseInt(split[2]));
+        characterBase.setZ(Integer.parseInt(split[3]));
 
-        characterBase.setAttributePoints(config.get(AttributePoints));;
-        characterBase.setAttributePointsSpent(config.get(AttributePointsSpent));
+        characterBase.setAttributePoints(config.get(ATTRIBUTE_POINTS));
+        characterBase.setAttributePointsSpent(config.get(ATTRIBUTE_POINTS_SPENT));
 
-        Config config1 = config.get(SKILLS);
+        List<Config> skills = config.get(SKILLS);
+        characterBase.setCharacterSkills(skillsFromConfig(skills, characterBase));
 
-        config.get(CLASSES);
+        List<Config> classes = config.get(CLASSES);
+        characterBase.setCharacterClasses(classesFromConfig(classes, characterBase));
 
-        config.get(ATTRIBUTES);
+        List<Config> attributes = config.get(ATTRIBUTES);
+        characterBase.setBaseCharacterAttribute(attributesFromConfig(attributes, characterBase));
 
-        /*List<EquipedSlot> inventoryEquipSlotOrder = c.getInventoryEquipSlotOrder();
-        String collect = inventoryEquipSlotOrder.stream().map(equipedSlot -> equipedSlot.toString()).collect(Collectors.joining(";"));
-        config.get(INVENTOY_EQUIP_ORDER, collect);
-*/
+        //FIXME
+        /*List<EquipedSlot> iso = new ArrayList<>();
+        String o = config.get(INVENTORY_EQUIP_ORDER);
+        for (String s : o.split(";")) {
+            String[] split1 = s.split("@");
+            if (split1.length == 1) {
+                iso.add(Rpg.get().getInventoryService().createEquipedSlot(null, Integer.parseInt(split1[0])));
+            } else {
+                iso.add(Rpg.get().getInventoryService().createEquipedSlot(split1[0], Integer.parseInt(split1[1])));
+            }
+        }
+        characterBase.setInventoryEquipSlotOrder(iso);*/
 
-        characterBase.setHealthScale(config.get(HEALTH_SCALING));
+        characterBase.setHealthScale(((Number) config.get(HEALTH_SCALING)).doubleValue());
         characterBase.setMarkedForRemoval(config.get(MARKED_FOR_REMOVAL));
         return characterBase;
+    }
+
+    private static Set<BaseCharacterAttribute> attributesFromConfig(List<Config> attributes, CharacterBase c) {
+        Set<BaseCharacterAttribute> attributeSet = new HashSet<>();
+        for (Config config : attributes) {
+            attributeSet.add(attributeFromConfig(config, c));
+        }
+        return attributeSet;
+    }
+
+    private static Set<CharacterClass> classesFromConfig(List<Config> classes, CharacterBase c) {
+        Set<CharacterClass> classSet = new HashSet<>();
+        for (Config config : classes) {
+            classSet.add(classFromConfig(config, c));
+        }
+        return classSet;
+    }
+
+    private static Set<CharacterSkill> skillsFromConfig(List<Config> configs, CharacterBase c) {
+        Set<CharacterSkill> skills = new HashSet<>();
+        for (Config config : configs) {
+            skills.add(skillFromConfig(config, c));
+        }
+        return skills;
+    }
+
+    private static BaseCharacterAttribute attributeFromConfig(Config config, CharacterBase character) {
+        BaseCharacterAttribute attribute = new BaseCharacterAttributeImpl();
+
+        attribute.setName(config.get(ATTRIBUTE_NAME));
+        attribute.setLevel(config.get(ATTRIBUTE_LEVEL));
+
+        attribute.setCharacterBase(character);
+
+        return attribute;
+    }
+
+    private static CharacterClass classFromConfig(Config config, CharacterBase character) {
+        CharacterClass characterClass = new CharacterClassImpl();
+
+        characterClass.setName(config.get(CLASS_NAME));
+        characterClass.setExperiences(((Number) config.get(CLASS_EXPERIENCES)).doubleValue());
+        characterClass.setLevel(config.get(CLASS_LEVEL));
+        characterClass.setSkillPoints(config.get(CLASS_SKILLPOINTS));
+        characterClass.setUsedSkillPoints(config.get(CLASS_SKILLPOINTS_SPENT));
+
+        characterClass.setCharacterBase(character);
+
+        return characterClass;
+    }
+
+    private static CharacterSkill skillFromConfig(Config config, CharacterBase character) {
+        CharacterSkill characterSkill = new CharacterSkillImpl();
+        characterSkill.setCharacterBase(character);
+
+        characterSkill.setCatalogId(config.get(SKILL_ID));
+        characterSkill.setCooldown(config.get(SKILL_CD));
+
+        String o = config.get(SKILL_FROM_CLASS);
+        if (o != null) {
+            for (CharacterClass characterClass : character.getCharacterClasses()) {
+                if (character.getName().equalsIgnoreCase(o)) {
+                    characterSkill.setFromClass(characterClass);
+                    break;
+                }
+            }
+        }
+
+        characterSkill.setLevel(config.getInt(SKILL_LEVEL));
+
+        return characterSkill;
+    }
+
+    private static SimpleDateFormat getDateFormat() {
+        return new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+    }
+
+    private static String dateToText(Date created) {
+        return getDateFormat().format(created);
+    }
+
+    private static Date textToDate(String text) {
+        try {
+            return getDateFormat().parse(text);
+        } catch (ParseException e) {
+            throw new RuntimeException("Could not parse date " + text);
+        }
     }
 }

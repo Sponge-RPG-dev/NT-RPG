@@ -5,14 +5,14 @@ import cz.neumimto.persistence.TestHelper;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.damage.DamageService;
-import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.entity.EntityService;
-import cz.neumimto.rpg.api.entity.IPropertyService;
+import cz.neumimto.rpg.api.entity.PropertyService;
+import cz.neumimto.rpg.api.entity.players.CharacterService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.entity.players.ICharacterService;
 import cz.neumimto.rpg.api.entity.players.parties.PartyService;
 import cz.neumimto.rpg.api.events.EventFactoryService;
-import cz.neumimto.rpg.api.exp.IExperienceService;
+import cz.neumimto.rpg.api.exp.ExperienceService;
 import cz.neumimto.rpg.api.inventory.InventoryService;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.localization.Arg;
@@ -109,7 +109,7 @@ public class RpgTests implements RpgApi {
     }
 
     @Override
-    public ICharacterService getCharacterService() {
+    public CharacterService getCharacterService() {
         return null;
     }
 
@@ -124,7 +124,7 @@ public class RpgTests implements RpgApi {
     }
 
     @Override
-    public IPropertyService getPropertyService() {
+    public PropertyService getPropertyService() {
         return null;
     }
 
@@ -135,11 +135,11 @@ public class RpgTests implements RpgApi {
 
     @Override
     public String getWorkingDirectory() {
-        return "/tmp/";
+        return "./build/tests/tmp/";
     }
 
     @Override
-    public IResourceLoader getResourceLoader() {
+    public ResourceLoader getResourceLoader() {
         return null;
     }
 
@@ -149,7 +149,7 @@ public class RpgTests implements RpgApi {
     }
 
     @Override
-    public IEffectService getEffectService() {
+    public EffectService getEffectService() {
         return null;
     }
 
@@ -163,6 +163,11 @@ public class RpgTests implements RpgApi {
         return new InventoryService() {
             @Override
             public void load() {
+
+            }
+
+            @Override
+            public void reload() {
 
             }
 
@@ -199,7 +204,7 @@ public class RpgTests implements RpgApi {
     }
 
     @Override
-    public IExperienceService getExperienceService() {
+    public ExperienceService getExperienceService() {
         return null;
     }
 
@@ -209,12 +214,12 @@ public class RpgTests implements RpgApi {
     }
 
 
-
     @Override
     public void scheduleSyncLater(Runnable runnable) {
 
     }
 
+    @Override
     public void init(Path workingDirPath, Object commandManager, Class[] commandClasses, RpgAddon defaultStorageImpl,
                      BiFunction<Map, Map<Class<?>, ?>, Module> fnInjProv, Consumer<com.google.inject.Injector> injectorc) {
 

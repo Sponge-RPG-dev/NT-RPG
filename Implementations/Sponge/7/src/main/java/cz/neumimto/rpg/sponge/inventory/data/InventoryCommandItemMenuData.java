@@ -21,7 +21,7 @@ import java.util.Optional;
 public class InventoryCommandItemMenuData extends AbstractSingleData<String, InventoryCommandItemMenuData, InventoryCommandItemMenuData.Immutable> {
 
     public InventoryCommandItemMenuData(String value) {
-        super(value, NKeys.COMMAND);
+        super(value, NKeys.MENU_COMMAND);
     }
 
     @Override
@@ -41,8 +41,8 @@ public class InventoryCommandItemMenuData extends AbstractSingleData<String, Inv
     }
 
     public Optional<InventoryCommandItemMenuData> from(DataView view) {
-        if (view.contains(NKeys.COMMAND.getQuery())) {
-            setValue(view.getString(NKeys.COMMAND.getQuery()).get());
+        if (view.contains(NKeys.MENU_COMMAND.getQuery())) {
+            setValue(view.getString(NKeys.MENU_COMMAND.getQuery()).get());
             return Optional.of(this);
         }
         return Optional.empty();
@@ -56,7 +56,7 @@ public class InventoryCommandItemMenuData extends AbstractSingleData<String, Inv
 
     @Override
     protected Value<?> getValueGetter() {
-        return Sponge.getRegistry().getValueFactory().createValue(NKeys.COMMAND, getValue());
+        return Sponge.getRegistry().getValueFactory().createValue(NKeys.MENU_COMMAND, getValue());
     }
 
     @Override
@@ -72,19 +72,19 @@ public class InventoryCommandItemMenuData extends AbstractSingleData<String, Inv
     @Override
     public DataContainer toContainer() {
         return super.toContainer()
-                .set(NKeys.COMMAND.getQuery(), getValue());
+                .set(NKeys.MENU_COMMAND.getQuery(), getValue());
     }
 
     public static class Immutable extends AbstractImmutableSingleData<String, Immutable, InventoryCommandItemMenuData> {
 
 
         public Immutable(String value) {
-            super(value, NKeys.COMMAND);
+            super(value, NKeys.MENU_COMMAND);
         }
 
         @Override
         protected ImmutableValue<?> getValueGetter() {
-            return Sponge.getRegistry().getValueFactory().createValue(NKeys.COMMAND, getValue()).asImmutable();
+            return Sponge.getRegistry().getValueFactory().createValue(NKeys.MENU_COMMAND, getValue()).asImmutable();
         }
 
         @Override
@@ -99,14 +99,14 @@ public class InventoryCommandItemMenuData extends AbstractSingleData<String, Inv
 
         @Override
         public DataContainer toContainer() {
-            return super.toContainer().set(NKeys.COMMAND.getQuery(), getValue());
+            return super.toContainer().set(NKeys.MENU_COMMAND.getQuery(), getValue());
         }
     }
 
-    public static class InventoryCommandItemMenuDataBuilder extends AbstractDataBuilder<InventoryCommandItemMenuData>
+    public static class Builder extends AbstractDataBuilder<InventoryCommandItemMenuData>
             implements DataManipulatorBuilder<InventoryCommandItemMenuData, Immutable> {
 
-        public InventoryCommandItemMenuDataBuilder() {
+        public Builder() {
             super(InventoryCommandItemMenuData.class, 1);
         }
 

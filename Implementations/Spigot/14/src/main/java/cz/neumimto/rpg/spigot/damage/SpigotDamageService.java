@@ -11,9 +11,9 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
-import javax.inject.Singleton;
 import java.util.*;
 import java.util.stream.Collectors;
+import javax.inject.Singleton;
 
 @Singleton
 public class SpigotDamageService extends AbstractDamageService<LivingEntity> {
@@ -31,8 +31,8 @@ public class SpigotDamageService extends AbstractDamageService<LivingEntity> {
     };
 
     @Override
-    public void damageEntity(IEntity<LivingEntity> character, double maxValue) {
-        character.getEntity().damage(maxValue);
+    public void damageEntity(IEntity<LivingEntity> character, double value) {
+        character.getEntity().damage(value);
     }
 
     @Override

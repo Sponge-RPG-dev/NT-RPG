@@ -1,7 +1,6 @@
 package cz.neumimto.skills.active;
 
-import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.api.IResourceLoader;
+import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
@@ -30,41 +29,41 @@ import javax.inject.Singleton;
  * Created by NeumimTo on 5.2.2016.
  */
 @Singleton
-@IResourceLoader.ListenerClass
+@ResourceLoader.ListenerClass
 @ResourceLoader.Skill("ntrpg:brainsap")
 public class BrainSap extends Targeted {
 
-	@Inject
-	private EntityService entityService;
+    @Inject
+    private EntityService entityService;
 
-	@Override
-	public void init() {
-		super.init();
-		settings.addNode(SkillNodes.COOLDOWN, 1000f, 10f);
-		settings.addNode(SkillNodes.RANGE, 10f, 1f);
-		settings.addNode(SkillNodes.DAMAGE, 10f, 10f);
-		setDamageType(DamageTypes.MAGIC.getId());
-		addSkillType(SkillType.HEALTH_DRAIN);
-	}
+    @Override
+    public void init() {
+        super.init();
+        settings.addNode(SkillNodes.COOLDOWN, 1000f, 10f);
+        settings.addNode(SkillNodes.RANGE, 10f, 1f);
+        settings.addNode(SkillNodes.DAMAGE, 10f, 10f);
+        setDamageType(DamageTypes.MAGIC.getId());
+        addSkillType(SkillType.HEALTH_DRAIN);
+    }
 
-	@Override
-	public void castOn(IEntity target, ISpongeCharacter source, PlayerSkillContext info, SkillContext skillContext) {
-		SkillDamageSource s = new SkillDamageSourceBuilder()
-				.fromSkill(this)
-				.setSource(source)
-				.build();
-		float damage = skillContext.getFloatNodeValue(SkillNodes.DAMAGE);
-		((ISpongeEntity)target).getEntity().damage(damage, s);
-		skillContext.next(source, info, SkillResult.OK);
-	}
+    @Override
+    public void castOn(IEntity target, ISpongeCharacter source, PlayerSkillContext info, SkillContext skillContext) {
+        SkillDamageSource s = new SkillDamageSourceBuilder()
+                .fromSkill(this)
+                .setSource(source)
+                .build();
+        float damage = skillContext.getFloatNodeValue(SkillNodes.DAMAGE);
+        ((ISpongeEntity) target).getEntity().damage(damage, s);
+        skillContext.next(source, info, SkillResult.OK);
+    }
 
-	@Listener(order = Order.LAST)
-	@IsCancelled(Tristate.TRUE)
-	public void onDamage(SpongeEntitySkillDamageLateEvent event, @First ISkillDamageSource damageSource) {
-		if (event.getSkill() != null && event.getSkill().getClass() == this.getClass()) {
-			IEntity caster = damageSource.getSourceIEntity();
-			entityService.healEntity(caster, (float) event.getDamage(), this);
-		}
-	}
+    @Listener(order = Order.LAST)
+    @IsCancelled(Tristate.TRUE)
+    public void onDamage(SpongeEntitySkillDamageLateEvent event, @First ISkillDamageSource damageSource) {
+        if (event.getSkill() != null && event.getSkill().getClass() == this.getClass()) {
+            IEntity caster = damageSource.getSourceIEntity();
+            entityService.healEntity(caster, (float) event.getDamage(), this);
+        }
+    }
 
 }

@@ -83,7 +83,7 @@ public class LocalizationKeys {
     public static final String CHARACTER_DOES_NOT_HAVE_SKILL = "player.skill-cast.precondition.no-skillaccess.message";
     public static final String CHARACTER_EXISTS = "player.character-already-exists.message";
     public static final String REACHED_CHARACTER_LIMIT = "player.reached-character-limit.message";
-    public static final String ALREADY_CUURENT_CHARACTER = "player.character-already-selected.message";
+    public static final String ALREADY_CURRENT_CHARACTER = "player.character-already-selected.message";
     public static final String NON_EXISTING_CHARACTER = "player.non-existing-character.message";
     public static final String ITEM_EFFECTS_SECTION = "item.label.section.effects";
     public static final String ITEM_RARITY_SECTION = "item.label.section.rarity";
@@ -109,7 +109,7 @@ public class LocalizationKeys {
     public static final String NO_ATTRIBUTEPOINTS = "player.attributes.not-enough-points.message";
     public static final String NEXT = "item.label.next.button";
     public static final String CASTING_FAILED = "player.skill-castfailed.notification";
-    
+
     public static final String COMMAND_ADMIN_EXEC_SKILL_DESC = "command.admin-exec-skill-desc.desc";
     public static final String COMMAND_ADMIN_EFFECT_ADD = "command.admin-effect-add.desc";
     public static final String COMMAND_ADMIN_EXP_ADD = "command.admin-exp-add.desc";

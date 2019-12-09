@@ -28,7 +28,7 @@ dependencies {
     compileOnly "org.spigotmc:plugin-annotations:1.2.2-SNAPSHOT"
     annotationProcessor "org.spigotmc:plugin-annotations:1.2.2-SNAPSHOT"
 
-    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.28'
+    compile 'org.slf4j:slf4j-api:1.7.28'
     compile project(':Common')
     compile project(':FlatFiles-Persistence')
 
@@ -47,13 +47,10 @@ dependencies {
     }
 }
 
-compileJava {
-    options.compilerArgs += ["-parameters"]
-    options.fork = true
-    options.forkOptions.executable = 'javac'
-}
-
 shadowJar {
+    baseName 'NT-RPG'
+    classifier = null
+    
     relocate 'co.aikar.commands', 'cz.neumimto.acf'
 }
 

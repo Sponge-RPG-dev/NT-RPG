@@ -18,15 +18,13 @@
 
 package cz.neumimto.rpg.sponge.gui;
 
-import cz.neumimto.rpg.api.IResourceLoader;
+import static cz.neumimto.rpg.sponge.gui.GuiHelper.*;
+import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
-import cz.neumimto.rpg.api.effects.EffectStatusType;
-import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.api.effects.IEffectContainer;
-import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.api.effects.*;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.gui.IPlayerMessage;
@@ -52,9 +50,9 @@ import cz.neumimto.rpg.sponge.effects.common.def.BossBarExpNotifier;
 import cz.neumimto.rpg.sponge.effects.common.def.ManaBarNotifier;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
+import cz.neumimto.rpg.sponge.gui.vanilla.CharacterAttributesGui;
 import cz.neumimto.rpg.sponge.inventory.data.InventoryCommandItemMenuData;
 import cz.neumimto.rpg.sponge.inventory.data.MenuInventoryData;
-import cz.neumimto.rpg.sponge.inventory.data.NKeys;
 import cz.neumimto.rpg.sponge.inventory.data.SkillTreeInventoryViewControllsData;
 import cz.neumimto.rpg.sponge.inventory.data.manipulators.SkillTreeNode;
 import cz.neumimto.rpg.sponge.inventory.runewords.RWService;
@@ -68,14 +66,12 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.DyeColors;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.*;
 import org.spongepowered.api.item.inventory.property.InventoryTitle;
 import org.spongepowered.api.item.inventory.property.SlotPos;
 import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
-import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
 import org.spongepowered.api.item.inventory.type.GridInventory;
 import org.spongepowered.api.service.pagination.PaginationList;
 import org.spongepowered.api.service.pagination.PaginationService;
@@ -88,19 +84,16 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 import org.spongepowered.api.util.Color;
 
+import java.util.*;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-
-import static cz.neumimto.rpg.sponge.gui.GuiHelper.*;
 
 /**
  * Created by NeumimTo on 6.8.2015.
  */
 @Singleton
-@IResourceLoader.ListenerClass
+@ResourceLoader.ListenerClass
 public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
 
     public static Map<SkillTreeControllsButton, SkillTreeInterfaceModel> controlls;
@@ -115,7 +108,7 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
     private ClassService classService;
 
     @Inject
-    private IEffectService effectService;
+    private EffectService effectService;
 
     @Inject
     private SpongeRpgPlugin plugin;
@@ -145,7 +138,6 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
             ItemType type = Sponge.getRegistry().getType(ItemType.class, split[1]).orElse(ItemTypes.BARRIER);
 
             controlls.put(key, new SkillTreeInterfaceModel(Integer.parseInt(split[3]), type, split[2], (short) 0));
-
         }
     }
 
@@ -282,20 +274,20 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
     public void sendListOfCharacters(final ISpongeCharacter player, CharacterBase currentlyCreated) {
         PaginationService paginationService = Sponge.getServiceManager().provide(PaginationService.class).get();
         PaginationList.Builder builder = paginationService.builder();
-        SpongeRpgPlugin.asyncExecutor.execute(() -> {
+        Rpg.get().getAsyncExecutor().execute(() -> {
 
             List<CharacterBase> playersCharacters = characterService.getPlayersCharacters(player.getPlayer().getUniqueId());
             List<CharacterListModel> list = new ArrayList<>();
             for (CharacterBase playersCharacter : playersCharacters) {
                 Set<CharacterClass> characterClasses = playersCharacter.getCharacterClasses();
-                Integer pcExp = 0;
+                int charLevel = 0;
                 for (CharacterClass characterClass : characterClasses) {
                     ClassDefinition classDefinitionByName = classService.getClassDefinitionByName(characterClass.getName());
                     if (classDefinitionByName == null) {
                         continue;
                     }
-                    if (classDefinitionByName.getClassType().equalsIgnoreCase(SpongeRpgPlugin.pluginConfig.PRIMARY_CLASS_TYPE)) {
-                        pcExp = characterClass.getLevel();
+                    if (classDefinitionByName.getClassType().equalsIgnoreCase(Rpg.get().getPluginConfig().PRIMARY_CLASS_TYPE)) {
+                        charLevel = characterClass.getLevel();
                         break;
                     }
                 }
@@ -303,7 +295,7 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
                 list.add(new CharacterListModel(
                         playersCharacter.getName(),
                         collect,
-                        pcExp
+                        charLevel
                 ));
             }
 
@@ -834,133 +826,31 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
 
         ItemStack itemStack = GuiHelper.itemStack(ItemTypes.BOOK);
         itemStack.offer(Keys.DISPLAY_NAME, translate(LocalizationKeys.ATTRIBUTES));
-        itemStack.offer(new InventoryCommandItemMenuData("char attributes"));
+        itemStack.offer(new InventoryCommandItemMenuData("character attributes"));
         i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(1, 1))).offer(itemStack);
 
         itemStack = GuiHelper.itemStack(ItemTypes.ARMOR_STAND);
         itemStack.offer(Keys.DISPLAY_NAME, translate(LocalizationKeys.CHARACTER_CLASSES));
-        itemStack.offer(new InventoryCommandItemMenuData("char classes"));
+        itemStack.offer(new InventoryCommandItemMenuData("character classes"));
         i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(2, 1))).offer(itemStack);
 
         itemStack = GuiHelper.itemStack(ItemTypes.IRON_CHESTPLATE);
         itemStack.offer(Keys.DISPLAY_NAME, translate(LocalizationKeys.CHARACTER_ARMOR));
-        itemStack.offer(new InventoryCommandItemMenuData("char armor 0"));
+        itemStack.offer(new InventoryCommandItemMenuData("character armor 0"));
         i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(3, 1))).offer(itemStack);
 
         itemStack = GuiHelper.itemStack(ItemTypes.IRON_AXE);
         itemStack.offer(Keys.DISPLAY_NAME, translate(LocalizationKeys.CHARACTER_WEAPONS));
-        itemStack.offer(new InventoryCommandItemMenuData("char weapon 0"));
+        itemStack.offer(new InventoryCommandItemMenuData("character weapon 0"));
         i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(4, 1))).offer(itemStack);
 
         character.getPlayer().openInventory(i);
     }
 
-    //todo this could be optimized.
-    // Dont redraw every time user clicks +
     @Override
     public void displayCharacterAttributes(ISpongeCharacter character) {
         character.setAttributesTransaction(new HashMap<>());
-
-        SlotPos commitSP = SlotPos.of(7, 1);
-        int attributePoints = character.getAttributePoints();
-        Inventory i = createCharacterEmptyInventory(character)
-                .listener(ClickInventoryEvent.class, clickInventoryEvent -> {
-                    Container inventory = clickInventoryEvent.getTargetInventory();
-                    SlotTransaction slotTransaction = clickInventoryEvent.getTransactions().get(0);
-                    ItemStackSnapshot aFinal = slotTransaction.getOriginal();
-                    Optional<Text> text = aFinal.get(Keys.DISPLAY_NAME);
-                    if (text.isPresent() && text.get().toPlainSingle().equalsIgnoreCase("+")) {
-                        Sponge.getScheduler()
-                                .createSyncExecutor(plugin)
-                                .schedule(
-                                        () -> {
-                                            createAttributeRow(character, inventory);
-                                            createCommitAttributeTxButton(commitSP, attributePoints, inventory);
-                                        }
-                                            ,
-                                        1L,
-                                        TimeUnit.MILLISECONDS
-                                );
-                    } else {
-                        aFinal.get(NKeys.COMMAND).ifPresent(s -> {
-                            if (s.equalsIgnoreCase("char tx-attribute-commit")) {
-                                Sponge.getScheduler()
-                                        .createSyncExecutor(plugin)
-                                        .schedule(
-                                                () -> Sponge.getCommandManager().process(character.getPlayer(), "char"),
-                                                1L,
-                                                TimeUnit.MILLISECONDS
-                                        );
-
-                            }
-                        });
-                    }
-                })
-                .build(plugin);
-        makeBorder(i, DyeColors.ORANGE);
-        i.offer(back("char ", Text.of("back")));
-
-        createCommitAttributeTxButton(commitSP, attributePoints, i);
-
-
-        createAttributeRow(character, i);
-        PluginConfig pluginConfig = Rpg.get().getPluginConfig();
-        if (pluginConfig.RESPEC_ATTRIBUTES) {
-            SlotPos respecSp = SlotPos.of(7, 5);
-            ItemStack btnRespec = GuiHelper.itemStack(ItemTypes.BARRIER);
-            btnRespec.offer(Keys.DISPLAY_NAME, translate(LocalizationKeys.RESPEC_ATTRIBUTES));
-            btnRespec.offer(new InventoryCommandItemMenuData("char attributes-respec"));
-            i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(respecSp)).offer(btnRespec);
-        }
-
-        character.getPlayer().openInventory(i);
-    }
-
-    public void createAttributeRow(ISpongeCharacter character, Inventory i) {
-        Collection<AttributeConfig> allOf = Rpg.get().getPropertyService().getAttributes().values();
-        int attributePoints = character.getAttributePoints() ;
-        for (Integer value : character.getAttributesTransaction().values()) {
-            attributePoints -= value;
-        }
-
-        int q = 1;
-        for (AttributeConfig attribute : allOf) {
-
-            ItemStack itemStack = GuiHelper.itemStack(attribute.getItemType());
-            itemStack.offer(Keys.DISPLAY_NAME, Text.of(attribute.getName()));
-            List<Text> text = TextHelper.splitStringByDelimiter(attribute.getDescription());
-            Integer amount = character.getCharacterBase().getAttributes().get(attribute.getId());
-            amount = amount == null ? 0 : amount;
-            Integer c = character.getAttributesTransaction().get(attribute.getId());
-            if (c != null) {
-                amount += c;
-            }
-            text.add(Text.builder(amount + " / " + attribute.getMaxValue()).build());
-            itemStack.offer(Keys.ITEM_LORE, text);
-
-            if (attributePoints > 0) {
-                ItemStack btn = GuiHelper.itemStack(ItemTypes.SUGAR);
-                btn.offer(Keys.DISPLAY_NAME, Text.of(TextColors.GREEN, "+"));
-                btn.offer(new InventoryCommandItemMenuData("char attribute " + attribute.getId() + " 1"));
-                i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(q, 2))).set(btn);
-            } else {
-                i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(q, 2))).poll();
-            }
-
-            i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(q, 3))).set(itemStack);
-            q++;
-        }
-    }
-
-    public void createCommitAttributeTxButton(SlotPos commitSP, int attributePoints, Inventory i) {
-        ItemStack commit = GuiHelper.itemStack(ItemTypes.DIAMOND);
-        commit.offer(Keys.DISPLAY_NAME, Text.builder("Commit").color(TextColors.GREEN).build());
-        List<Text> list = new ArrayList<>();
-        list.add(Text.builder("Remaining Attribute Points: " + attributePoints).color(attributePoints == 0 ? TextColors.RED : TextColors.GREEN).build());
-        commit.offer(Keys.ITEM_LORE, list);
-        commit.offer(new InventoryCommandItemMenuData("char tx-attribute-commit"));
-
-        i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(commitSP)).set(commit);
+        character.getPlayer().openInventory(new CharacterAttributesGui(character).getInventory());
     }
 
     @Override

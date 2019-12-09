@@ -1,8 +1,8 @@
 package cz.neumimto.skills.active;
 
 import cz.neumimto.effects.negative.StunEffect;
-import cz.neumimto.rpg.ResourceLoader;
-import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.api.ResourceLoader;
+import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
@@ -26,33 +26,33 @@ import javax.inject.Singleton;
 @ResourceLoader.Skill("ntrpg:stun")
 public class Stun extends Targeted {
 
-	@Inject
-	private IEffectService effectService;
+    @Inject
+    private EffectService effectService;
 
-	@Override
-	public void init() {
-		super.init();
-		settings.addNode(SkillNodes.DAMAGE, 10, 1);
-		settings.addNode(SkillNodes.DURATION, 4500, 100);
-		addSkillType(SkillType.PHYSICAL);
-		addSkillType(SkillType.MOVEMENT);
-		setDamageType(DamageTypes.ATTACK.getId());
-	}
+    @Override
+    public void init() {
+        super.init();
+        settings.addNode(SkillNodes.DAMAGE, 10, 1);
+        settings.addNode(SkillNodes.DURATION, 4500, 100);
+        addSkillType(SkillType.PHYSICAL);
+        addSkillType(SkillType.MOVEMENT);
+        setDamageType(DamageTypes.ATTACK.getId());
+    }
 
-	@Override
-	public void castOn(IEntity target, ISpongeCharacter source, PlayerSkillContext info, SkillContext skillContext) {
-		long duration = skillContext.getLongNodeValue(SkillNodes.DURATION);
-		double damage = skillContext.getDoubleNodeValue(SkillNodes.DAMAGE);
-		StunEffect stunEffect = new StunEffect(target, duration);
-		effectService.addEffect(stunEffect, this, source);
-		if (damage > 0) {
-			SkillDamageSource s = new SkillDamageSourceBuilder()
-					.fromSkill(this)
-					.setSource(source)
-					.build();
-			((ISpongeEntity)target).getEntity().damage(damage, s);
-		}
-		skillContext.next(source, info, skillContext.result(SkillResult.OK));
-	}
+    @Override
+    public void castOn(IEntity target, ISpongeCharacter source, PlayerSkillContext info, SkillContext skillContext) {
+        long duration = skillContext.getLongNodeValue(SkillNodes.DURATION);
+        double damage = skillContext.getDoubleNodeValue(SkillNodes.DAMAGE);
+        StunEffect stunEffect = new StunEffect(target, duration);
+        effectService.addEffect(stunEffect, this, source);
+        if (damage > 0) {
+            SkillDamageSource s = new SkillDamageSourceBuilder()
+                    .fromSkill(this)
+                    .setSource(source)
+                    .build();
+            ((ISpongeEntity) target).getEntity().damage(damage, s);
+        }
+        skillContext.next(source, info, skillContext.result(SkillResult.OK));
+    }
 
 }

@@ -15,7 +15,10 @@ public class AttributeConfig {
     private String name;
 
     @Path("MaxValue")
-    private float maxValue;
+    private int maxValue;
+
+    @Path("Hidden")
+    private boolean hidden;
 
     @Path("Properties")
     @Conversion(PropertiesMapAdapter.class)
@@ -27,10 +30,11 @@ public class AttributeConfig {
     @Path("Description")
     private String description;
 
-    public AttributeConfig(String id, String name, float maxValue, Map<Integer, Float> propBonus, String itemType, String description) {
+    public AttributeConfig(String id, String name, int maxValue, boolean hidden, Map<Integer, Float> propBonus, String itemType, String description) {
         this.id = id;
         this.name = name;
         this.maxValue = maxValue;
+        this.hidden = hidden;
         this.propBonus = propBonus;
         this.itemType = itemType;
         this.description = description;
@@ -47,12 +51,16 @@ public class AttributeConfig {
         return name;
     }
 
-    public Map<Integer, Float> getPropBonus() {
-        return propBonus;
-    }
-
     public float getMaxValue() {
         return maxValue;
+    }
+
+    public boolean isHidden() {
+        return hidden;
+    }
+
+    public Map<Integer, Float> getPropBonus() {
+        return propBonus;
     }
 
     public String getItemType() {

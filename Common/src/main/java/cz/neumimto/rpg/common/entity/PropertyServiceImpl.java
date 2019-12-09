@@ -1,59 +1,45 @@
 package cz.neumimto.rpg.common.entity;
 
+import static cz.neumimto.rpg.api.logging.Log.info;
 import com.electronwill.nightconfig.core.conversion.ObjectConverter;
 import com.electronwill.nightconfig.core.file.FileConfig;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.configuration.Attributes;
-import cz.neumimto.rpg.api.entity.IPropertyService;
+import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.properties.Property;
 import cz.neumimto.rpg.api.utils.Console;
 import cz.neumimto.rpg.common.assets.AssetService;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.io.*;
 import java.lang.reflect.Field;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
+import java.nio.file.*;
 import java.text.Collator;
 import java.util.*;
 import java.util.function.Supplier;
-
-import static cz.neumimto.rpg.api.logging.Log.info;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 @Singleton
-public class PropertyService implements IPropertyService {
+public class PropertyServiceImpl implements PropertyService {
 
     public static final double WALKING_SPEED = 0.1d;
 
     public static int LAST_ID = 0;
-    public static final Supplier<Integer> getAndIncrement = () -> {
-        int t = new Integer(LAST_ID);
-        LAST_ID++;
-        return t;
-    };
-
-    @Inject
-    private ItemService itemService;
-
-    @Inject
-    private AssetService assetService;
-
-    private Map<String, Integer> idMap = new HashMap<>();
-
-    private Map<Integer, String> nameMap = new HashMap<>();
-
-    private Map<Integer, Float> defaults = new HashMap<>();
-
-    private Set<Integer> damageRecalc = new HashSet<>();
-
-    private Map<String, AttributeConfig> attributeMap = new HashMap<>();
+    public static final Supplier<Integer> getAndIncrement = () -> LAST_ID++;
 
     protected float[] maxValues;
+    @Inject
+    private ItemService itemService;
+    @Inject
+    private AssetService assetService;
+    private Map<String, Integer> idMap = new HashMap<>();
+    private Map<Integer, String> nameMap = new HashMap<>();
+    private Map<Integer, Float> defaults = new HashMap<>();
+    private Set<Integer> damageRecalc = new HashSet<>();
+    private Map<String, AttributeConfig> attributeMap = new HashMap<>();
 
     @Override
     public int getLastId() {
@@ -160,7 +146,9 @@ public class PropertyService implements IPropertyService {
     }
 
     @Override
-    public void loadMaximalServerPropertyValues(Path path) {
+    public void loadMaximalServerPropertyValues() {
+        Path path = Paths.get(Rpg.get().getWorkingDirectory(), "max_server_property_values.properties");
+
         maxValues = new float[LAST_ID];
         for (int i = 0; i < maxValues.length; i++) {
             maxValues[i] = Float.MAX_VALUE;
@@ -222,8 +210,9 @@ public class PropertyService implements IPropertyService {
     }
 
     @Override
-    public void reLoadAttributes(Path attributeFilePath) {
-        try (FileConfig fc = FileConfig.of(attributeFilePath)) {
+    public void reLoadAttributes() {
+        Path attributesPath = Paths.get(Rpg.get().getWorkingDirectory() + "/Attributes.conf");
+        try (FileConfig fc = FileConfig.of(attributesPath)) {
             fc.load();
             Attributes attributes = new ObjectConverter().toObject(fc, Attributes::new);
             attributes.getAttributes().forEach(a -> attributeMap.put(a.getId(), a));
@@ -232,23 +221,34 @@ public class PropertyService implements IPropertyService {
     }
 
     @Override
-    public void init(Path attributeConf, Path propertiesDump) {
+    public void load() {
         StringBuilder s = new StringBuilder();
         List<String> l = new ArrayList<>(idMap.keySet());
         info(" - found " + l.size() + " Properties", Rpg.get().getPluginConfig().DEBUG);
         l.sort(Collator.getInstance());
         for (String s1 : l) {
-            s.append(s1).append('\t');
+            s.append(s1).append('\n');
         }
         try {
+            Path propertiesDump = Paths.get(Rpg.get().getWorkingDirectory() + File.separator + "properties_dump.info");
             Files.write(propertiesDump, s.toString().getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+        Path attributeConf = Paths.get(Rpg.get().getWorkingDirectory() + "/Attributes.conf");
         File f = attributeConf.toFile();
         if (!f.exists()) {
             assetService.copyToFile("Attributes.conf", attributeConf);
         }
+
+        reLoadAttributes();
+        loadMaximalServerPropertyValues();
+    }
+
+    @Override
+    public void reload() {
+        attributeMap.clear();
+        load();
     }
 }

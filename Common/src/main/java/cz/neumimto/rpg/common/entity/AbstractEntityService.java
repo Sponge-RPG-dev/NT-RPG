@@ -1,34 +1,31 @@
 package cz.neumimto.rpg.common.entity;
 
+import static cz.neumimto.rpg.api.logging.Log.warn;
 import cz.neumimto.rpg.api.IRpgElement;
 import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.entity.*;
-import cz.neumimto.rpg.api.entity.players.ICharacterService;
+import cz.neumimto.rpg.api.entity.players.CharacterService;
 import cz.neumimto.rpg.api.events.skill.SkillHealEvent;
 import cz.neumimto.rpg.common.entity.configuration.MobSettingsDao;
 import cz.neumimto.rpg.common.entity.configuration.MobsConfig;
-import cz.neumimto.rpg.common.entity.players.CharacterService;
 
-import javax.inject.Inject;
-import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.UUID;
-
-import static cz.neumimto.rpg.api.logging.Log.warn;
+import javax.inject.Inject;
 
 public abstract class AbstractEntityService<T, I extends IMob<T>> implements EntityService<T> {
 
     private HashMap<UUID, I> entityHashMap;
 
     @Inject
-    private ICharacterService characterService;
+    private CharacterService characterService;
 
     @Inject
-    private IPropertyService propertyService;
+    private PropertyService propertyService;
 
     @Inject
-    private IEffectService effectService;
+    private EffectService effectService;
 
     @Inject
     protected MobSettingsDao dao;
@@ -59,7 +56,7 @@ public abstract class AbstractEntityService<T, I extends IMob<T>> implements Ent
     /**
      * Unlike {@link IEntity#getProperty} this method checks for maximal allowed value, defined in config file.
      *
-     * @see IPropertyService#loadMaximalServerPropertyValues(Path) ()
+     * @see PropertyService#loadMaximalServerPropertyValues()
      */
     @Override
     public float getEntityProperty(IEffectConsumer entity, int id) {

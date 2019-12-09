@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.common.skills;
 
-import cz.neumimto.rpg.api.IResourceLoader;
+import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.utils.DebugLevel;
@@ -39,10 +39,10 @@ public class SkillConfigLoader {
         ByteBuddy byteBuddy = new ByteBuddy();
         String[] split = id.split(":");
         String name = split[split.length - 1];
-        IResourceLoader rl = Rpg.get().getResourceLoader();
+        ResourceLoader rl = Rpg.get().getResourceLoader();
         Class<? extends ISkill> value = byteBuddy.subclass(type)
                 .name("cz.neumimto.generated." + name + System.currentTimeMillis())
-                .annotateType(AnnotationDescription.Builder.ofType(IResourceLoader.Skill.class)
+                .annotateType(AnnotationDescription.Builder.ofType(ResourceLoader.Skill.class)
                         .define("value", id)
                         .build())
                 .make()

@@ -4,10 +4,7 @@ import cz.neumimto.persistence.TestHelper;
 import cz.neumimto.rpg.api.RpgTests;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterClass;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.util.Optional;
 
@@ -24,6 +21,11 @@ public class JdbcPlayerDaoTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @AfterAll
+    public static void stop() {
+        MariaDbBootstrap.tearDown();
     }
 
     @Test
@@ -48,8 +50,6 @@ public class JdbcPlayerDaoTest {
         Assertions.assertEquals(characterBase.getCharacterSkills(), loadded.getCharacterSkills());
         Assertions.assertEquals(characterBase.getHealthScale(), loadded.getHealthScale());
         Assertions.assertEquals(characterBase.getId(), loadded.getId());
-        Assertions.assertEquals(characterBase.getInfo(), loadded.getInfo());
-
 
         Assertions.assertEquals(characterBase.getLastKnownPlayerName(), loadded.getLastKnownPlayerName());
         Assertions.assertEquals(characterBase.getMarkedForRemoval(), loadded.getMarkedForRemoval());
@@ -84,12 +84,5 @@ public class JdbcPlayerDaoTest {
             Assertions.assertEquals(characterClass.getSkillPoints(), loadedClass.getSkillPoints());
             Assertions.assertEquals(characterClass.getUsedSkillPoints(), loadedClass.getUsedSkillPoints());
         }
-    }
-
-
-
-    @AfterAll
-    public static void stop() {
-        MariaDbBootstrap.tearDown();
     }
 }

@@ -12,6 +12,8 @@ public interface InventoryService<T extends IActiveCharacter> {
 
     void load();
 
+    void reload();
+
     void initializeManagedSlots(T activeCharacter);
 
     boolean isManagedInventory(Class aClass, int slotId);

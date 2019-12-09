@@ -2,10 +2,8 @@ package cz.neumimto.rpg.common.entity;
 
 import com.google.inject.Singleton;
 
-import java.nio.file.Path;
-
 @Singleton
-public class TestPropertyService extends PropertyService {
+public class TestPropertyService extends PropertyServiceImpl {
 
     public TestPropertyService() {
         LAST_ID = 100;
@@ -16,12 +14,12 @@ public class TestPropertyService extends PropertyService {
     }
 
     @Override
-    public void init(Path attributeConf, Path propertiesDump) {
+    public void load() {
 
     }
 
     @Override
-    public void reLoadAttributes(Path attributeFilePath) {
+    public void reLoadAttributes() {
 
     }
 

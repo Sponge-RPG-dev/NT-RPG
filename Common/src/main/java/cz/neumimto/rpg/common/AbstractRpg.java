@@ -7,21 +7,21 @@ import com.electronwill.nightconfig.core.file.FileConfig;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
-import cz.neumimto.rpg.api.IResourceLoader;
-import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.RpgAddon;
 import cz.neumimto.rpg.api.RpgApi;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.damage.DamageService;
-import cz.neumimto.rpg.api.effects.IEffectService;
+import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.entity.EntityService;
-import cz.neumimto.rpg.api.entity.IPropertyService;
-import cz.neumimto.rpg.api.entity.players.ICharacterService;
+import cz.neumimto.rpg.api.entity.PropertyService;
+import cz.neumimto.rpg.api.entity.players.CharacterService;
 import cz.neumimto.rpg.api.entity.players.parties.PartyService;
 import cz.neumimto.rpg.api.events.EventFactoryService;
-import cz.neumimto.rpg.api.exp.IExperienceService;
+import cz.neumimto.rpg.api.exp.ExperienceService;
+import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.inventory.InventoryService;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.localization.Arg;
@@ -33,69 +33,54 @@ import cz.neumimto.rpg.api.utils.FileUtils;
 import cz.neumimto.rpg.api.utils.rng.PseudoRandomDistribution;
 import cz.neumimto.rpg.common.commands.ACFBootstrap;
 
-import javax.inject.Inject;
 import java.io.File;
 import java.net.URL;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
+import javax.inject.Inject;
 
 public abstract class AbstractRpg implements RpgApi {
 
+    private final String workingDirectory;
+
     @Inject
     private EventFactoryService eventFactory;
-
     @Inject
     private SkillService skillService;
-
     @Inject
     private LocalizationService localizationService;
-
-    @Inject
+    //@Inject
     private PluginConfig pluginConfig;
-
     @Inject
     private DamageService damageService;
-
     @Inject
-    private IEffectService effectService;
-
+    private EffectService effectService;
     @Inject
     private ClassService classService;
-
     @Inject
     private ItemService itemService;
-
     @Inject
     private InventoryService inventoryService;
-
     @Inject
     private IScriptEngine scriptEngine;
-
     @Inject
     private PartyService partyService;
-
     @Inject
-    private IPropertyService propertyService;
-
+    private PropertyService propertyService;
     @Inject
     private EntityService entityService;
-
     @Inject
-    private IResourceLoader iresourceLoader;
-
+    private ResourceLoader resourceLoader;
     @Inject
-    private ICharacterService characterService;
-
+    private CharacterService characterService;
     @Inject
-    private IExperienceService experienceService;
-
+    private ExperienceService experienceService;
     @Inject
     private Injector injector;
-    
-    private final String workingDirectory;
+    @Inject
+    private Gui gui;
 
     public AbstractRpg(String workingDirectory) {
         this.workingDirectory = workingDirectory;
@@ -135,9 +120,9 @@ public abstract class AbstractRpg implements RpgApi {
     public PluginConfig getPluginConfig() {
         return pluginConfig;
     }
-    
+
     @Override
-    public ICharacterService getCharacterService() {
+    public CharacterService getCharacterService() {
         return characterService;
     }
 
@@ -152,7 +137,7 @@ public abstract class AbstractRpg implements RpgApi {
     }
 
     @Override
-    public IPropertyService getPropertyService() {
+    public PropertyService getPropertyService() {
         return propertyService;
     }
 
@@ -167,8 +152,8 @@ public abstract class AbstractRpg implements RpgApi {
     }
 
     @Override
-    public IResourceLoader getResourceLoader() {
-        return iresourceLoader;
+    public ResourceLoader getResourceLoader() {
+        return resourceLoader;
     }
 
     @Override
@@ -177,7 +162,7 @@ public abstract class AbstractRpg implements RpgApi {
     }
 
     @Override
-    public IEffectService getEffectService() {
+    public EffectService getEffectService() {
         return effectService;
     }
 
@@ -192,10 +177,11 @@ public abstract class AbstractRpg implements RpgApi {
     }
 
     @Override
-    public IExperienceService getExperienceService() {
+    public ExperienceService getExperienceService() {
         return experienceService;
     }
 
+    @Override
     public void reloadMainPluginConfig() {
         File file = new File(getWorkingDirectory());
         if (!file.exists()) {
@@ -223,14 +209,14 @@ public abstract class AbstractRpg implements RpgApi {
     }
 
     @Override
-    public void init(Path workingDirPath, Object commandManager, Class[] commandClasses, RpgAddon defaultStorageImpl,
-                     BiFunction<Map, Map<Class<?>, ?>, Module> fnInjProv, Consumer<Injector> injectorc) {
-        int a = 0;
+    public void init(Path workingDirPath, Object commandManager, Class[] commandClasses, RpgAddon defaultStorageImpl, BiFunction<Map, Map<Class<?>, ?>, Module> fnInjProv, Consumer<Injector> injectorc) {
+        reloadMainPluginConfig();
+
         PseudoRandomDistribution p = new PseudoRandomDistribution();
         PseudoRandomDistribution.C = new double[101];
-        for (double i = 0.01; i <= 1; i += 0.01) {
+        int a = 0;
+        for (double i = 0.01; i <= 1; i += 0.01, a++) {
             PseudoRandomDistribution.C[a] = p.c(i);
-            a++;
         }
 
         AddonScanner.setDeployedDir(workingDirPath.resolve(".deployed"));
@@ -240,13 +226,12 @@ public abstract class AbstractRpg implements RpgApi {
         Set<RpgAddon> rpgAddons = AbstractResourceManager.discoverGuiceModules();
         AddonScanner.onlyReloads();
 
-        Map bindings = new HashMap<>();
-        bindings.putAll(defaultStorageImpl.getBindings());
+        Map<Class<?>, Class<?>> bindings = new HashMap<>(defaultStorageImpl.getBindings());
         for (RpgAddon rpgAddon : rpgAddons) {
             bindings.putAll(rpgAddon.getBindings());
         }
 
-        Map<Class<?>, ?> providers = new HashMap();
+        Map<Class<?>, ?> providers = new HashMap<>();
         Set<Class<?>> classesToLoad = AddonScanner.getClassesToLoad();
         Iterator<Class<?>> iterator = classesToLoad.iterator();
         try {
@@ -256,9 +241,9 @@ public abstract class AbstractRpg implements RpgApi {
                     try {
                         RpgAddon addon = (RpgAddon) next.getConstructor().newInstance();
                         bindings.putAll(addon.getBindings());
-                        Map map = new HashMap<>();
+                        Map<String, Object> map = new HashMap<>();
                         map.put("WORKINGDIR", workingDirPath.toAbsolutePath().toString());
-                        providers = addon.getProviders(map);
+                        providers = addon.getProviders(map); //TODO something definitely wrong with this
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -274,13 +259,13 @@ public abstract class AbstractRpg implements RpgApi {
 
         URL pluginUrl = FileUtils.getPluginUrl();
         File file = new File(pluginUrl.getFile());
-        Rpg.get().getResourceLoader().loadJarFile(file, true);
+        getResourceLoader().loadJarFile(file, true);
 
         for (RpgAddon rpgAddon : rpgAddons) {
             rpgAddon.processStageEarly(injector);
         }
 
-        Rpg.get().getResourceLoader().initializeComponents();
+        getResourceLoader().initializeComponents();
         Locale locale = Locale.forLanguageTag(pluginConfig.LOCALE);
         try {
             getResourceLoader().reloadLocalizations(locale);
@@ -288,18 +273,16 @@ public abstract class AbstractRpg implements RpgApi {
             Log.error("Could not read localizations in locale " + locale.toString() + " - " + e.getMessage());
         }
 
-        getItemService().loadItemGroups(Paths.get(getWorkingDirectory()).resolve("ItemGroups.conf"));
+        getItemService().load();
         getInventoryService().load();
         getEventFactory().registerEventProviders();
         getExperienceService().load();
 
         getSkillService().init();
-        getPropertyService().init(Paths.get(getWorkingDirectory() + "/Attributes.conf"), Paths.get(getWorkingDirectory() + File.separator + "properties_dump.info"));
-        getPropertyService().reLoadAttributes(Paths.get(getWorkingDirectory() + "/Attributes.conf"));
-        getPropertyService().loadMaximalServerPropertyValues(Paths.get(getWorkingDirectory(), "max_server_property_values.properties"));
+        getPropertyService().load();
         getScriptEngine().initEngine();
         getSkillService().load();
-        getClassService().loadClasses();
+        getClassService().load();
         getEffectService().load();
         getEffectService().startEffectScheduler();
         getDamageService().init();
@@ -314,7 +297,5 @@ public abstract class AbstractRpg implements RpgApi {
         for (RpgAddon rpgAddon : rpgAddons) {
             rpgAddon.processStageLate(injector);
         }
-
     }
-
 }

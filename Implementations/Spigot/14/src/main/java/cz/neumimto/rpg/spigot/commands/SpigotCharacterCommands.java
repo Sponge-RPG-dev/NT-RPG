@@ -38,7 +38,7 @@ public class SpigotCharacterCommands extends BaseCommand {
     public void createCharacter(Player executor, String name) {
         UUID uuid = executor.getUniqueId();
 
-        characterCommandFacade.commandCreateCharacter(uuid, name, actionResult -> {
+        characterCommandFacade.commandCreateCharacter(uuid, name, executor.getName(), actionResult -> {
             executor.sendMessage(actionResult.getMessage());
         });
     }

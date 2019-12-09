@@ -40,16 +40,16 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.serializer.TextSerializers;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Created by NeumimTo on 22.7.2015.
  */
 @Singleton
-public class CommandService {
+public class SpongeCommandService {
 
     @Inject
     private SpongeRpgPlugin plugin;
@@ -70,7 +70,6 @@ public class CommandService {
     private RWService rwService;
 
     public void registerStandartCommands() {
-
         registerCharacterCommands();
         registerItemCommands();
     }
