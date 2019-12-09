@@ -155,7 +155,6 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
                 activeCharacter.getCharacterBase().setLastKnownPlayerName(playerName);
                 Rpg.get().scheduleSyncLater(() -> {
                     setActiveCharacter(id, activeCharacter);
-                    invalidateCaches(activeCharacter);
                     assignPlayerToCharacter(id);
                 });
             }
@@ -302,10 +301,9 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
             applyGlobalEffects(character, nClass.getClassDefinition());
         }
 
+        invalidateCaches(character);
         inventoryService.initializeCharacterInventory(character);
         damageService.recalculateCharacterWeaponDamage(character);
-        updateMaxHealth(character);
-        entityService.updateWalkSpeed(character);
 
         CharacterInitializedEvent event = Rpg.get().getEventFactory().createEventInstance(CharacterInitializedEvent.class);
         event.setTarget(character);

@@ -163,7 +163,7 @@ public class SpongeRpgPlugin extends Rpg {
                 .dataName("Attr Ref")
                 .dataClass(AttributeRefMenuData.class)
                 .immutableClass(AttributeRefMenuData.Immutable.class)
-                .builder(new AttributeRefMenuData.AttributeRefMenuDataBuilder())
+                .builder(new AttributeRefMenuData.Builder())
                 .buildAndRegister(plugin);
 
         DataRegistration.builder()
@@ -171,7 +171,7 @@ public class SpongeRpgPlugin extends Rpg {
                 .dataName("Custom Inventory Command")
                 .dataClass(InventoryCommandItemMenuData.class)
                 .immutableClass(InventoryCommandItemMenuData.Immutable.class)
-                .builder(new InventoryCommandItemMenuData.InventoryCommandItemMenuDataBuilder())
+                .builder(new InventoryCommandItemMenuData.Builder())
                 .buildAndRegister(plugin);
 
         DataRegistration.<MenuInventoryData, MenuInventoryData.Immutable>builder()
@@ -182,15 +182,21 @@ public class SpongeRpgPlugin extends Rpg {
                 .builder(new MenuInventoryData.Builder())
                 .buildAndRegister(plugin);
 
+        DataRegistration.builder()
+                .manipulatorId("custom_inventory_action")
+                .dataName("Custom Inventory Action")
+                .dataClass(InventoryActionItemMenuData.class)
+                .immutableClass(InventoryActionItemMenuData.Immutable.class)
+                .builder(new InventoryActionItemMenuData.Builder())
+                .buildAndRegister(plugin);
 
         DataRegistration.builder()
                 .dataName("Item Effects")
                 .manipulatorId("item_effects")
                 .dataClass(EffectsData.class)
                 .immutableClass(EffectsData.Immutable.class)
-                .builder(new EffectsData.EffectDataBuilder())
+                .builder(new EffectsData.Builder())
                 .buildAndRegister(plugin);
-
 
         DataRegistration.<ItemAttributesData, ItemAttributesData.Immutable>builder()
                 .dataClass(ItemAttributesData.class)

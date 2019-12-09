@@ -268,7 +268,6 @@ public class CharacterBaseImpl extends TimestampEntityImpl implements CharacterB
         this.attributePointsSpent = attributePointsSpent;
     }
 
-
     public void postLoad() {
         for (BaseCharacterAttribute characterAttribute : baseCharacterAttribute) {
             cachedAttributes.put(characterAttribute.getName(), characterAttribute.getLevel());

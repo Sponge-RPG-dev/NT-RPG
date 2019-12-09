@@ -10,7 +10,6 @@ import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.common.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
-import cz.neumimto.rpg.sponge.gui.GuiHelper;
 import cz.neumimto.rpg.sponge.gui.SkillTreeViewModel;
 import cz.neumimto.rpg.sponge.gui.VanillaMessaging;
 import org.spongepowered.api.entity.living.player.Player;

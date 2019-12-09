@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MapStringDoubleAdapter implements Converter<Map<String, Float>, Config> {
+
     @Override
     public Map convertToField(Config value) {
         Map<String, Float> map = new HashMap();

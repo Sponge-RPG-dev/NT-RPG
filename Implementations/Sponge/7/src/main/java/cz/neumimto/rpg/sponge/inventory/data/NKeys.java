@@ -21,9 +21,11 @@ import org.spongepowered.api.text.Text;
  */
 public class NKeys {
 
-    public static Key<Value<String>> ATTRIBUTE_REF = null;
-    public static Key<Value<String>> COMMAND = null;
     public static Key<Value<Boolean>> MENU_INVENTORY = null;
+    public static Key<Value<String>> MENU_COMMAND = null;
+    public static Key<Value<Integer>> MENU_ACTION = null;
+
+    public static Key<Value<String>> ATTRIBUTE_REF = null;
     public static Key<Value<SkillTreeControllsButton>> SKILLTREE_CONTROLLS = null;
     public static Key<Value<Integer>> ITEM_RARITY = null;
     public static Key<MapValue<String, Integer>> ITEM_ATTRIBUTE_REQUIREMENTS = null;
@@ -49,14 +51,15 @@ public class NKeys {
 
     public NKeys() {
 
-        ATTRIBUTE_REF = Key.builder()
-                .type(new TypeToken<Value<String>>() {
+        MENU_INVENTORY = Key.builder()
+                .type(new TypeToken<Value<Boolean>>() {
                 })
-                .name("AttributeConfig Ref")
-                .query(DataQuery.of(".", "ntrpg.inventory.attrref"))
-                .id("nt-rpg:item_attribute_ref")
+                .query(DataQuery.of(".", "ntrpg.inventory.menu"))
+                .name("Inventory menu")
+                .id("nt-rpg:menu_inventory")
                 .build();
-        COMMAND = Key.builder()
+
+        MENU_COMMAND = Key.builder()
                 .type(new TypeToken<Value<String>>() {
                 })
                 .name("Custom Inventory Command")
@@ -64,12 +67,20 @@ public class NKeys {
                 .id("nt-rpg:custom_inventory_command")
                 .build();
 
-        MENU_INVENTORY = Key.builder()
-                .type(new TypeToken<Value<Boolean>>() {
+        MENU_ACTION = Key.builder()
+                .type(new TypeToken<Value<Integer>>() {
                 })
-                .query(DataQuery.of(".", "ntrpg.inventory.menu"))
-                .name("Inventory menu")
-                .id("nt-rpg:menu_inventory")
+                .name("Custom Inventory Action")
+                .query(DataQuery.of(".", "ntrpg.inventory.action"))
+                .id("nt-rpg:custom_inventory_action")
+                .build();
+
+        ATTRIBUTE_REF = Key.builder()
+                .type(new TypeToken<Value<String>>() {
+                })
+                .name("AttributeConfig Ref")
+                .query(DataQuery.of(".", "ntrpg.inventory.attrref"))
+                .id("nt-rpg:item_attribute_ref")
                 .build();
 
         SKILLTREE_CONTROLLS = Key.builder()

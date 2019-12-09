@@ -11,7 +11,6 @@ import java.util.Map;
 
 public class PropertiesMapAdapter implements Converter<Map<Integer, Float>, Config> {
 
-
     @Override
     public Map<Integer, Float> convertToField(Config c) {
         Map<Integer, Float> map = new HashMap<>();
@@ -33,19 +32,7 @@ public class PropertiesMapAdapter implements Converter<Map<Integer, Float>, Conf
 
     @Override
     public Config convertFromField(Map<Integer, Float> value) {
-        Config config = Config.inMemory();
-
-        PropertyService propertyService = Rpg.get().getPropertyService();
-
-        for (Map.Entry<Integer, Float> integerFloatEntry : value.entrySet()) {
-            Integer key = integerFloatEntry.getKey();
-            String nameById = propertyService.getNameById(key);
-            if (nameById == null) {
-                continue;
-            }
-            config.add(nameById, integerFloatEntry.getValue());
-        }
-
-        return config;
+        //NOOP
+        return Config.inMemory();
     }
 }

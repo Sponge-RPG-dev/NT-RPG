@@ -12,10 +12,7 @@ import org.spongepowered.api.data.merge.MergeFunction;
 import org.spongepowered.api.data.persistence.AbstractDataBuilder;
 import org.spongepowered.api.data.persistence.InvalidDataException;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by NeumimTo on 12.1.2018.
@@ -130,9 +127,9 @@ public class EffectsData extends AbstractMappedData<String, EffectParams, Effect
         }
     }
 
-    public static class EffectDataBuilder extends AbstractDataBuilder<EffectsData> implements DataManipulatorBuilder<EffectsData, Immutable> {
+    public static class Builder extends AbstractDataBuilder<EffectsData> implements DataManipulatorBuilder<EffectsData, Immutable> {
 
-        public EffectDataBuilder() {
+        public Builder() {
             super(EffectsData.class, 1);
         }
 

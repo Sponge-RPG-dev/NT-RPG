@@ -5,10 +5,7 @@ import com.electronwill.nightconfig.core.conversion.Converter;
 import com.electronwill.nightconfig.core.conversion.ObjectConverter;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassPermission;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 public class ClassPermissionAdapter implements Converter<Set<PlayerClassPermission>, List<Config>> {
 

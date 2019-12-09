@@ -34,6 +34,7 @@ import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
 import cz.neumimto.rpg.sponge.inventory.SpongeItemService;
 import cz.neumimto.rpg.sponge.utils.TextHelper;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.ItemStack;
@@ -189,14 +190,23 @@ public class SpongeAdminCommands extends BaseCommand {
             CharacterBase max = playersCharacters.stream().max(Comparator.comparing(CharacterBase::getUpdated)).get();
             ISpongeCharacter activeCharacter = characterService.createActiveCharacter(player.getUniqueId(), max);
             characterService.setActiveCharacter(player.getUniqueId(), activeCharacter);
-            characterService.invalidateCaches(activeCharacter);
             characterService.assignPlayerToCharacter(player.getUniqueId());
+        }
+    }
+
+    @Subcommand("invoke")
+    @Description("Forces player to use command")
+    public void invokeCommand(CommandSource executor, OnlinePlayer target, String command) {
+        try {
+            Sponge.getCommandManager().process(target.player, command);
+        } catch (Exception e) {
+            executor.sendMessage(Text.of(e.getMessage()));
         }
     }
 
     @Subcommand("effect")
     @Description("Adds effect, managed by rpg plugin, to the player")
-    public void effectAddCommand(Player executor, OnlinePlayer target, IGlobalEffect effect, long duration, @Default("{}") String[] args) {
+    public void effectAddCommand(CommandSource executor, OnlinePlayer target, IGlobalEffect effect, long duration, @Default("{}") String[] args) {
         String data = String.join("", args);
 
         IActiveCharacter character = characterService.getCharacter(target.player);
@@ -210,7 +220,7 @@ public class SpongeAdminCommands extends BaseCommand {
 
     @Subcommand("exp")
     @Description("Adds N experiences of given source type to a character")
-    public void addExperiencesCommand(Player executor, OnlinePlayer target, double amount, String classOrSource) {
+    public void addExperiencesCommand(CommandSource executor, OnlinePlayer target, double amount, String classOrSource) {
         ISpongeCharacter character = characterService.getCharacter(target.player);
         try {
             adminCommandFacade.commandAddExperiences(character, amount, classOrSource);
@@ -250,7 +260,7 @@ public class SpongeAdminCommands extends BaseCommand {
     }
 
     @Subcommand("add-class")
-    public void addClassToCharacterCommand(Player executor, OnlinePlayer target, ClassDefinition klass) {
+    public void addClassToCharacterCommand(CommandSource executor, OnlinePlayer target, ClassDefinition klass) {
         ISpongeCharacter character = characterService.getCharacter(target.player);
         ActionResult actionResult = adminCommandFacade.addCharacterClass(character, klass);
         if (actionResult.isOk()) {
@@ -261,7 +271,7 @@ public class SpongeAdminCommands extends BaseCommand {
     }
 
     @Subcommand("inspect property")
-    public void inspectPropertyCommand(Player executor, OnlinePlayer target, String property) {
+    public void inspectPropertyCommand(CommandSource executor, OnlinePlayer target, String property) {
         try {
             int idByName = propertyService.getIdByName(property);
             IActiveCharacter character = characterService.getCharacter(target.player);
@@ -287,7 +297,7 @@ public class SpongeAdminCommands extends BaseCommand {
     }
 
     @Subcommand("inspect item-damage")
-    public void inspectItemDamageCommand(Player executor, OnlinePlayer oplayer) {
+    public void inspectItemDamageCommand(CommandSource executor, OnlinePlayer oplayer) {
         Player player = oplayer.player;
         java.util.Optional<ItemStack> itemInHand = player.getItemInHand(HandTypes.MAIN_HAND);
         if (!itemInHand.isPresent()) {

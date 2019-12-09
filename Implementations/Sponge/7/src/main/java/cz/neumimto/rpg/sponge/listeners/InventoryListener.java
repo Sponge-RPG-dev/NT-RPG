@@ -29,9 +29,7 @@ import cz.neumimto.rpg.common.inventory.InventoryHandler;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
 import cz.neumimto.rpg.sponge.inventory.SpongeItemService;
-import cz.neumimto.rpg.sponge.inventory.data.NKeys;
 import cz.neumimto.rpg.sponge.utils.ItemStackUtils;
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
@@ -186,28 +184,6 @@ public class InventoryListener {
             }
         }
     }
-
-
-    @Listener
-    @Include({
-            ClickInventoryEvent.Primary.class,
-            ClickInventoryEvent.Secondary.class
-    })
-    @IsCancelled(Tristate.FALSE)
-    public void onClick(ClickInventoryEvent event, @Root Player player) {
-        List<SlotTransaction> transactions = event.getTransactions();
-        for (SlotTransaction transaction : transactions) {
-            Optional<String> s = transaction.getOriginal().get(NKeys.COMMAND);
-            s.ifPresent(value -> Sponge.getCommandManager().process(player, value));
-            Optional<Boolean> aBoolean = transaction.getOriginal().get(NKeys.MENU_INVENTORY);
-            if (aBoolean.isPresent()) {
-                if (aBoolean.get()) {
-                    event.setCancelled(true);
-                }
-            }
-        }
-    }
-
 
     @Listener
     @Include({

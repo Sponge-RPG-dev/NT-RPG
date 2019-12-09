@@ -16,24 +16,21 @@ import java.util.stream.Collectors;
 
 public class ClassRpgItemTypeAdapter implements Converter<Set<ClassItem>, List<String>> {
 
-
     @Override
     public Set<ClassItem> convertToField(List<String> list) {
         if (list == null) {
             return new HashSet<>();
         }
-        Map<RpgItemType, Double> map = new HashMap<>();
-        Map<RpgItemType, Double> map2 = new HashMap<>();
-        Iterator<String> iterator = list.iterator();
-        while (iterator.hasNext()) {
-            String s = iterator.next();
+        Map<RpgItemType, Double> fromWeaponClass = new HashMap<>();
+        Map<RpgItemType, Double> fromConfig = new HashMap<>();
+        for (String s : list) {
             if (s.toLowerCase().startsWith("weaponclass:")) {
                 String[] data = s.split(":");
                 String clazz = data[1];
                 Set<RpgItemType> itemTypes = Rpg.get().getItemService().getItemTypesByWeaponClass(clazz);
                 for (RpgItemType itemType : itemTypes) {
-                    if (!map.containsKey(itemType)) {
-                        map.put(itemType, itemType.getDamage());
+                    if (!fromWeaponClass.containsKey(itemType)) {
+                        fromWeaponClass.put(itemType, itemType.getDamage());
                     }
                 }
             } else {
@@ -41,16 +38,16 @@ public class ClassRpgItemTypeAdapter implements Converter<Set<ClassItem>, List<S
                 Optional<RpgItemType> rpgItemType = Rpg.get().getItemService().getRpgItemType(parsed.itemId, parsed.variant);
                 if (rpgItemType.isPresent()) {
                     RpgItemType rpgItemType1 = rpgItemType.get();
-                    map2.put(rpgItemType1, parsed.damage);
+                    fromConfig.put(rpgItemType1, parsed.damage);
                 } else {
                     Log.error("- Not managed item type " + RpgItemType.KEY_BUILDER.apply(parsed.itemId, parsed.variant));
                 }
             }
         }
 
-        map.putAll(map2);
+        fromWeaponClass.putAll(fromConfig);
 
-        return map.entrySet()
+        return fromWeaponClass.entrySet()
                 .stream()
                 .map(a -> Rpg.get().getItemService().createClassItemSpecification(a.getKey(), a.getValue()))
                 .collect(Collectors.toSet());
@@ -62,7 +59,12 @@ public class ClassRpgItemTypeAdapter implements Converter<Set<ClassItem>, List<S
         for (ClassItem classItem : value) {
             RpgItemType type = classItem.getType();
             double damage = classItem.getDamage();
-            toSerialize.add(type.getKey().concat(";").concat(String.valueOf(damage)));
+            StringBuilder item = new StringBuilder(type.getKey());
+            item.append(";").append(damage);
+            if (type.getModelId() != null && !type.getModelId().isEmpty()) {
+                item.append(";").append(type.getModelId());
+            }
+            toSerialize.add(item.toString());
         }
         return toSerialize;
     }

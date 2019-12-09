@@ -97,7 +97,7 @@ public final class SpongeRpg extends AbstractRpg {
 
     @Override
     public void scheduleSyncLater(Runnable runnable) {
-        Sponge.getScheduler().createTaskBuilder().execute(runnable).submit(SpongeRpgPlugin.getInstance());
+        Sponge.getScheduler().createTaskBuilder().delayTicks(1).execute(runnable).submit(SpongeRpgPlugin.getInstance());
     }
 
     public VanillaMessaging getVanillaMessaging() {

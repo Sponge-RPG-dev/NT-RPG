@@ -1,10 +1,7 @@
 package cz.neumimto.rpg.api.configuration.adapters;
 
 import com.electronwill.nightconfig.core.Config;
-import com.electronwill.nightconfig.core.conversion.Conversion;
-import com.electronwill.nightconfig.core.conversion.Converter;
-import com.electronwill.nightconfig.core.conversion.ObjectConverter;
-import com.electronwill.nightconfig.core.conversion.Path;
+import com.electronwill.nightconfig.core.conversion.*;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.effects.EffectParams;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
@@ -38,20 +35,12 @@ public class EffectsAdapter implements Converter<Map<IGlobalEffect, EffectParams
 
         }
 
-
         return params;
     }
 
     @Override
     public List<Config> convertFromField(Map<IGlobalEffect, EffectParams> value) {
-        List<EffectConfigModel> list = new ArrayList<>();
-        for (Map.Entry<IGlobalEffect, EffectParams> entry : value.entrySet()) {
-            EffectConfigModel model = new EffectConfigModel();
-            model.settings = entry.getValue();
-            model.type = entry.getKey().getName();
-        }
-        Config config = Config.inMemory();
-        config.set("effects", list);
+        //NOOP
         return new ArrayList<>();
     }
 
@@ -63,6 +52,7 @@ public class EffectsAdapter implements Converter<Map<IGlobalEffect, EffectParams
         @Path("Settings")
         @Conversion(EffectSettingsConverter.class)
         private Map<String, String> settings = new HashMap<>();
+
     }
 
     private static class EffectSettingsConverter implements Converter<Map<String, String>, Config> {

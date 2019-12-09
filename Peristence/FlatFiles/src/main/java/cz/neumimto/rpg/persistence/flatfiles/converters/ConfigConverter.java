@@ -3,9 +3,7 @@ package cz.neumimto.rpg.persistence.flatfiles.converters;
 import com.electronwill.nightconfig.core.Config;
 import com.electronwill.nightconfig.core.file.FileConfig;
 import cz.neumimto.rpg.api.persistance.model.*;
-import cz.neumimto.rpg.persistence.model.CharacterBaseImpl;
-import cz.neumimto.rpg.persistence.model.CharacterClassImpl;
-import cz.neumimto.rpg.persistence.model.CharacterSkillImpl;
+import cz.neumimto.rpg.persistence.model.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -24,23 +22,23 @@ public class ConfigConverter {
     private static final String CHAR_CREATED = "Created";
     private static final String CHAR_UPDATED = "Updated";
     private static final String LAST_POSITION = "LastPosition";
-    private static final String AttributePoints = "AttributePoints";
-    private static final String AttributePointsSpent = "AttributePointsSpent";
-    private static final String SKILLS = "LearnedSkills";
-    private static final String CLASSES = "Classes";
-    private static final String ATTRIBUTES = "Attributes";
+    private static final String ATTRIBUTE_POINTS = "AttributePoints";
+    private static final String ATTRIBUTE_POINTS_SPENT = "AttributePointsSpent";
     private static final String INVENTORY_EQUIP_ORDER = "InventoryEquipOrder";
     private static final String HEALTH_SCALING = "HealthScale";
 
+    private static final String ATTRIBUTES = "Attributes";
     private static final String ATTRIBUTE_NAME = "Name";
     private static final String ATTRIBUTE_LEVEL = "Level";
 
+    private static final String CLASSES = "Classes";
     private static final String CLASS_NAME = "Name";
     private static final String CLASS_EXPERIENCES = "Experiences";
     private static final String CLASS_LEVEL = "Level";
     private static final String CLASS_SKILLPOINTS = "SkillPoints";
     private static final String CLASS_SKILLPOINTS_SPENT = "SkillPointsSpent";
 
+    private static final String SKILLS = "LearnedSkills";
     private static final String SKILL_ID = "Skill";
     private static final String SKILL_CD = "Cooldown";
     private static final String SKILL_FROM_CLASS = "FromClass";
@@ -73,10 +71,10 @@ public class ConfigConverter {
         config.set(LAST_POSITION, lastPosition);
 
         Integer attributePoints = c.getAttributePoints();
-        config.set(AttributePoints, attributePoints);
+        config.set(ATTRIBUTE_POINTS, attributePoints);
 
         attributePoints = c.getAttributePointsSpent();
-        config.set(AttributePointsSpent, attributePoints);
+        config.set(ATTRIBUTE_POINTS_SPENT, attributePoints);
 
         List<Config> characterSkills = c.getCharacterSkills().stream().map(ConfigConverter::toConfig).collect(Collectors.toList());
         config.set(SKILLS, characterSkills);
@@ -172,8 +170,8 @@ public class ConfigConverter {
         characterBase.setY(Integer.parseInt(split[2]));
         characterBase.setZ(Integer.parseInt(split[3]));
 
-        characterBase.setAttributePoints(config.get(AttributePoints));
-        characterBase.setAttributePointsSpent(config.get(AttributePointsSpent));
+        characterBase.setAttributePoints(config.get(ATTRIBUTE_POINTS));
+        characterBase.setAttributePointsSpent(config.get(ATTRIBUTE_POINTS_SPENT));
 
         List<Config> skills = config.get(SKILLS);
         characterBase.setCharacterSkills(skillsFromConfig(skills, characterBase));
@@ -182,6 +180,7 @@ public class ConfigConverter {
         characterBase.setCharacterClasses(classesFromConfig(classes, characterBase));
 
         List<Config> attributes = config.get(ATTRIBUTES);
+        characterBase.setBaseCharacterAttribute(attributesFromConfig(attributes, characterBase));
 
         //FIXME
         /*List<EquipedSlot> iso = new ArrayList<>();
@@ -201,6 +200,14 @@ public class ConfigConverter {
         return characterBase;
     }
 
+    private static Set<BaseCharacterAttribute> attributesFromConfig(List<Config> attributes, CharacterBase c) {
+        Set<BaseCharacterAttribute> attributeSet = new HashSet<>();
+        for (Config config : attributes) {
+            attributeSet.add(attributeFromConfig(config, c));
+        }
+        return attributeSet;
+    }
+
     private static Set<CharacterClass> classesFromConfig(List<Config> classes, CharacterBase c) {
         Set<CharacterClass> classSet = new HashSet<>();
         for (Config config : classes) {
@@ -215,6 +222,31 @@ public class ConfigConverter {
             skills.add(skillFromConfig(config, c));
         }
         return skills;
+    }
+
+    private static BaseCharacterAttribute attributeFromConfig(Config config, CharacterBase character) {
+        BaseCharacterAttribute attribute = new BaseCharacterAttributeImpl();
+
+        attribute.setName(config.get(ATTRIBUTE_NAME));
+        attribute.setLevel(config.get(ATTRIBUTE_LEVEL));
+
+        attribute.setCharacterBase(character);
+
+        return attribute;
+    }
+
+    private static CharacterClass classFromConfig(Config config, CharacterBase character) {
+        CharacterClass characterClass = new CharacterClassImpl();
+
+        characterClass.setName(config.get(CLASS_NAME));
+        characterClass.setExperiences(((Number) config.get(CLASS_EXPERIENCES)).doubleValue());
+        characterClass.setLevel(config.get(CLASS_LEVEL));
+        characterClass.setSkillPoints(config.get(CLASS_SKILLPOINTS));
+        characterClass.setUsedSkillPoints(config.get(CLASS_SKILLPOINTS_SPENT));
+
+        characterClass.setCharacterBase(character);
+
+        return characterClass;
     }
 
     private static CharacterSkill skillFromConfig(Config config, CharacterBase character) {
@@ -237,20 +269,6 @@ public class ConfigConverter {
         characterSkill.setLevel(config.getInt(SKILL_LEVEL));
 
         return characterSkill;
-    }
-
-    private static CharacterClass classFromConfig(Config config, CharacterBase character) {
-        CharacterClass characterClass = new CharacterClassImpl();
-
-        characterClass.setName(config.get(CLASS_NAME));
-        characterClass.setExperiences(((Number) config.get(CLASS_EXPERIENCES)).doubleValue());
-        characterClass.setLevel(config.get(CLASS_LEVEL));
-        characterClass.setSkillPoints(config.get(CLASS_SKILLPOINTS));
-        characterClass.setUsedSkillPoints(config.get(CLASS_SKILLPOINTS_SPENT));
-
-        characterClass.setCharacterBase(character);
-
-        return characterClass;
     }
 
     private static SimpleDateFormat getDateFormat() {

@@ -6,7 +6,6 @@ import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.logging.Log;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -21,9 +20,10 @@ public class PropertiesArrayAdapter implements Converter<float[], Config> {
         if (value == null) {
             return arr;
         }
+
         PropertyService propertyService = Rpg.get().getPropertyService();
         for (Map.Entry<String, Object> objectEntry : value.valueMap().entrySet()) {
-            String propertyName = ((String) objectEntry.getKey()).toLowerCase();
+            String propertyName = objectEntry.getKey().toLowerCase();
             float f = ((Number) objectEntry.getValue()).floatValue();
 
             if (propertyService.exists(propertyName)) {
@@ -35,20 +35,20 @@ public class PropertiesArrayAdapter implements Converter<float[], Config> {
         }
 
         return arr;
-
-
     }
 
     @Override
     public Config convertFromField(float[] floats) {
-        Map<String, Float> map = new HashMap<>();
-        PropertyService propertyService = Rpg.get().getPropertyService();
+        Config config = Config.inMemory();
+        PropertyService service = Rpg.get().getPropertyService();
+
         for (int i = 0; i < floats.length; i++) {
-            String nameById = propertyService.getNameById(i);
-            if (floats[i] != 0) {
-                map.put(nameById, floats[i]);
+            String propertyName = service.getNameById(i);
+            if (floats[i] != service.getDefault(i)) {
+                config.add(propertyName, floats[i]);
             }
         }
+
         return Config.inMemory();
     }
 }

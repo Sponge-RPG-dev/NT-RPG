@@ -20,10 +20,7 @@ package cz.neumimto.effects.positive;
 
 import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.effects.EffectBase;
-import cz.neumimto.rpg.api.effects.Generate;
-import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.api.effects.IGlobalEffect;
+import cz.neumimto.rpg.api.effects.*;
 import cz.neumimto.rpg.api.entity.CommonProperties;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
