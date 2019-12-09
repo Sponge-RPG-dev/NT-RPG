@@ -4,8 +4,7 @@ import co.aikar.commands.CommandManager;
 import co.aikar.commands.PaperCommandManager;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.persistence.flatfiles.FlatFilesModule;
-import cz.neumimto.rpg.spigot.commands.SpigotAdminCommands;
-import cz.neumimto.rpg.spigot.commands.SpigotCharacterCommands;
+import cz.neumimto.rpg.spigot.commands.*;
 import cz.neumimto.rpg.spigot.resources.SpigotGuiceModule;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.java.annotation.plugin.*;
@@ -50,18 +49,19 @@ public class SpigotRpgPlugin extends JavaPlugin {
 
         CommandManager manager = new PaperCommandManager(this);
 
-        spigotRpg.init(
-                getDataFolder().toPath(),
-                manager,
-                new Class[]{SpigotAdminCommands.class, SpigotCharacterCommands.class},
-                new FlatFilesModule(),
-                (bindings, providers) -> new SpigotGuiceModule(this,  bindings, providers),
-                injector -> {
-                    injector.injectMembers(spigotRpg);
-                    new RpgImpl(spigotRpg);
-                }
+        spigotRpg.init(getDataFolder().toPath(), manager, new Class[]{
+                SpigotAdminCommands.class,
+                SpigotCharacterCommands.class,
+                SpigotInfoCommands.class,
+                SpigotPartyCommands.class,
+                SpigotSkillCommands.class,
+                SpigotSkilltreeCommands.class,
+                SpigotSkillBindCommands.class
 
-        );
+        }, new FlatFilesModule(), (bindings, providers) -> new SpigotGuiceModule(this,  bindings, providers), injector -> {
+            injector.injectMembers(spigotRpg);
+            new RpgImpl(spigotRpg);
+        });
 
     }
 }

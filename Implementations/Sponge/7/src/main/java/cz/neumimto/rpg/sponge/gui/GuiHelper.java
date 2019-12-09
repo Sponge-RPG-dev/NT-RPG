@@ -1,7 +1,5 @@
 package cz.neumimto.rpg.sponge.gui;
 
-import static cz.neumimto.rpg.sponge.gui.CatalogTypeItemStackBuilder.Block;
-import static cz.neumimto.rpg.sponge.gui.CatalogTypeItemStackBuilder.Item;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
@@ -51,6 +49,9 @@ import org.spongepowered.api.text.format.TextStyles;
 
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static cz.neumimto.rpg.sponge.gui.CatalogTypeItemStackBuilder.Block;
+import static cz.neumimto.rpg.sponge.gui.CatalogTypeItemStackBuilder.Item;
 
 /**
  * Created by ja on 29.12.2016.
@@ -242,11 +243,11 @@ public class GuiHelper {
         return of;
     }
 
-    static ItemStack skillToItemStack(ISpongeCharacter character, SkillData skillData, SkillTree skillTree, SkillTreeViewModel model) {
+    static ItemStack skillToItemStack(ISpongeCharacter character, SkillData skillData, SkillTree skillTree, SpongeSkillTreeViewModel model) {
         return toItemStack(skillData.getSkill(), character, skillData, skillTree, model);
     }
 
-    private static ItemStack toItemStack(ISkill skill, ISpongeCharacter character, SkillData skillData, SkillTree skillTree, SkillTreeViewModel model) {
+    private static ItemStack toItemStack(ISkill skill, ISpongeCharacter character, SkillData skillData, SkillTree skillTree, SpongeSkillTreeViewModel model) {
         List<Text> lore;
         TextColor nameColor;
         Pair<List<Text>, TextColor> fromCache = model.getFromCache(skill);
@@ -327,7 +328,7 @@ public class GuiHelper {
         i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(7, 5))).offer(unclickableInterface(DyeColors.YELLOW));
 
 
-        SkillTreeViewModel model = character.getSkillTreeViewLocation().get(skillTree.getId());
+        SpongeSkillTreeViewModel model = character.getSkillTreeViewLocation().get(skillTree.getId());
 
         ItemStack md = interactiveModeToitemStack(character, model.getInteractiveMode());
         i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(8, 1))).set(md);
@@ -369,7 +370,7 @@ public class GuiHelper {
                         .build()))
                 .build(SpongeRpgPlugin.getInstance());
 
-        SkillTreeViewModel skillTreeViewModel = character.getLastTimeInvokedSkillTreeView();
+        SpongeSkillTreeViewModel skillTreeViewModel = character.getLastTimeInvokedSkillTreeView();
         ItemStack back = back("skilltree " + skillTreeViewModel.getViewedClass().getName(), translate(LocalizationKeys.SKILLTREE));
         build.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0, 0))).offer(back);
 
@@ -461,7 +462,7 @@ public class GuiHelper {
     }
 
 
-    public static ItemStack interactiveModeToitemStack(ISpongeCharacter character, SkillTreeViewModel.InteractiveMode interactiveMode) {
+    public static ItemStack interactiveModeToitemStack(ISpongeCharacter character, SpongeSkillTreeViewModel.InteractiveMode interactiveMode) {
 
         String translation = null;
         ItemType itemType = null;

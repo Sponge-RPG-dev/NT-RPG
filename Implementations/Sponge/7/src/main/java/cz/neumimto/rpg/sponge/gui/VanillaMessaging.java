@@ -18,13 +18,15 @@
 
 package cz.neumimto.rpg.sponge.gui;
 
-import static cz.neumimto.rpg.sponge.gui.GuiHelper.*;
 import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
-import cz.neumimto.rpg.api.effects.*;
+import cz.neumimto.rpg.api.effects.EffectService;
+import cz.neumimto.rpg.api.effects.EffectStatusType;
+import cz.neumimto.rpg.api.effects.IEffect;
+import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.gui.IPlayerMessage;
@@ -68,7 +70,10 @@ import org.spongepowered.api.data.type.DyeColors;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
-import org.spongepowered.api.item.inventory.*;
+import org.spongepowered.api.item.inventory.Container;
+import org.spongepowered.api.item.inventory.Inventory;
+import org.spongepowered.api.item.inventory.InventoryArchetypes;
+import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.property.InventoryTitle;
 import org.spongepowered.api.item.inventory.property.SlotPos;
 import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
@@ -84,10 +89,12 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 import org.spongepowered.api.util.Color;
 
-import java.util.*;
-import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static cz.neumimto.rpg.sponge.gui.GuiHelper.*;
 
 /**
  * Created by NeumimTo on 6.8.2015.
@@ -684,8 +691,8 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
     public void openSkillTreeMenu(ISpongeCharacter player) {
         SkillTree skillTree = player.getLastTimeInvokedSkillTreeView().getSkillTree();
         if (player.getSkillTreeViewLocation().get(skillTree.getId()) == null) {
-            SkillTreeViewModel skillTreeViewModel = new SkillTreeViewModel();
-            for (SkillTreeViewModel treeViewModel : player.getSkillTreeViewLocation().values()) {
+            SpongeSkillTreeViewModel skillTreeViewModel = new SpongeSkillTreeViewModel();
+            for (SpongeSkillTreeViewModel treeViewModel : player.getSkillTreeViewLocation().values()) {
                 treeViewModel.setCurrent(false);
             }
             player.getSkillTreeViewLocation().put(skillTree.getId(), skillTreeViewModel);
@@ -731,7 +738,7 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
 
     private void createSkillTreeView(ISpongeCharacter character, Inventory skillTreeInventoryViewTemplate) {
 
-        SkillTreeViewModel skillTreeViewModel = character.getLastTimeInvokedSkillTreeView();
+        SpongeSkillTreeViewModel skillTreeViewModel = character.getLastTimeInvokedSkillTreeView();
         SkillTree skillTree = skillTreeViewModel.getSkillTree();
         short[][] skillTreeMap = skillTreeViewModel.getSkillTree().getSkillTreeMap();
         int y = skillTree.getCenter().value + skillTreeViewModel.getLocation().value; //y
@@ -744,7 +751,7 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
         int columns = skillTreeMap[0].length;
         int rows = skillTreeMap.length;
 
-        SkillTreeViewModel.InteractiveMode interactiveMode = skillTreeViewModel.getInteractiveMode();
+        SpongeSkillTreeViewModel.InteractiveMode interactiveMode = skillTreeViewModel.getInteractiveMode();
         ItemStack md = GuiHelper.interactiveModeToitemStack(character, interactiveMode);
         skillTreeInventoryViewTemplate.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(8, 1))).clear();
         skillTreeInventoryViewTemplate.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(8, 1))).offer(md);

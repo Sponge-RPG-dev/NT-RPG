@@ -3,7 +3,7 @@ package cz.neumimto.rpg.sponge.entities.players;
 import cz.neumimto.rpg.common.entity.players.PlayerNotInGameException;
 import cz.neumimto.rpg.common.entity.players.PreloadCharacter;
 import cz.neumimto.rpg.sponge.entities.players.party.SpongeParty;
-import cz.neumimto.rpg.sponge.gui.SkillTreeViewModel;
+import cz.neumimto.rpg.sponge.gui.SpongeSkillTreeViewModel;
 import cz.neumimto.rpg.sponge.utils.TextHelper;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
@@ -34,12 +34,12 @@ public class SpongePreloadCharacter extends PreloadCharacter<Player, SpongeParty
     }
 
     @Override
-    public Map<String, SkillTreeViewModel> getSkillTreeViewLocation() {
+    public Map<String, SpongeSkillTreeViewModel> getSkillTreeViewLocation() {
         return Collections.emptyMap();
     }
 
     @Override
-    public SkillTreeViewModel getLastTimeInvokedSkillTreeView() {
+    public SpongeSkillTreeViewModel getLastTimeInvokedSkillTreeView() {
         return null;
     }
 

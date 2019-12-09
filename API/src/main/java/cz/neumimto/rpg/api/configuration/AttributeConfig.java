@@ -2,6 +2,7 @@ package cz.neumimto.rpg.api.configuration;
 
 import com.electronwill.nightconfig.core.conversion.Conversion;
 import com.electronwill.nightconfig.core.conversion.Path;
+import com.electronwill.nightconfig.core.conversion.PreserveNotNull;
 import cz.neumimto.rpg.api.configuration.adapters.PropertiesMapAdapter;
 
 import java.util.Map;
@@ -15,9 +16,11 @@ public class AttributeConfig {
     private String name;
 
     @Path("MaxValue")
+    @PreserveNotNull
     private int maxValue;
 
     @Path("Hidden")
+    @PreserveNotNull
     private boolean hidden;
 
     @Path("Properties")

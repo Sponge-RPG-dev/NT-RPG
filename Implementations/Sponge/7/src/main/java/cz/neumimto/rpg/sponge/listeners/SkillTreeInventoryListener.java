@@ -11,7 +11,7 @@ import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
 import cz.neumimto.rpg.sponge.gui.SkillTreeControllsButton;
-import cz.neumimto.rpg.sponge.gui.SkillTreeViewModel;
+import cz.neumimto.rpg.sponge.gui.SpongeSkillTreeViewModel;
 import cz.neumimto.rpg.sponge.inventory.data.NKeys;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
@@ -43,7 +43,7 @@ public class SkillTreeInventoryListener {
                 event.setCancelled(true);
                 SkillTreeControllsButton command = t.getOriginal().get(NKeys.SKILLTREE_CONTROLLS).get();
                 ISpongeCharacter character = characterService.getCharacter(player);
-                SkillTreeViewModel viewModel = character.getLastTimeInvokedSkillTreeView();
+                SpongeSkillTreeViewModel viewModel = character.getLastTimeInvokedSkillTreeView();
                 switch (command) {
                     case NORTH:
                         viewModel.getLocation().key -= 1;
@@ -78,7 +78,7 @@ public class SkillTreeInventoryListener {
                         break;
                     default:
                         String node = t.getOriginal().get(NKeys.SKILLTREE_NODE).get();
-                        if (viewModel.getInteractiveMode() == SkillTreeViewModel.InteractiveMode.FAST) {
+                        if (viewModel.getInteractiveMode() == SpongeSkillTreeViewModel.InteractiveMode.FAST) {
 
                             ISkill iSkill = skillService.getById(node).get();
 

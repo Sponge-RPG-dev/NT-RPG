@@ -25,4 +25,6 @@ public interface InventoryService<T extends IActiveCharacter> {
     EquipedSlot createEquipedSlot(String className, int slotId);
 
     String getItemIconForSkill(ISkill iSkill);
+
+
 }

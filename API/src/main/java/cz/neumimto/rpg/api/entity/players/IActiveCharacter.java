@@ -29,6 +29,7 @@ import cz.neumimto.rpg.api.entity.IReservable;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.entity.players.party.IParty;
+import cz.neumimto.rpg.api.gui.SkillTreeViewModel;
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.inventory.RpgInventory;
 import cz.neumimto.rpg.api.items.RpgItemStack;
@@ -280,4 +281,6 @@ public interface IActiveCharacter<T, P extends IParty> extends IEntity<T> {
     void setAttributesTransaction(HashMap<String, Integer> map);
 
     String getPlayerAccountName();
+
+    Map<String, ? extends SkillTreeViewModel> getSkillTreeViewLocation();
 }

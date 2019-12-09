@@ -7,19 +7,21 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.parties.PartyService;
 import cz.neumimto.rpg.api.gui.Gui;
+import cz.neumimto.rpg.api.gui.SkillTreeViewModel;
 import cz.neumimto.rpg.api.localization.Arg;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.permissions.PermissionService;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
+import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.utils.ActionResult;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 
 @SuppressWarnings("unchecked")
 @Singleton
@@ -121,6 +123,27 @@ public class CharacterCommandFacade {
                 current.sendMessage(localizationService.translate(LocalizationKeys.NON_EXISTING_CHARACTER));
             }
         }, Rpg.get().getAsyncExecutor());
+    }
+
+    public void openSKillTreeMenu(IActiveCharacter character, ClassDefinition classDefinition) {
+        SkillTree skillTree = classDefinition.getSkillTree();
+        if (skillTree == SkillTree.Default || skillTree == null) {
+            character.sendMessage("Unknown class, or the class has no skilltree defined");
+            return;
+        }
+        Set<SkillTreeViewModel> set = character.getSkillTreeViewLocation().entrySet();
+
+        for (SkillTreeViewModel treeViewModel : set) {
+            treeViewModel.setCurrent(false);
+        }
+        if (character.getSkillTreeViewLocation().get(skillTree.getId()) == null) {
+            SkillTreeViewModel skillTreeViewModel = SkillTreeViewModel.get();
+            character.getSkillTreeViewLocation().put(skillTree.getId(), skillTreeViewModel);
+            skillTreeViewModel.setSkillTree(skillTree);
+        } else {
+            ((SkillTreeViewModel)character.getSkillTreeViewLocation().get(skillTree.getId())).setCurrent(true);
+        }
+        Gui.openSkillTreeMenu(character);
     }
 
     private static class CommandSyncCallback implements Runnable {

@@ -3,7 +3,6 @@ package cz.neumimto.rpg.sponge.commands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Default;
-import co.aikar.commands.annotation.Optional;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.gui.Gui;
@@ -13,7 +12,7 @@ import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.common.commands.SkillsCommandFacade;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
-import cz.neumimto.rpg.sponge.gui.SkillTreeViewModel;
+import cz.neumimto.rpg.sponge.gui.SpongeSkillTreeViewModel;
 import org.spongepowered.api.entity.living.player.Player;
 
 import javax.inject.Inject;
@@ -51,12 +50,12 @@ public class SpongeSkilltreeCommands extends BaseCommand {
         }
         if (classDefinition != null) {
             SkillTree skillTree = classDefinition.getSkillTree();
-            for (SkillTreeViewModel treeViewModel : character.getSkillTreeViewLocation().values()) {
+            for (SpongeSkillTreeViewModel treeViewModel : character.getSkillTreeViewLocation().values()) {
                 treeViewModel.setCurrent(false);
             }
-            SkillTreeViewModel skillTreeViewModel = character.getSkillTreeViewLocation().get(skillTree.getId());
+            SpongeSkillTreeViewModel skillTreeViewModel = character.getSkillTreeViewLocation().get(skillTree.getId());
             if (skillTreeViewModel == null) {
-                skillTreeViewModel = new SkillTreeViewModel();
+                skillTreeViewModel = new SpongeSkillTreeViewModel();
                 character.getSkillTreeViewLocation().put(skillTree.getId(), skillTreeViewModel);
                 skillTreeViewModel.setSkillTree(skillTree);
             } else {

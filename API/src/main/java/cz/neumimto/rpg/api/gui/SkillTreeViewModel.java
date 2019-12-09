@@ -1,34 +1,24 @@
-package cz.neumimto.rpg.sponge.gui;
+package cz.neumimto.rpg.api.gui;
 
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
-import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.utils.Pair;
-import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.format.TextColor;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.function.Supplier;
 
-/**
- * Created by NeumimTo on 22.10.2017.
- */
-public class SkillTreeViewModel {
+public abstract class SkillTreeViewModel {
 
     private InteractiveMode interactiveMode;
     private Pair<Integer, Integer> location;
     private boolean current = true;
     private SkillTree skillTree;
     private ClassDefinition viewedClass;
-    private Map<String, Pair<List<Text>, TextColor>> buttonCache;
-
 
     public SkillTreeViewModel() {
         interactiveMode = InteractiveMode.DETAILED;
         location = new Pair<>(0, 0);
-        buttonCache = new HashMap<>();
     }
+
 
     public SkillTree getSkillTree() {
         return skillTree;
@@ -70,16 +60,12 @@ public class SkillTreeViewModel {
         return viewedClass;
     }
 
-    public void reset() {
-        buttonCache.clear();
-    }
+    public abstract void reset();
 
-    public Pair<List<Text>, TextColor> getFromCache(ISkill iSkill) {
-        return buttonCache.get(iSkill.getId());
-    }
+    protected static Supplier<SkillTreeViewModel> factory;
 
-    public void addToCache(ISkill iSkill, List<Text> lore, TextColor textColor) {
-        buttonCache.put(iSkill.getId(), new Pair<>(lore, textColor));
+    public static SkillTreeViewModel get() {
+        return factory.get();
     }
 
     public enum InteractiveMode {

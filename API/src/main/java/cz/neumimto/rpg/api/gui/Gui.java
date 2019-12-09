@@ -158,4 +158,5 @@ public class Gui {
     public static void displayCharacterWeapons(IActiveCharacter character, int page) {
         getMessageTypeOf(character).displayCharacterWeapons(character, page);
     }
+
 }

@@ -9,6 +9,7 @@ import cz.neumimto.rpg.api.inventory.CannotUseItemReason;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
+import cz.neumimto.rpg.common.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 
 import javax.inject.Singleton;
@@ -16,6 +17,7 @@ import java.util.List;
 
 @Singleton
 public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
+
     @Override
     public boolean isClientSideGui() {
         return false;
@@ -178,6 +180,26 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
 
     @Override
     public void displayCharacterWeapons(ISpigotCharacter character, int page) {
+
+    }
+
+    public void displayRuneword(ISpigotCharacter character, RuneWord runeword, boolean b) {
+
+    }
+
+    public void displayRunewordAllowedItems(ISpigotCharacter character, RuneWord runeWord) {
+
+    }
+
+    public void displayRunewordAllowedGroups(ISpigotCharacter character, RuneWord runeWord) {
+
+    }
+
+    public void displayRunewordRequiredGroups(ISpigotCharacter character, RuneWord runeWord) {
+
+    }
+
+    public void displayRunewordBlockedGroups(ISpigotCharacter character, RuneWord runeWord) {
 
     }
 }

@@ -1,26 +1,22 @@
-package cz.neumimto.rpg.sponge.commands;
+package cz.neumimto.rpg.spigot.commands;
 
 import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Flags;
 import co.aikar.commands.annotation.Subcommand;
-import co.aikar.commands.sponge.contexts.OnlinePlayer;
+import co.aikar.commands.bukkit.contexts.OnlinePlayer;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.parties.PartyService;
 import cz.neumimto.rpg.common.commands.PartyCommandFacade;
-import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
-import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
-import org.spongepowered.api.entity.living.player.Player;
+import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
+import org.bukkit.entity.Player;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
-@Singleton
-@CommandAlias("party|nparty")
-public class SpongePartyCommands extends BaseCommand {
+public class SpigotPartyCommands extends BaseCommand {
 
     @Inject
-    private SpongeCharacterService characterService;
+    private SpigotCharacterService characterService;
 
     @Inject
     private PartyCommandFacade partyCommandFacade;
@@ -30,7 +26,7 @@ public class SpongePartyCommands extends BaseCommand {
 
     @Subcommand("accept")
     public void acceptPartyInviteCommand(Player executor) {
-        ISpongeCharacter character = characterService.getCharacter(executor);
+        ISpigotCharacter character = characterService.getCharacter(executor);
         partyCommandFacade.acceptPartyInvite(character);
     }
 

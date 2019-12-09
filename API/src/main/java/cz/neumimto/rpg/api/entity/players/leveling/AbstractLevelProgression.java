@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.api.entity.players.leveling;
 
 import com.electronwill.nightconfig.core.conversion.Path;
-import com.typesafe.config.Optional;
+import com.electronwill.nightconfig.core.conversion.PreserveNotNull;
 
 import java.util.Arrays;
 
@@ -10,7 +10,7 @@ import java.util.Arrays;
  */
 public abstract class AbstractLevelProgression implements ILevelProgression {
 
-    @Optional
+    @PreserveNotNull
     @Path("MaxLevel")
     protected int maxLevel;
 

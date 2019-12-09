@@ -5,7 +5,7 @@ import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.sponge.entities.players.party.SpongeParty;
 import cz.neumimto.rpg.sponge.gui.ArmorAndWeaponMenuHelper;
-import cz.neumimto.rpg.sponge.gui.SkillTreeViewModel;
+import cz.neumimto.rpg.sponge.gui.SpongeSkillTreeViewModel;
 import cz.neumimto.rpg.sponge.utils.TextHelper;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.chat.ChatTypes;
@@ -16,7 +16,7 @@ import java.util.UUID;
 
 public class SpongeCharacter extends ActiveCharacter<Player, SpongeParty> implements ISpongeCharacter {
 
-    protected Map<String, SkillTreeViewModel> skillTreeViewLocation = new HashMap<>();
+    protected Map<String, SpongeSkillTreeViewModel> skillTreeViewLocation = new HashMap<>();
 
     public SpongeCharacter(UUID uuid, CharacterBase base, int propertyCount) {
         super(uuid, base, propertyCount);
@@ -52,13 +52,13 @@ public class SpongeCharacter extends ActiveCharacter<Player, SpongeParty> implem
     }
 
     @Override
-    public Map<String, SkillTreeViewModel> getSkillTreeViewLocation() {
+    public Map<String, SpongeSkillTreeViewModel> getSkillTreeViewLocation() {
         return skillTreeViewLocation;
     }
 
     @Override
-    public SkillTreeViewModel getLastTimeInvokedSkillTreeView() {
-        for (SkillTreeViewModel skillTreeViewModel : skillTreeViewLocation.values()) {
+    public SpongeSkillTreeViewModel getLastTimeInvokedSkillTreeView() {
+        for (SpongeSkillTreeViewModel skillTreeViewModel : skillTreeViewLocation.values()) {
             if (skillTreeViewModel.isCurrent()) {
                 return skillTreeViewModel;
             }

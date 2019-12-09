@@ -8,6 +8,7 @@ import cz.neumimto.rpg.common.inventory.AbstractInventoryService;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.persistance.SpigotEquipedSlot;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import javax.inject.Singleton;
@@ -40,6 +41,11 @@ public class SpigotInventoryService extends AbstractInventoryService<ISpigotChar
 
     @Override
     public String getItemIconForSkill(ISkill iSkill) {
+        return null;
+    }
+
+
+    public ItemStack createSkillbind(ISkill skill) {
         return null;
     }
 }
