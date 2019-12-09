@@ -227,7 +227,7 @@ public class PropertyServiceImpl implements PropertyService {
         info(" - found " + l.size() + " Properties", Rpg.get().getPluginConfig().DEBUG);
         l.sort(Collator.getInstance());
         for (String s1 : l) {
-            s.append(s1).append('\t');
+            s.append(s1).append('\n');
         }
         try {
             Path propertiesDump = Paths.get(Rpg.get().getWorkingDirectory() + File.separator + "properties_dump.info");

@@ -174,7 +174,7 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
         characterBase.setUuid(uuid);
         characterBase.setLastKnownPlayerName(playerName);
         characterBase.setWorld("");
-        characterBase.setHealthScale(1.0D); // ?
+        characterBase.setHealthScale(20.0D);
 
         Date inc = new Date();
         characterBase.setCreated(inc);
