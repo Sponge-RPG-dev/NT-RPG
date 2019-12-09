@@ -1,10 +1,7 @@
 package cz.neumimto.rpg.sponge.effects.common.def;
 
 import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.effects.EffectBase;
-import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.api.effects.IEffectContainer;
-import cz.neumimto.rpg.api.effects.IEffectSourceProvider;
+import cz.neumimto.rpg.api.effects.*;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
@@ -42,8 +39,7 @@ public class BossBarExpNotifier extends EffectBase<Object> implements IEffectCon
 
     public void notifyExpChange(ISpongeCharacter character, String clazz, double exps) {
         final String classname = clazz.toLowerCase();
-        Optional<PlayerClassData> first =
-                character.getClasses().values().stream().filter(a -> a.getClassDefinition().getName().equalsIgnoreCase(classname)).findFirst();
+        Optional<PlayerClassData> first = Optional.ofNullable(character.getClassByName(classname));
         if (first.isPresent()) {
             SessionWrapper sessionWrapper = bossBarMap.computeIfAbsent(classname, s -> new SessionWrapper());
             ServerBossBar serverBossBar = sessionWrapper.serverBossBar;
@@ -64,7 +60,8 @@ public class BossBarExpNotifier extends EffectBase<Object> implements IEffectCon
             PlayerClassData playerClassData = first.get();
 
             sessionWrapper.currentSessionExp += exps;
-            DecimalFormat df = new DecimalFormat("#.00");
+            DecimalFormat df = new DecimalFormat("0");
+            DecimalFormat changeDf = new DecimalFormat("+0.0;-0.0");
 
             LocalizationService localizationService = Rpg.get().getLocalizationService();
             String preferedColor = playerClassData.getClassDefinition().getPreferedColor();
@@ -72,10 +69,10 @@ public class BossBarExpNotifier extends EffectBase<Object> implements IEffectCon
 
             serverBossBar.setName(
                     Text.builder(Utils.capitalizeFirst(classname)).color(textColor)
-                            .append(Text.of(localizationService.translate(LocalizationKeys.LEVEL)))
+                            .append(Text.of(" " + localizationService.translate(LocalizationKeys.LEVEL)))
                             .append(Text.of(": ")).color(TextColors.DARK_GRAY)
                             .append(Text.builder(String.valueOf(playerClassData.getLevel())).color(TextColors.GOLD).build())
-                            .append(Text.builder(" +" + df.format(sessionWrapper.currentSessionExp)).color(TextColors.GREEN).build())
+                            .append(Text.builder(" " + changeDf.format(sessionWrapper.currentSessionExp)).color(TextColors.GREEN).build())
                             .append(Text.builder(" " + df.format(playerClassData.getExperiencesFromLevel())
                                     + " / "
                                     + df.format(playerClassData.getClassDefinition().getLevelProgression().getLevelMargins()[playerClassData.getLevel()]))

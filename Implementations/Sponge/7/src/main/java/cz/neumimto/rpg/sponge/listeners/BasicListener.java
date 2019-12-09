@@ -60,10 +60,10 @@ import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.List;
 import java.util.Optional;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 
 /**
@@ -186,17 +186,17 @@ public class BasicListener {
             String type = transaction.getOriginal().getState().getType().getId();
 
             Double d = spongeExperienceService.getMiningExperiences(type);
-            if (d != null) {
+            if (d != null && d != 0) {
                 characterService.addExperiences(character, d, ExperienceSources.MINING);
                 return;
             }
             d = spongeExperienceService.getFarmingExperiences(type);
-            if (d != null) {
+            if (d != null && d != 0) {
                 characterService.addExperiences(character, d, ExperienceSources.FARMING);
                 return;
             }
             d = spongeExperienceService.getLoggingExperiences(type);
-            if (d != null) {
+            if (d != null && d != 0) {
                 characterService.addExperiences(character, d, ExperienceSources.LOGGING);
                 return;
             }
@@ -218,7 +218,7 @@ public class BasicListener {
         if (ofish.isPresent()) {
             Fish fish = ofish.get();
             Double d = spongeExperienceService.getFishingExperience(fish.getId());
-            if (d == null) {
+            if (d == null || d == 0) {
                 return;
             }
             Location<World> location = fishHook.getLocation();

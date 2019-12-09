@@ -210,10 +210,10 @@ public class SpongeAdminCommands extends BaseCommand {
 
     @Subcommand("exp")
     @Description("Adds N experiences of given source type to a character")
-    public void addExperiencesCommand(Player executor, OnlinePlayer target, double amount, @Optional ClassDefinition classDefinition, @Optional String source) {
+    public void addExperiencesCommand(Player executor, OnlinePlayer target, double amount, String classOrSource) {
         ISpongeCharacter character = characterService.getCharacter(target.player);
         try {
-            adminCommandFacade.commandAddExperiences(character, amount, classDefinition, source);
+            adminCommandFacade.commandAddExperiences(character, amount, classOrSource);
         } catch (CommandProcessingException e) {
             executor.sendMessage(Text.of(e.getMessage()));
         }

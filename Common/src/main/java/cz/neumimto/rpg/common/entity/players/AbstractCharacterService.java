@@ -897,13 +897,14 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
         }
 
         int level = aClass.getLevel();
-        exp = exp * entityService.getEntityProperty(character, CommonProperties.experiences_mult);
+        if (exp > 0) exp = exp * entityService.getEntityProperty(character, CommonProperties.experiences_mult);
 
         double lvlexp = aClass.getExperiencesFromLevel();
 
         double levellimit = levels[level];
 
         double newcurrentexp = lvlexp + exp;
+        if (newcurrentexp < 0) newcurrentexp = 0;
 
         boolean gotLevel = false;
         while (newcurrentexp > levellimit) {
@@ -933,7 +934,7 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
             inventoryService.initializeCharacterInventory(character);
         }
 
-        if (exp > 0) Gui.showExpChange(character, aClass.getClassDefinition().getName(), exp);
+        Gui.showExpChange(character, aClass.getClassDefinition().getName(), exp);
 
         CompletableFuture.runAsync(() -> {
             info("Saving CharacterClass " + characterClass.getId(), DebugLevel.DEVELOP);

@@ -139,13 +139,13 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
     }
 
     @Override
-    public void setChanneledSkill(InterruptableSkillPreprocessor o) {
-        this.channeledSkill = o;
+    public Optional<InterruptableSkillPreprocessor> getChanneledSkill() {
+        return Optional.ofNullable(channeledSkill);
     }
 
     @Override
-    public Optional<InterruptableSkillPreprocessor> getChanneledSkill() {
-        return Optional.ofNullable(channeledSkill);
+    public void setChanneledSkill(InterruptableSkillPreprocessor o) {
+        this.channeledSkill = o;
     }
 
     @Override
@@ -159,6 +159,7 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
     }
 
 
+    @Override
     @SuppressWarnings("unchecked")
     public void addEffect(IEffect effect) {
         IEffectContainer IEffectContainer1 = getEffectMap().get(effect.getName());
@@ -173,7 +174,7 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
     }
 
 
-
+    @Override
     @SuppressWarnings("unchecked")
     public void addEffect(IEffectContainer<Object, IEffect<Object>> iEffectContainer) {
         IEffectContainer effectContainer1 = getEffectMap().get(iEffectContainer.getName());
@@ -273,11 +274,6 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
     }
 
     @Override
-    public void setHealth(float maxHealth) {
-        getHealth().setValue(maxHealth);
-    }
-
-    @Override
     public IReservable getMana() {
         return mana;
     }
@@ -290,6 +286,11 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
     @Override
     public IReservable getHealth() {
         return health;
+    }
+
+    @Override
+    public void setHealth(float maxHealth) {
+        getHealth().setValue(maxHealth);
     }
 
     @Override
@@ -533,7 +534,7 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
         if (playerClassData.getClassDefinition().getClassType().equalsIgnoreCase(Rpg.get().getPluginConfig().PRIMARY_CLASS_TYPE)) {
             primaryClass = playerClassData;
         }
-        classes.put(playerClassData.getClassDefinition().getName(), playerClassData);
+        classes.put(playerClassData.getClassDefinition().getName().toLowerCase(), playerClassData);
     }
 
     @Override

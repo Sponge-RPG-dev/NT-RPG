@@ -125,7 +125,7 @@ public class EntityLifecycleListener {
                     exp += character.getExperienceBonusFor(targetEntity.getLocation().getExtent().getName(), targetEntity.getType().getId());
                     String experienceSource = targetEntity.getType() == EntityTypes.PLAYER ? ExperienceSources.PVP : ExperienceSources.PVE;
 
-                    if (exp > 0) {
+                    if (exp != 0) {
                         if (character.hasParty()) {
                             PluginConfig pluginConfig = Rpg.get().getPluginConfig();
                             exp *= pluginConfig.PARTY_EXPERIENCE_MULTIPLIER;
