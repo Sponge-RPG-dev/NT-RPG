@@ -3,8 +3,8 @@ package cz.neumimto.rpg.sponge.assets;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import cz.neumimto.rpg.api.logging.Log;
+import cz.neumimto.rpg.common.ResourceManagerImpl;
 import cz.neumimto.rpg.common.assets.AssetService;
-import cz.neumimto.rpg.sponge.SpongeResourceLoader;
 import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.asset.Asset;
@@ -23,7 +23,7 @@ public class SpongeAssetService implements AssetService {
         try {
             return Sponge.getAssetManager().getAsset(plugin, path).get().readString();
         } catch (IOException e) {
-            Log.error("Could not copy file Skills-Definition.conf into the directory " + SpongeResourceLoader.addonDir, e);
+            Log.error("Could not copy file Skills-Definition.conf into the directory " + ResourceManagerImpl.addonDir, e);
             throw new IllegalArgumentException(e);
         }
     }

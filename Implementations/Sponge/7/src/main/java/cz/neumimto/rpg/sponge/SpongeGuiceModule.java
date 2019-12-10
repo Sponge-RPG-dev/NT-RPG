@@ -1,6 +1,9 @@
 package cz.neumimto.rpg.sponge;
 
-import com.google.inject.*;
+import com.google.inject.Inject;
+import com.google.inject.Injector;
+import com.google.inject.Provider;
+import com.google.inject.TypeLiteral;
 import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.damage.DamageService;
 import cz.neumimto.rpg.api.effects.EffectService;
@@ -17,6 +20,7 @@ import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.permissions.PermissionService;
 import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.common.AbstractRpgGuiceModule;
+import cz.neumimto.rpg.common.ResourceManagerImpl;
 import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.bytecode.ClassGenerator;
 import cz.neumimto.rpg.common.entity.configuration.MobSettingsDao;
@@ -82,7 +86,7 @@ public class SpongeGuiceModule extends AbstractRpgGuiceModule {
         map.put(PermissionService.class, SpongePermissionService.class);
         map.put(EventFactoryService.class, SpongeEventFactory.class);
         map.put(CharacterInventoryInteractionHandler.class, InventoryHandler.class);
-        map.put(ResourceLoader.class, SpongeResourceLoader.class);
+        map.put(ResourceLoader.class, ResourceManagerImpl.class);
         map.put(SpongeCommandService.class, null);
         map.put(ParticleDecorator.class, null);
         map.put(ItemLoreBuilderService.class, null);

@@ -1,8 +1,7 @@
 package cz.neumimto.rpg.common;
 
-import static cz.neumimto.rpg.api.logging.Log.error;
-import static cz.neumimto.rpg.api.logging.Log.info;
 import com.google.inject.Injector;
+import com.google.inject.Singleton;
 import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.RpgAddon;
@@ -27,6 +26,7 @@ import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.common.utils.ResourceClassLoader;
 import org.apache.commons.io.FileUtils;
 
+import javax.inject.Inject;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
@@ -37,9 +37,12 @@ import java.nio.charset.Charset;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import javax.inject.Inject;
 
-public abstract class AbstractResourceManager implements ResourceLoader {
+import static cz.neumimto.rpg.api.logging.Log.error;
+import static cz.neumimto.rpg.api.logging.Log.info;
+
+@Singleton
+public class ResourceManagerImpl implements ResourceLoader {
 
     private final static String INNERCLASS_SEPARATOR = "$";
 
@@ -175,7 +178,7 @@ public abstract class AbstractResourceManager implements ResourceLoader {
 
         for (String classToLoad : classesToLoad) {
             Class<?> clazz = loadClass(main, classLoader, classToLoad);
-            AbstractResourceManager.classesToLoad.add(clazz);
+            ResourceManagerImpl.classesToLoad.add(clazz);
         }
 
         info("Finished parsing of jarfile " + file.getName());
