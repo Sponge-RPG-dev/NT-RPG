@@ -15,7 +15,6 @@ import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
-import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource;
@@ -27,10 +26,11 @@ import org.spongepowered.api.event.world.chunk.UnloadChunkEvent;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
+import javax.inject.Inject;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
-import javax.inject.Inject;
 
 
 /**
@@ -155,7 +155,10 @@ public class EntityLifecycleListener {
 
     @Listener
     public void onChunkDespawn(UnloadChunkEvent event) {
-        event.getTargetChunk().getEntities(Utils::isLivingEntity).stream().peek(entity -> entityService.remove((Living) entity));
+        Collection<Entity> entities = event.getTargetChunk().getEntities();
+        for (Entity entity : entities) {
+            entityService.remove(entity.getUniqueId());
+        }
     }
 }
 

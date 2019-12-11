@@ -1,19 +1,11 @@
 package cz.neumimto.rpg.sponge.entities.players;
 
-import static cz.neumimto.rpg.api.logging.Log.error;
-import static cz.neumimto.rpg.api.logging.Log.info;
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.configuration.PluginConfig;
-import cz.neumimto.rpg.api.effects.IEffectContainer;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.common.entity.players.AbstractCharacterService;
 import cz.neumimto.rpg.common.entity.players.CharacterMana;
-import cz.neumimto.rpg.common.entity.players.UserActionType;
 import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
-import cz.neumimto.rpg.sponge.effects.common.def.ClickComboActionComponent;
 import cz.neumimto.rpg.sponge.entities.SpongeEntityService;
 import cz.neumimto.rpg.sponge.entities.players.party.SpongePartyService;
 import cz.neumimto.rpg.sponge.utils.PermissionUtils;
@@ -21,11 +13,14 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+
+import static cz.neumimto.rpg.api.logging.Log.error;
+import static cz.neumimto.rpg.api.logging.Log.info;
 
 
 @Singleton
@@ -104,32 +99,6 @@ public class SpongeCharacterService extends AbstractCharacterService<ISpongeChar
     protected void scheduleNextTick(Runnable r) {
         Sponge.getScheduler().createTaskBuilder().delay(1, TimeUnit.MILLISECONDS)
                 .execute(r).submit(plugin);
-    }
-
-    public boolean processUserAction(IActiveCharacter character, UserActionType userActionType) {
-        IEffectContainer effect = character.getEffect(ClickComboActionComponent.name);
-        if (effect == null) {
-            return false;
-        }
-        ClickComboActionComponent e = (ClickComboActionComponent) effect;
-        if (userActionType == UserActionType.L && e.hasStarted()) {
-            e.processLMB();
-            return false;
-        }
-        if (userActionType == UserActionType.R) {
-            e.processRMB();
-            return false;
-        }
-        PluginConfig pluginConfig = Rpg.get().getPluginConfig();
-        if (userActionType == UserActionType.Q && pluginConfig.ENABLED_Q && e.hasStarted()) {
-            e.processQ();
-            return true;
-        }
-        if (userActionType == UserActionType.E && pluginConfig.ENABLED_E && e.hasStarted()) {
-            e.processE();
-            return true;
-        }
-        return false;
     }
 
     @Override

@@ -48,4 +48,8 @@ public class SpigotEntityService extends AbstractEntityService<LivingEntity, Spi
             info(entity + " setting walk speed to " + speed);
         }
     }
+
+    public double getMobDamage(LivingEntity entity) {
+        return getMobDamage(entity.getLocation().getWorld().getName(), entity.getName());
+    }
 }

@@ -16,7 +16,7 @@
  *
  */
 
-package cz.neumimto.rpg.common.entity.players;
+package cz.neumimto.rpg.api.entity;
 
 /**
  * Created by NeumimTo on 22.7.2015.

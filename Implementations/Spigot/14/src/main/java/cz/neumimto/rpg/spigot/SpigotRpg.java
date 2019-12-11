@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.spigot;
 
+import cz.neumimto.rpg.api.utils.Console;
 import cz.neumimto.rpg.common.AbstractRpg;
 import cz.neumimto.rpg.common.assets.AssetService;
 import org.bukkit.Bukkit;
@@ -13,6 +14,8 @@ import javax.inject.Singleton;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executor;
+
+import static cz.neumimto.rpg.api.logging.Log.info;
 
 @Singleton
 public final class SpigotRpg extends AbstractRpg {
@@ -36,7 +39,17 @@ public final class SpigotRpg extends AbstractRpg {
 
     @Override
     public void executeCommandBatch(Map<String, String> args, List<String> enterCommands) {
-
+        for (String commandTemplate : enterCommands) {
+            for (Map.Entry<String, String> entry : args.entrySet()) {
+                commandTemplate = commandTemplate.replaceAll("\\{\\{" + entry.getKey() + "}}", entry.getValue());
+            }
+            try {
+                info(Console.GREEN_BOLD + " Running Command (as a console): " + Console.YELLOW + commandTemplate);
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), commandTemplate);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -60,7 +73,7 @@ public final class SpigotRpg extends AbstractRpg {
 
     @Override
     public Executor getAsyncExecutor() {
-        return null;
+        return SpigotRpgPlugin.getInstance().executor;
     }
 
     @Override

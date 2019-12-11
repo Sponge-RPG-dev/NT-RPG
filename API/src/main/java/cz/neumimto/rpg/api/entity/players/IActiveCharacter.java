@@ -209,8 +209,6 @@ public interface IActiveCharacter<T, P extends IParty> extends IEntity<T> {
 
     void sendMessage(String message);
 
-    void sendMessage(int channel, String message);
-
     float[] getSecondaryProperties();
 
     void setSecondaryProperties(float[] arr);

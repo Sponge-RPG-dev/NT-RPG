@@ -4,6 +4,7 @@ import com.google.inject.AbstractModule;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.configuration.SkillTreeDao;
 import cz.neumimto.rpg.api.entity.PropertyService;
+import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.scripting.IScriptEngine;
 import cz.neumimto.rpg.common.classes.ClassServiceImpl;
@@ -27,6 +28,7 @@ public class AbstractRpgGuiceModule extends AbstractModule {
         map.put(ClassService.class, ClassServiceImpl.class);
         map.put(ClassDefinitionDao.class, null);
         map.put(ExperienceDAO.class, null);
+        map.put(Gui.class, null);
         map.put(LocalizationService.class, LocalizationServiceImpl.class);
         return map;
     }

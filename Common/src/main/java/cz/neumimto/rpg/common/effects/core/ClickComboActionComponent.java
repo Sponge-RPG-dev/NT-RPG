@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.sponge.effects.common.def;
+package cz.neumimto.rpg.common.effects.core;
 
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.PluginConfig;

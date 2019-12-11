@@ -135,6 +135,7 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
     @Inject
     private IPlayerDao playerDao;
 
+
     public void load() {
         controlls = new HashMap<>();
         PluginConfig pluginConfig = Rpg.get().getPluginConfig();

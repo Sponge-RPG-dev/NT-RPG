@@ -17,9 +17,6 @@
  */
 package cz.neumimto.rpg.common.entity.players;
 
-import static cz.neumimto.rpg.api.localization.Arg.arg;
-import static cz.neumimto.rpg.api.logging.Log.info;
-import static cz.neumimto.rpg.api.logging.Log.warn;
 import cz.neumimto.rpg.api.IRpgElement;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.classes.ClassService;
@@ -27,9 +24,11 @@ import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.damage.DamageService;
 import cz.neumimto.rpg.api.effects.EffectService;
+import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.api.entity.CommonProperties;
 import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.entity.PropertyService;
+import cz.neumimto.rpg.api.entity.UserActionType;
 import cz.neumimto.rpg.api.entity.players.CharacterService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
@@ -43,23 +42,31 @@ import cz.neumimto.rpg.api.inventory.InventoryService;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.permissions.PermissionService;
-import cz.neumimto.rpg.api.persistance.model.*;
+import cz.neumimto.rpg.api.persistance.model.BaseCharacterAttribute;
+import cz.neumimto.rpg.api.persistance.model.CharacterBase;
+import cz.neumimto.rpg.api.persistance.model.CharacterClass;
+import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
 import cz.neumimto.rpg.api.skills.*;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.skills.tree.SkillTreeSpecialization;
 import cz.neumimto.rpg.api.utils.ActionResult;
 import cz.neumimto.rpg.api.utils.DebugLevel;
 import cz.neumimto.rpg.api.utils.MathUtils;
+import cz.neumimto.rpg.common.effects.core.ClickComboActionComponent;
 import cz.neumimto.rpg.common.effects.core.CombatEffect;
 import cz.neumimto.rpg.common.persistance.dao.ICharacterClassDao;
 import cz.neumimto.rpg.common.persistance.dao.IPersistenceHandler;
 import cz.neumimto.rpg.common.persistance.dao.IPlayerDao;
 import cz.neumimto.rpg.common.utils.exceptions.MissingConfigurationException;
 
+import javax.inject.Inject;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
-import javax.inject.Inject;
+
+import static cz.neumimto.rpg.api.localization.Arg.arg;
+import static cz.neumimto.rpg.api.logging.Log.info;
+import static cz.neumimto.rpg.api.logging.Log.warn;
 
 /**
  * Created by NeumimTo on 26.12.2014.
@@ -1287,5 +1294,34 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
     public void addDefaultEffects(T character) {
         effectService.addEffect(new CombatEffect(character, Rpg.get().getPluginConfig().COMBAT_TIME));
     }
+
+    @Override
+    public boolean processUserAction(IActiveCharacter character, UserActionType userActionType) {
+        IEffectContainer effect = character.getEffect(ClickComboActionComponent.name);
+        if (effect == null) {
+            return false;
+        }
+        ClickComboActionComponent e = (ClickComboActionComponent) effect;
+        if (userActionType == UserActionType.L && e.hasStarted()) {
+            e.processLMB();
+            return false;
+        }
+        if (userActionType == UserActionType.R) {
+            e.processRMB();
+            return false;
+        }
+        PluginConfig pluginConfig = Rpg.get().getPluginConfig();
+        if (userActionType == UserActionType.Q && pluginConfig.ENABLED_Q && e.hasStarted()) {
+            e.processQ();
+            return true;
+        }
+        if (userActionType == UserActionType.E && pluginConfig.ENABLED_E && e.hasStarted()) {
+            e.processE();
+            return true;
+        }
+        return false;
+    }
+
+
 }
 

@@ -33,13 +33,13 @@ import cz.neumimto.rpg.api.utils.FileUtils;
 import cz.neumimto.rpg.api.utils.rng.PseudoRandomDistribution;
 import cz.neumimto.rpg.common.commands.ACFBootstrap;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
-import javax.inject.Inject;
 
 public abstract class AbstractRpg implements RpgApi {
 
@@ -223,7 +223,7 @@ public abstract class AbstractRpg implements RpgApi {
         AddonScanner.setAddonDir(workingDirPath.resolve("addons"));
 
         AddonScanner.prepareAddons();
-        Set<RpgAddon> rpgAddons = AbstractResourceManager.discoverGuiceModules();
+        Set<RpgAddon> rpgAddons = ResourceManagerImpl.discoverGuiceModules();
         AddonScanner.onlyReloads();
 
         Map<Class<?>, Class<?>> bindings = new HashMap<>(defaultStorageImpl.getBindings());

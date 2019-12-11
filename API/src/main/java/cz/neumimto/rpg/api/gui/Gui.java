@@ -18,7 +18,6 @@
 
 package cz.neumimto.rpg.api.gui;
 
-import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import cz.neumimto.rpg.api.effects.EffectStatusType;
 import cz.neumimto.rpg.api.effects.IEffect;
@@ -43,7 +42,8 @@ public class Gui {
 
     private static IPlayerMessage mod;
 
-    @Inject
+    public Gui() {}
+
     public Gui(IPlayerMessage vanilla) {
         Gui.vanilla = vanilla;
     }
@@ -159,4 +159,7 @@ public class Gui {
         getMessageTypeOf(character).displayCharacterWeapons(character, page);
     }
 
+    public void setVanillaMessaging(IPlayerMessage instance) {
+        vanilla = instance;
+    }
 }

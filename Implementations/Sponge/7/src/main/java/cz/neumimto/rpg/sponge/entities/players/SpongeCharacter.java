@@ -23,19 +23,6 @@ public class SpongeCharacter extends ActiveCharacter<Player, SpongeParty> implem
     }
 
 
-
-    @Override
-    public void sendMessage(int channel, String message) {
-        switch (channel){
-            case 0:
-                sendMessage(message);
-                break;
-            case 2:
-                sendNotification(message);
-                break;
-        }
-    }
-
     @Override
     public void sendNotification(String message) {
         getPlayer().sendMessage(ChatTypes.ACTION_BAR, TextHelper.parse(message));

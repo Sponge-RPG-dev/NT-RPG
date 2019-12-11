@@ -29,11 +29,6 @@ public class SpigotCharacter extends ActiveCharacter<Player, SpigotParty> implem
     }
 
     @Override
-    public void sendMessage(int channel, String message) {
-
-    }
-
-    @Override
     public void sendNotification(String message) {
         getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
     }
@@ -63,7 +58,8 @@ public class SpigotCharacter extends ActiveCharacter<Player, SpigotParty> implem
         return getPlayer() == null;
     }
 
-    private Player getPlayer() {
+    @Override
+    public Player getPlayer() {
         return Bukkit.getPlayer(getUUID());
     }
 

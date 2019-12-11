@@ -2,8 +2,12 @@ package cz.neumimto.rpg.api.entity;
 
 import cz.neumimto.rpg.api.IRpgElement;
 
+import java.util.UUID;
+
 
 public interface EntityService<T> {
+
+    void remove(UUID uuid);
 
     void reload();
 

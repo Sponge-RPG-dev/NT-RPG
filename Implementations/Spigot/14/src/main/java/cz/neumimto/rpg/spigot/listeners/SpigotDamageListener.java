@@ -2,14 +2,38 @@ package cz.neumimto.rpg.spigot.listeners;
 
 import com.google.inject.Singleton;
 import cz.neumimto.rpg.api.ResourceLoader;
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
+import cz.neumimto.rpg.api.entity.IEntity;
+import cz.neumimto.rpg.api.entity.IEntityType;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.events.damage.IEntityWeaponDamageEarlyEvent;
+import cz.neumimto.rpg.api.items.RpgItemStack;
+import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.common.damage.AbstractDamageListener;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
+import cz.neumimto.rpg.spigot.entities.ISpigotEntity;
+import cz.neumimto.rpg.spigot.entities.ProjectileCache;
 import cz.neumimto.rpg.spigot.entities.SpigotEntityService;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
+import cz.neumimto.rpg.spigot.events.damage.SpigotEntityProjectileDamageEarlyEvent;
+import cz.neumimto.rpg.spigot.events.damage.SpigotEntitySkillDamageEarlyEvent;
+import cz.neumimto.rpg.spigot.events.damage.SpigotEntityWeaponDamageEarlyEvent;
 import cz.neumimto.rpg.spigot.inventory.SpigotItemService;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Projectile;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.projectiles.ProjectileSource;
 
 import javax.inject.Inject;
+import java.util.Optional;
 
 @Singleton
 @ResourceLoader.ListenerClass
@@ -26,7 +50,7 @@ public class SpigotDamageListener extends AbstractDamageListener implements List
 
     @Inject
     private PluginConfig pluginConfig;
-/*
+
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onEntityDamageEarly(EntityDamageByEntityEvent event) {
         if (event.getCause() == EntityDamageEvent.DamageCause.CUSTOM) {
@@ -38,23 +62,24 @@ public class SpigotDamageListener extends AbstractDamageListener implements List
         LivingEntity living = (LivingEntity) entity;
         ISpigotEntity target = (ISpigotEntity) entityService.get(living);
 
-        IEntity attacker;
+        IEntity attacker = null;
         if (event.getCause() == EntityDamageEvent.DamageCause.PROJECTILE) {
             Projectile projectile = (Projectile) damager;
             ProjectileSource shooter = projectile.getShooter();
 
-            ProjectileCache projectileProperties = ProjectileCache.cache.get(projectile);
-            if (projectileProperties != null) {
-                event.setCancelled(true);
-                ProjectileCache.cache.remove(projectile);
-                projectileProperties.consumer.accept(event, attacker, target);
-                return;
-            }
-
             if (shooter instanceof LivingEntity) {
                 attacker = entityService.get((LivingEntity) shooter);
+
+                ProjectileCache projectileProperties = ProjectileCache.cache.get(projectile);
+                if (projectileProperties != null) {
+                    event.setCancelled(true);
+                    ProjectileCache.cache.remove(projectile);
+                    projectileProperties.consumer.accept(event, attacker, target);
+                    return;
+                }
+                processProjectileDamageEarly(event, attacker, target, projectile);
             }
-            processProjectileDamageEarly(event, attacker, target, projectile);
+
         } else {
             attacker = entityService.get((LivingEntity) damager);
         }
@@ -98,7 +123,7 @@ public class SpigotDamageListener extends AbstractDamageListener implements List
         }
         newdamage *= spigotDamageService.getEntityDamageMult(attacker, event.getCause());
 
-        IEntityWeaponDamageEarlyEvent e = getWeaponDamage(event, target, newdamage, rpgItemStack, SpigotEntityWeaponDamageEarlyEvent.class;);
+        IEntityWeaponDamageEarlyEvent e = getWeaponDamage(event, target, newdamage, rpgItemStack, SpigotEntityWeaponDamageEarlyEvent.class);
         event.setDamage(e.getDamage());
     }
 
@@ -125,7 +150,7 @@ public class SpigotDamageListener extends AbstractDamageListener implements List
         EntityDamageEvent.DamageCause type = event.getCause();
 
         if (attacker.getType() == IEntityType.CHARACTER) {
-            IActiveCharacter c = (IActiveCharacter) attacker;
+            SpigotCharacter c = (SpigotCharacter) attacker;
             if (c.hasPreferedDamageType()) {
                 type = spigotDamageService.damageTypeById(c.getDamageType());
             }
@@ -150,5 +175,33 @@ public class SpigotDamageListener extends AbstractDamageListener implements List
 
     }
 
- */
+    private void processProjectileDamageEarly(EntityDamageByEntityEvent event,  IEntity attacker, IEntity target, Projectile projectile) {
+        double newdamage = event.getDamage();
+        if (attacker.getType() == IEntityType.CHARACTER) {
+            IActiveCharacter c = (IActiveCharacter) attacker;
+            newdamage = spigotDamageService.getCharacterProjectileDamage(c, projectile.getType());
+        } else if (attacker.getType() == IEntityType.MOB) {
+            PluginConfig pluginConfig = Rpg.get().getPluginConfig();
+            if (!pluginConfig.OVERRIDE_MOBS) {
+                newdamage = entityService.getMobDamage((LivingEntity) attacker.getEntity());
+            }
+        }
+
+        SpigotEntityProjectileDamageEarlyEvent e = Rpg.get().getEventFactory().createEventInstance(SpigotEntityProjectileDamageEarlyEvent.class);
+        e.setTarget(target);
+        e.setDamage(newdamage);
+        e.setProjectile(projectile);
+
+
+        if (Rpg.get().postEvent(e)) {
+            e.setCancelled(true);
+            return;
+        }
+
+        if (e.getDamage() <= 0) {
+            return;
+        }
+
+        event.setDamage(e.getDamage());
+    }
 }

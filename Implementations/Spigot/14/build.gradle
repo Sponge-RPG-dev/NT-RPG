@@ -36,6 +36,8 @@ dependencies {
     compile 'com.github.Sponge-RPG-dev:ConfigurateButWithBlackjackAndHookers:39d5fc8afd'
     compile 'ninja.leaping.configurate:configurate-hocon:3.3'
     compile "co.aikar:acf-paper:0.5.0-SNAPSHOT"
+    compile 'com.github.stefvanschie.inventoryframework:IF:0.5.14'
+
 
     jar {
 
@@ -52,6 +54,7 @@ shadowJar {
     classifier = null
     
     relocate 'co.aikar.commands', 'cz.neumimto.acf'
+    relocate 'com.github.stefvanschie.inventoryframework', 'cz.neumimto.inventoryframework'
 }
 
 build.dependsOn shadowJar

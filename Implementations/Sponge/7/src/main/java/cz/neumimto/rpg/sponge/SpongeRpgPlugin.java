@@ -18,16 +18,17 @@
 
 package cz.neumimto.rpg.sponge;
 
-import static cz.neumimto.rpg.api.logging.Log.info;
 import co.aikar.commands.SpongeCommandManager;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
+import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.utils.FileUtils;
 import cz.neumimto.rpg.persistence.flatfiles.FlatFilesModule;
 import cz.neumimto.rpg.sponge.commands.*;
+import cz.neumimto.rpg.sponge.gui.VanillaMessaging;
 import cz.neumimto.rpg.sponge.inventory.data.*;
 import cz.neumimto.rpg.sponge.inventory.data.manipulators.*;
 import cz.neumimto.rpg.sponge.skills.NDamageType;
@@ -46,6 +47,7 @@ import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.scheduler.SpongeExecutorService;
 
+import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -55,7 +57,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Set;
-import javax.annotation.Resource;
+
+import static cz.neumimto.rpg.api.logging.Log.info;
 
 /**
  * Created by NeumimTo on 29.4.2015.
@@ -137,6 +140,8 @@ public class SpongeRpgPlugin extends Rpg {
 
                     SpongeCommandService commandService = injector.getInstance(SpongeCommandService.class);
                     commandService.registerStandartCommands();
+
+                    injector.getInstance(Gui.class).setVanillaMessaging(injector.getInstance(VanillaMessaging.class));
 
                 }
         );

@@ -58,10 +58,6 @@ public class SpongePreloadCharacter extends PreloadCharacter<Player, SpongeParty
         return uuid;
     }
 
-    @Override
-    public void sendMessage(int channel, String message) {
-        getPlayer().sendMessage(TextHelper.parse(message));
-    }
 
     @Override
     public void sendNotification(String message) {

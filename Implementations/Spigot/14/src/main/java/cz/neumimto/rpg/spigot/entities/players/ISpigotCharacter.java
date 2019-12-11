@@ -8,4 +8,6 @@ import org.bukkit.entity.Player;
 
 public interface ISpigotCharacter extends IActiveCharacter<Player, SpigotParty>, ISpigotEntity<Player>, IEntity<Player> {
 
+
+    Player getPlayer();
 }

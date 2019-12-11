@@ -1,22 +1,36 @@
 package cz.neumimto.rpg.spigot.gui;
 
+import com.github.stefvanschie.inventoryframework.Gui;
+import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import cz.neumimto.rpg.api.effects.EffectStatusType;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.gui.IPlayerMessage;
 import cz.neumimto.rpg.api.inventory.CannotUseItemReason;
+import cz.neumimto.rpg.api.localization.Arg;
+import cz.neumimto.rpg.api.localization.LocalizationKeys;
+import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.common.inventory.runewords.RuneWord;
+import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.List;
 
 @Singleton
 public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
+
+    @Inject
+    private LocalizationService localizationService;
 
     @Override
     public boolean isClientSideGui() {
@@ -25,7 +39,7 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
 
     @Override
     public void sendCooldownMessage(ISpigotCharacter player, String message, double cooldown) {
-
+        player.sendMessage(localizationService.translate(LocalizationKeys.ON_COOLDOWN, Arg.arg("skill", message).with("time", cooldown)));
     }
 
     @Override
@@ -115,7 +129,21 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
 
     @Override
     public void sendCannotUseItemNotification(ISpigotCharacter character, String item, CannotUseItemReason reason) {
+        if (reason == CannotUseItemReason.CONFIG) {
+            character.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, translate(LocalizationKeys.CANNOT_USE_ITEM_CONFIGURATION_REASON));
+        } else if (reason == CannotUseItemReason.LEVEL) {
+            BaseComponent translate = translate(LocalizationKeys.CANNOT_USE_ITEM_LEVEL_REASON);
+            translate.setColor(ChatColor.RED);
+            character.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, translate);
+        } else if (reason == CannotUseItemReason.LORE) {
+            BaseComponent translate = translate(LocalizationKeys.CANNOT_USE_ITEM_LORE_REASON);
+            translate.setColor(ChatColor.RED);
+            character.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, translate);
+        }
+    }
 
+    private BaseComponent translate(String key) {
+        return TextComponent.fromLegacyText(localizationService.translate(key))[0];
     }
 
     @Override
@@ -155,7 +183,10 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
 
     @Override
     public void sendClassTypes(ISpigotCharacter character) {
-
+        Gui gui = new Gui(SpigotRpgPlugin.getInstance(), 6, "Pages!");
+        StaticPane staticPane = SpigotGuiHelper.createMenuInventoryClassTypesView();
+        gui.addPane(staticPane);
+        gui.show(character.getPlayer());
     }
 
     @Override

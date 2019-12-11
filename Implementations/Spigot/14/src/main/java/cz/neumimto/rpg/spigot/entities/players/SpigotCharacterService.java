@@ -12,6 +12,8 @@ import org.bukkit.entity.Player;
 import javax.inject.Singleton;
 import java.util.UUID;
 
+import static cz.neumimto.rpg.api.logging.Log.info;
+
 @Singleton
 public class SpigotCharacterService extends AbstractCharacterService<ISpigotCharacter> {
 
@@ -26,7 +28,8 @@ public class SpigotCharacterService extends AbstractCharacterService<ISpigotChar
 
     @Override
     public ISpigotCharacter buildDummyChar(UUID uuid) {
-        return null;
+        info("Creating a dummy character for " + uuid);
+        return new SpigotPreloadCharacter(uuid);
     }
 
     @Override
@@ -57,4 +60,5 @@ public class SpigotCharacterService extends AbstractCharacterService<ISpigotChar
     public ISpigotCharacter getCharacter(Player target) {
         return getCharacter(target.getUniqueId());
     }
+
 }

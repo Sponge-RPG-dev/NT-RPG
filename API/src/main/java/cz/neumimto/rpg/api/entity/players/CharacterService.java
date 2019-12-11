@@ -2,6 +2,7 @@ package cz.neumimto.rpg.api.entity.players;
 
 import cz.neumimto.rpg.api.IRpgElement;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
+import cz.neumimto.rpg.api.entity.UserActionType;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
@@ -11,7 +12,10 @@ import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillData;
 import cz.neumimto.rpg.api.utils.ActionResult;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public interface CharacterService<T extends IActiveCharacter> {
 
@@ -138,4 +142,7 @@ public interface CharacterService<T extends IActiveCharacter> {
     void removePersistantSkill(CharacterSkill characterSkill);
 
     void resetAttributes(T character);
+
+    boolean processUserAction(IActiveCharacter character, UserActionType userActionType);
+
 }

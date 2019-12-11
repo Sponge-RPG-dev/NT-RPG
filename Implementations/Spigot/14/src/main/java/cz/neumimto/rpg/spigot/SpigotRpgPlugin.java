@@ -2,9 +2,11 @@ package cz.neumimto.rpg.spigot;
 
 import co.aikar.commands.CommandManager;
 import co.aikar.commands.PaperCommandManager;
+import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.persistence.flatfiles.FlatFilesModule;
 import cz.neumimto.rpg.spigot.commands.*;
+import cz.neumimto.rpg.spigot.gui.SpigotGui;
 import cz.neumimto.rpg.spigot.resources.SpigotGuiceModule;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.java.annotation.plugin.*;
@@ -13,6 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 @Plugin(name = "NT-RPG", version = "0.0.1-SNAPSHOT")
@@ -31,9 +35,11 @@ public class SpigotRpgPlugin extends JavaPlugin {
         return plugin;
     }
 
+    public final ExecutorService executor = Executors.newFixedThreadPool(5);;
 
     @Override
     public void onEnable() {
+
         Log.setLogger(logger);
 
         if (!getDataFolder().exists()) {
@@ -61,7 +67,14 @@ public class SpigotRpgPlugin extends JavaPlugin {
         }, new FlatFilesModule(), (bindings, providers) -> new SpigotGuiceModule(this,  bindings, providers), injector -> {
             injector.injectMembers(spigotRpg);
             new RpgImpl(spigotRpg);
+
+            injector.getInstance(Gui.class).setVanillaMessaging(injector.getInstance(SpigotGui.class));
         });
 
+    }
+
+    @Override
+    public void onDisable() {
+        executor.shutdown();
     }
 }
