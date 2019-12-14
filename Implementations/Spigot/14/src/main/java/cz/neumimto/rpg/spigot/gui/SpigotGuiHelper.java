@@ -1,65 +1,130 @@
 package cz.neumimto.rpg.spigot.gui;
 
-import com.github.stefvanschie.inventoryframework.GuiItem;
-import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.ClassTypeDefinition;
+import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
+import de.tr7zw.nbtapi.NBTItem;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.DyeColor;
 import org.bukkit.Material;
-import org.bukkit.entity.HumanEntity;
-import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class SpigotGuiHelper {
 
-    public static StaticPane createMenuInventoryClassTypesView() {
-        StaticPane pane = new StaticPane( 9, 6);
-        makeBorder(pane, Material.LIGHT_GRAY_STAINED_GLASS);
-
+    public static Inventory createMenuInventoryClassTypesView(Player player) {
         Map<String, ClassTypeDefinition> class_types = Rpg.get().getPluginConfig().CLASS_TYPES;
-
-        int i = 1;
-        int m = 1;
+        Inventory classes = createInventoryTemplate(player, "Classes");
+        makeBorder(classes, Material.WHITE_STAINED_GLASS_PANE);
         for (Map.Entry<String, ClassTypeDefinition> entry : class_types.entrySet()) {
-            ItemStack itemStack = new ItemStack(Material.CRAFTING_TABLE);
-            pane.addItem(new GuiItem(itemStack, event -> {
-                dispatchCommand(event, "ninfo class " + entry.getKey());
-            }), i, m);
+            ItemStack itemStack = button(Material.CRAFTING_TABLE,
+                    ChatColor.valueOf(entry.getValue().getPrimaryColor()) + entry.getKey(),
+                    "ninfo classes " + entry.getKey());
+            classes.addItem(itemStack);
         }
-
-        return pane;
+        return classes;
     }
 
-    public static void dispatchCommand(InventoryClickEvent event, String command) {
-        HumanEntity whoClicked = event.getWhoClicked();
-        Bukkit.dispatchCommand(whoClicked, command);
+    public static Inventory createMenuInventoryClassesByTypeView(Player player, String classType) {
+        Map<String, ClassTypeDefinition> class_types = Rpg.get().getPluginConfig().CLASS_TYPES;
+        ClassTypeDefinition definition = class_types.get(classType);
+        Inventory classes = createInventoryTemplate(player, classType);
+        DyeColor dyeColor = DyeColor.valueOf(definition.getDyeColor());
+        makeBorder(classes, Material.getMaterial(dyeColor.name() + "_STAINED_GLASS_PANE"));
+
+        Rpg.get().getClassService().getClassDefinitions().stream()
+                .filter(a -> a.getClassType().equalsIgnoreCase(classType))
+                .forEach(a -> classes.addItem(toItemStack(a)));
+
+        return classes;
     }
 
-    private static void makeBorder(StaticPane pane, Material mat) {
-        int h = pane.getHeight();
-        int l = pane.getLength();
-        for (int i = 0; i < l; i++) {
-            ItemStack itemStack = new ItemStack(mat);
-            ItemMeta itemMeta = itemStack.getItemMeta();
-            itemMeta.setDisplayName("");
-            itemStack.setItemMeta(itemMeta);
-            pane.addItem(new GuiItem(itemStack, DENY_INTERACTION), 0, i);
-            pane.addItem(new GuiItem(itemStack, DENY_INTERACTION), 0, l);
-        }
+    private static ItemStack toItemStack(ClassDefinition a) {
+        String sItemType = a.getItemType();
+        Material material = Material.matchMaterial(sItemType);
+        ItemStack itemStack = button(material, ChatColor.valueOf(a.getPreferedColor()) + a.getName(), "ninfo class " + a.getName());
 
-        for (int i = 1; i < h - 1; i++) {
-            ItemStack itemStack = new ItemStack(mat);
-            ItemMeta itemMeta = itemStack.getItemMeta();
-            itemMeta.setDisplayName("");
-            itemStack.setItemMeta(itemMeta);
-            pane.addItem(new GuiItem(itemStack, DENY_INTERACTION), i, 0);
-            pane.addItem(new GuiItem(itemStack, DENY_INTERACTION), h, 0);
+        List<String> lore;
+        if (!(a.getCustomLore() == null || a.getCustomLore().isEmpty())) {
+            lore = a.getCustomLore().stream().map(SpigotGuiHelper::parseStr).collect(Collectors.toList());
+        } else {
+            lore = new ArrayList<>();
+
+            String description = a.getDescription();
+            lore.add(ChatColor.BOLD.toString() + ChatColor.GRAY + a.getClassType());
+            lore.add(" ");
+            lore.add(ChatColor.ITALIC.toString() + ChatColor.GOLD + description);
         }
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        itemMeta.setLore(lore);
+        itemStack.setItemMeta(itemMeta);
+        itemStack = unclickableInterface(itemStack);
+
+        return itemStack;
     }
 
-    private static final Consumer<InventoryClickEvent> DENY_INTERACTION = event -> event.setCancelled(true);
+    private static Inventory createInventoryTemplate(Player player, String title) {
+        return Bukkit.createInventory(player, 6 * 9, title);
+    }
+
+    public static void makeBorder(Inventory i, Material material) {
+        if (i.getType() == InventoryType.CHEST) {
+            for (int j = 0; j < 9; j++) {
+                ItemStack of = unclickableInterface(material);
+                i.setItem(j, of);
+
+                of = unclickableInterface(material);
+                i.setItem(j + 45, of);
+            }
+
+            for (int j = 1; j < 5; j++) {
+                ItemStack of = unclickableInterface(material);
+                i.setItem(9 * j, of);
+
+                of = unclickableInterface(material);
+                i.setItem(9 * j + 8, of);
+            }
+
+        }
+
+
+    }
+
+    private static ItemStack button(Material material, String name, String command) {
+        ItemStack itemStack = new ItemStack(material);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        itemMeta.setDisplayName(name);
+        itemStack.setItemMeta(itemMeta);
+        NBTItem nbti = new NBTItem(itemStack);
+        nbti.setString("ntrpg.item-command", command);
+        return nbti.getItem();
+    }
+
+    private static ItemStack unclickableInterface(Material material) {
+        ItemStack itemStack = new ItemStack(material);
+        return unclickableInterface(itemStack);
+    }
+
+    private static ItemStack unclickableInterface(ItemStack itemStack) {
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        itemMeta.setDisplayName(" ");
+        itemStack.setItemMeta(itemMeta);
+        NBTItem nbti = new NBTItem(itemStack);
+        nbti.setBoolean("ntrpg.item-iface", true);
+        return nbti.getItem();
+    }
+
+
+        private static String parseStr(String str) {
+        return ChatColor.translateAlternateColorCodes('$', str);
+    }
 }

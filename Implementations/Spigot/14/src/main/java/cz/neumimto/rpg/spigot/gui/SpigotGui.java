@@ -1,7 +1,5 @@
 package cz.neumimto.rpg.spigot.gui;
 
-import com.github.stefvanschie.inventoryframework.Gui;
-import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import cz.neumimto.rpg.api.effects.EffectStatusType;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
@@ -15,12 +13,13 @@ import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.common.inventory.runewords.RuneWord;
-import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -178,15 +177,16 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
 
     @Override
     public void sendClassesByType(ISpigotCharacter character, String def) {
-
+        Player player = character.getPlayer();
+        Inventory inventory = SpigotGuiHelper.createMenuInventoryClassesByTypeView(player, def);
+        player.openInventory(inventory);
     }
 
     @Override
     public void sendClassTypes(ISpigotCharacter character) {
-        Gui gui = new Gui(SpigotRpgPlugin.getInstance(), 6, "Pages!");
-        StaticPane staticPane = SpigotGuiHelper.createMenuInventoryClassTypesView();
-        gui.addPane(staticPane);
-        gui.show(character.getPlayer());
+        Player player = character.getPlayer();
+        Inventory inventory = SpigotGuiHelper.createMenuInventoryClassTypesView(player);
+        player.openInventory(inventory);
     }
 
     @Override
@@ -233,4 +233,6 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
     public void displayRunewordBlockedGroups(ISpigotCharacter character, RuneWord runeWord) {
 
     }
+
+
 }

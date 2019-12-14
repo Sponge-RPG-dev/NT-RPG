@@ -30,7 +30,7 @@ public class SpigotExperienceService extends AbstractExperienceService {
     @Override
     public void populateBlockCacheFromConfig(Map<String, Double> expMap, Map<String, Double> map) {
         for (Map.Entry<String, Double> entry : expMap.entrySet()) {
-            Material material = Material.getMaterial(entry.getKey());
+            Material material = Material.matchMaterial(entry.getKey());
             if (material != null) {
                 map.put(material.name(), entry.getValue());
             } else {

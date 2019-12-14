@@ -11,7 +11,12 @@ repositories {
     maven {
         url "https://oss.sonatype.org/content/repositories/snapshots"
     }
-    maven { url = "https://repo.aikar.co/content/groups/aikar/" }
+    maven {
+        url "https://repo.codemc.org/repository/maven-public/"
+    }
+    maven {
+        url = "https://repo.aikar.co/content/groups/aikar/"
+    }
 }
 
 group = 'cz.neumimto.rpg'
@@ -37,7 +42,7 @@ dependencies {
     compile 'ninja.leaping.configurate:configurate-hocon:3.3'
     compile "co.aikar:acf-paper:0.5.0-SNAPSHOT"
     compile 'com.github.stefvanschie.inventoryframework:IF:0.5.14'
-
+    compile 'de.tr7zw:item-nbt-api-plugin:2.1.0'
 
     jar {
 
@@ -53,8 +58,8 @@ shadowJar {
     baseName 'NT-RPG'
     classifier = null
     
-    relocate 'co.aikar.commands', 'cz.neumimto.acf'
-    relocate 'com.github.stefvanschie.inventoryframework', 'cz.neumimto.inventoryframework'
+  // relocate 'co.aikar.commands', 'cz.neumimto.acf'
+  // relocate 'com.github.stefvanschie.inventoryframework', 'cz.neumimto.inventoryframework'
 }
 
 build.dependsOn shadowJar

@@ -144,7 +144,7 @@ public class GuiHelper {
                 .filter(a -> a.getClassType().equalsIgnoreCase(type))
                 .forEach(a -> i.offer(GuiHelper.toItemStack(a)));
 
-        i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(7, 4))).offer(back("classes", translate(LocalizationKeys.BACK)));
+        i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(7, 4))).offer(back("ninfo classes", translate(LocalizationKeys.BACK)));
 
         return i;
     }
