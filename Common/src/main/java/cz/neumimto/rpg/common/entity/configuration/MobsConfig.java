@@ -71,7 +71,14 @@ public class MobsConfig {
 
         @Override
         public Config convertFromField(Map<String, Double> value) {
-            return null;
+            Config config = Config.inMemory();
+            if (value == null) {
+                return config;
+            }
+            for (Map.Entry<String, Double> entry : value.entrySet()) {
+                config.set(entry.getKey(), entry.getValue());
+            }
+            return config;
         }
     }
 }

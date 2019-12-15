@@ -27,8 +27,7 @@ public class SpigotMobSettingsDao extends MobSettingsDao {
         if (!properties.exists()) {
             EntityType[] values = EntityType.values();
             List<EntityType> livingEntities = Stream.of(values)
-                    .filter(e -> !LivingEntity.class.isAssignableFrom(e.getEntityClass()))
-                    .filter(e -> HumanEntity.class.isAssignableFrom(e.getEntityClass()))
+                    .filter(EntityType::isAlive)
                     .collect(Collectors.toList());
 
             RootMobConfig rootMobConfig = new RootMobConfig();

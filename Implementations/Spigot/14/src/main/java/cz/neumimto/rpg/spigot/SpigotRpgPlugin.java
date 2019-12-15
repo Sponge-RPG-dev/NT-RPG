@@ -6,6 +6,7 @@ import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.persistence.flatfiles.FlatFilesModule;
 import cz.neumimto.rpg.spigot.commands.*;
+import cz.neumimto.rpg.spigot.entities.configuration.SpigotMobSettingsDao;
 import cz.neumimto.rpg.spigot.gui.SpigotGui;
 import cz.neumimto.rpg.spigot.resources.SpigotGuiceModule;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -69,6 +70,7 @@ public class SpigotRpgPlugin extends JavaPlugin {
             new RpgImpl(spigotRpg);
 
             injector.getInstance(Gui.class).setVanillaMessaging(injector.getInstance(SpigotGui.class));
+            injector.getInstance(SpigotMobSettingsDao.class).load();
         });
 
     }
