@@ -18,6 +18,7 @@ public class SpigotMob extends AbstractMob<LivingEntity> implements ISpigotEntit
 
     public SpigotMob(LivingEntity entity) {
         this.entity = entity;
+        this.entityHealth = new SpigotEntityHealth(entity);
     }
 
     @Override

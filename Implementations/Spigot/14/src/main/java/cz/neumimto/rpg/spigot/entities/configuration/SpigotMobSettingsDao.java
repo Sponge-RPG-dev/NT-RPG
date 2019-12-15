@@ -34,9 +34,9 @@ public class SpigotMobSettingsDao extends MobSettingsDao {
             MobsConfig overWorldMobConfig = new MobsConfig();
 
             for (EntityType livingEntity : livingEntities) {
-                overWorldMobConfig.getDamage().put(livingEntity.getName(), 10D);
-                overWorldMobConfig.getExperiences().put(livingEntity.getName(), 10D);
-                overWorldMobConfig.getHealth().put(livingEntity.getName(), 10D);
+                overWorldMobConfig.getDamage().put(livingEntity.name(), 10D);
+                overWorldMobConfig.getExperiences().put(livingEntity.name(), 10D);
+                overWorldMobConfig.getHealth().put(livingEntity.name(), 10D);
             }
 
             List<World> worlds = Bukkit.getWorlds();
