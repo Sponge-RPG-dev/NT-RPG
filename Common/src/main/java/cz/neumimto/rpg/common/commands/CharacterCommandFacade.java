@@ -11,6 +11,7 @@ import cz.neumimto.rpg.api.gui.SkillTreeViewModel;
 import cz.neumimto.rpg.api.localization.Arg;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
+import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.permissions.PermissionService;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
@@ -96,7 +97,10 @@ public class CharacterCommandFacade {
                 IActiveCharacter character = characterService.getCharacter(uuid);
                 Gui.sendListOfCharacters(character, characterBase);
             }
-        }, Rpg.get().getAsyncExecutor());
+        }, Rpg.get().getAsyncExecutor()).exceptionally(throwable -> {
+            Log.error("Could not create character", throwable);
+            return null;
+        });
     }
 
     public void commandSwitchCharacter(IActiveCharacter current, String nameNext, Consumer<Runnable> syncCallback) {
@@ -122,7 +126,10 @@ public class CharacterCommandFacade {
             if (!b) {
                 current.sendMessage(localizationService.translate(LocalizationKeys.NON_EXISTING_CHARACTER));
             }
-        }, Rpg.get().getAsyncExecutor());
+        }, Rpg.get().getAsyncExecutor()).exceptionally(throwable -> {
+            Log.error("Could not change character" , throwable);
+            return null;
+        });
     }
 
     public void openSKillTreeMenu(IActiveCharacter character, ClassDefinition classDefinition) {

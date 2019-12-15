@@ -9,6 +9,7 @@ import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.events.character.CharacterGainedLevelEvent;
 import cz.neumimto.rpg.api.localization.Arg;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
+import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
@@ -78,7 +79,10 @@ public enum SkillTreeType {
                 CompletableFuture.runAsync(() -> {
                     characterService.save(character.getCharacterBase());
                     Rpg.get().getCharacterService().removePersistantSkill(characterSkill);
-                }, Rpg.get().getAsyncExecutor());
+                }, Rpg.get().getAsyncExecutor()).exceptionally(throwable -> {
+                    Log.error("Could not refund a skillpoint " , throwable);
+                    return null;
+                });
             } else {
                 character.sendMessage(actionResult.getMessage());
             }

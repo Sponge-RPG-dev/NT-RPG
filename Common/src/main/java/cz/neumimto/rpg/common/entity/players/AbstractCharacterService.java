@@ -41,6 +41,7 @@ import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.inventory.InventoryService;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
+import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.permissions.PermissionService;
 import cz.neumimto.rpg.api.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
@@ -165,7 +166,10 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
                     assignPlayerToCharacter(id);
                 });
             }
-        }, Rpg.get().getAsyncExecutor());
+        }, Rpg.get().getAsyncExecutor()).exceptionally(throwable -> {
+            Log.error("Could not load player data", throwable);
+            return null;
+        });
     }
 
 
@@ -243,7 +247,10 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
             info("Saving player " + base.getUuid() + " character " + base.getName());
             save(base);
             info("Saved player " + base.getUuid() + " character " + base.getName() + "[" + (System.currentTimeMillis() - k) + "]ms ");
-        }, Rpg.get().getAsyncExecutor());
+        }, Rpg.get().getAsyncExecutor()).exceptionally(throwable -> {
+            Log.error("Could not save character ", throwable);
+            return null;
+        });
     }
 
     /**
@@ -944,7 +951,10 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
         CompletableFuture.runAsync(() -> {
             info("Saving CharacterClass " + characterClass.getId(), DebugLevel.DEVELOP);
             characterClassDao.update(characterClass);
-        }, Rpg.get().getAsyncExecutor());
+        }, Rpg.get().getAsyncExecutor()).exceptionally(throwable -> {
+            Log.error("Could not update experience or level ", throwable);
+            return null;
+        });
     }
 
     @Override
