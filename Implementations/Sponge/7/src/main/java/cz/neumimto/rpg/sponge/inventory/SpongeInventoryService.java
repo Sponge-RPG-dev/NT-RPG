@@ -18,7 +18,6 @@
 
 package cz.neumimto.rpg.sponge.inventory;
 
-import static cz.neumimto.rpg.api.logging.Log.error;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import cz.neumimto.config.blackjack.and.hookers.NotSoStupidObjectMapper;
@@ -38,7 +37,10 @@ import cz.neumimto.rpg.api.inventory.RpgInventory;
 import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.persistance.model.EquipedSlot;
-import cz.neumimto.rpg.api.skills.*;
+import cz.neumimto.rpg.api.skills.ISkill;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.SkillCost;
+import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.api.skills.mods.ActiveSkillPreProcessorWrapper;
 import cz.neumimto.rpg.api.utils.Console;
 import cz.neumimto.rpg.api.utils.Pair;
@@ -81,14 +83,16 @@ import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.api.text.Text;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+
+import static cz.neumimto.rpg.api.logging.Log.error;
 
 /**
  * Created by NeumimTo on 22.7.2015.
@@ -435,8 +439,5 @@ public class SpongeInventoryService extends AbstractInventoryService<ISpongeChar
         return null;
     }
 
-    @Override
-    public String getItemIconForSkill(ISkill iSkill) {
-        return null;
-    }
+
 }

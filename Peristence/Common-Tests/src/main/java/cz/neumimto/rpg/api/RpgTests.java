@@ -19,7 +19,6 @@ import cz.neumimto.rpg.api.localization.Arg;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.api.scripting.IScriptEngine;
-import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.api.skills.mods.ActiveSkillPreProcessorWrapper;
@@ -196,10 +195,7 @@ public class RpgTests implements RpgApi {
                 return new TestHelper.EquipedSlotImpl(slotId);
             }
 
-            @Override
-            public String getItemIconForSkill(ISkill iSkill) {
-                return null;
-            }
+
         };
     }
 

@@ -9,6 +9,7 @@ import java.util.UUID;
 
 public class SpigotParty implements IParty<ISpigotCharacter> {
     private Team team;
+
     public SpigotParty(ISpigotCharacter leader) {
 
     }

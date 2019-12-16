@@ -63,6 +63,7 @@ public abstract class AbstractSkill implements ISkill {
     private List<String> lore;
     private String damageType = null;
 
+
     public AbstractSkill() {
         ResourceLoader.Skill sk = this.getClass().getAnnotation(ResourceLoader.Skill.class);
         if (sk != null) {
@@ -211,4 +212,5 @@ public abstract class AbstractSkill implements ISkill {
         super.finalize();
         Log.info(Console.PURPLE + "Destroying " + getId() + " classloader: " + getClass().getClassLoader().toString(), DebugLevel.DEVELOP);
     }
+
 }

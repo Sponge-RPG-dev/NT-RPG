@@ -39,10 +39,6 @@ public class SpigotInventoryService extends AbstractInventoryService<ISpigotChar
         return new SpigotEquipedSlot(slotId);
     }
 
-    @Override
-    public String getItemIconForSkill(ISkill iSkill) {
-        return null;
-    }
 
 
     public ItemStack createSkillbind(ISkill skill) {

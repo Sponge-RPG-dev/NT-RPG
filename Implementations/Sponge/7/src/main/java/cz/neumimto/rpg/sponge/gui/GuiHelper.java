@@ -251,7 +251,7 @@ public class GuiHelper {
         List<Text> lore;
         TextColor nameColor;
         Pair<List<Text>, TextColor> fromCache = model.getFromCache(skill);
-        ItemStack itemStack = itemStack(Rpg.get().getInventoryService().getItemIconForSkill(skill));
+
         if (fromCache == null) {
             lore = new ArrayList<>();
             nameColor = getSkillTextColor(character, skill, skillData, skillTree);
@@ -293,6 +293,7 @@ public class GuiHelper {
             lore = fromCache.key;
             nameColor = fromCache.value;
         }
+        ItemStack itemStack = itemStack(skillData.getIcon());
         itemStack.offer(Keys.DISPLAY_NAME, Text.builder(skillData.getSkillName()).style(TextStyles.BOLD).color(nameColor).build());
         itemStack.offer(Keys.ITEM_LORE, lore);
         return itemStack;

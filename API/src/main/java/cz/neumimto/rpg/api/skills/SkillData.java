@@ -62,6 +62,8 @@ public class SkillData {
     private boolean useDescriptionOnly;
     private List<ActiveSkillPreProcessorWrapper> skillPreprocessors = new ArrayList<>();
 
+    private String icon;
+
     public SkillData(String skill) {
         this.skill = skill;
     }
@@ -208,4 +210,11 @@ public class SkillData {
         return skillPreprocessors;
     }
 
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
 }
