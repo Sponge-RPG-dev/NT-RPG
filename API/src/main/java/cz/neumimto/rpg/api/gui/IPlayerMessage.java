@@ -18,12 +18,14 @@
 
 package cz.neumimto.rpg.api.gui;
 
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.effects.EffectStatusType;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.inventory.CannotUseItemReason;
+import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
@@ -43,8 +45,6 @@ public interface IPlayerMessage<T extends IActiveCharacter> {
 
     void invokeCharacterMenu(T player, List<CharacterBase> characterBases);
 
-    void sendPlayerInfo(T character, List<CharacterBase> target);
-
     void sendPlayerInfo(T character, T target);
 
     void showExpChange(T character, String classname, double expchange);
@@ -52,8 +52,6 @@ public interface IPlayerMessage<T extends IActiveCharacter> {
     void showLevelChange(T character, PlayerClassData clazz, int level);
 
     void sendStatus(T character);
-
-    void invokerDefaultMenu(T character);
 
     void sendListOfCharacters(T player, CharacterBase currentlyCreated);
 
@@ -65,11 +63,7 @@ public interface IPlayerMessage<T extends IActiveCharacter> {
 
     void displayGroupWeapon(ClassDefinition g, T target);
 
-    void sendClassInfo(T target, ClassDefinition configClass);
-
     void displayAttributes(T target, ClassDefinition group);
-
-    void displayHealth(T character);
 
     void displayMana(T character);
 
@@ -83,9 +77,10 @@ public interface IPlayerMessage<T extends IActiveCharacter> {
 
     void displayInitialProperties(ClassDefinition byName, T player);
 
-    void sendCannotUseItemInOffHandNotification(String futureOffHandItem, T character, CannotUseItemReason reason);
-
-    void skillExecution(T character, PlayerSkillContext skill);
+    default void skillExecution(T character, PlayerSkillContext skill) {
+        String msg = Rpg.get().getLocalizationService().translate(LocalizationKeys.SKILL_EXECUTED_MESSAGE, "skill", skill.getSkill().getName());
+        character.sendNotification(msg);
+    }
 
     void sendClassesByType(T character, String def);
 

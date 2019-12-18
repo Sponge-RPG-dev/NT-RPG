@@ -80,6 +80,7 @@ public class SpongeDamageListener extends AbstractDamageListener {
         } else {
             processWeaponDamageEarly(event, damageSource, attacker, target);
         }
+
     }
 
     @Listener(order = Order.LATE)

@@ -37,7 +37,6 @@ import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterClass;
-import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillData;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.common.effects.InternalEffectSourceProvider;
@@ -155,11 +154,6 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
     }
 
     @Override
-    public void invokerDefaultMenu(ISpongeCharacter character) {
-
-    }
-
-    @Override
     public void sendCooldownMessage(ISpongeCharacter player, String message, double cooldown) {
         player.sendMessage(localizationService.translate(LocalizationKeys.ON_COOLDOWN, Arg.arg("skill", message).with("time", cooldown)));
     }
@@ -175,31 +169,6 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
         List<ItemStack> list = new ArrayList<>();
         //todo
     }
-
-
-    @Override
-    public void sendPlayerInfo(ISpongeCharacter character, List<CharacterBase> target) {
-        PaginationService paginationService = game.getServiceManager().provide(PaginationService.class).get();
-        PaginationList.Builder builder = paginationService.builder();
-        builder.padding(Text.builder("=").color(TextColors.GREEN).build());
-        List<Text> content = new ArrayList<>();
-        for (CharacterBase characterBase : target) {
-            String name = characterBase.getName();
-            int level = character.getPrimaryClass().getLevel();
-            Text.Builder b = Text.builder();
-            b.append(Text.builder(" [").color(TextColors.DARK_GRAY).build())
-                    .append(Text.builder("SELECT").color(TextColors.GREEN).build())
-                    .append(Text.builder("] - ").color(TextColors.DARK_GRAY).build());
-            b.append(Text.of(name));
-            if (character.getPrimaryClass() != null) {
-                b.append(Text.builder(" ").build()).append(Text.of(level));
-            }
-            content.add(b.build());
-        }
-        builder.contents(content);
-        builder.sendTo(character.getPlayer());
-    }
-
 
     private Text getDetailedCharInfo(ISpongeCharacter character) {
         Text text = Text.builder("Level").color(TextColors.YELLOW).append(
@@ -459,13 +428,6 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
         target.openInventory(i);
     }
 
-
-    @Override
-    public void sendClassInfo(ISpongeCharacter target, ClassDefinition configClass) {
-        Inventory i = createMenuInventoryClassDefView(configClass);
-        target.getPlayer().openInventory(i);
-    }
-
     @Override
     public void displayAttributes(ISpongeCharacter target, ClassDefinition cls) {
 
@@ -653,17 +615,6 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
 
 
     @Override
-    public void displayHealth(ISpongeCharacter character) {
-        double value = character.getHealth().getValue();
-        double maxValue = character.getHealth().getMaxValue();
-        //todo implement
-        //double reservedAmount = character.getHealth().getReservedAmount();
-
-        Text a = translate(LocalizationKeys.HEALTH, Arg.arg("current", value).with("maxValue", maxValue));
-        character.getPlayer().sendMessage(a);
-    }
-
-    @Override
     public void displayMana(ISpongeCharacter character) {
         IEffectContainer<Object, ManaBarNotifier> barExpNotifier = character.getEffect(ManaBarNotifier.name);
         ManaBarNotifier effect = (ManaBarNotifier) barExpNotifier;
@@ -724,17 +675,6 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
     public void displayInitialProperties(ClassDefinition byName, ISpongeCharacter player) {
         ItemStack back = GuiHelper.back(byName);
 
-    }
-
-    @Override
-    public void sendCannotUseItemInOffHandNotification(String futureOffHandItem, ISpongeCharacter character, CannotUseItemReason reason) {
-        if (reason == CannotUseItemReason.CONFIG) {
-            character.getPlayer().sendMessage(ChatTypes.ACTION_BAR, translate(LocalizationKeys.CANNOT_USE_ITEM_CONFIGURATION_REASON_OFFHAND));
-        } else if (reason == CannotUseItemReason.LEVEL) {
-            character.getPlayer().sendMessage(ChatTypes.ACTION_BAR, translate(LocalizationKeys.CANNOT_USE_ITEM_LEVEL_REASON));
-        } else if (reason == CannotUseItemReason.LORE) {
-            character.getPlayer().sendMessage(ChatTypes.ACTION_BAR, translate(LocalizationKeys.CANNOT_USE_ITEM_LORE_REASON));
-        }
     }
 
     private void createSkillTreeView(ISpongeCharacter character, Inventory skillTreeInventoryViewTemplate) {
@@ -804,12 +744,6 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
                 }
             }
         }
-    }
-
-    @Override
-    public void skillExecution(ISpongeCharacter character, PlayerSkillContext skill) {
-        String msg = Rpg.get().getLocalizationService().translate(LocalizationKeys.SKILL_EXECUTED_MESSAGE, "skill", skill.getSkill().getName());
-        character.sendNotification(msg);
     }
 
     @Override

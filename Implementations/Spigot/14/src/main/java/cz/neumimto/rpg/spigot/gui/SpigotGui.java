@@ -10,7 +10,6 @@ import cz.neumimto.rpg.api.localization.Arg;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
-import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.common.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
@@ -52,11 +51,6 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
     }
 
     @Override
-    public void sendPlayerInfo(ISpigotCharacter character, List<CharacterBase> target) {
-
-    }
-
-    @Override
     public void sendPlayerInfo(ISpigotCharacter character, ISpigotCharacter target) {
 
     }
@@ -77,13 +71,8 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
     }
 
     @Override
-    public void invokerDefaultMenu(ISpigotCharacter character) {
-
-    }
-
-    @Override
     public void sendListOfCharacters(ISpigotCharacter player, CharacterBase currentlyCreated) {
-
+        SpigotGuiHelper.sendcharacters(player.getPlayer(), player, currentlyCreated);
     }
 
     @Override
@@ -107,17 +96,7 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
     }
 
     @Override
-    public void sendClassInfo(ISpigotCharacter target, ClassDefinition configClass) {
-
-    }
-
-    @Override
     public void displayAttributes(ISpigotCharacter target, ClassDefinition group) {
-
-    }
-
-    @Override
-    public void displayHealth(ISpigotCharacter character) {
 
     }
 
@@ -162,16 +141,6 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
 
     @Override
     public void displayInitialProperties(ClassDefinition byName, ISpigotCharacter player) {
-
-    }
-
-    @Override
-    public void sendCannotUseItemInOffHandNotification(String futureOffHandItem, ISpigotCharacter character, CannotUseItemReason reason) {
-
-    }
-
-    @Override
-    public void skillExecution(ISpigotCharacter character, PlayerSkillContext skill) {
 
     }
 

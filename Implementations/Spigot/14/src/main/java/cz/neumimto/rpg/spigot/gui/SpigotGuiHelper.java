@@ -3,7 +3,13 @@ package cz.neumimto.rpg.spigot.gui;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.api.logging.Log;
+import cz.neumimto.rpg.api.persistance.model.CharacterBase;
+import cz.neumimto.rpg.common.utils.model.CharacterListModel;
+import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import de.tr7zw.nbtapi.NBTItem;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
@@ -17,6 +23,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public class SpigotGuiHelper {
@@ -123,8 +130,41 @@ public class SpigotGuiHelper {
         return nbti.getItem();
     }
 
+    public static void sendcharacters(Player player, ISpigotCharacter player1, CharacterBase currentlyCreated) {
+        CompletableFuture.runAsync(() -> {
+            List<CharacterListModel> playersCharacters = Rpg.get().getCharacterService().getPlayersCharacters(player.getUniqueId());
 
-        private static String parseStr(String str) {
+            for (CharacterListModel base : playersCharacters) {
+                TextComponent message = new TextComponent("[");
+                message.setColor(net.md_5.bungee.api.ChatColor.YELLOW);
+                TextComponent inner;
+                if (base.getCharacterName().equalsIgnoreCase(currentlyCreated.getName())) {
+                    inner = new TextComponent("*");
+                    inner.setColor(net.md_5.bungee.api.ChatColor.RED);
+                } else {
+                    inner = new TextComponent("SELECT");
+                    inner.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "character switch " + base.getCharacterName()));
+                    inner.setColor(net.md_5.bungee.api.ChatColor.GREEN);
+                }
+                message.addExtra(inner);
+                message.addExtra("] ");
+                message.setColor(net.md_5.bungee.api.ChatColor.YELLOW);
+
+                TextComponent textComponent = new TextComponent(base.getCharacterName() + " ");
+                textComponent.setColor(net.md_5.bungee.api.ChatColor.GOLD);
+
+                message.addExtra(textComponent);
+                player.spigot().sendMessage(textComponent);
+            }
+
+
+        }, Rpg.get().getAsyncExecutor()).exceptionally(throwable -> {
+            Log.error("Could not get character list", throwable);
+            return null;
+        });
+    }
+
+    private static String parseStr(String str) {
         return ChatColor.translateAlternateColorCodes('$', str);
     }
 }
