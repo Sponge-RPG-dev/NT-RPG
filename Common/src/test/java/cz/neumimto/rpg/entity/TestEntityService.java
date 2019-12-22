@@ -1,11 +1,15 @@
 package cz.neumimto.rpg.entity;
 
 import cz.neumimto.rpg.api.IRpgElement;
-import cz.neumimto.rpg.api.entity.*;
+import cz.neumimto.rpg.api.entity.EntityService;
+import cz.neumimto.rpg.api.entity.IEffectConsumer;
+import cz.neumimto.rpg.api.entity.IEntity;
+import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.common.entity.TestCharacter;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.UUID;
 
 @Singleton
 public class TestEntityService implements EntityService<TestCharacter> {
@@ -45,6 +49,11 @@ public class TestEntityService implements EntityService<TestCharacter> {
 
     @Override
     public void updateWalkSpeed(IEntity<? extends TestCharacter> activeCharacter) {
+
+    }
+
+    @Override
+    public void remove(UUID uuid) {
 
     }
 

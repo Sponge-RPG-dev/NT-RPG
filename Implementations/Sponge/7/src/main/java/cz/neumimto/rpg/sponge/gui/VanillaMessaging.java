@@ -356,7 +356,13 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
         ItemStack s = GuiHelper.itemStack(p.getItemType());
         s.offer(new MenuInventoryData(true));
         s.offer(Keys.DISPLAY_NAME, Text.of(p.getName(), TextColors.DARK_PURPLE));
-        s.offer(Keys.ITEM_LORE, getItemLore(p.getDescription()));
+        if (p.getDescription() != null) {
+            List<Text> list = new ArrayList<>();
+            for (String s1 : p.getDescription()) {
+                list.add(Text.builder(s1).color(TextColors.GOLD).style(TextStyles.ITALIC).build());
+            }
+            s.offer(Keys.ITEM_LORE, list);
+        }
         return s;
     }
 

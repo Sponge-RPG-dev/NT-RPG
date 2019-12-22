@@ -534,10 +534,14 @@ public class GuiHelper {
             itemStack.offer(Keys.ITEM_LORE, a.getCustomLore().stream().map(TextHelper::parse).collect(Collectors.toList()));
         } else {
             List<Text> lore = new ArrayList<>();
-            String description = a.getDescription();
             lore.add(Text.builder(a.getClassType()).style(TextStyles.BOLD).color(TextColors.GRAY).build());
             lore.add(Text.EMPTY);
-            lore.add(Text.builder(description).style(TextStyles.ITALIC).color(TextColors.GOLD).build());
+            List<String> description = a.getDescription();
+            if (description != null) {
+                for (String s : description) {
+                    lore.add(Text.builder(s).style(TextStyles.ITALIC).color(TextColors.GOLD).build());
+                }
+            }
             itemStack.offer(Keys.ITEM_LORE, lore);
         }
         itemStack.offer(new InventoryCommandItemMenuData("class " + a.getName()));

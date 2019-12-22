@@ -49,7 +49,7 @@ public class CharacterCommandTests {
 
     @Test
     public void testCommandAddAttribute(@Stage(READY)IActiveCharacter iActiveCharacter) {
-        AttributeConfig attributeConfig = new AttributeConfig("test","test", 100, Collections.emptyMap(),"test", "test");
+        AttributeConfig attributeConfig = new AttributeConfig("test","test", 100,false, Collections.emptyMap(),"test", "test");
         iActiveCharacter.getCharacterBase().setAttributePoints(1);
         iActiveCharacter.getTransientAttributes().put("test", 0);
         Integer value = iActiveCharacter.getAttributeValue(attributeConfig);

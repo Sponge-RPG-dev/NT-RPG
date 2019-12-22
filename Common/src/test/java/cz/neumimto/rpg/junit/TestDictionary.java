@@ -1,10 +1,10 @@
 package cz.neumimto.rpg.junit;
 
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
+import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.items.ItemClass;
 import cz.neumimto.rpg.api.items.RpgItemType;
 import cz.neumimto.rpg.common.items.RpgItemTypeImpl;
-import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 
 import java.util.HashMap;
 
@@ -40,8 +40,8 @@ public class TestDictionary {
         CLASS_PRIMARY = new ClassDefinition("primary","Primary");
         CLASS_TERTIARY = new ClassDefinition("tertiary","Tertiary");
         CLASS_SECONDARY = new ClassDefinition("secondary","Secondary");
-        STR = new AttributeConfig("str", "str", 100, new HashMap<>(), null, null);
-        AGI = new AttributeConfig("agi", "agi", 100, new HashMap<>(), null, null);
+        STR = new AttributeConfig("str", "str", 100, false, new HashMap<>(), null, null);
+        AGI = new AttributeConfig("agi", "agi", 100,false,  new HashMap<>(), null, null);
         AGI.getPropBonus().put(6, 1f);
         STR.getPropBonus().put(5, 2f);
 

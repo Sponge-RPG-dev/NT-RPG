@@ -16,8 +16,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import java.util.Set;
 import javax.inject.Inject;
+import java.util.Set;
 
 @ExtendWith({GuiceExtension.class, NtRpgExtension.class})
 @IncludeModule(TestGuiceModule.class)
@@ -52,7 +52,7 @@ public class ClassDefinitionDaoTest {
         Assertions.assertSame(classDefinitions.size(), 1);
         ClassDefinition c = classDefinitions.iterator().next();
         Assertions.assertEquals(c.getName(), "ClassExample1");
-        Assertions.assertEquals(c.getDescription(), "Description");
+        Assertions.assertEquals(c.getDescription().get(0), "Description");
         Assertions.assertEquals(c.getWelcomeMessage(), "WelcomeMessage");
         Assertions.assertEquals(c.getPreferedColor(), "PreferredTextColor");
         Assertions.assertEquals(c.getItemType(), "ItemType");

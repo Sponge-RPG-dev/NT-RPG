@@ -40,7 +40,7 @@ public class SpigotInfoCommands extends BaseCommand {
     }
 
     @Subcommand("classes")
-    @CommandPermission("%.classes")
+    @CommandPermission("ntrpg.info.classes")
     public void showClassesCommand(Player executor, @Optional String type) {
         ISpigotCharacter character = characterService.getCharacter(executor);
         if (type == null) {
@@ -48,11 +48,17 @@ public class SpigotInfoCommands extends BaseCommand {
         } else {
             Gui.sendClassesByType(character, type);
         }
+    }
 
+    @Subcommand("class")
+    @CommandPermission("ntrpg.info.class")
+    public void showClassCommand(Player executor, ClassDefinition classDefinition) {
+        ISpigotCharacter character = characterService.getCharacter(executor);
+        Gui.showClassInfo(character, classDefinition);
     }
 
     @Subcommand("character")
-    @CommandPermission("%.player.characters.other")
+    @CommandPermission("ntrpg.info.player.characters.other")
     public void showOtherPlayerCharacterCommand(Player executor, OnlinePlayer target) {
         IActiveCharacter targett = characterService.getCharacter(executor);
         IActiveCharacter targett1 = characterService.getCharacter(target.player);
@@ -60,7 +66,7 @@ public class SpigotInfoCommands extends BaseCommand {
     }
 
     @Subcommand("character")
-    @CommandPermission("%.player.characters.self")
+    @CommandPermission("ntrpg.info.player.characters.self")
     public void showPlayerCharacterCommand(Player executor) {
         IActiveCharacter targett = characterService.getCharacter(executor);
         Gui.showCharacterInfo(targett, targett);
@@ -73,8 +79,14 @@ public class SpigotInfoCommands extends BaseCommand {
         Gui.sendListOfCharacters(target, target.getCharacterBase());
     }
 
+    @Subcommand("class-weapons")
+    public void showClassWeapons(Player player, ClassDefinition cc) {
+        IActiveCharacter target = characterService.getCharacter(player);
+        Gui.displayClassWeapons(cc, target);
+    }
+
     @Subcommand("runeword")
-    @CommandPermission("%.player.characters.other")
+    @CommandPermission("ntrpg.info.player.characters.other")
     public void showRunewordInfoCommand(Player executor, RuneWord runeword) {
         ISpigotCharacter character = characterService.getCharacter(executor);
         messaging.displayRuneword(character, runeword, true);

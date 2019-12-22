@@ -11,9 +11,9 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
+import javax.inject.Singleton;
 import java.util.*;
 import java.util.stream.Collectors;
-import javax.inject.Singleton;
 
 @Singleton
 public class SpigotDamageService extends AbstractDamageService<LivingEntity> {
@@ -21,13 +21,13 @@ public class SpigotDamageService extends AbstractDamageService<LivingEntity> {
     private Map<Double, String> doubleColorMap = new TreeMap<>();
 
     private String[] colorScale = new String[]{
-            "&f",
-            "&e",
-            "&6",
-            "&c",
-            "&4",
-            "&5",
-            "&1"
+            "§f",
+            "§e",
+            "§6",
+            "§c",
+            "§4",
+            "§5",
+            "§1"
     };
 
     @Override
@@ -60,9 +60,9 @@ public class SpigotDamageService extends AbstractDamageService<LivingEntity> {
 
     public String getColorByDamage(Double damage) {
         if (doubleColorMap.size() != colorScale.length) {
-            return "&c";
+            return "§c";
         }
-        String val = "&c";
+        String val = "§c";
         for (Map.Entry<Double, String> aDouble : doubleColorMap.entrySet()) {
             if (damage <= aDouble.getKey() || aDouble.getValue().equals(colorScale[colorScale.length - 1])) {
                 val = aDouble.getValue();

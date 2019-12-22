@@ -41,7 +41,7 @@ public class ClassDefinition implements IEffectSourceProvider {
     protected String name;
 
     @Path("Description")
-    protected String description;
+    protected List<String> description;
 
     @Path("WelcomeMessage")
     protected String welcomeMessage;
@@ -189,11 +189,11 @@ public class ClassDefinition implements IEffectSourceProvider {
         this.itemType = itemType;
     }
 
-    public String getDescription() {
+    public List<String> getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(List<String> description) {
         this.description = description;
     }
 
