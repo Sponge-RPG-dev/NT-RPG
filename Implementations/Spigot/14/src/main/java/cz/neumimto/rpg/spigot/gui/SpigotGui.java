@@ -89,13 +89,15 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
 
     @Override
     public void displayGroupArmor(ClassDefinition g, ISpigotCharacter target) {
-
+        Player player = target.getPlayer();
+        Inventory i = SpigotGuiHelper.createArmorView(player, g, g.getWeapons());
+        player.openInventory(i);
     }
 
     @Override
     public void displayGroupWeapon(ClassDefinition g, ISpigotCharacter target) {
         Player player = target.getPlayer();
-        Inventory i = SpigotGuiHelper.createClassWeaponView(player, g);
+        Inventory i = SpigotGuiHelper.createClassWeaponView(player, g, g.getWeapons());
         player.openInventory(i);
     }
 

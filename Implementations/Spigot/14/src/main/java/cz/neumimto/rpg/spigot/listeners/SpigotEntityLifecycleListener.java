@@ -5,6 +5,7 @@ import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.exp.ExperienceService;
 import cz.neumimto.rpg.common.exp.ExperienceSources;
 import cz.neumimto.rpg.spigot.entities.SpigotEntityService;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
@@ -18,6 +19,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
+import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.projectiles.ProjectileSource;
@@ -43,6 +45,8 @@ public class SpigotEntityLifecycleListener implements Listener {
     @Inject
     private SpigotInventoryService spigotInventoryService;
 
+    @Inject
+    private ExperienceService experienceService;
 
     @EventHandler
     public void onPlayerLogin(AsyncPlayerPreLoginEvent event) {
@@ -143,6 +147,18 @@ public class SpigotEntityLifecycleListener implements Listener {
         Entity[] entities = event.getChunk().getEntities();
         for (Entity entity : entities) {
             entityService.remove(entity.getUniqueId());
+        }
+    }
+
+    @EventHandler
+    public void onCatchFish(PlayerFishEvent event) {
+        Entity caught = event.getCaught();
+        if (caught != null) {
+            Double fishingExperience = experienceService.getFishingExperience(caught.getType().name());
+            if (fishingExperience != null) {
+                ISpigotCharacter character = characterService.getCharacter(event.getPlayer());
+                characterService.addExperiences(character, fishingExperience, ExperienceSources.FISHING);
+            }
         }
     }
 

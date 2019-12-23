@@ -24,10 +24,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -191,13 +188,16 @@ public class SpigotGuiHelper {
         return i;
     }
 
-    public static Inventory createClassWeaponView(Player player, ClassDefinition cc) {
-        Inventory i = createInventoryTemplate(player, ChatColor.valueOf(cc.getPreferedColor()) + cc.getName() + " - Weapons");
+    public static Inventory createClassWeaponView(Player player, ClassDefinition cc, Set<ClassItem> weapons) {
+        String translate = Rpg.get().getLocalizationService().translate(LocalizationKeys.WEAPONS);
+        Inventory i = createInventoryTemplate(player, ChatColor.valueOf(cc.getPreferedColor()) + cc.getName() + ChatColor.RESET + translate);
         i.setItem(0, button(Material.PAPER, Rpg.get().getLocalizationService().translate(LocalizationKeys.BACK), "ninfo class " + cc.getName()));
         int w = 9;
         SpigotDamageService damageService = (SpigotDamageService) Rpg.get().getDamageService();
-        Set<ClassItem> weapons = cc.getWeapons();
         String dmg = Rpg.get().getLocalizationService().translate(LocalizationKeys.ITEM_DAMAGE);
+        if (weapons == null) {
+            weapons = Collections.emptySet();
+        }
         for (ClassItem weapon : weapons) {
             SpigotRpgItemType type = (SpigotRpgItemType) weapon.getType();
             ItemStack itemStack = new ItemStack(type.getMaterial());
@@ -206,9 +206,35 @@ public class SpigotGuiHelper {
             if (damage > 0) {
                 ChatColor colorByDamage = ChatColor.valueOf(damageService.getColorByDamage(damage));
                 ItemMeta itemMeta = itemStack.getItemMeta();
+                if (type.getModelId() != null) {
+                    itemMeta.setCustomModelData(Integer.parseInt(type.getModelId()));
+                }
                 List<String> list = new ArrayList<>();
                 list.add(ChatColor.GRAY + dmg + ":" + colorByDamage + damage);
                 itemMeta.setLore(list);
+                itemStack.setItemMeta(itemMeta);
+            }
+            i.setItem(w, unclickableInterface(itemStack));
+            w++;
+        }
+        return i;
+    }
+
+    public static Inventory createArmorView(Player player, ClassDefinition cc, Set<ClassItem> weapons) {
+        String translate = Rpg.get().getLocalizationService().translate(LocalizationKeys.ARMOR);
+        Inventory i = createInventoryTemplate(player, ChatColor.valueOf(cc.getPreferedColor()) + cc.getName() + ChatColor.RESET + translate);
+        i.setItem(0, button(Material.PAPER, Rpg.get().getLocalizationService().translate(LocalizationKeys.BACK), "ninfo class " + cc.getName()));
+        int w = 9;
+        for (ClassItem weapon : weapons) {
+            SpigotRpgItemType type = (SpigotRpgItemType) weapon.getType();
+            ItemStack itemStack = new ItemStack(type.getMaterial());
+            double damage = weapon.getDamage();
+
+            if (damage > 0) {
+                ItemMeta itemMeta = itemStack.getItemMeta();
+                if (type.getModelId() != null) {
+                    itemMeta.setCustomModelData(Integer.parseInt(type.getModelId()));
+                }
                 itemStack.setItemMeta(itemMeta);
             }
             i.setItem(w, unclickableInterface(itemStack));

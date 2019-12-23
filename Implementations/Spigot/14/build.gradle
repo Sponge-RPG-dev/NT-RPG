@@ -29,7 +29,7 @@ compileJava {
 }
 
 dependencies {
-    compileOnly "org.spigotmc:spigot-api:1.14.2-R0.1-SNAPSHOT"
+    compileOnly "org.spigotmc:spigot-api:1.15.1-R0.1-SNAPSHOT"
     compileOnly "org.spigotmc:plugin-annotations:1.2.2-SNAPSHOT"
     annotationProcessor "org.spigotmc:plugin-annotations:1.2.2-SNAPSHOT"
 

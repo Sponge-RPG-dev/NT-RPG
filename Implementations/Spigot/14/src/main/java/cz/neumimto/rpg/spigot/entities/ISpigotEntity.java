@@ -22,4 +22,5 @@ public interface ISpigotEntity<T extends LivingEntity> extends IEffectConsumer, 
     default void close() {
         setSkillOrEffectDamageCause(null);
     };
+
 }

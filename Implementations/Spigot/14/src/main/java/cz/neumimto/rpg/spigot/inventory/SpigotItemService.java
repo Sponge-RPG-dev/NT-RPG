@@ -27,8 +27,11 @@ public class SpigotItemService extends AbstractItemService {
     public Optional<RpgItemType> getRpgItemType(ItemStack itemStack) {
         ItemMeta meta = itemStack.getItemMeta();
         if (meta != null) {
-            String displayName = meta.getDisplayName();
-            return getRpgItemType(itemStack.getType().name(), displayName);
+            int customModelData = meta.getCustomModelData();
+            if (customModelData == 0) {
+                return getRpgItemType(itemStack.getType().name(), "");
+            }
+            return getRpgItemType(itemStack.getType().name(), String.valueOf(customModelData));
         }
         return Optional.empty();
     }
