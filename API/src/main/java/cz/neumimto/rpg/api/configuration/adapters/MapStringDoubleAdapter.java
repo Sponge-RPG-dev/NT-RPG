@@ -12,9 +12,11 @@ public class MapStringDoubleAdapter implements Converter<Map<String, Float>, Con
     @Override
     public Map convertToField(Config value) {
         Map<String, Float> map = new HashMap();
-        for (Map.Entry<String, Object> entry : value.valueMap().entrySet()) {
-            Number value1 = (Number) entry.getValue();
-            map.put(entry.getKey(), value1.floatValue());
+        if (value != null) {
+            for (Map.Entry<String, Object> entry : value.valueMap().entrySet()) {
+                Number value1 = (Number) entry.getValue();
+                map.put(entry.getKey(), value1.floatValue());
+            }
         }
         return map;
     }

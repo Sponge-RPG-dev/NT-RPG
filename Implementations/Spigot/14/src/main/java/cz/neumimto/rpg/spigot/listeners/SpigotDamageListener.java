@@ -124,7 +124,11 @@ public class SpigotDamageListener extends AbstractDamageListener implements List
         newdamage *= spigotDamageService.getEntityDamageMult(attacker, event.getCause());
 
         IEntityWeaponDamageEarlyEvent e = getWeaponDamage(event, target, newdamage, rpgItemStack, SpigotEntityWeaponDamageEarlyEvent.class);
-        event.setDamage(e.getDamage());
+        if (e == null) {
+            event.setCancelled(true);
+        } else {
+            event.setDamage(e.getDamage());
+        }
     }
 
     protected IEntityWeaponDamageEarlyEvent getWeaponDamage(EntityDamageByEntityEvent event, IEntity target, double newdamage, RpgItemStack rpgItemStack, Class<? extends IEntityWeaponDamageEarlyEvent> impl) {

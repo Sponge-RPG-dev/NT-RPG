@@ -85,6 +85,12 @@ public class SpigotInfoCommands extends BaseCommand {
         Gui.displayClassWeapons(cc, target);
     }
 
+    @Subcommand("class-armor")
+    public void showClassArmor(Player player, ClassDefinition cc) {
+        IActiveCharacter target = characterService.getCharacter(player);
+        Gui.displayClassArmor(cc, target);
+    }
+
     @Subcommand("runeword")
     @CommandPermission("ntrpg.info.player.characters.other")
     public void showRunewordInfoCommand(Player executor, RuneWord runeword) {

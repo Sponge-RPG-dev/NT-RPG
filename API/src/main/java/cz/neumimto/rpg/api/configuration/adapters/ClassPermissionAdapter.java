@@ -12,8 +12,10 @@ public class ClassPermissionAdapter implements Converter<Set<PlayerClassPermissi
     @Override
     public Set<PlayerClassPermission> convertToField(List<Config> value) {
         Set<PlayerClassPermission> set = new TreeSet<>();
-        for (Config config : value) {
-            set.add(new ObjectConverter().toObject(config, PlayerClassPermission::new));
+        if (value != null) {
+            for (Config config : value) {
+                set.add(new ObjectConverter().toObject(config, PlayerClassPermission::new));
+            }
         }
         return set;
     }

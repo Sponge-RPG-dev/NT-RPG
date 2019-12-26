@@ -9,6 +9,7 @@ import cz.neumimto.rpg.spigot.entities.players.party.SpigotParty;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -26,6 +27,7 @@ public class SpigotCharacter extends ActiveCharacter<Player, SpigotParty> implem
 
     @Override
     public void sendMessage(String message) {
+        message = ChatColor.translateAlternateColorCodes('&', message);
         getPlayer().spigot().sendMessage(ChatMessageType.CHAT, TextComponent.fromLegacyText(message));
     }
 

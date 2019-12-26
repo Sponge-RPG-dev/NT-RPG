@@ -204,5 +204,8 @@ public class StringUtils {
         return replaceEach(result, searchList, replacementList, repeat, timeToLive - 1);
     }
 
+    public static String capitalizeFirst(String str) {
+        return (Character.toUpperCase(str.charAt(0)) + str.substring(1)).replaceAll("_", " ");
+    }
 }
 

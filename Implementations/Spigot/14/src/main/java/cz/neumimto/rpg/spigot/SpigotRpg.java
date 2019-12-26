@@ -41,7 +41,7 @@ public final class SpigotRpg extends AbstractRpg {
     public void executeCommandBatch(Map<String, String> args, List<String> enterCommands) {
         for (String commandTemplate : enterCommands) {
             for (Map.Entry<String, String> entry : args.entrySet()) {
-                commandTemplate = commandTemplate.replaceAll("\\{\\{" + entry.getKey() + "}}", entry.getValue());
+                commandTemplate = commandTemplate.replaceAll("\\{\\{" + entry.getKey() + "\\}\\}", entry.getValue());
             }
             try {
                 info(Console.GREEN_BOLD + " Running Command (as a console): " + Console.YELLOW + commandTemplate);

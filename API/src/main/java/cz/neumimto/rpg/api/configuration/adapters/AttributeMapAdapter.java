@@ -18,18 +18,19 @@ public class AttributeMapAdapter implements Converter<Map<AttributeConfig, Integ
     @Override
     public Map<AttributeConfig, Integer> convertToField(Config value) {
         Map<AttributeConfig, Integer> map = new HashMap<>();
+        if (value != null) {
+            for (Map.Entry<String, Object> entry : value.valueMap().entrySet()) {
+                String key = entry.getKey();
 
-        for (Map.Entry<String, Object> entry : value.valueMap().entrySet()) {
-            String key = entry.getKey();
-
-            Optional<AttributeConfig> attribute = Rpg.get().getPropertyService().getAttributeById(key);
-            if (attribute.isPresent()) {
-                int anInt = ((Number) entry.getValue()).intValue();
-                map.put(attribute.get(), anInt);
-            } else {
-                warn("Unknown attribute " + key + ". Should be one of: " +
-                        String.join(", ", Rpg.get().getPropertyService().getAttributes().keySet())
-                );
+                Optional<AttributeConfig> attribute = Rpg.get().getPropertyService().getAttributeById(key);
+                if (attribute.isPresent()) {
+                    int anInt = ((Number) entry.getValue()).intValue();
+                    map.put(attribute.get(), anInt);
+                } else {
+                    warn("Unknown attribute " + key + ". Should be one of: " +
+                            String.join(", ", Rpg.get().getPropertyService().getAttributes().keySet())
+                    );
+                }
             }
         }
         return map;

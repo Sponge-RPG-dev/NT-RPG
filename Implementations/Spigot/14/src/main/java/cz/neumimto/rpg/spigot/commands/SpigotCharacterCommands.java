@@ -4,10 +4,13 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Subcommand;
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.common.commands.CharacterCommandFacade;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
+import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
 import org.bukkit.entity.Player;
 
@@ -27,6 +30,9 @@ public class SpigotCharacterCommands extends BaseCommand {
 
     @Inject
     private SpigotRpgPlugin plugin;
+
+    @Inject
+    private ClassService classService;
 
     @Subcommand("list")
     public void characterList(Player executor) {
@@ -49,5 +55,11 @@ public class SpigotCharacterCommands extends BaseCommand {
         characterCommandFacade.commandSwitchCharacter(character, name, runnable -> {
             Rpg.get().scheduleSyncLater(runnable);
         });
+    }
+
+    @Subcommand("choose class")
+    public void chooseCharacterClass(Player executor, ClassDefinition classDefinition) {
+        ISpigotCharacter character = characterService.getCharacter(executor);
+        characterService.addNewClass(character, classDefinition);
     }
 }

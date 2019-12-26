@@ -42,7 +42,7 @@ dependencies {
     compile 'ninja.leaping.configurate:configurate-hocon:3.3'
     compile "co.aikar:acf-paper:0.5.0-SNAPSHOT"
     compile 'com.github.stefvanschie.inventoryframework:IF:0.5.14'
-    compile 'de.tr7zw:item-nbt-api-plugin:2.1.0'
+    compile 'de.tr7zw:item-nbt-api-plugin:2.1.1'
 
     jar {
 
@@ -50,7 +50,7 @@ dependencies {
             configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
         }
 
-        baseName 'NT-RPG'
+        baseName 'NT-RPG-Spigot-1.15.1'
     }
 }
 

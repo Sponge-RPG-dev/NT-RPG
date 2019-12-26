@@ -7,6 +7,7 @@ import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.utils.MathUtils;
 import cz.neumimto.rpg.common.effects.CoreEffectTypes;
+import cz.neumimto.rpg.common.utils.StringUtils;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacter;
 import cz.neumimto.rpg.sponge.utils.Utils;
@@ -68,7 +69,7 @@ public class BossBarExpNotifier extends EffectBase<Object> implements IEffectCon
             TextColor textColor = Sponge.getRegistry().getType(TextColor.class, preferedColor).orElse(TextColors.WHITE);
 
             serverBossBar.setName(
-                    Text.builder(Utils.capitalizeFirst(classname)).color(textColor)
+                    Text.builder(StringUtils.capitalizeFirst(classname)).color(textColor)
                             .append(Text.of(" " + localizationService.translate(LocalizationKeys.LEVEL)))
                             .append(Text.of(": ")).color(TextColors.DARK_GRAY)
                             .append(Text.builder(String.valueOf(playerClassData.getLevel())).color(TextColors.GOLD).build())

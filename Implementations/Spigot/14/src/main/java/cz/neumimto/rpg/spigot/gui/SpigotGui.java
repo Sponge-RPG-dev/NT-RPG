@@ -1,7 +1,9 @@
 package cz.neumimto.rpg.spigot.gui;
 
+import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.effects.EffectStatusType;
 import cz.neumimto.rpg.api.effects.IEffect;
+import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.gui.IPlayerMessage;
@@ -11,7 +13,9 @@ import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
+import cz.neumimto.rpg.common.effects.InternalEffectSourceProvider;
 import cz.neumimto.rpg.common.inventory.runewords.RuneWord;
+import cz.neumimto.rpg.spigot.effects.common.def.BossBarExpNotifier;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
@@ -29,6 +33,9 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
 
     @Inject
     private LocalizationService localizationService;
+
+    @Inject
+    private EffectService effectService;
 
     @Override
     public boolean isClientSideGui() {
@@ -57,11 +64,19 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
 
     @Override
     public void showExpChange(ISpigotCharacter character, String classname, double expchange) {
-
+        IEffectContainer<Object, BossBarExpNotifier> barExpNotifier = character.getEffect(BossBarExpNotifier.name);
+        BossBarExpNotifier effect = (BossBarExpNotifier) barExpNotifier;
+        if (effect == null) {
+            effect = new BossBarExpNotifier(character);
+            effectService.addEffect(effect, InternalEffectSourceProvider.INSTANCE);
+        }
+        effect.notifyExpChange(character, classname, expchange);
     }
 
     @Override
     public void showLevelChange(ISpigotCharacter character, PlayerClassData clazz, int level) {
+        Player player = character.getPlayer();
+        player.sendMessage("Level up: " + clazz.getClassDefinition().getName() + " - " + level);
 
     }
 
@@ -90,7 +105,7 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
     @Override
     public void displayGroupArmor(ClassDefinition g, ISpigotCharacter target) {
         Player player = target.getPlayer();
-        Inventory i = SpigotGuiHelper.createArmorView(player, g, g.getWeapons());
+        Inventory i = SpigotGuiHelper.createArmorView(player, g, g.getAllowedArmor());
         player.openInventory(i);
     }
 
@@ -103,7 +118,9 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
 
     @Override
     public void displayAttributes(ISpigotCharacter target, ClassDefinition group) {
-
+        Player player = target.getPlayer();
+        Inventory i = SpigotGuiHelper.createClassAttributesView(player, group);
+        player.openInventory(i);
     }
 
     @Override

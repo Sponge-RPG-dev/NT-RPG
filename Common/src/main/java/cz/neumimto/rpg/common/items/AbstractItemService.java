@@ -76,6 +76,10 @@ public abstract class AbstractItemService implements ItemService {
         return Optional.ofNullable(items.get(RpgItemType.KEY_BUILDER.apply(itemId, model)));
     }
 
+    protected Optional<RpgItemType> getRpgItemType(String itemId) {
+        return Optional.ofNullable(items.get(itemId));
+    }
+
     @Override
     public void registerRpgItemType(RpgItemType rpgItemType) {
         rpgItemType.getItemClass().getItems().add(rpgItemType);

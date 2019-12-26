@@ -10,8 +10,10 @@ import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.utils.MathUtils;
 import cz.neumimto.rpg.common.effects.CoreEffectTypes;
+import cz.neumimto.rpg.common.utils.StringUtils;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
@@ -41,7 +43,7 @@ public class BossBarExpNotifier extends EffectBase<Object> implements IEffectCon
             SessionWrapper sessionWrapper = bossBarMap.computeIfAbsent(classname, s -> new SessionWrapper());
             BossBar serverBossBar = sessionWrapper.serverBossBar;
             if (serverBossBar == null) {
-                Bukkit.getServer().createBossBar(, BarColor.BLUE, BarStyle.SEGMENTED_10))
+                serverBossBar = Bukkit.getServer().createBossBar("", BarColor.BLUE, BarStyle.SEGMENTED_10);
                 serverBossBar.setVisible(false);
 
                 serverBossBar.addPlayer(character.getPlayer());
@@ -55,23 +57,15 @@ public class BossBarExpNotifier extends EffectBase<Object> implements IEffectCon
 
             LocalizationService localizationService = Rpg.get().getLocalizationService();
             String preferedColor = playerClassData.getClassDefinition().getPreferedColor();
-            TextColor textColor = Spigot.getRegistry().getType(TextColor.class, preferedColor).orElse(TextColors.WHITE);
 
-            serverBossBar.setName(
-                    Text.builder(Utils.capitalizeFirst(classname)).color(textColor)
-                            .append(Text.of(" " + localizationService.translate(LocalizationKeys.LEVEL)))
-                            .append(Text.of(": ")).color(TextColors.DARK_GRAY)
-                            .append(Text.builder(String.valueOf(playerClassData.getLevel())).color(TextColors.GOLD).build())
-                            .append(Text.builder(" " + changeDf.format(sessionWrapper.currentSessionExp)).color(TextColors.GREEN).build())
-                            .append(Text.builder(" " + df.format(playerClassData.getExperiencesFromLevel())
-                                    + " / "
-                                    + df.format(playerClassData.getClassDefinition().getLevelProgression().getLevelMargins()[playerClassData.getLevel()]))
-                                    .color(TextColors.DARK_GRAY)
-                                    .style(TextStyles.ITALIC)
-                                    .build())
-                            .build());
+            ChatColor textColor = ChatColor.valueOf(preferedColor);
+
+            String s = textColor + StringUtils.capitalizeFirst(classname) + " " + localizationService.translate(LocalizationKeys.LEVEL)
+                    + ChatColor.DARK_GRAY +" :" + ChatColor.GOLD + playerClassData.getLevel() + " " + ChatColor.GREEN + changeDf.format(sessionWrapper.currentSessionExp)
+                    + " " + df.format(playerClassData.getExperiencesFromLevel()) + " / " + df.format(playerClassData.getClassDefinition().getLevelProgression().getLevelMargins()[playerClassData.getLevel()]);
 
 
+            serverBossBar.setTitle(s);
             serverBossBar.setProgress(MathUtils
                     .getPercentage(playerClassData.getExperiencesFromLevel(), playerClassData.getClassDefinition().getLevelProgression().getLevelMargins()[playerClassData.getLevel()])
                     / 100);

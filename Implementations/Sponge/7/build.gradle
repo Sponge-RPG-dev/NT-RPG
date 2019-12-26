@@ -53,7 +53,8 @@ dependencies {
             configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
         }
 
-        baseName 'NT-RPG'
+        baseName 'NT-RPG-Sponge-7'
+
     }
 
 }

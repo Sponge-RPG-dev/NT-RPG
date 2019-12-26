@@ -228,9 +228,7 @@ public class Utils {
         }
     }
 
-    public static String capitalizeFirst(String str) {
-        return (Character.toUpperCase(str.charAt(0)) + str.substring(1)).replaceAll("_", " ");
-    }
+
 
     public static String extractClassMember(String string) {
         Matcher matcher = REGEXP_CLASS_MEMBER.matcher(string);

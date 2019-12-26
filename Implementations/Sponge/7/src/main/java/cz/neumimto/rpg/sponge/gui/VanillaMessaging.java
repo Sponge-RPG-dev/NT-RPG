@@ -44,6 +44,7 @@ import cz.neumimto.rpg.common.inventory.crafting.runewords.ItemUpgrade;
 import cz.neumimto.rpg.common.inventory.crafting.runewords.Rune;
 import cz.neumimto.rpg.common.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.common.persistance.dao.IPlayerDao;
+import cz.neumimto.rpg.common.utils.StringUtils;
 import cz.neumimto.rpg.common.utils.model.CharacterListModel;
 import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
 import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
@@ -213,7 +214,7 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
         List<Text> content = new ArrayList<>();
         Set<CharacterClass> characterClasses = base.getCharacterClasses();
         for (CharacterClass cc : characterClasses) {
-            Text t = Text.builder().append(Text.of(Utils.capitalizeFirst(cc.getName()), Color.GREEN))
+            Text t = Text.builder().append(Text.of(StringUtils.capitalizeFirst(cc.getName()), Color.GREEN))
                     .append(Text.of(" - ", TextColors.GRAY))
                     .append(Text.of(cc.getSkillPoints(), TextColors.BLUE))
                     .append(Text.of(String.format("(%s)", cc.getUsedSkillPoints()), TextColors.GRAY))

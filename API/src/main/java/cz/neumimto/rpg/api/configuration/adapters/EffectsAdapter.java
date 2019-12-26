@@ -15,26 +15,27 @@ public class EffectsAdapter implements Converter<Map<IGlobalEffect, EffectParams
     public Map<IGlobalEffect, EffectParams> convertToField(List<Config> value) {
         Map<IGlobalEffect, EffectParams> params = new HashMap<>();
 
-        for (Config config : value) {
+        if (value != null) {
+            for (Config config : value) {
 
-            EffectConfigModel model = new ObjectConverter().toObject(config, EffectConfigModel::new);
+                EffectConfigModel model = new ObjectConverter().toObject(config, EffectConfigModel::new);
 
-            if (model.type == null) {
-                Log.warn("Cannot read effects section - Missing node Id");
-                continue;
-            }
-            IGlobalEffect globalEffect = Rpg.get().getEffectService().getGlobalEffect(model.type);
-            if (globalEffect == null) {
-                Log.error("Unknown Effect " + model.type);
-                continue;
-            }
-            if (model.settings == null) {
-                model.settings = new HashMap<>();
-            }
-            params.put(globalEffect, new EffectParams(model.settings));
+                if (model.type == null) {
+                    Log.warn("Cannot read effects section - Missing node Id");
+                    continue;
+                }
+                IGlobalEffect globalEffect = Rpg.get().getEffectService().getGlobalEffect(model.type);
+                if (globalEffect == null) {
+                    Log.error("Unknown Effect " + model.type);
+                    continue;
+                }
+                if (model.settings == null) {
+                    model.settings = new HashMap<>();
+                }
+                params.put(globalEffect, new EffectParams(model.settings));
 
+            }
         }
-
         return params;
     }
 
