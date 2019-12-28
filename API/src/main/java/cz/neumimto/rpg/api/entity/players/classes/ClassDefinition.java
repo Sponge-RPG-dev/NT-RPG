@@ -127,8 +127,8 @@ public class ClassDefinition implements IEffectSourceProvider {
     @Conversion(StringSet.class)
     protected Set<String> experienceSourceSet;
 
-  //  @Path("Dependencies")
-//    @Conversion(ClassDependencyGraphAdapter.class)
+    //@Path("Dependencies")
+    //@Conversion(ClassDependencyGraphAdapter.class)
     protected transient DependencyGraph classDefinitionDependencyGraph;
 
     @Path("CustomLore")

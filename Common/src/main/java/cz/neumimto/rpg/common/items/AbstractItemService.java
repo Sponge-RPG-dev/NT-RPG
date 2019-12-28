@@ -18,8 +18,8 @@ import cz.neumimto.rpg.api.items.*;
 import cz.neumimto.rpg.api.items.sockets.SocketType;
 import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
-import cz.neumimto.rpg.common.inventory.items.ItemMetaType;
-import cz.neumimto.rpg.common.inventory.items.subtypes.ItemSubtype;
+import cz.neumimto.rpg.api.items.ItemMetaType;
+import cz.neumimto.rpg.api.items.subtypes.ItemSubtype;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -269,10 +269,12 @@ public abstract class AbstractItemService implements ItemService {
         return socketTypes;
     }
 
+    @Override
     public Map<String, ItemMetaType> getItemMetaTypes() {
         return itemMetaTypes;
     }
 
+    @Override
     public Map<String, ItemSubtype> getItemSubtypes() {
         return itemSubtypes;
     }

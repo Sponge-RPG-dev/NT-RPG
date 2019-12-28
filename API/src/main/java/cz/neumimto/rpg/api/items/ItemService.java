@@ -5,12 +5,17 @@ import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.items.sockets.SocketType;
+import cz.neumimto.rpg.api.items.subtypes.ItemSubtype;
 
 import java.util.*;
 
 public interface ItemService {
 
     void load();
+
+    Map<String, ItemMetaType> getItemMetaTypes();
+
+    Map<String, ItemSubtype> getItemSubtypes();
 
     void reload();
 
@@ -47,4 +52,5 @@ public interface ItemService {
     void registerItemAttributes(Collection<AttributeConfig> attributes);
 
     Map<String, SocketType> getSocketTypes();
+
 }

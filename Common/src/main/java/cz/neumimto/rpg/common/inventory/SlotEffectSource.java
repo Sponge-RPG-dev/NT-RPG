@@ -1,8 +1,8 @@
 package cz.neumimto.rpg.common.inventory;
 
 import cz.neumimto.rpg.api.effects.IEffectSource;
-import cz.neumimto.rpg.common.inventory.items.subtypes.ItemSubtype;
-import cz.neumimto.rpg.common.inventory.items.subtypes.ItemSubtypes;
+import cz.neumimto.rpg.api.items.subtypes.ItemSubtype;
+import cz.neumimto.rpg.api.items.subtypes.ItemSubtypes;
 
 public class SlotEffectSource implements IEffectSource {
 

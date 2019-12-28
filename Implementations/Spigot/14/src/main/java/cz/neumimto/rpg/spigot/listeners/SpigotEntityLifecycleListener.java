@@ -18,9 +18,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
-import org.bukkit.event.player.PlayerFishEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.projectiles.ProjectileSource;
 
@@ -64,11 +62,11 @@ public class SpigotEntityLifecycleListener implements Listener {
             character.getCharacterBase().setLastKnownPlayerName(event.getPlayer().getName());
             character.updateLastKnownLocation(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), ex.getName());
             characterService.putInSaveQueue(character.getCharacterBase());
-            effectService.removeAllEffects(character);
 			/*Always reset the persistent properties back to vanilla values in a case
              some dummy decides to remove my awesome plugin :C */
             //Utils.resetPlayerToDefault(player);
         }
+        effectService.removeAllEffects(character);
     }
 
     @EventHandler
@@ -161,5 +159,15 @@ public class SpigotEntityLifecycleListener implements Listener {
             }
         }
     }
+
+    @EventHandler
+    public void onPlayerRespawn(PlayerRespawnEvent event) {
+        ISpigotCharacter character = characterService.getCharacter(event.getPlayer().getUniqueId());
+        if (character.isStub()) {
+            return;
+        }
+        characterService.respawnCharacter(character);
+    }
+
 
 }

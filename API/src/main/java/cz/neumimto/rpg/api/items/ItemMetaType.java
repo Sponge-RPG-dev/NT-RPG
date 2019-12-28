@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.common.inventory.items;
+package cz.neumimto.rpg.api.items;
 
 /**
  * Created by NeumimTo on 30.3.2018.

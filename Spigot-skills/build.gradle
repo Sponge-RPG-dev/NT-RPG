@@ -1,0 +1,21 @@
+plugins {
+    id 'org.spongepowered.plugin' version '0.8.1'
+}
+
+group = 'cz.neumimto.rpg'
+version = '3.0.5'
+
+dependencies {
+    annotationProcessor project(':Generator')
+    
+    compileOnly project(':Spigot-14')
+    compileOnly project(':API')
+    
+    compileOnly 'org.spongepowered:spongeapi:' + project.spongeApiVersion
+
+    jar {
+
+        baseName 'NT-RPG-Spigot-Skills-only'
+
+    }
+}

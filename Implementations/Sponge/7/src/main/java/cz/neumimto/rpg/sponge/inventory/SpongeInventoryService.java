@@ -18,8 +18,6 @@
 
 package cz.neumimto.rpg.sponge.inventory;
 
-import com.typesafe.config.Config;
-import com.typesafe.config.ConfigFactory;
 import cz.neumimto.config.blackjack.and.hookers.NotSoStupidObjectMapper;
 import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
@@ -42,14 +40,9 @@ import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillCost;
 import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.api.skills.mods.ActiveSkillPreProcessorWrapper;
-import cz.neumimto.rpg.api.utils.Console;
 import cz.neumimto.rpg.api.utils.Pair;
 import cz.neumimto.rpg.common.inventory.AbstractInventoryService;
-import cz.neumimto.rpg.common.inventory.ManagedInventory;
-import cz.neumimto.rpg.common.inventory.SlotEffectSource;
-import cz.neumimto.rpg.common.inventory.items.ItemMetaType;
-import cz.neumimto.rpg.common.inventory.items.subtypes.ItemSubtype;
-import cz.neumimto.rpg.common.inventory.items.subtypes.ItemSubtypes;
+import cz.neumimto.rpg.api.items.ItemMetaType;
 import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
 import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
@@ -68,7 +61,6 @@ import ninja.leaping.configurate.objectmapping.ObjectMapper;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.asset.Asset;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
@@ -298,31 +290,7 @@ public class SpongeInventoryService extends AbstractInventoryService<ISpongeChar
 
     @Override
     public void load() {
-        Path path = Paths.get(Rpg.get().getWorkingDirectory(), "ItemGroups.conf");
-        File f = path.toFile();
-        if (!f.exists()) {
-            Optional<Asset> asset = Sponge.getAssetManager().getAsset(plugin, "ItemGroups.conf");
-            if (!asset.isPresent()) {
-                throw new IllegalStateException("Could not find an asset ItemGroups.conf");
-            }
-            try {
-                asset.get().copyToFile(f.toPath());
-            } catch (IOException e) {
-                throw new IllegalStateException("Could not create ItemGroups.conf file", e);
-            }
-        }
-
-        Config c = ConfigFactory.parseFile(path.toFile());
-
-        List<? extends Config> inventorySlots = c.getConfigList("InventorySlots");
-        for (Config inventorySlot : inventorySlots) {
-            loadInventorySettings(inventorySlot);
-        }
-
-        List<String> itemMetaSubtypes = c.getStringList("ItemMetaSubtypes");
-
-        itemMetaSubtypes.stream().map(ItemSubtype::new).forEach(a -> itemService.getItemSubtypes().get(a));
-
+        super.load();
         loadSkillGuis();
     }
 
@@ -352,35 +320,7 @@ public class SpongeInventoryService extends AbstractInventoryService<ISpongeChar
     }
 
 
-    private void loadInventorySettings(Config slots) {
-        String aClass = slots.getString("type");
-        try {
-            Class<?> aClass1 = Class.forName(aClass);
 
-            HashMap<Integer, SlotEffectSource> slotEffectSourceHashMap = new HashMap<>();
-            ManagedInventory managedInventory = new ManagedInventory(aClass1, slotEffectSourceHashMap);
-            for (String str : slots.getStringList("slots")) {
-                String[] split = str.split(";");
-                if (split.length == 1) {
-                    SlotEffectSource slotEffectSource = new SlotEffectSource(Integer.parseInt(split[0]), ItemSubtypes.ANY);
-                    slotEffectSourceHashMap.put(slotEffectSource.getSlotId(), slotEffectSource);
-                } else {
-                    ItemSubtype type = itemService.getItemSubtypes().get(split[1]);
-                    if (type == null) {
-                        type = ItemSubtypes.ANY;
-                        error("Could not find subtype " + split[1]);
-                    }
-                    SlotEffectSource slotEffectSource = new SlotEffectSource(Integer.parseInt(split[0]), type);
-                    slotEffectSourceHashMap.put(slotEffectSource.getSlotId(), slotEffectSource);
-                }
-            }
-            managedInventories.put(managedInventory.getType(), managedInventory);
-        } catch (ClassNotFoundException e) {
-            error(Console.RED + "Could not find inventory type " + Console.GREEN + aClass + Console.RED
-                    + " defined in ItemGroups.conf. Is the mod loaded? Is the class name correct? If you are unsure restart plugin with debug mode "
-                    + "ON and interact with desired inventory");
-        }
-    }
 
     @Override
     public Set<ActiveSkillPreProcessorWrapper> processItemCost(ISpongeCharacter character, PlayerSkillContext skillInfo) {

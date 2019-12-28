@@ -8,12 +8,14 @@ import cz.neumimto.rpg.api.items.ClassItem;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
+import cz.neumimto.rpg.api.persistance.model.CharacterClass;
 import cz.neumimto.rpg.common.utils.model.CharacterListModel;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.items.SpigotRpgItemType;
 import de.tr7zw.nbtapi.NBTItem;
 import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -154,27 +156,24 @@ public class SpigotGuiHelper {
         CompletableFuture.runAsync(() -> {
             List<CharacterBase> playersCharacters = Rpg.get().getCharacterService().getPlayersCharacters(player.getUniqueId());
 
+
             for (CharacterBase base : playersCharacters) {
-                TextComponent message = new TextComponent("[");
-                message.setColor(net.md_5.bungee.api.ChatColor.YELLOW);
-                TextComponent inner;
+                ComponentBuilder builder = new ComponentBuilder("[")
+                        .color(net.md_5.bungee.api.ChatColor.YELLOW)
+                        ;
                 if (base.getName().equalsIgnoreCase(currentlyCreated.getName())) {
-                    inner = new TextComponent("*");
-                    inner.setColor(net.md_5.bungee.api.ChatColor.RED);
+                    builder.append("*").color(net.md_5.bungee.api.ChatColor.RED);
                 } else {
-                    inner = new TextComponent("SELECT");
-                    inner.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "character switch " + base.getName()));
-                    inner.setColor(net.md_5.bungee.api.ChatColor.GREEN);
+                    builder.append("SELECT").event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "character switch " + base.getName()))
+                            .color(net.md_5.bungee.api.ChatColor.GREEN);
                 }
-                message.addExtra(inner);
-                message.addExtra("] ");
-                message.setColor(net.md_5.bungee.api.ChatColor.YELLOW);
 
-                TextComponent textComponent = new TextComponent(base.getName() + " ");
-                textComponent.setColor(net.md_5.bungee.api.ChatColor.GOLD);
+                builder.append("] ").color(net.md_5.bungee.api.ChatColor.YELLOW)
+                        .append(base.getName() + " ").color(net.md_5.bungee.api.ChatColor.GOLD)
+                        .append(base.getCharacterClasses().stream().map(CharacterClass::getName).collect(Collectors.joining(", ")))
+                        .color(net.md_5.bungee.api.ChatColor.GRAY);
 
-                message.addExtra(textComponent);
-                player.spigot().sendMessage(textComponent);
+                player.spigot().sendMessage(builder.create());
             }
 
 
