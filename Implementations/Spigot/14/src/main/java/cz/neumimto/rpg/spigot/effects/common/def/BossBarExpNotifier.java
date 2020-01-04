@@ -99,9 +99,6 @@ public class BossBarExpNotifier extends EffectBase<Object> implements IEffectCon
 
     @Override
     public void setDuration(long l) {
-        if (l >= 0) {
-            throw new IllegalArgumentException();
-        }
         super.setDuration(l);
     }
 
