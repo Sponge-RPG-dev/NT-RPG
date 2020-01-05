@@ -26,7 +26,7 @@ public class SpigotEffectService extends AbstractEffectService {
                 schedule();
             }
         };
-        bukkitRunnable.runTaskTimer(SpigotRpgPlugin.getInstance(), 5L, 1L);
+        bukkitRunnable.runTaskTimer(SpigotRpgPlugin.getInstance(), 5L, 5L);
     }
 
     @Override

@@ -7,6 +7,7 @@ import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.inventory.RpgInventory;
 import cz.neumimto.rpg.api.items.ItemClass;
 import cz.neumimto.rpg.api.items.RpgItemStack;
+import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.common.inventory.InventoryHandler;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
@@ -21,7 +22,9 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.inventory.*;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
@@ -30,7 +33,6 @@ import org.bukkit.inventory.PlayerInventory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -50,6 +52,9 @@ public class SpigotInventoryListener implements Listener {
     @Inject
     private SpigotInventoryService inventoryService;
 
+    @Inject
+    private SkillService skillService;
+
     private static final int OFFHAND_SLOT_ID = 40;
 
     @EventHandler
@@ -67,6 +72,12 @@ public class SpigotInventoryListener implements Listener {
             }
             if (nbti.hasKey("ntrpg.item-iface")) {
                 event.setResult(Event.Result.DENY);
+            }
+            if (nbti.hasKey(SpigotInventoryService.SKILLBIND)) {
+                event.setResult(Event.Result.DENY);
+                Rpg.get().scheduleSyncLater(() -> {
+                    Bukkit.dispatchCommand(whoClicked, "skill " + currentItem.getItemMeta().getDisplayName());
+                });
             }
         }
     }
