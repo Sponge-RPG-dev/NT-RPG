@@ -15,7 +15,7 @@ public class SpigotEffectService extends AbstractEffectService {
 
     @Override
     protected boolean mayTick(IEffect e) {
-        return false;
+        return !e.getConsumer().isDetached();
     }
 
     @Override
