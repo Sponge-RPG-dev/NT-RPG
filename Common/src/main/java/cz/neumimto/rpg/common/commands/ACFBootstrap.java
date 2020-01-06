@@ -2,6 +2,7 @@ package cz.neumimto.rpg.common.commands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.CommandManager;
+import co.aikar.commands.InvalidCommandArgument;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
@@ -59,9 +60,16 @@ public class ACFBootstrap {
         );
 
         manager.getCommandContexts().registerContext(ClassDefinition.class, c -> {
-            String firstArg = c.getFirstArg();
-            c.popFirstArg();
-            return Rpg.get().getClassService().getClassDefinitionByName(firstArg);
+            String firstArg = "";
+            while (c.getIndex() <= c.getArgs().size()) {
+                firstArg += c.popFirstArg();
+                ClassDefinition cw = Rpg.get().getClassService().getClassDefinitionByName(firstArg);
+                if (cw != null) {
+                    return cw;
+                }
+                firstArg += " ";
+            }
+            throw new InvalidCommandArgument("Unknown class " + firstArg);
         });
 
         manager.getCommandCompletions().registerAsyncCompletion("attribute", c ->

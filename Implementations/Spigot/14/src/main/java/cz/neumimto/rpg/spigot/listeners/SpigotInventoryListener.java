@@ -57,7 +57,7 @@ public class SpigotInventoryListener implements Listener {
 
     private static final int OFFHAND_SLOT_ID = 40;
 
-    @EventHandler
+    @EventHandler 
     public void onInventoryInteract(InventoryClickEvent event) {
         HumanEntity whoClicked = event.getWhoClicked();
         ItemStack currentItem = event.getCurrentItem();
