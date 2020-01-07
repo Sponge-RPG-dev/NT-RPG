@@ -1192,7 +1192,7 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
                         List<String> enterCommands = klass.getEnterCommands();
                         if (enterCommands != null) {
                             Map<String, String> args = new HashMap<>();
-                            args.put("{{player}}", character.getPlayerAccountName());
+                            args.put("player", character.getPlayerAccountName());
                             Rpg.get().executeCommandBatch(args, enterCommands);
                         }
                     });

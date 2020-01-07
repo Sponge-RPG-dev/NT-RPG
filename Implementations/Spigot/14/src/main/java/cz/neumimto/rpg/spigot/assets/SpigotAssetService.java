@@ -22,6 +22,7 @@ public class SpigotAssetService implements AssetService {
             try (InputStreamReader isr = new InputStreamReader(is, Charsets.UTF_8)){
                 return CharStreams.toString(isr);
             }
+
         } catch (IOException e) {
             Log.error("Could not read file " + path + e);
             throw new IllegalArgumentException(e);

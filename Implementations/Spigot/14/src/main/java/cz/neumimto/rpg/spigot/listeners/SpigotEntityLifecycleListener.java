@@ -18,7 +18,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.PlayerFishEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.projectiles.ProjectileSource;
 
@@ -47,9 +50,9 @@ public class SpigotEntityLifecycleListener implements Listener {
     private ExperienceService experienceService;
 
     @EventHandler
-    public void onPlayerLogin(AsyncPlayerPreLoginEvent event) {
+    public void onPlayerLogin(PlayerJoinEvent event) {
         //  IActiveCharacter character = characterService.getTarget(event.getTarget().getUniqueId());
-        characterService.loadPlayerData(event.getUniqueId(), event.getName());
+        characterService.loadPlayerData(event.getPlayer().getUniqueId(), event.getPlayer().getName());
     }
 
     @EventHandler
