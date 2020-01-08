@@ -156,7 +156,7 @@ public class SpigotInventoryListener implements Listener {
             RpgItemStack futureOff = rpgItemStackOff.orElse(null);
             RpgItemStack futureMain = rpgItemStackMain.orElse(null);
 
-            if ((futureOff == null || inventoryHandler.isValidItemForSlot(offHandSlotO, futureOff)) &&
+            if ((futureOff == null || (inventoryHandler.isValidItemForSlot(offHandSlotO, futureOff))) &&
                     (futureMain == null || inventoryHandler.isValidItemForSlot(managedSlotM, futureMain))
             ) {
                 offHandSlotO.setContent(futureOff);

@@ -3,23 +3,22 @@ package cz.neumimto.rpg.common.inventory;
 import com.electronwill.nightconfig.core.Config;
 import com.electronwill.nightconfig.core.file.FileConfig;
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.entity.EntityHand;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.inventory.InventoryService;
+import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.inventory.RpgInventory;
 import cz.neumimto.rpg.api.items.ItemService;
-import cz.neumimto.rpg.api.utils.Console;
-import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.api.items.subtypes.ItemSubtype;
 import cz.neumimto.rpg.api.items.subtypes.ItemSubtypes;
+import cz.neumimto.rpg.api.utils.Console;
+import cz.neumimto.rpg.common.assets.AssetService;
 
 import javax.inject.Inject;
 import java.io.File;
-
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static cz.neumimto.rpg.api.logging.Log.error;
@@ -35,6 +34,17 @@ public abstract class AbstractInventoryService<T extends IActiveCharacter> imple
 
     protected Map<Class<?>, ManagedInventory> managedInventories = new HashMap<>();
 
+    //todo put to configuration
+    private Set<Integer> armorIds = new HashSet<Integer>() {{
+        add(36);
+        add(37);
+        add(38);
+        add(39);
+    }};
+
+    private Integer offhandId = 40;
+
+
     @Override
     public void initializeManagedSlots(T activeCharacter) {
         Map<Class<?>, RpgInventory> managedInventory = activeCharacter.getManagedInventory();
@@ -43,7 +53,17 @@ public abstract class AbstractInventoryService<T extends IActiveCharacter> imple
             ManagedInventory mi = entry.getValue();
             RpgInventoryImpl rpgInventory = new RpgInventoryImpl();
             for (SlotEffectSource value : mi.getSlots().values()) {
-                rpgInventory.getManagedSlots().put(value.getSlotId(), new ManagedSlotImpl(value.getSlotId()));
+                ManagedSlot slot;
+                if (value.getSlotId() == offhandId) {
+                    slot = new FilteredManagedSlotImpl(value.getSlotId(), item -> activeCharacter.canUse(item.getItemType(), EntityHand.OFF));
+                } else if (armorIds.contains(value.getSlotId())) {
+                    slot = new FilteredManagedSlotImpl(value.getSlotId(), item -> activeCharacter.canWear(item.getItemType()));
+                } else if (value.getSlotId() >= 0 && value.getSlotId() < 9) {
+                    slot = new FilteredManagedSlotImpl(value.getSlotId(), item -> activeCharacter.canUse(item.getItemType(), EntityHand.MAIN));
+                } else {
+                    slot = new ManagedSlotImpl(value.getSlotId());
+                }
+                rpgInventory.getManagedSlots().put(value.getSlotId(), slot);
             }
             managedInventory.put(key, rpgInventory);
         }
@@ -115,5 +135,7 @@ public abstract class AbstractInventoryService<T extends IActiveCharacter> imple
                     + "ON and interact with desired inventory");
         }
     }
+
+
 
 }
