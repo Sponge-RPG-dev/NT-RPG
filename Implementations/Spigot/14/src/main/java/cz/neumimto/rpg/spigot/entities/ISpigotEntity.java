@@ -5,10 +5,9 @@ import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.ISkill;
 import org.bukkit.entity.LivingEntity;
 
-import java.io.Closeable;
 import java.util.UUID;
 
-public interface ISpigotEntity<T extends LivingEntity> extends IEffectConsumer, IEntity<T>, Closeable {
+public interface ISpigotEntity<T extends LivingEntity> extends IEffectConsumer, IEntity<T>, AutoCloseable {
 
     T getEntity();
 
@@ -16,7 +15,7 @@ public interface ISpigotEntity<T extends LivingEntity> extends IEffectConsumer, 
 
     ISkill skillOrEffectDamageCayse();
 
-    void setSkillOrEffectDamageCause(ISkill rpgElement);
+    ISpigotEntity setSkillOrEffectDamageCause(ISkill rpgElement);
 
     @Override
     default void close() {

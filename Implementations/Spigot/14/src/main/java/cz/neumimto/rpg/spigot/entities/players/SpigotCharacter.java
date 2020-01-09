@@ -4,7 +4,7 @@ import cz.neumimto.rpg.api.gui.SkillTreeViewModel;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
-import cz.neumimto.rpg.spigot.entities.SpigotEntityHealth;
+import cz.neumimto.rpg.spigot.entities.ISpigotEntity;
 import cz.neumimto.rpg.spigot.entities.players.party.SpigotParty;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -52,8 +52,9 @@ public class SpigotCharacter extends ActiveCharacter<Player, SpigotParty> implem
     }
 
     @Override
-    public void setSkillOrEffectDamageCause(ISkill rpgElement) {
+    public ISpigotEntity setSkillOrEffectDamageCause(ISkill rpgElement) {
         soedc = rpgElement;
+        return this;
     }
 
     @Override

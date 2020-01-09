@@ -1,21 +1,29 @@
 plugins {
     id 'org.spongepowered.plugin' version '0.8.1'
+    id 'java'
 }
 
 group = 'cz.neumimto.rpg'
-version = '3.0.5'
+version = '1.0.0'
+
+repositories {
+    mavenCentral()
+    maven {
+        url "https://hub.spigotmc.org/nexus/content/repositories/snapshots"
+    }
+    maven {
+        url "https://repo.codemc.org/repository/maven-public/"
+    }
+}
 
 dependencies {
     annotationProcessor project(':Generator')
     
     compileOnly project(':Spigot-14')
     compileOnly project(':API')
-    
-    compileOnly 'org.spongepowered:spongeapi:' + project.spongeApiVersion
+    compileOnly "org.spigotmc:spigot-api:1.15.1-R0.1-SNAPSHOT"
 
     jar {
-
         baseName 'NT-RPG-Spigot-Skills-only'
-
     }
 }

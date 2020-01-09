@@ -44,7 +44,10 @@ import org.spongepowered.api.event.item.inventory.ChangeInventoryEvent;
 import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.event.item.inventory.DropItemEvent;
 import org.spongepowered.api.item.ItemTypes;
-import org.spongepowered.api.item.inventory.*;
+import org.spongepowered.api.item.inventory.Carrier;
+import org.spongepowered.api.item.inventory.Inventory;
+import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
@@ -52,10 +55,10 @@ import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
 import org.spongepowered.api.item.inventory.type.CarriedInventory;
 import org.spongepowered.api.util.Tristate;
 
+import javax.inject.Inject;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import javax.inject.Inject;
 
 
 /**
@@ -103,6 +106,8 @@ public class InventoryListener {
                     if (inventoryHandler.handleCharacterEquipActionPre(character, managedSlot, itemStack)) {
                         inventoryHandler.handleCharacterEquipActionPost(character, managedSlot, itemStack);
                         character.setRequiresDamageRecalculation(true);
+                    } else {
+
                     }
                 });
             }
@@ -293,8 +298,8 @@ public class InventoryListener {
             ManagedSlot managedSlotM = rpgInventory.getManagedSlots().get(selectedSlotIndex);
             ManagedSlot offHandSlotO = rpgInventory.getManagedSlots().get(OFFHAND_SLOT_ID);
 
-            if (inventoryHandler.isValidItemForSlot(offHandSlotO, futureOff) &&
-                    inventoryHandler.isValidItemForSlot(managedSlotM, futureMain)
+            if (inventoryHandler.handleCharacterEquipActionPre(character, offHandSlotO, futureOff) &&
+                    inventoryHandler.handleCharacterEquipActionPre(character, managedSlotM ,futureMain)
             ) {
                 Optional<RpgItemStack> content = managedSlotM.getContent();
                 Optional<RpgItemStack> content1 = offHandSlotO.getContent();

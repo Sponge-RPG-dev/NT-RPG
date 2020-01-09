@@ -3,6 +3,7 @@ package cz.neumimto.rpg.spigot.entities.players;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.common.entity.players.PlayerNotInGameException;
 import cz.neumimto.rpg.common.entity.players.PreloadCharacter;
+import cz.neumimto.rpg.spigot.entities.ISpigotEntity;
 import cz.neumimto.rpg.spigot.entities.players.party.SpigotParty;
 import cz.neumimto.rpg.spigot.gui.SpigotSkillTreeViewModel;
 import net.md_5.bungee.api.ChatMessageType;
@@ -63,8 +64,8 @@ public class SpigotPreloadCharacter extends PreloadCharacter<Player, SpigotParty
     }
 
     @Override
-    public void setSkillOrEffectDamageCause(ISkill rpgElement) {
-
+    public ISpigotEntity setSkillOrEffectDamageCause(ISkill rpgElement) {
+        return this;
     }
 
     @Override

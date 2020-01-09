@@ -10,11 +10,13 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.events.damage.IEntityWeaponDamageEarlyEvent;
 import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.skills.ISkill;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.damage.AbstractDamageListener;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
 import cz.neumimto.rpg.spigot.entities.ISpigotEntity;
 import cz.neumimto.rpg.spigot.entities.ProjectileCache;
 import cz.neumimto.rpg.spigot.entities.SpigotEntityService;
+import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import cz.neumimto.rpg.spigot.events.damage.SpigotEntityProjectileDamageEarlyEvent;
 import cz.neumimto.rpg.spigot.events.damage.SpigotEntitySkillDamageEarlyEvent;
@@ -25,7 +27,6 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -51,7 +52,7 @@ public class SpigotDamageListener extends AbstractDamageListener implements List
     @Inject
     private PluginConfig pluginConfig;
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    @EventHandler
     public void onEntityDamageEarly(EntityDamageByEntityEvent event) {
         if (event.getCause() == EntityDamageEvent.DamageCause.CUSTOM) {
             return;
@@ -72,10 +73,15 @@ public class SpigotDamageListener extends AbstractDamageListener implements List
 
                 ProjectileCache projectileProperties = ProjectileCache.cache.get(projectile);
                 if (projectileProperties != null) {
-                    event.setCancelled(true);
                     ProjectileCache.cache.remove(projectile);
-                    projectileProperties.consumer.accept(event, attacker, target);
+                    projectileProperties.consumer.accept(event, (ISpigotEntity) attacker, target);
+                    PlayerSkillContext skill = projectileProperties.getSkill();
+                    if (skill != null) {
+                        target.setSkillOrEffectDamageCause(skill.getSkill());
+                    }
                     return;
+                } else {
+                    event.setDamage(0);
                 }
                 processProjectileDamageEarly(event, attacker, target, projectile);
             }
@@ -86,6 +92,7 @@ public class SpigotDamageListener extends AbstractDamageListener implements List
 
         if (target.skillOrEffectDamageCayse() != null) {
             processSkillDamageEarly(event, target.skillOrEffectDamageCayse(), attacker, target);
+            target.setSkillOrEffectDamageCause(null);
         } else {
             processWeaponDamageEarly(event, event.getCause(), attacker, target);
         }
@@ -182,8 +189,8 @@ public class SpigotDamageListener extends AbstractDamageListener implements List
     private void processProjectileDamageEarly(EntityDamageByEntityEvent event,  IEntity attacker, IEntity target, Projectile projectile) {
         double newdamage = event.getDamage();
         if (attacker.getType() == IEntityType.CHARACTER) {
-            IActiveCharacter c = (IActiveCharacter) attacker;
-            newdamage = spigotDamageService.getCharacterProjectileDamage(c, projectile.getType());
+            ISpigotCharacter c = (ISpigotCharacter) attacker;
+            newdamage += spigotDamageService.getCharacterProjectileDamage(c, projectile.getType());
         } else if (attacker.getType() == IEntityType.MOB) {
             PluginConfig pluginConfig = Rpg.get().getPluginConfig();
             if (!pluginConfig.OVERRIDE_MOBS) {

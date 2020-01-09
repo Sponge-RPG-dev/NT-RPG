@@ -73,8 +73,9 @@ public class SpigotMob extends AbstractMob<LivingEntity> implements ISpigotEntit
     }
 
     @Override
-    public void setSkillOrEffectDamageCause(ISkill rpgElement) {
+    public ISpigotEntity setSkillOrEffectDamageCause(ISkill rpgElement) {
         this.soedc = rpgElement;
+        return this;
     }
 
 }
