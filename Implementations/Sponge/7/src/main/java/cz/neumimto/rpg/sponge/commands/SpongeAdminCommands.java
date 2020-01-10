@@ -1,6 +1,5 @@
 package cz.neumimto.rpg.sponge.commands;
 
-import static cz.neumimto.rpg.api.logging.Log.info;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.Optional;
 import co.aikar.commands.annotation.*;
@@ -20,10 +19,7 @@ import cz.neumimto.rpg.api.items.RpgItemType;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.scripting.IScriptEngine;
-import cz.neumimto.rpg.api.skills.*;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
-import cz.neumimto.rpg.api.skills.mods.SkillExecutorCallback;
-import cz.neumimto.rpg.api.skills.types.IActiveSkill;
+import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.utils.ActionResult;
 import cz.neumimto.rpg.common.commands.AdminCommandFacade;
 import cz.neumimto.rpg.common.commands.CommandProcessingException;
@@ -41,13 +37,14 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+
+import static cz.neumimto.rpg.api.logging.Log.info;
 
 @Singleton
 @CommandAlias("nadmin|na")
@@ -232,36 +229,12 @@ public class SpongeAdminCommands extends BaseCommand {
     @Subcommand("skill")
     public void adminExecuteSkillCommand(Player executor, ISkill skill, @Flags("level") @Default("1") int level) {
         IActiveCharacter character = characterService.getCharacter(executor);
-        if (character.isStub()) {
-            throw new RuntimeException("Character is required even for an admin.");
-        }
-        SkillSettings defaultSkillSettings = skill.getSettings();
-
-        Long l = System.nanoTime();
-
-        PlayerSkillContext playerSkillContext = new PlayerSkillContext(null, skill, character);
-        playerSkillContext.setLevel(level);
-        SkillData skillData = new SkillData(skill.getId());
-        skillData.setSkillSettings(defaultSkillSettings);
-        playerSkillContext.setSkillData(skillData);
-        playerSkillContext.setSkill(skill);
-
-        SkillContext skillContext = new SkillContext((IActiveSkill) skill, playerSkillContext) {{
-            wrappers.add(new SkillExecutorCallback() {
-                @Override
-                public void doNext(IActiveCharacter character, PlayerSkillContext info, SkillContext skillResult) {
-                    Long e = System.nanoTime();
-                    character.sendMessage("Exec Time: " + TimeUnit.MILLISECONDS.convert(e - l, TimeUnit.NANOSECONDS));
-                }
-            });
-        }};
-        skillContext.sort();
-        skillContext.next(character, playerSkillContext, skillContext);
+        adminCommandFacade.commandExecuteSkill(character, skill, level);
     }
 
     @Subcommand("add-class")
     public void addClassToCharacterCommand(CommandSource executor, OnlinePlayer target, ClassDefinition klass) {
-        ISpongeCharacter character = characterService.getCharacter(target.player);
+        IActiveCharacter character = characterService.getCharacter(target.player);
         ActionResult actionResult = adminCommandFacade.addCharacterClass(character, klass);
         if (actionResult.isOk()) {
             executor.sendMessage(TextHelper.parse(Rpg.get().getLocalizationService().translate("class.set.ok")));

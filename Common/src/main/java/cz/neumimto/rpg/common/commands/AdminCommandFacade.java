@@ -12,16 +12,24 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.logging.Log;
+import cz.neumimto.rpg.api.skills.ISkill;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.SkillData;
+import cz.neumimto.rpg.api.skills.SkillSettings;
+import cz.neumimto.rpg.api.skills.mods.SkillContext;
+import cz.neumimto.rpg.api.skills.mods.SkillExecutorCallback;
+import cz.neumimto.rpg.api.skills.types.IActiveSkill;
 import cz.neumimto.rpg.api.utils.ActionResult;
 import cz.neumimto.rpg.common.effects.InternalEffectSourceProvider;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import java.util.concurrent.TimeUnit;
 
 @Singleton
 public class AdminCommandFacade {
@@ -111,5 +119,33 @@ public class AdminCommandFacade {
             characterService.addNewClass(c, classDefinition);
         }
         return actionResult;
+    }
+
+    public void commandExecuteSkill(IActiveCharacter character, ISkill skill, int level) {
+        if (character.isStub()) {
+            throw new RuntimeException("Character is required even for an admin.");
+        }
+        SkillSettings defaultSkillSettings = skill.getSettings();
+
+        Long l = System.nanoTime();
+
+        PlayerSkillContext playerSkillContext = new PlayerSkillContext(null, skill, character);
+        playerSkillContext.setLevel(level);
+        SkillData skillData = new SkillData(skill.getId());
+        skillData.setSkillSettings(defaultSkillSettings);
+        playerSkillContext.setSkillData(skillData);
+        playerSkillContext.setSkill(skill);
+
+        SkillContext skillContext = new SkillContext((IActiveSkill) skill, playerSkillContext) {{
+            wrappers.add(new SkillExecutorCallback() {
+                @Override
+                public void doNext(IActiveCharacter character, PlayerSkillContext info, SkillContext skillResult) {
+                    Long e = System.nanoTime();
+                    character.sendMessage("Exec Time: " + TimeUnit.MILLISECONDS.convert(e - l, TimeUnit.NANOSECONDS));
+                }
+            });
+        }};
+        skillContext.sort();
+        skillContext.next(character, playerSkillContext, skillContext);
     }
 }
