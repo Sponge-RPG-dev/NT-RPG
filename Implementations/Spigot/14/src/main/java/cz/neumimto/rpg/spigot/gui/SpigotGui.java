@@ -22,7 +22,9 @@ import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -154,7 +156,11 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
 
     @Override
     public void moveSkillTreeMenu(ISpigotCharacter character) {
-
+        Player player = character.getPlayer();
+        InventoryView openInventory = player.getOpenInventory();
+        if (openInventory.getType() == InventoryType.CRAFTING) {
+            SpigotGuiHelper.drawSkillTreeViewData(openInventory.getTopInventory(), character);
+        }
     }
 
     @Override

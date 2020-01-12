@@ -72,10 +72,6 @@ public class SpongeSkillService extends AbstractSkillService {
         return guiModelByCharacter.get(c);
     }
 
-    public SkillTreeInterfaceModel getGuiModelByCharacter(Character character) {
-        return guiModelByCharacter.get(character);
-    }
-
 
     public SkillTreeInterfaceModel getGuiModelById(Short k) {
         return guiModelById.get(k);

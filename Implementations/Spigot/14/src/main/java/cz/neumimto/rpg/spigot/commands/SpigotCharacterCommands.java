@@ -52,6 +52,7 @@ public class SpigotCharacterCommands extends BaseCommand {
     @Subcommand("switch")
     public void switchCharacter(Player executor, String name) {
         IActiveCharacter character = characterService.getCharacter(executor);
+
         characterCommandFacade.commandSwitchCharacter(character, name, runnable -> {
             Rpg.get().scheduleSyncLater(runnable);
         });

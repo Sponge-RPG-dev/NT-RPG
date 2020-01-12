@@ -3,16 +3,28 @@ package cz.neumimto.rpg.spigot.gui;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.configuration.ClassTypeDefinition;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
+import cz.neumimto.rpg.api.gui.SkillTreeViewModel;
 import cz.neumimto.rpg.api.items.ClassItem;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
+import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterClass;
+import cz.neumimto.rpg.api.skills.ISkill;
+import cz.neumimto.rpg.api.skills.ISkillType;
+import cz.neumimto.rpg.api.skills.SkillData;
+import cz.neumimto.rpg.api.skills.SkillService;
+import cz.neumimto.rpg.api.skills.tree.SkillTree;
+import cz.neumimto.rpg.api.utils.Pair;
 import cz.neumimto.rpg.common.utils.model.CharacterListModel;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.items.SpigotRpgItemType;
+import cz.neumimto.rpg.spigot.skills.SpigotSkillService;
+import cz.neumimto.rpg.spigot.skills.SpigotSkillTreeInterfaceModel;
 import de.tr7zw.nbtapi.NBTItem;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -23,6 +35,7 @@ import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -33,6 +46,10 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public class SpigotGuiHelper {
+
+    private static int slotId(int x, int y) {
+        return (y-1)*9 + (x-1);
+    }
 
     public static Inventory createMenuInventoryClassTypesView(Player player) {
         Map<String, ClassTypeDefinition> class_types = Rpg.get().getPluginConfig().CLASS_TYPES;
@@ -128,6 +145,18 @@ public class SpigotGuiHelper {
         return nbti.getItem();
     }
 
+    private static ItemStack button(Material material, String name, String command, int data) {
+        ItemStack itemStack = new ItemStack(material);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        itemMeta.setDisplayName(name);
+        itemMeta.setCustomModelData(data);
+        itemStack.setItemMeta(itemMeta);
+        NBTItem nbti = new NBTItem(itemStack);
+        nbti.setString("ntrpg.item-command", command);
+        return nbti.getItem();
+    }
+
     private static ItemStack unclickableInterface(Material material) {
         ItemStack itemStack = new ItemStack(material);
         return unclickableInterface(itemStack);
@@ -143,6 +172,23 @@ public class SpigotGuiHelper {
         return nbti.getItem();
     }
 
+    private static ItemStack unclickableInterface(Material material, int model) {
+        ItemStack itemStack = new ItemStack(material);
+        return unclickableInterface(itemStack, model);
+    }
+
+    private static ItemStack unclickableInterface(ItemStack itemStack, int model) {
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        itemMeta.setDisplayName(" ");
+        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        itemMeta.setCustomModelData(model);
+        itemStack.setItemMeta(itemMeta);
+        NBTItem nbti = new NBTItem(itemStack);
+        nbti.setBoolean("ntrpg.item-iface", true);
+        return nbti.getItem();
+    }
+    
+    
     private static ItemStack unclickableInterfaceKeepName(ItemStack itemStack) {
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -256,7 +302,7 @@ public class SpigotGuiHelper {
     }
 
     public static Inventory createClassAttributesView(Player player, ClassDefinition cc) {
-        String translate = Rpg.get().getLocalizationService().translate(LocalizationKeys.ARMOR);
+        String translate = translate = Rpg.get().getLocalizationService().translate(LocalizationKeys.ATTRIBUTES);
         Map<AttributeConfig, Integer> attrs = cc.getStartingAttributes();
         Inventory i = createInventoryTemplate(player, ChatColor.valueOf(cc.getPreferedColor()) + cc.getName() + ChatColor.RESET + translate);
 
@@ -264,7 +310,7 @@ public class SpigotGuiHelper {
 
         int w = 9;
 
-        translate = Rpg.get().getLocalizationService().translate(LocalizationKeys.ATTRIBUTES);
+
         for (Map.Entry<AttributeConfig, Integer> attr : attrs.entrySet()) {
             AttributeConfig att = attr.getKey();
             ItemStack itemStack = new ItemStack(Material.matchMaterial(att.getItemType()));
@@ -283,5 +329,191 @@ public class SpigotGuiHelper {
         }
 
         return i;
+    }
+
+    public static Inventory createSkillTreeView(ISpigotCharacter character, SkillTree skillTree) {
+        Player player = character.getPlayer();
+        Inventory i = createInventoryTemplate(player, Rpg.get().getLocalizationService().translate(LocalizationKeys.SKILLTREE));
+        fillSkillTreeViewInterface(i);
+        return i;
+    }
+
+    private static void fillSkillTreeViewInterface(Inventory i) {
+        i.setItem(7, unclickableInterface(Material.LIGHT_GRAY_STAINED_GLASS_PANE, 12345));
+        i.setItem(16, unclickableInterface(Material.LIGHT_GRAY_STAINED_GLASS_PANE, 12345));
+        i.setItem(25, unclickableInterface(Material.LIGHT_GRAY_STAINED_GLASS_PANE, 12345));
+        i.setItem(34, unclickableInterface(Material.LIGHT_GRAY_STAINED_GLASS_PANE, 12345));
+        i.setItem(43, unclickableInterface(Material.LIGHT_GRAY_STAINED_GLASS_PANE, 12345));
+        i.setItem(52, unclickableInterface(Material.LIGHT_GRAY_STAINED_GLASS_PANE, 12345));
+
+        i.setItem(26, unclickableInterface(button(Material.STICK, "Up", "skilltree north", 12345)));
+        i.setItem(35, unclickableInterface(button(Material.STICK, "Down", "skilltree south", 12346)));
+        i.setItem(44, unclickableInterface(button(Material.STICK, "Right", "skilltree west", 12347)));
+        i.setItem(53, unclickableInterface(button(Material.STICK, "Left", "skilltree east", 12348)));
+    }
+
+    public static Inventory drawSkillTreeViewData(Inventory i, ISpigotCharacter character) {
+        SpigotSkillTreeViewModel skillTreeViewModel = character.getLastTimeInvokedSkillTreeView();
+        SkillTree skillTree = skillTreeViewModel.getSkillTree();
+        short[][] skillTreeMap = skillTreeViewModel.getSkillTree().getSkillTreeMap();
+        int y = skillTree.getCenter().value + skillTreeViewModel.getLocation().value; //y
+        int x = skillTree.getCenter().key + skillTreeViewModel.getLocation().key; //x
+
+        if (skillTreeMap == null) {
+            throw new IllegalStateException("No AsciiMap defined for skilltree: " + skillTree.getId());
+        }
+
+        int columns = skillTreeMap[0].length;
+        int rows = skillTreeMap.length;
+
+        SpigotSkillTreeViewModel.InteractiveMode interactiveMode = skillTreeViewModel.getInteractiveMode();
+        ItemStack md = interactiveModeToitemStack(character, interactiveMode);
+        i.setItem(8, md);
+
+        SpigotSkillService skillService = (SpigotSkillService) Rpg.get().getSkillService();
+
+        for (int k = -3; k <= 3; k++) { //x
+            for (int l = -3; l <= 3; l++) { //y
+                int slot = slotId(l + 3, k + 3);
+
+                if (x + k >= 0 && x + k < rows) {
+                    if (l + y >= 0 && l + y < columns) {
+
+                        short id = skillTreeMap[x + k][l + y];
+                        ItemStack itemStack = null;
+                        if (id > 0) {
+                            SpigotSkillTreeInterfaceModel guiModelById = skillService.getGuiModelById(id);
+                            if (guiModelById != null) {
+                                itemStack = guiModelById.toItemStack();
+                            } else {
+                                SkillData skillById = skillTree.getSkillById(id);
+
+                                if (skillById == null) {
+                                    itemStack = unclickableInterface(Material.BARRIER);
+                                } else {
+                                    itemStack = skillToItemStack(character, skillById, skillTree, skillTreeViewModel);
+                                }
+                            }
+                        }
+                        if (itemStack == null) {
+                            itemStack = unclickableInterface(Material.GRAY_STAINED_GLASS_PANE, 1235);
+                        }
+                        i.setItem(slot, itemStack);
+                    } else {
+                        i.setItem(slot, createSkillTreeInventoryMenuBoundary());
+                    }
+                } else {
+                    i.setItem(slot, createSkillTreeInventoryMenuBoundary());
+                }
+            }
+        }
+        return i;
+    }
+
+    private static ItemStack skillToItemStack(ISpigotCharacter character, SkillData skillData, SkillTree skillTree, SpigotSkillTreeViewModel model) {
+        List<String> lore;
+        ChatColor nameColor;
+
+        ISkill skill = skillData.getSkill();
+        List<String> fromCache = model.getFromCache(skill);
+
+        if (fromCache == null) {
+            lore = new ArrayList<>();
+            nameColor = getSkillTextColor(character, skill, skillData, skillTree);
+            if (skillData.useDescriptionOnly()) {
+                List<String> description = skillData.getDescription(character);
+                lore.addAll(description);
+            } else {
+                LocalizationService locService = Rpg.get().getLocalizationService();
+                String execType = locService.translate(skill.getSkillExecutionType().toString().toLowerCase());
+                lore.add(execType);
+                lore.add("");
+
+                lore.addAll(skillData.getDescription(character));
+                lore.add("");
+
+                Set<ISkillType> skillTypes = skill.getSkillTypes();
+                StringBuilder builder = new StringBuilder();
+                Iterator<ISkillType> iterator = skillTypes.iterator();
+                int i = 0;
+                while (iterator.hasNext()) {
+                    i++;
+                    ISkillType next = iterator.next();
+                    String translate = locService.translate(next.toString());
+                    lore.add(translate);
+                    if (i % 3 == 0) {
+                        lore.add(builder.toString());
+                        builder = new StringBuilder();
+                    }
+                }
+            }
+
+            model.addToCache(skill, lore);
+        } else {
+            lore = fromCache;
+            nameColor = getSkillTextColor(character, skill, skillData, skillTree);
+        }
+        Material material = Material.matchMaterial(skillData.getIcon());
+        ItemStack itemStack = new ItemStack(material == null ? Material.STONE : material);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        itemMeta.setDisplayName(nameColor + skillData.getSkillName());
+        itemMeta.setLore(lore);
+        itemStack.setItemMeta(itemMeta);
+        return itemStack;
+    }
+
+
+
+    private static ItemStack createSkillTreeInventoryMenuBoundary() {
+        return unclickableInterface(Material.RED_STAINED_GLASS_PANE);
+    }
+
+    private static ItemStack interactiveModeToitemStack(ISpigotCharacter character, SkillTreeViewModel.InteractiveMode interactiveMode) {
+        String translation = null;
+        Material itemType = null;
+
+        switch (interactiveMode) {
+            case FAST:
+                translation = LocalizationKeys.INTERACTIVE_SKILLTREE_MOD_FAST;
+                itemType = Material.GOLD_NUGGET;
+                break;
+            case DETAILED:
+                translation = LocalizationKeys.INTERACTIVE_SKILLTREE_MOD_DETAILS;
+                itemType = Material.BOOK;
+                break;
+        }
+        LocalizationService localizationService = Rpg.get().getLocalizationService();
+        String interactiveModeName = localizationService.translate(translation);
+        ItemStack md = new ItemStack(itemType);
+        List<String> lore = new ArrayList<>();
+        lore.add(interactiveModeName);
+        lore.add("");
+        lore.add(ChatColor.YELLOW + "Level: " + ChatColor.RESET + ChatColor.BOLD + character.getLevel());
+
+        ClassDefinition viewedClass = character.getLastTimeInvokedSkillTreeView().getViewedClass();
+        CharacterClass characterClass = character.getCharacterBase().getCharacterClass(viewedClass);
+        if (characterClass == null) {
+            String translate = localizationService.translate(LocalizationKeys.CLASS_NOT_SELECTED);
+            lore.add(translate);
+        } else {
+            int sp = characterClass.getSkillPoints();
+            lore.add(ChatColor.GREEN + "SP: " + ChatColor.RESET + ChatColor.BOLD + sp);
+        }
+
+        ItemMeta itemMeta = md.getItemMeta();
+        itemMeta.setLore(lore);
+        itemMeta.setCustomModelData(1234);
+        md.setItemMeta(itemMeta);
+
+        return md;
+    }
+
+    private static ChatColor getSkillTextColor(IActiveCharacter character, ISkill skill, SkillData skillData, SkillTree skillTree) {
+        if (character.hasSkill(skillData.getSkillId())) {
+            return ChatColor.GREEN;
+        }
+        Collection<PlayerClassData> values = character.getClasses().values();
+        Optional<PlayerClassData> first = values.stream().filter(a -> a.getClassDefinition().getSkillTree() == skillTree).findFirst();
+        return first.filter(playerClassData -> Rpg.get().getCharacterService().canLearnSkill(character, playerClassData.getClassDefinition(), skill).isOk()).map(playerClassData -> ChatColor.GRAY).orElse(ChatColor.RED);
     }
 }

@@ -6,6 +6,7 @@ import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.spigot.entities.ISpigotEntity;
 import cz.neumimto.rpg.spigot.entities.players.party.SpigotParty;
+import cz.neumimto.rpg.spigot.gui.SpigotSkillTreeViewModel;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
@@ -19,7 +20,7 @@ import java.util.UUID;
 public class SpigotCharacter extends ActiveCharacter<Player, SpigotParty> implements ISpigotCharacter {
 
     private ISkill soedc;
-    private Map<String, SkillTreeViewModel> skillTreeviewLocation = new HashMap<>();
+    private Map<String, SpigotSkillTreeViewModel> skillTreeviewLocation = new HashMap<>();
 
     public SpigotCharacter(UUID uuid, CharacterBase base, int propertyCount) {
         super(uuid, base, propertyCount);
@@ -37,7 +38,7 @@ public class SpigotCharacter extends ActiveCharacter<Player, SpigotParty> implem
     }
 
     @Override
-    public Map<String, SkillTreeViewModel> getSkillTreeViewLocation() {
+    public Map<String, ? extends SkillTreeViewModel> getSkillTreeViewLocation() {
         return skillTreeviewLocation;
     }
 
@@ -65,6 +66,16 @@ public class SpigotCharacter extends ActiveCharacter<Player, SpigotParty> implem
     @Override
     public Player getPlayer() {
         return Bukkit.getPlayer(getUUID());
+    }
+
+    @Override
+    public SpigotSkillTreeViewModel getLastTimeInvokedSkillTreeView() {
+        for (SpigotSkillTreeViewModel skillTreeViewModel : skillTreeviewLocation.values()) {
+            if (skillTreeViewModel.isCurrent()) {
+                return skillTreeViewModel;
+            }
+        }
+        return null;
     }
 
 }
