@@ -93,7 +93,7 @@ public class SkillsCommandFacade {
     }
 
     public void openSkillTreeCommand(IActiveCharacter character, ClassDefinition classDefinition) {
-        if (classDefinition != null) {
+        if (classDefinition == null) {
             PlayerClassData primaryClass = character.getPrimaryClass();
             if (primaryClass == null) {
                 String translate = localizationService.translate(LocalizationKeys.NO_PRIMARY_CLASS);

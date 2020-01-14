@@ -11,7 +11,7 @@ out
 *.ipr
 *.iws
 *.iml
-
+lib/
 .idea/
 !.idea/codeStyleSettings.xml
 

@@ -16,10 +16,7 @@ import cz.neumimto.rpg.api.persistance.model.CharacterClass;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.ISkillType;
 import cz.neumimto.rpg.api.skills.SkillData;
-import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
-import cz.neumimto.rpg.api.utils.Pair;
-import cz.neumimto.rpg.common.utils.model.CharacterListModel;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.items.SpigotRpgItemType;
@@ -28,14 +25,12 @@ import cz.neumimto.rpg.spigot.skills.SpigotSkillTreeInterfaceModel;
 import de.tr7zw.nbtapi.NBTItem;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -242,6 +237,10 @@ public class SpigotGuiHelper {
         }
         if (!cc.getWeapons().isEmpty() || !cc.getOffHandWeapons().isEmpty()) {
             i.setItem(30, button(Material.DIAMOND_SWORD, Rpg.get().getLocalizationService().translate(LocalizationKeys.WEAPONS), "ninfo class-weapons " + cc.getName()));
+        }
+        if (cc.getSkillTree() != null) {
+            i.setItem(31, button(Material.OAK_SAPLING,
+                    Rpg.get().getLocalizationService().translate(LocalizationKeys.SKILLTREE), "skilltree view " + cc.getName(), 12345));
         }
         return i;
     }

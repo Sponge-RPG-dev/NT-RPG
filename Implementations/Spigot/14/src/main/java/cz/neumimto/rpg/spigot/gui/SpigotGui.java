@@ -7,6 +7,7 @@ import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.gui.IPlayerMessage;
+import cz.neumimto.rpg.api.gui.SkillTreeViewModel;
 import cz.neumimto.rpg.api.inventory.CannotUseItemReason;
 import cz.neumimto.rpg.api.localization.Arg;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
@@ -151,7 +152,18 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
 
     @Override
     public void openSkillTreeMenu(ISpigotCharacter player) {
-
+        SkillTree skillTree = player.getLastTimeInvokedSkillTreeView().getSkillTree();
+        if (player.getSkillTreeViewLocation().get(skillTree.getId()) == null) {
+            SpigotSkillTreeViewModel skillTreeViewModel = new SpigotSkillTreeViewModel();
+            for (SkillTreeViewModel treeViewModel : player.getSkillTreeViewLocation().values()) {
+                treeViewModel.setCurrent(false);
+            }
+            player.getSkillTreeViewLocation().put(skillTree.getId(), skillTreeViewModel);
+            skillTreeViewModel.setSkillTree(skillTree);
+        }
+        Inventory skillTreeInventoryViewTemplate = SpigotGuiHelper.createSkillTreeView(player, skillTree);
+        SpigotGuiHelper.drawSkillTreeViewData(skillTreeInventoryViewTemplate, player);
+        player.getPlayer().openInventory(skillTreeInventoryViewTemplate);
     }
 
     @Override

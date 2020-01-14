@@ -1,6 +1,5 @@
 package cz.neumimto.rpg.spigot.entities.players;
 
-import cz.neumimto.rpg.api.gui.SkillTreeViewModel;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
@@ -38,7 +37,7 @@ public class SpigotCharacter extends ActiveCharacter<Player, SpigotParty> implem
     }
 
     @Override
-    public Map<String, ? extends SkillTreeViewModel> getSkillTreeViewLocation() {
+    public Map<String, SpigotSkillTreeViewModel> getSkillTreeViewLocation() {
         return skillTreeviewLocation;
     }
 

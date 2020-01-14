@@ -102,4 +102,13 @@ public class SpigotDamageService extends AbstractDamageService<LivingEntity> {
         }
         return 1;
     }
+
+    public boolean damage(LivingEntity attacker, LivingEntity target, DamageCause cause, double damage, boolean knockback) {
+        if (target.isDead() || target.getHealth() <= 0.0) {
+            return false;
+        }
+        target.damage(damage, attacker);
+
+        return true;
+    }
 }

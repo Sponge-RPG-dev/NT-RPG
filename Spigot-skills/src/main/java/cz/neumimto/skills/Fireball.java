@@ -8,7 +8,6 @@ import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
-import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
 import cz.neumimto.rpg.spigot.entities.ProjectileCache;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import org.bukkit.World;
@@ -16,7 +15,6 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.SmallFireball;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import static org.bukkit.event.entity.EntityDamageEvent.DamageCause;
@@ -25,11 +23,6 @@ import static org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 @Singleton
 @ResourceLoader.Skill("ntrpg:fireball")
 public class Fireball extends ActiveSkill<ISpigotCharacter> {
-
-    @Inject
-    private SpigotDamageService spigotDamageService;
-
-    private Fireball self;
 
     @Override
     public void init() {
@@ -41,7 +34,6 @@ public class Fireball extends ActiveSkill<ISpigotCharacter> {
         addSkillType(SkillType.PROJECTILE);
         addSkillType(SkillType.ELEMENTAL);
         addSkillType(SkillType.FIRE);
-        this.self = this;
     }
 
     @Override

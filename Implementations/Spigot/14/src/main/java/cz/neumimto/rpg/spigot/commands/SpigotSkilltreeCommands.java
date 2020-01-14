@@ -2,7 +2,6 @@ package cz.neumimto.rpg.spigot.commands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Subcommand;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
@@ -38,7 +37,7 @@ public class SpigotSkilltreeCommands extends BaseCommand {
     @Inject
     private SkillService skillService;
 
-    @Default
+    @Subcommand("view")
     public void openSkillTreeCommand(Player executor, ClassDefinition classDefinition) {
         ISpigotCharacter character = characterService.getCharacter(executor);
 
