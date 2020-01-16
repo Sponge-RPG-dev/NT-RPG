@@ -42,8 +42,16 @@ import java.util.stream.Collectors;
 
 public class SpigotGuiHelper {
 
-    private static int slotId(int x, int y) {
-        return (y-1)*9 + (x-1);
+    static final int[] inventoryIds;
+    static {
+        List<Integer> w = new ArrayList<>();
+        for (int i = 0; i <= 7; i++) {
+            for (int j = 0; j < 6; j++) {
+                w.add(j*9+i);
+            }
+        }
+
+        inventoryIds = w.stream().mapToInt(i -> i).toArray();
     }
 
     public static Inventory createMenuInventoryClassTypesView(Player player) {
@@ -238,7 +246,7 @@ public class SpigotGuiHelper {
         if (!cc.getWeapons().isEmpty() || !cc.getOffHandWeapons().isEmpty()) {
             i.setItem(30, button(Material.DIAMOND_SWORD, Rpg.get().getLocalizationService().translate(LocalizationKeys.WEAPONS), "ninfo class-weapons " + cc.getName()));
         }
-        if (cc.getSkillTree() != null) {
+        if (cc.getSkillTree() != SkillTree.Default) {
             i.setItem(31, button(Material.OAK_SAPLING,
                     Rpg.get().getLocalizationService().translate(LocalizationKeys.SKILLTREE), "skilltree view " + cc.getName(), 12345));
         }
@@ -371,10 +379,12 @@ public class SpigotGuiHelper {
 
         SpigotSkillService skillService = (SpigotSkillService) Rpg.get().getSkillService();
 
-        for (int k = -3; k <= 3; k++) { //x
-            for (int l = -3; l <= 3; l++) { //y
-                int slot = slotId(l + 3, k + 3);
+        int pointer = 0;
 
+        for (int k = -3; k <= 3; k++) { //x
+            for (int l = -3; l < 3; l++) { //y
+                int slot = inventoryIds[pointer];
+                pointer++;
                 if (x + k >= 0 && x + k < rows) {
                     if (l + y >= 0 && l + y < columns) {
 
@@ -452,8 +462,15 @@ public class SpigotGuiHelper {
             lore = fromCache;
             nameColor = getSkillTextColor(character, skill, skillData, skillTree);
         }
-        Material material = Material.matchMaterial(skillData.getIcon());
-        ItemStack itemStack = new ItemStack(material == null ? Material.STONE : material);
+
+        Material material;
+        if (skillData.getIcon() != null) {
+            material = Material.matchMaterial(skillData.getIcon());
+        } else {
+            material = Material.STONE;
+        }
+
+        ItemStack itemStack = new ItemStack(material);
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName(nameColor + skillData.getSkillName());
         itemMeta.setLore(lore);

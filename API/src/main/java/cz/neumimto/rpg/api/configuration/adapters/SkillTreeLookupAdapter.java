@@ -5,6 +5,8 @@ import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 
+import java.util.Map;
+
 /**
  * Created by NeumimTo on 6.1.2019.
  */
@@ -15,13 +17,15 @@ public class SkillTreeLookupAdapter implements Converter<SkillTree, String> {
         if (skillTreeId == null) {
             return SkillTree.Default;
         }
-        SkillTree skillTree = Rpg.get().getSkillService().getSkillTrees().get(skillTreeId);
-        if (skillTree == null) {
-            Log.info("Unknown skilltree " + skillTreeId);
-            skillTree = SkillTree.Default;
+        Map<String, SkillTree> skillTrees = Rpg.get().getSkillService().getSkillTrees();
+        for (Map.Entry<String, SkillTree> e : skillTrees.entrySet()) {
+            if (skillTreeId.equalsIgnoreCase(e.getKey())) {
+                return e.getValue();
+            }
         }
-        return skillTree;
 
+        Log.info("Unknown skilltree " + skillTreeId);
+        return SkillTree.Default;
     }
 
     @Override

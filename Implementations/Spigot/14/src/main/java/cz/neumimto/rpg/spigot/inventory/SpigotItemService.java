@@ -39,6 +39,9 @@ public class SpigotItemService extends AbstractItemService {
     private PropertyService propertyService;
 
     public Optional<RpgItemType> getRpgItemType(ItemStack itemStack) {
+        if (itemStack == null) {
+            return Optional.empty();
+        }
         ItemMeta meta = itemStack.getItemMeta();
         if (meta != null) {
             if (meta.hasCustomModelData()) {
