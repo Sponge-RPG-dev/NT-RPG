@@ -20,7 +20,7 @@ repositories {
 }
 
 group = 'cz.neumimto.rpg'
-version = '2.1.0-SNAPSHOT-2'
+version = '2.1.0-SNAPSHOT-3'
 
 compileJava {
     options.compilerArgs += ["-parameters"]
@@ -44,7 +44,7 @@ dependencies {
     compile 'ninja.leaping.configurate:configurate-hocon:3.3'
     compile "co.aikar:acf-paper:0.5.0-SNAPSHOT"
     compile 'com.github.stefvanschie.inventoryframework:IF:0.5.14'
-    compile 'de.tr7zw:item-nbt-api-plugin:2.1.1'
+    compile 'de.tr7zw:item-nbt-api-plugin:2.2.0'
 
     jar {
 

@@ -170,7 +170,7 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
     public void moveSkillTreeMenu(ISpigotCharacter character) {
         Player player = character.getPlayer();
         InventoryView openInventory = player.getOpenInventory();
-        if (openInventory.getType() == InventoryType.CRAFTING) {
+        if (openInventory.getType() == InventoryType.CHEST) {
             SpigotGuiHelper.drawSkillTreeViewData(openInventory.getTopInventory(), character);
         }
     }

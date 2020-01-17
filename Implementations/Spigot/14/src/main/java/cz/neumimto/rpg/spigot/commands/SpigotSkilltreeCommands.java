@@ -48,7 +48,7 @@ public class SpigotSkilltreeCommands extends BaseCommand {
     public void skillTreeOptionNorth(Player executor) {
         ISpigotCharacter character = characterService.getCharacter(executor);
         SpigotSkillTreeViewModel viewModel = character.getLastTimeInvokedSkillTreeView();
-        viewModel.getLocation().key -= 1;
+        viewModel.getLocation().value -= 1;
         Rpg.get().scheduleSyncLater(() -> Gui.moveSkillTreeMenu(character));
     }
 
@@ -56,7 +56,7 @@ public class SpigotSkilltreeCommands extends BaseCommand {
     public void skillTreeOptionSouth(Player executor) {
         ISpigotCharacter character = characterService.getCharacter(executor);
         SpigotSkillTreeViewModel viewModel = character.getLastTimeInvokedSkillTreeView();
-        viewModel.getLocation().key += 1;
+        viewModel.getLocation().value += 1;
         Rpg.get().scheduleSyncLater(() -> Gui.moveSkillTreeMenu(character));
     }
 
@@ -64,15 +64,15 @@ public class SpigotSkilltreeCommands extends BaseCommand {
     public void skillTreeOptionWest(Player executor) {
         ISpigotCharacter character = characterService.getCharacter(executor);
         SpigotSkillTreeViewModel viewModel = character.getLastTimeInvokedSkillTreeView();
-        viewModel.getLocation().value += 1;
+        viewModel.getLocation().key += 1;
         Rpg.get().scheduleSyncLater(() -> Gui.moveSkillTreeMenu(character));
     }
 
-    @Subcommand("up")
+    @Subcommand("east")
     public void skillTreeOptionEast(Player executor) {
         ISpigotCharacter character = characterService.getCharacter(executor);
         SpigotSkillTreeViewModel viewModel = character.getLastTimeInvokedSkillTreeView();
-        viewModel.getLocation().value -= 1;
+        viewModel.getLocation().key -= 1;
         Rpg.get().scheduleSyncLater(() -> Gui.moveSkillTreeMenu(character));
     }
 

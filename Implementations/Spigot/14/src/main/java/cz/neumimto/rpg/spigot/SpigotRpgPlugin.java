@@ -2,6 +2,9 @@ package cz.neumimto.rpg.spigot;
 
 import co.aikar.commands.CommandManager;
 import co.aikar.commands.PaperCommandManager;
+import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.entity.players.CharacterService;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.persistence.flatfiles.FlatFilesModule;
@@ -9,6 +12,8 @@ import cz.neumimto.rpg.spigot.commands.*;
 import cz.neumimto.rpg.spigot.entities.configuration.SpigotMobSettingsDao;
 import cz.neumimto.rpg.spigot.gui.SpigotGui;
 import cz.neumimto.rpg.spigot.resources.SpigotGuiceModule;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.java.annotation.plugin.*;
 import org.bukkit.plugin.java.annotation.plugin.author.Author;
@@ -16,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -73,10 +79,19 @@ public class SpigotRpgPlugin extends JavaPlugin {
             injector.getInstance(SpigotMobSettingsDao.class).load();
         });
 
+        Collection<? extends Player> onlinePlayers = Bukkit.getServer().getOnlinePlayers();
+        for (Player onlinePlayer : onlinePlayers) {
+            Rpg.get().getCharacterService().loadPlayerData(onlinePlayer.getUniqueId(), onlinePlayer.getName());
+        }
     }
 
     @Override
     public void onDisable() {
         executor.shutdown();
+        CharacterService characterService = Rpg.get().getCharacterService();
+        Collection<IActiveCharacter> characters = characterService.getCharacters();
+        for (IActiveCharacter character : characters) {
+            characterService.save(character.getCharacterBase());
+        }
     }
 }

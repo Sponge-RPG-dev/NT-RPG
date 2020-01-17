@@ -346,17 +346,11 @@ public class SpigotGuiHelper {
     }
 
     private static void fillSkillTreeViewInterface(Inventory i) {
-        i.setItem(7, unclickableInterface(Material.LIGHT_GRAY_STAINED_GLASS_PANE, 12345));
-        i.setItem(16, unclickableInterface(Material.LIGHT_GRAY_STAINED_GLASS_PANE, 12345));
-        i.setItem(25, unclickableInterface(Material.LIGHT_GRAY_STAINED_GLASS_PANE, 12345));
-        i.setItem(34, unclickableInterface(Material.LIGHT_GRAY_STAINED_GLASS_PANE, 12345));
-        i.setItem(43, unclickableInterface(Material.LIGHT_GRAY_STAINED_GLASS_PANE, 12345));
-        i.setItem(52, unclickableInterface(Material.LIGHT_GRAY_STAINED_GLASS_PANE, 12345));
 
-        i.setItem(26, unclickableInterface(button(Material.STICK, "Up", "skilltree north", 12345)));
-        i.setItem(35, unclickableInterface(button(Material.STICK, "Down", "skilltree south", 12346)));
-        i.setItem(44, unclickableInterface(button(Material.STICK, "Right", "skilltree west", 12347)));
-        i.setItem(53, unclickableInterface(button(Material.STICK, "Left", "skilltree east", 12348)));
+        i.setItem(26, button(Material.STICK, "Up", "skilltree north", 12345));
+        i.setItem(35, button(Material.STICK, "Down", "skilltree south", 12346));
+        i.setItem(44, button(Material.STICK, "Right", "skilltree west", 12347));
+        i.setItem(53, button(Material.STICK, "Left", "skilltree east", 12348));
     }
 
     public static Inventory drawSkillTreeViewData(Inventory i, ISpigotCharacter character) {
@@ -381,7 +375,7 @@ public class SpigotGuiHelper {
 
         int pointer = 0;
 
-        for (int k = -3; k <= 3; k++) { //x
+        for (int k = -3; k <= 4; k++) { //x
             for (int l = -3; l < 3; l++) { //y
                 int slot = inventoryIds[pointer];
                 pointer++;
@@ -472,10 +466,12 @@ public class SpigotGuiHelper {
 
         ItemStack itemStack = new ItemStack(material);
         ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.setDisplayName(nameColor + skillData.getSkillName());
+        itemMeta.setDisplayName(nameColor + skillData.getSkillPName());
         itemMeta.setLore(lore);
         itemStack.setItemMeta(itemMeta);
-        return itemStack;
+        NBTItem nbtItem = new NBTItem(itemStack);
+        nbtItem.setString("ntrpg.item-command", "skilltree skill " + skill.getId());
+        return nbtItem.getItem();
     }
 
 
@@ -502,8 +498,6 @@ public class SpigotGuiHelper {
         String interactiveModeName = localizationService.translate(translation);
         ItemStack md = new ItemStack(itemType);
         List<String> lore = new ArrayList<>();
-        lore.add(interactiveModeName);
-        lore.add("");
         lore.add(ChatColor.YELLOW + "Level: " + ChatColor.RESET + ChatColor.BOLD + character.getLevel());
 
         ClassDefinition viewedClass = character.getLastTimeInvokedSkillTreeView().getViewedClass();
@@ -517,11 +511,13 @@ public class SpigotGuiHelper {
         }
 
         ItemMeta itemMeta = md.getItemMeta();
+        itemMeta.setDisplayName(interactiveModeName);
         itemMeta.setLore(lore);
         itemMeta.setCustomModelData(1234);
         md.setItemMeta(itemMeta);
-
-        return md;
+        NBTItem nbtItem = new NBTItem(md);
+        nbtItem.setString("ntrpg.item-command", "skilltree mode");
+        return nbtItem.getItem();
     }
 
     private static ChatColor getSkillTextColor(IActiveCharacter character, ISkill skill, SkillData skillData, SkillTree skillTree) {
