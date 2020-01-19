@@ -1,8 +1,10 @@
 package cz.neumimto.rpg.spigot.gui;
 
+import com.google.common.cache.LoadingCache;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.configuration.ClassTypeDefinition;
+import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
@@ -38,11 +40,14 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 public class SpigotGuiHelper {
 
     static final int[] inventoryIds;
+    private static final int[] attributButtonSlots;
+
     static {
         List<Integer> w = new ArrayList<>();
         for (int i = 0; i <= 7; i++) {
@@ -52,6 +57,8 @@ public class SpigotGuiHelper {
         }
 
         inventoryIds = w.stream().mapToInt(i -> i).toArray();
+        attributButtonSlots = new int[] {10,11,12,13,14,15,16,17,36,37,38,39,40,41,42,43,45};
+
     }
 
     public static Inventory createMenuInventoryClassTypesView(Player player) {
@@ -466,7 +473,7 @@ public class SpigotGuiHelper {
 
         ItemStack itemStack = new ItemStack(material);
         ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.setDisplayName(nameColor + skillData.getSkillPName());
+        itemMeta.setDisplayName(nameColor + skillData.getSkillName());
         itemMeta.setLore(lore);
         itemStack.setItemMeta(itemMeta);
         NBTItem nbtItem = new NBTItem(itemStack);
@@ -528,4 +535,122 @@ public class SpigotGuiHelper {
         Optional<PlayerClassData> first = values.stream().filter(a -> a.getClassDefinition().getSkillTree() == skillTree).findFirst();
         return first.filter(playerClassData -> Rpg.get().getCharacterService().canLearnSkill(character, playerClassData.getClassDefinition(), skill).isOk()).map(playerClassData -> ChatColor.GRAY).orElse(ChatColor.RED);
     }
+
+    public static Inventory createCharacterMenu(Player player, ISpigotCharacter cc) {
+        Inventory i = createInventoryTemplate(player, cc.getName());
+        if (!cc.getAllowedArmor().isEmpty()) {
+            i.setItem(10, button(Material.DIAMOND_CHESTPLATE, Rpg.get().getLocalizationService().translate(LocalizationKeys.ARMOR), "char armor " + cc.getName()));
+        }
+        if (!cc.getAllowedWeapons().isEmpty()) {
+            i.setItem(11, button(Material.DIAMOND_SWORD, Rpg.get().getLocalizationService().translate(LocalizationKeys.WEAPONS), "ninfo weapons " + cc.getName()));
+        }
+
+        Map<String, PlayerClassData> classes = cc.getClasses();
+
+        int s = 37;
+        for (PlayerClassData value : classes.values()) {
+            ItemStack itemStack = toItemStack(value.getClassDefinition());
+            ItemMeta itemMeta = itemStack.getItemMeta();
+            itemMeta.setDisplayName(itemMeta.getDisplayName() + ChatColor.RESET + "| Lvl: " + ChatColor.GREEN + value.getLevel());
+            itemStack.setItemMeta(itemMeta);
+            i.setItem(s, itemStack);
+            s++;
+        }
+
+
+
+        return i;
+    }
+
+    public static void refreshCharacterAttributeView(Player player, ISpigotCharacter character, Inventory i, int slotMod) {
+        i.setItem(slotMod, attrInc);
+        ItemStack atris = charAttributeToItemStack(aconf, real, transientVal, tx);
+    }
+
+
+
+    public static Inventory createCharacterAttributeView(Player player, ISpigotCharacter character) {
+        Inventory i = createInventoryTemplate(player, Rpg.get().getLocalizationService().translate(LocalizationKeys.ATTRIBUTES));
+        i.setItem(0, button(Material.PAPER, Rpg.get().getLocalizationService().translate(LocalizationKeys.BACK), "char"));
+        createAttributePointsButton(i, character);
+
+        Map<String, Integer> transientAttributes = character.getTransientAttributes();
+        Map<String, Integer> attributes = character.getCharacterBase().getAttributes();
+        Map<String, Integer> attributesTransaction = character.getAttributesTransaction();
+
+        PropertyService propertyService = Rpg.get().getPropertyService();
+
+        Map<String, AttributeConfig> ac = propertyService.getAttributes();
+        int k = 0;
+        for (Map.Entry<String, AttributeConfig> a : ac.entrySet()) {
+
+            AttributeConfig aconf = a.getValue();
+            int transientVal = transientAttributes.get(a.getKey());
+            int real = attributes.get(a.getKey());
+            int tx = attributesTransaction.get(a.getKey());
+
+            int slot = attributButtonSlots[k];
+            ItemStack attrInc = button(Material.GREEN_DYE, ChatColor.GREEN + aconf.getName(),
+                    "char attribute add " + aconf.getId() + " -ui true -slotMod " + slot);
+            ItemStack atris = charAttributeToItemStack(aconf, real, transientVal, tx);
+
+            i.setItem(slot-9, attrInc);
+            i.setItem(slot, atris);
+        }
+        return i;
+    }
+
+    private static void createAttributePointsButton(Inventory inventory, IActiveCharacter character) {
+        if (character.getAttributePoints() > 0) {
+            ItemStack itemStack = unclickableInterface(Material.BOOK);
+            ItemMeta itemMeta = itemStack.getItemMeta();
+            String translate = Rpg.get().getLocalizationService().translate(LocalizationKeys.ATTRIBUTE_POINTS);
+            itemMeta.setDisplayName(ChatColor.GREEN + translate + ChatColor.RESET +" " + character.getAttributePoints());
+            itemStack.setItemMeta(itemMeta);
+            inventory.setItem(1, itemStack);
+        }
+    }
+
+    private static ItemStack charAttributeToItemStack(AttributeConfig a, int base, int tr, int inTx) {
+        base += inTx;
+
+        ItemStack itemStack = new ItemStack(Material.matchMaterial(a.getItemType()));
+
+        ItemMeta itemMeta = itemStack.getItemMeta();
+
+        String name = a.getName();
+        itemMeta.setDisplayName(ChatColor.GREEN + name);
+
+        List<String> lore = new ArrayList<>();
+        if (a.getDescription() != null) {
+            lore.add(a.getDescription());
+        }
+
+        lore.add(ChatColor.GRAY + "-------------------");
+        lore.add("");
+        lore.add(ChatColor.WHITE + "Effective Value: " + base + tr);
+        lore.add(ChatColor.ITALIC.toString() + ChatColor.YELLOW + "Char. Value: " + base);
+        lore.add(ChatColor.GRAY + "-------------------");
+        lore.add("");
+
+        Map<Integer, Float> propBonus = a.getPropBonus();
+        if (!propBonus.isEmpty()) {
+            lore.add("");
+            PropertyService propertyService = Rpg.get().getPropertyService();
+            for (Map.Entry<Integer, Float> e : propBonus.entrySet()) {
+                String nameById = propertyService.getNameById(e.getKey());
+                lore.add(" " + ChatColor.WHITE + nameById.replaceAll("_", " ") + " " + e.getValue());
+            }
+        }
+
+
+        itemMeta.setLore(lore);
+        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ATTRIBUTES);
+        itemMeta.setCustomModelData(1002);
+        itemStack.setItemMeta(itemMeta);
+
+        return itemStack;
+    }
+
+
 }

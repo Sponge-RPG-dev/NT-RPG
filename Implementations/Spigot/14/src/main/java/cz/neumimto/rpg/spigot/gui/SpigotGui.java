@@ -201,7 +201,9 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
 
     @Override
     public void displayCharacterMenu(ISpigotCharacter character) {
-
+        Player player = character.getPlayer();
+        Inventory inventory = SpigotGuiHelper.createCharacterMenu(player, character);
+        player.openInventory(inventory);
     }
 
     @Override
@@ -245,4 +247,13 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
     }
 
 
+    public void displayCharacterAttributes(Player player, ISpigotCharacter character) {
+        Inventory inventory = SpigotGuiHelper.createCharacterAttributeView(player, character);
+        player.openInventory(inventory);
+    }
+
+
+    public void refreshAttributeView(Player player, ISpigotCharacter character, int slotMod) {
+        SpigotGuiHelper.refreshCharacterAttributeView(player, character, player.getOpenInventory().getTopInventory(), slotMod);
+    }
 }

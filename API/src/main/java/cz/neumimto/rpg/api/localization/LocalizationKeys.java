@@ -138,6 +138,7 @@ public class LocalizationKeys {
     public static final String COMMAND_ADMIN_RARITY = "command.admin-rarity.desc";
     public static final String COMMAND_ADMIN_ITEM_TYPE = "command.admin-item-type.desc";
     public static final String COMMAND_ADMIN_RUNEWORD = "command.admin-runeword.desc";
+    public static final String ATTRIBUTE_POINTS = "label.attribute-points";
 
     private LocalizationKeys() {
     }

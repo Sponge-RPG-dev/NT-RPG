@@ -991,6 +991,9 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
         }
 
         for (Map.Entry<AttributeConfig, Integer> entry : attributes.entrySet()) {
+            if (entry.getValue() == 0) {
+                continue;
+            }
             Set<BaseCharacterAttribute> ap = base.getBaseCharacterAttribute();
             boolean found = false;
             for (BaseCharacterAttribute a : ap) {

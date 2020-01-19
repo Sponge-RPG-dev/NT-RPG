@@ -201,7 +201,7 @@ public class SpigotInventoryListener implements Listener {
 
         int selectedSlotIndex = inventory.getHeldItemSlot();
 
-        if (itemStack.getType() != Material.AIR) {
+        if (itemStack != null) {
             if (rpgItemStack.isPresent()) {
                 RpgItemStack rpgItemType1 = rpgItemStack.get();
 
@@ -231,6 +231,7 @@ public class SpigotInventoryListener implements Listener {
                 character.setRequiresDamageRecalculation(true);
             }
         }
+
     }
 
     @EventHandler

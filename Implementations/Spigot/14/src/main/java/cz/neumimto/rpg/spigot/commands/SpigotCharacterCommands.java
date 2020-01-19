@@ -1,10 +1,10 @@
 package cz.neumimto.rpg.spigot.commands;
 
 import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.Subcommand;
+import co.aikar.commands.annotation.*;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.classes.ClassService;
+import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.gui.Gui;
@@ -12,10 +12,12 @@ import cz.neumimto.rpg.common.commands.CharacterCommandFacade;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
+import cz.neumimto.rpg.spigot.gui.SpigotGui;
 import org.bukkit.entity.Player;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Map;
 import java.util.UUID;
 
 @Singleton
@@ -33,6 +35,15 @@ public class SpigotCharacterCommands extends BaseCommand {
 
     @Inject
     private ClassService classService;
+
+    @Inject
+    private SpigotGui spigotGui;
+
+    @Default
+    public void menu(Player executor) {
+        IActiveCharacter character = characterService.getCharacter(executor);
+        Gui.displayCharacterMenu(character);
+    }
 
     @Subcommand("list")
     public void characterList(Player executor) {
@@ -63,4 +74,28 @@ public class SpigotCharacterCommands extends BaseCommand {
         ISpigotCharacter character = characterService.getCharacter(executor);
         characterService.addNewClass(character, classDefinition);
     }
+
+    @Subcommand("attribute add")
+    public void attributesAdd(Player executor, AttributeConfig a, @Default("false") @Optional boolean ui, @Optional int slotMod) {
+        ISpigotCharacter character = characterService.getCharacter(executor);
+        Map<String, Integer> attributesTransaction = character.getAttributesTransaction();
+        Integer integer = attributesTransaction.get(a.getId());
+        attributesTransaction.put(a.getId(), integer + 1);
+        if (ui) {
+            spigotGui.refreshAttributeView(executor, character, slotMod);
+        }
+    }
+
+    @Subcommand("attributes")
+    public void attributes(Player executor) {
+        ISpigotCharacter character = characterService.getCharacter(executor);
+        spigotGui.displayCharacterAttributes(executor, character);
+    }
+
+    @Subcommand("attributes tx-commit")
+    public void attributesCommit(Player executor) {
+        ISpigotCharacter character = characterService.getCharacter(executor);
+        characterCommandFacade.commandCommitAttribute(character);
+    }
+
 }
