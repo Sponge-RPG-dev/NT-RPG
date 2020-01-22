@@ -52,9 +52,9 @@ public class SpigotInfoCommands extends BaseCommand {
 
     @Subcommand("class")
     @CommandPermission("ntrpg.info.class")
-    public void showClassCommand(Player executor, ClassDefinition classDefinition) {
+    public void showClassCommand(Player executor, ClassDefinition classDefinition, @Optional String back) {
         ISpigotCharacter character = characterService.getCharacter(executor);
-        Gui.showClassInfo(character, classDefinition);
+        messaging.showClassInfo(character, classDefinition, back);
     }
 
     @Subcommand("character")

@@ -101,7 +101,9 @@ public interface CharacterService<T extends IActiveCharacter> {
 
     void characterSetMaxHealth(T character, float newHealht);
 
-    void characterAddPoints(T character, ClassDefinition clazz, int skillpoint, int attributepoint);
+    void characterAddSkillPoints(T character, ClassDefinition clazz, int skillpoint);
+
+    void characterAddAttributePoints(T character, int attributepoint);
 
     void addExperiences(T character, double exp, String source);
 

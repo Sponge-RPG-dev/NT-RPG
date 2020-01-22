@@ -5,6 +5,7 @@ import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Flags;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.common.commands.AdminCommandFacade;
 import cz.neumimto.rpg.common.commands.CommandProcessingException;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
@@ -19,6 +20,8 @@ public abstract class AbstractAdminCommands<C, T> extends BaseCommand {
     @Inject
     protected SpigotCharacterService characterService;
 
+    @Inject
+    protected LocalizationService localizationService;
 
     public void _effectAddCommand(C c, @Flags("target") T target, IGlobalEffect effect, long duration, @Default("{}") String[] args) {
         String data = String.join("", args);
@@ -35,4 +38,5 @@ public abstract class AbstractAdminCommands<C, T> extends BaseCommand {
     protected abstract void sendMessageC(C c, String message);
 
     protected abstract void sendMessageT(T t, String message);
+
 }

@@ -14,6 +14,7 @@ import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.items.ClassItem;
 import cz.neumimto.rpg.api.items.ItemClass;
 import cz.neumimto.rpg.api.items.RpgItemType;
+import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.utils.ActionResult;
 import cz.neumimto.rpg.common.commands.AdminCommandFacade;
@@ -21,6 +22,7 @@ import cz.neumimto.rpg.common.commands.CommandProcessingException;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.inventory.SpigotItemService;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -34,6 +36,7 @@ import java.util.function.Function;
 
 @Singleton
 @CommandAlias("nadmin|na")
+@CommandPermission("ntrpg.admin")
 public class SpigotAdminCommands extends AbstractAdminCommands<CommandSender, Player> {
 
     @Inject
@@ -54,6 +57,36 @@ public class SpigotAdminCommands extends AbstractAdminCommands<CommandSender, Pl
     @Override
     protected IActiveCharacter toCharacter(Player player) {
         return characterService.getCharacter(player.getUniqueId());
+    }
+
+    @Subcommand("class add")
+    public void addCharacterClass(CommandSender commandSender, OnlinePlayer player, ClassDefinition classDefinition) {
+        ISpigotCharacter character = characterService.getCharacter(player.player);
+        ActionResult actionResult = adminCommandFacade.addCharacterClass(character, classDefinition);
+        if (!actionResult.isOk()) {
+            Log.error("Attempt to add player class safely failed, - class slot already occupied, player is lacking permission, missing prerequirements...");
+        } else {
+            Log.info("Player gained class via console " + player.getPlayer() + " class " + classDefinition.getName());
+        }
+    }
+
+    @Subcommand("attributepoints add")
+    @Description("Permanently adds X skillpoints to a player")
+    public void addSkillPointsCommand(CommandSender commandSender, OnlinePlayer player, @Default("1") int amount) {
+        ISpigotCharacter character = characterService.getCharacter(player.player);
+        characterService.characterAddAttributePoints(character, amount);
+    }
+
+    @Subcommand("skillpoints add")
+    @Description("Permanently adds X skillpoints to a player")
+    public void addSkillPointsCommand(CommandSender commandSender, OnlinePlayer player, ClassDefinition characterClass, @Default("1") int amount) {
+        ISpigotCharacter character = characterService.getCharacter(player.player);
+        PlayerClassData classByName = character.getClassByName(characterClass.getName());
+        if (classByName == null) {
+            throw new CommandException("Player " + player.player.getName() + " character " + character.getName() + " do not have class " + characterClass.getName());
+        }
+        characterService.characterAddSkillPoints(character,characterClass, amount);
+
     }
 
     @Subcommand("effect add")

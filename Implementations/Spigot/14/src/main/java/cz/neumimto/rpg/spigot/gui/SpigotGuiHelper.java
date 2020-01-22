@@ -1,6 +1,5 @@
 package cz.neumimto.rpg.spigot.gui;
 
-import com.google.common.cache.LoadingCache;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.configuration.ClassTypeDefinition;
@@ -10,6 +9,7 @@ import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.gui.SkillTreeViewModel;
 import cz.neumimto.rpg.api.items.ClassItem;
+import cz.neumimto.rpg.api.items.RpgItemType;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.logging.Log;
@@ -40,7 +40,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 public class SpigotGuiHelper {
@@ -52,12 +51,12 @@ public class SpigotGuiHelper {
         List<Integer> w = new ArrayList<>();
         for (int i = 0; i <= 7; i++) {
             for (int j = 0; j < 6; j++) {
-                w.add(j*9+i);
+                w.add(j * 9 + i);
             }
         }
 
         inventoryIds = w.stream().mapToInt(i -> i).toArray();
-        attributButtonSlots = new int[] {10,11,12,13,14,15,16,17,36,37,38,39,40,41,42,43,45};
+        attributButtonSlots = new int[]{10, 11, 12, 13, 14, 15, 16, 17, 36, 37, 38, 39, 40, 41, 42, 43, 45};
 
     }
 
@@ -81,17 +80,18 @@ public class SpigotGuiHelper {
         DyeColor dyeColor = DyeColor.valueOf(definition.getDyeColor());
         makeBorder(classes, Material.getMaterial(dyeColor.name() + "_STAINED_GLASS_PANE"));
 
+        String back = "ninfo classes";
         Rpg.get().getClassService().getClassDefinitions().stream()
                 .filter(a -> a.getClassType().equalsIgnoreCase(classType))
-                .forEach(a -> classes.addItem(toItemStack(a)));
+                .forEach(a -> classes.addItem(toItemStack(a, back)));
 
         return classes;
     }
 
-    private static ItemStack toItemStack(ClassDefinition a) {
+    private static ItemStack toItemStack(ClassDefinition a, String backCommand) {
         String sItemType = a.getItemType();
         Material material = Material.matchMaterial(sItemType);
-        ItemStack itemStack = button(material, ChatColor.valueOf(a.getPreferedColor()) + a.getName(), "ninfo class " + a.getName());
+        ItemStack itemStack = button(material, ChatColor.valueOf(a.getPreferedColor()) + a.getName(), "ninfo class " + a.getName() + " " + backCommand);
 
         List<String> lore;
         if (!(a.getCustomLore() == null || a.getCustomLore().isEmpty())) {
@@ -100,7 +100,7 @@ public class SpigotGuiHelper {
             lore = new ArrayList<>();
             lore.add(ChatColor.valueOf(a.getPreferedColor()) + a.getName());
             lore.add(ChatColor.BOLD.toString() + ChatColor.valueOf(a.getPreferedColor()) + a.getClassType());
-
+            lore.add(ChatColor.GRAY + "----------------------------------");
             lore.add(" ");
             if (a.getDescription() != null) {
                 List<String> description = a.getDescription();
@@ -117,7 +117,7 @@ public class SpigotGuiHelper {
         return itemStack;
     }
 
-    private static Inventory createInventoryTemplate(Player player, String title) {
+    public static Inventory createInventoryTemplate(Player player, String title) {
         return Bukkit.createInventory(player, 6 * 9, title);
     }
 
@@ -177,6 +177,10 @@ public class SpigotGuiHelper {
         itemMeta.setDisplayName(" ");
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         itemStack.setItemMeta(itemMeta);
+        return unclickableIcon(itemStack);
+    }
+
+    private static ItemStack unclickableIcon(ItemStack itemStack) {
         NBTItem nbti = new NBTItem(itemStack);
         nbti.setBoolean("ntrpg.item-iface", true);
         return nbti.getItem();
@@ -197,8 +201,8 @@ public class SpigotGuiHelper {
         nbti.setBoolean("ntrpg.item-iface", true);
         return nbti.getItem();
     }
-    
-    
+
+
     private static ItemStack unclickableInterfaceKeepName(ItemStack itemStack) {
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -215,8 +219,7 @@ public class SpigotGuiHelper {
 
             for (CharacterBase base : playersCharacters) {
                 ComponentBuilder builder = new ComponentBuilder("[")
-                        .color(net.md_5.bungee.api.ChatColor.YELLOW)
-                        ;
+                        .color(net.md_5.bungee.api.ChatColor.YELLOW);
                 if (base.getName().equalsIgnoreCase(currentlyCreated.getName())) {
                     builder.append("*").color(net.md_5.bungee.api.ChatColor.RED);
                 } else {
@@ -243,19 +246,20 @@ public class SpigotGuiHelper {
         return ChatColor.translateAlternateColorCodes('&', str);
     }
 
-    public static Inventory createClassInfoView(Player player, ClassDefinition cc) {
+    public static Inventory createClassInfoView(Player player, ClassDefinition cc, String back) {
         Inventory i = createInventoryTemplate(player, ChatColor.valueOf(cc.getPreferedColor()) + cc.getName());
-        i.setItem(0, button(Material.PAPER, Rpg.get().getLocalizationService().translate(LocalizationKeys.BACK), "ninfo classes"));
-        i.setItem(8, button(Material.DIAMOND, Rpg.get().getLocalizationService().translate(LocalizationKeys.CONFIRM), "char choose class " + cc.getName()));
+        LocalizationService localizationService = Rpg.get().getLocalizationService();
+        i.setItem(0, button(Material.PAPER, localizationService.translate(LocalizationKeys.BACK), back == null ? "ninfo classes" : back));
+        i.setItem(8, button(Material.DIAMOND, localizationService.translate(LocalizationKeys.CONFIRM), "char choose class " + cc.getName()));
         if (!cc.getAllowedArmor().isEmpty()) {
-            i.setItem(29, button(Material.DIAMOND_CHESTPLATE, Rpg.get().getLocalizationService().translate(LocalizationKeys.ARMOR), "ninfo class-armor " + cc.getName()));
+            i.setItem(29, button(Material.DIAMOND_CHESTPLATE, localizationService.translate(LocalizationKeys.ARMOR), "ninfo class-armor " + cc.getName()));
         }
         if (!cc.getWeapons().isEmpty() || !cc.getOffHandWeapons().isEmpty()) {
-            i.setItem(30, button(Material.DIAMOND_SWORD, Rpg.get().getLocalizationService().translate(LocalizationKeys.WEAPONS), "ninfo class-weapons " + cc.getName()));
+            i.setItem(30, button(Material.DIAMOND_SWORD, localizationService.translate(LocalizationKeys.WEAPONS), "ninfo class-weapons " + cc.getName()));
         }
         if (cc.getSkillTree() != SkillTree.Default) {
             i.setItem(31, button(Material.OAK_SAPLING,
-                    Rpg.get().getLocalizationService().translate(LocalizationKeys.SKILLTREE), "skilltree view " + cc.getName(), 12345));
+                    localizationService.translate(LocalizationKeys.SKILLTREE), "skilltree view " + cc.getName(), 12345));
         }
         return i;
     }
@@ -292,31 +296,77 @@ public class SpigotGuiHelper {
         return i;
     }
 
-    public static Inventory createArmorView(Player player, ClassDefinition cc, Set<ClassItem> weapons) {
+    public static Inventory createArmorView(Player player, ClassDefinition cc, Set<ClassItem> armor) {
         String translate = Rpg.get().getLocalizationService().translate(LocalizationKeys.ARMOR);
         Inventory i = createInventoryTemplate(player, ChatColor.valueOf(cc.getPreferedColor()) + cc.getName() + " " + ChatColor.RESET + translate);
-        i.setItem(0, button(Material.PAPER, Rpg.get().getLocalizationService().translate(LocalizationKeys.BACK), "ninfo class " + cc.getName()));
-        int w = 9;
-        for (ClassItem weapon : weapons) {
-            SpigotRpgItemType type = (SpigotRpgItemType) weapon.getType();
-            ItemStack itemStack = new ItemStack(type.getMaterial());
-            double damage = weapon.getDamage();
 
-            if (damage > 0) {
-                ItemMeta itemMeta = itemStack.getItemMeta();
-                if (type.getModelId() != null) {
-                    itemMeta.setCustomModelData(Integer.parseInt(type.getModelId()));
-                }
-                itemStack.setItemMeta(itemMeta);
-            }
-            i.setItem(w, unclickableInterface(itemStack));
-            w++;
-        }
+        createArmorView(i, armor, "ninfo class " + cc.getName());
         return i;
     }
 
+    public static void createArmorView(Inventory i, Set<ClassItem> armor, String backCommand) {
+        i.setItem(0, button(Material.PAPER, Rpg.get().getLocalizationService().translate(LocalizationKeys.BACK), backCommand));
+        int w = 9;
+        String damageLabel = Rpg.get().getLocalizationService().translate(LocalizationKeys.ITEM_ARMOR);
+        for (ClassItem ar : armor) {
+            SpigotRpgItemType type = (SpigotRpgItemType) ar.getType();
+            double damage = ar.getDamage();
+
+            i.setItem(w, toItemStack(type, damage, damageLabel));
+            w++;
+        }
+    }
+
+    private static ItemStack toItemStack(SpigotRpgItemType type, double damage, String damageLabel) {
+        ItemStack itemStack = new ItemStack(type.getMaterial());
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        if (type.getModelId() != null) {
+            itemMeta.setCustomModelData(Integer.parseInt(type.getModelId()));
+        }
+        if (damage > 0) {
+            List<String> lore = new ArrayList<>();
+            SpigotDamageService spigotDamageService = (SpigotDamageService) Rpg.get().getDamageService();
+            String colorByDamage = spigotDamageService.getColorByDamage(damage);
+            lore.add(damageLabel + ":" + colorByDamage + damage);
+            itemMeta.setLore(lore);
+        }
+        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        itemStack.setItemMeta(itemMeta);
+
+        return unclickableIcon(itemStack);
+    }
+
+    public static void fillWeaponView(Inventory i, Map<RpgItemType, Double> items, String backCommand) {
+        i.setItem(0, button(Material.PAPER, Rpg.get().getLocalizationService().translate(LocalizationKeys.BACK), backCommand));
+        int w = 9;
+        String damageLabel = Rpg.get().getLocalizationService().translate(LocalizationKeys.ITEM_DAMAGE);
+
+        for (Map.Entry<RpgItemType, Double> entry : items.entrySet()) {
+            SpigotRpgItemType weapon = (SpigotRpgItemType) entry.getKey();
+            double damage = entry.getValue();
+
+            i.setItem(w, toItemStack(weapon, damage, damageLabel));
+            w++;
+        }
+    }
+
+    public static void fillArmorView(Inventory i, Set<RpgItemType> allowedArmor, String backCommand) {
+        i.setItem(0, button(Material.PAPER, Rpg.get().getLocalizationService().translate(LocalizationKeys.BACK), backCommand));
+        int w = 9;
+        String damageLabel = Rpg.get().getLocalizationService().translate(LocalizationKeys.ITEM_DAMAGE);
+
+        for (RpgItemType entry : allowedArmor) {
+            double damage = entry.getArmor();
+
+            i.setItem(w, toItemStack((SpigotRpgItemType)entry, damage, damageLabel));
+            w++;
+        }
+
+    }
+
+
     public static Inventory createClassAttributesView(Player player, ClassDefinition cc) {
-        String translate = translate = Rpg.get().getLocalizationService().translate(LocalizationKeys.ATTRIBUTES);
+        String translate = Rpg.get().getLocalizationService().translate(LocalizationKeys.ATTRIBUTES);
         Map<AttributeConfig, Integer> attrs = cc.getStartingAttributes();
         Inventory i = createInventoryTemplate(player, ChatColor.valueOf(cc.getPreferedColor()) + cc.getName() + ChatColor.RESET + translate);
 
@@ -333,7 +383,7 @@ public class SpigotGuiHelper {
 
             lore.add(ChatColor.GREEN.toString() + ChatColor.BOLD + att.getName() + ChatColor.RESET + " - " + ChatColor.GREEN + attr.getValue());
             lore.add(" ");
-            if (att.getDescription() != null || ! att.getDescription().isEmpty()) {
+            if (att.getDescription() != null || !att.getDescription().isEmpty()) {
                 lore.add(ChatColor.ITALIC.toString() + ChatColor.GOLD + att.getDescription());
             }
             itemMeta.setLore(lore);
@@ -436,8 +486,8 @@ public class SpigotGuiHelper {
             } else {
                 LocalizationService locService = Rpg.get().getLocalizationService();
                 String execType = locService.translate(skill.getSkillExecutionType().toString().toLowerCase());
-                lore.add(execType);
-                lore.add("");
+                lore.add(ChatColor.WHITE + execType);
+                lore.add(ChatColor.GRAY + "--------------------------");
 
                 lore.addAll(skillData.getDescription(character));
                 lore.add("");
@@ -450,9 +500,9 @@ public class SpigotGuiHelper {
                     i++;
                     ISkillType next = iterator.next();
                     String translate = locService.translate(next.toString());
-                    lore.add(translate);
+                    lore.add(ChatColor.YELLOW + translate);
                     if (i % 3 == 0) {
-                        lore.add(builder.toString());
+                        lore.add(ChatColor.YELLOW + builder.toString());
                         builder = new StringBuilder();
                     }
                 }
@@ -480,7 +530,6 @@ public class SpigotGuiHelper {
         nbtItem.setString("ntrpg.item-command", "skilltree skill " + skill.getId());
         return nbtItem.getItem();
     }
-
 
 
     private static ItemStack createSkillTreeInventoryMenuBoundary() {
@@ -539,34 +588,39 @@ public class SpigotGuiHelper {
     public static Inventory createCharacterMenu(Player player, ISpigotCharacter cc) {
         Inventory i = createInventoryTemplate(player, cc.getName());
         if (!cc.getAllowedArmor().isEmpty()) {
-            i.setItem(10, button(Material.DIAMOND_CHESTPLATE, Rpg.get().getLocalizationService().translate(LocalizationKeys.ARMOR), "char armor " + cc.getName()));
+            i.setItem(10, button(Material.DIAMOND_CHESTPLATE, Rpg.get().getLocalizationService().translate(LocalizationKeys.ARMOR), "char armor"));
         }
         if (!cc.getAllowedWeapons().isEmpty()) {
-            i.setItem(11, button(Material.DIAMOND_SWORD, Rpg.get().getLocalizationService().translate(LocalizationKeys.WEAPONS), "ninfo weapons " + cc.getName()));
+            i.setItem(11, button(Material.DIAMOND_SWORD, Rpg.get().getLocalizationService().translate(LocalizationKeys.WEAPONS), "char weapons"));
         }
+
+        i.setItem(12, button(Material.BLAZE_POWDER, Rpg.get().getLocalizationService().translate(LocalizationKeys.ATTRIBUTES), "char attributes"));
 
         Map<String, PlayerClassData> classes = cc.getClasses();
 
         int s = 37;
         for (PlayerClassData value : classes.values()) {
-            ItemStack itemStack = toItemStack(value.getClassDefinition());
+            ClassDefinition classDefinition = value.getClassDefinition();
+            ItemStack itemStack = toItemStack(classDefinition, "char");
             ItemMeta itemMeta = itemStack.getItemMeta();
-            itemMeta.setDisplayName(itemMeta.getDisplayName() + ChatColor.RESET + "| Lvl: " + ChatColor.GREEN + value.getLevel());
+            itemMeta.setDisplayName(ChatColor.valueOf(classDefinition.getPreferedColor()) + classDefinition.getName() + itemMeta.getDisplayName() + ChatColor.RESET + "| Lvl: " + ChatColor.GREEN + value.getLevel());
             itemStack.setItemMeta(itemMeta);
             i.setItem(s, itemStack);
             s++;
         }
 
 
-
         return i;
     }
 
-    public static void refreshCharacterAttributeView(Player player, ISpigotCharacter character, Inventory i, int slotMod) {
-        i.setItem(slotMod, attrInc);
-        ItemStack atris = charAttributeToItemStack(aconf, real, transientVal, tx);
+    public static void refreshCharacterAttributeView(Player player, ISpigotCharacter character, Inventory i, int slotMod, AttributeConfig a) {
+        String id = a.getId();
+        int transientVal = character.getTransientAttributes().get(id);
+        int real = character.getCharacterBase().getAttributes().get(id);
+        int tx = character.getTransientAttributes().get(id);
+        ItemStack atris = charAttributeToItemStack(a, real, transientVal, tx);
+        i.setItem(slotMod, atris);
     }
-
 
 
     public static Inventory createCharacterAttributeView(Player player, ISpigotCharacter character) {
@@ -590,11 +644,11 @@ public class SpigotGuiHelper {
             int tx = attributesTransaction.get(a.getKey());
 
             int slot = attributButtonSlots[k];
-            ItemStack attrInc = button(Material.GREEN_DYE, ChatColor.GREEN + aconf.getName(),
-                    "char attribute add " + aconf.getId() + " -ui true -slotMod " + slot);
-            ItemStack atris = charAttributeToItemStack(aconf, real, transientVal, tx);
+            ItemStack attrInc = button(Material.GREEN_DYE, ChatColor.GREEN + "+",
+                    "char attribute add " + aconf.getId() + " true " + slot);
+            ItemStack atris = unclickableIcon(charAttributeToItemStack(aconf, real, transientVal, tx));
 
-            i.setItem(slot-9, attrInc);
+            i.setItem(slot - 9, attrInc);
             i.setItem(slot, atris);
         }
         return i;
@@ -605,7 +659,7 @@ public class SpigotGuiHelper {
             ItemStack itemStack = unclickableInterface(Material.BOOK);
             ItemMeta itemMeta = itemStack.getItemMeta();
             String translate = Rpg.get().getLocalizationService().translate(LocalizationKeys.ATTRIBUTE_POINTS);
-            itemMeta.setDisplayName(ChatColor.GREEN + translate + ChatColor.RESET +" " + character.getAttributePoints());
+            itemMeta.setDisplayName(ChatColor.GREEN + translate + ChatColor.RESET + " " + character.getAttributePoints());
             itemStack.setItemMeta(itemMeta);
             inventory.setItem(1, itemStack);
         }
@@ -639,7 +693,8 @@ public class SpigotGuiHelper {
             PropertyService propertyService = Rpg.get().getPropertyService();
             for (Map.Entry<Integer, Float> e : propBonus.entrySet()) {
                 String nameById = propertyService.getNameById(e.getKey());
-                lore.add(" " + ChatColor.WHITE + nameById.replaceAll("_", " ") + " " + e.getValue());
+                Float value = e.getValue();
+                lore.add(" " + ChatColor.WHITE + nameById.replaceAll("_", " ") + " " + formatPropertyValue(value));
             }
         }
 
@@ -650,6 +705,14 @@ public class SpigotGuiHelper {
         itemStack.setItemMeta(itemMeta);
 
         return itemStack;
+    }
+
+    private static String formatPropertyValue(Float value) {
+        float v = value.floatValue();
+        if (v > 0) {
+            return ChatColor.GREEN + "+" + v;
+        }
+        return ChatColor.RED + "-" + v;
     }
 
 

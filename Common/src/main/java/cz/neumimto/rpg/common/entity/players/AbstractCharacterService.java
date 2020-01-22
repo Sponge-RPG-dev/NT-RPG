@@ -526,9 +526,13 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
     @Override
     public T createActiveCharacter(UUID player, CharacterBase characterBase) {
         T activeCharacter = createCharacter(player, characterBase);
-        Set<String> strings = propertyService.getAttributes().keySet();
+        Map<String, AttributeConfig> attributes = propertyService.getAttributes();
+        Set<String> strings = attributes.keySet();
+
         for (String string : strings) {
             activeCharacter.getTransientAttributes().put(string, 0);
+            activeCharacter.getAttributesTransaction().put(string, 0);
+            characterBase.getAttributes().putIfAbsent(string, 0);
         }
         Set<CharacterClass> characterClasses = characterBase.getCharacterClasses();
 
@@ -550,6 +554,7 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
         for (PlayerSkillContext dt : skillData) {
             dt.getSkill().onCharacterInit(activeCharacter, dt.getLevel());
         }
+
 
 
         return activeCharacter;
@@ -868,20 +873,19 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
         character.getHealth().setValue(newHealht / percent);
     }
 
-    /**
-     * Adds stats/attribute points to the character and saves the character
-     *
-     * @param character      - character object
-     * @param skillpoint     - skillpoints to be added
-     * @param attributepoint - attribute points to be added
-     */
     @Override
-    public void characterAddPoints(T character, ClassDefinition clazz, int skillpoint, int attributepoint) {
+    public void characterAddSkillPoints(T character, ClassDefinition clazz, int skillpoint) {
         CharacterClass cc = character.getCharacterBase().getCharacterClass(clazz);
         cc.setSkillPoints(cc.getSkillPoints() + skillpoint);
-        character.setAttributePoints(character.getAttributePoints() + attributepoint);
-        String msg = localizationService.translate(LocalizationKeys.CHARACTER_GAINED_POINTS,
-                arg("skillpoints", skillpoint).with("attributes", attributepoint));
+        String msg = localizationService.translate(LocalizationKeys.CHARACTER_GAINED_SKILL_POINTS,
+                arg("skillpoints", skillpoint).with("class", cc.getName()));
+        character.sendMessage(msg);
+        putInSaveQueue(character.getCharacterBase());
+    }
+
+    @Override
+    public void characterAddAttributePoints(T character, int attributepoint) {
+        String msg = localizationService.translate(LocalizationKeys.CHARACTER_GAINED_ATTRIBUTE_POINTS, arg("attributes", attributepoint));
         character.sendMessage(msg);
         putInSaveQueue(character.getCharacterBase());
     }

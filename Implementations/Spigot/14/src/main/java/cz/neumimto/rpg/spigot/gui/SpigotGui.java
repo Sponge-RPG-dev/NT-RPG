@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.spigot.gui;
 
+import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.effects.EffectStatusType;
 import cz.neumimto.rpg.api.effects.IEffect;
@@ -95,8 +96,12 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
 
     @Override
     public void showClassInfo(ISpigotCharacter character, ClassDefinition cc) {
+        showClassInfo(character, cc, null);
+    }
+
+    public void showClassInfo(ISpigotCharacter character, ClassDefinition cc, String back) {
         Player player = character.getPlayer();
-        Inventory i = SpigotGuiHelper.createClassInfoView(player, cc);
+        Inventory i = SpigotGuiHelper.createClassInfoView(player, cc, back);
         player.openInventory(i);
     }
 
@@ -218,12 +223,21 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
 
     @Override
     public void displayCharacterArmor(ISpigotCharacter character, int page) {
+        Player player = character.getPlayer();
+        Inventory i = SpigotGuiHelper.createInventoryTemplate(player, character.getName());
+
+        SpigotGuiHelper.fillArmorView(i, character.getAllowedArmor(), "char");
+        player.openInventory(i);
 
     }
 
     @Override
     public void displayCharacterWeapons(ISpigotCharacter character, int page) {
+        Player player = character.getPlayer();
+        Inventory i = SpigotGuiHelper.createInventoryTemplate(player, character.getName());
 
+        SpigotGuiHelper.fillWeaponView(i, character.getAllowedWeapons(), "char");
+        player.openInventory(i);
     }
 
     public void displayRuneword(ISpigotCharacter character, RuneWord runeword, boolean b) {
@@ -253,7 +267,7 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
     }
 
 
-    public void refreshAttributeView(Player player, ISpigotCharacter character, int slotMod) {
-        SpigotGuiHelper.refreshCharacterAttributeView(player, character, player.getOpenInventory().getTopInventory(), slotMod);
+    public void refreshAttributeView(Player player, ISpigotCharacter character, int slotMod, AttributeConfig a) {
+        SpigotGuiHelper.refreshCharacterAttributeView(player, character, player.getOpenInventory().getTopInventory(), slotMod, a);
     }
 }

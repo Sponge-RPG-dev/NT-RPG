@@ -131,6 +131,7 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
         this.denySlotInteractionArr = new HashSet<>();
         this.inventory = new HashMap<>();
         this.requiresDamageRecalculation = true;
+        this.attrTransaction = new HashMap<>();
     }
 
     @Override

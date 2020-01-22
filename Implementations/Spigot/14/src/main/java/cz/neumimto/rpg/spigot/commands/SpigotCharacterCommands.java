@@ -1,7 +1,10 @@
 package cz.neumimto.rpg.spigot.commands;
 
 import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.*;
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.Default;
+import co.aikar.commands.annotation.Optional;
+import co.aikar.commands.annotation.Subcommand;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
@@ -82,7 +85,7 @@ public class SpigotCharacterCommands extends BaseCommand {
         Integer integer = attributesTransaction.get(a.getId());
         attributesTransaction.put(a.getId(), integer + 1);
         if (ui) {
-            spigotGui.refreshAttributeView(executor, character, slotMod);
+            spigotGui.refreshAttributeView(executor, character, slotMod, a);
         }
     }
 
@@ -92,10 +95,24 @@ public class SpigotCharacterCommands extends BaseCommand {
         spigotGui.displayCharacterAttributes(executor, character);
     }
 
+    @Subcommand("weapons")
+    public void weapons(Player executor, @Default("0") int page) {
+        ISpigotCharacter character = characterService.getCharacter(executor);
+        spigotGui.displayCharacterWeapons(character, page);
+    }
+
+    @Subcommand("armor")
+    public void armor(Player executor, @Default("0") int page) {
+        ISpigotCharacter character = characterService.getCharacter(executor);
+        spigotGui.displayCharacterArmor(character, page);
+    }
+
     @Subcommand("attributes tx-commit")
     public void attributesCommit(Player executor) {
         ISpigotCharacter character = characterService.getCharacter(executor);
         characterCommandFacade.commandCommitAttribute(character);
     }
+
+
 
 }

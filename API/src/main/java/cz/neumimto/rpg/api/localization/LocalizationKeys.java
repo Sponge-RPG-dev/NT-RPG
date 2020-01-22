@@ -33,7 +33,8 @@ public class LocalizationKeys {
     public static final String INTERACTIVE_SKILLTREE_MOD_FAST = "skilltree.mode.fast";
     public static final String CLASS_NOT_SELECTED = "skilltree.no.class.selected";
     public static final String CHARACTER_INITIALIZED = "player.character.activated.message";
-    public static final String CHARACTER_GAINED_POINTS = "player.character.gained.points.message";
+    public static final String CHARACTER_GAINED_ATTRIBUTE_POINTS = "player.character.gained.ap.points.message";
+    public static final String CHARACTER_GAINED_SKILL_POINTS = "player.character.gained.sk.points.message";
     public static final String CLASS_WELCOME_MESSAGE = "player.class.welcome-text.message";
     public static final String PLAYER_INVITED_TO_PARTY_PARTY_MSG = "party.player-invited.message";
     public static final String PLAYER_INVITED_TO_PARTY = "player.received-party-invite.message";
@@ -139,6 +140,7 @@ public class LocalizationKeys {
     public static final String COMMAND_ADMIN_ITEM_TYPE = "command.admin-item-type.desc";
     public static final String COMMAND_ADMIN_RUNEWORD = "command.admin-runeword.desc";
     public static final String ATTRIBUTE_POINTS = "label.attribute-points";
+    public static final String ITEM_ARMOR = "label.item-armor";
 
     private LocalizationKeys() {
     }
