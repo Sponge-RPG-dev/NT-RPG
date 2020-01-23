@@ -58,6 +58,10 @@ public class CharacterCommandFacade {
             for (Map.Entry<AttributeConfig, Integer> e : map.entrySet()) {
                 character.sendMessage(e.getKey().getName() + " +" + e.getValue());
             }
+            for (String s : propertyService.getAttributes().keySet()) {
+                attributesTransaction.put(s, 0);
+            }
+
         } else {
             character.sendMessage(actionResult.getMessage());
         }

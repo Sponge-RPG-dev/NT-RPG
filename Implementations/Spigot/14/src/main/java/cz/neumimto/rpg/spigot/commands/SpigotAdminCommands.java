@@ -1,6 +1,7 @@
 package cz.neumimto.rpg.spigot.commands;
 
 
+import co.aikar.commands.annotation.Optional;
 import co.aikar.commands.annotation.*;
 import co.aikar.commands.bukkit.contexts.OnlinePlayer;
 import cz.neumimto.rpg.api.Rpg;
@@ -53,6 +54,12 @@ public class SpigotAdminCommands extends AbstractAdminCommands<CommandSender, Pl
 
     @Inject
     private DamageService damageService;
+
+    @Inject
+    private SpigotCharacterCommands spigotCharacterCommands;
+
+    @Inject
+    private SpigotInfoCommands spigotInfoCommands;
 
     @Override
     protected IActiveCharacter toCharacter(Player player) {
@@ -108,10 +115,28 @@ public class SpigotAdminCommands extends AbstractAdminCommands<CommandSender, Pl
     }
 
     @Subcommand("skill")
-    public void adminExecuteSkillCommand(Player executor, ISkill skill, @Flags("level") @Default("1") int level) {
+    public void adminExecuteSkillCommand(Player executor, ISkill skill, @Default("1") int level) {
         IActiveCharacter character = characterService.getCharacter(executor);
         adminCommandFacade.commandExecuteSkill(character, skill, level);
     }
+
+    @Subcommand("char")
+    @Description("forces opening of character menu on a client")
+    public void adminExecuteSkillCommandAdmin(CommandSender console, OnlinePlayer executor) {
+        spigotCharacterCommands.menu(executor.player);
+    }
+
+    @Subcommand("classes")
+    public void showClassesCommandAdmin(CommandSender console, OnlinePlayer executor, @Optional String type) {
+        spigotInfoCommands.showClassesCommand(executor.player, type);
+    }
+
+    @Subcommand("class")
+    @CommandPermission("ntrpg.info.class")
+    public void showClassCommandAdmin(CommandSender console, OnlinePlayer executor, ClassDefinition classDefinition, @Optional String back) {
+        spigotInfoCommands.showClassCommand(executor.player, classDefinition, back);
+    }
+
 
     @Subcommand("add-class")
     public void addClassToCharacterCommand(CommandSender executor, OnlinePlayer target, ClassDefinition klass) {

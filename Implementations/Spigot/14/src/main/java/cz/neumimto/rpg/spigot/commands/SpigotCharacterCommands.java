@@ -79,7 +79,7 @@ public class SpigotCharacterCommands extends BaseCommand {
     }
 
     @Subcommand("attribute add")
-    public void attributesAdd(Player executor, AttributeConfig a, @Default("false") @Optional boolean ui, @Optional int slotMod) {
+    public void attributesAdd(Player executor, AttributeConfig a, @Default("false") @Optional boolean ui, @Optional Integer slotMod) {
         ISpigotCharacter character = characterService.getCharacter(executor);
         Map<String, Integer> attributesTransaction = character.getAttributesTransaction();
         Integer integer = attributesTransaction.get(a.getId());

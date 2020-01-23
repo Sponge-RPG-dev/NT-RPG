@@ -56,7 +56,7 @@ public class SpigotGuiHelper {
         }
 
         inventoryIds = w.stream().mapToInt(i -> i).toArray();
-        attributButtonSlots = new int[]{10, 11, 12, 13, 14, 15, 16, 17, 36, 37, 38, 39, 40, 41, 42, 43, 45};
+        attributButtonSlots = new int[]{10, 11, 12, 13, 14, 15, 16,  36, 37, 38, 39, 40, 41, 42, 43, 45};
 
     }
 
@@ -627,7 +627,7 @@ public class SpigotGuiHelper {
         Inventory i = createInventoryTemplate(player, Rpg.get().getLocalizationService().translate(LocalizationKeys.ATTRIBUTES));
         i.setItem(0, button(Material.PAPER, Rpg.get().getLocalizationService().translate(LocalizationKeys.BACK), "char"));
         createAttributePointsButton(i, character);
-
+        i.setItem(8, button(Material.GLOWSTONE_DUST, Rpg.get().getLocalizationService().translate(LocalizationKeys.CONFIRM), "char attributes tx-commit"));
         Map<String, Integer> transientAttributes = character.getTransientAttributes();
         Map<String, Integer> attributes = character.getCharacterBase().getAttributes();
         Map<String, Integer> attributesTransaction = character.getAttributesTransaction();

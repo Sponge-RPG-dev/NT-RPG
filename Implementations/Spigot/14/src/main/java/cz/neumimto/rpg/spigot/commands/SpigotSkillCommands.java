@@ -3,7 +3,6 @@ package cz.neumimto.rpg.spigot.commands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Default;
-import co.aikar.commands.annotation.Flags;
 import co.aikar.commands.annotation.Optional;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.ISkill;
@@ -26,7 +25,7 @@ public class SpigotSkillCommands extends BaseCommand  {
 
     @Default
     private void playerRunSkillCommand(Player executor, ISkill skill,
-                                       @Optional @Flags("action") SkillsCommandFacade.SkillAction action,
+                                       @Optional SkillsCommandFacade.SkillAction action,
                                        @Optional String flagData
     ) {
         IActiveCharacter character = characterService.getCharacter(executor);
