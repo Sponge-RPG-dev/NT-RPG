@@ -16,12 +16,15 @@ import cz.neumimto.rpg.spigot.inventory.SpigotItemService;
 import de.tr7zw.nbtapi.NBTItem;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
@@ -57,7 +60,7 @@ public class SpigotInventoryListener implements Listener {
 
     private static final int OFFHAND_SLOT_ID = 40;
 
-    @EventHandler 
+    @EventHandler
     public void onInventoryInteract(InventoryClickEvent event) {
         HumanEntity whoClicked = event.getWhoClicked();
         ItemStack currentItem = event.getCurrentItem();
@@ -167,7 +170,6 @@ public class SpigotInventoryListener implements Listener {
             ) {
                 offHandSlotO.setContent(futureOff);
                 managedSlotM.setContent(futureMain);
-                character.setRequiresDamageRecalculation(true);
             } else {
                 event.setCancelled(true);
             }
@@ -175,7 +177,6 @@ public class SpigotInventoryListener implements Listener {
 
         character.setRequiresDamageRecalculation(true);
     }
-
 
 
     @EventHandler
@@ -283,6 +284,7 @@ public class SpigotInventoryListener implements Listener {
                     //equip
                     if (inventoryHandler.handleCharacterEquipActionPre(character, managedSlot, rpgItemStackF)) {
                         inventoryHandler.handleCharacterEquipActionPost(character, managedSlot, rpgItemStackF);
+                        character.setRequiresDamageRecalculation(true);
                     } else {
                         event.setResult(Event.Result.DENY);
                         event.setCancelled(true);
@@ -295,10 +297,49 @@ public class SpigotInventoryListener implements Listener {
                     RpgItemStack rpgItemStack = original.get();
                     if (inventoryHandler.handleCharacterUnEquipActionPre(character, managedSlot, rpgItemStack)) {
                         inventoryHandler.handleCharacterUnEquipActionPost(character, managedSlot);
+                        character.setRequiresDamageRecalculation(true);
                     }
                 }
             }
         }
+    }
+
+    @EventHandler
+    public void onItemPickup(EntityPickupItemEvent event) {
+        if (event.getEntityType() != EntityType.PLAYER) {
+            return;
+        }
+        Player player = (Player) event.getEntity();
+        ISpigotCharacter character = spigotCharacterService.getCharacter(player.getUniqueId());
+        Item item = event.getItem();
+
+        PlayerInventory inventory = player.getInventory();
+
+        ItemStack itemStackToBePickedUp = item.getItemStack();
+        Optional<RpgItemStack> itemStack = itemService.getRpgItemStack(itemStackToBePickedUp);
+        if (itemStack.isPresent()) {
+            RpgItemStack rpgItemStack = itemStack.get();
+
+            boolean canUse = itemService.checkItemType(character, rpgItemStack) &&
+                    itemService.checkItemAttributeRequirements(character, rpgItemStack) &&
+                    itemService.checkItemClassRequirements(character, rpgItemStack);
+
+            if (!canUse) {
+                int size = inventory.getSize();
+                for (int i = 8; i < size-1; i++) {
+                    ItemStack item1 = inventory.getItem(i);
+                    if (item1 == null) {
+                        inventory.setItem(i, itemStackToBePickedUp);
+                        event.setCancelled(true);
+                        item.remove();
+                        break;
+                    }
+                }
+            } else {
+                character.setRequiresDamageRecalculation(true);
+            }
+        }
+
     }
 }
 

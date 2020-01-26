@@ -19,5 +19,4 @@ public interface ISpigotCharacter extends IActiveCharacter<Player, SpigotParty>,
 
     Map<String, SpigotSkillTreeViewModel> getSkillTreeViewLocation();
 
-    List<PermissionAttachment> getPermissionContext();
 }

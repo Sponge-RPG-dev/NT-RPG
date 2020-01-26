@@ -122,7 +122,7 @@ public abstract class AbstractItemService implements ItemService {
     }
 
     @Override
-    public boolean checkItemAttributeRequirements(IActiveCharacter character, ManagedSlot managedSlot, RpgItemStack rpgItemStack) {
+    public boolean checkItemAttributeRequirements(IActiveCharacter character, RpgItemStack rpgItemStack) {
         Collection<AttributeConfig> attributes = propertyService.getAttributes().values();
         Map<AttributeConfig, Integer> inventoryRequirements = new HashMap<>();
         for (AttributeConfig attribute : attributes) {

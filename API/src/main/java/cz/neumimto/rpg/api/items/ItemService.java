@@ -45,7 +45,7 @@ public interface ItemService {
 
     boolean checkItemType(IActiveCharacter character, RpgItemStack rpgItemStack);
 
-    boolean checkItemAttributeRequirements(IActiveCharacter character, ManagedSlot managedSlot, RpgItemStack rpgItemStack);
+    boolean checkItemAttributeRequirements(IActiveCharacter character, RpgItemStack rpgItemStack);
 
     boolean checkItemClassRequirements(IActiveCharacter character, RpgItemStack rpgItemStack);
 
