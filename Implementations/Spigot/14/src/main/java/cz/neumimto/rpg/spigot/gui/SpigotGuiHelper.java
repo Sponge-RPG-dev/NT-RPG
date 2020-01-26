@@ -280,7 +280,7 @@ public class SpigotGuiHelper {
             double damage = weapon.getDamage();
 
             if (damage > 0) {
-                ChatColor colorByDamage = ChatColor.valueOf(damageService.getColorByDamage(damage));
+                ChatColor colorByDamage = ChatColor.RED;//valueOf(damageService.getColorByDamage(damage));
                 ItemMeta itemMeta = itemStack.getItemMeta();
                 if (type.getModelId() != null) {
                     itemMeta.setCustomModelData(Integer.parseInt(type.getModelId()));
@@ -645,11 +645,12 @@ public class SpigotGuiHelper {
 
             int slot = attributButtonSlots[k];
             ItemStack attrInc = button(Material.GREEN_DYE, ChatColor.GREEN + "+",
-                    "char attribute add " + aconf.getId() + " true " + slot);
+                    "char attribute-add " + aconf.getId() + " true " + slot);
             ItemStack atris = unclickableIcon(charAttributeToItemStack(aconf, real, transientVal, tx));
 
             i.setItem(slot - 9, attrInc);
             i.setItem(slot, atris);
+            k++;
         }
         return i;
     }

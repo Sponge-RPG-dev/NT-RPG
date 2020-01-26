@@ -18,6 +18,7 @@ import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.common.effects.InternalEffectSourceProvider;
 import cz.neumimto.rpg.common.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.spigot.effects.common.def.BossBarExpNotifier;
+import cz.neumimto.rpg.spigot.effects.common.def.ManaBarNotifier;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
@@ -133,7 +134,13 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
 
     @Override
     public void displayMana(ISpigotCharacter character) {
-
+        IEffectContainer<Object, ManaBarNotifier> barExpNotifier = character.getEffect(ManaBarNotifier.name);
+        ManaBarNotifier effect = (ManaBarNotifier) barExpNotifier;
+        if (effect == null) {
+            effect = new ManaBarNotifier(character);
+            effectService.addEffect(effect, InternalEffectSourceProvider.INSTANCE);
+        }
+        effect.notifyManaChange();
     }
 
     @Override

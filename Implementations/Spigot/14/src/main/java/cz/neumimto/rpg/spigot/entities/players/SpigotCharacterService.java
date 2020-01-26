@@ -61,4 +61,9 @@ public class SpigotCharacterService extends AbstractCharacterService<ISpigotChar
         return getCharacter(target.getUniqueId());
     }
 
+    public void setHeathscale(ISpigotCharacter character, double i) {
+        character.getCharacterBase().setHealthScale(i);
+        character.getPlayer().setHealthScale(i);
+        putInSaveQueue(character.getCharacterBase());
+    }
 }

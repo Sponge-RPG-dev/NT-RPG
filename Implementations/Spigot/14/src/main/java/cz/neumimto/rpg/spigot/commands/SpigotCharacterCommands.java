@@ -78,7 +78,7 @@ public class SpigotCharacterCommands extends BaseCommand {
         characterService.addNewClass(character, classDefinition);
     }
 
-    @Subcommand("attribute add")
+    @Subcommand("attribute-add")
     public void attributesAdd(Player executor, AttributeConfig a, @Default("false") @Optional boolean ui, @Optional Integer slotMod) {
         ISpigotCharacter character = characterService.getCharacter(executor);
         Map<String, Integer> attributesTransaction = character.getAttributesTransaction();
@@ -113,6 +113,11 @@ public class SpigotCharacterCommands extends BaseCommand {
         characterCommandFacade.commandCommitAttribute(character);
     }
 
+    @Subcommand("healthscale")
+    public void attributesCommit(Player executor, double scale) {
+        ISpigotCharacter character = characterService.getCharacter(executor);
+        characterService.setHeathscale(character, scale);
+    }
 
 
 }
