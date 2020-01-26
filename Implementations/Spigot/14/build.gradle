@@ -17,6 +17,9 @@ repositories {
     maven {
         url = "https://repo.aikar.co/content/groups/aikar/"
     }
+    maven {
+        url = 'http://repo.extendedclip.com/content/repositories/placeholderapi/'
+    }
 }
 
 group = 'cz.neumimto.rpg'
@@ -46,6 +49,7 @@ dependencies {
     compile 'com.github.stefvanschie.inventoryframework:IF:0.5.14'
     compile 'de.tr7zw:item-nbt-api-plugin:2.2.0'
 
+    compileOnly 'me.clip:placeholderapi:2.10.3'
     jar {
 
         from {

@@ -8,6 +8,7 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.persistence.flatfiles.FlatFilesModule;
+import cz.neumimto.rpg.spigot.bridges.NtRpgPlaceholderExpansion;
 import cz.neumimto.rpg.spigot.commands.*;
 import cz.neumimto.rpg.spigot.entities.configuration.SpigotMobSettingsDao;
 import cz.neumimto.rpg.spigot.gui.SpigotGui;
@@ -15,6 +16,8 @@ import cz.neumimto.rpg.spigot.resources.SpigotGuiceModule;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.java.annotation.dependency.SoftDependency;
+import org.bukkit.plugin.java.annotation.dependency.SoftDependsOn;
 import org.bukkit.plugin.java.annotation.plugin.*;
 import org.bukkit.plugin.java.annotation.plugin.author.Author;
 import org.slf4j.Logger;
@@ -26,12 +29,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
-@Plugin(name = "NT-RPG", version = "0.0.1-SNAPSHOT")
+@Plugin(name = "NT-RPG", version = "0.0.3-SNAPSHOT")
 @Description("Complete combat overhaul with classes and skills")
 @Author("NeumimTo")
 @Website("https://github.com/Sponge-RPG-dev/NT-RPG")
 @LogPrefix("NTRPG")
 @ApiVersion(ApiVersion.Target.v1_13)
+@SoftDependsOn(@SoftDependency("PlaceholderAPI"))
 public class SpigotRpgPlugin extends JavaPlugin {
 
     private static SpigotRpgPlugin plugin;
@@ -77,12 +81,19 @@ public class SpigotRpgPlugin extends JavaPlugin {
 
             injector.getInstance(Gui.class).setVanillaMessaging(injector.getInstance(SpigotGui.class));
             injector.getInstance(SpigotMobSettingsDao.class).load();
+
+            if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null){
+                injector.getInstance(NtRpgPlaceholderExpansion.class).register();
+            }
         });
+
+
 
         Collection<? extends Player> onlinePlayers = Bukkit.getServer().getOnlinePlayers();
         for (Player onlinePlayer : onlinePlayers) {
             Rpg.get().getCharacterService().loadPlayerData(onlinePlayer.getUniqueId(), onlinePlayer.getName());
         }
+
     }
 
     @Override
