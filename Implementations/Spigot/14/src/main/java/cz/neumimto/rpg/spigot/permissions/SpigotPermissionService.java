@@ -1,10 +1,13 @@
 package cz.neumimto.rpg.spigot.permissions;
 
-import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.permissions.PermissionService;
+import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import org.bukkit.entity.Player;
+import org.bukkit.permissions.PermissionAttachmentInfo;
 
 import java.util.Collection;
+import java.util.Set;
 
 public class SpigotPermissionService implements PermissionService<ISpigotCharacter> {
     @Override
@@ -14,21 +17,23 @@ public class SpigotPermissionService implements PermissionService<ISpigotCharact
 
     @Override
     public void removePermissions(ISpigotCharacter character, Collection<String> perms) {
-
+        Player player = character.getPlayer();
+        Set<PermissionAttachmentInfo> efPerms = player.getEffectivePermissions();
+        for (String perm : perms) {
+            for (PermissionAttachmentInfo efPerm : efPerms) {
+                if (efPerm.getPermission().equalsIgnoreCase(perm)) {
+                    player.removeAttachment(efPerm.getAttachment());
+                }
+            }
+        }
     }
 
     @Override
     public void addPermissions(ISpigotCharacter character, Collection<String> perms) {
-
+        Player player = character.getPlayer();
+        for (String perm : perms) {
+            player.addAttachment(SpigotRpgPlugin.getInstance(), perm, true);
+        }
     }
 
-    @Override
-    public void addAllPermissions(ISpigotCharacter character, PlayerClassData classDefinition) {
-
-    }
-
-    @Override
-    public void addPermissions(ISpigotCharacter character, PlayerClassData classDefinition) {
-
-    }
 }

@@ -2,6 +2,7 @@ package cz.neumimto.rpg.api.permissions;
 
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
+import cz.neumimto.rpg.api.entity.players.classes.PlayerClassPermission;
 
 import java.util.Collection;
 
@@ -13,7 +14,20 @@ public interface PermissionService<T extends IActiveCharacter> {
 
     void addPermissions(T character, Collection<String> perms);
 
-    void addAllPermissions(T character, PlayerClassData classDefinition);
+    default void addAllPermissions(T character, PlayerClassData classDefinition) {
+        for (PlayerClassPermission playerClassPermission : classDefinition.getClassDefinition().getPermissions()) {
+            if (playerClassPermission.getLevel() <= classDefinition.getLevel()) {
+                addPermissions(character, playerClassPermission.getPermissions());
+            }
+        }
+    }
 
-    void addPermissions(T character, PlayerClassData classDefinition);
+
+    default void addPermissions(T character, PlayerClassData classDefinition) {
+        for (PlayerClassPermission playerClassPermission : classDefinition.getClassDefinition().getPermissions()) {
+            if (playerClassPermission.getLevel() == classDefinition.getLevel()) {
+                addPermissions(character, playerClassPermission.getPermissions());
+            }
+        }
+    }
 }

@@ -34,21 +34,5 @@ public class SpongePermissionService implements PermissionService<ISpongeCharact
         }
     }
 
-    @Override
-    public void addAllPermissions(ISpongeCharacter character, PlayerClassData classDefinition) {
-        for (PlayerClassPermission playerClassPermission : classDefinition.getClassDefinition().getPermissions()) {
-            if (playerClassPermission.getLevel() <= classDefinition.getLevel()) {
-                addPermissions(character, playerClassPermission.getPermissions());
-            }
-        }
-    }
 
-    @Override
-    public void addPermissions(ISpongeCharacter character, PlayerClassData classDefinition) {
-        for (PlayerClassPermission playerClassPermission : classDefinition.getClassDefinition().getPermissions()) {
-            if (playerClassPermission.getLevel() == classDefinition.getLevel()) {
-                addPermissions(character, playerClassPermission.getPermissions());
-            }
-        }
-    }
 }

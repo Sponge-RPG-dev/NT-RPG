@@ -644,11 +644,14 @@ public class SpigotGuiHelper {
             int tx = attributesTransaction.get(a.getKey());
 
             int slot = attributButtonSlots[k];
-            ItemStack attrInc = button(Material.GREEN_DYE, ChatColor.GREEN + "+",
-                    "char attribute-add " + aconf.getId() + " true " + slot);
+            if (character.getAttributePoints() > 0) {
+                ItemStack attrInc = button(Material.GREEN_DYE, ChatColor.GREEN + "+",
+                        "char attribute-add " + aconf.getId() + " true " + slot);
+                i.setItem(slot - 9, attrInc);
+            }
             ItemStack atris = unclickableIcon(charAttributeToItemStack(aconf, real, transientVal, tx));
 
-            i.setItem(slot - 9, attrInc);
+
             i.setItem(slot, atris);
             k++;
         }

@@ -79,7 +79,7 @@ public class ACFBootstrap {
         manager.getCommandContexts().registerContext(AttributeConfig.class, c -> {
             String firstArg = c.getFirstArg();
             c.popFirstArg();
-            return Rpg.get().getPropertyService().getAttributeById(firstArg);
+            return Rpg.get().getPropertyService().getAttributeById(firstArg).get();
         });
 
         manager.getCommandCompletions().registerAsyncCompletion("classtype", c ->
