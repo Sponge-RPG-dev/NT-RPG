@@ -41,7 +41,7 @@ public class SpigotClassGenerator extends ClassGenerator {
 
 
                 AnnotationDescription annotation = AnnotationDescription.Builder.ofType(EventHandler.class)
-                        .define("prioerity", priority)
+                        .define("priority", priority)
                         .build();
 
 

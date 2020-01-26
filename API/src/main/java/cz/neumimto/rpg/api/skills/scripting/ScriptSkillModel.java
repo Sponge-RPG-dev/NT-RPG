@@ -32,7 +32,7 @@ public class ScriptSkillModel {
     @Path("Description")
     private List<String> description;
 
-    @Path("Paths")
+    @Path("Settings")
     @Conversion(SettingsToMap.class)
     private Map<String, Float> settings;
 
