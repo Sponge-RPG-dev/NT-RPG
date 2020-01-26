@@ -22,10 +22,7 @@ import cz.neumimto.rpg.spigot.events.damage.SpigotEntityProjectileDamageEarlyEve
 import cz.neumimto.rpg.spigot.events.damage.SpigotEntitySkillDamageEarlyEvent;
 import cz.neumimto.rpg.spigot.events.damage.SpigotEntityWeaponDamageEarlyEvent;
 import cz.neumimto.rpg.spigot.inventory.SpigotItemService;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Projectile;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -107,6 +104,10 @@ public class SpigotDamageListener extends AbstractDamageListener implements List
         if (attacker.getType() == IEntityType.CHARACTER) {
             IActiveCharacter character = (IActiveCharacter) attacker;
             if (character.requiresDamageRecalculation()) {
+                Player entity = (Player) attacker.getEntity();
+                ItemStack itemInMainHand = entity.getInventory().getItemInMainHand();
+                RpgItemStack futureMainHand = itemService.getRpgItemStack(itemInMainHand).orElse(null);
+                character.setMainHand(futureMainHand, entity.getInventory().getHeldItemSlot());
                 RpgItemStack mainHand = character.getMainHand();
                 spigotDamageService.recalculateCharacterWeaponDamage(character, mainHand);
                 character.setRequiresDamageRecalculation(false);

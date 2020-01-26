@@ -177,6 +177,9 @@ public class ResourceManagerImpl implements ResourceLoader {
         }
 
         for (String classToLoad : classesToLoad) {
+            if (classToLoad.startsWith("cz/neumimto/rpg/spigot/bridges")) {
+                continue;
+            }
             Class<?> clazz = loadClass(main, classLoader, classToLoad);
             ResourceManagerImpl.classesToLoad.add(clazz);
         }
@@ -194,7 +197,7 @@ public class ResourceManagerImpl implements ResourceLoader {
             } else {
                 clazz = Class.forName(className);
             }
-        } catch (Exception e) {
+        } catch (Throwable e) {
             error("Could not load the class [" + className + "]" + e.getMessage(), e);
         }
         return clazz;

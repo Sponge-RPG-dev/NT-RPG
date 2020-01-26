@@ -209,7 +209,7 @@ public class SpigotInventoryListener implements Listener {
                 int last = character.getLastHotbarSlotInteraction();
                 if (selectedSlotIndex != last) {
                     Map<Class<?>, RpgInventory> managedInventory = character.getManagedInventory();
-                    Map<Integer, ManagedSlot> managedSlots = managedInventory.get(inventory.getClass()).getManagedSlots();
+                    Map<Integer, ManagedSlot> managedSlots = managedInventory.get(PlayerInventory.class).getManagedSlots();
 
                     if (managedSlots.containsKey(selectedSlotIndex)) {
                         ManagedSlot managedSlot = managedSlots.get(selectedSlotIndex);

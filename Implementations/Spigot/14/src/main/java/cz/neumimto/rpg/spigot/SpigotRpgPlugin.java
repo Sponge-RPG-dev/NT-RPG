@@ -29,7 +29,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
-@Plugin(name = "NT-RPG", version = "0.0.3-SNAPSHOT")
+@Plugin(name = "NT-RPG", version = "0.0.4-SNAPSHOT")
 @Description("Complete combat overhaul with classes and skills")
 @Author("NeumimTo")
 @Website("https://github.com/Sponge-RPG-dev/NT-RPG")

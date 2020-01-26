@@ -51,7 +51,7 @@ public abstract class AbstractDamageService<T> implements DamageService<T> {
     @Override
     public void recalculateCharacterWeaponDamage(IActiveCharacter character, RpgItemStack mainHand) {
         if (mainHand == null) {
-            character.setWeaponDamage(0); //todo unarmed
+            character.setWeaponDamage(1); //todo unarmed
         } else {
             recalculateCharacterWeaponDamage(character, mainHand.getItemType());
         }
