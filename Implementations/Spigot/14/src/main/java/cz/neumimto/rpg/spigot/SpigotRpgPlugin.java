@@ -96,6 +96,7 @@ public class SpigotRpgPlugin extends JavaPlugin {
 
     }
 
+
     @Override
     public void onDisable() {
         executor.shutdown();
