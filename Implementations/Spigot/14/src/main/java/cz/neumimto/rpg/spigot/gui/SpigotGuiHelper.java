@@ -406,8 +406,8 @@ public class SpigotGuiHelper {
 
         i.setItem(26, button(Material.STICK, "Up", "skilltree north", 12345));
         i.setItem(35, button(Material.STICK, "Down", "skilltree south", 12346));
-        i.setItem(44, button(Material.STICK, "Right", "skilltree west", 12347));
-        i.setItem(53, button(Material.STICK, "Left", "skilltree east", 12348));
+        i.setItem(53, button(Material.STICK, "Left", "skilltree east", 12347));
+        i.setItem(44, button(Material.STICK, "Right", "skilltree west", 12348));
     }
 
     public static Inventory drawSkillTreeViewData(Inventory i, ISpigotCharacter character) {
