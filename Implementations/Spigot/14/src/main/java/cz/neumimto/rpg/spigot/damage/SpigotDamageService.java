@@ -7,6 +7,7 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.items.ClassItem;
 import cz.neumimto.rpg.common.damage.AbstractDamageService;
+import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
@@ -109,6 +110,10 @@ public class SpigotDamageService extends AbstractDamageService<LivingEntity> {
         }
         target.damage(damage, attacker);
 
+        return true;
+    }
+
+    public boolean canDamage(ISpigotCharacter caster, LivingEntity l) {
         return true;
     }
 }
