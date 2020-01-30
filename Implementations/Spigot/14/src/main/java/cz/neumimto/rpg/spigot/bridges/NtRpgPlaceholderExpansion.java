@@ -1,7 +1,5 @@
 package cz.neumimto.rpg.spigot.bridges;
 
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
@@ -12,7 +10,6 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 public class NtRpgPlaceholderExpansion extends PlaceholderExpansion {
 
@@ -96,9 +93,6 @@ public class NtRpgPlaceholderExpansion extends PlaceholderExpansion {
                 return null;
             }
 
-            if(identifier.equals("placeholder2")){
-                return character.getName();
-            }
         }
 
         return null;

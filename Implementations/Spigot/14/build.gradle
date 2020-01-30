@@ -23,7 +23,7 @@ repositories {
 }
 
 group = 'cz.neumimto.rpg'
-version = '2.1.0-SNAPSHOT-4'
+version = '2.1.0-SNAPSHOT-5'
 
 compileJava {
     options.compilerArgs += ["-parameters"]
@@ -50,6 +50,8 @@ dependencies {
     compile 'de.tr7zw:item-nbt-api-plugin:2.2.0'
 
     compileOnly 'me.clip:placeholderapi:2.10.3'
+    compileOnly 'com.gmail.filoghost.holographicdisplays:holographicdisplays-api:2.4.0'
+
     jar {
 
         from {

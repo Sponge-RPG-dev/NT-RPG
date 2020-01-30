@@ -48,7 +48,7 @@ public abstract class Targeted extends ActiveSkill<ISpigotCharacter> implements 
             skillContext.next(caster, info, SkillResult.CANCELLED); //dont chain
             return;
         }
-        IEntity target = Rpg.get().getEntityService().get(l);
+        IEntity<LivingEntity> target = Rpg.get().getEntityService().get(l);
 
         SkillTargetAttemptEvent event = Rpg.get().getEventFactory().createEventInstance(SkillTargetAttemptEvent.class);
         event.setSkill(this);

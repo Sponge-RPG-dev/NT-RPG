@@ -8,6 +8,7 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.persistence.flatfiles.FlatFilesModule;
+import cz.neumimto.rpg.spigot.bridges.HolographicDisplaysExpansion;
 import cz.neumimto.rpg.spigot.bridges.NtRpgPlaceholderExpansion;
 import cz.neumimto.rpg.spigot.commands.*;
 import cz.neumimto.rpg.spigot.entities.configuration.SpigotMobSettingsDao;
@@ -29,13 +30,18 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
-@Plugin(name = "NT-RPG", version = "0.0.4-SNAPSHOT")
+@Plugin(name = "NT-RPG", version = "0.0.5-SNAPSHOT")
 @Description("Complete combat overhaul with classes and skills")
 @Author("NeumimTo")
 @Website("https://github.com/Sponge-RPG-dev/NT-RPG")
 @LogPrefix("NTRPG")
 @ApiVersion(ApiVersion.Target.v1_13)
-@SoftDependsOn(@SoftDependency("PlaceholderAPI"))
+@SoftDependsOn(
+        value = {
+                @SoftDependency("PlaceholderAPI"),
+                @SoftDependency("HolographicDisplays")
+        }
+)
 public class SpigotRpgPlugin extends JavaPlugin {
 
     private static SpigotRpgPlugin plugin;
@@ -46,7 +52,8 @@ public class SpigotRpgPlugin extends JavaPlugin {
         return plugin;
     }
 
-    public final ExecutorService executor = Executors.newFixedThreadPool(5);;
+    public final ExecutorService executor = Executors.newFixedThreadPool(5);
+    ;
 
     @Override
     public void onEnable() {
@@ -75,18 +82,23 @@ public class SpigotRpgPlugin extends JavaPlugin {
                 SpigotSkilltreeCommands.class,
                 SpigotSkillBindCommands.class
 
-        }, new FlatFilesModule(), (bindings, providers) -> new SpigotGuiceModule(this,  bindings, providers), injector -> {
+        }, new FlatFilesModule(), (bindings, providers) -> new SpigotGuiceModule(this, bindings, providers), injector -> {
             injector.injectMembers(spigotRpg);
             new RpgImpl(spigotRpg);
 
             injector.getInstance(Gui.class).setVanillaMessaging(injector.getInstance(SpigotGui.class));
             injector.getInstance(SpigotMobSettingsDao.class).load();
 
-            if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null){
+            if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+                Log.info("PlaceholderAPI installed - registering NTRPG placeholders");
                 injector.getInstance(NtRpgPlaceholderExpansion.class).register();
             }
-        });
 
+            if (Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays")) {
+                Log.info("HolographicDisplays installed - NTRP will use it for some extra guis");
+                injector.getInstance(HolographicDisplaysExpansion.class).init();
+            }
+        });
 
 
         Collection<? extends Player> onlinePlayers = Bukkit.getServer().getOnlinePlayers();

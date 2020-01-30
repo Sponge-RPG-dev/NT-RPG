@@ -8,8 +8,10 @@ import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.items.ClassItem;
 import cz.neumimto.rpg.common.damage.AbstractDamageService;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 import javax.inject.Singleton;
@@ -114,6 +116,10 @@ public class SpigotDamageService extends AbstractDamageService<LivingEntity> {
     }
 
     public boolean canDamage(ISpigotCharacter caster, LivingEntity l) {
-        return true;
+        if (l.getHealth() <= 0 || l.isDead() || l instanceof ArmorStand) {
+            return false;
+        }
+        EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(caster.getEntity(), l, DamageCause.CUSTOM, 0);
+        return !event.isCancelled();
     }
 }
