@@ -8,39 +8,22 @@ import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.api.skills.scripting.SkillScriptContext;
 import cz.neumimto.rpg.api.utils.TriConsumer;
 import cz.neumimto.rpg.common.skills.scripting.SkillComponent;
-import cz.neumimto.rpg.spigot.entities.ISpigotEntity;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageEvent;
 
+import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
-
-import static cz.neumimto.rpg.api.logging.Log.info;
+import java.util.function.Function;
 
 @JsBinding(JsBinding.Type.CONTAINER)
 public class SkillActions {
-
-    @SkillComponent(
-            value = "Damaging an Entity",
-            usage = "damage(source, target, damage, context)",
-            params = {
-                    @SkillComponent.Param("source - Entity of damage origin"),
-                    @SkillComponent.Param("target - Entity to be damaged"),
-                    @SkillComponent.Param("damage - damage value"),
-                    @SkillComponent.Param("context - skill context"),
-                    @SkillComponent.Param("@returns - true if the damage was dealt"),
-            }
-    )
-    public static F.QuadFunction<IEntity<LivingEntity>, IEntity<LivingEntity>, Number, SkillScriptContext, Boolean> DAMAGE = (caster, target, damage, context) -> {
-        IEntity iEntity;
-        ISpigotEntity<LivingEntity> l;
-        l.setSkillOrEffectDamageCause()
-        LivingEntity entity = target.getEntity();
-        LivingEntity damager = caster.getEntity();
-
-        return entity.damage(damage.doubleValue(), damager);
-    };
 
     @SkillComponent(
             value = "Damaging an Entity with specific damage type",
@@ -54,22 +37,11 @@ public class SkillActions {
                     @SkillComponent.Param("@returns - true if the damage was dealt"),
             }
     )
-    public static F.PentaFunction<IEntity<LivingEntity>, IEntity<LivingEntity>, Number, String, SkillScriptContext, Boolean> DAMAGE_WITH_TYPE = (caster, target, damage, damageType, context) -> {
-        Optional<DamageType> type = Sponge.getRegistry().getType(DamageType.class, damageType);
-        if (!type.isPresent()) {
-            throw new RuntimeException(
-                    String.format("Unknown damage type %s, Use one of [%s]",
-                            damageType,
-                            Sponge.getRegistry().getAllOf(DamageType.class).stream().map(DamageType::getId).collect(Collectors.joining(", "))
-                    )
-            );
-        }
-        SkillDamageSource s = new SkillDamageSourceBuilder()
-                .fromSkill(context.getSkill())
-                .type(type.get())
-                .setSource(caster)
-                .build();
-        return target.getEntity().damage(damage.doubleValue(), s);
+    public static F.PentaFunction<IEntity<LivingEntity>, IEntity<LivingEntity>, Number, String, SkillScriptContext, Void> DAMAGE_WITH_TYPE = (caster, target, damage, DamageCause, context) -> {
+        EntityDamageEvent.DamageCause type = EntityDamageEvent.DamageCause.valueOf(DamageCause.toUpperCase());
+
+        target.getEntity().damage(damage.doubleValue(), caster.getEntity());
+        return null;
     };
 
     @SkillComponent(
@@ -108,8 +80,7 @@ public class SkillActions {
             }
     )
     public static Consumer<String> BROADCAST_ALL = (string) -> {
-        Text text = TextHelper.parse(string);
-        Sponge.getServer().getOnlinePlayers().forEach(player -> player.sendMessage(text));
+        Bukkit.getServer().getOnlinePlayers().forEach(player -> player.sendMessage(string));
     };
 
     @SkillComponent(
@@ -121,14 +92,14 @@ public class SkillActions {
             }
     )
     public static TriConsumer<Location, Number, String> BROADCAST_NEARBY = (location, integer, string) -> {
-        Text text = TextHelper.parse(string);
+
         double pow = Math.pow(integer.intValue(), 2);
 
-        Collection<Player> onlinePlayers = Sponge.getServer().getOnlinePlayers();
+        Collection<? extends Player> onlinePlayers = Bukkit.getServer().getOnlinePlayers();
         for (Player onlinePlayer : onlinePlayers) {
-            if (onlinePlayer.getLocation().getExtent().equals(location.getExtent())
-                    && onlinePlayer.getLocation().getPosition().distanceSquared(location.getPosition()) < pow) {
-                onlinePlayer.sendMessage(text);
+            if (onlinePlayer.getLocation().getWorld().equals(location.getWorld())
+                    && onlinePlayer.getLocation().distanceSquared(location) < pow) {
+                onlinePlayer.sendMessage(string);
             }
         }
     };
@@ -142,8 +113,7 @@ public class SkillActions {
             }
     )
     public static Consumer<Location> SPAWN_LIGHTNING = (location) -> {
-        Entity q = location.getExtent().createEntity(EntityTypes.LIGHTNING, location.getPosition());
-        location.getExtent().spawnEntity(q);
+        Entity q = location.getWorld().spawnEntity(location, EntityType.LIGHTNING);
     };
 
     @SkillComponent(
@@ -169,6 +139,7 @@ public class SkillActions {
     )
     public static Function<IEntity<LivingEntity>, Location> GET_LOCATION = iEntity -> iEntity.getEntity().getLocation();
 
+    /*
     @SkillComponent(
             value = "Adds potion effect to the entity",
             usage = "add_potion_effect(target, builder)",
@@ -177,11 +148,10 @@ public class SkillActions {
                     @SkillComponent.Param("builder - potion effect builder"),
             }
     )
-    public static BiConsumer<ISpongeEntity, PotionEffect.Builder> ADD_POTION_EFFECT = (iEffectConsumer, builder) -> {
-        PotionEffect build = builder.build();
-        iEffectConsumer.addPotionEffect(build);
-    };
+    public static BiConsumer<ISpigotEntity, PotionEffect> ADD_POTION_EFFECT = (iEffectConsumer, oe) -> {
 
+    };
+*/
     @SkillComponent(
             value = "Converts a time to ingame interval represented in server ticks, conversion is not taking into account server lag",
             usage = "to_server_ticks(100, timeunit)",
@@ -194,36 +164,5 @@ public class SkillActions {
         long convert = o2.convert(o, TimeUnit.SECONDS);
         return (int) (convert / 3);
     };
-
-    @SkillComponent(
-            value = "Returns an instance of PotionEffectBuilder",
-            usage = "var builder = potion_effect_builder(\"potioneffectid\")",
-            params = {}
-    )
-    public static Function<String, PotionEffect.Builder> POTION_EFFECT_BUILDER = s -> {
-        PotionEffectType type = Sponge.getRegistry().getType(PotionEffectType.class, s).orElseGet(null);
-        if (type == null) {
-            info("Registered Potion Ids:");
-            for (PotionEffectType potionEffectType : Sponge.getRegistry().getAllOf(PotionEffectType.class)) {
-                info(" - " + potionEffectType.getId());
-            }
-            throw new RuntimeException("Unknown Potion Effect Id : " + s);
-        }
-        return PotionEffect.builder().potionType(type);
-    };
-
-    @SkillComponent(
-            value = "Converts a string to Text object.",
-            usage = "var text = to_text(\"&aColored Text\")",
-            params = {}
-    )
-    public static Function<String, Text> TO_TEXT = TextHelper::parse;
-
-    @SkillComponent(
-            value = "Converts a string to multiline (list) of Text objects.",
-            usage = "var textList = to_multiline_text(\"&aFirst Line:nSecondLine\")",
-            params = {}
-    )
-    public static Function<String, List<Text>> TO_MULTILINE_TEXT = TextHelper::splitStringByDelimiter;
 
 }
