@@ -20,6 +20,7 @@ repositories {
     maven {
         url = 'http://repo.extendedclip.com/content/repositories/placeholderapi/'
     }
+
 }
 
 group = 'cz.neumimto.rpg'
@@ -36,8 +37,7 @@ dependencies {
     compileOnly "org.spigotmc:plugin-annotations:1.2.2-SNAPSHOT"
     annotationProcessor "org.spigotmc:plugin-annotations:1.2.2-SNAPSHOT"
 
-   // compileOnly files('../../../lib/craftbukkit-1.15.1-R0.1-SNAPSHOT.jar')
-
+    compile fileTree(dir: 'lib', include: '*.jar')
     compile 'org.slf4j:slf4j-api:1.7.28'
     compile project(':Common')
     compile project(':FlatFiles-Persistence')
