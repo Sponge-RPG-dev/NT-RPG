@@ -43,7 +43,8 @@ public class ACFBootstrap {
         });
 
         manager.getCommandContexts().registerContext(ISkill.class, c -> {
-            String s = c.getFirstArg();
+            String s = c.popFirstArg();
+
             return Rpg.get().getSkillService().getById(s.toLowerCase()).get();
         });
 
@@ -77,8 +78,7 @@ public class ACFBootstrap {
         );
 
         manager.getCommandContexts().registerContext(AttributeConfig.class, c -> {
-            String firstArg = c.getFirstArg();
-            c.popFirstArg();
+            String firstArg = c.popFirstArg();
             return Rpg.get().getPropertyService().getAttributeById(firstArg).get();
         });
 

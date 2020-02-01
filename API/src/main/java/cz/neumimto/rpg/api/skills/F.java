@@ -12,6 +12,12 @@ public interface F {
     }
 
     @FunctionalInterface
+    interface PentaConsumer<T, U, V, W, X> {
+
+        void accept(T t, U u, V v, W w, X x);
+    }
+
+    @FunctionalInterface
     interface TriFunction<T, U, V, R> {
 
         R apply(T t, U u, V v);

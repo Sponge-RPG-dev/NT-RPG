@@ -7,6 +7,8 @@ import cz.neumimto.rpg.api.entity.players.CharacterService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.logging.Log;
+import cz.neumimto.rpg.api.scripting.IScriptEngine;
+import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.persistence.flatfiles.FlatFilesModule;
 import cz.neumimto.rpg.spigot.bridges.HolographicDisplaysExpansion;
 import cz.neumimto.rpg.spigot.bridges.NtRpgPlaceholderExpansion;
@@ -15,7 +17,9 @@ import cz.neumimto.rpg.spigot.entities.configuration.SpigotMobSettingsDao;
 import cz.neumimto.rpg.spigot.gui.SpigotGui;
 import cz.neumimto.rpg.spigot.resources.SpigotGuiceModule;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.java.annotation.dependency.SoftDependency;
 import org.bukkit.plugin.java.annotation.dependency.SoftDependsOn;
@@ -95,16 +99,23 @@ public class SpigotRpgPlugin extends JavaPlugin {
             }
 
             if (Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays")) {
-                Log.info("HolographicDisplays installed - NTRP will use it for some extra guis");
+                Log.info("HolographicDisplays installed - NTRPG will use it for some extra guis");
                 injector.getInstance(HolographicDisplaysExpansion.class).init();
             }
+            IScriptEngine scriptEngine = Rpg.get().getScriptEngine();
+            scriptEngine.getDataToBind().put(EntityDamageEvent.DamageCause.class, JsBinding.Type.CLASS);
+            scriptEngine.getDataToBind().put(EntityType.class, JsBinding.Type.CLASS);
         });
+
+
 
 
         Collection<? extends Player> onlinePlayers = Bukkit.getServer().getOnlinePlayers();
         for (Player onlinePlayer : onlinePlayers) {
             Rpg.get().getCharacterService().loadPlayerData(onlinePlayer.getUniqueId(), onlinePlayer.getName());
         }
+
+
 
     }
 

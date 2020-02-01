@@ -116,9 +116,9 @@ public class SpigotAdminCommands extends AbstractAdminCommands<CommandSender, Pl
 
     @Subcommand("skill")
     @CommandCompletion("@skill=skill")
-    public void adminExecuteSkillCommand(Player executor, ISkill skill, @Default("1") int level) {
+    public void adminExecuteSkillCommand(Player executor, ISkill skill, @Optional String level) {
         IActiveCharacter character = characterService.getCharacter(executor);
-        adminCommandFacade.commandExecuteSkill(character, skill, level);
+        adminCommandFacade.commandExecuteSkill(character, skill, level == null ? 1 : Integer.parseInt(level));
     }
 
     @Subcommand("char")

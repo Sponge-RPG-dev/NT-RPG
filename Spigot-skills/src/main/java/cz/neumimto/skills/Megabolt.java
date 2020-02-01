@@ -1,7 +1,6 @@
 package cz.neumimto.skills;
 
 import cz.neumimto.rpg.api.ResourceLoader;
-import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
@@ -10,6 +9,7 @@ import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
 import cz.neumimto.rpg.spigot.entities.SpigotEntityService;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.skills.scripting.SkillActions;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -49,8 +49,8 @@ public class Megabolt extends ActiveSkill<ISpigotCharacter> {
         for (Entity nearbyEntity : player.getNearbyEntities(radius, radius, radius)) {
             if (nearbyEntity instanceof LivingEntity) {
                 LivingEntity livingEntity = (LivingEntity) nearbyEntity;
-                IEntity iEntity = spigotEntityService.get(livingEntity);
-                if (!iEntity.isFriendlyTo(character)) {
+                if (damageService.canDamage(character, livingEntity)) {
+                    SkillActions.SPAWN_LIGHTNING.accept(livingEntity.getLocation());
                     damageService.damage(player, livingEntity, EntityDamageEvent.DamageCause.LIGHTNING, damage, false);
                 }
             }

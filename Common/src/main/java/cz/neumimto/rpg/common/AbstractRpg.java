@@ -280,6 +280,7 @@ public abstract class AbstractRpg implements RpgApi {
 
         getSkillService().init();
         getPropertyService().load();
+
         getScriptEngine().initEngine();
         getSkillService().load();
         getClassService().load();

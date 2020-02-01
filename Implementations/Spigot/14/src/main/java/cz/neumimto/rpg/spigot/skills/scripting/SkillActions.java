@@ -10,8 +10,6 @@ import cz.neumimto.rpg.api.utils.TriConsumer;
 import cz.neumimto.rpg.common.skills.scripting.SkillComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -37,11 +35,9 @@ public class SkillActions {
                     @SkillComponent.Param("@returns - true if the damage was dealt"),
             }
     )
-    public static F.PentaFunction<IEntity<LivingEntity>, IEntity<LivingEntity>, Number, String, SkillScriptContext, Void> DAMAGE_WITH_TYPE = (caster, target, damage, DamageCause, context) -> {
-        EntityDamageEvent.DamageCause type = EntityDamageEvent.DamageCause.valueOf(DamageCause.toUpperCase());
+    public static F.PentaConsumer<IEntity<LivingEntity>, IEntity<LivingEntity>, Number, EntityDamageEvent.DamageCause, SkillScriptContext> DAMAGE = (caster, target, damage, DamageCause, context) -> {
 
         target.getEntity().damage(damage.doubleValue(), caster.getEntity());
-        return null;
     };
 
     @SkillComponent(
@@ -113,7 +109,7 @@ public class SkillActions {
             }
     )
     public static Consumer<Location> SPAWN_LIGHTNING = (location) -> {
-        Entity q = location.getWorld().spawnEntity(location, EntityType.LIGHTNING);
+        location.getWorld().strikeLightningEffect(location);
     };
 
     @SkillComponent(
@@ -164,5 +160,6 @@ public class SkillActions {
         long convert = o2.convert(o, TimeUnit.SECONDS);
         return (int) (convert / 3);
     };
+
 
 }
