@@ -6,21 +6,19 @@ import cz.neumimto.rpg.api.entity.IEntityType;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.common.skills.scripting.SkillComponent;
-import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
-import cz.neumimto.rpg.sponge.entities.players.SpongeCharacter;
-import cz.neumimto.rpg.sponge.utils.Utils;
-import org.apache.commons.lang3.NotImplementedException;
-import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.entity.Entity;
-import org.spongepowered.api.entity.EntityTypes;
-import org.spongepowered.api.entity.living.Living;
-import org.spongepowered.api.entity.living.monster.Monster;
+import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
+import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.skills.Targeted;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Monster;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.BiFunction;
+
 
 @JsBinding(JsBinding.Type.CONTAINER)
 public class SkillTargetProcessors {
@@ -33,18 +31,16 @@ public class SkillTargetProcessors {
                     @SkillComponent.Param("radius")
             }
     )
-    public static final BiFunction<IEntity<Living>, Number, List<IEntity>> NEARBY_ALLIES = ((entity, radius) -> {
-        Collection<Entity> nearbyEntities = entity.getEntity().getNearbyEntities(radius.doubleValue());
+    public static final BiFunction<IEntity<LivingEntity>, Number, List<IEntity>> NEARBY_ALLIES = ((entity, radius) -> {
+        double v = radius.doubleValue();
+        Collection<Entity> nearbyEntities = entity.getEntity().getNearbyEntities(v,v,v);
         List<IEntity> nearby = new ArrayList<>();
         if (entity.getType() == IEntityType.MOB) {
             for (Entity nearbyEntity : nearbyEntities) {
-                if (nearbyEntity.getType() == EntityTypes.PLAYER) {
+                if (nearbyEntity.getType() == EntityType.PLAYER) {
                     continue;
                 }
-                if (!(nearbyEntity instanceof Living)) {
-                    continue;
-                }
-                if (nearbyEntity.get(Keys.TAMED_OWNER).isPresent()) {
+                if (!(nearbyEntity instanceof LivingEntity)) {
                     continue;
                 }
                 IEntity iEntity = Rpg.get().getEntityService().get(nearbyEntity);
@@ -72,29 +68,24 @@ public class SkillTargetProcessors {
                     @SkillComponent.Param("@returns - An entity instance or null"),
             }
     )
-    public static final BiFunction<IEntity<? extends Living>, Number, IEntity> TARGETED_ENEMY = (caster, range) -> {
+    public static final BiFunction<IEntity<? extends LivingEntity>, Number, IEntity> TARGETED_ENEMY = (caster, range) -> {
         if (caster.getType() == IEntityType.MOB) {
 
-            Living entity = caster.getEntity();
+            LivingEntity entity = caster.getEntity();
             if (entity instanceof Monster) {
-                Optional<Entity> target = ((Monster) entity).getTarget();
-                if (target.isPresent()) {
-                    Entity mtarget = target.get();
-                    if (!(mtarget instanceof Living)) {
-                        return null;
-                    }
-                    return Rpg.get().getEntityService().get(mtarget);
+                LivingEntity target = ((Monster) entity).getTarget();
+                if (target != null) {
+                    return Rpg.get().getEntityService().get(target);
                 }
             } else {
-                Collection<Entity> nearbyEntities = entity.getNearbyEntities(range.doubleValue());
-
-                throw new NotImplementedException(":(");
+                return null;
             }
-        } else if (caster.getType() == IEntityType.CHARACTER) {
-            ISpongeCharacter character = (SpongeCharacter) caster;
-            Living targetedEntity = Utils.getTargetedEntity(character, range.intValue());
+        } else if (caster instanceof ISpigotCharacter) {
+            ISpigotCharacter character = (ISpigotCharacter) caster;
+            LivingEntity targetedEntity = Targeted.rayTraceEntity(character.getPlayer(), range.doubleValue());
             if (targetedEntity != null) {
-                if (Utils.canDamage(character, targetedEntity)) {
+                SpigotDamageService damageService = (SpigotDamageService) Rpg.get().getDamageService();
+                if (damageService.canDamage(character, targetedEntity)) {
                     return Rpg.get().getEntityService().get(targetedEntity);
                 }
             }

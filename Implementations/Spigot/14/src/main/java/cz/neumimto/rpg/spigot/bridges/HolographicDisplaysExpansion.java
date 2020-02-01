@@ -13,6 +13,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -60,7 +61,7 @@ public class HolographicDisplaysExpansion {
         colors.put(damageCause.toString(), chatColor.toString());
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onSkillCast(SkillPostUsageEvent event) {
         ISkill skill = event.getSkill();
         String damageType = skill.getDamageType();

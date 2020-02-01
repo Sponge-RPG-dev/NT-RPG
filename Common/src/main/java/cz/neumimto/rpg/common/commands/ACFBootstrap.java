@@ -44,7 +44,7 @@ public class ACFBootstrap {
 
         manager.getCommandContexts().registerContext(ISkill.class, c -> {
             String s = c.getFirstArg();
-            return Rpg.get().getSkillService().getById(s.toLowerCase());
+            return Rpg.get().getSkillService().getById(s.toLowerCase()).get();
         });
 
 
