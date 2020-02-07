@@ -4,7 +4,6 @@ package cz.neumimto.rpg.spigot.skills;
 import com.google.inject.Inject;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.IEntity;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.events.skill.SkillTargetAttemptEvent;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
@@ -21,7 +20,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.RayTraceResult;
 
-public abstract class Targeted extends ActiveSkill<ISpigotCharacter> implements ITargeted<ISpigotCharacter> {
+public abstract class TargetedEntitySkill extends ActiveSkill<ISpigotCharacter> implements ITargeted<ISpigotCharacter> {
 
     @Inject
     protected SpigotDamageService damageService;
@@ -55,9 +54,10 @@ public abstract class Targeted extends ActiveSkill<ISpigotCharacter> implements 
         event.setCaster(caster);
         event.setTarget(target);
 
+
         if (Rpg.get().postEvent(event)) {
             //todo https://github.com/Sponge-RPG-dev/NT-RPG/issues/111
-            skillContext.next((IActiveCharacter) event.getCaster(), info, SkillResult.CANCELLED); //dont chain
+            skillContext.next((ISpigotCharacter)event.getCaster(), info, SkillResult.CANCELLED); //dont chain
             return;
         }
         castOn(event.getTarget(), (ISpigotCharacter) event.getCaster(), info, skillContext);
@@ -68,7 +68,7 @@ public abstract class Targeted extends ActiveSkill<ISpigotCharacter> implements 
         if (maxDistance <= 0.0) {
             return null;
         }
-        RayTraceResult rayTraceResult = player.getWorld().rayTrace(player.getEyeLocation(), player.getEyeLocation().getDirection(), maxDistance, FluidCollisionMode.NEVER, true,1, entity -> true);
+        RayTraceResult rayTraceResult = player.getWorld().rayTraceBlocks(player.getEyeLocation(), player.getEyeLocation().getDirection(), maxDistance, FluidCollisionMode.NEVER, true);
         Entity hitEntity = rayTraceResult.getHitEntity();
         if (hitEntity != null) {
             if (hitEntity instanceof LivingEntity) {

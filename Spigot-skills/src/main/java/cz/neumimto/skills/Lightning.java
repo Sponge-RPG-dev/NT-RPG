@@ -8,7 +8,7 @@ import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
-import cz.neumimto.rpg.spigot.skills.Targeted;
+import cz.neumimto.rpg.spigot.skills.TargetedEntitySkill;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageEvent;
 
@@ -16,7 +16,7 @@ import javax.inject.Singleton;
 
 @Singleton
 @ResourceLoader.Skill("ntrpg:jump")
-public class Lightning extends Targeted {
+public class Lightning extends TargetedEntitySkill {
 
     @Override
     public void init() {

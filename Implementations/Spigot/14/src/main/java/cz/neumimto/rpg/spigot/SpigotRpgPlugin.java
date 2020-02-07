@@ -16,6 +16,7 @@ import cz.neumimto.rpg.spigot.commands.*;
 import cz.neumimto.rpg.spigot.entities.configuration.SpigotMobSettingsDao;
 import cz.neumimto.rpg.spigot.gui.SpigotGui;
 import cz.neumimto.rpg.spigot.resources.SpigotGuiceModule;
+import de.slikey.effectlib.EffectManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -51,6 +52,7 @@ public class SpigotRpgPlugin extends JavaPlugin {
     private static SpigotRpgPlugin plugin;
 
     private static Logger logger = LoggerFactory.getLogger("NTRPG");
+    private static EffectManager effectManager;
 
     public static SpigotRpgPlugin getInstance() {
         return plugin;
@@ -107,7 +109,7 @@ public class SpigotRpgPlugin extends JavaPlugin {
             scriptEngine.getDataToBind().put(EntityType.class, JsBinding.Type.CLASS);
         });
 
-
+        effectManager = new EffectManager(this);
 
 
         Collection<? extends Player> onlinePlayers = Bukkit.getServer().getOnlinePlayers();
@@ -115,8 +117,10 @@ public class SpigotRpgPlugin extends JavaPlugin {
             Rpg.get().getCharacterService().loadPlayerData(onlinePlayer.getUniqueId(), onlinePlayer.getName());
         }
 
+    }
 
-
+    public static EffectManager getEffectManager() {
+        return effectManager;
     }
 
 
@@ -128,5 +132,6 @@ public class SpigotRpgPlugin extends JavaPlugin {
         for (IActiveCharacter character : characters) {
             characterService.save(character.getCharacterBase());
         }
+        effectManager.disposeOnTermination();
     }
 }

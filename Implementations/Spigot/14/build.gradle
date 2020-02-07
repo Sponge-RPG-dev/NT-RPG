@@ -20,7 +20,9 @@ repositories {
     maven {
         url = 'http://repo.extendedclip.com/content/repositories/placeholderapi/'
     }
-
+    maven { 
+        url 'https://jitpack.io'
+    }
 }
 
 group = 'cz.neumimto.rpg'
@@ -48,6 +50,7 @@ dependencies {
     compile "co.aikar:acf-paper:0.5.0-SNAPSHOT"
     compile 'com.github.stefvanschie.inventoryframework:IF:0.5.14'
     compile 'de.tr7zw:item-nbt-api-plugin:2.2.0'
+    compile 'com.github.Slikey:EffectLib:d77f639038'
 
     compileOnly 'me.clip:placeholderapi:2.10.3'
     compileOnly 'com.gmail.filoghost.holographicdisplays:holographicdisplays-api:2.4.0'

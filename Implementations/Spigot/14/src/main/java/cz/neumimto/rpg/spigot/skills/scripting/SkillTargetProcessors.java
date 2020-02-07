@@ -8,7 +8,7 @@ import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.common.skills.scripting.SkillComponent;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
-import cz.neumimto.rpg.spigot.skills.Targeted;
+import cz.neumimto.rpg.spigot.skills.TargetedEntitySkill;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -82,7 +82,7 @@ public class SkillTargetProcessors {
             }
         } else if (caster instanceof ISpigotCharacter) {
             ISpigotCharacter character = (ISpigotCharacter) caster;
-            LivingEntity targetedEntity = Targeted.rayTraceEntity(character.getPlayer(), range.doubleValue());
+            LivingEntity targetedEntity = TargetedEntitySkill.rayTraceEntity(character.getPlayer(), range.doubleValue());
             if (targetedEntity != null) {
                 SpigotDamageService damageService = (SpigotDamageService) Rpg.get().getDamageService();
                 if (damageService.canDamage(character, targetedEntity)) {
