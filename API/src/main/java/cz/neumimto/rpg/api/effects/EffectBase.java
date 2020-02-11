@@ -58,6 +58,7 @@ public abstract class EffectBase<VALUE> implements IEffect<VALUE> {
     }
 
     public EffectBase(String name, IEffectConsumer consumer) {
+        this();
         this.name = name;
         this.consumer = consumer;
     }

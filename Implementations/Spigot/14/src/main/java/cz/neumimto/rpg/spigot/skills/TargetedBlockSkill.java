@@ -21,8 +21,9 @@ public abstract class TargetedBlockSkill extends ActiveSkill<ISpigotCharacter> {
         Block block = rayTraceBlock(player, range);
         if (block != null && isValidBlock(block)) {
             castOn(block, character, info, skillContext);
+        } else {
+            skillContext.next(character, info, SkillResult.NO_TARGET); //dont chain
         }
-        skillContext.next(character, info, SkillResult.NO_TARGET); //dont chain
     }
 
     protected abstract void castOn(Block block, ISpigotCharacter character, PlayerSkillContext info, SkillContext skillContext);

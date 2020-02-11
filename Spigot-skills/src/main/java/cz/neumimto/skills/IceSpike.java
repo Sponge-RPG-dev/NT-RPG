@@ -12,9 +12,12 @@ import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
 import cz.neumimto.rpg.spigot.effects.SpigotEffectService;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.skills.TargetedBlockSkill;
-import cz.neumimto.skills.effects.positive.IceSpikeAura;
+import cz.neumimto.skills.effects.positive.IceSpikeEffect;
+import cz.neumimto.skills.particles.ResetingVortexEffect;
 import de.slikey.effectlib.effect.VortexEffect;
 import org.bukkit.Color;
+import org.bukkit.Location;
+import org.bukkit.Particle;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -44,7 +47,7 @@ public class IceSpike extends TargetedBlockSkill {
         settings.addNode(SkillNodes.RANGE, 10f, .5f);
         settings.addNode(SkillNodes.DURATION, 10000, 1000);
         settings.addNode("damage-initial", 30, 5);
-        settings.addNode(SkillNodes.RADIUS, 3, 0);
+        settings.addNode(SkillNodes.RADIUS, 5, 0);
         addSkillType(SkillType.SUMMON);
         addSkillType(SkillType.ICE);
     }
@@ -71,21 +74,24 @@ public class IceSpike extends TargetedBlockSkill {
         }
 
         long duration = skillContext.getLongNodeValue(SkillNodes.DURATION);
-
-        VortexEffect vortexEffect = new VortexEffect(SpigotRpgPlugin.getEffectManager());
-        vortexEffect.helixes = 1;
-        vortexEffect.circles = 1;
+        VortexEffect vortexEffect = new ResetingVortexEffect(SpigotRpgPlugin.getEffectManager(), 5);
+        vortexEffect.helixes = 5;
+        vortexEffect.circles = 2;
         vortexEffect.color = Color.WHITE;
+        vortexEffect.radius = radius;
+
+        vortexEffect.grow = 0.075f;
+        vortexEffect.particleCount = 10;
+        vortexEffect.particle = Particle.CLOUD;
         vortexEffect.duration = (int) duration;
+        Location location = spike.getLocation();
+        location.setPitch(-90);
+        vortexEffect.setLocation(location);
 
-        vortexEffect.start();
-
-        IceSpikeAura iceSpikeAura = new IceSpikeAura(spike, character, duration, radius, damage);
+        IceSpikeEffect iceSpikeAura = new IceSpikeEffect(spike, character, duration, radius, damage, damageService, vortexEffect);
         effectService.addEffect(iceSpikeAura);
+
+
         skillContext.next(character, info, skillContext.result(SkillResult.OK));
-
-
     }
-
-
 }
