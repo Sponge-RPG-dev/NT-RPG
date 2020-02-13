@@ -20,9 +20,14 @@ repositories {
     maven {
         url = 'http://repo.extendedclip.com/content/repositories/placeholderapi/'
     }
-    maven { 
+    maven {
         url 'https://jitpack.io'
     }
+
+    maven {
+        url "https://repo.dmulloy2.net/nexus/repository/public/"
+    }
+
 }
 
 group = 'cz.neumimto.rpg'
@@ -38,7 +43,7 @@ dependencies {
     compileOnly "org.spigotmc:spigot-api:1.15.1-R0.1-SNAPSHOT"
     compileOnly "org.spigotmc:plugin-annotations:1.2.2-SNAPSHOT"
     annotationProcessor "org.spigotmc:plugin-annotations:1.2.2-SNAPSHOT"
-
+    compileOnly group: "com.comphenix.protocol", name: "ProtocolLib", version: "4.5.0";
     compile fileTree(dir: 'lib', include: '*.jar')
     compile 'org.slf4j:slf4j-api:1.7.28'
     compile project(':Common')
@@ -68,9 +73,9 @@ dependencies {
 shadowJar {
     baseName 'NT-RPG'
     classifier = null
-    
-  // relocate 'co.aikar.commands', 'cz.neumimto.acf'
-  // relocate 'com.github.stefvanschie.inventoryframework', 'cz.neumimto.inventoryframework'
+
+    // relocate 'co.aikar.commands', 'cz.neumimto.acf'
+    // relocate 'com.github.stefvanschie.inventoryframework', 'cz.neumimto.inventoryframework'
 }
 
 build.dependsOn shadowJar

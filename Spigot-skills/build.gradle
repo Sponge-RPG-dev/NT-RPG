@@ -13,6 +13,10 @@ repositories {
     maven {
         url "https://repo.codemc.org/repository/maven-public/"
     }
+
+    maven {
+        url "https://repo.dmulloy2.net/nexus/repository/public/"
+    }
 }
 
 
@@ -22,6 +26,9 @@ dependencies {
     compileOnly project(':Spigot-14')
     compileOnly project(':API')
     compileOnly "org.spigotmc:spigot-api:1.15.1-R0.1-SNAPSHOT"
+
+    compileOnly group: "com.comphenix.protocol", name: "ProtocolLib", version: "4.5.0";
+
 
     jar {
         baseName 'NT-RPG-Spigot-Skills-only'

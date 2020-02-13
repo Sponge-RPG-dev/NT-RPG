@@ -141,6 +141,16 @@ public class LocalizationKeys {
     public static final String COMMAND_ADMIN_RUNEWORD = "command.admin-runeword.desc";
     public static final String ATTRIBUTE_POINTS = "label.attribute-points";
     public static final String ITEM_ARMOR = "label.item-armor";
+    public static final String CLASS_TYPE = "label.item.class.class-type";
+    public static final String DESCRIPTION = "label.item.class.description";
+    public static final String LORE = "label.item.class.lore";;
+    public static final String SKILL_EXECUTION_TYPE = "label.item.skill.exec-type";
+    public static final String SKILL_TRAITS = "label.item.skill.traits";
+    public static final String SKILL_TYPES = "label.item.skill.types";
+    public static final String SKILL_MAX_LEVEL = "label.item.skill.max-level";
+    public static final String SKILL_MIN_CLASS_LEVEL = "label.item.skill.min-class-level";
+    public static final String SKILL_SETTINGS = "label.item.skill.settings";
+    public static final String SKILL_LEVEL_GAP = "label.item.skill.level-gap";
 
     private LocalizationKeys() {
     }

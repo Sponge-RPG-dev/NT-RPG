@@ -16,7 +16,6 @@ import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterClass;
 import cz.neumimto.rpg.api.skills.ISkill;
-import cz.neumimto.rpg.api.skills.ISkillType;
 import cz.neumimto.rpg.api.skills.SkillData;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
@@ -47,7 +46,10 @@ public class SpigotGuiHelper {
     static final int[] inventoryIds;
     private static final int[] attributButtonSlots;
 
+    public static ItemLoreFactory itemLoreFactory;
+
     static {
+        itemLoreFactory = new ItemLoreFactory();
         List<Integer> w = new ArrayList<>();
         for (int i = 0; i <= 7; i++) {
             for (int j = 0; j < 6; j++) {
@@ -93,24 +95,8 @@ public class SpigotGuiHelper {
         Material material = Material.matchMaterial(sItemType);
         ItemStack itemStack = button(material, ChatColor.valueOf(a.getPreferedColor()) + a.getName(), "ninfo class " + a.getName() + " " + backCommand);
 
-        List<String> lore;
-        if (!(a.getCustomLore() == null || a.getCustomLore().isEmpty())) {
-            lore = a.getCustomLore().stream().map(SpigotGuiHelper::parseStr).collect(Collectors.toList());
-        } else {
-            lore = new ArrayList<>();
-            lore.add(ChatColor.valueOf(a.getPreferedColor()) + a.getName());
-            lore.add(ChatColor.BOLD.toString() + ChatColor.valueOf(a.getPreferedColor()) + a.getClassType());
-            lore.add(ChatColor.GRAY + "----------------------------------");
-            lore.add(" ");
-            if (a.getDescription() != null) {
-                List<String> description = a.getDescription();
-                for (String s : description) {
-                    lore.add(ChatColor.ITALIC.toString() + ChatColor.GOLD + s);
-                }
-            }
-        }
         ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.setLore(lore);
+        itemMeta.setLore(itemLoreFactory.toLore(a));
         itemStack.setItemMeta(itemMeta);
         itemStack = unclickableInterface(itemStack);
 
@@ -472,46 +458,17 @@ public class SpigotGuiHelper {
 
     private static ItemStack skillToItemStack(ISpigotCharacter character, SkillData skillData, SkillTree skillTree, SpigotSkillTreeViewModel model) {
         List<String> lore;
-        ChatColor nameColor;
 
         ISkill skill = skillData.getSkill();
+        ChatColor nameColor = getSkillTextColor(character, skill, skillData, skillTree);
+
         List<String> fromCache = model.getFromCache(skill);
 
         if (fromCache == null) {
-            lore = new ArrayList<>();
-            nameColor = getSkillTextColor(character, skill, skillData, skillTree);
-            if (skillData.useDescriptionOnly()) {
-                List<String> description = skillData.getDescription(character);
-                lore.addAll(description);
-            } else {
-                LocalizationService locService = Rpg.get().getLocalizationService();
-                String execType = locService.translate(skill.getSkillExecutionType().toString().toLowerCase());
-                lore.add(ChatColor.WHITE + execType);
-                lore.add(ChatColor.GRAY + "--------------------------");
-
-                lore.addAll(skillData.getDescription(character));
-                lore.add("");
-
-                Set<ISkillType> skillTypes = skill.getSkillTypes();
-                StringBuilder builder = new StringBuilder();
-                Iterator<ISkillType> iterator = skillTypes.iterator();
-                int i = 0;
-                while (iterator.hasNext()) {
-                    i++;
-                    ISkillType next = iterator.next();
-                    String translate = locService.translate(next.toString());
-                    lore.add(ChatColor.YELLOW + translate);
-                    if (i % 3 == 0) {
-                        lore.add(ChatColor.YELLOW + builder.toString());
-                        builder = new StringBuilder();
-                    }
-                }
-            }
-
+            lore = itemLoreFactory.toLore(character, skillData, nameColor, skillTree);
             model.addToCache(skill, lore);
         } else {
             lore = fromCache;
-            nameColor = getSkillTextColor(character, skill, skillData, skillTree);
         }
 
         Material material;
@@ -523,7 +480,6 @@ public class SpigotGuiHelper {
 
         ItemStack itemStack = new ItemStack(material);
         ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.setDisplayName(nameColor + skillData.getSkillName());
         itemMeta.setLore(lore);
         itemStack.setItemMeta(itemMeta);
         NBTItem nbtItem = new NBTItem(itemStack);

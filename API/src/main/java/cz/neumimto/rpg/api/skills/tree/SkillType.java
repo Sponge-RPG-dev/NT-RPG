@@ -52,10 +52,12 @@ public enum SkillType implements ISkillType {
     DRAIN(TRUE, "ntrpg:drain", "Drain"),
     CANNOT_BE_SELF_CASTED(UNDEFINED, "ntrpg:cannot_be_self_casted", "Cannot be self casted"),
     PROTECTION(TRUE, "ntrpg:protection", "Protection"),
+    ILLUSION(FALSE, "ntrpg:illusion", "Illusion"),
     /**
      * Do not use this one in custom skills
      */
     PATH(UNDEFINED, "ntrpg:path", "Path");
+
 
     private TriState negative;
     private String id;
