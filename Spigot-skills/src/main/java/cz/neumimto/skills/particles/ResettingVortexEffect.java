@@ -3,10 +3,10 @@ package cz.neumimto.skills.particles;
 import de.slikey.effectlib.EffectManager;
 import de.slikey.effectlib.effect.VortexEffect;
 
-public class ResetingVortexEffect extends VortexEffect {
+public class ResettingVortexEffect extends VortexEffect {
     private final float maxy;
 
-    public ResetingVortexEffect(EffectManager effectManager, float maxy) {
+    public ResettingVortexEffect(EffectManager effectManager, float maxy) {
         super(effectManager);
         this.maxy = maxy;
     }

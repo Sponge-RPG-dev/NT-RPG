@@ -13,7 +13,7 @@ import cz.neumimto.rpg.spigot.effects.SpigotEffectService;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.skills.TargetedBlockSkill;
 import cz.neumimto.skills.effects.positive.IceSpikeEffect;
-import cz.neumimto.skills.particles.ResetingVortexEffect;
+import cz.neumimto.skills.particles.ResettingVortexEffect;
 import de.slikey.effectlib.effect.VortexEffect;
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -74,7 +74,7 @@ public class IceSpike extends TargetedBlockSkill {
         }
 
         long duration = skillContext.getLongNodeValue(SkillNodes.DURATION);
-        VortexEffect vortexEffect = new ResetingVortexEffect(SpigotRpgPlugin.getEffectManager(), 5);
+        VortexEffect vortexEffect = new ResettingVortexEffect(SpigotRpgPlugin.getEffectManager(), 5);
         vortexEffect.helixes = 5;
         vortexEffect.circles = 2;
         vortexEffect.color = Color.WHITE;
