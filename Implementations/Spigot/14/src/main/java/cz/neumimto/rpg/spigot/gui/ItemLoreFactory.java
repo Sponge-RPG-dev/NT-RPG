@@ -15,9 +15,16 @@ import java.util.*;
 public class ItemLoreFactory {
 
     public static String JOINT = ChatColor.DARK_GRAY + "[" + ChatColor.RESET +  ChatColor.DARK_RED + "+" + ChatColor.RESET + ChatColor.DARK_GRAY + "]";
-    public static String HEADER_START = ChatColor.DARK_GRAY + "════════ [ " + ChatColor.RESET + ChatColor.GREEN;
-    public static String HEADER_END = ChatColor.RESET.toString() + ChatColor.DARK_GRAY + " ] ════════";
+    public static String HEADER_START = ChatColor.DARK_GRAY + "════════ [ ";
+    public static String HEADER_END = ChatColor.DARK_GRAY + " ] ════════";
     public static String VERTICAL_LINE = ChatColor.DARK_GRAY + "║ " + ChatColor.GRAY;
+    public static Set<String> SKILL_SETTINGS_DURATION_NODES = new HashSet<>();
+
+    static {
+        SKILL_SETTINGS_DURATION_NODES.add(SkillNodes.DURATION.value());
+        SKILL_SETTINGS_DURATION_NODES.add(SkillNodes.PERIOD.value());
+    }
+
 
     public String header(String header) {
         return JOINT + HEADER_START + header + HEADER_END;
@@ -72,7 +79,7 @@ public class ItemLoreFactory {
             lore.add(header(nameColor + skill.getName()));
             lore.add(node(locService.translate(LocalizationKeys.SKILL_EXECUTION_TYPE), locService.translate(skill.getSkillExecutionType().toString().toLowerCase())));
 
-            lore.add(header(character.getName()));
+            lore.add(header(ChatColor.GREEN + character.getName()));
 
             PlayerSkillContext psc = character.getSkillInfo(skill);
             String level = psc == null ? " -- " : psc.getLevel() + (psc.getLevel() != psc.getTotalLevel() ? " ("+psc.getTotalLevel()+")" :"");
@@ -85,22 +92,40 @@ public class ItemLoreFactory {
 
 
             SkillSettings skillSettings = skillData.getSkillSettings();
-            lore.add(header(locService.translate(LocalizationKeys.SKILL_SETTINGS)));
+            lore.add(header(ChatColor.GREEN + locService.translate(LocalizationKeys.SKILL_SETTINGS)));
 
+            String value = null;
             for (Map.Entry<String, Float> entry : skillSettings.getNodes().entrySet()) {
-                lore.add(node(locService.translate(entry.getKey()), String.format("%.2f", entry.getValue())));
+                if (entry.getKey().endsWith(SkillSettings.BONUS_SUFFIX)) {
+                    continue;
+                }
+                String translatedNode = locService.translate(entry.getKey());
+                Float bonusNode = skillSettings.getNodes().get(translatedNode + SkillSettings.BONUS_SUFFIX);
+
+                if (SKILL_SETTINGS_DURATION_NODES.contains(translatedNode)) {
+                    value = String.format("%.2f", entry.getValue() * 0.001) + " ms";
+                    if (bonusNode != null && bonusNode != 0) {
+                        value += " (" + String.format("%.2f", bonusNode * 0.001) + " ms)";
+                    }
+                } else {
+                    value = String.format("%.2f", entry.getValue());
+                    if (bonusNode != null && bonusNode != 0) {
+                        value += " (" + String.format("%.2f", bonusNode) + ")";
+                    }
+                }
+                lore.add(node(translatedNode, value));
             }
 
             List<String> description = skillData.getDescription(character);
             if (description != null && description.size() > 0) {
-                lore.add(header(locService.translate(LocalizationKeys.DESCRIPTION)));
+                lore.add(header(ChatColor.GREEN + locService.translate(LocalizationKeys.DESCRIPTION)));
 
                 for (String s : description) {
                     lore.add(line(s));
                 }
             }
 
-            lore.add(header(locService.translate(LocalizationKeys.SKILL_TRAITS)));
+            lore.add(header(ChatColor.GREEN + locService.translate(LocalizationKeys.SKILL_TRAITS)));
             Set<ISkillType> skillTypes = skill.getSkillTypes();
             StringBuilder builder = new StringBuilder();
             Iterator<ISkillType> iterator = skillTypes.iterator();
@@ -109,7 +134,7 @@ public class ItemLoreFactory {
             while (iterator.hasNext()) {
                 i++;
                 ISkillType next = iterator.next();
-                String translate = locService.translate(next.toString());
+                String translate = locService.translate(next.toString())+" ";
                 builder.append(translate);
                 if (i % 4 == 0) {
                     if (firstLine) {
