@@ -24,6 +24,7 @@ import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.configuration.ItemString;
 import cz.neumimto.rpg.api.configuration.SkillItemCost;
 import cz.neumimto.rpg.api.configuration.SkillTreeDao;
+import cz.neumimto.rpg.api.gui.ISkillTreeInterfaceModel;
 import cz.neumimto.rpg.api.skills.*;
 import cz.neumimto.rpg.api.skills.mods.ActiveSkillPreProcessorWrapper;
 import cz.neumimto.rpg.api.skills.scripting.ScriptedSkillNodeDescription;
@@ -33,7 +34,6 @@ import cz.neumimto.rpg.api.skills.utils.SkillLoadingErrors;
 import cz.neumimto.rpg.api.utils.FileUtils;
 import cz.neumimto.rpg.api.utils.MathUtils;
 import cz.neumimto.rpg.api.utils.Pair;
-import cz.neumimto.rpg.api.gui.ISkillTreeInterfaceModel;
 import cz.neumimto.rpg.common.skills.SkillConfigLoader;
 import cz.neumimto.rpg.common.skills.SkillConfigLoaders;
 import cz.neumimto.rpg.common.skills.preprocessors.SkillPreprocessorFactories;
@@ -355,7 +355,7 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
                     for (AttributeConfig attribute : attributes) {
                         String s = "_per_" + attribute.getId();
                         if (e.getKey().endsWith(s)) {
-                            String stripped = s.substring(0, val.length() - s.length());
+                            String stripped = e.getKey().substring(0, e.getKey().length() - s.length());
                             skillSettings.addAttributeNode(stripped, attribute, norm);
                             continue outer;
                         }

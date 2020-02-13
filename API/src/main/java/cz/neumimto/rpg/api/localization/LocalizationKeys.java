@@ -151,6 +151,8 @@ public class LocalizationKeys {
     public static final String SKILL_MIN_CLASS_LEVEL = "label.item.skill.min-class-level";
     public static final String SKILL_SETTINGS = "label.item.skill.settings";
     public static final String SKILL_LEVEL_GAP = "label.item.skill.level-gap";
+    public static final String SKILL_ATTRIBUTE_SETTINGS = "label.item.skill.attribute-settings";
+    public static final String SKILL_ATTRIBUTE_SETTING_PATTERN = "label.item.skill.attribute-setting-pattern";
 
     private LocalizationKeys() {
     }

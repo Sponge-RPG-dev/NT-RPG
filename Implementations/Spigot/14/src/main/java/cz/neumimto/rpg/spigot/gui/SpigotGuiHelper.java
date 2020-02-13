@@ -480,7 +480,9 @@ public class SpigotGuiHelper {
 
         ItemStack itemStack = new ItemStack(material);
         ItemMeta itemMeta = itemStack.getItemMeta();
+        itemMeta.setDisplayName(null);
         itemMeta.setLore(lore);
+        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         itemStack.setItemMeta(itemMeta);
         NBTItem nbtItem = new NBTItem(itemStack);
         nbtItem.setString("ntrpg.item-command", "skilltree skill " + skill.getId());

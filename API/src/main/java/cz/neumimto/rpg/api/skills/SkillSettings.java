@@ -19,8 +19,8 @@
 package cz.neumimto.rpg.api.skills;
 
 import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
+import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -40,6 +40,7 @@ public class SkillSettings {
 
     private Map<String, Float> skillSettings = new HashMap<>();
     private Map<String, String> objMap = new HashMap<>();
+    private Map<AttributeConfig, AttributeSettings> attributeSettingsMap = new HashMap<>();
 
     public void addNode(ISkillNode n, float val, float levelbonux) {
         addNode(n.toString(), val, levelbonux);
@@ -56,6 +57,7 @@ public class SkillSettings {
 
     public void addAttributeNode(String n, AttributeConfig attribute, float val) {
         addNode(n + "_per_" + attribute.getId(), val);
+        attributeSettingsMap.put(attribute, new AttributeSettings(n, val));
     }
 
     public boolean hasNode(String s) {
@@ -129,4 +131,17 @@ public class SkillSettings {
         return collect;
     }
 
+    public Map<AttributeConfig, AttributeSettings> getAttributeSettings() {
+        return Collections.unmodifiableMap(attributeSettingsMap);
+    }
+
+    public static class AttributeSettings {
+        public final String node;
+        public final float value;
+
+        public AttributeSettings(String node, float value) {
+            this.node = node;
+            this.value = value;
+        }
+    }
 }

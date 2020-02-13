@@ -2,7 +2,9 @@ package cz.neumimto.rpg.spigot.gui;
 
 
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.api.localization.Arg;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.skills.*;
@@ -23,6 +25,7 @@ public class ItemLoreFactory {
     static {
         SKILL_SETTINGS_DURATION_NODES.add(SkillNodes.DURATION.value());
         SKILL_SETTINGS_DURATION_NODES.add(SkillNodes.PERIOD.value());
+        SKILL_SETTINGS_DURATION_NODES.add(SkillNodes.COOLDOWN.value());
     }
 
 
@@ -76,16 +79,16 @@ public class ItemLoreFactory {
             lore.addAll(description);
         } else {
             LocalizationService locService = Rpg.get().getLocalizationService();
-            lore.add(header(nameColor + skill.getName()));
+            lore.add(header(nameColor + locService.translate(skill.getName())));
             lore.add(node(locService.translate(LocalizationKeys.SKILL_EXECUTION_TYPE), locService.translate(skill.getSkillExecutionType().toString().toLowerCase())));
-
-            lore.add(header(ChatColor.GREEN + character.getName()));
 
             PlayerSkillContext psc = character.getSkillInfo(skill);
             String level = psc == null ? " -- " : psc.getLevel() + (psc.getLevel() != psc.getTotalLevel() ? " ("+psc.getTotalLevel()+")" :"");
             lore.add(node(locService.translate(LocalizationKeys.LEVEL), level));
             lore.add(node(locService.translate(LocalizationKeys.SKILL_MAX_LEVEL), ""+ skillData.getMaxSkillLevel()));
-            lore.add(node(locService.translate(LocalizationKeys.SKILL_MIN_CLASS_LEVEL), "" + skillData.getMinPlayerLevel()));
+            if (skillData.getMinPlayerLevel() > 0) {
+                lore.add(node(locService.translate(LocalizationKeys.SKILL_MIN_CLASS_LEVEL), "" + skillData.getMinPlayerLevel()));
+            }
             if (skillData.getLevelGap() > 0) {
                 lore.add(node(locService.translate(LocalizationKeys.SKILL_LEVEL_GAP), "" + skillData.getLevelGap()));
             }
@@ -96,9 +99,10 @@ public class ItemLoreFactory {
 
             String value = null;
             for (Map.Entry<String, Float> entry : skillSettings.getNodes().entrySet()) {
-                if (entry.getKey().endsWith(SkillSettings.BONUS_SUFFIX)) {
+                if (entry.getKey().endsWith(SkillSettings.BONUS_SUFFIX) || entry.getKey().contains("_per_")) {
                     continue;
                 }
+
                 String translatedNode = locService.translate(entry.getKey());
                 Float bonusNode = skillSettings.getNodes().get(translatedNode + SkillSettings.BONUS_SUFFIX);
 
@@ -113,7 +117,34 @@ public class ItemLoreFactory {
                         value += " (" + String.format("%.2f", bonusNode) + ")";
                     }
                 }
+
+                if (entry.getValue() == 0f && (bonusNode == null || bonusNode == 0f)) {
+                    continue;
+                }
                 lore.add(node(translatedNode, value));
+            }
+
+            Map<AttributeConfig, SkillSettings.AttributeSettings> attributeSettings = skillSettings.getAttributeSettings();
+            if (attributeSettings.size() > 0) {
+                lore.add(header(ChatColor.GREEN + locService.translate(LocalizationKeys.SKILL_ATTRIBUTE_SETTINGS)));
+
+                for (Map.Entry<AttributeConfig, SkillSettings.AttributeSettings> e : attributeSettings.entrySet()) {
+                    float value1 = e.getValue().value;
+                    String strVal = null;
+                    if (value1 == 0f) {
+                        continue;
+                    }
+                    if (SKILL_SETTINGS_DURATION_NODES.contains(e.getValue().node)) {
+                        strVal = String.format("%.2f", value1 * 0.001) + " ms";
+                    } else {
+                        strVal = String.valueOf(value1);
+                    }
+                    String line = locService.translate(LocalizationKeys.SKILL_ATTRIBUTE_SETTING_PATTERN,
+                            Arg.arg("value", strVal)
+                                    .with("attr", e.getKey().getName())
+                                    .with("node", locService.translate(e.getValue().node)));
+                    lore.add(line(line));
+                }
             }
 
             List<String> description = skillData.getDescription(character);
