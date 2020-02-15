@@ -69,14 +69,6 @@ public interface IEffect<K> extends IRpgElement {
 
     void setDuration(long l);
 
-    String getExpireMessage();
-
-    void setExpireMessage(String expireMessage);
-
-    String getApplyMessage();
-
-    void setApplyMessage(String applyMessage);
-
     IEffectConsumer getConsumer();
 
     Set<EffectType> getEffectTypes();

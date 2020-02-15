@@ -40,8 +40,6 @@ public abstract class EffectBase<VALUE> implements IEffect<VALUE> {
     private long lastTickTime;
 
     private long timeCreated;
-    private String applyMessage;
-    private String expireMessage;
 
     private IEffectSourceProvider effectSourceProvider;
 
@@ -129,26 +127,6 @@ public abstract class EffectBase<VALUE> implements IEffect<VALUE> {
     @Override
     public void setLastTickTime(long lastTickTime) {
         this.lastTickTime = lastTickTime;
-    }
-
-    @Override
-    public String getExpireMessage() {
-        return expireMessage;
-    }
-
-    @Override
-    public void setExpireMessage(String expireMessage) {
-        this.expireMessage = expireMessage;
-    }
-
-    @Override
-    public String getApplyMessage() {
-        return applyMessage;
-    }
-
-    @Override
-    public void setApplyMessage(String applyMessage) {
-        this.applyMessage = applyMessage;
     }
 
     @Override

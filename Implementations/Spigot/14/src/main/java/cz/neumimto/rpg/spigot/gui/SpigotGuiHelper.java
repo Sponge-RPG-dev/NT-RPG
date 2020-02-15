@@ -238,10 +238,10 @@ public class SpigotGuiHelper {
         i.setItem(0, button(Material.PAPER, localizationService.translate(LocalizationKeys.BACK), back == null ? "ninfo classes" : back));
         i.setItem(8, button(Material.DIAMOND, localizationService.translate(LocalizationKeys.CONFIRM), "char choose class " + cc.getName()));
         if (!cc.getAllowedArmor().isEmpty()) {
-            i.setItem(29, button(Material.DIAMOND_CHESTPLATE, localizationService.translate(LocalizationKeys.ARMOR), "ninfo class-armor " + cc.getName()));
+            i.setItem(29, button(Material.DIAMOND_CHESTPLATE, localizationService.translate(LocalizationKeys.ARMOR), "ninfo class-armor " + cc.getName(), 12345));
         }
         if (!cc.getWeapons().isEmpty() || !cc.getOffHandWeapons().isEmpty()) {
-            i.setItem(30, button(Material.DIAMOND_SWORD, localizationService.translate(LocalizationKeys.WEAPONS), "ninfo class-weapons " + cc.getName()));
+            i.setItem(30, button(Material.DIAMOND_SWORD, localizationService.translate(LocalizationKeys.WEAPONS), "ninfo class-weapons " + cc.getName(), 12345));
         }
         if (cc.getSkillTree() != SkillTree.Default) {
             i.setItem(31, button(Material.OAK_SAPLING,

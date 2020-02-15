@@ -37,16 +37,12 @@ import cz.neumimto.rpg.common.effects.CoreEffectTypes;
 public class DefaultManaRegeneration extends EffectBase {
 
     public static final String name = "DefaultManaRegen";
-    private static final String apply = "You've gained mana reneneration.";
-    private static final String remove = "You've lost mana regenartion.";
     private IActiveCharacter character;
 
     public DefaultManaRegeneration(IEffectConsumer character) {
         super(name, character);
         this.character = (IActiveCharacter) character;
         setPeriod(Rpg.get().getPluginConfig().MANA_REGENERATION_RATE);
-        setApplyMessage(apply);
-        setExpireMessage(remove);
         setDuration(-1);
         addEffectType(CoreEffectTypes.MANA_REGEN);
     }
