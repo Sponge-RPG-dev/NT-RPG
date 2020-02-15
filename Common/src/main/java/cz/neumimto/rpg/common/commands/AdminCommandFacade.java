@@ -141,7 +141,7 @@ public class AdminCommandFacade {
             wrappers.add(new SkillExecutorCallback() {
                 @Override
                 public void doNext(IActiveCharacter character, PlayerSkillContext info, SkillContext skillResult) {
-                    Long e = System.nanoTime();
+                    long e = System.nanoTime();
                     SkillPostUsageEvent eventPost = Rpg.get().getEventFactory().createEventInstance(SkillPostUsageEvent.class);
                     eventPost.setSkillContext(skillResult);
                     eventPost.setSkill(skillResult.getSkill());
