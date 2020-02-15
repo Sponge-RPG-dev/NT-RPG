@@ -11,6 +11,7 @@ import cz.neumimto.rpg.api.entity.players.CharacterService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
+import cz.neumimto.rpg.api.events.skill.SkillPostUsageEvent;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
@@ -141,6 +142,11 @@ public class AdminCommandFacade {
                 @Override
                 public void doNext(IActiveCharacter character, PlayerSkillContext info, SkillContext skillResult) {
                     Long e = System.nanoTime();
+                    SkillPostUsageEvent eventPost = Rpg.get().getEventFactory().createEventInstance(SkillPostUsageEvent.class);
+                    eventPost.setSkillContext(skillResult);
+                    eventPost.setSkill(skillResult.getSkill());
+                    eventPost.setCaster(character);
+                    Rpg.get().postEvent(eventPost);
                     character.sendMessage("Exec Time: " + TimeUnit.MILLISECONDS.convert(e - l, TimeUnit.NANOSECONDS));
                 }
             });
