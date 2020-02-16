@@ -18,6 +18,18 @@ public class Resourcepack {
         rnd = new XORShiftRnd();
     }
 
+    public static RPItem ARMOR = new RPItem(Material.DIAMOND_CHESTPLATE,12345);
+    public static RPItem WEAPONS = new RPItem(Material.DIAMOND_SWORD,12345);
+
+    public static RPItem PLUS = new RPItem(Material.GREEN_DYE,12345);
+    public static RPItem MINUS = new RPItem(Material.DIAMOND_SWORD,12345);
+
+    public static RPItem UP = new RPItem(Material.STICK, 12345);
+    public static RPItem DOWN = new RPItem(Material.STICK, 12346);
+    public static RPItem LEFT = new RPItem(Material.STICK, 12347);
+    public static RPItem RIGHT = new RPItem(Material.STICK, 12348);
+
+
     private static final int ICE_SPIKE_LARGE = 12349;
 
     public static Entity summonLargeIceSpike(Location location) {
@@ -37,5 +49,15 @@ public class Resourcepack {
         world.playSound(location, Sound.BLOCK_GLASS_BREAK, 1F, 0.5F);
 
         return entity;
+    }
+
+    public static class RPItem {
+        public final Material mat;
+        public final int model;
+
+        public RPItem(Material material, int modelId) {
+            this.mat = material;
+            this.model = modelId;
+        }
     }
 }

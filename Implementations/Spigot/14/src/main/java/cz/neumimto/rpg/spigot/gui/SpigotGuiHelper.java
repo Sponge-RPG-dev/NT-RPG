@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.spigot.gui;
 
+import com.comphenix.protocol.wrappers.EnumWrappers;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.configuration.ClassTypeDefinition;
@@ -18,6 +19,7 @@ import cz.neumimto.rpg.api.persistance.model.CharacterClass;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.SkillData;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
+import cz.neumimto.rpg.spigot.Resourcepack;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.items.SpigotRpgItemType;
@@ -130,6 +132,12 @@ public class SpigotGuiHelper {
 
     }
 
+    private static ItemStack button(Resourcepack.RPItem i, String name, String command) {
+        LocalizationService localizationService = Rpg.get().getLocalizationService();
+        return button(i.mat, name, localizationService.translate(command), i.model);
+    }
+
+
     private static ItemStack button(Material material, String name, String command) {
         ItemStack itemStack = new ItemStack(material);
         ItemMeta itemMeta = itemStack.getItemMeta();
@@ -238,10 +246,10 @@ public class SpigotGuiHelper {
         i.setItem(0, button(Material.PAPER, localizationService.translate(LocalizationKeys.BACK), back == null ? "ninfo classes" : back));
         i.setItem(8, button(Material.DIAMOND, localizationService.translate(LocalizationKeys.CONFIRM), "char choose class " + cc.getName()));
         if (!cc.getAllowedArmor().isEmpty()) {
-            i.setItem(29, button(Material.DIAMOND_CHESTPLATE, localizationService.translate(LocalizationKeys.ARMOR), "ninfo class-armor " + cc.getName(), 12345));
+            i.setItem(29, button(Resourcepack.ARMOR, localizationService.translate(LocalizationKeys.ARMOR), "ninfo class-armor " + cc.getName()));
         }
         if (!cc.getWeapons().isEmpty() || !cc.getOffHandWeapons().isEmpty()) {
-            i.setItem(30, button(Material.DIAMOND_SWORD, localizationService.translate(LocalizationKeys.WEAPONS), "ninfo class-weapons " + cc.getName(), 12345));
+            i.setItem(30, button(Resourcepack.WEAPONS, localizationService.translate(LocalizationKeys.WEAPONS), "ninfo class-weapons " + cc.getName()));
         }
         if (cc.getSkillTree() != SkillTree.Default) {
             i.setItem(31, button(Material.OAK_SAPLING,
@@ -390,10 +398,10 @@ public class SpigotGuiHelper {
 
     private static void fillSkillTreeViewInterface(Inventory i) {
 
-        i.setItem(26, button(Material.STICK, "Up", "skilltree north", 12345));
-        i.setItem(35, button(Material.STICK, "Down", "skilltree south", 12346));
-        i.setItem(53, button(Material.STICK, "Left", "skilltree east", 12347));
-        i.setItem(44, button(Material.STICK, "Right", "skilltree west", 12348));
+        i.setItem(26, button(Resourcepack.UP, "Up", "skilltree north"));
+        i.setItem(35, button(Resourcepack.DOWN, "Down", "skilltree south"));
+        i.setItem(53, button(Resourcepack.LEFT, "Left", "skilltree east"));
+        i.setItem(44, button(Resourcepack.RIGHT, "Right", "skilltree west"));
     }
 
     public static Inventory drawSkillTreeViewData(Inventory i, ISpigotCharacter character) {
@@ -603,7 +611,7 @@ public class SpigotGuiHelper {
 
             int slot = attributButtonSlots[k];
             if (character.getAttributePoints() > 0) {
-                ItemStack attrInc = button(Material.GREEN_DYE, ChatColor.GREEN + "+",
+                ItemStack attrInc = button(Resourcepack.PLUS, ChatColor.GREEN + "+",
                         "char attribute-add " + aconf.getId() + " true " + slot);
                 i.setItem(slot - 9, attrInc);
             }
