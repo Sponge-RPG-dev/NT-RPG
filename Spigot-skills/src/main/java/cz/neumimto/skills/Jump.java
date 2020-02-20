@@ -74,5 +74,7 @@ public class Jump extends ActiveSkill<ISpigotCharacter> {
         }
 
         unstableMaterials.add(Material.SOUL_SAND);
+        unstableMaterials.add(Material.CAMPFIRE);
+        unstableMaterials.add(Material.CAKE);
     }
 }

@@ -98,7 +98,7 @@ public class SpigotAdminCommands extends AbstractAdminCommands<CommandSender, Pl
 
     @Subcommand("effect add")
     @Description("Adds effect, managed by rpg plugin, to the player")
-    public void effectAddCommand(CommandSender commandSender, @Flags("taget") OnlinePlayer target, IGlobalEffect effect, long duration, String[] args) {
+    public void effectAddCommand(CommandSender commandSender, OnlinePlayer target, IGlobalEffect effect, long duration, String[] args) {
         super._effectAddCommand(commandSender, target.player, effect, duration, args);
     }
 

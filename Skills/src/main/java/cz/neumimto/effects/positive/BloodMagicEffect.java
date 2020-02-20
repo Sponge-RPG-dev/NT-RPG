@@ -36,16 +36,12 @@ import cz.neumimto.rpg.common.entity.players.CharacterMana;
 public class BloodMagicEffect extends EffectBase {
 
     public static String name = "BloodMagic";
-    private static String apply = "You have gained " + name;
-    private static String expire = "You have lost " + name;
     private IActiveCharacter consumer;
 
     public BloodMagicEffect(IEffectConsumer consumer, long duration) {
         super(name, consumer);
         this.consumer = (IActiveCharacter) consumer;
         setDuration(duration);
-        setApplyMessage(apply);
-        setExpireMessage(expire);
     }
 
     @Override
