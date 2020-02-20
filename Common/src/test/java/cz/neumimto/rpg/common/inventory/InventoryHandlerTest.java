@@ -1,7 +1,5 @@
 package cz.neumimto.rpg.common.inventory;
 
-import static cz.neumimto.rpg.junit.CharactersExtension.Stage;
-import static cz.neumimto.rpg.junit.CharactersExtension.Stage.Stages.READY;
 import cz.neumimto.rpg.RpgTest;
 import cz.neumimto.rpg.api.RpgApi;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
@@ -14,7 +12,10 @@ import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.common.entity.TestCharacter;
 import cz.neumimto.rpg.common.items.RpgItemStackImpl;
-import cz.neumimto.rpg.junit.*;
+import cz.neumimto.rpg.junit.CharactersExtension;
+import cz.neumimto.rpg.junit.NtRpgExtension;
+import cz.neumimto.rpg.junit.TestDictionary;
+import cz.neumimto.rpg.junit.TestGuiceModule;
 import name.falgout.jeffrey.testing.junit.guice.GuiceExtension;
 import name.falgout.jeffrey.testing.junit.guice.IncludeModule;
 import org.junit.jupiter.api.Assertions;
@@ -25,11 +26,14 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import javax.inject.Inject;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
-import javax.inject.Inject;
+
+import static cz.neumimto.rpg.junit.CharactersExtension.Stage;
+import static cz.neumimto.rpg.junit.CharactersExtension.Stage.Stages.READY;
 
 @ExtendWith({GuiceExtension.class, NtRpgExtension.class, CharactersExtension.class})
 @IncludeModule(TestGuiceModule.class)
@@ -161,7 +165,7 @@ class InventoryHandlerTest {
         }},
                 minimalRequirements, Collections.emptyMap());
 
-        boolean mayUse = itemService.checkItemAttributeRequirements(character, managedSlot, future);
+        boolean mayUse = itemService.checkItemAttributeRequirements(character, future);
         Assertions.assertTrue(mayUse);
     }
 
@@ -187,7 +191,7 @@ class InventoryHandlerTest {
                 }},
                 minimalRequirements, Collections.emptyMap());
 
-        boolean mayUse = itemService.checkItemAttributeRequirements(character, managedSlot, future);
+        boolean mayUse = itemService.checkItemAttributeRequirements(character, future);
         Assertions.assertFalse(mayUse);
     }
 
@@ -211,7 +215,7 @@ class InventoryHandlerTest {
         bonusAttributes.put(TestDictionary.STR, 5);
         RpgItemStackImpl future = new RpgItemStackImpl(TestDictionary.ARMOR_TYPE_1, Collections.emptyMap(), bonusAttributes, minimalRequirements, Collections.emptyMap());
 
-        boolean mayUse = itemService.checkItemAttributeRequirements(character, managedSlot, future);
+        boolean mayUse = itemService.checkItemAttributeRequirements(character, future);
         Assertions.assertFalse(mayUse);
     }
 }

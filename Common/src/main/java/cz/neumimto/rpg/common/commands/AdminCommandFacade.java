@@ -108,7 +108,7 @@ public class AdminCommandFacade {
                     .filter(c -> c.getClassDefinition().getName().equalsIgnoreCase(classDefinition.getName()))
                     .forEach(c -> characterService.addExperiences(character, amount, c));
         } else {
-            characterService.addExperiences(character, amount, expSource);
+            characterService.addExperiences(character, amount, expSource.toUpperCase());
         }
         return true;
     }

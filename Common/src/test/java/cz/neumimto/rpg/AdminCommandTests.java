@@ -1,6 +1,5 @@
 package cz.neumimto.rpg;
 
-import static cz.neumimto.rpg.junit.CharactersExtension.Stage.Stages.READY;
 import cz.neumimto.rpg.api.RpgApi;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.api.entity.CommonProperties;
@@ -28,6 +27,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import javax.inject.Inject;
+
+import static cz.neumimto.rpg.junit.CharactersExtension.Stage.Stages.READY;
 
 @ExtendWith({GuiceExtension.class, NtRpgExtension.class, CharactersExtension.class})
 @IncludeModule(TestGuiceModule.class)
@@ -94,10 +95,10 @@ public class AdminCommandTests {
             }
         };
         iActiveCharacter.addClass(data);
-        classDefinition.addExperienceSource("expSourceTest");
+        classDefinition.addExperienceSource("expSourceTest".toUpperCase());
 
         iActiveCharacter.setProperty(CommonProperties.experiences_mult, 1);
-        adminCommandFacade.commandAddExperiences(iActiveCharacter, 10D, classDefinition.getName());
+        adminCommandFacade.commandAddExperiences(iActiveCharacter, 10D, "expSourceTest");
         Assertions.assertEquals(jpaCharacterClass.getExperiences(), 10D);
     }
 }
