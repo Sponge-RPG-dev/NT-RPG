@@ -1,6 +1,7 @@
 package cz.neumimto.rpg;
 
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.RpgApi;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
@@ -9,6 +10,7 @@ import cz.neumimto.rpg.api.gui.IPlayerMessage;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.common.commands.CharacterCommandFacade;
 import cz.neumimto.rpg.common.effects.AbstractEffectService;
+import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.junit.CharactersExtension;
 import cz.neumimto.rpg.junit.CharactersExtension.Stage;
 import cz.neumimto.rpg.junit.NtRpgExtension;
@@ -42,20 +44,33 @@ public class CharacterCommandTests {
     @Inject
     private IPlayerMessage vanillaMessaging;
 
+    @Inject
+    private RpgApi rpgApi;
+
+    @Inject
+    private PropertyServiceImpl propertyService;
+
     @BeforeEach
     public void before() {
+        new RpgTest(rpgApi);
         new Gui(vanillaMessaging);
     }
 
     @Test
     public void testCommandAddAttribute(@Stage(READY)IActiveCharacter iActiveCharacter) {
+
+
         AttributeConfig attributeConfig = new AttributeConfig("test","test", 100,false, Collections.emptyMap(),"test", "test");
+        propertyService.getAttributes().put(attributeConfig.getId(),attributeConfig);
+
         iActiveCharacter.getCharacterBase().setAttributePoints(1);
         iActiveCharacter.getTransientAttributes().put("test", 0);
         Integer value = iActiveCharacter.getAttributeValue(attributeConfig);
         HashMap<AttributeConfig, Integer> map = new HashMap<>();
         map.put(attributeConfig, 1);
+        iActiveCharacter.getAttributesTransaction().put("test", 1);
         characterCommandFacade.commandCommitAttribute(iActiveCharacter);
+
         Assertions.assertEquals(iActiveCharacter.getAttributeValue(attributeConfig), value + 1);
         Assertions.assertEquals(iActiveCharacter.getCharacterBase().getAttributePoints(), 0);
         Assertions.assertEquals(iActiveCharacter.getCharacterBase().getAttributePointsSpent(), 1);

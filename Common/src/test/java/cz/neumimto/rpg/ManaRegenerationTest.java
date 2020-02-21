@@ -1,6 +1,5 @@
 package cz.neumimto.rpg;
 
-import static cz.neumimto.rpg.junit.CharactersExtension.Stage.Stages.READY;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.RpgApi;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
@@ -25,6 +24,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import javax.inject.Inject;
+
+import static cz.neumimto.rpg.junit.CharactersExtension.Stage.Stages.READY;
 
 @ExtendWith({CharactersExtension.class, GuiceExtension.class, NtRpgExtension.class})
 @IncludeModule(TestGuiceModule.class)
@@ -61,6 +62,7 @@ public class ManaRegenerationTest {
     @Test
     public void testManaRegen(@Stage(READY) IActiveCharacter character) {
         DefaultManaRegeneration defaultManaRegeneration = new DefaultManaRegeneration(character);
+
         character.setProperty(CommonProperties.mana_regen_mult, 1);
         iEffectService.addEffect(defaultManaRegeneration);
 
@@ -72,6 +74,11 @@ public class ManaRegenerationTest {
 
         for (int i = 0; i < 100; i++) {
             iEffectService.schedule();
+            try {
+                Thread.sleep(2);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         Assertions.assertEquals(character.getMana().getValue(), 100.0);
     }
