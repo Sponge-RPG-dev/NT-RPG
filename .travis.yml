@@ -12,5 +12,4 @@ branches:
 language: java
 jdk:
   - openjdk8
-script:
-  - ./gradlew build -x test
+script: gradle build -x test
