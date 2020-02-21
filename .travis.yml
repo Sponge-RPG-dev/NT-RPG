@@ -7,6 +7,7 @@ deploy:
   file:
   - "/home/travis/build/NeumimTo/NT-RPG/Plugin/target/NT-RPG-*.jar"
   - "/home/travis/build/NeumimTo/NT-RPG/Skills/target/NT-*.jar"
+
 language: java
 jdk:
 - openjdk8
