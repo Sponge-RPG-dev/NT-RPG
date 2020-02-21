@@ -39,12 +39,13 @@ compileJava {
     options.forkOptions.executable = 'javac'
 }
 
+
 dependencies {
     compileOnly "org.spigotmc:spigot-api:1.15.1-R0.1-SNAPSHOT"
     compileOnly "org.spigotmc:plugin-annotations:1.2.2-SNAPSHOT"
     annotationProcessor "org.spigotmc:plugin-annotations:1.2.2-SNAPSHOT"
     compileOnly group: "com.comphenix.protocol", name: "ProtocolLib", version: "4.5.0";
-    compile fileTree(dir: 'lib', include: '*.jar')
+    compileOnly fileTree(dir: 'lib', include: '*.jar')
     compile 'org.slf4j:slf4j-api:1.7.28'
     compile project(':Common')
     compile project(':FlatFiles-Persistence')
@@ -53,7 +54,6 @@ dependencies {
     compile 'com.github.Sponge-RPG-dev:ConfigurateButWithBlackjackAndHookers:39d5fc8afd'
     compile 'ninja.leaping.configurate:configurate-hocon:3.3'
     compile "co.aikar:acf-paper:0.5.0-SNAPSHOT"
-    compile 'com.github.stefvanschie.inventoryframework:IF:0.5.14'
     compile 'de.tr7zw:item-nbt-api-plugin:2.2.0'
     compile 'com.github.Slikey:EffectLib:d77f639038'
 
@@ -65,15 +65,12 @@ dependencies {
         from {
             configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
         }
-
-        baseName 'NT-RPG-Spigot-1.15.1'
+        archiveName("NT-RPG-Spigot-15.x-"+version+".jar")
     }
 }
 
 shadowJar {
-    baseName 'NT-RPG'
     classifier = null
-
     // relocate 'co.aikar.commands', 'cz.neumimto.acf'
     // relocate 'com.github.stefvanschie.inventoryframework', 'cz.neumimto.inventoryframework'
 }

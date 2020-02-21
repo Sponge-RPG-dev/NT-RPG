@@ -4,8 +4,10 @@ deploy:
   cleanup: false
   file_glob: true
   file:
-  - "/home/travis/build/NeumimTo/NT-RPG/Plugin/target/NT-RPG-*.jar"
-  - "/home/travis/build/NeumimTo/NT-RPG/Skills/target/NT-*.jar"
+    - "/home/travis/build/Sponge-RPG-dev/NT-RPG/Implementations/Spigot/14/build/libs/NT-RPG-Spigot-*.jar"
+    - "/home/travis/build/Sponge-RPG-dev/NT-RPG/Implementations/Sponge/7/build/libs/NT-RPG-Sponge-*.jar"
+    - "/home/travis/build/Sponge-RPG-dev/NT-RPG/Skills/build/libs/Sponge-Skills-*.jar"
+    - "/home/travis/build/Sponge-RPG-dev/NT-RPG/Spigot-skills/build/libs/Spigot-Skills-*.jar"
 branches:
   only:
     - /^v.*$/

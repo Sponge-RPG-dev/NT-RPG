@@ -31,6 +31,6 @@ dependencies {
 
 
     jar {
-        baseName 'NT-RPG-Spigot-Skills-only'
+        archiveName("Spigot-Skills-"+version+".jar")
     }
 }

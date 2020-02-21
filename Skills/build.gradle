@@ -14,10 +14,7 @@ dependencies {
     compileOnly 'org.spongepowered:spongeapi:' + project.spongeApiVersion
 
 
-
     jar {
-
-        baseName 'NT-RPG-Sponge-7-Skills-only'
-
+        archiveName("Sponge-Skills-"+version+".jar")
     }
 }
