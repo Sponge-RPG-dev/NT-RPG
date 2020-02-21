@@ -80,9 +80,9 @@ public class CharactersExtension implements ParameterResolver {
 
 
         ManagedSlot managedSlot = new FilteredManagedSlotImpl(0,
-                weaponClass -> weaponClass == ItemClass.ARMOR);
+                weaponClass -> weaponClass.getItemType().getItemClass() == ItemClass.ARMOR);
         ManagedSlot filteredSlot = new FilteredManagedSlotImpl(1,
-                weaponClass -> weaponClass == TestDictionary.WEAPON_CLASS_1);
+                weaponClass -> weaponClass.getItemType().getItemClass() == TestDictionary.WEAPON_CLASS_1);
 
 
         activeCharacter.getAllowedWeapons().put(TestDictionary.ITEM_TYPE_WEAPON_1, 20D);

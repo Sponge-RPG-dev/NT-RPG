@@ -68,11 +68,11 @@ class InventoryHandlerTest {
     @ParameterizedTest
     @MethodSource("methodProvider01")
     void handleCharacterEquipActionPreTest(RpgItemStack testItemStack, int i, boolean result) {
-        Log.info("Id: {} result: {}");
+
         boolean mayUse = inventoryHandler.handleCharacterEquipActionPre(character,
                 character.getManagedInventory().get(Object.class).getManagedSlots().get(i),
                 testItemStack);
-
+        Log.info("Id: "+i+" result: "+ result);
         Assertions.assertSame(mayUse, result);
     }
 
