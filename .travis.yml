@@ -6,13 +6,13 @@ deploy:
   file:
   - "/home/travis/build/NeumimTo/NT-RPG/Plugin/target/NT-RPG-*.jar"
   - "/home/travis/build/NeumimTo/NT-RPG/Skills/target/NT-*.jar"
-  on:
-    branch: master
+  # Only build tags
+  if: tag IS present
 language: java
 jdk:
 - oraclejdk8
 after_success:
-- git config --global user.name "Travis CI"
+- git config --global user.name "CI"
 - export GIT_TAG=build-$(date -u "+%Y-%m-%d-%H")
-- git tag $GIT_TAG -a -m "Generated tag from TravisCI build $TRAVIS_BUILD_NUMBER"
+- git tag $GIT_TAG -a -m "$GIT_TAG"
 - git push origin $GIT_TAG
