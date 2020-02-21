@@ -2,9 +2,14 @@ package cz.neumimto.rpg.persistence.jdbc.dao;
 
 import cz.neumimto.persistence.TestHelper;
 import cz.neumimto.rpg.api.RpgTests;
+import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterClass;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
 
 import java.util.Optional;
 
@@ -15,6 +20,8 @@ public class JdbcPlayerDaoTest {
     @BeforeAll
     public static void before() {
         new RpgTests();
+        Logger logger = org.slf4j.LoggerFactory.getLogger(JdbcPlayerDaoTest.class);
+        Log.setLogger(logger);
         try {
             MariaDbBootstrap.runMigrations();
             jdbcPlayerDao = new JdbcPlayerDao().setDataSource(MariaDbBootstrap.ds);

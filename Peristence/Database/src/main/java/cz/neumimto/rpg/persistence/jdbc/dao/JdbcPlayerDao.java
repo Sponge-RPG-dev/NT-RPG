@@ -1,7 +1,10 @@
 package cz.neumimto.rpg.persistence.jdbc.dao;
 
 import cz.neumimto.rpg.api.logging.Log;
-import cz.neumimto.rpg.api.persistance.model.*;
+import cz.neumimto.rpg.api.persistance.model.CharacterBase;
+import cz.neumimto.rpg.api.persistance.model.CharacterClass;
+import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
+import cz.neumimto.rpg.api.persistance.model.TimestampEntity;
 import cz.neumimto.rpg.common.persistance.dao.IPlayerDao;
 import cz.neumimto.rpg.persistence.jdbc.NamedPreparedStatement;
 import cz.neumimto.rpg.persistence.jdbc.converters.EquipedSlot2Json;
@@ -9,11 +12,11 @@ import cz.neumimto.rpg.persistence.model.CharacterBaseImpl;
 import cz.neumimto.rpg.persistence.model.CharacterClassImpl;
 import cz.neumimto.rpg.persistence.model.CharacterSkillImpl;
 
-import java.sql.*;
-import java.util.*;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.sql.DataSource;
+import java.sql.*;
+import java.util.*;
 
 @Singleton
 public class JdbcPlayerDao implements IPlayerDao {
@@ -414,6 +417,7 @@ public class JdbcPlayerDao implements IPlayerDao {
         pspt.setString(":inventory_equip_slot_order:", new EquipedSlot2Json().convertToDatabaseColumn(characterBase.getInventoryEquipSlotOrder()));
         pspt.setInt(":x:", characterBase.getX());
         pspt.setInt(":y:", characterBase.getY());
+        pspt.setString(":info:", "");
         pspt.setInt(":z:", characterBase.getZ());
         pspt.setString(":world:", characterBase.getWorld());
     }

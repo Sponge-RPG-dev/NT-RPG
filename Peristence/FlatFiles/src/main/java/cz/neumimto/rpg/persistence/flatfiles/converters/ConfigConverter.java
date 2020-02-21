@@ -2,8 +2,12 @@ package cz.neumimto.rpg.persistence.flatfiles.converters;
 
 import com.electronwill.nightconfig.core.Config;
 import com.electronwill.nightconfig.core.file.FileConfig;
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.persistance.model.*;
-import cz.neumimto.rpg.persistence.model.*;
+import cz.neumimto.rpg.persistence.model.BaseCharacterAttributeImpl;
+import cz.neumimto.rpg.persistence.model.CharacterBaseImpl;
+import cz.neumimto.rpg.persistence.model.CharacterClassImpl;
+import cz.neumimto.rpg.persistence.model.CharacterSkillImpl;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -182,8 +186,8 @@ public class ConfigConverter {
         List<Config> attributes = config.get(ATTRIBUTES);
         characterBase.setBaseCharacterAttribute(attributesFromConfig(attributes, characterBase));
 
-        //FIXME
-        /*List<EquipedSlot> iso = new ArrayList<>();
+
+        List<EquipedSlot> iso = new ArrayList<>();
         String o = config.get(INVENTORY_EQUIP_ORDER);
         for (String s : o.split(";")) {
             String[] split1 = s.split("@");
@@ -193,7 +197,7 @@ public class ConfigConverter {
                 iso.add(Rpg.get().getInventoryService().createEquipedSlot(split1[0], Integer.parseInt(split1[1])));
             }
         }
-        characterBase.setInventoryEquipSlotOrder(iso);*/
+        characterBase.setInventoryEquipSlotOrder(iso);
 
         characterBase.setHealthScale(((Number) config.get(HEALTH_SCALING)).doubleValue());
         characterBase.setMarkedForRemoval(config.get(MARKED_FOR_REMOVAL));
