@@ -9,9 +9,7 @@ deploy:
     - "/home/travis/build/Sponge-RPG-dev/NT-RPG/Skills/build/libs/Sponge-Skills-*.jar"
     - "/home/travis/build/Sponge-RPG-dev/NT-RPG/Spigot-skills/build/libs/Spigot-Skills-*.jar"
   on:
-    branches:
-      only:
-      - /^v.*$/
+    tags: true
 branches:
   only:
     - /^v.*$/
