@@ -18,7 +18,9 @@
 
 package cz.neumimto.rpg.sponge.inventory;
 
-import cz.neumimto.config.blackjack.and.hookers.NotSoStupidObjectMapper;
+
+import com.electronwill.nightconfig.core.conversion.ObjectConverter;
+import com.electronwill.nightconfig.core.file.FileConfig;
 import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.classes.ClassService;
@@ -32,6 +34,7 @@ import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.inventory.CharacterInventoryInteractionHandler;
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.inventory.RpgInventory;
+import cz.neumimto.rpg.api.items.ItemMetaType;
 import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.persistance.model.EquipedSlot;
@@ -42,7 +45,6 @@ import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.api.skills.mods.ActiveSkillPreProcessorWrapper;
 import cz.neumimto.rpg.api.utils.Pair;
 import cz.neumimto.rpg.common.inventory.AbstractInventoryService;
-import cz.neumimto.rpg.api.items.ItemMetaType;
 import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
 import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
@@ -58,7 +60,6 @@ import cz.neumimto.rpg.sponge.utils.TextHelper;
 import ninja.leaping.configurate.SimpleConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMapper;
-import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
@@ -83,8 +84,6 @@ import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
-
-import static cz.neumimto.rpg.api.logging.Log.error;
 
 /**
  * Created by NeumimTo on 22.7.2015.
@@ -304,17 +303,16 @@ public class SpongeInventoryService extends AbstractInventoryService<ISpongeChar
                 Log.error("Could not create a file " + path.toString(), e);
             }
         }
-        try {
-            ObjectMapper<GuiConfig> mapper = NotSoStupidObjectMapper.forClass(GuiConfig.class);
-            HoconConfigurationLoader hcl = HoconConfigurationLoader.builder().setPath(path).build();
-            GuiConfig guiConfig = mapper.bind(new GuiConfig()).populate(hcl.load());
+        try (FileConfig fileConfig = FileConfig.of(path)) {
+            fileConfig.load();
+            GuiConfig guiConfig = new ObjectConverter().toObject(fileConfig, GuiConfig::new);
             guiConfig.getSkillIcons()
                     .entrySet()
                     .stream()
                     .filter(a -> skillService.getById(a.getKey()).isPresent())
                     .map(a -> new Pair<>(skillService.getById(a.getKey()).get(), a.getValue()))
                     .forEach(a -> GuiDictionary.addSkillIcon(a.key, a.value));
-        } catch (ObjectMappingException | IOException e) {
+        } catch (Exception e) {
             Log.error("Could not read " + path, e);
         }
     }

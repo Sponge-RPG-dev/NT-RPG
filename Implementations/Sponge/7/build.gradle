@@ -21,7 +21,7 @@ dependencies {
     compile project(':Common')
     compile project(':FlatFiles-Persistence')
 
-    compile 'com.github.Sponge-RPG-dev:ConfigurateButWithBlackjackAndHookers:39d5fc8afd'
+
     compile 'com.scireum:parsii:1.5'
 
     compileOnly 'commons-io:commons-io:2.4'

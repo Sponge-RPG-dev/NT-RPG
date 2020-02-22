@@ -17,8 +17,6 @@ dependencies {
     compile group: 'com.zaxxer', name: 'HikariCP', version: '3.3.1'
 
     compileOnly 'com.google.inject:guice:4.2.2'
-    compileOnly 'com.github.Sponge-RPG-dev:ConfigurateButWithBlackjackAndHookers:39d5fc8afd'
-    compileOnly 'ninja.leaping.configurate:configurate-hocon:3.3'
     compileOnly 'com.google.inject:guice:4.2.2'
     compileOnly 'org.slf4j:slf4j-api:1.7.26'
     compileOnly 'com.google.code.gson:gson:2.8.5'

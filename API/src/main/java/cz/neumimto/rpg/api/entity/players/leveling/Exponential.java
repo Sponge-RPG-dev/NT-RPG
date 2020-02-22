@@ -1,12 +1,10 @@
 package cz.neumimto.rpg.api.entity.players.leveling;
 
 import com.electronwill.nightconfig.core.conversion.Path;
-import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 
 /**
  * Created by NeumimTo on 26.1.2019.
  */
-@ConfigSerializable
 public class Exponential extends AbstractLevelProgression {
 
     @Path("Sequence")

@@ -1,8 +1,5 @@
 package cz.neumimto.rpg.api.configuration;
 
-import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
-
-@ConfigSerializable
 public class Sum implements ItemDamageProcessor {
 
     @Override

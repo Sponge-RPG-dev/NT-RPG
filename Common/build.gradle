@@ -32,8 +32,6 @@ dependencies {
     testCompile 'org.junit.jupiter:junit-jupiter-engine:5.4.1'
     testCompile 'org.junit.jupiter:junit-jupiter-params:5.4.1'
 
-    testCompile 'ninja.leaping.configurate:configurate-hocon:3.3'
-    testCompile 'com.github.Sponge-RPG-dev:ConfigurateButWithBlackjackAndHookers:39d5fc8afd'
     testCompile group: 'it.unimi.dsi', name: 'fastutil', version: '8.2.1'
     testCompile 'org.slf4j:slf4j-simple:1.7.26'
     // https://mvnrepository.com/artifact/com.google.code.gson/gson

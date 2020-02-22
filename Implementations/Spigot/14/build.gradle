@@ -51,8 +51,6 @@ dependencies {
     compile project(':FlatFiles-Persistence')
 
     compile 'com.google.inject:guice:4.1.0'
-    compile 'com.github.Sponge-RPG-dev:ConfigurateButWithBlackjackAndHookers:39d5fc8afd'
-    compile 'ninja.leaping.configurate:configurate-hocon:3.3'
     compile "co.aikar:acf-paper:0.5.0-SNAPSHOT"
     compile 'de.tr7zw:item-nbt-api-plugin:2.2.0'
     compile 'com.github.Slikey:EffectLib:d77f639038'
