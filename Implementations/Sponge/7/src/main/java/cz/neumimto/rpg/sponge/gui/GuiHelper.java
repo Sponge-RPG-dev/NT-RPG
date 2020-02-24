@@ -48,7 +48,6 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static cz.neumimto.rpg.sponge.gui.CatalogTypeItemStackBuilder.Block;
 import static cz.neumimto.rpg.sponge.gui.CatalogTypeItemStackBuilder.Item;
@@ -60,7 +59,17 @@ public class GuiHelper {
 
     public static Map<DamageType, CatalogTypeItemStackBuilder> damageTypeToItemStack = new HashMap<>();
 
+    public static Text JOINT = Text.of(TextColors.DARK_GRAY, "[", TextColors.DARK_RED, "+", TextColors.DARK_GRAY + "]");
+    public static Text HEADER_START = Text.of(TextColors.DARK_GRAY,"════════ [ ");
+    public static Text HEADER_END = Text.of(TextColors.DARK_GRAY," ] ════════");
+    public static Text VERTICAL_LINE = Text.of(TextColors.DARK_GRAY, "║ " , TextColors.GRAY);
+    public static Set<String> SKILL_SETTINGS_DURATION_NODES = new HashSet<>();
+
     static {
+        SKILL_SETTINGS_DURATION_NODES.add(SkillNodes.DURATION.value());
+        SKILL_SETTINGS_DURATION_NODES.add(SkillNodes.PERIOD.value());
+        SKILL_SETTINGS_DURATION_NODES.add(SkillNodes.COOLDOWN.value());
+
 
         damageTypeToItemStack.put(DamageTypes.ATTACK, Item.of(ItemTypes.STONE_SWORD));
         damageTypeToItemStack.put(DamageTypes.CONTACT, Item.of(ItemTypes.CACTUS));
@@ -82,6 +91,20 @@ public class GuiHelper {
         damageTypeToItemStack.put(NDamageType.ICE, Block.of(BlockTypes.ICE));
         damageTypeToItemStack.put(NDamageType.LIGHTNING, Item.of(ItemTypes.NETHER_STAR));
     }
+
+
+    public static Text header(String header) {
+        return Text.of(JOINT, HEADER_START, TextColors.GREEN, header , HEADER_END);
+    }
+
+    public static Text line(String line) {
+        return Text.of(VERTICAL_LINE, TextColors.GRAY, line);
+    }
+
+    public static Text node(String key, String value) {
+        return Text.of(VERTICAL_LINE, TextColors.GRAY, Rpg.get().getLocalizationService().translate(key),TextColors.DARK_GRAY, ": " + value);
+    }
+
 
     public static ItemStack itemStack(ItemType type) {
         ItemStack is = ItemStack.of(type, 1);
@@ -528,22 +551,34 @@ public class GuiHelper {
         String sItemType = a.getItemType();
         ItemType type = Sponge.getRegistry().getType(ItemType.class, sItemType).orElse(ItemTypes.STONE);
         ItemStack itemStack = itemStack(type);
-        itemStack.offer(Keys.DISPLAY_NAME, Text.builder(a.getName()).color(toTextColor(a.getPreferedColor())).style(TextStyles.BOLD).build());
 
-        if (a.getCustomLore().isEmpty()) {
-            itemStack.offer(Keys.ITEM_LORE, a.getCustomLore().stream().map(TextHelper::parse).collect(Collectors.toList()));
-        } else {
-            List<Text> lore = new ArrayList<>();
-            lore.add(Text.builder(a.getClassType()).style(TextStyles.BOLD).color(TextColors.GRAY).build());
-            lore.add(Text.EMPTY);
+        List<Text> lore = new ArrayList<>();
+        lore.add(header(a.getName()));
+        lore.add(node(LocalizationKeys.CLASS_TYPE, a.getClassType()));
+
+        if (a.getDescription() != null && a.getDescription().size() > 0) {
             List<String> description = a.getDescription();
-            if (description != null) {
-                for (String s : description) {
-                    lore.add(Text.builder(s).style(TextStyles.ITALIC).color(TextColors.GOLD).build());
-                }
+            String descriptionS = Rpg.get().getLocalizationService().translate(LocalizationKeys.DESCRIPTION);
+            lore.add(header(descriptionS));
+
+            for (String s : description) {
+                lore.add(line(s));
             }
-            itemStack.offer(Keys.ITEM_LORE, lore);
         }
+
+        if (a.getCustomLore() != null && a.getCustomLore().size() > 0) {
+            String loreH = Rpg.get().getLocalizationService().translate(LocalizationKeys.LORE);
+            lore.add(header(loreH));
+
+            List<String> ll = a.getCustomLore();
+            for (String s : ll) {
+                lore.add(line(s));
+            }
+
+        }
+
+
+
         itemStack.offer(new InventoryCommandItemMenuData("class " + a.getName()));
         itemStack.offer(new MenuInventoryData(true));
         return itemStack;

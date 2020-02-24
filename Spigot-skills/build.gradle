@@ -26,7 +26,7 @@ dependencies {
     compileOnly project(':Spigot-14')
     compileOnly project(':API')
     compileOnly "org.spigotmc:spigot-api:1.15.1-R0.1-SNAPSHOT"
-
+    compileOnly 'com.github.Slikey:EffectLib:d77f639038'
     compileOnly group: "com.comphenix.protocol", name: "ProtocolLib", version: "4.5.0";
 
 

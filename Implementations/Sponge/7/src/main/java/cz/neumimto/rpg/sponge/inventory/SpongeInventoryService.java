@@ -306,6 +306,8 @@ public class SpongeInventoryService extends AbstractInventoryService<ISpongeChar
         try (FileConfig fileConfig = FileConfig.of(path)) {
             fileConfig.load();
             GuiConfig guiConfig = new ObjectConverter().toObject(fileConfig, GuiConfig::new);
+            if (guiConfig.getSkillIcons() == null)
+                return;
             guiConfig.getSkillIcons()
                     .entrySet()
                     .stream()
