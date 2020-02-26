@@ -189,12 +189,14 @@ public class ConfigConverter {
 
         List<EquipedSlot> iso = new ArrayList<>();
         String o = config.get(INVENTORY_EQUIP_ORDER);
-        for (String s : o.split(";")) {
-            String[] split1 = s.split("@");
-            if (split1.length == 1) {
-                iso.add(Rpg.get().getInventoryService().createEquipedSlot(null, Integer.parseInt(split1[0])));
-            } else {
-                iso.add(Rpg.get().getInventoryService().createEquipedSlot(split1[0], Integer.parseInt(split1[1])));
+        if (!o.trim().isEmpty()) {
+            for (String s : o.split(";")) {
+                String[] split1 = s.split("@");
+                if (split1.length == 1) {
+                    iso.add(Rpg.get().getInventoryService().createEquipedSlot(null, Integer.parseInt(split1[0])));
+                } else {
+                    iso.add(Rpg.get().getInventoryService().createEquipedSlot(split1[0], Integer.parseInt(split1[1])));
+                }
             }
         }
         characterBase.setInventoryEquipSlotOrder(iso);

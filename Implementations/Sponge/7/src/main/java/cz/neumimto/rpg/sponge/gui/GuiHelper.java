@@ -59,7 +59,7 @@ public class GuiHelper {
 
     public static Map<DamageType, CatalogTypeItemStackBuilder> damageTypeToItemStack = new HashMap<>();
 
-    public static Text JOINT = Text.of(TextColors.DARK_GRAY, "[", TextColors.DARK_RED, "+", TextColors.DARK_GRAY + "]");
+    public static Text JOINT = Text.of(TextColors.DARK_GRAY, "[", TextColors.DARK_RED, "+", TextColors.DARK_GRAY, "]");
     public static Text HEADER_START = Text.of(TextColors.DARK_GRAY,"════════ [ ");
     public static Text HEADER_END = Text.of(TextColors.DARK_GRAY," ] ════════");
     public static Text VERTICAL_LINE = Text.of(TextColors.DARK_GRAY, "║ " , TextColors.GRAY);
@@ -578,7 +578,7 @@ public class GuiHelper {
         }
 
 
-
+        itemStack.offer(Keys.ITEM_LORE, lore);
         itemStack.offer(new InventoryCommandItemMenuData("class " + a.getName()));
         itemStack.offer(new MenuInventoryData(true));
         return itemStack;
