@@ -1,11 +1,13 @@
 package cz.neumimto.rpg.sponge.gui;
 
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.items.ClassItem;
+import cz.neumimto.rpg.api.localization.Arg;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.logging.Log;
@@ -278,37 +280,14 @@ public class GuiHelper {
         if (fromCache == null) {
             lore = new ArrayList<>();
             nameColor = getSkillTextColor(character, skill, skillData, skillTree);
+
             if (skillData.useDescriptionOnly()) {
                 List<String> description = skillData.getDescription(character);
                 for (String s : description) {
                     lore.add(TextHelper.parse(s));
                 }
             } else {
-                LocalizationService locService = Rpg.get().getLocalizationService();
-                Text execType = TextHelper.parse(locService.translate(skill.getSkillExecutionType().toString().toLowerCase()));
-                lore.add(execType);
-                lore.add(Text.EMPTY);
-
-                for (String s : skillData.getDescription(character)) {
-                    lore.add(TextHelper.parse(s));
-                }
-
-                lore.add(Text.EMPTY);
-
-                Set<ISkillType> skillTypes = skillData.getSkill().getSkillTypes();
-                Text.Builder builder = Text.builder();
-                Iterator<ISkillType> iterator = skillTypes.iterator();
-                int i = 0;
-                while (iterator.hasNext()) {
-                    i++;
-                    ISkillType next = iterator.next();
-                    String translate = locService.translate(next.toString());
-                    lore.add(TextHelper.parse(translate));
-                    if (i % 3 == 0) {
-                        lore.add(builder.build());
-                        builder = Text.builder();
-                    }
-                }
+                lore = toLore(character, skillData, nameColor);
             }
 
             model.addToCache(skill, lore, nameColor);
@@ -321,6 +300,124 @@ public class GuiHelper {
         itemStack.offer(Keys.ITEM_LORE, lore);
         return itemStack;
     }
+
+    public static List<Text> toLore(ISpongeCharacter character, SkillData skillData, TextColor nameColor) {
+        ISkill skill = skillData.getSkill();
+        List<Text> lore = new ArrayList<>();
+        if (skillData.useDescriptionOnly()) {
+            List<String> description = skillData.getDescription(character);
+            for (String s : description) {
+                lore.add(TextHelper.parse(s));
+            }
+        } else {
+            LocalizationService locService = Rpg.get().getLocalizationService();
+            lore.add(header(nameColor + locService.translate(skill.getName())));
+            lore.add(node(locService.translate(LocalizationKeys.SKILL_EXECUTION_TYPE), locService.translate(skill.getSkillExecutionType().toString().toLowerCase())));
+
+            PlayerSkillContext psc = character.getSkillInfo(skill);
+            String level = psc == null ? " -- " : psc.getLevel() + (psc.getLevel() != psc.getTotalLevel() ? " ("+psc.getTotalLevel()+")" :"");
+            lore.add(node(locService.translate(LocalizationKeys.LEVEL), level));
+            lore.add(node(locService.translate(LocalizationKeys.SKILL_MAX_LEVEL), ""+ skillData.getMaxSkillLevel()));
+            if (skillData.getMinPlayerLevel() > 0) {
+                lore.add(node(locService.translate(LocalizationKeys.SKILL_MIN_CLASS_LEVEL), "" + skillData.getMinPlayerLevel()));
+            }
+            if (skillData.getLevelGap() > 0) {
+                lore.add(node(locService.translate(LocalizationKeys.SKILL_LEVEL_GAP), "" + skillData.getLevelGap()));
+            }
+
+
+            SkillSettings skillSettings = skillData.getSkillSettings();
+            lore.add(header(locService.translate(LocalizationKeys.SKILL_SETTINGS)));
+
+            String value = null;
+            for (Map.Entry<String, Float> entry : skillSettings.getNodes().entrySet()) {
+                if (entry.getKey().endsWith(SkillSettings.BONUS_SUFFIX) || entry.getKey().contains("_per_")) {
+                    continue;
+                }
+
+                String translatedNode = locService.translate(entry.getKey());
+                Float bonusNode = skillSettings.getNodes().get(translatedNode + SkillSettings.BONUS_SUFFIX);
+
+                if (SKILL_SETTINGS_DURATION_NODES.contains(translatedNode)) {
+                    value = String.format("%.2f", entry.getValue() * 0.001) + " ms";
+                    if (bonusNode != null && bonusNode != 0) {
+                        value += " (" + String.format("%.2f", bonusNode * 0.001) + " ms)";
+                    }
+                } else {
+                    value = String.format("%.2f", entry.getValue());
+                    if (bonusNode != null && bonusNode != 0) {
+                        value += " (" + String.format("%.2f", bonusNode) + ")";
+                    }
+                }
+
+                if (entry.getValue() == 0f && (bonusNode == null || bonusNode == 0f)) {
+                    continue;
+                }
+                lore.add(node(translatedNode, value));
+            }
+
+            Map<AttributeConfig, SkillSettings.AttributeSettings> attributeSettings = skillSettings.getAttributeSettings();
+            if (attributeSettings.size() > 0) {
+                lore.add(header(locService.translate(LocalizationKeys.SKILL_ATTRIBUTE_SETTINGS)));
+
+                for (Map.Entry<AttributeConfig, SkillSettings.AttributeSettings> e : attributeSettings.entrySet()) {
+                    float value1 = e.getValue().value;
+                    String strVal = null;
+                    if (value1 == 0f) {
+                        continue;
+                    }
+                    if (SKILL_SETTINGS_DURATION_NODES.contains(e.getValue().node)) {
+                        strVal = String.format("%.2f", value1 * 0.001) + " ms";
+                    } else {
+                        strVal = String.valueOf(value1);
+                    }
+                    String line = locService.translate(LocalizationKeys.SKILL_ATTRIBUTE_SETTING_PATTERN,
+                            Arg.arg("value", strVal)
+                                    .with("attr", e.getKey().getName())
+                                    .with("node", locService.translate(e.getValue().node)));
+                    lore.add(line(line));
+                }
+            }
+
+            List<String> description = skillData.getDescription(character);
+            if (description != null && description.size() > 0) {
+                lore.add(header(locService.translate(LocalizationKeys.DESCRIPTION)));
+
+                for (String s : description) {
+                    lore.add(line(s));
+                }
+            }
+
+            lore.add(header(locService.translate(LocalizationKeys.SKILL_TRAITS)));
+            Set<ISkillType> skillTypes = skill.getSkillTypes();
+            StringBuilder builder = new StringBuilder();
+            Iterator<ISkillType> iterator = skillTypes.iterator();
+            int i = 0;
+            boolean firstLine = true;
+            while (iterator.hasNext()) {
+                i++;
+                ISkillType next = iterator.next();
+                String translate = locService.translate(next.toString())+" ";
+                builder.append(translate);
+                if (i % 4 == 0) {
+                    if (firstLine) {
+                        lore.add(node(locService.translate(LocalizationKeys.SKILL_TYPES), builder.toString()));
+                    } else {
+                        lore.add(line(" - " + builder.toString()));
+                    }
+
+                    builder = new StringBuilder();
+                    firstLine = false;
+                }
+            }
+        }
+
+
+        return lore;
+    }
+
+
+
 
     @SuppressWarnings("unchecked")
     private static TextColor getSkillTextColor(IActiveCharacter character, ISkill skill, SkillData skillData, SkillTree skillTree) {
@@ -579,7 +676,7 @@ public class GuiHelper {
 
 
         itemStack.offer(Keys.ITEM_LORE, lore);
-        itemStack.offer(new InventoryCommandItemMenuData("class " + a.getName()));
+        itemStack.offer(new InventoryCommandItemMenuData("character class " + a.getName()));
         itemStack.offer(new MenuInventoryData(true));
         return itemStack;
     }
