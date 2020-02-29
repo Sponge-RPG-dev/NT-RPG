@@ -676,7 +676,7 @@ public class GuiHelper {
 
 
         itemStack.offer(Keys.ITEM_LORE, lore);
-        itemStack.offer(new InventoryCommandItemMenuData("character class " + a.getName()));
+        itemStack.offer(new InventoryCommandItemMenuData("ninfo class " + a.getName()));
         itemStack.offer(new MenuInventoryData(true));
         return itemStack;
     }

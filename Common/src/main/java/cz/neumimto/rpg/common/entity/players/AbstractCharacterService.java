@@ -43,10 +43,7 @@ import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.permissions.PermissionService;
-import cz.neumimto.rpg.api.persistance.model.BaseCharacterAttribute;
-import cz.neumimto.rpg.api.persistance.model.CharacterBase;
-import cz.neumimto.rpg.api.persistance.model.CharacterClass;
-import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
+import cz.neumimto.rpg.api.persistance.model.*;
 import cz.neumimto.rpg.api.skills.*;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.skills.tree.SkillTreeSpecialization;
@@ -1210,9 +1207,9 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
     }
 
     @Override
-    public void addSkillPoint(T character, PlayerClassData playerClassData, int skillpointsPerLevel) {
+    public void addSkillPoint(T character, PlayerClassData playerClassData, int amount) {
         CharacterClass characterClass = character.getCharacterBase().getCharacterClass(playerClassData.getClassDefinition());
-        characterClass.setSkillPoints(characterClass.getSkillPoints() + skillpointsPerLevel);
+        characterClass.setSkillPoints(characterClass.getSkillPoints() + amount);
     }
 
     @Override
@@ -1339,6 +1336,42 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
         return false;
     }
 
+    @Override
+    public ActionResult addUniqueSkillpoint(T character, PlayerClassData classByType, String sourceKey) {
+        CharacterBase characterBase = character.getCharacterBase();
+        CharacterClass characterClass = characterBase.getCharacterClass(classByType.getClassDefinition());
+        if (sourceKey == null) {
+            throw new IllegalStateException("SourceKey is requried");
+        }
+        if (characterClass == null) {
+             throw new IllegalStateException("Player " + character.toString() + " has no class type of " + characterClass);
+        }
+        sourceKey = sourceKey.toLowerCase();
+        Map<String, Set<DateKeyPair>> uniqueSkillpoints = characterBase.getUniqueSkillpoints();
 
+        String key = characterClass.getName().toLowerCase();
+
+        Set<DateKeyPair> uniques = uniqueSkillpoints.get(characterClass.getName());
+        if (uniques == null) {
+            uniques = new HashSet<>();
+            uniqueSkillpoints.put(key, uniques);
+        }
+        for (DateKeyPair unique : uniques) {
+            if (sourceKey.equalsIgnoreCase(unique.getSourceKey())) {
+                Log.error("Character " + character.getUUID() + " already gained " + sourceKey + " skillpoint");
+                return ActionResult.nok();
+            }
+        }
+
+        uniques.add(new DateKeyPair(new Date(), sourceKey));
+
+
+
+
+        addSkillPoint(character, classByType, 1);
+
+        Log.error("Character " + character.getUUID() + " gained " + sourceKey + " skillpoint");
+        return ActionResult.ok();
+    }
 }
 

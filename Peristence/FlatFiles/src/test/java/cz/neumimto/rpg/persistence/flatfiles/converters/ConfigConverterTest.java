@@ -7,6 +7,7 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.inventory.InventoryService;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterClass;
+import cz.neumimto.rpg.api.persistance.model.DateKeyPair;
 import cz.neumimto.rpg.api.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.mods.ActiveSkillPreProcessorWrapper;
@@ -18,6 +19,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -85,6 +87,22 @@ class ConfigConverterTest {
             }
         }
 
+        Assertions.assertNotNull(loadded.getUniqueSkillpoints());
+        Assertions.assertEquals(characterBase.getUniqueSkillpoints().size(), loadded.getUniqueSkillpoints().size());
+
+        for (Map.Entry<String, Set<DateKeyPair>> entry : characterBase.getUniqueSkillpoints().entrySet()) {
+            Set<DateKeyPair> dateKeyPairs = loadded.getUniqueSkillpoints().get(entry.getKey());
+            Assertions.assertNotNull(dateKeyPairs);
+            Set<DateKeyPair> value = entry.getValue();
+
+            Assertions.assertEquals(value.size(), dateKeyPairs.size());
+            for (DateKeyPair dateKeyPair : value) {
+                Optional<String> any = dateKeyPairs.stream().map(DateKeyPair::getSourceKey).filter(a -> dateKeyPair.getSourceKey().equalsIgnoreCase(a)).findAny();
+                Assertions.assertTrue(any.isPresent());
+            }
+        }
+
+
         TestHelper.addClasses(characterBase);
         flatFilePlayerDao.update(characterBase);
         loadded = flatFilePlayerDao.getCharacter(characterBase.getUuid(), characterBase.getName());
@@ -101,6 +119,8 @@ class ConfigConverterTest {
             Assertions.assertEquals(characterClass.getSkillPoints(), loadedClass.getSkillPoints());
             Assertions.assertEquals(characterClass.getUsedSkillPoints(), loadedClass.getUsedSkillPoints());
         }
+
+
     }
 
 }

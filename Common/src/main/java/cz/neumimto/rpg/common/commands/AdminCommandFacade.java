@@ -154,4 +154,14 @@ public class AdminCommandFacade {
         skillContext.sort();
         skillContext.next(character, playerSkillContext, skillContext);
     }
+
+    public void commandAddUniqueSkillpoint(IActiveCharacter character, String classType, String sourceKey) {
+        PlayerClassData classByType = character.getClassByType(classType);
+        if (classByType != null) {
+            ActionResult result = characterService.addUniqueSkillpoint(character, classByType, sourceKey);
+            if (result.isOk()) {
+                characterService.putInSaveQueue(character.getCharacterBase());
+            }
+        }
+    }
 }

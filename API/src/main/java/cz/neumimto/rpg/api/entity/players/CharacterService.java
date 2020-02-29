@@ -147,4 +147,5 @@ public interface CharacterService<T extends IActiveCharacter> {
 
     boolean processUserAction(IActiveCharacter character, UserActionType userActionType);
 
+    ActionResult addUniqueSkillpoint(T character, PlayerClassData classByType, String sourceKey);
 }

@@ -2,6 +2,9 @@ package cz.neumimto.rpg.api.utils;
 
 public class ActionResult {
 
+    private static final ActionResult OK = new ActionResult(true);
+    private static final ActionResult NOK = new ActionResult(false);
+
     private final boolean ok;
     private String message;
 
@@ -19,7 +22,7 @@ public class ActionResult {
     }
 
     public static ActionResult nok() {
-        return new ActionResult(false);
+        return NOK;
     }
 
     public boolean isOk() {
@@ -35,7 +38,7 @@ public class ActionResult {
     }
 
     public static ActionResult ok() {
-        return new ActionResult(true);
+        return OK;
     }
 
 }

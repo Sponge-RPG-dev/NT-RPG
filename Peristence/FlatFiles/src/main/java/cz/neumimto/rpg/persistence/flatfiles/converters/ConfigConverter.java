@@ -16,6 +16,8 @@ import java.util.stream.Collectors;
 
 public class ConfigConverter {
 
+
+
     public static final String MARKED_FOR_REMOVAL = "Remove";
 
     private static final String UUID_ = "UUID";
@@ -47,6 +49,10 @@ public class ConfigConverter {
     private static final String SKILL_CD = "Cooldown";
     private static final String SKILL_FROM_CLASS = "FromClass";
     private static final String SKILL_LEVEL = "Level";
+
+    private static final String UNIQUE_SKILLPOINTS = "UniqueSkillPoints";
+    private static final String DATE_PAIR_DATE = "Date";
+    private static final String DATE_PAIR_KEY = "SourceKey";
 
     public static Config toConfig(CharacterBase c, FileConfig config) {
 
@@ -98,6 +104,10 @@ public class ConfigConverter {
 
         Boolean markedForRemoval = c.getMarkedForRemoval();
         config.set(MARKED_FOR_REMOVAL, markedForRemoval);
+
+        Map<String, Set<DateKeyPair>> uniqueSkillpoints = c.getUniqueSkillpoints();
+        config.set(UNIQUE_SKILLPOINTS, toConfig(uniqueSkillpoints));
+
         return config;
     }
 
@@ -133,6 +143,45 @@ public class ConfigConverter {
 
         return config;
     }
+
+    private static Config toConfig(Map<String, Set<DateKeyPair>> uniquePoints) {
+        Config config = Config.inMemory();
+        for (Map.Entry<String, Set<DateKeyPair>> entry : uniquePoints.entrySet()) {
+            config.set(entry.getKey(), toConfig(entry.getValue()));
+        }
+        return config;
+    }
+
+    private static List<Config> toConfig(Collection<DateKeyPair> uniquePoints) {
+        List<Config> configList = new ArrayList<>();
+        for (DateKeyPair uniquePoint : uniquePoints) {
+            Config config = Config.inMemory();
+            config.set(DATE_PAIR_DATE, dateToText(uniquePoint.getDateReceived()));
+            config.set(DATE_PAIR_KEY, uniquePoint.getSourceKey());
+            configList.add(config);
+        }
+        return configList;
+    }
+
+    private static Map<String, Set<DateKeyPair>> uniqueSkillpointsFromConfig(Config config) {
+        Map<String, Set<DateKeyPair>> uniquePoints = new HashMap<>();
+
+        Map<String, Object> stringObjectMap = config.valueMap();
+        for (Map.Entry<String, Object> entry : stringObjectMap.entrySet()) {
+            List<Config> value = (List<Config>) entry.getValue();
+            String key = entry.getKey();
+
+            for (Config c : value) {
+                Set<DateKeyPair> dateKeyPairs = uniquePoints.computeIfAbsent(key, k -> new HashSet<>());
+                dateKeyPairs.add(new DateKeyPair(textToDate(c.get(DATE_PAIR_DATE)), c.get(DATE_PAIR_KEY)));
+            }
+
+
+        }
+
+        return uniquePoints;
+    }
+
 
     private static Config toConfig(CharacterSkill characterSkill) {
         Config config = Config.inMemory();
@@ -203,6 +252,11 @@ public class ConfigConverter {
 
         characterBase.setHealthScale(((Number) config.get(HEALTH_SCALING)).doubleValue());
         characterBase.setMarkedForRemoval(config.get(MARKED_FOR_REMOVAL));
+
+
+        Config uniqueSkillpoints = config.get(UNIQUE_SKILLPOINTS);
+        Map<String, Set<DateKeyPair>> stringSetMap = uniqueSkillpointsFromConfig(uniqueSkillpoints);
+        characterBase.getUniqueSkillpoints().putAll(stringSetMap);
         return characterBase;
     }
 

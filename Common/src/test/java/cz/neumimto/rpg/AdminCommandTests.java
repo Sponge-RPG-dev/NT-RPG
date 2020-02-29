@@ -9,6 +9,7 @@ import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.entity.players.leveling.Linear;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.gui.IPlayerMessage;
+import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterClass;
 import cz.neumimto.rpg.common.commands.AdminCommandFacade;
 import cz.neumimto.rpg.common.effects.AbstractEffectService;
@@ -101,4 +102,26 @@ public class AdminCommandTests {
         adminCommandFacade.commandAddExperiences(iActiveCharacter, 10D, "expSourceTest");
         Assertions.assertEquals(jpaCharacterClass.getExperiences(), 10D);
     }
+
+    @Test
+    public void testAddUniqueSkillPointsWrongArgs3(@Stage(READY) IActiveCharacter iActiveCharacter) {
+        Assertions.assertThrows(IllegalStateException.class, () -> {
+            adminCommandFacade.commandAddUniqueSkillpoint(iActiveCharacter, "Primary", null);
+        });
+    }
+
+    @Test
+    public void testAddUniqueSkillPoints(@Stage(READY) IActiveCharacter iActiveCharacter) {
+        PlayerClassData primary = iActiveCharacter.getClassByType("Primary");
+        CharacterBase characterBase = iActiveCharacter.getCharacterBase();
+
+        CharacterClass characterClass = characterBase.getCharacterClass(primary.getClassDefinition());
+        int i = characterClass.getSkillPoints();
+
+        adminCommandFacade.commandAddUniqueSkillpoint(iActiveCharacter, "Primary", "testing");
+
+        Assertions.assertEquals(characterClass.getSkillPoints(), i + 1);
+        Assertions.assertEquals(characterBase.getUniqueSkillpoints().size(), 1);
+    }
+
 }

@@ -1,7 +1,10 @@
 package cz.neumimto.persistence;
 
 import cz.neumimto.rpg.api.persistance.model.*;
-import cz.neumimto.rpg.persistence.model.*;
+import cz.neumimto.rpg.persistence.model.BaseCharacterAttributeImpl;
+import cz.neumimto.rpg.persistence.model.CharacterBaseImpl;
+import cz.neumimto.rpg.persistence.model.CharacterClassImpl;
+import cz.neumimto.rpg.persistence.model.CharacterSkillImpl;
 
 import java.util.*;
 
@@ -24,6 +27,8 @@ public class TestHelper {
         characterBase.setX(10);
         characterBase.setY(15);
         characterBase.setZ(-31);
+        characterBase.getUniqueSkillpoints().put("test",
+                new HashSet<>(Arrays.asList(new DateKeyPair("uq1"), new DateKeyPair("uq2"))));
         return characterBase;
     }
 

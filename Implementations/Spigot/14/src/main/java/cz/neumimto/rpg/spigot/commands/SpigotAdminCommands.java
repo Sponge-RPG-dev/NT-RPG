@@ -150,6 +150,15 @@ public class SpigotAdminCommands extends AbstractAdminCommands<CommandSender, Pl
         }
     }
 
+    @Subcommand("add-unique-skillpoint")
+    public void addUniqueSkillpoint(CommandSender executor, OnlinePlayer target,  String classType, String sourceKey) {
+        IActiveCharacter character = characterService.getCharacter(target.player);
+        if (character.isStub()) {
+            throw new IllegalStateException("Stub character");
+        }
+        adminCommandFacade.commandAddUniqueSkillpoint(character, classType, sourceKey);
+    }
+
     @Subcommand("inspect property")
     public void inspectPropertyCommand(CommandSender executor, OnlinePlayer target, String property) {
         try {

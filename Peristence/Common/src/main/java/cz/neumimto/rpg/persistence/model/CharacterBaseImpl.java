@@ -47,6 +47,7 @@ public class CharacterBaseImpl extends TimestampEntityImpl implements CharacterB
     private int Y;
     private int Z;
     private String world;
+    private Map<String, Set<DateKeyPair>> uniqueSkillpoints = new HashMap<>();
 
     private transient Map<String, Integer> cachedAttributes = new HashMap<>();
 
@@ -266,6 +267,11 @@ public class CharacterBaseImpl extends TimestampEntityImpl implements CharacterB
     @Override
     public void setAttributePointsSpent(Integer attributePointsSpent) {
         this.attributePointsSpent = attributePointsSpent;
+    }
+
+    @Override
+    public Map<String, Set<DateKeyPair>> getUniqueSkillpoints() {
+        return uniqueSkillpoints;
     }
 
     public void postLoad() {
