@@ -5,10 +5,7 @@ import cz.neumimto.rpg.api.RpgTests;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterClass;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 
 import java.util.Optional;
@@ -36,6 +33,7 @@ public class JdbcPlayerDaoTest {
     }
 
     @Test
+    @Disabled
     public void test() {
         CharacterBase characterBase = TestHelper.createCharacterBase();
         CharacterBase loadded = null;

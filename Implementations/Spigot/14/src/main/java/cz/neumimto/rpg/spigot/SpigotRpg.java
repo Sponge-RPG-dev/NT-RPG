@@ -58,7 +58,7 @@ public final class SpigotRpg extends AbstractRpg {
         if (event instanceof Cancellable) {
             return ((Cancellable) event).isCancelled();
         }
-        return true;
+        return false;
     }
 
     @Override

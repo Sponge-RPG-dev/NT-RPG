@@ -22,7 +22,7 @@ dependencies {
     compile project(':FlatFiles-Persistence')
 
 
-    compile 'com.scireum:parsii:1.5'
+    //compile 'com.scireum:parsii:1.5'
 
     compileOnly 'commons-io:commons-io:2.4'
     compileOnly 'org.spongepowered:spongeapi:' + project.spongeApiVersion
