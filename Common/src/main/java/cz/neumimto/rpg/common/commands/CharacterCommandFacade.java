@@ -1,6 +1,7 @@
 package cz.neumimto.rpg.common.commands;
 
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.entity.players.CharacterService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
@@ -22,6 +23,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 
 @SuppressWarnings("unchecked")
@@ -39,6 +41,9 @@ public class CharacterCommandFacade {
 
     @Inject
     private PartyService partyService;
+
+    @Inject
+    private ClassService classService;
 
     @Inject
     private PropertyServiceImpl propertyService;
@@ -98,14 +103,18 @@ public class CharacterCommandFacade {
 
                 actionResultConsumer.accept(ActionResult.ok(text));
 
-                IActiveCharacter character = characterService.getCharacter(uuid);
-                Gui.sendListOfCharacters(character, characterBase);
+                Executor executor = Rpg.get().getSyncExecutor();
+                executor.execute(() -> {
+                    IActiveCharacter character = characterService.getCharacter(uuid);
+                    Gui.sendListOfCharacters(character, characterBase);
+                });
             }
         }, Rpg.get().getAsyncExecutor()).exceptionally(throwable -> {
             Log.error("Could not create character", throwable);
             return null;
         });
     }
+
 
     public void commandSwitchCharacter(IActiveCharacter current, String nameNext, Consumer<Runnable> syncCallback) {
         if (current != null && current.getName().equalsIgnoreCase(nameNext)) {

@@ -110,7 +110,7 @@ public class SpigotRpgPlugin extends JavaPlugin {
         });
 
         effectManager = new EffectManager(this);
-
+        Rpg.get().getSyncExecutor();
 
         Collection<? extends Player> onlinePlayers = Bukkit.getServer().getOnlinePlayers();
         for (Player onlinePlayer : onlinePlayers) {

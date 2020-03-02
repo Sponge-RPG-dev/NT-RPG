@@ -290,6 +290,9 @@ public class JdbcPlayerDao implements IPlayerDao {
             Log.error("Could not execute SQL to insert a new record to rpg_character_base table", ex);
             throw new CannotCreateCharacterBaseSQL();
         }
+        for (CharacterClass characterClass : base.getCharacterClasses()) {
+            createCharacterClass(characterClass);
+        }
     }
 
     @Override

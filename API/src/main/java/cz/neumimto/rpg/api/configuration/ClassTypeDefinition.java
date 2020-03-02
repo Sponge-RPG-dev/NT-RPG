@@ -1,6 +1,7 @@
 package cz.neumimto.rpg.api.configuration;
 
 import com.electronwill.nightconfig.core.conversion.Path;
+import com.typesafe.config.Optional;
 
 import java.util.Objects;
 
@@ -20,6 +21,10 @@ public class ClassTypeDefinition implements Comparable<ClassTypeDefinition> {
 
     @Path("Order")
     private int order;
+
+    @Path("DefaultClass")
+    @Optional
+    private String defaultClass;
 
     public ClassTypeDefinition(String primaryColor, String secondaryColor, String dyeColor, boolean changeable, int order) {
         this.primaryColor = primaryColor;
@@ -50,6 +55,10 @@ public class ClassTypeDefinition implements Comparable<ClassTypeDefinition> {
 
     public int getOrder() {
         return order;
+    }
+
+    public String getDefaultClass() {
+        return defaultClass;
     }
 
     @Override

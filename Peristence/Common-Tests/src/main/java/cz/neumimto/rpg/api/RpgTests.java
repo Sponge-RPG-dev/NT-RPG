@@ -220,4 +220,9 @@ public class RpgTests implements RpgApi {
                      BiFunction<Map, Map<Class<?>, ?>, Module> fnInjProv, Consumer<com.google.inject.Injector> injectorc) {
 
     }
+
+    @Override
+    public Executor getSyncExecutor() {
+        return Runnable::run;
+    }
 }

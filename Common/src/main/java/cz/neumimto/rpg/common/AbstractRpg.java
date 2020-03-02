@@ -38,6 +38,7 @@ import java.io.File;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.concurrent.Executor;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
@@ -81,6 +82,8 @@ public abstract class AbstractRpg implements RpgApi {
     private Injector injector;
     @Inject
     private Gui gui;
+
+    private CurrentThreadExecutor currentThreadExecutor;
 
     public AbstractRpg(String workingDirectory) {
         this.workingDirectory = workingDirectory;
@@ -297,6 +300,20 @@ public abstract class AbstractRpg implements RpgApi {
 
         for (RpgAddon rpgAddon : rpgAddons) {
             rpgAddon.processStageLate(injector);
+        }
+    }
+
+    @Override
+    public Executor getSyncExecutor() {
+        if (currentThreadExecutor == null) {
+            currentThreadExecutor = new CurrentThreadExecutor();
+        }
+        return currentThreadExecutor;
+    }
+
+    private static class CurrentThreadExecutor implements Executor {
+        public void execute(Runnable r) {
+            r.run();
         }
     }
 }

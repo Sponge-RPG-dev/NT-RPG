@@ -21,6 +21,7 @@ import cz.neumimto.rpg.api.IRpgElement;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
+import cz.neumimto.rpg.api.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.damage.DamageService;
 import cz.neumimto.rpg.api.effects.EffectService;
@@ -263,9 +264,27 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
 
     @Override
     public void create(CharacterBase base) {
+        addDefaultClasses(base);
         base.onCreate();
         playerDao.create(base);
     }
+
+    private void addDefaultClasses(CharacterBase characterBase) {
+        Map<String, ClassTypeDefinition> classTypes = Rpg.get().getPluginConfig().CLASS_TYPES;
+        List<ClassTypeDefinition> collect = classTypes.values().stream().sorted().collect(Collectors.toList());
+        for (ClassTypeDefinition definition : collect) {
+            String defaultCl = definition.getDefaultClass();
+            if (defaultCl != null) {
+                ClassDefinition defClassDefinition = classService.getClassDefinitionByName(defaultCl);
+                if (defClassDefinition != null ) {
+                    addNewBaseClass(characterBase, defClassDefinition);
+                } else {
+                    Log.error("Could not add default class to player character " + characterBase.getUuid() + " Class " + defaultCl + " not found");
+                }
+            }
+        }
+    }
+
 
 
     /**
@@ -654,14 +673,13 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
             return ActionResult.withErrorMessage(text);
         }
 
-        int avalaibleSkillpoints = 0;
         CharacterClass clazz = character.getCharacterBase().getCharacterClass(nClass.getClassDefinition());
         if (clazz == null) {
             throw new MissingConfigurationException("Class=" + nClass.getClassDefinition().getName() + ". Renamed?");
         }
 
         //todo fetch from db
-        avalaibleSkillpoints = clazz.getSkillPoints();
+        int avalaibleSkillpoints = clazz.getSkillPoints();
         if (avalaibleSkillpoints < 1) {
             String text = localizationService.translate(LocalizationKeys.NO_SKILLPOINTS, arg("skill", skill.getName()));
             return ActionResult.withErrorMessage(text);
@@ -678,7 +696,7 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
             return ActionResult.withErrorMessage(text);
         }
 
-        if (clazz.getLevel() < info.getMinPlayerLevel()) {
+        if (clazz.getLevel() <= info.getMinPlayerLevel()) {
             Map<java.lang.String, Object> map = new HashMap<>();
             map.put("skill", skill.getName());
             map.put("level", info.getMinPlayerLevel());
@@ -1160,9 +1178,9 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
         return ActionResult.ok();
     }
 
+
     @Override
-    public ActionResult addNewClass(T character, ClassDefinition klass) {
-        CharacterBase characterBase = character.getCharacterBase();
+    public CharacterClass addNewBaseClass(CharacterBase characterBase, ClassDefinition klass) {
         CharacterClass cc = persistanceHandler.createCharacterClass();
         cc.setName(klass.getName());
         cc.setCharacterBase(characterBase);
@@ -1170,6 +1188,15 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
         cc.setSkillPoints(0);
         cc.setUsedSkillPoints(0);
         cc.setLevel(0);
+
+        characterBase.getCharacterClasses().add(cc);
+        return cc;
+    }
+
+    @Override
+    public ActionResult addNewClass(T character, ClassDefinition klass) {
+        CharacterBase characterBase = character.getCharacterBase();
+        CharacterClass cc = addNewBaseClass(characterBase, klass);
 
         characterBase.getCharacterClasses().add(cc);
         putInSaveQueue(characterBase);

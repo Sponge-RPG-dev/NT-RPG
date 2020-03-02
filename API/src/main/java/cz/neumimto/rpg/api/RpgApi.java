@@ -92,4 +92,5 @@ public interface RpgApi {
     void init(Path workingDirPath, Object commandManager, Class[] commandClasses, RpgAddon defaultStorageImpl,
               BiFunction<Map, Map<Class<?>, ?>, Module> fnInjProv, Consumer<Injector> injectorc);
 
+    Executor getSyncExecutor();
 }

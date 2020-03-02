@@ -23,11 +23,6 @@ dependencies {
     testCompile 'org.junit.jupiter:junit-jupiter-engine:5.4.1'
     testCompile 'org.junit.jupiter:junit-jupiter-params:5.4.1'
     jar {
-        manifest {
-            attributes(
-                    'Build-Timestamp': new Date()
-            )
-        }
 
         from {
             configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }

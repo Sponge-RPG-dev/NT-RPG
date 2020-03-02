@@ -145,7 +145,7 @@ public class SpongeRpgPlugin extends Rpg {
 
                 }
         );
-
+        Rpg.get().getSyncExecutor();
         /*
         try {
             Class.forName("me.rojo8399.placeholderapi.PlaceholderService");

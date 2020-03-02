@@ -6,6 +6,7 @@ import cz.neumimto.rpg.api.entity.UserActionType;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
+import cz.neumimto.rpg.api.persistance.model.CharacterClass;
 import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
@@ -126,6 +127,8 @@ public interface CharacterService<T extends IActiveCharacter> {
     void gainMana(T character, double manaToAdd, IRpgElement source);
 
     ActionResult canGainClass(T character, ClassDefinition klass);
+
+    CharacterClass addNewBaseClass(CharacterBase characterBase, ClassDefinition klass);
 
     ActionResult addNewClass(T character, ClassDefinition klass);
 

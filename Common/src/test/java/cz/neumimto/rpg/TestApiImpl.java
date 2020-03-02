@@ -22,6 +22,8 @@ import cz.neumimto.rpg.common.impl.TestCharacterService;
 import cz.neumimto.rpg.common.inventory.TestInventoryService;
 import cz.neumimto.rpg.entity.TestEntityService;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Path;
@@ -32,8 +34,6 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 
 @Singleton
 public class TestApiImpl implements RpgApi {
@@ -230,5 +230,10 @@ public class TestApiImpl implements RpgApi {
     @Override
     public void init(Path workingDirPath, Object commandManager, Class[] commandClasses, RpgAddon defaultStorageImpl, BiFunction<Map, Map<Class<?>, ?>, Module> fnInjProv, Consumer<Injector> injectorc) {
 
+    }
+
+    @Override
+    public Executor getSyncExecutor() {
+        return Runnable::run;
     }
 }
