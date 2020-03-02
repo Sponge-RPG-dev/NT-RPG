@@ -13,6 +13,8 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.Event;
 import org.spongepowered.api.text.Text;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
@@ -20,8 +22,6 @@ import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 
 @Singleton
 public final class SpongeRpg extends AbstractRpg {
@@ -38,8 +38,9 @@ public final class SpongeRpg extends AbstractRpg {
     @Inject
     private SpongeRpgPlugin plugin;
 
-    protected SpongeRpg(String workingDir) {
+    protected SpongeRpg(String workingDir, Executor syncExecutor) {
         super(workingDir);
+        super.currentThreadExecutor = syncExecutor;
     }
 
     private void broadcastMessage(Text text) {

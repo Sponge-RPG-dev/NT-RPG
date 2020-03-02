@@ -119,7 +119,7 @@ public class SpongeRpgPlugin extends Rpg {
         PluginContainer pluginContainer = Sponge.getPluginManager().fromInstance(this).get();
 
         SpongeCommandManager manager = new SpongeCommandManager(pluginContainer);
-        impl = new SpongeRpg(workingDir);
+        impl = new SpongeRpg(workingDir, Sponge.getScheduler().createSyncExecutor(this));
 
         impl.init(
                 workingDirPath,

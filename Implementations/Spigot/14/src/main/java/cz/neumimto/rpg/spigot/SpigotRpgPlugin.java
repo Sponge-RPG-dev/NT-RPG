@@ -2,6 +2,7 @@ package cz.neumimto.rpg.spigot;
 
 import co.aikar.commands.CommandManager;
 import co.aikar.commands.PaperCommandManager;
+import com.comphenix.executors.BukkitExecutors;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.players.CharacterService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
@@ -74,7 +75,7 @@ public class SpigotRpgPlugin extends JavaPlugin {
 
         Path workingDirPath = getDataFolder().toPath();
 
-        SpigotRpg spigotRpg = new SpigotRpg(workingDirPath.toString());
+        SpigotRpg spigotRpg = new SpigotRpg(workingDirPath.toString(), BukkitExecutors.newSynchronous(this));
 
 
         CommandManager manager = new PaperCommandManager(this);

@@ -23,8 +23,9 @@ public final class SpigotRpg extends AbstractRpg {
     @Inject
     private AssetService assetService;
 
-    protected SpigotRpg(String workingDirectory) {
+    protected SpigotRpg(String workingDirectory, Executor syncExecutor) {
         super(workingDirectory);
+        super.currentThreadExecutor = syncExecutor;
     }
 
     @Override

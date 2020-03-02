@@ -83,7 +83,7 @@ public abstract class AbstractRpg implements RpgApi {
     @Inject
     private Gui gui;
 
-    private CurrentThreadExecutor currentThreadExecutor;
+    protected Executor currentThreadExecutor;
 
     public AbstractRpg(String workingDirectory) {
         this.workingDirectory = workingDirectory;
@@ -305,15 +305,7 @@ public abstract class AbstractRpg implements RpgApi {
 
     @Override
     public Executor getSyncExecutor() {
-        if (currentThreadExecutor == null) {
-            currentThreadExecutor = new CurrentThreadExecutor();
-        }
         return currentThreadExecutor;
     }
 
-    private static class CurrentThreadExecutor implements Executor {
-        public void execute(Runnable r) {
-            r.run();
-        }
-    }
 }
