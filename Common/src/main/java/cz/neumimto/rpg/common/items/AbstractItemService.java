@@ -1,8 +1,5 @@
 package cz.neumimto.rpg.common.items;
 
-import static cz.neumimto.rpg.api.logging.Log.error;
-import static cz.neumimto.rpg.api.logging.Log.info;
-import static cz.neumimto.rpg.api.logging.Log.warn;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
 import com.typesafe.config.ConfigFactory;
@@ -13,18 +10,18 @@ import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
-import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.items.*;
 import cz.neumimto.rpg.api.items.sockets.SocketType;
+import cz.neumimto.rpg.api.items.subtypes.ItemSubtype;
 import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
-import cz.neumimto.rpg.api.items.ItemMetaType;
-import cz.neumimto.rpg.api.items.subtypes.ItemSubtype;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.*;
-import javax.inject.Inject;
+
+import static cz.neumimto.rpg.api.logging.Log.*;
 
 public abstract class AbstractItemService implements ItemService {
 
@@ -106,7 +103,7 @@ public abstract class AbstractItemService implements ItemService {
 
     @Override
     public ClassItem createClassItemSpecification(RpgItemType key, Double value) {
-        value = Rpg.get().getPluginConfig().ITEM_DAMAGE_PROCESSOR.get(value, key.getDamage());
+        value = Rpg.get().getPluginConfig().CLASS_ITEM_DAMAGE_PROCESSOR.get(value, key.getDamage());
         return new ClassItemImpl(key, value, 0);
     }
 

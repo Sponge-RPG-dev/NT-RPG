@@ -54,16 +54,29 @@ public class SpigotItemService extends AbstractItemService {
     }
 
     public Optional<RpgItemStack> getRpgItemStack(ItemStack itemStack) {
-        return getRpgItemType(itemStack).map(a -> new RpgItemStackImpl(a,
-                getItemEffects(itemStack),
-                getItemBonusAttributes(itemStack),
-                getItemMinimalAttributeRequirements(itemStack),
-                getClassRequirements(itemStack)
-        ));
+        return getRpgItemType(itemStack).map(a -> {
+            NBTItem nbtItem = new NBTItem(itemStack);
+            return new RpgItemStackImpl(a,
+                    getItemEffects(nbtItem),
+                    getItemBonusAttributes(nbtItem),
+                    getItemMinimalAttributeRequirements(nbtItem),
+                    getClassRequirements(nbtItem),
+                    getItemData(nbtItem));
+        });
     }
 
-    private Map<IGlobalEffect, EffectParams> getItemEffects(ItemStack itemStack) {
-        NBTItem nbtItem = new NBTItem(itemStack);
+    private Map<String, Double> getItemData(NBTItem nbtItem) {
+        NBTCompoundList attributes = nbtItem.getCompoundList("AttributeModifiers");
+        if (attributes == null) {
+            return Collections.emptyMap();
+        }
+        for (NBTListCompound attribute : attributes) {
+            Object compound = attribute.getCompound();
+        }
+        return Collections.emptyMap();
+    }
+
+    private Map<IGlobalEffect, EffectParams> getItemEffects(NBTItem nbtItem) {
         NBTCompoundList compoundList = nbtItem.getCompoundList(EFFECTS);
         if (compoundList == null) {
             return Collections.emptyMap();
@@ -78,17 +91,16 @@ public class SpigotItemService extends AbstractItemService {
         return map;
     }
 
-    private Map<ClassDefinition, Integer> getClassRequirements(ItemStack itemStack) {
+    private Map<ClassDefinition, Integer> getClassRequirements(NBTItem nbtItem) {
         return Collections.emptyMap();
     }
 
-    private Map<AttributeConfig, Integer> getItemBonusAttributes(ItemStack itemStack) {
+    private Map<AttributeConfig, Integer> getItemBonusAttributes(NBTItem nbtItem) {
         return Collections.emptyMap();
     }
 
-    private Map<AttributeConfig, Integer> getItemMinimalAttributeRequirements(ItemStack itemStack) {
-        NBTItem item = new NBTItem(itemStack);
-        NBTCompoundList compoundList = item.getCompoundList(ATTRIBTUES_REQUIREMENTS);
+    private Map<AttributeConfig, Integer> getItemMinimalAttributeRequirements(NBTItem nbtItem) {
+        NBTCompoundList compoundList = nbtItem.getCompoundList(ATTRIBTUES_REQUIREMENTS);
         if (compoundList == null) {
             return Collections.emptyMap();
         }

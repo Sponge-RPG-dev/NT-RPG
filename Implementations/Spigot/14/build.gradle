@@ -28,6 +28,9 @@ repositories {
         url "https://repo.dmulloy2.net/nexus/repository/public/"
     }
 
+    maven {
+        url "http://mvn.lumine.io/repository/maven-releases/"
+    }
 }
 
 group = 'cz.neumimto.rpg'
@@ -53,10 +56,13 @@ dependencies {
     compile 'com.google.inject:guice:4.1.0'
     compile "co.aikar:acf-paper:0.5.0-SNAPSHOT"
     compile 'de.tr7zw:item-nbt-api-plugin:2.2.0'
-    compileOnly 'com.github.Slikey:EffectLib:d77f639038'
+    compile 'com.github.Slikey:EffectLib:d77f639038'
 
     compileOnly 'me.clip:placeholderapi:2.10.3'
     compileOnly 'com.gmail.filoghost.holographicdisplays:holographicdisplays-api:2.4.0'
+    compileOnly ('net.Indyuce:MMOItems:5.3.2') {
+        exclude group: 'com.mojang', module: 'authlib'
+    }
 
     jar {
 

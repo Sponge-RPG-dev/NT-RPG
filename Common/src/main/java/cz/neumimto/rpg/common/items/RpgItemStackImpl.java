@@ -1,11 +1,11 @@
 package cz.neumimto.rpg.common.items;
 
+import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.effects.EffectParams;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
+import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.items.RpgItemType;
-import cz.neumimto.rpg.api.configuration.AttributeConfig;
-import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 
 import java.util.Map;
 
@@ -16,13 +16,21 @@ public class RpgItemStackImpl implements RpgItemStack {
     private Map<AttributeConfig, Integer> bonusAttributes;
     private Map<AttributeConfig, Integer> minimalAttributeRequirements;
     private Map<ClassDefinition, Integer> classRequirements;
+    private Map<String, Double> itemData;
 
-    public RpgItemStackImpl(RpgItemType rpgItemType, Map<IGlobalEffect, EffectParams> enchantments, Map<AttributeConfig, Integer> bonusAttributes, Map<AttributeConfig, Integer> minimalAttributeRequirements, Map<ClassDefinition, Integer> classRequirements) {
+    public RpgItemStackImpl(RpgItemType rpgItemType,
+                            Map<IGlobalEffect, EffectParams> enchantments,
+                            Map<AttributeConfig, Integer> bonusAttributes,
+                            Map<AttributeConfig, Integer> minimalAttributeRequirements,
+                            Map<ClassDefinition, Integer> classRequirements,
+                            Map<String, Double> itemData
+                            ) {
         this.rpgItemType = rpgItemType;
         this.enchantments = enchantments;
         this.bonusAttributes = bonusAttributes;
         this.minimalAttributeRequirements = minimalAttributeRequirements;
         this.classRequirements = classRequirements;
+        this.itemData = itemData;
     }
 
     @Override
@@ -48,6 +56,11 @@ public class RpgItemStackImpl implements RpgItemStack {
     @Override
     public Map<ClassDefinition, Integer> getClassRequirements() {
         return classRequirements;
+    }
+
+    @Override
+    public Map<String, Double> getItemData() {
+        return itemData;
     }
 
     @Override

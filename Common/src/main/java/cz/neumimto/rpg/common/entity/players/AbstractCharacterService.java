@@ -696,7 +696,7 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
             return ActionResult.withErrorMessage(text);
         }
 
-        if (clazz.getLevel() <= info.getMinPlayerLevel()) {
+        if (clazz.getLevel() < info.getMinPlayerLevel()) {
             Map<java.lang.String, Object> map = new HashMap<>();
             map.put("skill", skill.getName());
             map.put("level", info.getMinPlayerLevel());

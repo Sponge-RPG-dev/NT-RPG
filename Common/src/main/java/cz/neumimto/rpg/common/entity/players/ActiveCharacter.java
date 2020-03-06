@@ -347,11 +347,11 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
     }
 
     private void mergeWeapons(Set<ClassItem> weapons) {
+        ItemDamageProcessor itemDamageProcessor = Rpg.get().getPluginConfig().CLASS_ITEM_DAMAGE_PROCESSOR;
         for (ClassItem weapon : weapons) {
             if (!allowedWeapons.containsKey(weapon.getType())) {
                 allowedWeapons.put(weapon.getType(), weapon.getDamage());
             } else {
-                ItemDamageProcessor itemDamageProcessor = Rpg.get().getPluginConfig().ITEM_DAMAGE_PROCESSOR;
                 double dmg = itemDamageProcessor.get(allowedWeapons.get(weapon.getType()), weapon.getDamage());
                 allowedWeapons.put(weapon.getType(), dmg);
             }
@@ -414,8 +414,10 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
         while (iterator.hasNext()) {
             PlayerClassData next = iterator.next();
 
+            ClassDefinition classDefinition = next.getClassDefinition();
+
             //merge weapon sets
-            mergeWeapons(next.getClassDefinition());
+            mergeWeapons(classDefinition);
 
             //might be expensive on massive Skilltrees, eventually i could cache these types of skill in an extra collection
             for (PlayerSkillContext playerSkillContext : getSkills().values()) {
@@ -430,26 +432,24 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
                     }
                 }
             }
-            allowedArmorIds.addAll(next
-                    .getClassDefinition()
+            allowedArmorIds.addAll(classDefinition
                     .getAllowedArmor()
                     .stream()
                     .map(ClassItem::getType)
                     .collect(Collectors.toSet()));
-        }
 
-        for (PlayerClassData playerClassData : getClasses().values()) {
-            ClassDefinition configClass = playerClassData.getClassDefinition();
-            Map<String, Double> projectileDamage = configClass.getProjectileDamage();
+
+            Map<String, Double> projectileDamage = classDefinition.getProjectileDamage();
             for (Map.Entry<String, Double> entityType : projectileDamage.entrySet()) {
                 Double aDouble = getProjectileDamages().get(entityType.getKey());
                 if (aDouble == null) {
                     getProjectileDamages().put(entityType.getKey(), entityType.getValue());
                 } else {
-                    double v = Rpg.get().getPluginConfig().ITEM_DAMAGE_PROCESSOR.get(aDouble, entityType.getValue());
+                    double v = Rpg.get().getPluginConfig().CLASS_ITEM_DAMAGE_PROCESSOR.get(aDouble, entityType.getValue());
                     getProjectileDamages().put(entityType.getKey(), v);
                 }
             }
+
         }
         return this;
     }

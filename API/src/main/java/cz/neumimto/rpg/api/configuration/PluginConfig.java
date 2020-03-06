@@ -142,6 +142,11 @@ public class PluginConfig {
             "SOCKETS",
             "REQUIREMENTS");
 
+    @Path("CLASS_ITEM_DAMAGE_PROCESSOR")
+    @Conversion(ItemDamageProcessorConverter.class)
+    public ItemDamageProcessor CLASS_ITEM_DAMAGE_PROCESSOR = new Max();
+
+
     @Path("ITEM_DAMAGE_PROCESSOR")
     @Conversion(ItemDamageProcessorConverter.class)
     public ItemDamageProcessor ITEM_DAMAGE_PROCESSOR = new Max();

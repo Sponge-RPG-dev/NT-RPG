@@ -50,8 +50,13 @@ public class SpongeItemService extends AbstractItemService {
                 getItemEffects(itemStack),
                 getItemBonusAttributes(itemStack),
                 getItemMinimalAttributeRequirements(itemStack),
-                getClassRequirements(itemStack)
+                getClassRequirements(itemStack),
+                getItemData(itemStack)
         ));
+    }
+
+    private Map<String, Double> getItemData(ItemStack itemStack) {
+        return null;
     }
 
     private Map<ClassDefinition, Integer> getClassRequirements(ItemStack itemStack) {

@@ -3,13 +3,14 @@ package cz.neumimto.rpg.api.items;
 import com.typesafe.config.Config;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.items.sockets.SocketType;
 import cz.neumimto.rpg.api.items.subtypes.ItemSubtype;
 
 import java.util.*;
 
 public interface ItemService {
+
+    String DAMAGE_KEY = "dam";
 
     void load();
 
