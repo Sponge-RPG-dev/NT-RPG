@@ -67,13 +67,17 @@ public class SpigotItemService extends AbstractItemService {
 
     private Map<String, Double> getItemData(NBTItem nbtItem) {
         NBTCompoundList attributes = nbtItem.getCompoundList("AttributeModifiers");
-        if (attributes == null) {
+        if (attributes == null || attributes.isEmpty()) {
             return Collections.emptyMap();
         }
+        Map<String, Double> data = new HashMap<>();
         for (NBTListCompound attribute : attributes) {
-            Object compound = attribute.getCompound();
+            if (attribute.getString("AttributeName").equals("generic.attackDamage")) {
+                double amount = attribute.getDouble("Amount");
+                data.put(DAMAGE_KEY, amount);
+            }
         }
-        return Collections.emptyMap();
+        return data;
     }
 
     private Map<IGlobalEffect, EffectParams> getItemEffects(NBTItem nbtItem) {

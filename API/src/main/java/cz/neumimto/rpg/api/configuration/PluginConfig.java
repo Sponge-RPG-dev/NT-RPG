@@ -149,7 +149,7 @@ public class PluginConfig {
 
     @Path("ITEM_DAMAGE_PROCESSOR")
     @Conversion(ItemDamageProcessorConverter.class)
-    public ItemDamageProcessor ITEM_DAMAGE_PROCESSOR = new Max();
+    public ItemDamageProcessor ITEM_DAMAGE_PROCESSOR = new Sum();
 
 
     @Path("SKILLTREE_RELATIONS")

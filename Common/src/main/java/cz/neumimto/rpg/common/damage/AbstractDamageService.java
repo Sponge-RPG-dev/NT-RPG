@@ -1,12 +1,13 @@
 package cz.neumimto.rpg.common.damage;
 
 import cz.neumimto.rpg.api.classes.ClassService;
+import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.damage.DamageService;
 import cz.neumimto.rpg.api.entity.EntityService;
-import cz.neumimto.rpg.api.entity.IEntity;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.items.RpgItemType;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 
 import javax.inject.Inject;
 
@@ -17,6 +18,9 @@ public abstract class AbstractDamageService<T> implements DamageService<T> {
 
     @Inject
     protected ClassService classService;
+
+    @Inject
+    protected PluginConfig pluginConfig;
 
     @Override
     public double getCharacterItemDamage(IActiveCharacter character, RpgItemType type) {
@@ -54,6 +58,11 @@ public abstract class AbstractDamageService<T> implements DamageService<T> {
             character.setWeaponDamage(1); //todo unarmed
         } else {
             recalculateCharacterWeaponDamage(character, mainHand.getItemType());
+            Double damage = mainHand.getItemData().get(ItemService.DAMAGE_KEY);
+            if (damage != null) {
+                double damageF = pluginConfig.ITEM_DAMAGE_PROCESSOR.get(character.getWeaponDamage(), damage);
+                character.setWeaponDamage(damageF);
+            };
         }
     }
 

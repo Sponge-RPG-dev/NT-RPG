@@ -16,6 +16,8 @@ import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
 import cz.neumimto.rpg.sponge.inventory.data.NKeys;
 import cz.neumimto.rpg.sponge.items.SpongeRpgItemType;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.data.DataQuery;
+import org.spongepowered.api.data.DataView;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
@@ -23,9 +25,7 @@ import org.spongepowered.api.text.Text;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 
 /**
@@ -56,7 +56,20 @@ public class SpongeItemService extends AbstractItemService {
     }
 
     private Map<String, Double> getItemData(ItemStack itemStack) {
-        return null;
+        DataQuery query = DataQuery.of("UnsafeData", "AttributeModifiers");
+        Optional<List<DataView>> containers = itemStack.toContainer().getViewList(query);
+        if (containers.isPresent()) {
+            List<DataView> dataViews = containers.get();
+            Map<String, Double> map = new HashMap<>();
+            for (DataView dataView : dataViews) {
+                Optional<String> attributeName = dataView.getString(DataQuery.of("AttributeName"));
+                if (attributeName.isPresent() && attributeName.get().equals("generic.attackDamage")) {
+                    map.put(DAMAGE_KEY, dataView.getDouble(DataQuery.of("Amount")).get());
+                }
+            }
+            return map;
+        }
+        return Collections.emptyMap();
     }
 
     private Map<ClassDefinition, Integer> getClassRequirements(ItemStack itemStack) {

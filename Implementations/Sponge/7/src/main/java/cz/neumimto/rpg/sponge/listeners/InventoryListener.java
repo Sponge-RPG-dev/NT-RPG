@@ -81,6 +81,12 @@ public class InventoryListener {
 
     @Listener
     @IsCancelled(Tristate.FALSE)
+    public void onItemPickup(ChangeInventoryEvent event, @Root Player player) {
+        Player player1 = player;
+    }
+
+    @Listener
+    @IsCancelled(Tristate.FALSE)
     public void onItemPickup(ChangeInventoryEvent.Pickup event, @Root Player player) {
         ISpongeCharacter character = characterService.getCharacter(player);
         if (character.isStub()) {
