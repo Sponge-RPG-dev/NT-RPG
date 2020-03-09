@@ -70,7 +70,12 @@ public abstract class AbstractItemService implements ItemService {
 
     @Override
     public Optional<RpgItemType> getRpgItemType(String itemId, String model) {
-        return Optional.ofNullable(items.get(RpgItemType.KEY_BUILDER.apply(itemId, model)));
+        String iKey = RpgItemType.KEY_BUILDER.apply(itemId, model);
+        RpgItemType rpgItemType = items.get(iKey);
+        if (rpgItemType == null && model != null) {
+            rpgItemType = items.get(itemId);
+        }
+        return Optional.ofNullable(rpgItemType);
     }
 
     protected Optional<RpgItemType> getRpgItemType(String itemId) {
