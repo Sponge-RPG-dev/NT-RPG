@@ -1,6 +1,5 @@
 package cz.neumimto.rpg.spigot.gui;
 
-import com.comphenix.protocol.wrappers.EnumWrappers;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.configuration.ClassTypeDefinition;
@@ -613,6 +612,7 @@ public class SpigotGuiHelper {
             if (character.getAttributePoints() > 0) {
                 ItemStack attrInc = button(Resourcepack.PLUS, ChatColor.GREEN + "+",
                         "char attribute-add " + aconf.getId() + " true " + slot);
+
                 i.setItem(slot - 9, attrInc);
             }
             ItemStack atris = unclickableIcon(charAttributeToItemStack(aconf, real, transientVal, tx));

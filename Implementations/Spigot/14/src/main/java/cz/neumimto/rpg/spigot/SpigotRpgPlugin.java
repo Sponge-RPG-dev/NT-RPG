@@ -23,6 +23,8 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.java.annotation.dependency.Dependency;
+import org.bukkit.plugin.java.annotation.dependency.DependsOn;
 import org.bukkit.plugin.java.annotation.dependency.SoftDependency;
 import org.bukkit.plugin.java.annotation.dependency.SoftDependsOn;
 import org.bukkit.plugin.java.annotation.plugin.*;
@@ -36,7 +38,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
-@Plugin(name = "NT-RPG", version = "0.0.5-SNAPSHOT")
+@Plugin(name = "NT-RPG", version = "0.0.6-SNAPSHOT")
 @Description("Complete combat overhaul with classes and skills")
 @Author("NeumimTo")
 @Website("https://github.com/Sponge-RPG-dev/NT-RPG")
@@ -46,6 +48,13 @@ import java.util.concurrent.Executors;
         value = {
                 @SoftDependency("PlaceholderAPI"),
                 @SoftDependency("HolographicDisplays")
+        }
+)
+@DependsOn(
+        value = {
+                @Dependency("NBTAPI"),
+                @Dependency("EffectLib"),
+                @Dependency("ProtocolLib")
         }
 )
 public class SpigotRpgPlugin extends JavaPlugin {

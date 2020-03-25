@@ -165,7 +165,9 @@ public class ConfigConverter {
 
     private static Map<String, Set<DateKeyPair>> uniqueSkillpointsFromConfig(Config config) {
         Map<String, Set<DateKeyPair>> uniquePoints = new HashMap<>();
-
+        if (config == null) {
+            return uniquePoints;
+        }
         Map<String, Object> stringObjectMap = config.valueMap();
         for (Map.Entry<String, Object> entry : stringObjectMap.entrySet()) {
             List<Config> value = (List<Config>) entry.getValue();

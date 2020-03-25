@@ -148,11 +148,11 @@ public class SpigotInventoryListener implements Listener {
 
         Optional<RpgItemStack> rpgItemStackOff = itemService.getRpgItemStack(futureOffHand);
         Optional<RpgItemStack> rpgItemStackMain = itemService.getRpgItemStack(futureMainHand);
+
         if (!rpgItemStackMain.isPresent() && !rpgItemStackOff.isPresent()) {
             return;
+
         } else {
-
-
             Map<Class<?>, RpgInventory> managedInventory = character.getManagedInventory();
             RpgInventory rpgInventory = managedInventory.get(PlayerInventory.class);
 
