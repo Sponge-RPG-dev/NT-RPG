@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 @Generate(id = "name", description = "Converts all incoming healing to damage")
 public class UnlimtedFoodLevelEffect extends EffectBase<Double> {
 
-    public static String name = "Undead";
+    public static String name = "Unlimited Food";
 
     public UnlimtedFoodLevelEffect(IEffectConsumer consumer, long duration, double multipler) {
         super(name, consumer);

@@ -216,7 +216,7 @@ public class SpigotGuiHelper {
                 if (base.getName().equalsIgnoreCase(currentlyCreated.getName())) {
                     builder.append("*").color(net.md_5.bungee.api.ChatColor.RED);
                 } else {
-                    builder.append("SELECT").event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "character switch " + base.getName()))
+                    builder.append("SELECT").event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/character switch " + base.getName()))
                             .color(net.md_5.bungee.api.ChatColor.GREEN);
                 }
 

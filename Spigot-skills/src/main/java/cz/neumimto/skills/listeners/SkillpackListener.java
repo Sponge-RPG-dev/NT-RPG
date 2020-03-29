@@ -5,6 +5,7 @@ import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
 import cz.neumimto.rpg.spigot.entities.SpigotEntityService;
+import cz.neumimto.skills.effects.negative.NoNaturalHealingEffect;
 import cz.neumimto.skills.effects.positive.NoAutohealEffect;
 import cz.neumimto.skills.effects.positive.UnhealEffect;
 import org.bukkit.Particle;
@@ -35,7 +36,13 @@ public class SkillpackListener implements Listener {
         LivingEntity livingEntity = (LivingEntity) entity;
         IEntity iEntity = spigotEntityService.get(livingEntity);
 
-
+        if (event.getRegainReason() != EntityRegainHealthEvent.RegainReason.CUSTOM) {
+            if (iEntity.hasEffect(NoNaturalHealingEffect.name)) {
+                event.setAmount(0);
+                event.setCancelled(true);
+                return;
+            }
+        }
 
         if (event.getRegainReason() == EntityRegainHealthEvent.RegainReason.REGEN) {
             if (iEntity.hasEffect(NoAutohealEffect.name)) {
