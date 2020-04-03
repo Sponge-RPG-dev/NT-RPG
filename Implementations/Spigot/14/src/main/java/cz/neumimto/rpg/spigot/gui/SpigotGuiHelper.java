@@ -98,6 +98,11 @@ public class SpigotGuiHelper {
 
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setLore(itemLoreFactory.toLore(a));
+
+        if (a.getItemModel() != null) {
+            itemMeta.setCustomModelData(a.getItemModel());
+        }
+
         itemStack.setItemMeta(itemMeta);
         itemStack = unclickableInterface(itemStack);
 

@@ -52,6 +52,9 @@ public class ClassDefinition implements IEffectSourceProvider {
     @Path("ItemType")
     protected String itemType;
 
+    @Path("Model")
+    protected Integer itemModel;
+
     @Path("Visible")
     @Conversion(BooleanConverter.class)
     protected boolean showsInMenu = true;
@@ -297,6 +300,14 @@ public class ClassDefinition implements IEffectSourceProvider {
 
     public void setExperienceSources(Set<String> expU) {
         this.experienceSourceSet = expU;
+    }
+
+    public Integer getItemModel() {
+        return itemModel;
+    }
+
+    public void setItemModel(Integer itemModel) {
+        this.itemModel = itemModel;
     }
 
     @Override
