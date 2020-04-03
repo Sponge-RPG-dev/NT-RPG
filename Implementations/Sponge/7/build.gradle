@@ -6,11 +6,6 @@ plugins {
 group = 'cz.neumimto.rpg'
 version = '2.1.0-SNAPSHOT-1'
 
-blossom {
-    String str = "src/main/java/cz/neumimto/rpg/NtRpgPlugin.java"
-    replaceToken '@VERSION@', getVersion().toString(), str
-}
-
 compileJava {
     options.compilerArgs += ["-parameters"]
     options.fork = true

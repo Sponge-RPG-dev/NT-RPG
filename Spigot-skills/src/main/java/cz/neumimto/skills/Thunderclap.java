@@ -19,8 +19,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-@ResourceLoader.Skill("ntrpg:megabolt")
-public class Megabolt extends ActiveSkill<ISpigotCharacter> {
+@ResourceLoader.Skill("ntrpg:thunderclap")
+public class Thunderclap extends ActiveSkill<ISpigotCharacter> {
 
     @Inject
     private SpigotEntityService spigotEntityService;

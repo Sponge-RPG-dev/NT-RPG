@@ -63,7 +63,7 @@ import static cz.neumimto.rpg.api.logging.Log.info;
 /**
  * Created by NeumimTo on 29.4.2015.
  */
-@Plugin(id = "nt-rpg", version = "@VERSION@", name = "NT-Rpg", description = "RPG features for sponge", dependencies = {
+@Plugin(id = "nt-rpg", version = "2.1.0-SNAPSHOT-1", name = "NT-Rpg", description = "RPG features for sponge", dependencies = {
         @Dependency(id = "placeholderapi", version = "4.5", optional = true)
 })
 @Resource

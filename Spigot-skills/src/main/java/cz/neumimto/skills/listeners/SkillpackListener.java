@@ -6,6 +6,7 @@ import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
 import cz.neumimto.rpg.spigot.entities.SpigotEntityService;
 import cz.neumimto.skills.effects.negative.NoNaturalHealingEffect;
+import cz.neumimto.skills.effects.positive.FeatherFall;
 import cz.neumimto.skills.effects.positive.NoAutohealEffect;
 import cz.neumimto.skills.effects.positive.UnhealEffect;
 import org.bukkit.Particle;
@@ -58,4 +59,19 @@ public class SkillpackListener implements Listener {
             livingEntity.getWorld().spawnParticle(Particle.DAMAGE_INDICATOR, livingEntity.getLocation(), 5, 2,2,2);
         }
     }
+
+    @EventHandler
+    public void onEntityDamage(EntityDamageEvent event) {
+        Entity entity = event.getEntity();
+        if (entity instanceof LivingEntity) {
+            LivingEntity l = (LivingEntity) entity;
+            IEntity iEntity = spigotEntityService.get(l);
+
+            if (iEntity.hasEffect(FeatherFall.name)) {
+                event.setCancelled(true);
+            }
+
+        }
+    }
+
 }

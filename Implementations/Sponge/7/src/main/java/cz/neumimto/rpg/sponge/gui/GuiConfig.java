@@ -9,7 +9,7 @@ import java.util.Map;
 public class GuiConfig {
 
     @Path("icons")
-    private GMap<String, ItemType> skillIcons = new HashMap<>();
+    private Map<String, ItemType> skillIcons = new HashMap<>();
 
     public Map<String, ItemType> getSkillIcons() {
         return skillIcons;
