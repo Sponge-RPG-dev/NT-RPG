@@ -45,7 +45,7 @@ public class ManaBarNotifier extends EffectBase<Object> implements IEffectContai
                 + ChatColor.GOLD + " / " + ChatColor.BLUE + maxValue;
 
         if (bossBar == null) {
-            BossBar bossBar = Bukkit.getServer().createBossBar(title, BarColor.BLUE, BarStyle.SOLID);
+            bossBar = Bukkit.getServer().createBossBar(title, BarColor.BLUE, BarStyle.SOLID);
             bossBar.setProgress(MathUtils.getPercentage(value, maxValue) * 0.01d);
             bossBar.addPlayer(player);
         }

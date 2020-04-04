@@ -68,11 +68,14 @@ public abstract class TargetedEntitySkill extends ActiveSkill<ISpigotCharacter> 
         if (maxDistance <= 0.0) {
             return null;
         }
-        RayTraceResult rayTraceResult = player.getWorld().rayTraceEntities(player.getEyeLocation(), player.getEyeLocation().getDirection(), maxDistance);
-        Entity hitEntity = rayTraceResult.getHitEntity();
-        if (hitEntity != null) {
-            if (hitEntity instanceof LivingEntity) {
-                return (LivingEntity) hitEntity;
+        RayTraceResult rayTraceResult = player.getWorld()
+                .rayTraceEntities(player.getEyeLocation(), player.getEyeLocation().getDirection(), maxDistance, entity -> entity != player);
+        if (rayTraceResult != null) {
+            Entity hitEntity = rayTraceResult.getHitEntity();
+            if (hitEntity != null) {
+                if (hitEntity instanceof LivingEntity) {
+                    return (LivingEntity) hitEntity;
+                }
             }
         }
         return null;

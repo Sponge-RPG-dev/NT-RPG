@@ -125,7 +125,7 @@ public class SpigotDamageService extends AbstractDamageService<LivingEntity> {
     }
 
     public boolean canDamage(ISpigotCharacter caster, LivingEntity l) {
-        if (l.getHealth() <= 0 || l.isDead() || l instanceof ArmorStand) {
+        if (l.getHealth() <= 0 || l.isDead() || l.isInvulnerable()) {
             return false;
         }
         EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(caster.getEntity(), l, DamageCause.CUSTOM, 0);

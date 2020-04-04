@@ -32,14 +32,19 @@ public class Resourcepack {
 
     private static final int ICE_SPIKE_LARGE = 12349;
 
-    public static Entity summonLargeIceSpike(Location location) {
+    public static ArmorStand summonArmorStand(Location location) {
         World world = location.getWorld();
         ArmorStand entity = (ArmorStand) world.spawnEntity(location, EntityType.ARMOR_STAND);
         entity.setArms(true);
         entity.setVisible(false);
         entity.setCollidable(false);
-        entity.setInvulnerable(false);
+        entity.setInvulnerable(true);
+        return entity;
+    }
 
+    public static Entity summonLargeIceSpike(Location location) {
+        World world = location.getWorld();
+        ArmorStand entity = summonArmorStand(location);
 
         ItemStack itemStack = new ItemStack(Material.STICK);
         ItemMeta itemMeta = itemStack.getItemMeta();
