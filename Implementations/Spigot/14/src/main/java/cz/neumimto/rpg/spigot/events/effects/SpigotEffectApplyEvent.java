@@ -26,4 +26,8 @@ public class SpigotEffectApplyEvent<T extends IEffect> extends AbstractEffectEve
     public HandlerList getHandlers() {
         return HANDLERS_LIST;
     }
+
+    public static HandlerList getHandlerList() {
+        return HANDLERS_LIST;
+    }
 }

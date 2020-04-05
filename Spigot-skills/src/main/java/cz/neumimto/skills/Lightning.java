@@ -15,18 +15,19 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import javax.inject.Singleton;
 
 @Singleton
-@ResourceLoader.Skill("ntrpg:jump")
+@ResourceLoader.Skill("ntrpg:lightning")
 public class Lightning extends TargetedEntitySkill {
 
     @Override
     public void init() {
         super.init();
-        setDamageType(EntityDamageEvent.DamageCause.FIRE.name());
+        setDamageType(EntityDamageEvent.DamageCause.MAGIC.name());
         settings.addNode(SkillNodes.DAMAGE, 10, 10);
         settings.addNode(SkillNodes.VELOCITY, 1.5f, .5f);
 
         addSkillType(SkillType.ELEMENTAL);
         addSkillType(SkillType.LIGHTNING);
+        addSkillType(SkillType.CANNOT_BE_SELF_CASTED);
     }
 
     @Override

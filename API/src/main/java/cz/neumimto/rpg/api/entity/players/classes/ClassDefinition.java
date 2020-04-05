@@ -142,6 +142,7 @@ public class ClassDefinition implements IEffectSourceProvider {
         this.type = classType;
         this.classDefinitionDependencyGraph = new DependencyGraph(this);
         this.experienceSourceSet = new HashSet<>();
+        this.permissions = new TreeSet<>();
     }
 
     public String getName() {

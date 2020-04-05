@@ -11,4 +11,8 @@ public class SpigotPartyJoinEvent extends SpigotAbstractPartyEvent implements Pa
     public HandlerList getHandlers() {
         return HANDLERS_LIST;
     }
+
+    public static HandlerList getHandlerList() {
+        return HANDLERS_LIST;
+    }
 }

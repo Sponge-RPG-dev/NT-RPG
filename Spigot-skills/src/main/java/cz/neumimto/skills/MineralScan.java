@@ -1,38 +1,45 @@
 package cz.neumimto.skills;
 
+
+import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
+import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.wrappers.WrappedWatchableObject;
 import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.skills.utils.WrapperPlayServerEntityMetadata;
+import cz.neumimto.skills.utils.WrapperPlayServerSpawnEntityLiving;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Shulker;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
 import javax.inject.Singleton;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 
 @Singleton
 @ResourceLoader.Skill("ntrpg:mineralscan")
 public class MineralScan extends ActiveSkill<ISpigotCharacter> {
 
-    private ProtocolManager protocolManager;
+    private static int ID = Integer.MAX_VALUE;
 
     @Override
     public void init() {
         super.init();
         addSkillType(SkillType.ILLUSION);
-        protocolManager = ProtocolLibrary.getProtocolManager();
     }
 
     @Override
@@ -62,9 +69,7 @@ public class MineralScan extends ActiveSkill<ISpigotCharacter> {
                             break;
                     }
                     if (color != null) {
-                        Shulker entity = (Shulker) world.spawnEntity(loc, EntityType.SHULKER);
-                        entity.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 100, 1));
-                        entity.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 100, 1));
+                        spawnGlowingBlock(location, player);
                     }
                 }
             }
@@ -72,6 +77,26 @@ public class MineralScan extends ActiveSkill<ISpigotCharacter> {
     }
 
 
+    private void spawnGlowingBlock(Location location, Player player) {
+        ProtocolManager manager = ProtocolLibrary.getProtocolManager();
+        PacketContainer entity = manager.createPacket(PacketType.Play.Server.SPAWN_ENTITY_LIVING);
+        entity.getIntegers().write(0, ID).write(1, 38); //magmacube = 38
+
+        entity.getUUIDs().write(0, UUID.randomUUID());
+        entity.getDoubles().write(0, location.getX()).write(1, location.getY()).write(2, location.getZ());
+
+
+        WrapperPlayServerSpawnEntityLiving living = new WrapperPlayServerSpawnEntityLiving(entity);
+
+        WrapperPlayServerEntityMetadata metadata = new WrapperPlayServerEntityMetadata();
+        metadata.setEntityID(ID);
+        List<WrappedWatchableObject> list = new ArrayList<>();
+      //  list.add(new WrappedWatchableObject());
+        metadata.setMetadata(list);
+        ID--;
+        living.sendPacket(player);
+        metadata.sendPacket(player);
+    }
 
 
 }

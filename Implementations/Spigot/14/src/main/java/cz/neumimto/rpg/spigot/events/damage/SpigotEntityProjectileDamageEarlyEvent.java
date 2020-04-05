@@ -23,4 +23,8 @@ public class SpigotEntityProjectileDamageEarlyEvent extends SpigotAbstractDamage
     public HandlerList getHandlers() {
         return HANDLERS_LIST;
     }
+
+    public static HandlerList getHandlerList() {
+        return HANDLERS_LIST;
+    }
 }

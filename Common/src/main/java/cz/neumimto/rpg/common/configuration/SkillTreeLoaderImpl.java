@@ -25,6 +25,7 @@ import cz.neumimto.rpg.api.configuration.ItemString;
 import cz.neumimto.rpg.api.configuration.SkillItemCost;
 import cz.neumimto.rpg.api.configuration.SkillTreeDao;
 import cz.neumimto.rpg.api.gui.ISkillTreeInterfaceModel;
+import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.skills.*;
 import cz.neumimto.rpg.api.skills.mods.ActiveSkillPreProcessorWrapper;
 import cz.neumimto.rpg.api.skills.scripting.ScriptedSkillNodeDescription;
@@ -59,6 +60,9 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
 
     @Inject
     private SkillService skillService;
+
+    @Inject
+    private LocalizationService localizationService;
 
     @Override
     public Map<String, SkillTree> getAll() {
@@ -249,7 +253,11 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
                 skillNodeDescription = scriptedSkillNodeDescription;
             } catch (ConfigException ee) {
                 List<String> description = info.getSkill().getDescription();
-                skillNodeDescription = new SkillNodeDescription(description);
+                List<String> tddsc = new ArrayList<>();
+                for (String s : description) {
+                    tddsc.addAll(localizationService.translateMultiline(s));
+                }
+                skillNodeDescription = new SkillNodeDescription(tddsc);
             }
         }
         info.setDescription(skillNodeDescription);

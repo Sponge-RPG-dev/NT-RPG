@@ -11,4 +11,8 @@ public class SpigotPartyLeaveEvent extends SpigotAbstractPartyEvent implements P
     public HandlerList getHandlers() {
         return HANDLERS_LIST;
     }
+
+    public static HandlerList getHandlerList() {
+        return HANDLERS_LIST;
+    }
 }

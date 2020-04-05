@@ -5,17 +5,23 @@ import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import com.gmail.filoghost.holographicdisplays.api.VisibilityManager;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.events.skill.SkillPostUsageEvent;
+import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.SkillService;
+import cz.neumimto.rpg.api.utils.rng.XORShiftRnd;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
+import cz.neumimto.rpg.spigot.events.skill.SpigotSkillPostUsageEvent;
+import cz.neumimto.rpg.spigot.utils.VectorUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -24,7 +30,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 @Singleton
-public class HolographicDisplaysExpansion {
+public class HolographicDisplaysExpansion implements Listener {
 
     @Inject
     private SkillService skillService;
@@ -32,9 +38,14 @@ public class HolographicDisplaysExpansion {
     @Inject
     private SpigotDamageService damageService;
 
+    @Inject
+    private LocalizationService localizationService;
+
     private static Map<Hologram, Long> holograms = new HashMap<>();
     private static Map<String, String> colors = new HashMap<>();
 
+    private static Vector[] displayLocs;
+    private static XORShiftRnd rnd = new XORShiftRnd();
 
     static {
         put(EntityDamageEvent.DamageCause.FIRE, ChatColor.RED);
@@ -55,14 +66,18 @@ public class HolographicDisplaysExpansion {
         put(EntityDamageEvent.DamageCause.POISON, ChatColor.GREEN);
 
         put(EntityDamageEvent.DamageCause.POISON, ChatColor.GREEN);
+        put(EntityDamageEvent.DamageCause.ENTITY_ATTACK, ChatColor.GRAY);
+        put(EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK, ChatColor.GRAY);
+
+        displayLocs = VectorUtils.circle(new Vector[20], 2);
     }
 
     private static void put(EntityDamageEvent.DamageCause damageCause, ChatColor chatColor) {
         colors.put(damageCause.toString(), chatColor.toString());
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onSkillCast(SkillPostUsageEvent event) {
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = false)
+    public void onSkillCast(SpigotSkillPostUsageEvent event) {
         ISkill skill = event.getSkill();
         String damageType = skill.getDamageType();
         IEntity caster = event.getCaster();
@@ -70,15 +85,15 @@ public class HolographicDisplaysExpansion {
 
         String s = colors.get(damageType);
         if (s == null) {
-            s = "";
+            s = ChatColor.WHITE.toString();
         }
 
-        Location location = entity.getLocation().add(0, entity.getHeight() + 0.1,0);
+        Location location = entity.getLocation().add(0, entity.getHeight() + 0.1,0).add(getLocation());
         Hologram hologram = HologramsAPI.createHologram(SpigotRpgPlugin.getInstance(), location);
-        hologram.insertTextLine(0, s + skill.getName());
+        hologram.insertTextLine(0, ChatColor.BOLD + s + localizationService.translate(skill.getName()));
         VisibilityManager visiblityManager = hologram.getVisibilityManager();
         visiblityManager.setVisibleByDefault(true);
-        holograms.put(hologram, System.currentTimeMillis() + 2000);
+        holograms.put(hologram, System.currentTimeMillis() + 2500L);
     }
 
     public void init() {
@@ -94,10 +109,13 @@ public class HolographicDisplaysExpansion {
                     if (next.getValue() < System.currentTimeMillis()) {
                         key.delete();
                     }
-                    key.teleport(key.getLocation().add(0.0, 0.25, 0.0));
                 }
             }
-        }.runTaskTimer(SpigotRpgPlugin.getInstance(), 1L, 20L);
+        }.runTaskTimer(SpigotRpgPlugin.getInstance(), 1L, 30L);
     }
 
+    private static Vector getLocation() {
+        int i = rnd.nextInt(displayLocs.length - 1);
+        return displayLocs[i];
+    }
 }

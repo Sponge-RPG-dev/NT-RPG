@@ -59,7 +59,7 @@ public class SpigotGuiHelper {
         }
 
         inventoryIds = w.stream().mapToInt(i -> i).toArray();
-        attributButtonSlots = new int[]{10, 11, 12, 13, 14, 15, 16,  36, 37, 38, 39, 40, 41, 42, 43, 45};
+        attributButtonSlots = new int[]{10, 11, 12, 13, 14, 15, 16, 36, 37, 38, 39, 40, 41, 42, 43, 45};
 
     }
 
@@ -264,7 +264,7 @@ public class SpigotGuiHelper {
 
     public static Inventory createClassWeaponView(Player player, ClassDefinition cc, Set<ClassItem> weapons) {
         String translate = Rpg.get().getLocalizationService().translate(LocalizationKeys.WEAPONS);
-        Inventory i = createInventoryTemplate(player, ChatColor.valueOf(cc.getPreferedColor()) + cc.getName() + ChatColor.RESET + translate);
+        Inventory i = createInventoryTemplate(player, ChatColor.valueOf(cc.getPreferedColor()) + cc.getName() + ChatColor.RESET + " " + translate);
         i.setItem(0, button(Material.PAPER, Rpg.get().getLocalizationService().translate(LocalizationKeys.BACK), "ninfo class " + cc.getName()));
         int w = 9;
         SpigotDamageService damageService = (SpigotDamageService) Rpg.get().getDamageService();
@@ -277,17 +277,19 @@ public class SpigotGuiHelper {
             ItemStack itemStack = new ItemStack(type.getMaterial());
             double damage = weapon.getDamage();
 
-            if (damage > 0) {
-                ChatColor colorByDamage = ChatColor.RED;//valueOf(damageService.getColorByDamage(damage));
-                ItemMeta itemMeta = itemStack.getItemMeta();
-                if (type.getModelId() != null) {
-                    itemMeta.setCustomModelData(Integer.parseInt(type.getModelId()));
-                }
-                List<String> list = new ArrayList<>();
-                list.add(ChatColor.GRAY + dmg + ":" + colorByDamage + damage);
-                itemMeta.setLore(list);
-                itemStack.setItemMeta(itemMeta);
+            if (damage <= 0) {
+                damage = type.getDamage();
             }
+            ChatColor colorByDamage = ChatColor.RED;//valueOf(damageService.getColorByDamage(damage));
+            ItemMeta itemMeta = itemStack.getItemMeta();
+            if (type.getModelId() != null) {
+                itemMeta.setCustomModelData(Integer.parseInt(type.getModelId()));
+            }
+            List<String> list = new ArrayList<>();
+            list.add(ChatColor.GRAY + dmg + ": " + colorByDamage + damage);
+            itemMeta.setLore(list);
+            itemStack.setItemMeta(itemMeta);
+
             i.setItem(w, unclickableInterface(itemStack));
             w++;
         }
@@ -356,7 +358,7 @@ public class SpigotGuiHelper {
         for (RpgItemType entry : allowedArmor) {
             double damage = entry.getArmor();
 
-            i.setItem(w, toItemStack((SpigotRpgItemType)entry, damage, damageLabel));
+            i.setItem(w, toItemStack((SpigotRpgItemType) entry, damage, damageLabel));
             w++;
         }
 

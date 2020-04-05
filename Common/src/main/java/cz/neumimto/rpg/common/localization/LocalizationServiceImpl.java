@@ -8,6 +8,7 @@ import javax.inject.Singleton;
 import java.net.URLClassLoader;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Singleton
 public class LocalizationServiceImpl implements LocalizationService {
@@ -17,7 +18,17 @@ public class LocalizationServiceImpl implements LocalizationService {
 
     @Override
     public void addTranslationKey(String key, String translation) {
-        map.put(key, translation);
+        if (key.contains(".multiline.")) {
+            addMultilineTranslationkey(key, translation);
+        } else {
+            map.put(key, translation);
+        }
+    }
+
+    @Override
+    public void addMultilineTranslationkey(String key, String lines) {
+        List<String> collect = Stream.of(lines.split(":n")).collect(Collectors.toList());
+        mapMultiLine.put(key, collect);
     }
 
     //todo benchamrk this
@@ -37,12 +48,12 @@ public class LocalizationServiceImpl implements LocalizationService {
         if (s == null) {
             return message + " | " + singleKey;
         }
-        return StringUtils.replace(s, Arg.START_TAG  + singleKey + Arg.END_TAG, singleArg);
+        return StringUtils.replace(s, Arg.START_TAG + singleKey + Arg.END_TAG, singleArg);
     }
 
     @Override
     public String translate(String staticMessage) {
-        String s =  map.get(staticMessage);
+        String s = map.get(staticMessage);
         if (s == null) {
             return staticMessage;
         }
@@ -75,13 +86,7 @@ public class LocalizationServiceImpl implements LocalizationService {
         while (keys.hasMoreElements()) {
             String s = keys.nextElement();
             String string = translations.getString(s);
-            if (s.contains("multiline")) {
-                String[] split = string.split(":n");
-                List<String> strings = Arrays.asList(split);
-                mapMultiLine.put(s, strings);
-            } else {
-                map.put(s, string);
-            }
+            map.put(s, string);
         }
     }
 

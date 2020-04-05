@@ -155,29 +155,32 @@ public class ItemLoreFactory {
                     lore.add(line(s));
                 }
             }
-
-            lore.add(header(ChatColor.GREEN + locService.translate(LocalizationKeys.SKILL_TRAITS)));
             Set<ISkillType> skillTypes = skill.getSkillTypes();
-            StringBuilder builder = new StringBuilder();
-            Iterator<ISkillType> iterator = skillTypes.iterator();
-            int i = 0;
-            boolean firstLine = true;
-            while (iterator.hasNext()) {
-                i++;
-                ISkillType next = iterator.next();
-                String translate = locService.translate(next.toString())+" ";
-                builder.append(translate);
-                if (i % 4 == 0) {
-                    if (firstLine) {
-                        lore.add(node(locService.translate(LocalizationKeys.SKILL_TYPES), builder.toString()));
-                    } else {
-                        lore.add(line(" - " + builder.toString()));
-                    }
+            if (!skillTypes.isEmpty()) {
+                lore.add(header(ChatColor.GREEN + locService.translate(LocalizationKeys.SKILL_TRAITS)));
 
-                    builder = new StringBuilder();
-                    firstLine = false;
+                StringBuilder builder = new StringBuilder();
+                Iterator<ISkillType> iterator = skillTypes.iterator();
+                int i = 0;
+                boolean firstLine = true;
+                while (iterator.hasNext()) {
+                    i++;
+                    ISkillType next = iterator.next();
+                    String translate = locService.translate(next.toString())+" ";
+                    builder.append(translate);
+                    if (i % 4 == 0) {
+                        if (firstLine) {
+                            lore.add(node(locService.translate(LocalizationKeys.SKILL_TYPES), builder.toString()));
+                        } else {
+                            lore.add(line(" - " + builder.toString()));
+                        }
+
+                        builder = new StringBuilder();
+                        firstLine = false;
+                    }
                 }
             }
+
         }
 
 

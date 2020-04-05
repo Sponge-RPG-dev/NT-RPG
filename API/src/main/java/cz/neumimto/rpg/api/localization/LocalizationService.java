@@ -8,6 +8,8 @@ public interface LocalizationService {
 
     void addTranslationKey(String key, String translation);
 
+    void addMultilineTranslationkey(String key, String lines);
+
     String translate(String key, Arg arg);
 
     String translate(String message, String singleKey, String singleArg);

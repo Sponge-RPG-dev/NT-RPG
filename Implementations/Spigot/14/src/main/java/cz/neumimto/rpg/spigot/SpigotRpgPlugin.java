@@ -112,7 +112,9 @@ public class SpigotRpgPlugin extends JavaPlugin {
 
             if (Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays")) {
                 Log.info("HolographicDisplays installed - NTRPG will use it for some extra guis");
-                injector.getInstance(HolographicDisplaysExpansion.class).init();
+                HolographicDisplaysExpansion hde = injector.getInstance(HolographicDisplaysExpansion.class);
+                hde.init();
+                Bukkit.getPluginManager().registerEvents(hde, this);
             }
             IScriptEngine scriptEngine = Rpg.get().getScriptEngine();
             scriptEngine.getDataToBind().put(EntityDamageEvent.DamageCause.class, JsBinding.Type.CLASS);

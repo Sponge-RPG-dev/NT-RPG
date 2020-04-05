@@ -34,6 +34,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -336,8 +337,8 @@ public class ResourceManagerImpl implements ResourceLoader {
             String[] split = sk.value().split(":");
             String key = split[0] + ".skills." + split[1];
             skill.setLocalizableName(localizationService.translate(key + ".name"));
-            skill.setDescription(localizationService.translateMultiline(key + ".desc"));
-            skill.setLore(localizationService.translateMultiline(key + ".lore"));
+            skill.setDescription(localizationService.translateMultiline(key + ".multiline.desc"));
+            skill.setLore(localizationService.translateMultiline(key + ".multiline.lore"));
         }
         if (skill.getLocalizableName() == null || skill.getLocalizableName().isEmpty()) {
             String name = skill.getClass().getSimpleName();
@@ -360,6 +361,9 @@ public class ResourceManagerImpl implements ResourceLoader {
 
     @Override
     public void reloadLocalizations(Locale locale) {
+        loadLocalizationsFromClasspath("localizations/core_localization_en.properties");
+        loadLocalizationsFromClasspath("localizations/core_localization_"+locale.getLanguage()+".properties");
+
         File localizations = new File(Rpg.get().getWorkingDirectory() + "/localizations");
         String language = locale.getLanguage();
         Log.info("Loading localization from language " + language);
@@ -368,17 +372,28 @@ public class ResourceManagerImpl implements ResourceLoader {
             if (file.getName().endsWith(language + ".properties")) {
                 Log.info("Loading localization from file " + file.getName());
                 try (FileInputStream input = new FileInputStream(file)) {
-                    Properties properties = new Properties();
-                    properties.load(new InputStreamReader(input, Charset.forName("UTF-8")));
-                    for (Map.Entry<Object, Object> entry : properties.entrySet()) {
-                        if (entry.getValue() != null && !((String) entry.getValue()).isEmpty()) {
-                            localizationService.addTranslationKey(entry.getKey().toString(), entry.getValue().toString());
-                        }
-                    }
-
+                    loadLocalizations(input);
                 } catch (IOException e) {
                     Log.error("Could not read localization file " + file.getName(), e);
                 }
+            }
+        }
+    }
+
+    protected void loadLocalizationsFromClasspath(String classpathLoc) {
+        try (InputStream is = getClass().getClassLoader().getResourceAsStream(classpathLoc)){
+            loadLocalizations(is);
+        } catch (IOException e) {
+            Log.error("Could not read localization file classpath: "+ classpathLoc, e);
+        }
+    }
+
+    protected void loadLocalizations(InputStream input) throws IOException {
+        Properties properties = new Properties();
+        properties.load(new InputStreamReader(input, StandardCharsets.UTF_8));
+        for (Map.Entry<Object, Object> entry : properties.entrySet()) {
+            if (entry.getValue() != null && !((String) entry.getValue()).isEmpty()) {
+                localizationService.addTranslationKey(entry.getKey().toString(), entry.getValue().toString());
             }
         }
     }

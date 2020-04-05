@@ -67,4 +67,8 @@ public class SpigotCharacterManaRegainEvent extends AbstractCharacterEvent imple
     public HandlerList getHandlers() {
         return HANDLERS_LIST;
     }
+
+    public static HandlerList getHandlerList() {
+        return HANDLERS_LIST;
+    }
 }
