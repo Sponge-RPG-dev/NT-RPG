@@ -59,6 +59,7 @@ public class Jump extends ActiveSkill<ISpigotCharacter> {
         player.setFallDistance(-10.0f);
         player.getWorld().spawnParticle(Particle.BLOCK_DUST, player.getLocation(), 15, 0.0, 0.3, 0.0, steppedMaterial.data);
         player.getWorld().spawnParticle(Particle.BLOCK_CRACK, player.getLocation(), 15, 0.0, 0.1, 0.0, steppedMaterial.data);
+
         skillContext.next(character, info, skillContext.result(SkillResult.OK));
     }
 

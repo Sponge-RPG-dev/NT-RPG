@@ -200,23 +200,23 @@ public class GuiHelper {
     }
 
     private static ItemStack createPropertyCommand(ClassDefinition group) {
-        return command("show properties-initial " + group.getName(),
+        return command("ninfo properties-initial " + group.getName(),
                 translate(LocalizationKeys.PROPERTIES), ItemTypes.BOOK);
     }
 
     private static ItemStack createAttributesCommand(ClassDefinition group) {
-        return command("show attributes-initial " + group.getName(),
+        return command("ninfo attributes-initial " + group.getName(),
                 translate(LocalizationKeys.ATTRIBUTES), ItemTypes.BOOK);
     }
 
     private static ItemStack createArmorCommand(ClassDefinition group) {
-        ItemStack i = command("armor " + group.getName(), translate(LocalizationKeys.ARMOR), ItemTypes.DIAMOND_CHESTPLATE);
+        ItemStack i = command("ninfo armor " + group.getName(), translate(LocalizationKeys.ARMOR), ItemTypes.DIAMOND_CHESTPLATE);
         i.offer(Keys.ITEM_LORE, Collections.singletonList(translate(LocalizationKeys.ARMOR_MENU_HELP)));
         return i;
     }
 
     private static ItemStack createWeaponCommand(ClassDefinition group) {
-        ItemStack i = command("weapons " + group.getName(), translate(LocalizationKeys.WEAPONS), ItemTypes.DIAMOND_SWORD);
+        ItemStack i = command("ninfo weapons " + group.getName(), translate(LocalizationKeys.WEAPONS), ItemTypes.DIAMOND_SWORD);
         i.offer(Keys.ITEM_LORE, Collections.singletonList(translate(LocalizationKeys.WEAPONS_MENU_HELP)));
         return i;
     }
@@ -257,7 +257,7 @@ public class GuiHelper {
     }
 
     public static ItemStack back(ClassDefinition g) {
-        return command("class " + g.getName(), translate(LocalizationKeys.BACK), ItemTypes.PAPER);
+        return command("ninfo class " + g.getName(), translate(LocalizationKeys.BACK), ItemTypes.PAPER);
     }
 
     public static ItemStack unclickableInterface(DyeColor dyeColor) {
@@ -492,7 +492,7 @@ public class GuiHelper {
                 .build(SpongeRpgPlugin.getInstance());
 
         SpongeSkillTreeViewModel skillTreeViewModel = character.getLastTimeInvokedSkillTreeView();
-        ItemStack back = back("skilltree " + skillTreeViewModel.getViewedClass().getName(), translate(LocalizationKeys.SKILLTREE));
+        ItemStack back = back("ninfo skilltree " + skillTreeViewModel.getViewedClass().getName(), translate(LocalizationKeys.SKILLTREE));
         build.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0, 0))).offer(back);
 
         if (skillData instanceof SkillPathData) {

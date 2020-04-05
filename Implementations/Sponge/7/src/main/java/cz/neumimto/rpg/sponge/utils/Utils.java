@@ -189,7 +189,6 @@ public class Utils {
         DamageSource build = new SpongeEntityDamageSourceBuilder()
                 .entity(character.getEntity())
                 .type(NDamageType.DAMAGE_CHECK)
-                .bypassesArmor()
                 .absolute()
                 .build();
 
@@ -200,7 +199,6 @@ public class Utils {
         DamageSource build = new SpongeEntityDamageSourceBuilder()
                 .entity(entity.getEntity())
                 .type(NDamageType.DAMAGE_CHECK)
-                .bypassesArmor()
                 .absolute()
                 .build();
 

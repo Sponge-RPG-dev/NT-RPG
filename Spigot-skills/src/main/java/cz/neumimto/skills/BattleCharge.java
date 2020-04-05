@@ -4,6 +4,7 @@ import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
+import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
@@ -88,5 +89,7 @@ public class BattleCharge extends TargetedEntitySkill {
                 }
             }
         }.runTaskTimer(SpigotRpgPlugin.getInstance(), 10L, 2L);
+
+        skillContext.next(source, info, skillContext.result(SkillResult.OK));
     }
 }

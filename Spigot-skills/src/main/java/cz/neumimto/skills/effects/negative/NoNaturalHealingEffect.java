@@ -15,8 +15,6 @@ public class NoNaturalHealingEffect extends EffectBase<NoNaturalHealingEffect.Mo
         setValue(model);
     }
 
-
-
     public static class Model {
         public long duration;
     }
