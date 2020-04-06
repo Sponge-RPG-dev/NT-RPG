@@ -20,7 +20,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-@CommandPermission("ntrpg.info")
 @CommandAlias("show|ninfo")
 public class SpongeInfoCommands extends BaseCommand {
 
@@ -40,7 +39,7 @@ public class SpongeInfoCommands extends BaseCommand {
     }
 
     @Subcommand("classes")
-    @CommandPermission("%.classes")
+    @CommandPermission("ntrpg.info.classes")
     public void showClassesCommand(Player executor, @Optional String type) {
         ISpongeCharacter character = characterService.getCharacter(executor);
         if (type == null) {
@@ -52,7 +51,7 @@ public class SpongeInfoCommands extends BaseCommand {
     }
 
     @Subcommand("character")
-    @CommandPermission("%.player.characters.other")
+    @CommandPermission("ntrpg.info.player.characters.other")
     public void showOtherPlayerCharacterCommand(Player executor, OnlinePlayer target) {
         IActiveCharacter targett = characterService.getCharacter(executor);
         IActiveCharacter targett1 = characterService.getCharacter(target.player);
@@ -60,7 +59,7 @@ public class SpongeInfoCommands extends BaseCommand {
     }
 
     @Subcommand("character")
-    @CommandPermission("%.player.characters.self")
+    @CommandPermission("ntrpg.info.player.characters.self")
     public void showPlayerCharacterCommand(Player executor) {
         IActiveCharacter targett = characterService.getCharacter(executor);
         Gui.showCharacterInfo(targett, targett);
@@ -74,7 +73,7 @@ public class SpongeInfoCommands extends BaseCommand {
     }
 
     @Subcommand("runeword")
-    @CommandPermission("%.player.characters.other")
+    @CommandPermission("ntrpg.info.player.characters.other")
     public void showRunewordInfoCommand(Player executor, RuneWord runeword) {
         ISpongeCharacter character = characterService.getCharacter(executor);
         messaging.displayRuneword(character, runeword, true);
@@ -122,4 +121,24 @@ public class SpongeInfoCommands extends BaseCommand {
         Gui.sendStatus(character);
     }
 
+    @Subcommand("class")
+    @CommandPermission("ntrpg.info.class")
+    public void showClassCommand(Player executor, ClassDefinition classDefinition, @Optional String back) {
+        ISpongeCharacter character = characterService.getCharacter(executor);
+        messaging.showClassInfo(character, classDefinition);
+    }
+
+    @Subcommand("class-weapons")
+    @CommandPermission("ntrpg.info.class")
+    public void showClassWeapons(Player player, ClassDefinition cc) {
+        IActiveCharacter target = characterService.getCharacter(player);
+        Gui.displayClassWeapons(cc, target);
+    }
+
+    @Subcommand("class-armor")
+    @CommandPermission("ntrpg.info.class")
+    public void showClassArmor(Player player, ClassDefinition cc) {
+        IActiveCharacter target = characterService.getCharacter(player);
+        Gui.displayClassArmor(cc, target);
+    }
 }

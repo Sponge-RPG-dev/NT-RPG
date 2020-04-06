@@ -206,6 +206,10 @@ public class PluginConfig {
     @Path("RESPEC_ATTRIBUTES")
     public boolean RESPEC_ATTRIBUTES = false;
 
+   //@Path("DISABLED_WORLDS")
+   //@Conversion(SetToListConverter.class)
+   //public Set<String> DISABLED_WORLDS = new HashSet<>();
+
     private static class ItemDamageProcessorConverter implements Converter<ItemDamageProcessor, String> {
 
         @Override
