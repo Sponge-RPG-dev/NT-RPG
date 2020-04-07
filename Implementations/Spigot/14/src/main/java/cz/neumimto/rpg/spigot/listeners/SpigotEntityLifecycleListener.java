@@ -7,6 +7,7 @@ import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.exp.ExperienceService;
 import cz.neumimto.rpg.common.exp.ExperienceSources;
+import cz.neumimto.rpg.spigot.SpigotRpg;
 import cz.neumimto.rpg.spigot.entities.SpigotEntityService;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
@@ -18,10 +19,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.player.PlayerFishEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.projectiles.ProjectileSource;
 
@@ -49,6 +47,9 @@ public class SpigotEntityLifecycleListener implements Listener {
     @Inject
     private ExperienceService experienceService;
 
+    @Inject
+    private SpigotRpg spigotRpg;
+
     @EventHandler
     public void onPlayerLogin(PlayerJoinEvent event) {
         //  IActiveCharacter character = characterService.getTarget(event.getTarget().getUniqueId());
@@ -57,19 +58,7 @@ public class SpigotEntityLifecycleListener implements Listener {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        Player player = event.getPlayer();
-        IActiveCharacter character = characterService.removeCachedWrapper(player.getUniqueId());
-        if (!character.isStub()) {
-            Location loc = player.getLocation();
-            World ex = loc.getWorld();
-            character.getCharacterBase().setLastKnownPlayerName(event.getPlayer().getName());
-            character.updateLastKnownLocation(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), ex.getName());
-            characterService.putInSaveQueue(character.getCharacterBase());
-			/*Always reset the persistent properties back to vanilla values in a case
-             some dummy decides to remove my awesome plugin :C */
-            //Utils.resetPlayerToDefault(player);
-        }
-        effectService.removeAllEffects(character);
+        resetPlayer(event.getPlayer());
     }
 
     @EventHandler
@@ -85,6 +74,9 @@ public class SpigotEntityLifecycleListener implements Listener {
 
     @EventHandler
     public void onEntityDespawn(EntityDeathEvent event) {
+        if (spigotRpg.isDisabledInWorld(event.getEntity())) {
+            return;
+        }
         Entity targetEntity = event.getEntity();
         if (targetEntity.getType() == EntityType.PLAYER) {
             IActiveCharacter character = characterService.getCharacter(targetEntity.getUniqueId());
@@ -145,6 +137,9 @@ public class SpigotEntityLifecycleListener implements Listener {
 
     @EventHandler
     public void onChunkDespawn(ChunkUnloadEvent event) {
+        if (spigotRpg.isDisabledInWorld(event.getChunk().getWorld())) {
+            return;
+        }
         Entity[] entities = event.getChunk().getEntities();
         for (Entity entity : entities) {
             entityService.remove(entity.getUniqueId());
@@ -153,6 +148,9 @@ public class SpigotEntityLifecycleListener implements Listener {
 
     @EventHandler
     public void onCatchFish(PlayerFishEvent event) {
+        if (spigotRpg.isDisabledInWorld(event.getPlayer())) {
+            return;
+        }
         Entity caught = event.getCaught();
         if (caught != null) {
             Double fishingExperience = experienceService.getFishingExperience(caught.getType().name());
@@ -165,11 +163,40 @@ public class SpigotEntityLifecycleListener implements Listener {
 
     @EventHandler
     public void onPlayerRespawn(PlayerRespawnEvent event) {
+        if (spigotRpg.isDisabledInWorld(event.getPlayer())) {
+            resetPlayer(event.getPlayer());
+            return;
+        }
         ISpigotCharacter character = characterService.getCharacter(event.getPlayer().getUniqueId());
         if (character.isStub()) {
             return;
         }
         characterService.respawnCharacter(character);
+    }
+
+    @EventHandler
+    public void onPlayerTeleport(PlayerTeleportEvent event) {
+        if (event.getTo() != null && spigotRpg.isDisabledInWorld(event.getTo())) {
+            resetPlayer(event.getPlayer());
+        }
+    }
+
+    private void resetPlayer(Player player) {
+
+        player.setMaxHealth(20D);
+        if (player.getHealth() > player.getMaxHealth()) {
+            player.setHealth(20D);
+        }
+
+        IActiveCharacter character = characterService.removeCachedWrapper(player.getUniqueId());
+        if (!character.isStub()) {
+            Location loc = player.getLocation();
+            World ex = loc.getWorld();
+            character.getCharacterBase().setLastKnownPlayerName(player.getName());
+            character.updateLastKnownLocation(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), ex.getName());
+            characterService.putInSaveQueue(character.getCharacterBase());
+        }
+        effectService.removeAllEffects(character);
     }
 
 

@@ -4,6 +4,9 @@ import cz.neumimto.rpg.api.utils.Console;
 import cz.neumimto.rpg.common.AbstractRpg;
 import cz.neumimto.rpg.common.assets.AssetService;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.entity.Entity;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -82,4 +85,15 @@ public final class SpigotRpg extends AbstractRpg {
         Bukkit.getScheduler().scheduleSyncDelayedTask(SpigotRpgPlugin.getInstance(), runnable);
     }
 
+    public boolean isDisabledInWorld(Entity entity) {
+        return isDisabledInWorld(entity.getWorld());
+    }
+
+    public boolean isDisabledInWorld(Location location) {
+        return isDisabledInWorld(location.getWorld());
+    }
+
+    public boolean isDisabledInWorld(World world) {
+        return isDisabledInWorld(world.getName());
+    }
 }

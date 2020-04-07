@@ -12,6 +12,8 @@ import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.damage.AbstractDamageListener;
+import cz.neumimto.rpg.spigot.SpigotRpg;
+import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
 import cz.neumimto.rpg.spigot.entities.ISpigotEntity;
 import cz.neumimto.rpg.spigot.entities.ProjectileCache;
@@ -49,8 +51,14 @@ public class SpigotDamageListener extends AbstractDamageListener implements List
     @Inject
     private PluginConfig pluginConfig;
 
+    @Inject
+    private SpigotRpg spigotRpg;
+
     @EventHandler
     public void onEntityDamageEarly(EntityDamageByEntityEvent event) {
+        if (spigotRpg.isDisabledInWorld(event.getEntity())) {
+            return;
+        }
         if (event.getCause() == EntityDamageEvent.DamageCause.CUSTOM) {
             return;
         }

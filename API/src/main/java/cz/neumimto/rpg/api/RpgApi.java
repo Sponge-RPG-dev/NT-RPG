@@ -93,4 +93,6 @@ public interface RpgApi {
               BiFunction<Map, Map<Class<?>, ?>, Module> fnInjProv, Consumer<Injector> injectorc);
 
     Executor getSyncExecutor();
+
+    boolean isDisabledInWorld(String worldName);
 }

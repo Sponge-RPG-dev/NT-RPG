@@ -9,6 +9,7 @@ import cz.neumimto.rpg.api.items.ItemClass;
 import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.common.inventory.InventoryHandler;
+import cz.neumimto.rpg.spigot.SpigotRpg;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
 import cz.neumimto.rpg.spigot.inventory.SpigotInventoryService;
@@ -58,10 +59,17 @@ public class SpigotInventoryListener implements Listener {
     @Inject
     private SkillService skillService;
 
+    @Inject
+    private SpigotRpg spigotRpg;
+
     private static final int OFFHAND_SLOT_ID = 40;
 
     @EventHandler
     public void onInventoryInteract(InventoryClickEvent event) {
+        if (spigotRpg.isDisabledInWorld(event.getWhoClicked())) {
+            return;
+        }
+
         HumanEntity whoClicked = event.getWhoClicked();
         ItemStack currentItem = event.getCurrentItem();
 
@@ -93,6 +101,9 @@ public class SpigotInventoryListener implements Listener {
 
     @EventHandler
     public void itemEquipEvent(InventoryCloseEvent event) {
+        if (spigotRpg.isDisabledInWorld(event.getPlayer())) {
+            return;
+        }
         HumanEntity player = event.getPlayer();
         if (player instanceof Player) {
             Player p = (Player) player;
@@ -106,6 +117,9 @@ public class SpigotInventoryListener implements Listener {
 
     @EventHandler
     public void onItemDrop(PlayerDropItemEvent event) {
+        if (spigotRpg.isDisabledInWorld(event.getPlayer())) {
+            return;
+        }
         Player player = event.getPlayer();
         IActiveCharacter character = spigotCharacterService.getCharacter(player);
         if (character.isStub()) {
@@ -133,6 +147,9 @@ public class SpigotInventoryListener implements Listener {
 
     @EventHandler(ignoreCancelled = false)
     public void onSwapHands(PlayerSwapHandItemsEvent event) {
+        if (spigotRpg.isDisabledInWorld(event.getPlayer())) {
+            return;
+        }
         ItemStack futureMainHand = event.getMainHandItem();
         ItemStack futureOffHand = event.getOffHandItem();
         if (futureMainHand.getType() == Material.AIR && futureOffHand.getType() == Material.AIR) {
@@ -181,6 +198,9 @@ public class SpigotInventoryListener implements Listener {
 
     @EventHandler
     public void onHotbarInteract(PlayerInteractEvent event) {
+        if (spigotRpg.isDisabledInWorld(event.getPlayer())) {
+            return;
+        }
         Player player = event.getPlayer();
         ISpigotCharacter character = spigotCharacterService.getCharacter(player);
         if (character.isStub()) {
@@ -237,6 +257,9 @@ public class SpigotInventoryListener implements Listener {
 
     @EventHandler
     public void onDrag(InventoryDragEvent event) {
+        if (spigotRpg.isDisabledInWorld(event.getWhoClicked())) {
+            return;
+        }
         for (Integer slotId : event.getInventorySlots()) {
             if (inventoryService.isManagedInventory(PlayerInventory.class, slotId) || slotId == OFFHAND_SLOT_ID || (slotId >= 0 && slotId <= 8)) {
                 event.setResult(Event.Result.DENY);
@@ -246,6 +269,9 @@ public class SpigotInventoryListener implements Listener {
 
     @EventHandler
     public void onInteract(InventoryClickEvent event) {
+        if (spigotRpg.isDisabledInWorld(event.getWhoClicked())) {
+            return;
+        }
         HumanEntity whoClicked = event.getWhoClicked();
         if (whoClicked instanceof Player) {
             int slotId = event.getSlot();
@@ -306,6 +332,9 @@ public class SpigotInventoryListener implements Listener {
 
     @EventHandler
     public void onItemPickup(EntityPickupItemEvent event) {
+        if (spigotRpg.isDisabledInWorld(event.getEntity())) {
+            return;
+        }
         if (event.getEntityType() != EntityType.PLAYER) {
             return;
         }

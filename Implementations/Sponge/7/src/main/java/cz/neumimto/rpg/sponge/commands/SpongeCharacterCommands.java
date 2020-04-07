@@ -59,7 +59,7 @@ public class SpongeCharacterCommands extends BaseCommand {
         //TODO
     }
 
-    @Subcommand("class|c")
+    @Subcommand("set-class")
     public void chooseClassCommand(Player executor, ClassDefinition classDefinition) {
         IActiveCharacter character = characterService.getCharacter(executor);
         characterCommandFacade.commandChooseClass(character, classDefinition);

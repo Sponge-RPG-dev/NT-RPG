@@ -4,6 +4,7 @@ import com.google.inject.Singleton;
 import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.entity.UserActionType;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.spigot.SpigotRpg;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
 import org.bukkit.GameMode;
 import org.bukkit.event.EventHandler;
@@ -22,8 +23,14 @@ public class SpigotComboListener implements Listener {
     @Inject
     private SpigotCharacterService characterService;
 
+    @Inject
+    private SpigotRpg spigotRpg;
+
     @EventHandler
     public void onRMBClick(PlayerInteractEvent e) {
+        if (spigotRpg.isDisabledInWorld(e.getPlayer())) {
+            return;
+        }
         if (e.getPlayer().getGameMode() == GameMode.SURVIVAL) {
             IActiveCharacter character = characterService.getCharacter(e.getPlayer());
             e.setCancelled(characterService.processUserAction(character, UserActionType.R));
@@ -32,6 +39,9 @@ public class SpigotComboListener implements Listener {
 
     @EventHandler
     public void onLMBClick(PlayerInteractEntityEvent e) {
+        if (spigotRpg.isDisabledInWorld(e.getPlayer())) {
+            return;
+        }
         if (e.getPlayer().getGameMode() == GameMode.SURVIVAL) {
             IActiveCharacter character = characterService.getCharacter(e.getPlayer());
             e.setCancelled(characterService.processUserAction(character, UserActionType.L));
@@ -39,7 +49,10 @@ public class SpigotComboListener implements Listener {
     }
 
     @EventHandler
-    public void onQPress(PlayerDropItemEvent  e) {
+    public void onQPress(PlayerDropItemEvent e) {
+        if (spigotRpg.isDisabledInWorld(e.getPlayer())) {
+            return;
+        }
         if (e.getPlayer().getGameMode() == GameMode.SURVIVAL) {
             IActiveCharacter character = characterService.getCharacter(e.getPlayer());
             e.setCancelled(characterService.processUserAction(character, UserActionType.Q));
@@ -48,6 +61,9 @@ public class SpigotComboListener implements Listener {
 
     @EventHandler
     public void onInventoryOpen(InventoryOpenEvent e) {
+        if (spigotRpg.isDisabledInWorld(e.getPlayer())) {
+            return;
+        }
         if (e.getPlayer().getGameMode() == GameMode.SURVIVAL) {
             IActiveCharacter character = characterService.getCharacter(e.getPlayer().getUniqueId());
             e.setCancelled(characterService.processUserAction(character, UserActionType.E));

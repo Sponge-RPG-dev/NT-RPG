@@ -308,4 +308,8 @@ public abstract class AbstractRpg implements RpgApi {
         return currentThreadExecutor;
     }
 
+    @Override
+    public boolean isDisabledInWorld(String worldName) {
+        return pluginConfig.DISABLED_WORLDS.contains(worldName);
+    }
 }

@@ -32,7 +32,7 @@ repositories {
 }
 
 group = 'cz.neumimto.rpg'
-version = '2.1.0-SNAPSHOT-5'
+version = '2.1.0-SNAPSHOT-6'
 
 compileJava {
     options.compilerArgs += ["-parameters"]

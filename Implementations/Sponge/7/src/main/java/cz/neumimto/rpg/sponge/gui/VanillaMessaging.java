@@ -236,7 +236,7 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
         Inventory i = createMenuInventoryClassDefView(cc);
 
         ItemStack of = GuiHelper.itemStack(ItemTypes.DIAMOND);
-        of.offer(new InventoryCommandItemMenuData("character set class " + cc.getName()));
+        of.offer(new InventoryCommandItemMenuData("character set-class " + cc.getName()));
         of.offer(Keys.DISPLAY_NAME, translate(LocalizationKeys.CONFIRM));
         i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(7, 1))).offer(of);
 
