@@ -26,6 +26,7 @@ import cz.neumimto.rpg.common.bytecode.ClassGenerator;
 import cz.neumimto.rpg.common.entity.configuration.MobSettingsDao;
 import cz.neumimto.rpg.common.inventory.InventoryHandler;
 import cz.neumimto.rpg.common.inventory.crafting.runewords.RWDao;
+import cz.neumimto.rpg.spigot.SpigotRpg;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.assets.SpigotAssetService;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
@@ -47,11 +48,13 @@ import java.util.Map;
 public class SpigotGuiceModule extends AbstractRpgGuiceModule {
 
     private final SpigotRpgPlugin ntRpgPlugin;
+    private SpigotRpg spigotRpg;
     private Map extraBindings;
     private Map<Class, Object> providers;
 
-    public SpigotGuiceModule(SpigotRpgPlugin ntRpgPlugin, Map extraBindings, Map providers) {
+    public SpigotGuiceModule(SpigotRpgPlugin ntRpgPlugin,SpigotRpg spigotRpg, Map extraBindings, Map providers) {
         this.ntRpgPlugin = ntRpgPlugin;
+        this.spigotRpg = spigotRpg;
         this.extraBindings = extraBindings;
         this.providers = providers;
     }
@@ -95,7 +98,7 @@ public class SpigotGuiceModule extends AbstractRpgGuiceModule {
         }).toProvider(SpigotCharacterServiceProvider1.class);
 
         bind(SpigotRpgPlugin.class).toProvider(() -> ntRpgPlugin);
-
+        bind(SpigotRpg.class).toProvider(() -> spigotRpg);
         for (Map.Entry<Class, Object> entry : providers.entrySet()) {
             bind(entry.getKey()).toProvider(() -> entry.getValue());
         }

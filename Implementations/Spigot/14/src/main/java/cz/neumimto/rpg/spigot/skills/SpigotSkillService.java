@@ -26,13 +26,13 @@ public class SpigotSkillService extends AbstractSkillService {
         super.init();
         int i = 0;
 
-        for (String str : Rpg.get().getPluginConfig().SKILLTREE_RELATIONS) {
+        for (String str : Rpg.get().getPluginConfig().SKILLTREE_GUI) {
             String[] split = str.split(",");
 
             short k = (short) (Short.MAX_VALUE - i);
             Material material = Material.matchMaterial(split[1]);
             material = material == null ? Material.STICK : material;
-            SpigotSkillTreeInterfaceModel model = new SpigotSkillTreeInterfaceModel(Integer.parseInt(split[3]),
+            SpigotSkillTreeInterfaceModel model = new SpigotSkillTreeInterfaceModel(Integer.parseInt(split[2]),
                     material, k);
 
             guiModelById.put(k, model);

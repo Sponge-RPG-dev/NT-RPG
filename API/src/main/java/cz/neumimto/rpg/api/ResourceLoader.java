@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.api;
 
+import javax.naming.ConfigurationException;
 import java.io.File;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -14,7 +15,7 @@ public interface ResourceLoader {
 
     void loadJarFile(File f, boolean main);
 
-    Object loadClass(Class<?> clazz) throws IllegalAccessException, InstantiationException;
+    Object loadClass(Class<?> clazz) throws IllegalAccessException, InstantiationException, ConfigurationException;
 
     URLClassLoader getConfigClassLoader();
 

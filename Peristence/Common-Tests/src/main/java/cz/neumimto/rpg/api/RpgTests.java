@@ -225,4 +225,9 @@ public class RpgTests implements RpgApi {
     public Executor getSyncExecutor() {
         return Runnable::run;
     }
+
+    @Override
+    public boolean isDisabledInWorld(String worldName) {
+        return false;
+    }
 }

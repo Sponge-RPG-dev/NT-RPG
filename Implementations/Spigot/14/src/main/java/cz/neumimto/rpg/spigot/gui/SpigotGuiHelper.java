@@ -1,5 +1,7 @@
 package cz.neumimto.rpg.spigot.gui;
 
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.configuration.ClassTypeDefinition;
@@ -25,6 +27,7 @@ import cz.neumimto.rpg.spigot.items.SpigotRpgItemType;
 import cz.neumimto.rpg.spigot.skills.SpigotSkillService;
 import cz.neumimto.rpg.spigot.skills.SpigotSkillTreeInterfaceModel;
 import de.tr7zw.nbtapi.NBTItem;
+import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.Bukkit;
@@ -38,6 +41,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import javax.script.*;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
@@ -48,6 +52,8 @@ public class SpigotGuiHelper {
     private static final int[] attributButtonSlots;
 
     public static ItemLoreFactory itemLoreFactory;
+
+    private static Map<String, StaticInventory> CLASS_MENU_CACHE = new HashMap<>();
 
     static {
         itemLoreFactory = new ItemLoreFactory();
@@ -61,6 +67,93 @@ public class SpigotGuiHelper {
         inventoryIds = w.stream().mapToInt(i -> i).toArray();
         attributButtonSlots = new int[]{10, 11, 12, 13, 14, 15, 16, 36, 37, 38, 39, 40, 41, 42, 43, 45};
 
+    }
+
+
+    private static String tr(String key) {
+        LocalizationService localizationService = Rpg.get().getLocalizationService();
+        return localizationService.translate(key);
+    }
+
+    public static void initInventories() throws ScriptException, NoSuchMethodException {
+        Config config = ConfigFactory.load(SpigotGuiHelper.class.getClassLoader(), "guis.conf");
+        Collection<ClassDefinition> classDefinitions = Rpg.get().getClassService().getClassDefinitions();
+        NashornScriptEngineFactory nashornScriptEngineFactory = new NashornScriptEngineFactory();
+
+        String guiName = "class_template";
+        Config classTemplate = findRelevantConfig(config, guiName);
+
+        String classCond = "function validate(class_, slot_) { %cond% ; return true}"
+                .replaceAll("%cond%", classTemplate.getString("conditions"));
+
+        ScriptEngine scriptEngine = nashornScriptEngineFactory.getScriptEngine();
+        Invocable i = (Invocable) scriptEngine;
+
+        scriptEngine.eval(classCond);
+        scriptEngine.eval("function command(class_, command_) { %cmd%; }"
+                .replaceAll("%cmd%", classTemplate.getString("command")));
+
+
+        for (ClassDefinition clazz : classDefinitions) {
+            ItemStack blank = null;
+            Map<Character, ItemStack> itemMap = new HashMap<>();
+            List<String> items = classTemplate.getStringList("items");
+            for (String item : items) {
+                String[] split = item.split(",");
+                Material material = Material.matchMaterial(split[2]);
+                ItemStack itemStack = new ItemStack(material);
+                ItemMeta itemMeta = itemStack.getItemMeta();
+                itemMeta.setDisplayName(Rpg.get().getLocalizationService().translate(split[1]));
+                int i1 = Integer.parseInt(split[3]);
+                if (i1 > 0) {
+                    itemMeta.setCustomModelData(i1);
+                }
+
+                itemStack.setItemMeta(itemMeta);
+                String command = split[4];
+                String cmd = (String) i.invokeFunction("command", clazz, command);
+                if ("---".equalsIgnoreCase(cmd)) {
+                    blank = unclickableInterface(itemStack);
+                    itemMap.put(split[0].charAt(0), blank);
+                } else {
+                    NBTItem nbtItem = new NBTItem(itemStack);
+                    nbtItem.setString("ntrpg.item-command", command);
+                    itemStack = nbtItem.getItem();
+
+                    itemMap.put(split[0].charAt(0), itemStack);
+                }
+            }
+
+            List<String> inv = classTemplate.getStringList("inv");
+            List<ItemStack> invContent = new ArrayList<>();
+            for (String s : inv) {
+                char[] chars = s.toCharArray();
+                for (char c : chars) {
+                    boolean display = (boolean) i.invokeFunction("validate", clazz, c);
+                    if (display) {
+                        ItemStack itemStack = itemMap.get(c);
+                        if (itemStack == null) {
+                            throw new IllegalStateException("Gui " + guiName + " missing item " + c);
+                        }
+                        invContent.add(itemStack);
+                    } else {
+                        invContent.add(blank.clone());
+                    }
+                }
+            }
+            StaticInventory sinv = StaticInventory.of(invContent.toArray(new ItemStack[invContent.size() - 1]));
+            CLASS_MENU_CACHE.put(guiName + clazz.getName(), sinv);
+        }
+    }
+
+    private static Config findRelevantConfig(Config config, String type) {
+        List<? extends Config> gui = config.getConfigList("gui");
+        for (Config c : gui) {
+            if (type.equalsIgnoreCase(c.getString("type"))) {
+                return c;
+            }
+        }
+        throw new IllegalStateException("Unknown gui type:" + type);
     }
 
     public static Inventory createMenuInventoryClassTypesView(Player player) {
@@ -200,16 +293,6 @@ public class SpigotGuiHelper {
         return nbti.getItem();
     }
 
-
-    private static ItemStack unclickableInterfaceKeepName(ItemStack itemStack) {
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        itemStack.setItemMeta(itemMeta);
-        NBTItem nbti = new NBTItem(itemStack);
-        nbti.setBoolean("ntrpg.item-iface", true);
-        return nbti.getItem();
-    }
-
     public static void sendcharacters(Player player, ISpigotCharacter player1, CharacterBase currentlyCreated) {
         CompletableFuture.runAsync(() -> {
             List<CharacterBase> playersCharacters = Rpg.get().getCharacterService().getPlayersCharacters(player.getUniqueId());
@@ -246,19 +329,8 @@ public class SpigotGuiHelper {
 
     public static Inventory createClassInfoView(Player player, ClassDefinition cc, String back) {
         Inventory i = createInventoryTemplate(player, ChatColor.valueOf(cc.getPreferedColor()) + cc.getName());
-        LocalizationService localizationService = Rpg.get().getLocalizationService();
-        i.setItem(0, button(Material.PAPER, localizationService.translate(LocalizationKeys.BACK), back == null ? "ninfo classes" : back));
-        i.setItem(8, button(Material.DIAMOND, localizationService.translate(LocalizationKeys.CONFIRM), "char choose class " + cc.getName()));
-        if (!cc.getAllowedArmor().isEmpty()) {
-            i.setItem(29, button(Resourcepack.ARMOR, localizationService.translate(LocalizationKeys.ARMOR), "ninfo class-armor " + cc.getName()));
-        }
-        if (!cc.getWeapons().isEmpty() || !cc.getOffHandWeapons().isEmpty()) {
-            i.setItem(30, button(Resourcepack.WEAPONS, localizationService.translate(LocalizationKeys.WEAPONS), "ninfo class-weapons " + cc.getName()));
-        }
-        if (cc.getSkillTree() != SkillTree.Default) {
-            i.setItem(31, button(Material.OAK_SAPLING,
-                    localizationService.translate(LocalizationKeys.SKILLTREE), "skilltree view " + cc.getName(), 12345));
-        }
+        StaticInventory staticInventory = CLASS_MENU_CACHE.get("class_template" + cc.getName());
+        staticInventory.fill(i);
         return i;
     }
 
@@ -455,8 +527,9 @@ public class SpigotGuiHelper {
                                 }
                             }
                         }
+
                         if (itemStack == null) {
-                            itemStack = unclickableInterface(Material.GRAY_STAINED_GLASS_PANE, 1235);
+                            itemStack = blank();
                         }
                         i.setItem(slot, itemStack);
                     } else {
@@ -469,6 +542,11 @@ public class SpigotGuiHelper {
         }
         return i;
     }
+
+    private static ItemStack blank() {
+        return unclickableInterface(Material.GRAY_STAINED_GLASS_PANE, 1235);
+    }
+
 
     private static ItemStack skillToItemStack(ISpigotCharacter character, SkillData skillData, SkillTree skillTree, SpigotSkillTreeViewModel model) {
         List<String> lore;
@@ -505,7 +583,11 @@ public class SpigotGuiHelper {
 
 
     private static ItemStack createSkillTreeInventoryMenuBoundary() {
-        return unclickableInterface(Material.RED_STAINED_GLASS_PANE);
+        ItemStack is = unclickableInterface(Material.RED_STAINED_GLASS_PANE);
+        ItemMeta itemMeta = is.getItemMeta();
+        itemMeta.setCustomModelData(1235);
+        is.setItemMeta(itemMeta);
+        return is;
     }
 
     private static ItemStack interactiveModeToitemStack(ISpigotCharacter character, SkillTreeViewModel.InteractiveMode interactiveMode) {

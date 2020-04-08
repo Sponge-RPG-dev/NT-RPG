@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.common;
 
+import com.google.inject.ConfigurationException;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import cz.neumimto.rpg.api.ResourceLoader;
@@ -247,7 +248,7 @@ public class ResourceManagerImpl implements ResourceLoader {
     }
 
     @Override
-    public Object loadClass(Class<?> clazz) throws IllegalAccessException, InstantiationException {
+    public Object loadClass(Class<?> clazz) throws IllegalAccessException, InstantiationException, ConfigurationException {
         //Properties
         if (clazz == IGlobalEffect.class) {
             return null;
@@ -429,7 +430,7 @@ public class ResourceManagerImpl implements ResourceLoader {
                                 Console.GREEN + clazz.getSimpleName() + Console.RESET,
                         Rpg.get().getPluginConfig().DEBUG);
             }
-        } catch (IllegalAccessException | InstantiationException e) {
+        } catch (IllegalAccessException | InstantiationException | ConfigurationException e) {
             e.printStackTrace();
         }
     }

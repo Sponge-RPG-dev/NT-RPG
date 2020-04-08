@@ -13,13 +13,20 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class Resourcepack {
 
+
+    ;
     private static XORShiftRnd rnd;
     static {
         rnd = new XORShiftRnd();
     }
 
+    public static RPItem BACK = new RPItem(Material.PAPER, 12345);
+    public static RPItem CONFIRM = new RPItem(Material.DIAMOND, 12345);
+
     public static RPItem ARMOR = new RPItem(Material.DIAMOND_CHESTPLATE,12345);
     public static RPItem WEAPONS = new RPItem(Material.DIAMOND_SWORD,12345);
+
+    public static RPItem ATTRIBUTES = new RPItem(Material.BOOK, 12345);
 
     public static RPItem PLUS = new RPItem(Material.GREEN_DYE,12345);
     public static RPItem MINUS = new RPItem(Material.DIAMOND_SWORD,12345);
@@ -28,7 +35,7 @@ public class Resourcepack {
     public static RPItem DOWN = new RPItem(Material.STICK, 12346);
     public static RPItem LEFT = new RPItem(Material.STICK, 12347);
     public static RPItem RIGHT = new RPItem(Material.STICK, 12348);
-
+    public static RPItem SKILLTREE = new RPItem(Material.OAK_SAPLING, 12345);
 
     private static final int ICE_SPIKE_LARGE = 12349;
 

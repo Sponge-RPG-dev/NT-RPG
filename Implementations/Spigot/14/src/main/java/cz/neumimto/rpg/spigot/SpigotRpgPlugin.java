@@ -16,6 +16,7 @@ import cz.neumimto.rpg.spigot.bridges.NtRpgPlaceholderExpansion;
 import cz.neumimto.rpg.spigot.commands.*;
 import cz.neumimto.rpg.spigot.entities.configuration.SpigotMobSettingsDao;
 import cz.neumimto.rpg.spigot.gui.SpigotGui;
+import cz.neumimto.rpg.spigot.gui.SpigotGuiHelper;
 import cz.neumimto.rpg.spigot.resources.SpigotGuiceModule;
 import de.slikey.effectlib.EffectManager;
 import org.bukkit.Bukkit;
@@ -32,6 +33,7 @@ import org.bukkit.plugin.java.annotation.plugin.author.Author;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.script.ScriptException;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.concurrent.ExecutorService;
@@ -98,7 +100,8 @@ public class SpigotRpgPlugin extends JavaPlugin {
                 SpigotSkilltreeCommands.class,
                 SpigotSkillBindCommands.class
 
-        }, new FlatFilesModule(), (bindings, providers) -> new SpigotGuiceModule(this, bindings, providers), injector -> {
+        }, new FlatFilesModule(), (bindings, providers) -> new SpigotGuiceModule(this, spigotRpg, bindings, providers), injector -> {
+
             injector.injectMembers(spigotRpg);
             new RpgImpl(spigotRpg);
 
@@ -119,7 +122,14 @@ public class SpigotRpgPlugin extends JavaPlugin {
             IScriptEngine scriptEngine = Rpg.get().getScriptEngine();
             scriptEngine.getDataToBind().put(EntityDamageEvent.DamageCause.class, JsBinding.Type.CLASS);
             scriptEngine.getDataToBind().put(EntityType.class, JsBinding.Type.CLASS);
+
         });
+
+        try {
+            SpigotGuiHelper.initInventories();
+        } catch (ScriptException | NoSuchMethodException e) {
+            e.printStackTrace();
+        }
 
         effectManager = new EffectManager(this);
         Rpg.get().getSyncExecutor();

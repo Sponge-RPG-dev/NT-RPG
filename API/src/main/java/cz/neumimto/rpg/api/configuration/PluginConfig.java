@@ -160,6 +160,29 @@ public class PluginConfig {
         add("-,minecraft:stick,-,0");
     }};
 
+    //spigot only and once sponge moves its ass to 15.x
+    @Path("SKILLTREE_GUI")
+    public List<String> SKILLTREE_GUI = new ArrayList<String>() {{
+
+       add("-,minecraft:cobblestone,1"); //horizontal
+       add("│,minecraft:cobblestone,2"); //vertical
+       add("<,minecraft:cobblestone,3");
+       add(">,minecraft:cobblestone,4");
+       add("^,minecraft:cobblestone,5");
+       add("V,minecraft:cobblestone,6");
+       add("+,minecraft:cobblestone,7"); //cross
+       add("┐,minecraft:cobblestone,11");
+       add("┘,minecraft:cobblestone,12"); //duh
+       add("┌,minecraft:cobblestone,13");
+       add("└,minecraft:cobblestone,14");
+       add("┴,minecraft:cobblestone,15");
+       add("┬,minecraft:cobblestone,16");
+       add("┤,minecraft:cobblestone,17");
+       add("├,minecraft:cobblestone,18");
+
+   //    add("0,minecraft:gray_stained_glass_pane,19");//empty
+    }};
+
     @Path("SKILLTREE_BUTTON_CONTROLLS")
     public List<String> SKILLTREE_BUTTON_CONTROLLS = new ArrayList<String>() {{
         add("North,minecraft:diamond_hoe,Up,1");
@@ -222,7 +245,6 @@ public class PluginConfig {
             try {
                 return (ItemDamageProcessor) Class.forName(value).newInstance();
             } catch (Exception e) {
-                e.printStackTrace();
             }
             Log.error("Unknown item damage processor definition - Could not find class " + value + ". SEtting to Max()");
             return new Max();
@@ -233,14 +255,18 @@ public class PluginConfig {
         @Override
         public Set convertToField(List value) {
             HashSet hashSet = new HashSet();
-            hashSet.addAll(value);
+            if (value != null) {
+                hashSet.addAll(value);
+            }
             return hashSet;
         }
 
         @Override
         public List convertFromField(Set value) {
             List list = new ArrayList();
-            list.addAll(value);
+            if (value != null) {
+                list.addAll(value);
+            }
             return list;
         }
     }
