@@ -244,6 +244,9 @@ public class SpigotGuiHelper {
         String cmd = command.get();
         if ("---".equalsIgnoreCase(cmd)) {
             itemStack = unclickableInterface(itemStack);
+            NBTItem nbtItem = new NBTItem(itemStack);
+            nbtItem.setBoolean("ntrpg.item-iface", true);
+            itemStack = nbtItem.getItem();
         } else {
             NBTItem nbtItem = new NBTItem(itemStack);
             nbtItem.setString("ntrpg.item-command", cmd);
