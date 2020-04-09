@@ -125,11 +125,7 @@ public class SpigotRpgPlugin extends JavaPlugin {
 
         });
 
-        try {
-            SpigotGuiHelper.initInventories();
-        } catch (ScriptException | NoSuchMethodException e) {
-            e.printStackTrace();
-        }
+        SpigotGuiHelper.initInventories();
 
         effectManager = new EffectManager(this);
         Rpg.get().getSyncExecutor();

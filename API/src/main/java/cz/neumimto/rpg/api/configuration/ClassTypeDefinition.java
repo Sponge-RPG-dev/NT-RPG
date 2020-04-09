@@ -26,12 +26,18 @@ public class ClassTypeDefinition implements Comparable<ClassTypeDefinition> {
     @Optional
     private String defaultClass;
 
-    public ClassTypeDefinition(String primaryColor, String secondaryColor, String dyeColor, boolean changeable, int order) {
+    @Path("Model")
+    @Optional
+    private Integer modelId;
+
+
+    public ClassTypeDefinition(String primaryColor, String secondaryColor, String dyeColor, boolean changeable, int order, int modelId) {
         this.primaryColor = primaryColor;
         this.secondaryColor = secondaryColor;
         this.changeable = changeable;
         this.dyeColor = dyeColor;
         this.order = order;
+        this.modelId = modelId;
     }
 
     public ClassTypeDefinition() {
@@ -59,6 +65,10 @@ public class ClassTypeDefinition implements Comparable<ClassTypeDefinition> {
 
     public String getDefaultClass() {
         return defaultClass;
+    }
+
+    public Integer getModelId() {
+        return modelId;
     }
 
     @Override

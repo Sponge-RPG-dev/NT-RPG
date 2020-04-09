@@ -221,9 +221,9 @@ public class PluginConfig {
     @Path("CLASS_TYPES")
     @Conversion(ClassTypesDeserializer.class)
     public Map<String, ClassTypeDefinition> CLASS_TYPES = new LinkedHashMap<String, ClassTypeDefinition>() {{
-        put("Race", new ClassTypeDefinition("GREEN", "DARK_GREEN", "GREEN", false, 1));
-        put("Primary", new ClassTypeDefinition("YELLOW", "GOLD", "YELLOW", true, 2));
-        put("Profession", new ClassTypeDefinition("GRAY", "BLACK", "GRAY", true, 3));
+        put("Race", new ClassTypeDefinition("GREEN", "DARK_GREEN", "GREEN", false, 1,11111));
+        put("Primary", new ClassTypeDefinition("YELLOW", "GOLD", "YELLOW", true, 2,11112));
+        put("Profession", new ClassTypeDefinition("GRAY", "BLACK", "GRAY", true, 3,11113));
     }};
 
     @Path("RESPEC_ATTRIBUTES")
