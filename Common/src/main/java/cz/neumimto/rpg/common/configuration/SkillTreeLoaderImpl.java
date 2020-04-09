@@ -55,6 +55,7 @@ import static cz.neumimto.rpg.api.logging.Log.*;
 /**
  * Created by NeumimTo on 24.7.2015.
  */
+//todo use nightconfig
 @Singleton
 public class SkillTreeLoaderImpl implements SkillTreeDao {
 
@@ -219,6 +220,12 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
             if (!"".equals(combination)) {
                 info.setCombination(combination);
             }
+        } catch (ConfigException e) {
+        }
+
+        try {
+            Integer modelId = c.getInt("ModelId");
+            info.setModelId(modelId);
         } catch (ConfigException e) {
         }
 

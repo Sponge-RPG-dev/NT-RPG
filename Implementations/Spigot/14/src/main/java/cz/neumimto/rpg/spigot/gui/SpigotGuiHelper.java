@@ -235,6 +235,7 @@ public class SpigotGuiHelper {
         ItemStack itemStack = new ItemStack(material);
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName(Rpg.get().getLocalizationService().translate(split[1]));
+        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         int i1 = Integer.parseInt(split[3]);
         if (i1 > 0) {
             itemMeta.setCustomModelData(i1);
@@ -642,6 +643,9 @@ public class SpigotGuiHelper {
         itemMeta.setDisplayName(null);
         itemMeta.setLore(lore);
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        if (skillData.getModelId() != null) {
+            itemMeta.setCustomModelData(skillData.getModelId());
+        }
         itemStack.setItemMeta(itemMeta);
         NBTItem nbtItem = new NBTItem(itemStack);
         nbtItem.setString("ntrpg.item-command", "skilltree skill " + skill.getId());

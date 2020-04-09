@@ -64,6 +64,8 @@ public class SkillData {
 
     private String icon;
 
+    private Integer modelId;
+
     public SkillData(String skill) {
         this.skill = skill;
     }
@@ -216,5 +218,13 @@ public class SkillData {
 
     public void setIcon(String icon) {
         this.icon = icon;
+    }
+
+    public Integer getModelId() {
+        return modelId;
+    }
+
+    public void setModelId(Integer modelId) {
+        this.modelId = modelId;
     }
 }
