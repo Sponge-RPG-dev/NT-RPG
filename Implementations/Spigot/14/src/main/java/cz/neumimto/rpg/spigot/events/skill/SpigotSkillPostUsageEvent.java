@@ -30,6 +30,7 @@ public class SpigotSkillPostUsageEvent extends SpigotAbstractSkillEvent implemen
 
     private SkillContext skillContext;
     private IEntity caster;
+    private long cooldown;
 
     @Override
     public SkillContext getSkillContext() {
@@ -49,6 +50,14 @@ public class SpigotSkillPostUsageEvent extends SpigotAbstractSkillEvent implemen
     @Override
     public void setCaster(IEntity caster) {
         this.caster = caster;
+    }
+
+    public long getCooldown() {
+        return cooldown;
+    }
+
+    public void setCooldown(long cooldown) {
+        this.cooldown = cooldown;
     }
 
     private static final HandlerList HANDLERS_LIST = new HandlerList();

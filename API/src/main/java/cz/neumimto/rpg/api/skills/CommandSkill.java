@@ -22,12 +22,13 @@ public class CommandSkill extends ActiveSkill {
         List<String> command = Collections.singletonList(skillData.getCommand());
         Map<String, String> args = new HashMap<>();
         args.put("{{player}}", character.getPlayerAccountName());
-        if (skillData.isConsole()) {
 
+        if (skillData.isConsole()) {
             Rpg.get().executeCommandBatch(args, command);
         } else {
             Rpg.get().executeCommandAs(character.getUUID(), args, command);
         }
+
         skillContext.next(character, info, skillContext);
     }
 

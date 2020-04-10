@@ -20,7 +20,7 @@ public class SkillContext {
     private int cursor;
     private SkillResult result;
     private boolean continueExecution;
-    private boolean copy;
+    private float finalCooldown;
 
     public SkillContext(IActiveSkill activeSkill, PlayerSkillContext esi) {
         this.esi = esi;
@@ -138,4 +138,11 @@ public class SkillContext {
         return getDoubleNodeValue(node.value());
     }
 
+    public void setFinalCooldown(float finalCooldown) {
+        this.finalCooldown = finalCooldown;
+    }
+
+    public float getFinalCooldown() {
+        return finalCooldown;
+    }
 }

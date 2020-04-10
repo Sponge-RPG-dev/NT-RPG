@@ -17,6 +17,7 @@ import cz.neumimto.rpg.spigot.commands.*;
 import cz.neumimto.rpg.spigot.entities.configuration.SpigotMobSettingsDao;
 import cz.neumimto.rpg.spigot.gui.SpigotGui;
 import cz.neumimto.rpg.spigot.gui.SpigotGuiHelper;
+import cz.neumimto.rpg.spigot.listeners.SpigotItemCooldownListener;
 import cz.neumimto.rpg.spigot.resources.SpigotGuiceModule;
 import de.slikey.effectlib.EffectManager;
 import org.bukkit.Bukkit;
@@ -123,6 +124,9 @@ public class SpigotRpgPlugin extends JavaPlugin {
             scriptEngine.getDataToBind().put(EntityDamageEvent.DamageCause.class, JsBinding.Type.CLASS);
             scriptEngine.getDataToBind().put(EntityType.class, JsBinding.Type.CLASS);
 
+            if (Boolean.TRUE.equals(Rpg.get().getPluginConfig().ITEM_COOLDOWNS)) {
+                Rpg.get().registerListeners(new SpigotItemCooldownListener());
+            }
         });
 
         SpigotGuiHelper.initInventories();

@@ -17,8 +17,11 @@ import cz.neumimto.rpg.api.entity.CommonProperties;
 
 public class SkillCostPreprocessor extends ActiveSkillPreProcessorWrapper {
 
-    public SkillCostPreprocessor() {
+    private static EntityService entityService;
+
+    protected SkillCostPreprocessor() {
         super(PreProcessorTarget.BEFORE);
+        entityService = Rpg.get().getEntityService();
     }
 
     @Override
@@ -50,7 +53,7 @@ public class SkillCostPreprocessor extends ActiveSkillPreProcessorWrapper {
             return;
         }
 
-        //execute skill startEffectScheduler
+        //execute skill star
         skillContext.next(character, info, skillContext);
         //execute skill end
 
@@ -79,18 +82,24 @@ public class SkillCostPreprocessor extends ActiveSkillPreProcessorWrapper {
                 character.getHealth().setValue(newHp);
                 character.getMana().setValue(character.getMana().getValue() - manaCostPost);
 
-                float newCd = skillContext.getLongNodeValue(SkillNodes.COOLDOWN)
-                        * entityService.getEntityProperty(character, CommonProperties.cooldown_reduce_mult);
+                float newCd = calculateSkillCooldown(character, skillContext);
                 long cd = (long) newCd;
                 cd = cd + System.currentTimeMillis();
                 if (newCd > 59999L) {
                     character.getCharacterBase().getCharacterSkill(info.getSkill()).setCooldown(cd);
                 }
+
+                skillContext.setFinalCooldown(newCd);
                 character.getCooldowns().put(info.getSkill().getName(), cd);
                 Gui.displayMana(character);
                 //skillResult.next(character, info, skillResult.result(result));
             }
         }
+    }
+
+    public static float calculateSkillCooldown(IActiveCharacter character, SkillContext skillContext) {
+        return skillContext.getLongNodeValue(SkillNodes.COOLDOWN)
+                * entityService.getEntityProperty(character, CommonProperties.cooldown_reduce_mult);
     }
 
     protected void killCaster(IActiveCharacter character) {

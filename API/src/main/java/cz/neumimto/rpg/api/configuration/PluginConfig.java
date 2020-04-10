@@ -21,6 +21,7 @@ package cz.neumimto.rpg.api.configuration;
 import com.electronwill.nightconfig.core.conversion.Conversion;
 import com.electronwill.nightconfig.core.conversion.Converter;
 import com.electronwill.nightconfig.core.conversion.Path;
+import com.typesafe.config.Optional;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.utils.DebugLevel;
 
@@ -164,23 +165,23 @@ public class PluginConfig {
     @Path("SKILLTREE_GUI")
     public List<String> SKILLTREE_GUI = new ArrayList<String>() {{
 
-       add("-,minecraft:cobblestone,1"); //horizontal
-       add("│,minecraft:cobblestone,2"); //vertical
-       add("<,minecraft:cobblestone,3");
-       add(">,minecraft:cobblestone,4");
-       add("^,minecraft:cobblestone,5");
-       add("V,minecraft:cobblestone,6");
-       add("+,minecraft:cobblestone,7"); //cross
-       add("┐,minecraft:cobblestone,11");
-       add("┘,minecraft:cobblestone,12"); //duh
-       add("┌,minecraft:cobblestone,13");
-       add("└,minecraft:cobblestone,14");
-       add("┴,minecraft:cobblestone,15");
-       add("┬,minecraft:cobblestone,16");
-       add("┤,minecraft:cobblestone,17");
-       add("├,minecraft:cobblestone,18");
+        add("-,minecraft:cobblestone,1"); //horizontal
+        add("│,minecraft:cobblestone,2"); //vertical
+        add("<,minecraft:cobblestone,3");
+        add(">,minecraft:cobblestone,4");
+        add("^,minecraft:cobblestone,5");
+        add("V,minecraft:cobblestone,6");
+        add("+,minecraft:cobblestone,7"); //cross
+        add("┐,minecraft:cobblestone,11");
+        add("┘,minecraft:cobblestone,12"); //duh
+        add("┌,minecraft:cobblestone,13");
+        add("└,minecraft:cobblestone,14");
+        add("┴,minecraft:cobblestone,15");
+        add("┬,minecraft:cobblestone,16");
+        add("┤,minecraft:cobblestone,17");
+        add("├,minecraft:cobblestone,18");
 
-   //    add("0,minecraft:gray_stained_glass_pane,19");//empty
+        //    add("0,minecraft:gray_stained_glass_pane,19");//empty
     }};
 
     @Path("SKILLTREE_BUTTON_CONTROLLS")
@@ -221,17 +222,21 @@ public class PluginConfig {
     @Path("CLASS_TYPES")
     @Conversion(ClassTypesDeserializer.class)
     public Map<String, ClassTypeDefinition> CLASS_TYPES = new LinkedHashMap<String, ClassTypeDefinition>() {{
-        put("Race", new ClassTypeDefinition("GREEN", "DARK_GREEN", "GREEN", false, 1,11111));
-        put("Primary", new ClassTypeDefinition("YELLOW", "GOLD", "YELLOW", true, 2,11112));
-        put("Profession", new ClassTypeDefinition("GRAY", "BLACK", "GRAY", true, 3,11113));
+        put("Race", new ClassTypeDefinition("GREEN", "DARK_GREEN", "GREEN", false, 1, 11111));
+        put("Primary", new ClassTypeDefinition("YELLOW", "GOLD", "YELLOW", true, 2, 11112));
+        put("Profession", new ClassTypeDefinition("GRAY", "BLACK", "GRAY", true, 3, 11113));
     }};
 
     @Path("RESPEC_ATTRIBUTES")
     public boolean RESPEC_ATTRIBUTES = false;
 
-   @Path("DISABLED_WORLDS")
-   @Conversion(SetToListConverter.class)
-   public Set<String> DISABLED_WORLDS = new HashSet<>();
+    @Path("DISABLED_WORLDS")
+    @Conversion(SetToListConverter.class)
+    public Set<String> DISABLED_WORLDS = new HashSet<>();
+
+    @Path("ITEM_COOLDOWNS")
+    @Optional
+    public static final Boolean ITEM_COOLDOWNS = Boolean.TRUE;
 
     private static class ItemDamageProcessorConverter implements Converter<ItemDamageProcessor, String> {
 

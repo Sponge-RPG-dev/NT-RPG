@@ -5,6 +5,7 @@ import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.comp.rpg.RPGHandler;
+import org.bukkit.inventory.ItemStack;
 
 import javax.inject.Inject;
 
