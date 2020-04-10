@@ -27,6 +27,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.Executor;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -59,6 +60,11 @@ public class RpgTests implements RpgApi {
 
     @Override
     public void executeCommandBatch(Map<String, String> args, List<String> enterCommands) {
+
+    }
+
+    @Override
+    public void executeCommandAs(UUID sender, Map<String, String> args, List<String> enterCommands) {
 
     }
 

@@ -9,6 +9,7 @@ import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.entity.players.CharacterService;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.parties.PartyService;
 import cz.neumimto.rpg.api.events.EventFactoryService;
 import cz.neumimto.rpg.api.exp.ExperienceService;
@@ -22,6 +23,7 @@ import cz.neumimto.rpg.api.skills.SkillService;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.Executor;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -37,6 +39,8 @@ public interface RpgApi {
     String getTextAssetContent(String templateName);
 
     void executeCommandBatch(Map<String, String> args, List<String> enterCommands);
+
+    void executeCommandAs(UUID sender, Map<String, String> args, List<String> enterCommands);
 
     /**
      *

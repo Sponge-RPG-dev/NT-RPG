@@ -6,7 +6,9 @@ import cz.neumimto.rpg.common.assets.AssetService;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -16,6 +18,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.Executor;
 
 import static cz.neumimto.rpg.api.logging.Log.info;
@@ -43,13 +46,24 @@ public final class SpigotRpg extends AbstractRpg {
 
     @Override
     public void executeCommandBatch(Map<String, String> args, List<String> enterCommands) {
+        CommandSender commandSender = Bukkit.getConsoleSender();
+        runCommands(args, enterCommands, commandSender);
+    }
+
+    @Override
+    public void executeCommandAs(UUID sender, Map<String, String> args, List<String> enterCommands) {
+        CommandSender player = Bukkit.getPlayer(sender);
+        runCommands(args, enterCommands, player);
+    }
+
+    private void runCommands(Map<String, String> args, List<String> enterCommands, CommandSender commandSender) {
         for (String commandTemplate : enterCommands) {
             for (Map.Entry<String, String> entry : args.entrySet()) {
                 commandTemplate = commandTemplate.replaceAll("\\{\\{" + entry.getKey() + "\\}\\}", entry.getValue());
             }
             try {
                 info(Console.GREEN_BOLD + " Running Command (as a console): " + Console.YELLOW + commandTemplate);
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), commandTemplate);
+                Bukkit.dispatchCommand(commandSender, commandTemplate);
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -10,6 +10,7 @@ import cz.neumimto.rpg.sponge.inventory.runewords.RWService;
 import cz.neumimto.rpg.sponge.utils.TextHelper;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Event;
 import org.spongepowered.api.text.Text;
 
@@ -19,6 +20,8 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.Executor;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -63,7 +66,14 @@ public final class SpongeRpg extends AbstractRpg {
 
     @Override
     public void executeCommandBatch(Map<String, String> args, List<String> cmd) {
-        Utils.executeCommandBatch(args, cmd);
+        Utils.executeCommandBatch(Sponge.getServer().getConsole(), args, cmd);
+    }
+
+    @Override
+    public void executeCommandAs(UUID sender, Map<String, String> args, List<String> enterCommands) {
+        Optional<Player> player = Sponge.getServer().getPlayer(sender);
+        Player pl = player.get();
+        Utils.executeCommandBatch(pl, args, enterCommands);
     }
 
     @Override

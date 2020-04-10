@@ -33,6 +33,7 @@ import cz.neumimto.rpg.sponge.skills.NDamageType;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.property.entity.EyeLocationProperty;
 import org.spongepowered.api.entity.Entity;
@@ -242,14 +243,14 @@ public class Utils {
         return a;
     }
 
-    public static void executeCommandBatch(Map<String, String> variables, List<String> commandTemplates) {
+    public static void executeCommandBatch(CommandSource commandSource, Map<String, String> variables, List<String> commandTemplates) {
         for (String commandTemplate : commandTemplates) {
             for (Map.Entry<String, String> entry : variables.entrySet()) {
                 commandTemplate = commandTemplate.replaceAll("\\{\\{" + entry.getKey() + "}}", entry.getValue());
             }
             try {
                 info(Console.GREEN_BOLD + " Running Command (as a console): " + Console.YELLOW + commandTemplate);
-                Sponge.getCommandManager().process(Sponge.getServer().getConsole(), commandTemplate);
+                Sponge.getCommandManager().process(commandSource, commandTemplate);
             } catch (Exception e) {
                 e.printStackTrace();
             }

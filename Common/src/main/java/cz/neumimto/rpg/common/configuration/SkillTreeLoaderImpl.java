@@ -26,6 +26,7 @@ import cz.neumimto.rpg.api.configuration.SkillItemCost;
 import cz.neumimto.rpg.api.configuration.SkillTreeDao;
 import cz.neumimto.rpg.api.gui.ISkillTreeInterfaceModel;
 import cz.neumimto.rpg.api.localization.LocalizationService;
+import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.skills.*;
 import cz.neumimto.rpg.api.skills.mods.ActiveSkillPreProcessorWrapper;
 import cz.neumimto.rpg.api.skills.scripting.ScriptedSkillNodeDescription;
@@ -194,6 +195,7 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
                 }
 
             } else {
+                Log.warn("Found duplicit Config skill " + id + ", will be skipped try to avoid such use cases.");
             }
         }
     }
