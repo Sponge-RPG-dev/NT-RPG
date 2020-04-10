@@ -28,6 +28,7 @@ public class CommandSkill extends ActiveSkill {
         } else {
             Rpg.get().executeCommandAs(character.getUUID(), args, command);
         }
+        skillContext.next(character, info, skillContext);
     }
 
     @Override
