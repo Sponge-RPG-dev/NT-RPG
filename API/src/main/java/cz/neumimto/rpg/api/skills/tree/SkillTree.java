@@ -41,6 +41,8 @@ public class SkillTree {
 
     private Map<String, SkillData> skills = new HashMap<>();
 
+    private Map<Integer, SkillData> skillsById = new HashMap<>();
+
     private String description;
 
     private short[][] skillTreeMap;
@@ -68,12 +70,7 @@ public class SkillTree {
     }
 
     public SkillData getSkillById(int id) {
-        for (SkillData skillData : skills.values()) {
-            if (skillData.getSkillTreeId() == id) {
-                return skillData;
-            }
-        }
-        return null;
+        return skillsById.get(id);
     }
 
     public SkillData getSkillById(String id) {
@@ -94,5 +91,12 @@ public class SkillTree {
 
     public void setCenter(Pair<Integer, Integer> center) {
         this.center = center;
+    }
+
+    public void addSkill(SkillData value) {
+        skills.put(value.getSkillId().toLowerCase(), value);
+        if (value.getModelId() != null) {
+            skillsById.put(value.getModelId(), value);
+        }
     }
 }

@@ -166,7 +166,7 @@ public class PluginConfig {
     public List<String> SKILLTREE_GUI = new ArrayList<String>() {{
 
         add("-,minecraft:cobblestone,1"); //horizontal
-        add("│,minecraft:cobblestone,2"); //vertical
+        add("I,minecraft:cobblestone,2"); //vertical
         add("<,minecraft:cobblestone,3");
         add(">,minecraft:cobblestone,4");
         add("^,minecraft:cobblestone,5");
@@ -236,7 +236,7 @@ public class PluginConfig {
 
     @Path("ITEM_COOLDOWNS")
     @Optional
-    public static final Boolean ITEM_COOLDOWNS = Boolean.TRUE;
+    public Boolean ITEM_COOLDOWNS = Boolean.TRUE;
 
     private static class ItemDamageProcessorConverter implements Converter<ItemDamageProcessor, String> {
 

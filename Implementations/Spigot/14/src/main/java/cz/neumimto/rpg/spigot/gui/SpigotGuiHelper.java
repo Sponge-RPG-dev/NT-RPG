@@ -50,23 +50,27 @@ import java.util.stream.Collectors;
 
 public class SpigotGuiHelper {
 
-    static final int[] inventoryIds;
+    static int[] inventoryIds;
     private static final int[] attributButtonSlots;
 
     public static ItemLoreFactory itemLoreFactory;
 
-    private static Map<String, ConfigInventory> CACHED_MENUS = new HashMap<>();
+    private static final Map<String, ConfigInventory> CACHED_MENUS = new HashMap<>();
 
     static {
         itemLoreFactory = new ItemLoreFactory();
-        List<Integer> w = new ArrayList<>();
-        for (int i = 0; i <= 7; i++) {
-            for (int j = 0; j < 6; j++) {
-                w.add(j * 9 + i);
+        List<Integer> ids = new ArrayList<>();
+        ids.add(0);
+        int k = 0;
+        for (int j = 1; j < 53; j++) {
+            if (!(j % 9 == 0) && (j - k) % 8 == 0) {
+                k++;
+                continue;
             }
+            ids.add(j);
         }
+        inventoryIds = ids.stream().mapToInt(a -> a).toArray();
 
-        inventoryIds = w.stream().mapToInt(i -> i).toArray();
         attributButtonSlots = new int[]{10, 11, 12, 13, 14, 15, 16, 36, 37, 38, 39, 40, 41, 42, 43, 45};
 
     }
@@ -114,7 +118,7 @@ public class SpigotGuiHelper {
                         Object[] context2 = new Object[]{
                                 type,
                                 (Supplier<ItemStack[]>) () -> api.getClassService().getClassDefinitions()
-                                .stream().filter(a->a.getClassType().equals(type)).map(a ->toItemStack(a, ""))
+                                        .stream().filter(a -> a.getClassType().equals(type)).map(a -> toItemStack(a, ""))
                                         .collect(Collectors.toList())
                                         .toArray(new ItemStack[types.size() - 1])
                         };
@@ -343,13 +347,13 @@ public class SpigotGuiHelper {
         return unclickableIcon(itemStack);
     }
 
-    private static ItemStack unclickableIcon(ItemStack itemStack) {
+    public static ItemStack unclickableIcon(ItemStack itemStack) {
         NBTItem nbti = new NBTItem(itemStack);
         nbti.setBoolean("ntrpg.item-iface", true);
         return nbti.getItem();
     }
 
-    private static ItemStack unclickableInterface(Material material, int model) {
+    public static ItemStack unclickableInterface(Material material, int model) {
         ItemStack itemStack = new ItemStack(material);
         return unclickableInterface(itemStack, model);
     }
@@ -554,8 +558,8 @@ public class SpigotGuiHelper {
         SpigotSkillTreeViewModel skillTreeViewModel = character.getLastTimeInvokedSkillTreeView();
         SkillTree skillTree = skillTreeViewModel.getSkillTree();
         short[][] skillTreeMap = skillTreeViewModel.getSkillTree().getSkillTreeMap();
-        int y = skillTree.getCenter().value + skillTreeViewModel.getLocation().value; //y
-        int x = skillTree.getCenter().key + skillTreeViewModel.getLocation().key; //x
+        int centerY = skillTree.getCenter().value + skillTreeViewModel.getLocation().value; //y
+        int centerX = skillTree.getCenter().key + skillTreeViewModel.getLocation().key; //x
 
         if (skillTreeMap == null) {
             throw new IllegalStateException("No AsciiMap defined for skilltree: " + skillTree.getId());
@@ -570,45 +574,60 @@ public class SpigotGuiHelper {
 
         SpigotSkillService skillService = (SpigotSkillService) Rpg.get().getSkillService();
 
-        int pointer = 0;
-
-        for (int k = -3; k <= 4; k++) { //x
-            for (int l = -3; l < 3; l++) { //y
-                int slot = inventoryIds[pointer];
-                pointer++;
-                if (x + k >= 0 && x + k < rows) {
-                    if (l + y >= 0 && l + y < columns) {
-
-                        short id = skillTreeMap[x + k][l + y];
-                        ItemStack itemStack = null;
-                        if (id > 0) {
-                            SpigotSkillTreeInterfaceModel guiModelById = skillService.getGuiModelById(id);
-                            if (guiModelById != null) {
-                                itemStack = guiModelById.toItemStack();
-                            } else {
-                                SkillData skillById = skillTree.getSkillById(id);
-
-                                if (skillById == null) {
-                                    itemStack = unclickableInterface(Material.BARRIER);
-                                } else {
-                                    itemStack = skillToItemStack(character, skillById, skillTree, skillTreeViewModel);
-                                }
-                            }
-                        }
-
-                        if (itemStack == null) {
-                            itemStack = blank();
-                        }
-                        i.setItem(slot, itemStack);
-                    } else {
-                        i.setItem(slot, createSkillTreeInventoryMenuBoundary());
-                    }
-                } else {
-                    i.setItem(slot, createSkillTreeInventoryMenuBoundary());
-                }
+        ItemStack blank = blank();
+        ItemStack boundary = skillTreeBoundary();
+        int y = -4;
+        int x = -3;
+        for (int slotId : inventoryIds) {
+            i.setItem(slotId, new ItemStack(Material.RED_STAINED_GLASS_PANE));
+            if (slotId % 9 == 0) {
+                y++;
+                x = -4;
+            } else {
+                x++;
             }
+            int realX = centerX + x;
+            int realY = centerY + y;
+
+            if (isInRange(skillTreeMap, realX, realY) && realX < columns && realY < rows) {
+
+                short id = skillTreeMap[realY][realX];
+                if (id > 0) {
+                    i.setItem(slotId, getIcon(character, skillTreeViewModel, skillTree, skillService, id));
+                } else {
+                    i.setItem(slotId, blank);
+                }
+            } else {
+                i.setItem(slotId, boundary);
+            }
+
         }
         return i;
+    }
+
+    private static boolean isInRange(short[][] array, int indexX, int indexY) {
+        return indexX >= 0 && indexY >= 0;// && array.length < indexX && array[0].length < indexY;
+    }
+
+    private static ItemStack skillTreeBoundary() {
+        return unclickableInterface(Material.RED_STAINED_GLASS_PANE, 1235);
+    }
+
+    private static ItemStack getIcon(ISpigotCharacter character, SpigotSkillTreeViewModel skillTreeViewModel, SkillTree skillTree, SpigotSkillService skillService, short id) {
+        ItemStack itemStack;
+        SpigotSkillTreeInterfaceModel guiModelById = skillService.getGuiModelById(id);
+        if (guiModelById != null) {
+            itemStack = guiModelById.toItemStack();
+        } else {
+            SkillData skillById = skillTree.getSkillById(id);
+
+            if (skillById == null) {
+                itemStack = unclickableInterface(Material.BARRIER);
+            } else {
+                itemStack = skillToItemStack(character, skillById, skillTree, skillTreeViewModel);
+            }
+        }
+        return itemStack;
     }
 
     private static ItemStack blank() {

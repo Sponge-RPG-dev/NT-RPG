@@ -122,7 +122,7 @@ public class SkillsCommandFacade {
         }
     }
 
-    public static enum SkillAction {
+    public enum SkillAction {
         LEARN,
         UPGRADE,
         REFUND

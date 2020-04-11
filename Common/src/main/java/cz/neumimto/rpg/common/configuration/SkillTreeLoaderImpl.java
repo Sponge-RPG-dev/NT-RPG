@@ -31,7 +31,6 @@ import cz.neumimto.rpg.api.skills.*;
 import cz.neumimto.rpg.api.skills.mods.ActiveSkillPreProcessorWrapper;
 import cz.neumimto.rpg.api.skills.scripting.ScriptedSkillNodeDescription;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
-import cz.neumimto.rpg.api.skills.types.StartingPoint;
 import cz.neumimto.rpg.api.skills.utils.SkillLoadingErrors;
 import cz.neumimto.rpg.api.utils.FileUtils;
 import cz.neumimto.rpg.api.utils.MathUtils;
@@ -151,7 +150,7 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
             warn("Missing \"Name\" skipping to another file");
             return true;
         }
-        skillTree.getSkills().put(StartingPoint.NODE_NAME, StartingPoint.SKILL_DATA);
+
         try {
             List<? extends ConfigObject> skills = config.getObjectList("Skills");
             createConfigSkills(skills, skillTree);
@@ -472,7 +471,7 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
             }
             info = skill.constructSkillData();
             info.setSkill(skill);
-            tree.getSkills().put(lowercased, info);
+            tree.addSkill(info);
         }
         return info;
     }
