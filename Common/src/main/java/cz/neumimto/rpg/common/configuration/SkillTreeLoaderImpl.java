@@ -138,12 +138,7 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
 
 
     protected boolean loadTree(Config config, SkillTree skillTree) {
-        try {
-            skillTree.setDescription(config.getString("Description"));
-        } catch (ConfigException e) {
-            skillTree.setDescription("");
-            warn("Missing \"Description\" node");
-        }
+
         try {
             skillTree.setId(config.getString("Name"));
         } catch (ConfigException e) {
@@ -156,7 +151,7 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
             createConfigSkills(skills, skillTree);
             loadSkills(skills, skillTree);
         } catch (ConfigException e) {
-            warn("Missing \"Skills\" section. No skills defined");
+            error("Could not read \"Skills\" section. skipping", e);
 
         }
         return false;
@@ -166,18 +161,22 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
         for (ConfigObject co : sub) {
             Config c = co.toConfig();
             String id = c.getString("SkillId");
+            String type = null;
+            try {
+                type = c.getString("Type");
+            } catch (ConfigException.Missing ignored) {
+                continue;
+            }
             ISkill skill = Rpg.get().getSkillService().getSkills().get(id.toLowerCase());
             if (skill == null) {
                 try {
-                    String type = c.getString("Type");
+                    final String cType =type;
                     SkillConfigLoader loader = SkillConfigLoaders.getById(type)
-                            .orElseThrow(() -> new IllegalArgumentException("Unknown skill type " + type + " in a skiltree " + skillTree.getId()));
+                            .orElseThrow(() -> new IllegalArgumentException("Unknown skill type " + cType + " in a skiltree " + skillTree.getId()));
 
                     skill = loader.build(id.toLowerCase());
 
                 } catch (ConfigException.Missing ignored) {
-                    warn("Missing Type node, skipping");
-                    continue;
                 }
 
                 try {
@@ -228,6 +227,13 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
             Integer modelId = c.getInt("ModelId");
             info.setModelId(modelId);
         } catch (ConfigException e) {
+        }
+
+        try {
+            String icon = c.getString("Icon");
+            info.setIcon(icon);
+        } catch (ConfigException e) {
+
         }
 
         try {
@@ -334,6 +340,7 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
 
         try {
             info.setSkillTreeId(c.getInt("SkillTreeId"));
+            skillTree.addSkillTreeId(info);
         } catch (ConfigException ignored) {
             info(" - Skill " + info.getSkillId() + " missing SkillTreeId, it wont be possible to reference this skill in the ascii map");
         }

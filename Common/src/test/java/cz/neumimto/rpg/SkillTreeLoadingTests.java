@@ -65,7 +65,6 @@ public class SkillTreeLoadingTests {
         SkillTree tree = all.values().iterator().next();
 
         Assertions.assertEquals(tree.getId(), "name");
-        Assertions.assertEquals(tree.getDescription(), "test");
 
         SkillData sd = tree.getSkillById("test");
         Assertions.assertEquals(sd.getMaxSkillLevel(), 10);

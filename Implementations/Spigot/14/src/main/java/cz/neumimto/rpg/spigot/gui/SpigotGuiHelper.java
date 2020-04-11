@@ -659,9 +659,9 @@ public class SpigotGuiHelper {
 
         ItemStack itemStack = new ItemStack(material);
         ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.setDisplayName(null);
+        itemMeta.setDisplayName(" ");
         itemMeta.setLore(lore);
-        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        itemMeta.addItemFlags(ItemFlag.values());
         if (skillData.getModelId() != null) {
             itemMeta.setCustomModelData(skillData.getModelId());
         }
@@ -669,15 +669,6 @@ public class SpigotGuiHelper {
         NBTItem nbtItem = new NBTItem(itemStack);
         nbtItem.setString("ntrpg.item-command", "skilltree skill " + skill.getId());
         return nbtItem.getItem();
-    }
-
-
-    private static ItemStack createSkillTreeInventoryMenuBoundary() {
-        ItemStack is = unclickableInterface(Material.RED_STAINED_GLASS_PANE);
-        ItemMeta itemMeta = is.getItemMeta();
-        itemMeta.setCustomModelData(1235);
-        is.setItemMeta(itemMeta);
-        return is;
     }
 
     private static ItemStack interactiveModeToitemStack(ISpigotCharacter character, SkillTreeViewModel.InteractiveMode interactiveMode) {

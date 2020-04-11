@@ -34,7 +34,6 @@ public class SkillTree {
     static {
         Default = new SkillTree();
         Default.setId("None");
-        Default.setDescription("No skill tree");
     }
 
     private String id;
@@ -42,8 +41,6 @@ public class SkillTree {
     private Map<String, SkillData> skills = new HashMap<>();
 
     private Map<Integer, SkillData> skillsById = new HashMap<>();
-
-    private String description;
 
     private short[][] skillTreeMap;
 
@@ -59,14 +56,6 @@ public class SkillTree {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public SkillData getSkillById(int id) {
@@ -95,8 +84,11 @@ public class SkillTree {
 
     public void addSkill(SkillData value) {
         skills.put(value.getSkillId().toLowerCase(), value);
+    }
+
+    public void addSkillTreeId(SkillData value) {
         if (value.getModelId() != null) {
-            skillsById.put(value.getModelId(), value);
+            skillsById.put(value.getSkillTreeId(), value);
         }
     }
 }

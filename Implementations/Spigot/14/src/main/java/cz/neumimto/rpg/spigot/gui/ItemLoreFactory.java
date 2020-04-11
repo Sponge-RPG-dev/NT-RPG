@@ -79,7 +79,7 @@ public class ItemLoreFactory {
             lore.addAll(description);
         } else {
             LocalizationService locService = Rpg.get().getLocalizationService();
-            lore.add(header(nameColor + locService.translate(skill.getName())));
+            lore.add(header(nameColor + skillData.getSkillName()));
             lore.add(node(locService.translate(LocalizationKeys.SKILL_EXECUTION_TYPE), locService.translate(skill.getSkillExecutionType().toString().toLowerCase())));
 
             PlayerSkillContext psc = character.getSkillInfo(skill);
