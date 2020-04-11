@@ -16,7 +16,7 @@ import java.util.*;
 
 public class ItemLoreFactory {
 
-    public static String JOINT = ChatColor.DARK_GRAY + "[" + ChatColor.RESET +  ChatColor.DARK_RED + "+" + ChatColor.RESET + ChatColor.DARK_GRAY + "]";
+    public static String JOINT = ChatColor.DARK_GRAY + "[" + ChatColor.RESET + ChatColor.DARK_RED + "+" + ChatColor.RESET + ChatColor.DARK_GRAY + "]";
     public static String HEADER_START = ChatColor.DARK_GRAY + "════════ [ ";
     public static String HEADER_END = ChatColor.DARK_GRAY + " ] ════════";
     public static String VERTICAL_LINE = ChatColor.DARK_GRAY + "║ " + ChatColor.GRAY;
@@ -83,9 +83,9 @@ public class ItemLoreFactory {
             lore.add(node(locService.translate(LocalizationKeys.SKILL_EXECUTION_TYPE), locService.translate(skill.getSkillExecutionType().toString().toLowerCase())));
 
             PlayerSkillContext psc = character.getSkillInfo(skill);
-            String level = psc == null ? " -- " : psc.getLevel() + (psc.getLevel() != psc.getTotalLevel() ? " ("+psc.getTotalLevel()+")" :"");
+            String level = psc == null ? " -- " : psc.getLevel() + (psc.getLevel() != psc.getTotalLevel() ? " (" + psc.getTotalLevel() + ")" : "");
             lore.add(node(locService.translate(LocalizationKeys.LEVEL), level));
-            lore.add(node(locService.translate(LocalizationKeys.SKILL_MAX_LEVEL), ""+ skillData.getMaxSkillLevel()));
+            lore.add(node(locService.translate(LocalizationKeys.SKILL_MAX_LEVEL), "" + skillData.getMaxSkillLevel()));
             if (skillData.getMinPlayerLevel() > 0) {
                 lore.add(node(locService.translate(LocalizationKeys.SKILL_MIN_CLASS_LEVEL), "" + skillData.getMinPlayerLevel()));
             }
@@ -98,32 +98,33 @@ public class ItemLoreFactory {
             lore.add(header(ChatColor.GREEN + locService.translate(LocalizationKeys.SKILL_SETTINGS)));
 
             String value = null;
-            for (Map.Entry<String, Float> entry : skillSettings.getNodes().entrySet()) {
-                if (entry.getKey().endsWith(SkillSettings.BONUS_SUFFIX) || entry.getKey().contains("_per_")) {
-                    continue;
-                }
-
-                String translatedNode = locService.translate(entry.getKey());
-                Float bonusNode = skillSettings.getNodes().get(translatedNode + SkillSettings.BONUS_SUFFIX);
-
-                if (SKILL_SETTINGS_DURATION_NODES.contains(translatedNode)) {
-                    value = String.format("%.2f", entry.getValue() * 0.001) + " ms";
-                    if (bonusNode != null && bonusNode != 0) {
-                        value += " (" + String.format("%.2f", bonusNode * 0.001) + " ms)";
+            if (!skillSettings.getNodes().isEmpty()) {
+                for (Map.Entry<String, Float> entry : skillSettings.getNodes().entrySet()) {
+                    if (entry.getKey().endsWith(SkillSettings.BONUS_SUFFIX) || entry.getKey().contains("_per_")) {
+                        continue;
                     }
-                } else {
-                    value = String.format("%.2f", entry.getValue());
-                    if (bonusNode != null && bonusNode != 0) {
-                        value += " (" + String.format("%.2f", bonusNode) + ")";
-                    }
-                }
 
-                if (entry.getValue() == 0f && (bonusNode == null || bonusNode == 0f)) {
-                    continue;
+                    String translatedNode = locService.translate(entry.getKey());
+                    Float bonusNode = skillSettings.getNodes().get(translatedNode + SkillSettings.BONUS_SUFFIX);
+
+                    if (SKILL_SETTINGS_DURATION_NODES.contains(translatedNode)) {
+                        value = String.format("%.2f", entry.getValue() * 0.001) + " ms";
+                        if (bonusNode != null && bonusNode != 0) {
+                            value += " (" + String.format("%.2f", bonusNode * 0.001) + " ms)";
+                        }
+                    } else {
+                        value = String.format("%.2f", entry.getValue());
+                        if (bonusNode != null && bonusNode != 0) {
+                            value += " (" + String.format("%.2f", bonusNode) + ")";
+                        }
+                    }
+
+                    if (entry.getValue() == 0f && (bonusNode == null || bonusNode == 0f)) {
+                        continue;
+                    }
+                    lore.add(node(translatedNode, value));
                 }
-                lore.add(node(translatedNode, value));
             }
-
             Map<AttributeConfig, SkillSettings.AttributeSettings> attributeSettings = skillSettings.getAttributeSettings();
             if (attributeSettings.size() > 0) {
                 lore.add(header(ChatColor.GREEN + locService.translate(LocalizationKeys.SKILL_ATTRIBUTE_SETTINGS)));
@@ -166,7 +167,7 @@ public class ItemLoreFactory {
                 while (iterator.hasNext()) {
                     i++;
                     ISkillType next = iterator.next();
-                    String translate = locService.translate(next.toString())+" ";
+                    String translate = locService.translate(next.toString()) + " ";
                     builder.append(translate);
                     if (i % 4 == 0) {
                         if (firstLine) {
@@ -178,6 +179,9 @@ public class ItemLoreFactory {
                         builder = new StringBuilder();
                         firstLine = false;
                     }
+                }
+                if (!builder.toString().isEmpty()) {
+                    lore.add(line(" - " + builder.toString()));
                 }
             }
 

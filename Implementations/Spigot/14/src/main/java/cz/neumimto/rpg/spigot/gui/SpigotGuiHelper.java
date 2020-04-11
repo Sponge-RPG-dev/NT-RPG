@@ -249,9 +249,6 @@ public class SpigotGuiHelper {
         String cmd = command.get();
         if ("---".equalsIgnoreCase(cmd)) {
             itemStack = unclickableInterface(itemStack);
-            NBTItem nbtItem = new NBTItem(itemStack);
-            nbtItem.setBoolean("ntrpg.item-iface", true);
-            itemStack = nbtItem.getItem();
         } else {
             NBTItem nbtItem = new NBTItem(itemStack);
             nbtItem.setString("ntrpg.item-command", cmd);
@@ -342,7 +339,7 @@ public class SpigotGuiHelper {
     private static ItemStack unclickableInterface(ItemStack itemStack) {
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName(" ");
-        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        itemMeta.addItemFlags(ItemFlag.values());
         itemStack.setItemMeta(itemMeta);
         return unclickableIcon(itemStack);
     }
@@ -606,7 +603,7 @@ public class SpigotGuiHelper {
     }
 
     private static boolean isInRange(short[][] array, int indexX, int indexY) {
-        return indexX >= 0 && indexY >= 0;// && array.length < indexX && array[0].length < indexY;
+        return indexX >= 0 && indexY >= 0;
     }
 
     private static ItemStack skillTreeBoundary() {
