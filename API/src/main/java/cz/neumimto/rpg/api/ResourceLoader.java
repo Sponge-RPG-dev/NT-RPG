@@ -34,7 +34,6 @@ public interface ResourceLoader {
 
         String value();
 
-        boolean dynamicLocalizationNodes() default true;
     }
 
     @Retention(RetentionPolicy.RUNTIME)

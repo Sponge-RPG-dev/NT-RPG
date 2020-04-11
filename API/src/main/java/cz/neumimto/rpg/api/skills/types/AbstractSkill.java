@@ -53,14 +53,12 @@ public abstract class AbstractSkill implements ISkill {
     @Inject
     protected LocalizationService localizationService;
 
-    protected List<String> description;
     protected SkillSettings settings = new SkillSettings();
 
     @CatalogId
     private String catalogId;
 
     private Set<ISkillType> skillTypes = new HashSet<>();
-    private List<String> lore;
     private String damageType = null;
 
 
@@ -137,28 +135,8 @@ public abstract class AbstractSkill implements ISkill {
     }
 
     @Override
-    public List<String> getDescription() {
-        return description;
-    }
-
-    @Override
-    public void setDescription(List<String> description) {
-        this.description = description;
-    }
-
-    @Override
     public Set<ISkillType> getSkillTypes() {
         return skillTypes;
-    }
-
-    @Override
-    public List<String> getLore() {
-        return lore;
-    }
-
-    @Override
-    public void setLore(List<String> lore) {
-        this.lore = lore;
     }
 
     @Override

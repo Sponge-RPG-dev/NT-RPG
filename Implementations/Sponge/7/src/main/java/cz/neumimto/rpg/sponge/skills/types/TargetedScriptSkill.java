@@ -47,12 +47,7 @@ public class TargetedScriptSkill extends Targeted implements ITargetedScriptSkil
     @Override
     public void setModel(ScriptSkillModel model) {
         this.model = model;
-        setLore(model.getLore());
         setDamageType(model.getDamageType());
-        setDescription(model.getDescription());
-        setLore(model.getLore());
-        setDamageType(model.getDamageType());
-        setDescription(model.getDescription());
         setCatalogId(model.getId());
         List<String> configTypes = model.getSkillTypes();
         for (String configType : configTypes) {

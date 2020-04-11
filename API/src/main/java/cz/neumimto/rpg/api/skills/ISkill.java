@@ -58,14 +58,6 @@ public interface ISkill extends IEffectSourceProvider, IRpgElement {
 
     void setSettings(SkillSettings settings);
 
-    List<String> getDescription();
-
-    void setDescription(List<String> description);
-
-    List<String> getLore();
-
-    void setLore(List<String> lore);
-
     String getDamageType();
 
     void setDamageType(String type);

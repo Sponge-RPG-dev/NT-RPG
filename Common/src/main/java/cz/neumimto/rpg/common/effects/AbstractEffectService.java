@@ -456,17 +456,6 @@ public abstract class AbstractEffectService implements EffectService {
 
                 s = s.replaceAll("\\{\\{skill\\.damageType}}", damageType == null ? "Deals no damage" : damageType);
 
-                List<String> description = iSkill.getDescription();
-                StringBuilder desc = new StringBuilder();
-                if (description == null) {
-                    desc.append("null");
-                } else {
-                    for (String text : description) {
-                        desc.append(text);
-                    }
-                }
-                s = s.replaceAll("\\{\\{skill\\.description}}", desc.toString());
-
                 String id = iSkill.getId();
                 s = s.replaceAll("\\{\\{skill\\.id}}", id);
 

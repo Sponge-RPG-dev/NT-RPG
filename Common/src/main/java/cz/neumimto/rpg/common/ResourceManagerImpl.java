@@ -334,14 +334,6 @@ public class ResourceManagerImpl implements ResourceLoader {
         info("registering skill " + clazz.getName(), debugLevel);
         ISkill skill = (ISkill) container;
         Skill sk = clazz.getAnnotation(Skill.class);
-        if (sk.dynamicLocalizationNodes() && sk.value().contains(":")) {
-            String[] split = sk.value().split(":");
-            String key = split[0] + ".skills." + split[1];
-
-            skill.setDescription(localizationService.translateMultiline(key + ".multiline.desc"));
-            skill.setLore(localizationService.translateMultiline(key + ".multiline.lore"));
-        }
-
         skillService.registerAdditionalCatalog(skill);
         return container;
     }

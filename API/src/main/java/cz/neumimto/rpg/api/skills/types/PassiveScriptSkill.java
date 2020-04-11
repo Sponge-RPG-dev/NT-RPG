@@ -40,13 +40,8 @@ public class PassiveScriptSkill extends PassiveSkill implements IPassiveScriptSk
     @Override
     public void setModel(ScriptSkillModel model) {
         this.model = model;
-        setLore(model.getLore());
         setDamageType(model.getDamageType());
-        setDescription(model.getDescription());
         setCatalogId(model.getId());
-        setLore(model.getLore());
-        setDamageType(model.getDamageType());
-        setDescription(model.getDescription());
         List<String> configTypes = model.getSkillTypes();
         for (String configType : configTypes) {
             Optional<ISkillType> skillType = Rpg.get().getSkillService().getSkillType(configType);

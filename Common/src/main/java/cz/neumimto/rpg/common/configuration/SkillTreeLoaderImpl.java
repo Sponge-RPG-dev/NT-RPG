@@ -179,19 +179,6 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
                 } catch (ConfigException.Missing ignored) {
                 }
 
-                try {
-                    List<String> description = c.getStringList("Description");
-                    skill.setDescription(description);
-                } catch (ConfigException.Missing ignored) {
-
-                }
-
-                try {
-                    List<String> lore = c.getStringList("Lore");
-                    skill.setDescription(lore);
-                } catch (ConfigException.Missing ignored) {
-                }
-
             } else {
                 Log.warn("Found duplicit Config skill " + id + ", will be skipped try to avoid such use cases.");
             }
@@ -266,12 +253,6 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
 
                 skillNodeDescription = scriptedSkillNodeDescription;
             } catch (ConfigException ee) {
-                List<String> description = info.getSkill().getDescription();
-                List<String> tddsc = new ArrayList<>();
-                for (String s : description) {
-                    tddsc.addAll(localizationService.translateMultiline(s));
-                }
-                skillNodeDescription = new SkillNodeDescription(tddsc);
             }
         }
         info.setDescription(skillNodeDescription);

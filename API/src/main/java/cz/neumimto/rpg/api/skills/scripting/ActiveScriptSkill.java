@@ -42,9 +42,7 @@ public class ActiveScriptSkill extends ActiveSkill implements ScriptSkill<Script
 
     public void setModel(ScriptSkillModel model) {
         this.model = model;
-        setLore(model.getLore());
         setDamageType(model.getDamageType());
-        setDescription(model.getDescription());
         setCatalogId(model.getId());
         List<String> configTypes = model.getSkillTypes();
         for (String configType : configTypes) {
