@@ -36,17 +36,6 @@ public class SkillPotion extends PassiveSkill {
     }
 
     @Override
-    public void skillLearn(IActiveCharacter IActiveCharacter) {
-        super.skillLearn(IActiveCharacter);
-    }
-
-    @Override
-    public void skillUpgrade(IActiveCharacter IActiveCharacter, int level) {
-        super.skillUpgrade(IActiveCharacter, level);
-    }
-
-
-    @Override
     public void applyEffect(PlayerSkillContext info, IActiveCharacter character) {
         PotionEffect pe = (PotionEffect) character.getEffect(PotionEffect.name);
         if (pe == null) {

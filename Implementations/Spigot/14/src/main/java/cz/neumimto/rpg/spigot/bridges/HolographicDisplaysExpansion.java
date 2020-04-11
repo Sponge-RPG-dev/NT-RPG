@@ -4,9 +4,11 @@ import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import com.gmail.filoghost.holographicdisplays.api.VisibilityManager;
 import cz.neumimto.rpg.api.entity.IEntity;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.events.skill.SkillPostUsageEvent;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.skills.ISkill;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.api.utils.rng.XORShiftRnd;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
@@ -90,7 +92,10 @@ public class HolographicDisplaysExpansion implements Listener {
 
         Location location = entity.getLocation().add(0, entity.getHeight() + 0.1,0).add(getLocation());
         Hologram hologram = HologramsAPI.createHologram(SpigotRpgPlugin.getInstance(), location);
-        hologram.insertTextLine(0, ChatColor.BOLD + s + localizationService.translate(skill.getName()));
+        //todo in future when entitis are able to casts spells
+        IActiveCharacter c = (IActiveCharacter) caster;
+        PlayerSkillContext info = c.getSkillInfo(skill.getId());
+        hologram.insertTextLine(0, ChatColor.BOLD + s + info.getSkillData().getSkillName());
         VisibilityManager visiblityManager = hologram.getVisibilityManager();
         visiblityManager.setVisibleByDefault(true);
         holograms.put(hologram, System.currentTimeMillis() + 2500L);

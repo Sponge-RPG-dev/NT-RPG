@@ -95,7 +95,7 @@ public class SpigotSkilltreeCommands extends BaseCommand {
         if (viewModel.getInteractiveMode() == SpigotSkillTreeViewModel.InteractiveMode.FAST) {
 
             ClassDefinition classDefinition = viewModel.getViewedClass();
-            PlayerClassData playerClassData = character.getClasses().get(classDefinition.getName());
+            PlayerClassData playerClassData = character.getClassByName(classDefinition.getName());
 
             if (character.getSkill(skill.getId()) == null) {
                 classDefinition.getSkillTreeType().processLearnSkill(character, playerClassData, skill);

@@ -41,7 +41,7 @@ public class Critical extends PassiveSkill {
     }
 
     @Override
-    public void skillUpgrade(IActiveCharacter character, int level) {
+    public void skillUpgrade(IActiveCharacter character, int level, PlayerSkillContext context) {
         PlayerSkillContext info = character.getSkill(getId());
         IEffectContainer<CriticalEffectModel, CriticalEffect> effect = character.getEffect(CriticalEffect.name);
         effect.updateValue(getModel(info), this);

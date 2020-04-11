@@ -43,11 +43,10 @@ public class PassiveScriptSkill extends PassiveSkill implements IPassiveScriptSk
         setLore(model.getLore());
         setDamageType(model.getDamageType());
         setDescription(model.getDescription());
-        setLocalizableName(model.getName());
+        setCatalogId(model.getId());
         setLore(model.getLore());
         setDamageType(model.getDamageType());
         setDescription(model.getDescription());
-        setLocalizableName(model.getName());
         List<String> configTypes = model.getSkillTypes();
         for (String configType : configTypes) {
             Optional<ISkillType> skillType = Rpg.get().getSkillService().getSkillType(configType);

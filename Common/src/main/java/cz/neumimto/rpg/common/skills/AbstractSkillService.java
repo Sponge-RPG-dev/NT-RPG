@@ -81,10 +81,10 @@ public abstract class AbstractSkillService implements SkillService {
             return;
         }
 
-        Long aLong = character.getCooldown(esi.getSkill().getName());
+        Long aLong = character.getCooldown(esi.getSkill().getId());
         long servertime = System.currentTimeMillis();
         if (aLong != null && aLong > servertime) {
-            Gui.sendCooldownMessage(character, esi.getSkill().getName(), ((aLong - servertime) / 1000.0));
+            Gui.sendCooldownMessage(character, esi.getSkillData().getSkillName(), ((aLong - servertime) / 1000.0));
             callback.doNext(character, esi, new SkillContext().result(SkillResult.ON_COOLDOWN));
             return;
         }
@@ -153,17 +153,13 @@ public abstract class AbstractSkillService implements SkillService {
     @Override
     public void registerAdditionalCatalog(ISkill extraCatalog) {
         if (extraCatalog.getId() == null) {
-            warn("Cannot register skill " + extraCatalog.getName() + ", " + extraCatalog.getClass().getSimpleName() + " getId() returned"
+            warn("Cannot register skill " + extraCatalog.getId() + ", " + extraCatalog.getClass().getSimpleName() + " getId() returned"
                     + " null");
             return;
         }
         extraCatalog.init();
 
         skills.put(extraCatalog.getId().toLowerCase(), extraCatalog);
-        skillByNames.put(extraCatalog.getName(), extraCatalog);
-        if (extraCatalog.getLocalizableName() != null) {
-            skillByNames.put(extraCatalog.getLocalizableName(), extraCatalog);
-        }
     }
 
     @Override

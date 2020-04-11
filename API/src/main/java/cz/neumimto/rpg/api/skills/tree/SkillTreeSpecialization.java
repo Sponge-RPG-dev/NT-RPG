@@ -8,6 +8,7 @@ import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillPathData;
 import cz.neumimto.rpg.api.skills.SkillSettings;
+import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.types.PassiveSkill;
 import cz.neumimto.rpg.api.skills.SkillData;
 import cz.neumimto.rpg.api.skills.utils.SkillLoadingErrors;
@@ -32,15 +33,15 @@ public class SkillTreeSpecialization extends PassiveSkill {
     }
 
     @Override
-    public void skillLearn(IActiveCharacter IActiveCharacter) {
+    public void skillLearn(IActiveCharacter IActiveCharacter, PlayerSkillContext context) {
         if (Rpg.get().getPluginConfig().PLAYER_CHOOSED_SKILLTREE_SPECIALIZATION_GLOBAL_MESSAGE) {
             Rpg.get().broadcastLocalizableMessage(LocalizationKeys.PLAYER_CHOOSED_SKILLTREE_PATH_GLOBAL_MESSAGE_CONTENT,
                     Arg.arg(PLAYER, IActiveCharacter.getName())
                             .with("character", IActiveCharacter.getName())
-                            .with("path", getName()));
+                            .with("path", context.getSkillData().getSkillName()));
 
         }
-        onCharacterInit(IActiveCharacter, 1);
+        onCharacterInit(IActiveCharacter, 1, context);
     }
 
     @Override
@@ -49,8 +50,8 @@ public class SkillTreeSpecialization extends PassiveSkill {
     }
 
     @Override
-    public void onCharacterInit(IActiveCharacter c, int level) {
-        super.onCharacterInit(c, level);
+    public void onCharacterInit(IActiveCharacter c, int level, PlayerSkillContext context) {
+        super.onCharacterInit(c, level, context);
         PlayerSkillContext skillInfo = c.getSkillInfo(this);
         SkillData skillData = skillInfo.getSkillData();
         SkillPathData pdata = (SkillPathData) skillData;
@@ -69,9 +70,8 @@ public class SkillTreeSpecialization extends PassiveSkill {
     }
 
     @Override
-    public void skillRefund(IActiveCharacter c) {
-        PlayerSkillContext skillInfo = c.getSkillInfo(this);
-        SkillData skillData = skillInfo.getSkillData();
+    public void skillRefund(IActiveCharacter c, PlayerSkillContext context) {
+        SkillData skillData = context.getSkillData();
         SkillPathData pdata = (SkillPathData) skillData;
 
         if (pdata.getEnterCommands() != null) {

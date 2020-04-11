@@ -78,7 +78,9 @@ public interface IPlayerMessage<T extends IActiveCharacter> {
     void displayInitialProperties(ClassDefinition byName, T player);
 
     default void skillExecution(T character, PlayerSkillContext skill) {
-        String msg = Rpg.get().getLocalizationService().translate(LocalizationKeys.SKILL_EXECUTED_MESSAGE, "skill", skill.getSkill().getName());
+        String msg = Rpg.get().getLocalizationService().translate(LocalizationKeys.SKILL_EXECUTED_MESSAGE,
+                "skill",
+                skill.getSkillData().getSkillName());
         character.sendNotification(msg);
     }
 

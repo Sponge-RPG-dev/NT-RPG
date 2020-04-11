@@ -38,7 +38,7 @@ public class ResultNotificationSkillExecutor extends SkillExecutorCallback {
                 character.sendMessage(localizationService.translate(LocalizationKeys.NO_TARGET));
                 break;
             case OK:
-                character.sendNotification(info.getSkill().getLocalizableName());
+                character.sendNotification(info.getSkillData().getSkillName());
                 break;
             default:
                 character.sendNotification(localizationService.translate(LocalizationKeys.CASTING_FAILED));

@@ -149,7 +149,7 @@ public class SkillManipulationTests {
         Assertions.assertEquals(2, characterClass.getUsedSkillPoints());
         Assertions.assertTrue(character.hasSkill(main.getId()));
         Assertions.assertSame(character.getPrimaryClass(), playerClassData);
-        Mockito.verify(main, Mockito.times(1)).skillLearn(Mockito.any());
+        Mockito.verify(main, Mockito.times(1)).skillLearn(Mockito.any(), Mockito.any());
 
     }
 

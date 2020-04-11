@@ -45,8 +45,8 @@ public class Basher extends PassiveSkill {
     }
 
     @Override
-    public void skillUpgrade(IActiveCharacter IActiveCharacter, int level) {
-        super.skillUpgrade(IActiveCharacter, level);
+    public void skillUpgrade(IActiveCharacter IActiveCharacter, int level, PlayerSkillContext context) {
+        super.skillUpgrade(IActiveCharacter, level, context);
         PlayerSkillContext info = IActiveCharacter.getSkill(getId());
         BashModel model = getBashModel(info, IActiveCharacter);
         effectService.removeEffect(Bash.name, IActiveCharacter, this);

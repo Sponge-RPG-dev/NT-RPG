@@ -315,7 +315,7 @@ public class GuiHelper {
             }
         } else {
             LocalizationService locService = Rpg.get().getLocalizationService();
-            lore.add(header(locService.translate(skill.getName()), nameColor));
+            lore.add(header(locService.translate(skillData.getSkillName()), nameColor));
             lore.add(node(locService.translate(LocalizationKeys.SKILL_EXECUTION_TYPE), locService.translate(skill.getSkillExecutionType().toString().toLowerCase())));
 
             PlayerSkillContext psc = character.getSkillInfo(skill);
@@ -491,7 +491,7 @@ public class GuiHelper {
     public static Inventory createSkillDetailInventoryView(ISpongeCharacter character, SkillTree skillTree, SkillData skillData) {
         Inventory build = Inventory.builder()
                 .of(InventoryArchetypes.DOUBLE_CHEST)
-                .property(InventoryTitle.of(Text.builder(skillData.getSkill().getLocalizableName()).color(TextColors.DARK_GREEN).style(TextStyles.BOLD)
+                .property(InventoryTitle.of(Text.builder(skillData.getSkillName()).color(TextColors.DARK_GREEN).style(TextStyles.BOLD)
                         .build()))
                 .build(SpongeRpgPlugin.getInstance());
 

@@ -90,7 +90,7 @@ public class SkillCostPreprocessor extends ActiveSkillPreProcessorWrapper {
                 }
 
                 skillContext.setFinalCooldown(newCd);
-                character.getCooldowns().put(info.getSkill().getName(), cd);
+                character.getCooldowns().put(info.getSkill().getId(), cd);
                 Gui.displayMana(character);
                 //skillResult.next(character, info, skillResult.result(result));
             }

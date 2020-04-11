@@ -568,7 +568,7 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
         Set<PlayerSkillContext> skillData = resolveSkills(characterBase, activeCharacter);
         recalculateProperties(activeCharacter);
         for (PlayerSkillContext dt : skillData) {
-            dt.getSkill().onCharacterInit(activeCharacter, dt.getLevel());
+            dt.getSkill().onCharacterInit(activeCharacter, dt.getLevel(), dt);
         }
 
 
@@ -592,37 +592,41 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
         }
 
 
-        if (cc.getSkillPoints() < 1) {
-            String text = localizationService.translate(LocalizationKeys.NO_SKILLPOINTS, arg("skill", skill.getName()));
-            return ActionResult.withErrorMessage(text);
-        }
+
         PlayerSkillContext playerSkillContext = character.getSkillInfo(skill);
 
         if (playerSkillContext == null) {
-            String text = localizationService.translate(LocalizationKeys.NOT_LEARNED_SKILL, arg("skill", skill.getName()));
+            String text = localizationService.translate(LocalizationKeys.NOT_LEARNED_SKILL, arg("skill", skill.getId()));
             return ActionResult.withErrorMessage(text);
         }
-        int minlevel = playerSkillContext.getLevel() + playerSkillContext.getSkillData().getMinPlayerLevel();
+
+        SkillData info = playerSkillContext.getSkillData();
+        if (cc.getSkillPoints() < 1) {
+            String text = localizationService.translate(LocalizationKeys.NO_SKILLPOINTS, arg("skill", info.getSkillName()));
+            return ActionResult.withErrorMessage(text);
+        }
+
+        int minlevel = playerSkillContext.getLevel() + info.getMinPlayerLevel();
 
         if (minlevel > character.getLevel()) {
             Map<String, Object> map = new HashMap<>();
-            map.put("skill", skill.getName());
+            map.put("skill", info.getSkillName());
             map.put("level", minlevel);
             String text = localizationService.translate(LocalizationKeys.SKILL_REQUIRES_HIGHER_LEVEL, arg(map));
             return ActionResult.withErrorMessage(text);
         }
-        if (playerSkillContext.getLevel() + 1 > playerSkillContext.getSkillData().getMaxSkillLevel()) {
+        if (playerSkillContext.getLevel() + 1 > info.getMaxSkillLevel()) {
             Map<String, Object> map = new HashMap<>();
-            map.put("skill", skill.getName());
+            map.put("skill", info.getSkillName());
             map.put("level", playerSkillContext.getLevel());
             String text = localizationService.translate(LocalizationKeys.SKILL_IS_ON_MAX_LEVEL, arg(map));
             return ActionResult.withErrorMessage(text);
         }
 
-        if (playerSkillContext.getLevel() * playerSkillContext.getSkillData().getLevelGap() > character.getLevel()) {
+        if (playerSkillContext.getLevel() * info.getLevelGap() > character.getLevel()) {
             Map<String, Object> map = new HashMap<>();
-            map.put("skill", skill.getName());
-            map.put("level", playerSkillContext.getLevel() * playerSkillContext.getSkillData().getLevelGap());
+            map.put("skill", info.getSkillName());
+            map.put("level", playerSkillContext.getLevel() * info.getLevelGap());
             String text = localizationService.translate(LocalizationKeys.INSUFFICIENT_LEVEL_GAP, arg(map));
             return ActionResult.withErrorMessage(text);
         }
@@ -649,7 +653,7 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
         CharacterSkill characterSkill = character.getCharacterBase().getCharacterSkill(skill);
         characterSkill.setLevel(playerSkillContext.getLevel());
 
-        skill.skillUpgrade(character, playerSkillContext.getLevel());
+        skill.skillUpgrade(character, playerSkillContext.getLevel(), playerSkillContext);
     }
 
     /**
@@ -678,27 +682,31 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
             throw new MissingConfigurationException("Class=" + nClass.getClassDefinition().getName() + ". Renamed?");
         }
 
+        if (character.hasSkill(skill.getId())) {
+            PlayerSkillContext info = character.getSkillInfo(skill.getId());
+            String text = localizationService.translate(LocalizationKeys.SKILL_ALREADY_LEARNED, arg("skill", info.getSkillData().getSkillName()));
+            return ActionResult.withErrorMessage(text);
+        }
+        SkillData info = skillTree.getSkillById(skill.getId());
+
         //todo fetch from db
         int avalaibleSkillpoints = clazz.getSkillPoints();
         if (avalaibleSkillpoints < 1) {
-            String text = localizationService.translate(LocalizationKeys.NO_SKILLPOINTS, arg("skill", skill.getName()));
+            String text = localizationService.translate(LocalizationKeys.NO_SKILLPOINTS, arg("skill", info.getSkillName()));
             return ActionResult.withErrorMessage(text);
         }
 
-        if (character.hasSkill(skill.getId())) {
-            String text = localizationService.translate(LocalizationKeys.SKILL_ALREADY_LEARNED, arg("skill", skill.getName()));
-            return ActionResult.withErrorMessage(text);
-        }
 
-        SkillData info = skillTree.getSkillById(skill.getId());
+
+
         if (info == null) {
-            String text = localizationService.translate(LocalizationKeys.SKILL_NOT_IN_A_TREE, arg("skill", skill.getName()));
+            String text = localizationService.translate(LocalizationKeys.SKILL_NOT_IN_A_TREE, arg("skill", info.getSkillName()));
             return ActionResult.withErrorMessage(text);
         }
 
         if (clazz.getLevel() < info.getMinPlayerLevel()) {
             Map<java.lang.String, Object> map = new HashMap<>();
-            map.put("skill", skill.getName());
+            map.put("skill", info.getSkillName());
             map.put("level", info.getMinPlayerLevel());
             String text = localizationService.translate(LocalizationKeys.SKILL_REQUIRES_HIGHER_LEVEL, arg(map));
             return ActionResult.withErrorMessage(text);
@@ -707,7 +715,7 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
 
         if (!hasHardSkillDependencies(character, info)) {
             Map<String, Object> map = new HashMap<>();
-            map.put("skill", skill.getName());
+            map.put("skill", info.getSkillName());
             map.put("hard", info.getHardDepends().stream().map(SkillDependency::toString).collect(Collectors.joining(", ")));
             map.put("soft", info.getSoftDepends().stream().map(SkillDependency::toString).collect(Collectors.joining(", ")));
             String text = localizationService.translate(LocalizationKeys.MISSING_SKILL_DEPENDENCIES, arg(map));
@@ -717,7 +725,7 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
 
         if (!hasSoftSkillDependencies(character, info)) {
             Map<java.lang.String, Object> map = new HashMap<>();
-            map.put("skill", skill.getName());
+            map.put("skill", info.getSkillName());
             map.put("hard", info.getHardDepends().stream().map(SkillDependency::toString).collect(Collectors.joining(", ")));
             map.put("soft", info.getSoftDepends().stream().map(SkillDependency::toString).collect(Collectors.joining(", ")));
             String text = localizationService.translate(LocalizationKeys.MISSING_SKILL_DEPENDENCIES, arg(map));
@@ -726,7 +734,7 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
 
         if (hasConflictingSkillDepedencies(character, info)) {
             Map<String, Object> map = new HashMap<>();
-            map.put("skill", skill.getName());
+            map.put("skill", info.getSkillName());
             map.put("conflict", skill.getId());
             String text = localizationService.translate(LocalizationKeys.SKILL_CONFLICTS, arg(map));
             return ActionResult.withErrorMessage(text);
@@ -821,7 +829,7 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
     @Override
     public CharacterSkill refundSkill(T character, PlayerSkillContext playerSkillContext, ISkill skill) {
         int level = playerSkillContext.getLevel();
-        skill.skillRefund(character);
+        skill.skillRefund(character, playerSkillContext);
         CharacterBase characterBase = character.getCharacterBase();
 
         CharacterClass cc = characterBase.getCharacterClass(playerSkillContext.getClassDefinition());
@@ -1247,7 +1255,7 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
     @Override
     public void addSkill(T character, PlayerClassData origin, PlayerSkillContext skill) {
         character.addSkill(skill.getSkill().getId(), skill);
-        character.addSkill(skill.getSkill().getName(), skill);
+        character.addSkill(skill.getSkillData().getSkillName(), skill);
     }
 
     /**
@@ -1279,7 +1287,7 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
 
         addPersistantSkill(character, origin, skill1);
         addSkill(character, origin, einfo);
-        skill.skillLearn(character);
+        skill.skillLearn(character, einfo);
         info("Character " + character.getCharacterBase().getUuid() + " learned skill " + skill.getId());
     }
 

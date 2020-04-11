@@ -267,7 +267,7 @@ public interface IActiveCharacter<T, P extends IParty> extends IEntity<T> {
     void sendNotification(String message);
 
     default PlayerClassData getClassByName(String name) {
-        return getClasses().get(name);
+        return getClasses().get(name.toLowerCase());
     }
 
     void setChanneledSkill(InterruptableSkillPreprocessor o);

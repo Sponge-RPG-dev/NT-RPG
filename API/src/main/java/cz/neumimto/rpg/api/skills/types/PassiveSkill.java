@@ -55,7 +55,9 @@ public abstract class PassiveSkill extends AbstractSkill {
 
     @Override
     public void onPreUse(IActiveCharacter character, SkillContext skillContext) {
-        String msg = localizationService.translate(LocalizationKeys.CANT_USE_PASSIVE_SKILL, Arg.arg("skill", getName()));
+        PlayerSkillContext info = character.getSkillInfo(this);
+        String msg = localizationService.translate(LocalizationKeys.CANT_USE_PASSIVE_SKILL,
+                Arg.arg("skill", info.getSkillData().getSkillName()));
         character.sendMessage(msg);
         skillContext.result(SkillResult.CANCELLED);
     }
@@ -67,20 +69,20 @@ public abstract class PassiveSkill extends AbstractSkill {
     }
 
     @Override
-    public void onCharacterInit(IActiveCharacter c, int level) {
-        super.onCharacterInit(c, level);
+    public void onCharacterInit(IActiveCharacter c, int level, PlayerSkillContext context) {
+        super.onCharacterInit(c, level, context);
         update(c);
     }
 
     @Override
-    public void skillLearn(IActiveCharacter IActiveCharacter) {
-        super.skillLearn(IActiveCharacter);
+    public void skillLearn(IActiveCharacter IActiveCharacter, PlayerSkillContext context) {
+        super.skillLearn(IActiveCharacter, context);
         update(IActiveCharacter);
     }
 
     @Override
-    public void skillRefund(IActiveCharacter IActiveCharacter) {
-        super.skillRefund(IActiveCharacter);
+    public void skillRefund(IActiveCharacter IActiveCharacter, PlayerSkillContext context) {
+        super.skillRefund(IActiveCharacter, context);
         PlayerSkillContext skillInfo = IActiveCharacter.getSkillInfo(this);
         if (skillInfo.getLevel() <= 0) {
             effectService.removeEffect(relevantEffectName, IActiveCharacter, this);

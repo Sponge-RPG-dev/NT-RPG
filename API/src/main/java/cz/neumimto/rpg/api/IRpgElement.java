@@ -5,6 +5,4 @@ package cz.neumimto.rpg.api;
  */
 public interface IRpgElement {
 
-    String getName();
-
 }

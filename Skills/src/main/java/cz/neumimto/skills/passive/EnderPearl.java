@@ -35,8 +35,8 @@ public class EnderPearl extends PassiveSkill {
     }
 
     @Override
-    public void skillUpgrade(IActiveCharacter IActiveCharacter, int level) {
-        super.skillUpgrade(IActiveCharacter, level);
+    public void skillUpgrade(IActiveCharacter IActiveCharacter, int level, PlayerSkillContext context) {
+        super.skillUpgrade(IActiveCharacter, level, context);
         PlayerSkillContext skill = IActiveCharacter.getSkill(getId());
         int totalLevel = skill.getTotalLevel();
         long cooldown = (long) skill.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.COOLDOWN, totalLevel);

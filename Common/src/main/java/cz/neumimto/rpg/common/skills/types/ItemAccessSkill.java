@@ -9,6 +9,7 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.items.ClassItem;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.items.RpgItemType;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillData;
 import cz.neumimto.rpg.api.skills.SkillExecutionType;
 import cz.neumimto.rpg.api.skills.SkillResult;
@@ -36,27 +37,27 @@ public class ItemAccessSkill extends AbstractSkill {
     }
 
     @Override
-    public void skillLearn(IActiveCharacter IActiveCharacter) {
-        super.skillLearn(IActiveCharacter);
+    public void skillLearn(IActiveCharacter IActiveCharacter, PlayerSkillContext context) {
+        super.skillLearn(IActiveCharacter, context);
         resolveItemAccess(IActiveCharacter);
 
     }
 
     @Override
-    public void skillUpgrade(IActiveCharacter IActiveCharacter, int level) {
-        super.skillUpgrade(IActiveCharacter, level);
+    public void skillUpgrade(IActiveCharacter IActiveCharacter, int level, PlayerSkillContext context) {
+        super.skillUpgrade(IActiveCharacter, level, context);
         resolveItemAccess(IActiveCharacter);
     }
 
     @Override
-    public void onCharacterInit(IActiveCharacter c, int level) {
-        super.onCharacterInit(c, level);
+    public void onCharacterInit(IActiveCharacter c, int level, PlayerSkillContext context) {
+        super.onCharacterInit(c, level, context);
         resolveItemAccess(c);
     }
 
     @Override
-    public void skillRefund(IActiveCharacter IActiveCharacter) {
-        super.skillRefund(IActiveCharacter);
+    public void skillRefund(IActiveCharacter IActiveCharacter, PlayerSkillContext context) {
+        super.skillRefund(IActiveCharacter, context);
         resolveItemAccess(IActiveCharacter);
     }
 
@@ -73,7 +74,7 @@ public class ItemAccessSkill extends AbstractSkill {
 
     @Override
     public ItemAccessSkillData constructSkillData() {
-        return new ItemAccessSkillData(getName());
+        return new ItemAccessSkillData(getId());
     }
 
     @Override

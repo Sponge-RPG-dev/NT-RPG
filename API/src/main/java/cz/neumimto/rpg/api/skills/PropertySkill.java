@@ -35,26 +35,26 @@ public class PropertySkill extends AbstractSkill {
     }
 
     @Override
-    public void onCharacterInit(IActiveCharacter c, int level) {
-        super.onCharacterInit(c, level);
+    public void onCharacterInit(IActiveCharacter c, int level, PlayerSkillContext context) {
+        super.onCharacterInit(c, level, context);
         add(c, 1, (integer, integer2) -> integer <= integer2);
     }
 
     @Override
-    public void skillLearn(IActiveCharacter IActiveCharacter) {
-        super.skillLearn(IActiveCharacter);
+    public void skillLearn(IActiveCharacter IActiveCharacter, PlayerSkillContext context) {
+        super.skillLearn(IActiveCharacter, context);
         add(IActiveCharacter, 1, (integer, integer2) -> integer <= integer2);
     }
 
     @Override
-    public void skillRefund(IActiveCharacter IActiveCharacter) {
-        super.skillRefund(IActiveCharacter);
+    public void skillRefund(IActiveCharacter IActiveCharacter, PlayerSkillContext context) {
+        super.skillRefund(IActiveCharacter, context);
         add(IActiveCharacter, -1, (integer, integer2) -> integer <= integer2);
     }
 
     @Override
-    public void skillUpgrade(IActiveCharacter IActiveCharacter, int level) {
-        super.skillUpgrade(IActiveCharacter, level);
+    public void skillUpgrade(IActiveCharacter IActiveCharacter, int level, PlayerSkillContext context) {
+        super.skillUpgrade(IActiveCharacter, level, context);
         add(IActiveCharacter, 1, Objects::equals);
     }
 
@@ -95,7 +95,7 @@ public class PropertySkill extends AbstractSkill {
 
     @Override
     public PropertySkillData constructSkillData() {
-        return new PropertySkillData(getName());
+        return new PropertySkillData(getId());
     }
 
 

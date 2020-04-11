@@ -238,16 +238,16 @@ public class SpigotGuiHelper {
         Material material = Material.matchMaterial(split[2]);
         ItemStack itemStack = new ItemStack(material);
         ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.setDisplayName(Rpg.get().getLocalizationService().translate(split[1]));
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         int i1 = Integer.parseInt(split[3]);
         if (i1 > 0) {
             itemMeta.setCustomModelData(i1);
         }
 
+        itemMeta.setDisplayName(Rpg.get().getLocalizationService().translate(split[1]));
         itemStack.setItemMeta(itemMeta);
         String cmd = command.get();
-        if ("---".equalsIgnoreCase(cmd)) {
+        if ("".equals(cmd) || "---".equalsIgnoreCase(cmd)) {
             itemStack = unclickableInterface(itemStack);
         } else {
             NBTItem nbtItem = new NBTItem(itemStack);

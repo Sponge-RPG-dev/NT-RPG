@@ -49,6 +49,8 @@ public interface IEffect<K> extends IRpgElement {
 
     }
 
+    String getName();
+
     boolean isStackable();
 
     void setStackable(boolean b, EffectStackingStrategy<K> stackingStrategy);

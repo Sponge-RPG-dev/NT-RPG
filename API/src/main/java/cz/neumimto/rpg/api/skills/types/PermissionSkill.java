@@ -16,6 +16,7 @@
 
 package cz.neumimto.rpg.api.skills.types;
 
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillExecutionType;
 import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
@@ -34,24 +35,18 @@ public class PermissionSkill extends AbstractSkill {
     }
 
     @Override
-    public void onCharacterInit(IActiveCharacter c, int level) {
-        super.onCharacterInit(c, level);
-
+    public void skillLearn(IActiveCharacter IActiveCharacter, PlayerSkillContext context) {
+        super.skillLearn(IActiveCharacter, context);
     }
 
     @Override
-    public void skillLearn(IActiveCharacter IActiveCharacter) {
-        super.skillLearn(IActiveCharacter);
+    public void skillUpgrade(IActiveCharacter IActiveCharacter, int level, PlayerSkillContext context) {
+        super.skillUpgrade(IActiveCharacter, level, context);
     }
 
     @Override
-    public void skillUpgrade(IActiveCharacter IActiveCharacter, int level) {
-        super.skillUpgrade(IActiveCharacter, level);
-    }
-
-    @Override
-    public void skillRefund(IActiveCharacter IActiveCharacter) {
-        super.skillRefund(IActiveCharacter);
+    public void skillRefund(IActiveCharacter IActiveCharacter, PlayerSkillContext context) {
+        super.skillRefund(IActiveCharacter, context);
     }
 
 }

@@ -470,9 +470,6 @@ public abstract class AbstractEffectService implements EffectService {
                 String id = iSkill.getId();
                 s = s.replaceAll("\\{\\{skill\\.id}}", id);
 
-
-                s = s.replaceAll("\\{\\{skill\\.name}}", iSkill.getName());
-
                 SkillSettings defaultSkillSettings = iSkill.getDefaultSkillSettings();
 
                 StringBuilder buffer = new StringBuilder();

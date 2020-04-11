@@ -281,7 +281,7 @@ public class SpongeInventoryService extends AbstractInventoryService<ISpongeChar
         ItemStack itemStack = ItemStack.of(ItemTypes.PUMPKIN_SEEDS, 1);
         SkillBindData orCreate = itemStack.getOrCreate(SkillBindData.class).orElse(new SkillBindData(iSkill.getId()));
         orCreate.set(NKeys.SKILLBIND, iSkill.getId());
-        itemStack.offer(Keys.DISPLAY_NAME, Text.of(iSkill.getLocalizableName()));
+        itemStack.offer(Keys.DISPLAY_NAME, Text.of(iSkill.getId()));
         itemStack.offer(orCreate);
         return itemStack;
     }

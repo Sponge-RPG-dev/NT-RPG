@@ -33,7 +33,7 @@ public class Dodge extends PassiveSkill {
     }
 
     @Override
-    public void skillUpgrade(IActiveCharacter character, int level) {
+    public void skillUpgrade(IActiveCharacter character, int level, PlayerSkillContext context) {
         PlayerSkillContext info = character.getSkill(getId());
         int totalLevel = info.getTotalLevel();
         float chance = info.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.CHANCE, totalLevel);

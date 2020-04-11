@@ -37,8 +37,8 @@ public class Dampen extends PassiveSkill {
     }
 
     @Override
-    public void skillUpgrade(IActiveCharacter IActiveCharacter, int level) {
-        super.skillUpgrade(IActiveCharacter, level);
+    public void skillUpgrade(IActiveCharacter IActiveCharacter, int level, PlayerSkillContext context) {
+        super.skillUpgrade(IActiveCharacter, level, context);
         PlayerSkillContext info = IActiveCharacter.getSkill(getId());
         int totalLevel = info.getTotalLevel();
         double val = info.getSkillData().getSkillSettings().getLevelNodeValue("min-mana", totalLevel);

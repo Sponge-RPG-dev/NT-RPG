@@ -34,7 +34,7 @@ public class CommandSkill extends ActiveSkill {
 
     @Override
     public SkillData constructSkillData() {
-        return new CommandData(getName());
+        return new CommandData(getId());
     }
 
     @Override

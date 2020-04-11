@@ -38,21 +38,17 @@ public interface ISkill extends IEffectSourceProvider, IRpgElement {
 
     String getId();
 
-    String getLocalizableName();
-
-    void setLocalizableName(String name);
-
     void init();
 
-    void skillLearn(IActiveCharacter character);
+    void skillLearn(IActiveCharacter character, PlayerSkillContext context);
 
-    void skillUpgrade(IActiveCharacter character, int level);
+    void skillUpgrade(IActiveCharacter character, int level, PlayerSkillContext context);
 
-    void skillRefund(IActiveCharacter character);
+    void skillRefund(IActiveCharacter character, PlayerSkillContext context);
 
     SkillSettings getDefaultSkillSettings();
 
-    void onCharacterInit(IActiveCharacter c, int level);
+    void onCharacterInit(IActiveCharacter c, int level, PlayerSkillContext context);
 
     void onPreUse(IActiveCharacter character, SkillContext skillContext);
 
@@ -80,7 +76,7 @@ public interface ISkill extends IEffectSourceProvider, IRpgElement {
     }
 
     default <T extends SkillData> T constructSkillData() {
-        return (T) new SkillData(getName());
+        return (T) new SkillData(getId());
     }
 
     default <T extends SkillData> void loadSkillData(T skillData, SkillTree context, SkillLoadingErrors errors, Config c) {

@@ -29,8 +29,8 @@ public class CharacterAttributeSkill extends AbstractSkill {
     }
 
     @Override
-    public void onCharacterInit(IActiveCharacter c, int level) {
-        super.onCharacterInit(c, level);
+    public void onCharacterInit(IActiveCharacter c, int level, PlayerSkillContext context) {
+        super.onCharacterInit(c, level, context);
         assignAll(c, 1, (integer, integer2) -> integer <= integer2);
     }
 
@@ -46,27 +46,27 @@ public class CharacterAttributeSkill extends AbstractSkill {
     }
 
     @Override
-    public void skillLearn(IActiveCharacter c) {
-        super.skillLearn(c);
+    public void skillLearn(IActiveCharacter c,PlayerSkillContext context) {
+        super.skillLearn(c, context);
         assignAll(c, 1, (integer, integer2) -> integer <= integer2);
     }
 
     @Override
-    public void skillUpgrade(IActiveCharacter c, int level) {
-        super.skillUpgrade(c, level);
+    public void skillUpgrade(IActiveCharacter c, int level, PlayerSkillContext context) {
+        super.skillUpgrade(c, level, context);
         assignAll(c, 1, Objects::equals);
     }
 
     @Override
-    public void skillRefund(IActiveCharacter IActiveCharacter) {
-        super.skillRefund(IActiveCharacter);
+    public void skillRefund(IActiveCharacter IActiveCharacter, PlayerSkillContext context) {
+        super.skillRefund(IActiveCharacter, context);
         assignAll(IActiveCharacter, -1, (integer, integer2) -> integer <= integer2);
     }
 
 
     @Override
     public CharacterAttributeSkillData constructSkillData() {
-        return new CharacterAttributeSkillData(getName());
+        return new CharacterAttributeSkillData(getId());
     }
 
     @Override

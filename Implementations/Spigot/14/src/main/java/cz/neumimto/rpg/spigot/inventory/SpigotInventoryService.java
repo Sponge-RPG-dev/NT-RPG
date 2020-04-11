@@ -9,6 +9,7 @@ import cz.neumimto.rpg.api.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillCost;
+import cz.neumimto.rpg.api.skills.SkillData;
 import cz.neumimto.rpg.api.skills.mods.ActiveSkillPreProcessorWrapper;
 import cz.neumimto.rpg.common.inventory.AbstractInventoryService;
 import cz.neumimto.rpg.common.inventory.InventoryHandler;
@@ -86,10 +87,10 @@ public class SpigotInventoryService extends AbstractInventoryService<ISpigotChar
         return new SpigotEquipedSlot(slotId);
     }
 
-    public ItemStack createSkillbind(ISkill iSkill) {
+    public ItemStack createSkillbind(SkillData skillData) {
         ItemStack itemStack = new ItemStack(Material.PUMPKIN_SEEDS, 1);
         ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.setDisplayName(iSkill.getLocalizableName());
+        itemMeta.setDisplayName(skillData.getSkillName());
         itemStack.setItemMeta(itemMeta);
         NBTItem nbtItem = new NBTItem(itemStack);
         nbtItem.setBoolean(SKILLBIND, true);

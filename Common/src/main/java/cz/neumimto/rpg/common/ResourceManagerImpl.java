@@ -337,15 +337,11 @@ public class ResourceManagerImpl implements ResourceLoader {
         if (sk.dynamicLocalizationNodes() && sk.value().contains(":")) {
             String[] split = sk.value().split(":");
             String key = split[0] + ".skills." + split[1];
-            skill.setLocalizableName(localizationService.translate(key + ".name"));
+
             skill.setDescription(localizationService.translateMultiline(key + ".multiline.desc"));
             skill.setLore(localizationService.translateMultiline(key + ".multiline.lore"));
         }
-        if (skill.getLocalizableName() == null || skill.getLocalizableName().isEmpty()) {
-            String name = skill.getClass().getSimpleName();
-            name = name.startsWith("Skill") ? name.substring("Skill".length()) : name;
-            skill.setLocalizableName(name);
-        }
+
         skillService.registerAdditionalCatalog(skill);
         return container;
     }

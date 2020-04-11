@@ -53,7 +53,10 @@ public class SkillsCommandFacade {
     public void executeSkill(IActiveCharacter character, ISkill skill) {
         PlayerSkillContext info = character.getSkillInfo(skill.getId());
         if (info == PlayerSkillContext.EMPTY || info == null) {
-            character.sendMessage(localizationService.translate(LocalizationKeys.CHARACTER_DOES_NOT_HAVE_SKILL, Arg.arg("skill", skill.getName())));
+            Arg arg = Arg.arg("skill", skill.getId());
+            character.sendMessage(
+                    localizationService.translate(LocalizationKeys.CHARACTER_DOES_NOT_HAVE_SKILL,
+                            arg));
             return;
         }
         skillService.executeSkill(character, info, ResultNotificationSkillExecutor.INSTANCE);

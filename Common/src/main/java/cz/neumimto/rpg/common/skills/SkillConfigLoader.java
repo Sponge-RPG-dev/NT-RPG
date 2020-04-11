@@ -57,7 +57,6 @@ public class SkillConfigLoader {
             e.printStackTrace();
         }
         ISkill o1 = (ISkill) o;
-        o1.setLocalizableName(name);
         return o1;
     }
 

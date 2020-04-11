@@ -50,11 +50,10 @@ public class TargetedScriptSkill extends Targeted implements ITargetedScriptSkil
         setLore(model.getLore());
         setDamageType(model.getDamageType());
         setDescription(model.getDescription());
-        setLocalizableName(model.getName());
         setLore(model.getLore());
         setDamageType(model.getDamageType());
         setDescription(model.getDescription());
-        setLocalizableName(model.getName());
+        setCatalogId(model.getId());
         List<String> configTypes = model.getSkillTypes();
         for (String configType : configTypes) {
             Optional<ISkillType> skillType = Rpg.get().getSkillService().getSkillType(configType);

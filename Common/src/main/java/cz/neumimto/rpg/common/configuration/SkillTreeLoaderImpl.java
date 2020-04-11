@@ -345,12 +345,14 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
             info(" - Skill " + info.getSkillId() + " missing SkillTreeId, it wont be possible to reference this skill in the ascii map");
         }
 
+        String id = info.getSkill().getId();
         try {
             info.setSkillName(c.getString("Name"));
-            info(" - Alternate name defined for skill " + info.getSkill().getId() + " > " + info.getSkillName());
+            info(" - Alternate name defined for skill " + id + " > " + info.getSkillName());
             Rpg.get().getSkillService().registerSkillAlternateName(info.getSkillName(), info.getSkill());
         } catch (ConfigException missing) {
-            info.setSkillName(info.getSkill().getLocalizableName());
+            info.setSkillName(id);
+            warn(" - No alternate name defined for skill " + id + " !!falling back to default!! > " + info.getSkillName());
         }
 
         try {

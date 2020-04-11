@@ -8,6 +8,7 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.skills.ISkill;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
 import cz.neumimto.rpg.spigot.inventory.SpigotInventoryService;
@@ -43,7 +44,8 @@ public class SpigotSkillBindCommands extends BaseCommand {
             if (character.isStub()) {
                 return;
             }
-            ItemStack is = inventoryService.createSkillbind(skill);
+            PlayerSkillContext info = character.getSkillInfo(skill);
+            ItemStack is = inventoryService.createSkillbind(info.getSkillData());
             executor.setItemInHand(is);
         }
     }
