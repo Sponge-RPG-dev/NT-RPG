@@ -2,7 +2,6 @@ package cz.neumimto.rpg.spigot.gui;
 
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
-import cz.neumimto.rpg.api.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
@@ -19,6 +18,8 @@ import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.SkillData;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.common.gui.ConfigInventory;
+import cz.neumimto.rpg.common.gui.DynamicInventory;
+import cz.neumimto.rpg.common.gui.TemplateInventory;
 import cz.neumimto.rpg.spigot.Resourcepack;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
@@ -48,7 +49,8 @@ public class SpigotGuiHelper {
 
     public static ItemLoreFactory itemLoreFactory;
 
-    public static Map<String, ConfigInventory<ItemStack, Inventory>> CACHED_MENUS = new HashMap<>();
+    public static Map<String, Inventory> CACHED_MENUS = new HashMap<>();
+    public static Map<String, ConfigInventory<ItemStack, Inventory>> CACHED_MENU_TEMPLATES = new HashMap<>();
 
     static {
         itemLoreFactory = new ItemLoreFactory();
@@ -69,41 +71,41 @@ public class SpigotGuiHelper {
     }
 
     public static void initInventories() {
-        CACHED_MENUS = new SpigotUIReader().initInventories();
+        Map<String, Object> stringObjectMap = new SpigotUIReader().initInventories();
+        for (Map.Entry<String, Object> next : stringObjectMap.entrySet()) {
+            if (next.getValue() instanceof Inventory) {
+                CACHED_MENUS.put(next.getKey(), (Inventory) next.getValue());
+            } else {
+                CACHED_MENU_TEMPLATES.put(next.getKey(), (ConfigInventory<ItemStack, Inventory>) next.getValue());
+            }
+        }
     }
 
     public static Inventory createMenuInventoryClassTypesView(Player player) {
-        Inventory i = createInventoryTemplate(player, "Classes");
-        ConfigInventory staticInventory = CACHED_MENUS.get("class_types");
-        staticInventory.fill(i);
-        return i;
+        return CACHED_MENUS.get("class_types");
     }
 
     public static Inventory createMenuInventoryClassesByTypeView(Player player, String classType) {
-        Inventory i = createInventoryTemplate(player, classType);
-        ConfigInventory staticInventory = CACHED_MENUS.get("classes_by_type" + classType);
-        staticInventory.fill(i);
-        return i;
+        return CACHED_MENUS.get("classes_by_type" + classType);
     }
 
-    public static Inventory createCharacterMenu(Player player, ISpigotCharacter cc) {
-        Inventory i = createInventoryTemplate(player, cc.getName());
-        ConfigInventory dynamicInventory = CACHED_MENUS.get(cc.getName());
-
-
-        int s = 37;
-        for (PlayerClassData value : classes.values()) {
-            ClassDefinition classDefinition = value.getClassDefinition();
-            ItemStack itemStack = toItemStack(classDefinition, "char");
-            ItemMeta itemMeta = itemStack.getItemMeta();
-            itemMeta.setDisplayName(ChatColor.valueOf(classDefinition.getPreferedColor()) + classDefinition.getName() + itemMeta.getDisplayName() + ChatColor.RESET + "| Lvl: " + ChatColor.GREEN + value.getLevel());
-            itemStack.setItemMeta(itemMeta);
-            i.setItem(s, itemStack);
-            s++;
-        }
-
-
-        return i;
+    public static Inventory createCharacterMenu(ISpigotCharacter cc) {
+        String name = "char_view" + cc.getName();
+        Inventory dynamicInventory = CACHED_MENUS.get(name);
+       // if (dynamicInventory == null) {
+            TemplateInventory<ItemStack, Inventory> dView = (TemplateInventory<ItemStack, Inventory>) CACHED_MENU_TEMPLATES.get("char_view");
+            ItemStack[] chars = cc.getClasses().values()
+                    .stream()
+                    .map(PlayerClassData::getClassDefinition)
+                    .map(a -> toItemStack(a, "char"))
+                    .collect(Collectors.toList())
+                    .toArray(new ItemStack[cc.getClasses().size() == 0 ? 0 : cc.getClasses().size() - 1]);
+            DynamicInventory inv = dView.setActualContent(chars);
+            dynamicInventory = createInventoryTemplate(cc.getName());
+            inv.fill(dynamicInventory);
+            CACHED_MENUS.put(name, dynamicInventory);
+      //  }
+        return dynamicInventory;
     }
 
     public static ItemStack toItemStack(ClassDefinition a, String backCommand) {
@@ -126,6 +128,10 @@ public class SpigotGuiHelper {
 
     public static Inventory createInventoryTemplate(Player player, String title) {
         return Bukkit.createInventory(player, 6 * 9, title);
+    }
+
+    public static Inventory createInventoryTemplate(String title) {
+        return Bukkit.createInventory(null, 6 * 9, title);
     }
 
     private static ItemStack button(Resourcepack.RPItem i, String name, String command) {
@@ -224,28 +230,6 @@ public class SpigotGuiHelper {
         });
     }
 
-
-    public static Inventory createArmorView(Player player, ClassDefinition cc, Set<ClassItem> armor) {
-        String translate = Rpg.get().getLocalizationService().translate(LocalizationKeys.ARMOR);
-        Inventory i = createInventoryTemplate(player, ChatColor.valueOf(cc.getPreferedColor()) + cc.getName() + " " + ChatColor.RESET + translate);
-
-        createArmorView(i, armor, "ninfo class " + cc.getName());
-        return i;
-    }
-
-    public static void createArmorView(Inventory i, Set<ClassItem> armor, String backCommand) {
-        i.setItem(0, button(Material.PAPER, Rpg.get().getLocalizationService().translate(LocalizationKeys.BACK), backCommand));
-        int w = 9;
-        String damageLabel = Rpg.get().getLocalizationService().translate(LocalizationKeys.ITEM_ARMOR);
-        for (ClassItem ar : armor) {
-            SpigotRpgItemType type = (SpigotRpgItemType) ar.getType();
-            double damage = ar.getDamage();
-
-            i.setItem(w, toItemStack(type, damage, damageLabel));
-            w++;
-        }
-    }
-
     private static ItemStack toItemStack(SpigotRpgItemType type, double damage, String damageLabel) {
         ItemStack itemStack = new ItemStack(type.getMaterial());
         ItemMeta itemMeta = itemStack.getItemMeta();
@@ -265,33 +249,6 @@ public class SpigotGuiHelper {
         return unclickableIcon(itemStack);
     }
 
-    public static void fillWeaponView(Inventory i, Map<RpgItemType, Double> items, String backCommand) {
-        i.setItem(0, button(Material.PAPER, Rpg.get().getLocalizationService().translate(LocalizationKeys.BACK), backCommand));
-        int w = 9;
-        String damageLabel = Rpg.get().getLocalizationService().translate(LocalizationKeys.ITEM_DAMAGE);
-
-        for (Map.Entry<RpgItemType, Double> entry : items.entrySet()) {
-            SpigotRpgItemType weapon = (SpigotRpgItemType) entry.getKey();
-            double damage = entry.getValue();
-
-            i.setItem(w, toItemStack(weapon, damage, damageLabel));
-            w++;
-        }
-    }
-
-    public static void fillArmorView(Inventory i, Set<RpgItemType> allowedArmor, String backCommand) {
-        i.setItem(0, button(Material.PAPER, Rpg.get().getLocalizationService().translate(LocalizationKeys.BACK), backCommand));
-        int w = 9;
-        String damageLabel = Rpg.get().getLocalizationService().translate(LocalizationKeys.ITEM_DAMAGE);
-
-        for (RpgItemType entry : allowedArmor) {
-            double damage = entry.getArmor();
-
-            i.setItem(w, toItemStack((SpigotRpgItemType) entry, damage, damageLabel));
-            w++;
-        }
-
-    }
 
 
     public static Inventory createClassAttributesView(Player player, ClassDefinition cc) {

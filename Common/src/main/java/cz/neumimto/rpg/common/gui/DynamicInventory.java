@@ -5,19 +5,23 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class DynamicInventory<T, I> extends StaticInventory {
+public class DynamicInventory<T, I> extends StaticInventory<T, I> {
 
-    public DynamicInventory(T[] items, T replaceToken, T[] actualContent, InventorySlotProcessor<T, I> processor) {
+    protected final T replaceToken;
+    protected List<Integer> ids = new ArrayList<>();
+
+    public DynamicInventory(T[] items, T replaceToken, InventorySlotProcessor<T, I> processor) {
         super(items, processor);
-        List<Integer> ids = new ArrayList<>();
+        this.replaceToken = replaceToken;
         for (int i = 0; i < super.items.length; i++) {
             if (items[i].equals(replaceToken)) {
                 ids.add(i);
             }
         }
+    }
 
+    public DynamicInventory setActualContent(T[] actualContent) {
         Iterator<Integer> iterator = ids.iterator();
-
         for (T T : actualContent) {
             if (iterator.hasNext()) {
                 Integer toReplace = iterator.next();
@@ -30,5 +34,6 @@ public class DynamicInventory<T, I> extends StaticInventory {
                 break;
             }
         }
+        return this;
     }
 }

@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.common.gui;
 
+
 public class StaticInventory<T, I> extends ConfigInventory<T, I> {
 
     public StaticInventory(T[] items, InventorySlotProcessor<T, I> processor) {
@@ -8,7 +9,7 @@ public class StaticInventory<T, I> extends ConfigInventory<T, I> {
 
 
     @Override
-    public void fill(T inventory) {
+    public void fill(I inventory) {
         for (int i = 0; i < items.length; ) {
             //does java automatically unroll loops?
 

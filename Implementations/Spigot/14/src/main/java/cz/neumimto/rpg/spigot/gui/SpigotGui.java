@@ -103,9 +103,7 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
 
     public void showClassInfo(ISpigotCharacter character, ClassDefinition cc, String back) {
         Player player = character.getPlayer();
-        Inventory i = SpigotGuiHelper.createInventoryTemplate(player, org.bukkit.ChatColor.valueOf(cc.getPreferedColor()) + cc.getName());
-        ConfigInventory staticInventory = SpigotGuiHelper.CACHED_MENUS.get("class_template" + cc.getName());
-        staticInventory.fill(i);
+        Inventory i = SpigotGuiHelper.CACHED_MENUS.get("class_template" + cc.getName());
         player.openInventory(i);
     }
 
@@ -116,21 +114,17 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
 
     @Override
     public void displayGroupArmor(ClassDefinition cc, ISpigotCharacter target) {
-        Player player = target.getPlayer();
-        Inventory i = SpigotGuiHelper.createInventoryTemplate(player, org.bukkit.ChatColor.valueOf(cc.getPreferedColor()) + cc.getName());
         String key = "class_allowed_items_armor_" + cc.getName();
-        ConfigInventory staticInventory = SpigotGuiHelper.CACHED_MENUS.get(key);
-        staticInventory.fill(i);
+        Inventory i = SpigotGuiHelper.CACHED_MENUS.get(key);
+        Player player = target.getPlayer();
         player.openInventory(i);
     }
 
     @Override
     public void displayGroupWeapon(ClassDefinition cc, ISpigotCharacter target) {
-        Player player = target.getPlayer();
-        Inventory i = SpigotGuiHelper.createInventoryTemplate(player, org.bukkit.ChatColor.valueOf(cc.getPreferedColor()) + cc.getName());
         String key = "class_allowed_items_weapons_" + cc.getName();
-        ConfigInventory staticInventory = SpigotGuiHelper.CACHED_MENUS.get(key);
-        staticInventory.fill(i);
+        Inventory i = SpigotGuiHelper.CACHED_MENUS.get(key);
+        Player player = target.getPlayer();
         player.openInventory(i);
     }
 
@@ -223,7 +217,7 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
     @Override
     public void displayCharacterMenu(ISpigotCharacter character) {
         Player player = character.getPlayer();
-        Inventory inventory = SpigotGuiHelper.createCharacterMenu(player, character);
+        Inventory inventory = SpigotGuiHelper.createCharacterMenu(character);
         player.openInventory(inventory);
     }
 
@@ -242,7 +236,7 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
         Player player = character.getPlayer();
         Inventory i = SpigotGuiHelper.createInventoryTemplate(player, character.getName());
 
-        SpigotGuiHelper.fillArmorView(i, character.getAllowedArmor(), "char");
+      //  SpigotGuiHelper.fillArmorView(i, character.getAllowedArmor(), "char");
         player.openInventory(i);
 
     }
@@ -252,7 +246,7 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
         Player player = character.getPlayer();
         Inventory i = SpigotGuiHelper.createInventoryTemplate(player, character.getName());
 
-        SpigotGuiHelper.fillWeaponView(i, character.getAllowedWeapons(), "char");
+     //   SpigotGuiHelper.fillWeaponView(i, character.getAllowedWeapons(), "char");
         player.openInventory(i);
     }
 

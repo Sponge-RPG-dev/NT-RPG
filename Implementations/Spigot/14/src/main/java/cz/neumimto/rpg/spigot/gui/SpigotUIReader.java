@@ -12,6 +12,7 @@ import cz.neumimto.rpg.api.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.spigot.items.SpigotRpgItemType;
 import de.tr7zw.nbtapi.NBTItem;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
@@ -26,7 +27,7 @@ import java.util.function.Supplier;
 
 public class SpigotUIReader extends GuiParser<ItemStack, Inventory> {
 
-    public Map<String, ConfigInventory<ItemStack, Inventory>> initInventories() {
+    public Map<String, Object> initInventories() {
         return super.initInventories(SpigotUIReader.class.getClassLoader(), "guis.conf");
     }
 
@@ -92,5 +93,15 @@ public class SpigotUIReader extends GuiParser<ItemStack, Inventory> {
         itemMeta.setLore(list);
         itemStack.setItemMeta(itemMeta);
         return itemStack;
+    }
+
+    @Override
+    protected Inventory createInventory(String preferedColor, String header) {
+        ChatColor c = ChatColor.WHITE;
+        if (preferedColor != null) {
+            c = ChatColor.valueOf(preferedColor.toUpperCase());
+        }
+        String translate = Rpg.get().getLocalizationService().translate(header);
+        return Bukkit.createInventory(null, 6*9, c + translate);
     }
 }
