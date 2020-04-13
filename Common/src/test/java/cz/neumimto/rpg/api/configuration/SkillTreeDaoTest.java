@@ -39,15 +39,12 @@ class SkillTreeDaoTest {
         new RpgTest(api);
         AbstractSkill spy = Mockito.spy(AbstractSkill.class);
         Mockito.doNothing().when(spy).init();
-        Mockito.when(spy.getName()).thenReturn("test");
-        spy.setDescription(Arrays.asList("test"));
+
         spy.setCatalogId("test");
         skillService.registerAdditionalCatalog(spy);
 
         spy = Mockito.spy(AbstractSkill.class);
         Mockito.doNothing().when(spy).init();
-        Mockito.when(spy.getName()).thenReturn("test2");
-        spy.setDescription(Arrays.asList("test"));
         spy.setCatalogId("test2");
         skillService.registerAdditionalCatalog(spy);
     }

@@ -42,28 +42,29 @@ compileJava {
 
 
 dependencies {
-    compileOnly "org.spigotmc:spigot-api:1.15.1-R0.1-SNAPSHOT"
-    compileOnly "org.spigotmc:plugin-annotations:1.2.2-SNAPSHOT"
-    annotationProcessor "org.spigotmc:plugin-annotations:1.2.2-SNAPSHOT"
-    compileOnly group: "com.comphenix.protocol", name: "ProtocolLib", version: "4.5.0";
-    compileOnly fileTree(dir: 'lib', include: '*.jar')
-    compile 'org.slf4j:slf4j-api:1.7.28'
     compile project(':Common')
     compile project(':FlatFiles-Persistence')
 
-    compile 'com.google.inject:guice:4.1.0'
-    compile "co.aikar:acf-paper:0.5.0-SNAPSHOT"
+    compileOnly fileTree(dir: 'lib', include: '*.jar')
+
+    compileOnly "org.spigotmc:spigot-api:1.15.1-R0.1-SNAPSHOT"
+    compileOnly "org.spigotmc:plugin-annotations:1.2.2-SNAPSHOT"
+    annotationProcessor "org.spigotmc:plugin-annotations:1.2.2-SNAPSHOT"
+
+    compileOnly group: "com.comphenix.protocol", name: "ProtocolLib", version: "4.5.0";
     compileOnly 'de.tr7zw:item-nbt-api-plugin:2.2.0'
     compileOnly 'com.github.Slikey:EffectLib:d77f639038'
-
+    compile "co.aikar:acf-paper:0.5.0-SNAPSHOT"
     compileOnly 'me.clip:placeholderapi:2.10.3'
     compileOnly 'com.gmail.filoghost.holographicdisplays:holographicdisplays-api:2.4.0'
     compileOnly ('net.Indyuce:MMOItems:5.3.2') {
         exclude group: 'com.mojang', module: 'authlib'
     }
 
-    jar {
+    compile 'com.google.inject:guice:4.1.0'
+    compile 'org.slf4j:slf4j-api:1.7.28'
 
+    jar {
         from {
             configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
         }

@@ -515,8 +515,7 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
 
                 PlayerSkillContext info = new PlayerSkillContext(classDefinitionByName, iSkill, character);
                 info.setLevel(characterSkill.getLevel());
-                Map<String, PlayerClassData> classes = character.getClasses();
-                PlayerClassData playerClassData = classes.get(name);
+                PlayerClassData playerClassData = character.getClassByName(name);
                 SkillData info1 = playerClassData.getClassDefinition().getSkillTree().getSkills().get(iSkill.getId());
                 if (info1 != null) {
                     toInit.add(info);

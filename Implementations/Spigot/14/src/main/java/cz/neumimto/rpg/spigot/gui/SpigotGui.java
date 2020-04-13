@@ -16,6 +16,7 @@ import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.common.effects.InternalEffectSourceProvider;
+import cz.neumimto.rpg.common.gui.ConfigInventory;
 import cz.neumimto.rpg.common.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.spigot.effects.common.def.BossBarExpNotifier;
 import cz.neumimto.rpg.spigot.effects.common.def.ManaBarNotifier;
@@ -102,7 +103,9 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
 
     public void showClassInfo(ISpigotCharacter character, ClassDefinition cc, String back) {
         Player player = character.getPlayer();
-        Inventory i = SpigotGuiHelper.createClassInfoView(player, cc, back);
+        Inventory i = SpigotGuiHelper.createInventoryTemplate(player, org.bukkit.ChatColor.valueOf(cc.getPreferedColor()) + cc.getName());
+        ConfigInventory staticInventory = SpigotGuiHelper.CACHED_MENUS.get("class_template" + cc.getName());
+        staticInventory.fill(i);
         player.openInventory(i);
     }
 
@@ -112,16 +115,22 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
     }
 
     @Override
-    public void displayGroupArmor(ClassDefinition g, ISpigotCharacter target) {
+    public void displayGroupArmor(ClassDefinition cc, ISpigotCharacter target) {
         Player player = target.getPlayer();
-        Inventory i = SpigotGuiHelper.createArmorView(player, g, g.getAllowedArmor());
+        Inventory i = SpigotGuiHelper.createInventoryTemplate(player, org.bukkit.ChatColor.valueOf(cc.getPreferedColor()) + cc.getName());
+        String key = "class_allowed_items_armor_" + cc.getName();
+        ConfigInventory staticInventory = SpigotGuiHelper.CACHED_MENUS.get(key);
+        staticInventory.fill(i);
         player.openInventory(i);
     }
 
     @Override
-    public void displayGroupWeapon(ClassDefinition g, ISpigotCharacter target) {
+    public void displayGroupWeapon(ClassDefinition cc, ISpigotCharacter target) {
         Player player = target.getPlayer();
-        Inventory i = SpigotGuiHelper.createClassWeaponView(player, g, g.getWeapons());
+        Inventory i = SpigotGuiHelper.createInventoryTemplate(player, org.bukkit.ChatColor.valueOf(cc.getPreferedColor()) + cc.getName());
+        String key = "class_allowed_items_weapons_" + cc.getName();
+        ConfigInventory staticInventory = SpigotGuiHelper.CACHED_MENUS.get(key);
+        staticInventory.fill(i);
         player.openInventory(i);
     }
 

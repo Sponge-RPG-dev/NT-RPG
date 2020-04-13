@@ -113,7 +113,6 @@ public class SkillTreeLoadingTests {
 
         public TestSkill(String id) {
             setCatalogId(id);
-            setLocalizableName(id);
         }
 
         @Override

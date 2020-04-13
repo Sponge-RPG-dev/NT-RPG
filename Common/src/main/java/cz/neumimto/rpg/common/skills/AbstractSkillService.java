@@ -178,11 +178,12 @@ public abstract class AbstractSkillService implements SkillService {
 
     @Override
     public ISkill getSkillByLocalizedName(String name) {
-        return skillByNames.get(name);
+        return skillByNames.get(name.toLowerCase());
     }
 
     @Override
     public void registerSkillAlternateName(String name, ISkill skill) {
+        name = name.toLowerCase();
         if (skillByNames.containsKey(name)) {
             ISkill iSkill = skillByNames.get(name);
             if (iSkill != skill) {

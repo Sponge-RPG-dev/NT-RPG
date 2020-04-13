@@ -74,7 +74,7 @@ public class SkillExecutionTests {
         PlayerSkillContext playerSkillContext = new PlayerSkillContext(primary.getClassDefinition(), testSkill, character);
         playerSkillContext.setSkill(testSkill);
 
-        SkillData skillData = new SkillData(testSkill.getName());
+        SkillData skillData = new SkillData(testSkill.getId());
         skillData.setSkillSettings(new SkillSettings());
 
         skillData.setSkill(testSkill);
@@ -96,7 +96,7 @@ public class SkillExecutionTests {
         PlayerSkillContext playerSkillContext = new PlayerSkillContext(primary.getClassDefinition(), testSkill, character);
         playerSkillContext.setSkill(testSkill);
 
-        SkillData skillData = new SkillData(testSkill.getName());
+        SkillData skillData = new SkillData(testSkill.getId());
         skillData.setSkillSettings(new SkillSettings());
         skillData.getSkillSettings().addNode(SkillNodes.MANACOST, 100, 100);
         character.setProperty(CommonProperties.mana_cost_reduce, 1);
@@ -120,7 +120,7 @@ public class SkillExecutionTests {
         PlayerSkillContext playerSkillContext = new PlayerSkillContext(primary.getClassDefinition(), testSkill, character);
         playerSkillContext.setSkill(testSkill);
 
-        SkillData skillData = new SkillData(testSkill.getName());
+        SkillData skillData = new SkillData(testSkill.getId());
         skillData.setSkillSettings(new SkillSettings());
         skillData.getSkillSettings().addNode(SkillNodes.HPCOST, 100, 100);
         character.setProperty(CommonProperties.health_cost_reduce, 1);
@@ -144,9 +144,9 @@ public class SkillExecutionTests {
         PlayerSkillContext playerSkillContext = new PlayerSkillContext(primary.getClassDefinition(), testSkill, character);
         playerSkillContext.setSkill(testSkill);
 
-        SkillData skillData = new SkillData(testSkill.getName());
+        SkillData skillData = new SkillData(testSkill.getId());
         skillData.setSkillSettings(new SkillSettings());
-        character.getCooldowns().put(testSkill.getName(), Long.MAX_VALUE);
+        character.getCooldowns().put(testSkill.getId(), Long.MAX_VALUE);
         character.setProperty(CommonProperties.health_cost_reduce, 1);
         skillData.setSkill(testSkill);
         playerSkillContext.setSkillData(skillData);
@@ -169,7 +169,7 @@ public class SkillExecutionTests {
         PlayerSkillContext playerSkillContext = new PlayerSkillContext(primary.getClassDefinition(), testSkill, character);
         playerSkillContext.setSkill(testSkill);
 
-        SkillData skillData = new SkillData(testSkill.getName());
+        SkillData skillData = new SkillData(testSkill.getId());
         AtomicBoolean runFirst = new AtomicBoolean(false);
         AtomicBoolean runLast = new AtomicBoolean(false);
         skillData.getSkillPreprocessors().add(new ActiveSkillPreProcessorWrapper(PreProcessorTarget.EARLY) {
@@ -214,7 +214,6 @@ public class SkillExecutionTests {
         public TestSkill() {
             String id = "test";
             setCatalogId(id);
-            setLocalizableName(id);
         }
 
         @Override

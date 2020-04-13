@@ -228,11 +228,12 @@ public class ConfigConverter {
         characterBase.setAttributePoints(config.get(ATTRIBUTE_POINTS));
         characterBase.setAttributePointsSpent(config.get(ATTRIBUTE_POINTS_SPENT));
 
+        List<Config> classes = config.get(CLASSES);
+        characterBase.setCharacterClasses(classesFromConfig(classes, characterBase));
+
         List<Config> skills = config.get(SKILLS);
         characterBase.setCharacterSkills(skillsFromConfig(skills, characterBase));
 
-        List<Config> classes = config.get(CLASSES);
-        characterBase.setCharacterClasses(classesFromConfig(classes, characterBase));
 
         List<Config> attributes = config.get(ATTRIBUTES);
         characterBase.setBaseCharacterAttribute(attributesFromConfig(attributes, characterBase));
@@ -316,12 +317,12 @@ public class ConfigConverter {
         characterSkill.setCharacterBase(character);
 
         characterSkill.setCatalogId(config.get(SKILL_ID));
-        characterSkill.setCooldown(config.get(SKILL_CD));
+        characterSkill.setCooldown(config.getLong(SKILL_CD));
 
         String o = config.get(SKILL_FROM_CLASS);
         if (o != null) {
             for (CharacterClass characterClass : character.getCharacterClasses()) {
-                if (character.getName().equalsIgnoreCase(o)) {
+                if (characterClass.getName().equalsIgnoreCase(o)) {
                     characterSkill.setFromClass(characterClass);
                     break;
                 }
