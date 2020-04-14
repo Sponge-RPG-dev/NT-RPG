@@ -95,7 +95,12 @@ public class HolographicDisplaysExpansion implements Listener {
         //todo in future when entitis are able to casts spells
         IActiveCharacter c = (IActiveCharacter) caster;
         PlayerSkillContext info = c.getSkillInfo(skill.getId());
-        hologram.insertTextLine(0, ChatColor.BOLD + s + info.getSkillData().getSkillName());
+        String skillName = info.getSkillData().getSkillName();
+        //ran as nadmin skill <id> we have no context to grab name from
+        if (skillName == null) {
+            skillName = info.getSkill().getId();
+        }
+        hologram.insertTextLine(0, ChatColor.BOLD + s + skillName);
         VisibilityManager visiblityManager = hologram.getVisibilityManager();
         visiblityManager.setVisibleByDefault(true);
         holograms.put(hologram, System.currentTimeMillis() + 2500L);

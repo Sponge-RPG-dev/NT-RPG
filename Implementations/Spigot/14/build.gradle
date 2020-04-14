@@ -32,7 +32,7 @@ repositories {
 }
 
 group = 'cz.neumimto.rpg'
-version = '2.1.0-SNAPSHOT-6'
+version = '2.1.0-SNAPSHOT-8'
 
 compileJava {
     options.compilerArgs += ["-parameters"]
@@ -75,7 +75,6 @@ dependencies {
 shadowJar {
     classifier = null
     // relocate 'co.aikar.commands', 'cz.neumimto.acf'
-    // relocate 'com.github.stefvanschie.inventoryframework', 'cz.neumimto.inventoryframework'
 }
 
 build.dependsOn shadowJar

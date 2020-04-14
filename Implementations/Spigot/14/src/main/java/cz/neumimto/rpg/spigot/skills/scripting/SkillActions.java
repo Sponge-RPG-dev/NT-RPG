@@ -8,6 +8,8 @@ import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.api.skills.scripting.SkillScriptContext;
 import cz.neumimto.rpg.api.utils.TriConsumer;
 import cz.neumimto.rpg.common.skills.scripting.SkillComponent;
+import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
+import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
@@ -23,6 +25,10 @@ import java.util.function.Function;
 @JsBinding(JsBinding.Type.CONTAINER)
 public class SkillActions {
 
+    private static SpigotDamageService damageService;
+    static {
+        damageService = (SpigotDamageService) Rpg.get().getDamageService();
+    }
     @SkillComponent(
             value = "Damaging an Entity with specific damage type",
             usage = "damage(source, target, damage, type, context)",
@@ -35,9 +41,12 @@ public class SkillActions {
                     @SkillComponent.Param("@returns - true if the damage was dealt"),
             }
     )
-    public static F.PentaConsumer<IEntity<LivingEntity>, IEntity<LivingEntity>, Number, EntityDamageEvent.DamageCause, SkillScriptContext> DAMAGE = (caster, target, damage, DamageCause, context) -> {
-
-        target.getEntity().damage(damage.doubleValue(), caster.getEntity());
+    public static F.PentaFunction<ISpigotCharacter, IEntity<LivingEntity>, Number, EntityDamageEvent.DamageCause, SkillScriptContext, Boolean> DAMAGE = (caster, target, damage, DamageCause, context) -> {
+        if (damageService.canDamage(caster, target.getEntity())) {
+            damageService.damage(caster.getEntity(), target.getEntity(), DamageCause, damage.doubleValue(), false);
+            return true;
+        }
+        return false;
     };
 
     @SkillComponent(
