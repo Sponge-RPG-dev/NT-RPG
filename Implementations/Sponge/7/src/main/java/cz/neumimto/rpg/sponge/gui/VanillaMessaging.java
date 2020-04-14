@@ -325,24 +325,6 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
 
     }
 
-    private void displayCommonMenu(ISpongeCharacter character, Collection<? extends ClassDefinition> g, ClassDefinition default_, Text invHeader) {
-        Inventory i = Inventory.builder()
-                .of(InventoryArchetypes.DOUBLE_CHEST)
-                .property(InventoryTitle.of(invHeader))
-                .build(plugin);
-        Player player = character.getPlayer();
-        for (ClassDefinition cc : g) {
-            if (cc == default_) {
-                continue;
-            }
-            if (!cc.isShowsInMenu() && !player.hasPermission("ntrpg.admin")) {
-                continue;
-            }
-            i.offer(createItemRepresentingGroup(cc));
-        }
-        player.openInventory(i);
-    }
-
     private ItemStack createItemRepresentingGroup(ClassDefinition p) {
         ItemStack s = GuiHelper.itemStack(p.getItemType());
         s.offer(new MenuInventoryData(true));
@@ -358,72 +340,21 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
     }
 
     @Override
-    public void displayGroupArmor(ClassDefinition g, ISpongeCharacter c) {
-        Player target = c.getPlayer();
-        Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST).build(plugin);
-        List<List<SpongeRpgItemType>> rows = new ArrayList<>(5);
-        for (int ki = 0; ki <= 5; ki++) {
-            rows.add(new ArrayList<>());
-        }
-        for (ClassItem ci : g.getAllowedArmor()) {
-            SpongeRpgItemType type = (SpongeRpgItemType) ci.getType();
-            if (ItemStackUtils.isHelmet(type.getItemType())) {
-                rows.get(0).add(type);
-            } else if (ItemStackUtils.isChestplate(type.getItemType())) {
-                rows.get(1).add(type);
-            } else if (ItemStackUtils.isLeggings(type.getItemType())) {
-                rows.get(2).add(type);
-            } else if (ItemStackUtils.isBoots(type.getItemType())) {
-                rows.get(3).add(type);
-            } else {
-                rows.get(4).add(type);
-            }
-        }
-
-        ItemStack of = GuiHelper.back(g);
-        i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0, 0))).offer(of);
-
-        int x = 2;
-        int y = 0;
-        for (List<SpongeRpgItemType> row : rows) {
-            y = 0;
-            for (SpongeRpgItemType type : row) {
-                ItemStack armor = GuiHelper.itemStack(type.getItemType());
-                if (type.getModelId() != null) {
-                    armor.offer(Keys.DISPLAY_NAME, Text.of(type.getModelId()));
-                }
-                armor.offer(new MenuInventoryData(true));
-                i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(x, y))).offer(armor);
-                y++;
-            }
-            x++;
-        }
-        target.openInventory(i);
+    public void displayGroupArmor(ClassDefinition cc, ISpongeCharacter target) {
+        String key = "class_allowed_items_armor_" + cc.getName();
+        Inventory i = GuiHelper.CACHED_MENUS.get(key);
+        Player player = target.getPlayer();
+        player.openInventory(i);
     }
 
     @Override
-    public void displayGroupWeapon(ClassDefinition g, ISpongeCharacter c) {
-        Player target = c.getPlayer();
-        Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST).build(plugin);
-
-
-        ItemStack of = back(g);
-        i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0, 0))).offer(of);
-
-        Set<ClassItem> weapons = g.getWeapons();
-
-        List<ClassItem> sortedList = new ArrayList<>(weapons);
-        sortedList.sort((o1, o2) -> (int) (o2.getDamage() - o1.getDamage()));
-
-        for (ClassItem classItem : sortedList) {
-            SpongeRpgItemType type = (SpongeRpgItemType) classItem.getType();
-            ItemStack q = GuiHelper.rpgItemTypeToItemStack(type, classItem);
-            i.offer(q);
-        }
-
-
-        target.openInventory(i);
+    public void displayGroupWeapon(ClassDefinition cc, ISpongeCharacter target) {
+        String key = "class_allowed_items_weapons_" + cc.getName();
+        Inventory i = GuiHelper.CACHED_MENUS.get(key);
+        Player player = target.getPlayer();
+        player.openInventory(i);
     }
+
 
     @Override
     public void displayAttributes(ISpongeCharacter target, ClassDefinition cls) {
