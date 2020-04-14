@@ -92,7 +92,7 @@ public class SpigotGuiHelper {
     public static Inventory createCharacterMenu(ISpigotCharacter cc) {
         String name = "char_view" + cc.getName();
         Inventory dynamicInventory = CACHED_MENUS.get(name);
-       // if (dynamicInventory == null) {
+        if (dynamicInventory == null) {
             TemplateInventory<ItemStack, Inventory> dView = (TemplateInventory<ItemStack, Inventory>) CACHED_MENU_TEMPLATES.get("char_view");
             ItemStack[] chars = cc.getClasses().values()
                     .stream()
@@ -104,7 +104,7 @@ public class SpigotGuiHelper {
             dynamicInventory = createInventoryTemplate(cc.getName());
             inv.fill(dynamicInventory);
             CACHED_MENUS.put(name, dynamicInventory);
-      //  }
+        }
         return dynamicInventory;
     }
 

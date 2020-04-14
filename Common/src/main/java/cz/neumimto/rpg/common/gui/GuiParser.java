@@ -36,7 +36,6 @@ public abstract class GuiParser<T, I> {
                 case "class_template":
                     for (ClassDefinition context : classDefs) {
                         ConfigInventory c = createCachedMenu(sFactorz, guiName, gui, context);
-                        c.setPreInitialize(true);
                         I i = createInventory(context.getPreferedColor(), context.getName());
                         c.fill(i);
                         CACHED_MENUS.put(guiName + context.getName(), i);
@@ -54,7 +53,6 @@ public abstract class GuiParser<T, I> {
                     ConfigInventory c = createCachedMenu(
                             sFactorz, guiName, gui, context
                     );
-                    c.setPreInitialize(true);
                     I i = createInventory(null, "gui.label.class-types");
                     c.fill(i);
                     CACHED_MENUS.put(guiName, i);
@@ -67,14 +65,14 @@ public abstract class GuiParser<T, I> {
                                 Object[] context2 = new Object[]{
                                         type,
                                         (Supplier<T[]>) () -> api.getClassService().getClassDefinitions()
-                                                .stream().filter(a -> a.getClassType().equals(type)).map(a -> toItemStack(a))
+                                                .stream().filter(a -> a.getClassType().equals(type))
+                                                .map(this::toItemStack)
                                                 .collect(Collectors.toList())
                                                 .toArray(initArray(api.getClassService().getClassDefinitions().size()))
                                 };
                                 ConfigInventory c2 = createCachedMenu(
                                         sFactorz, guiName, gui, context2
                                 );
-                                c2.setPreInitialize(true);
                                 I i2 = createInventory(s.getPreferedColor(), type);
                                 c2.fill(i2);
                                 CACHED_MENUS.put(guiName + type, i2);
@@ -97,7 +95,6 @@ public abstract class GuiParser<T, I> {
                         ConfigInventory c3 = createCachedMenu(
                                 sFactorz, guiName, gui, context3
                         );
-                        c3.setPreInitialize(true);
                         I i3 = createInventory(classDef.getPreferedColor(), "gui.label.armor");
                         c3.fill(i3);
                         CACHED_MENUS.put(guiName + "_armor_" + classDef.getName(), i3);
@@ -115,7 +112,6 @@ public abstract class GuiParser<T, I> {
                         c3 = createCachedMenu(
                                 sFactorz, guiName, gui, context3
                         );
-                        c3.setPreInitialize(true);
                         i3 = createInventory(classDef.getPreferedColor(), "gui.label.weapons");
                         c3.fill(i3);
                         CACHED_MENUS.put(guiName + "_weapons_" + classDef.getName(), i3);

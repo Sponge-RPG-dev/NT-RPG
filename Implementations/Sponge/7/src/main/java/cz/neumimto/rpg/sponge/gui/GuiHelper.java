@@ -135,29 +135,6 @@ public class GuiHelper {
         return is;
     }
 
-    static Inventory createMenuInventoryClassDefView(ClassDefinition w) {
-        Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST)
-                .property(InventoryTitle.of(Text.of(w.getName(), toTextColor(w.getPreferedColor()), TextStyles.BOLD)))
-                .build(SpongeRpgPlugin.getInstance());
-        String dyeColor = Rpg.get().getPluginConfig().CLASS_TYPES.get(w.getClassType()).getDyeColor();
-        makeBorder(i, toDyeColor(dyeColor));
-        i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(1, 4))).offer(toItemStack(w));
-
-        if (!w.getWeapons().isEmpty()) {
-            i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(2, 2))).offer(createWeaponCommand(w));
-        }
-        if (!w.getAllowedArmor().isEmpty()) {
-            i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(3, 2))).offer(createArmorCommand(w));
-        }
-        if (!w.getStartingAttributes().isEmpty()) {
-            i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(2, 3))).offer(createAttributesCommand(w));
-        }
-
-        i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(3, 3))).offer(createPropertyCommand(w));
-
-        return i;
-    }
-
     static Inventory createMenuInventoryClassTypeView(String type) {
         ClassTypeDefinition classTypeDefinition = Rpg.get().getPluginConfig().CLASS_TYPES.get(type);
         Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST)
@@ -213,18 +190,6 @@ public class GuiHelper {
                 translate(LocalizationKeys.ATTRIBUTES), ItemTypes.BOOK);
     }
 
-    private static ItemStack createArmorCommand(ClassDefinition group) {
-        ItemStack i = command("ninfo class-armor " + group.getName(), translate(LocalizationKeys.ARMOR), ItemTypes.DIAMOND_CHESTPLATE);
-        i.offer(Keys.ITEM_LORE, Collections.singletonList(translate(LocalizationKeys.ARMOR_MENU_HELP)));
-        return i;
-    }
-
-    private static ItemStack createWeaponCommand(ClassDefinition group) {
-        ItemStack i = command("ninfo class-weapons " + group.getName(), translate(LocalizationKeys.WEAPONS), ItemTypes.DIAMOND_SWORD);
-        i.offer(Keys.ITEM_LORE, Collections.singletonList(translate(LocalizationKeys.WEAPONS_MENU_HELP)));
-        return i;
-    }
-
     public static ItemStack propertyToItemStack(int id, float value) {
         ItemStack i = itemStack(ItemTypes.BOOK);
         String nameById = Rpg.get().getPropertyService().getNameById(id);
@@ -254,7 +219,12 @@ public class GuiHelper {
 
     public static ItemStack command(String command, Text displayName, ItemType type) {
         ItemStack of = itemStack(type);
+        command(command, of);
         of.offer(Keys.DISPLAY_NAME, displayName);
+        return of;
+    }
+
+    public static ItemStack command(String command, ItemStack of) {
         of.offer(new MenuInventoryData(true));
         of.offer(new InventoryCommandItemMenuData(command));
         return of;
@@ -268,6 +238,12 @@ public class GuiHelper {
         ItemStack of = itemStack(ItemTypes.STAINED_GLASS_PANE);
         of.offer(new MenuInventoryData(true));
         of.offer(Keys.DYE_COLOR, dyeColor);
+        of.offer(Keys.DISPLAY_NAME, Text.EMPTY);
+        return of;
+    }
+
+    public static ItemStack unclickableInterface(ItemStack of) {
+        of.offer(new MenuInventoryData(true));
         of.offer(Keys.DISPLAY_NAME, Text.EMPTY);
         return of;
     }

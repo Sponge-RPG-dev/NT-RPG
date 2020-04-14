@@ -233,19 +233,9 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
 
     @Override
     public void showClassInfo(ISpongeCharacter character, ClassDefinition cc) {
-        Inventory i = createMenuInventoryClassDefView(cc);
-
-        ItemStack of = GuiHelper.itemStack(ItemTypes.DIAMOND);
-        of.offer(new InventoryCommandItemMenuData("character set-class " + cc.getName()));
-        of.offer(Keys.DISPLAY_NAME, translate(LocalizationKeys.CONFIRM));
-        i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(7, 1))).offer(of);
-
-        ItemStack tree = GuiHelper.itemStack(ItemTypes.SAPLING);
-        tree.offer(Keys.DISPLAY_NAME, translate(LocalizationKeys.SKILLTREE));
-        tree.offer(new InventoryCommandItemMenuData("skilltree " + cc.getName()));
-        i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(4, 3))).offer(tree);
-
-        character.getPlayer().openInventory(i);
+        Player player = character.getPlayer();
+        Inventory i = GuiHelper.CACHED_MENUS.get("class_template" + cc.getName());
+        player.openInventory(i);
     }
 
     @Override
