@@ -58,10 +58,6 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
 
     }
 
-    @Override
-    public void invokeCharacterMenu(ISpigotCharacter player, List<CharacterBase> characterBases) {
-
-    }
 
     @Override
     public void sendPlayerInfo(ISpigotCharacter character, ISpigotCharacter target) {

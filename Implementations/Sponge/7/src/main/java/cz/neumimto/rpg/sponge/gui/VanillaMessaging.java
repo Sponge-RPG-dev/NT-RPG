@@ -40,6 +40,8 @@ import cz.neumimto.rpg.api.persistance.model.CharacterClass;
 import cz.neumimto.rpg.api.skills.SkillData;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.common.effects.InternalEffectSourceProvider;
+import cz.neumimto.rpg.common.gui.DynamicInventory;
+import cz.neumimto.rpg.common.gui.TemplateInventory;
 import cz.neumimto.rpg.common.inventory.crafting.runewords.ItemUpgrade;
 import cz.neumimto.rpg.common.inventory.crafting.runewords.Rune;
 import cz.neumimto.rpg.common.inventory.runewords.RuneWord;
@@ -92,6 +94,7 @@ import org.spongepowered.api.util.Color;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static cz.neumimto.rpg.sponge.gui.GuiHelper.*;
@@ -164,12 +167,6 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
 
     }
 
-    @Override
-    public void invokeCharacterMenu(ISpongeCharacter player, List<CharacterBase> characterBases) {
-        ItemStack.Builder b = ItemStack.builder();
-        List<ItemStack> list = new ArrayList<>();
-        //todo
-    }
 
     private Text getDetailedCharInfo(ISpongeCharacter character) {
         Text text = Text.builder("Level").color(TextColors.YELLOW).append(
@@ -689,32 +686,10 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
     }
 
     @Override
-    public void displayCharacterMenu(ISpongeCharacter character) {
-        Inventory i = GuiHelper.createCharacterEmptyInventory(character).build(plugin);
-
-        makeBorder(i, DyeColors.ORANGE);
-
-        ItemStack itemStack = GuiHelper.itemStack(ItemTypes.BOOK);
-        itemStack.offer(Keys.DISPLAY_NAME, translate(LocalizationKeys.ATTRIBUTES));
-        itemStack.offer(new InventoryCommandItemMenuData("character attributes"));
-        i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(1, 1))).offer(itemStack);
-
-        itemStack = GuiHelper.itemStack(ItemTypes.ARMOR_STAND);
-        itemStack.offer(Keys.DISPLAY_NAME, translate(LocalizationKeys.CHARACTER_CLASSES));
-        itemStack.offer(new InventoryCommandItemMenuData("character classes"));
-        i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(2, 1))).offer(itemStack);
-
-        itemStack = GuiHelper.itemStack(ItemTypes.IRON_CHESTPLATE);
-        itemStack.offer(Keys.DISPLAY_NAME, translate(LocalizationKeys.CHARACTER_ARMOR));
-        itemStack.offer(new InventoryCommandItemMenuData("character armor 0"));
-        i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(3, 1))).offer(itemStack);
-
-        itemStack = GuiHelper.itemStack(ItemTypes.IRON_AXE);
-        itemStack.offer(Keys.DISPLAY_NAME, translate(LocalizationKeys.CHARACTER_WEAPONS));
-        itemStack.offer(new InventoryCommandItemMenuData("character weapon 0"));
-        i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(4, 1))).offer(itemStack);
-
-        character.getPlayer().openInventory(i);
+    public void displayCharacterMenu(ISpongeCharacter cc) {
+        Player player = cc.getPlayer();
+        Inventory inventory = GuiHelper.createCharacterMenu(cc);
+        player.openInventory(inventory);
     }
 
     @Override

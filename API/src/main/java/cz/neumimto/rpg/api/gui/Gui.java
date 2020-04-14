@@ -67,9 +67,7 @@ public class Gui {
         getMessageTypeOf(player).sendEffectStatus(player, type, effect);
     }
 
-    public static void invokeCharacterMenu(IActiveCharacter player, List<CharacterBase> characterBases) {
-        getMessageTypeOf(player).invokeCharacterMenu(player, characterBases);
-    }
+
 
     public static void showCharacterInfo(IActiveCharacter player, IActiveCharacter character) {
         getMessageTypeOf(player).sendPlayerInfo(player, character);

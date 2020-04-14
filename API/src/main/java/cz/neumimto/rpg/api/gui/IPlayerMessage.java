@@ -43,7 +43,6 @@ public interface IPlayerMessage<T extends IActiveCharacter> {
 
     void sendEffectStatus(T player, EffectStatusType type, IEffect effect);
 
-    void invokeCharacterMenu(T player, List<CharacterBase> characterBases);
 
     void sendPlayerInfo(T character, T target);
 

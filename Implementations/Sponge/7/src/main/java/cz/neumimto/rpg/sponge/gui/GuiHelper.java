@@ -15,6 +15,9 @@ import cz.neumimto.rpg.api.persistance.model.CharacterClass;
 import cz.neumimto.rpg.api.skills.*;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.utils.Pair;
+import cz.neumimto.rpg.common.gui.ConfigInventory;
+import cz.neumimto.rpg.common.gui.DynamicInventory;
+import cz.neumimto.rpg.common.gui.TemplateInventory;
 import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
 import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
@@ -50,6 +53,7 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static cz.neumimto.rpg.sponge.gui.CatalogTypeItemStackBuilder.Block;
 import static cz.neumimto.rpg.sponge.gui.CatalogTypeItemStackBuilder.Item;
@@ -66,6 +70,9 @@ public class GuiHelper {
     public static Text HEADER_END = Text.of(TextColors.DARK_GRAY," ] ════════");
     public static Text VERTICAL_LINE = Text.of(TextColors.DARK_GRAY, "║ " , TextColors.GRAY);
     public static Set<String> SKILL_SETTINGS_DURATION_NODES = new HashSet<>();
+
+    public static Map<String, Inventory> CACHED_MENUS = new HashMap<>();
+    public static Map<String, ConfigInventory<ItemStack, Inventory>> CACHED_MENU_TEMPLATES = new HashMap<>();
 
     static {
         SKILL_SETTINGS_DURATION_NODES.add(SkillNodes.DURATION.value());
@@ -92,6 +99,17 @@ public class GuiHelper {
         damageTypeToItemStack.put(NDamageType.FIRE, Block.of(BlockTypes.FIRE));
         damageTypeToItemStack.put(NDamageType.ICE, Block.of(BlockTypes.ICE));
         damageTypeToItemStack.put(NDamageType.LIGHTNING, Item.of(ItemTypes.NETHER_STAR));
+    }
+
+    public static void initInventories() {
+        Map<String, Object> stringObjectMap = new SpongeUIReader().initInventories();
+        for (Map.Entry<String, Object> next : stringObjectMap.entrySet()) {
+            if (next.getValue() instanceof Inventory) {
+                CACHED_MENUS.put(next.getKey(), (Inventory) next.getValue());
+            } else {
+                CACHED_MENU_TEMPLATES.put(next.getKey(), (ConfigInventory<ItemStack, Inventory>) next.getValue());
+            }
+        }
     }
 
 
@@ -180,16 +198,6 @@ public class GuiHelper {
         return i;
     }
 
-    private static ItemStack createPropertyCommand(ClassDefinition group) {
-        return command("ninfo properties-initial " + group.getName(),
-                translate(LocalizationKeys.PROPERTIES), ItemTypes.BOOK);
-    }
-
-    private static ItemStack createAttributesCommand(ClassDefinition group) {
-        return command("ninfo attributes-initial " + group.getName(),
-                translate(LocalizationKeys.ATTRIBUTES), ItemTypes.BOOK);
-    }
-
     public static ItemStack propertyToItemStack(int id, float value) {
         ItemStack i = itemStack(ItemTypes.BOOK);
         String nameById = Rpg.get().getPropertyService().getNameById(id);
@@ -251,6 +259,26 @@ public class GuiHelper {
     static ItemStack skillToItemStack(ISpongeCharacter character, SkillData skillData, SkillTree skillTree, SpongeSkillTreeViewModel model) {
         return toItemStack(skillData.getSkill(), character, skillData, skillTree, model);
     }
+
+    public static Inventory createCharacterMenu(ISpongeCharacter cc) {
+        String name = "char_view" + cc.getName();
+        Inventory dynamicInventory = CACHED_MENUS.get(name);
+        if (dynamicInventory == null) {
+            TemplateInventory<ItemStack, Inventory> dView = (TemplateInventory<ItemStack, Inventory>) CACHED_MENU_TEMPLATES.get("char_view");
+            ItemStack[] chars = cc.getClasses().values()
+                    .stream()
+                    .map(PlayerClassData::getClassDefinition)
+                    .map(GuiHelper::toItemStack)
+                    .collect(Collectors.toList())
+                    .toArray(new ItemStack[cc.getClasses().size() == 0 ? 0 : cc.getClasses().size() - 1]);
+            DynamicInventory inv = dView.setActualContent(chars);
+            dynamicInventory = createInventoryTemplate(cc.getName());
+            inv.fill(dynamicInventory);
+            CACHED_MENUS.put(name, dynamicInventory);
+        }
+        return dynamicInventory;
+    }
+
 
     private static ItemStack toItemStack(ISkill skill, ISpongeCharacter character, SkillData skillData, SkillTree skillTree, SpongeSkillTreeViewModel model) {
         List<Text> lore;
@@ -607,23 +635,6 @@ public class GuiHelper {
         return md;
     }
 
-
-    public static ItemStack rpgItemTypeToItemStack(SpongeRpgItemType configRPGItemType, ClassItem classItem) {
-        ItemStack q = itemStack(configRPGItemType.getItemType());
-        Text lore = Text.builder().append(translate(LocalizationKeys.ITEM_DAMAGE))
-                .append(Text.builder(": " + classItem.getDamage())
-                        .style(TextStyles.BOLD)
-                        .color(((SpongeDamageService) Rpg.get().getDamageService()).getColorByDamage(classItem.getDamage()))
-                        .build())
-                .build();
-        q.offer(Keys.ITEM_LORE, Collections.singletonList(lore));
-        q.offer(new MenuInventoryData(true));
-        if (configRPGItemType.getModelId() != null) {
-            q.offer(Keys.DISPLAY_NAME, Text.of(configRPGItemType.getModelId()));
-        }
-        return q;
-    }
-
     public static ItemStack toItemStack(ClassDefinition a) {
         String sItemType = a.getItemType();
         ItemType type = Sponge.getRegistry().getType(ItemType.class, sItemType).orElse(ItemTypes.STONE);
@@ -681,13 +692,6 @@ public class GuiHelper {
         }
     }
 
-    public static Inventory.Builder createCharacterEmptyInventory(IActiveCharacter character) {
-        return Inventory.builder()
-                .of(InventoryArchetypes.DOUBLE_CHEST)
-                .property(InventoryTitle.of(Text.of(character.getCharacterBase().getName(), TextStyles.BOLD)))
-                ;
-    }
-
     public static ItemStack itemStack(String itemType) {
         if (itemType == null) {
             return itemStack(ItemTypes.STONE);
@@ -712,4 +716,12 @@ public class GuiHelper {
     private static Text translate(String id) {
         return TextHelper.parse(Rpg.get().getLocalizationService().translate(id));
     }
+
+    public static Inventory createInventoryTemplate(String title) {
+        return Inventory.builder()
+                .of(InventoryArchetypes.DOUBLE_CHEST)
+                .property(InventoryTitle.of(Text.of(title)))
+                .build(SpongeRpgPlugin.getInstance());
+    }
+
 }
