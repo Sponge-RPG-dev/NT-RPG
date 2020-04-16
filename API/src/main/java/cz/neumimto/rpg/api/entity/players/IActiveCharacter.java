@@ -281,4 +281,6 @@ public interface IActiveCharacter<T, P extends IParty> extends IEntity<T> {
     String getPlayerAccountName();
 
     Map<String, ? extends SkillTreeViewModel> getSkillTreeViewLocation();
+
+    SkillTreeViewModel getLastTimeInvokedSkillTreeView();
 }

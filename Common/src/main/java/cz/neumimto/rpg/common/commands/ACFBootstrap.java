@@ -3,6 +3,7 @@ package cz.neumimto.rpg.common.commands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.CommandManager;
 import co.aikar.commands.InvalidCommandArgument;
+import co.aikar.commands.contexts.ContextResolver;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
@@ -91,7 +92,7 @@ public class ACFBootstrap {
             Set<IActiveCharacter> players = Rpg.get().getCharacterService().getCharacter(uniqueId)
                     .getParty()
                     .getPlayers();
-            return players.stream().map(a -> a.getPlayerAccountName()).collect(Collectors.toList());
+            return players.stream().map(IActiveCharacter::getPlayerAccountName).collect(Collectors.toList());
         });
 
         manager.getCommandCompletions().registerAsyncCompletion("learned-skill", c->
@@ -113,6 +114,17 @@ public class ACFBootstrap {
             //todo
             return new RuneWord();
         });
+
+        manager.getCommandContexts().registerIssuerOnlyContext(IActiveCharacter.class, c -> {
+            UUID uniqueId = c.getIssuer().getUniqueId();
+            return Rpg.get().getCharacterService().getCharacter(uniqueId);
+        });
+
+        ContextResolver resolver = manager.getCommandContexts().getResolver(OnlineOtherPlayer.class);
+        if (resolver == null) {
+            throw new IllegalStateException("Required to register OnlineOtherPlayer acf context resolver!!");
+        }
+
 
         for (BaseCommand o : commandClasses) {
             manager.registerCommand(o);

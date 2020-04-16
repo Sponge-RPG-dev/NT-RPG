@@ -35,17 +35,13 @@ public class SpongeSkillBindCommands extends BaseCommand {
     private SpongeInventoryService inventoryService;
 
     @Default
-    public void bindSkillCommand(Player executor, ISkill skill) {
+    public void bindSkillCommand(IActiveCharacter executor, ISkill skill) {
         if (!(skill instanceof ActiveSkill)) {
             String msg = localizationService.translate(LocalizationKeys.CANNOT_BIND_NON_EXECUTABLE_SKILL);
-            executor.sendMessage(TextHelper.parse(msg));
-            return;
-        }
-        IActiveCharacter character = characterService.getCharacter(executor);
-        if (character.isStub()) {
+            executor.sendMessage(msg);
             return;
         }
         ItemStack is = inventoryService.createSkillbind(skill);
-        executor.getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class)).offer(is);
+        ((Player)executor.getEntity()).getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class)).offer(is);
     }
 }

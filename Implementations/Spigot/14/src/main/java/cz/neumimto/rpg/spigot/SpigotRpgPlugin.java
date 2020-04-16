@@ -1,7 +1,6 @@
 package cz.neumimto.rpg.spigot;
 
-import co.aikar.commands.CommandManager;
-import co.aikar.commands.PaperCommandManager;
+import co.aikar.commands.*;
 import com.comphenix.executors.BukkitExecutors;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.players.CharacterService;
@@ -10,6 +9,7 @@ import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.scripting.IScriptEngine;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
+import cz.neumimto.rpg.common.commands.*;
 import cz.neumimto.rpg.persistence.flatfiles.FlatFilesModule;
 import cz.neumimto.rpg.spigot.bridges.HolographicDisplaysExpansion;
 import cz.neumimto.rpg.spigot.bridges.NtRpgPlaceholderExpansion;
@@ -34,7 +34,6 @@ import org.bukkit.plugin.java.annotation.plugin.author.Author;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.script.ScriptException;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.concurrent.ExecutorService;
@@ -92,13 +91,27 @@ public class SpigotRpgPlugin extends JavaPlugin {
 
         CommandManager manager = new PaperCommandManager(this);
 
+        manager.getCommandContexts().registerContext(OnlineOtherPlayer.class, c-> {
+            CommandIssuer issuer = c.getIssuer();
+            String lookup = c.popFirstArg();
+            boolean allowMissing = c.isOptional();
+            Player player = ACFBukkitUtil.findPlayerSmart(issuer, lookup);
+            if (player == null) {
+                if (allowMissing) {
+                    return null;
+                }
+                throw new InvalidCommandArgument(false);
+            }
+            return new OnlineOtherPlayer(Rpg.get().getCharacterService().getCharacter(player.getUniqueId()));
+        });
+
         spigotRpg.init(getDataFolder().toPath(), manager, new Class[]{
                 SpigotAdminCommands.class,
                 SpigotCharacterCommands.class,
-                SpigotInfoCommands.class,
-                SpigotPartyCommands.class,
-                SpigotSkillCommands.class,
-                SpigotSkilltreeCommands.class,
+                InfoCommands.class,
+                PartyCommands.class,
+                SkillCommands.class,
+                SkilltreeCommands.class,
                 SpigotSkillBindCommands.class
 
         }, new FlatFilesModule(), (bindings, providers) -> new SpigotGuiceModule(this, spigotRpg, bindings, providers), injector -> {

@@ -31,6 +31,8 @@ import cz.neumimto.rpg.sponge.utils.TextHelper;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.data.DataContainer;
+import org.spongepowered.api.data.DataQuery;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.DyeColor;
 import org.spongepowered.api.data.type.DyeColors;
@@ -137,6 +139,20 @@ public class GuiHelper {
         is.offer(Keys.HIDE_MISCELLANEOUS, true);
         return is;
     }
+
+    public static ItemStack isItemStackUnclickable(ItemStack i) {
+        DataQuery unsafeDataQ = DataQuery.of("UnsafeData", "my.nbt.path");
+        DataContainer container = i.toContainer();
+        container.set(unsafeDataQ, true);
+        i = ItemStack.builder().fromContainer(container).build();
+        return i;
+    }
+
+    public static void makeItemStackUnclickable(ItemStack i) {
+        DataQuery.of("UnsafeData", "ntrpg:menu_inventory");
+    }
+
+
 
     private static ItemStack damageTypeToItemStack(String type) {
         if (type == null) {

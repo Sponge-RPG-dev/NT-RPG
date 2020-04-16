@@ -60,7 +60,20 @@ public class SpongeUIReader extends GuiParser<ItemStack, Inventory> {
 
     @Override
     protected ItemStack itemStringToItemStack(String[] split, Supplier<String> command) {
-        Optional<ItemType> type = Sponge.getRegistry().getType(ItemType.class, split[2]);
+        String s = split[2];
+        if (s.equals("minecraft:oak_sapling")) {
+            s = "minecraft:sapling";
+        }
+        if (s.equals("minecraft:gray_stained_glass_pane")) {
+            s = "minecraft:stained_glass_pane";
+        }
+        if (s.equals("minecraft:red_stained_glass_pane")) {
+            s = "minecraft:stained_glass_pane";
+        }
+        if (s.equals("minecraft:white_stained_glass_pane")) {
+            s = "minecraft:stained_glass_pane";
+        }
+        Optional<ItemType> type = Sponge.getRegistry().getType(ItemType.class, s);
         ItemType itemType = type.get();
         ItemStack itemStack = ItemStack.of(itemType);
         itemStack.offer(Keys.HIDE_ATTRIBUTES, true);
@@ -73,7 +86,7 @@ public class SpongeUIReader extends GuiParser<ItemStack, Inventory> {
         itemStack.offer(Keys.DISPLAY_NAME, TextHelper.parse(Rpg.get().getLocalizationService().translate(split[1])));
 
         String cmd = command.get();
-        if ("".equals(cmd) || "---".equalsIgnoreCase(cmd)) {
+        if (cmd == null || "".equals(cmd) || "---".equalsIgnoreCase(cmd)) {
             return GuiHelper.unclickableInterface(itemStack);
         } else {
             return GuiHelper.command(cmd, itemStack);

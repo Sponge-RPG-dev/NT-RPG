@@ -39,7 +39,6 @@ import java.util.Optional;
 public abstract class CommandBase implements CommandCallable, IEffectSourceProvider {
 
     protected String permission = "*";
-    protected Optional<Text> shortDescription = Optional.empty();
     protected Optional<Text> help = Optional.empty();
     protected Text usage = Text.of("");
     protected List<String> alias = new ArrayList<>();
@@ -51,27 +50,6 @@ public abstract class CommandBase implements CommandCallable, IEffectSourceProvi
     @Override
     public CommandResult process(CommandSource commandSource, String s) throws CommandException {
         return CommandResult.empty();
-    }
-
-    protected void setDescription(String string) {
-        /* Ty for epic wrapers use... */
-        shortDescription = Optional.of(Text.of(string));
-    }
-
-    protected void setHelp(String string) {
-        help = Optional.of(Text.of(string));
-    }
-
-    protected void setUsage(String string) {
-        usage = Text.of(string);
-    }
-
-    protected void addAlias(String string) {
-        alias.add(string);
-    }
-
-    protected void setPermission(String permission) {
-        this.permission = permission;
     }
 
     @Override

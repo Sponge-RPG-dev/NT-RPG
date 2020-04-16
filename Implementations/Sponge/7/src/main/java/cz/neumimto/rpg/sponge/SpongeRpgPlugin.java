@@ -18,7 +18,11 @@
 
 package cz.neumimto.rpg.sponge;
 
+import co.aikar.commands.ACFSpongeUtil;
+import co.aikar.commands.CommandIssuer;
+import co.aikar.commands.InvalidCommandArgument;
 import co.aikar.commands.SpongeCommandManager;
+import co.aikar.commands.sponge.contexts.OnlinePlayer;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import cz.neumimto.rpg.api.Rpg;
@@ -26,8 +30,13 @@ import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.utils.FileUtils;
+import cz.neumimto.rpg.common.commands.InfoCommands;
+import cz.neumimto.rpg.common.commands.OnlineOtherPlayer;
+import cz.neumimto.rpg.common.commands.PartyCommands;
+import cz.neumimto.rpg.common.commands.SkillCommands;
 import cz.neumimto.rpg.persistence.flatfiles.FlatFilesModule;
 import cz.neumimto.rpg.sponge.commands.*;
+import cz.neumimto.rpg.sponge.gui.GuiHelper;
 import cz.neumimto.rpg.sponge.gui.VanillaMessaging;
 import cz.neumimto.rpg.sponge.inventory.data.*;
 import cz.neumimto.rpg.sponge.inventory.data.manipulators.*;
@@ -38,11 +47,13 @@ import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.data.DataRegistration;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.CauseStackManager;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.cause.entity.damage.DamageType;
 import org.spongepowered.api.event.game.GameRegistryEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
+import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.plugin.Dependency;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
@@ -119,37 +130,6 @@ public class SpongeRpgPlugin extends Rpg {
 
         PluginContainer pluginContainer = Sponge.getPluginManager().fromInstance(this).get();
 
-        SpongeCommandManager manager = new SpongeCommandManager(pluginContainer);
-        impl = new SpongeRpg(workingDir, Sponge.getScheduler().createSyncExecutor(this));
-
-        impl.init(
-                workingDirPath,
-                manager,
-                new Class[]{
-                        SpongeAdminCommands.class,
-                        SpongeCharacterCommands.class,
-                        SpongeInfoCommands.class,
-                        SpongePartyCommands.class,
-                        SpongeSkillCommands.class,
-                        SpongeSkilltreeCommands.class,
-                        SpongeSkillBindCommands.class
-                },
-                new FlatFilesModule(),
-                (bindings, providers) -> new SpongeGuiceModule(this, logger, game, causeStackManager, bindings),
-                injector -> {
-                    injector.injectMembers(impl);
-
-                    SpongeCommandService commandService = injector.getInstance(SpongeCommandService.class);
-                    commandService.registerStandartCommands();
-
-                    injector.getInstance(Gui.class).setVanillaMessaging(injector.getInstance(VanillaMessaging.class));
-
-                    if (Boolean.TRUE.equals(Rpg.get().getPluginConfig().ITEM_COOLDOWNS)) {
-                        Rpg.get().registerListeners(new SpongeItemCooldownListener());
-                    }
-                }
-        );
-        Rpg.get().getSyncExecutor();
         /*
         try {
             Class.forName("me.rojo8399.placeholderapi.PlaceholderService");
@@ -337,7 +317,65 @@ public class SpongeRpgPlugin extends Rpg {
                 .buildAndRegister(plugin);
 
         double elapsedTime = (System.nanoTime() - start) / 1000000000.0;
+
+
+
+        SpongeCommandManager manager = new SpongeCommandManager(pluginContainer);
+
+        manager.getCommandContexts().registerContext(OnlineOtherPlayer.class, c-> {
+            CommandIssuer issuer = c.getIssuer();
+            String lookup = c.popFirstArg();
+            boolean allowMissing = c.isOptional();
+            Player player = ACFSpongeUtil.findPlayerSmart(issuer, lookup);
+            if (player == null) {
+                if (allowMissing) {
+                    return null;
+                }
+                throw new InvalidCommandArgument(false);
+            }
+            return new OnlineOtherPlayer(Rpg.get().getCharacterService().getCharacter(player.getUniqueId()));
+        });
+
+        impl = new SpongeRpg(workingDir, Sponge.getScheduler().createSyncExecutor(this));
+
+        impl.init(
+                workingDirPath,
+                manager,
+                new Class[]{
+                        SpongeAdminCommands.class,
+                        SpongeCharacterCommands.class,
+                        InfoCommands.class,
+                        PartyCommands.class,
+                        SkillCommands.class,
+                        SpongeSkilltreeCommands.class,
+                        SpongeSkillBindCommands.class
+                },
+                new FlatFilesModule(),
+                (bindings, providers) -> new SpongeGuiceModule(this, logger, game, causeStackManager, bindings),
+                injector -> {
+                    injector.injectMembers(impl);
+
+                    SpongeCommandService commandService = injector.getInstance(SpongeCommandService.class);
+                    commandService.registerStandartCommands();
+
+                    injector.getInstance(Gui.class).setVanillaMessaging(injector.getInstance(VanillaMessaging.class));
+
+                    if (Boolean.TRUE.equals(Rpg.get().getPluginConfig().ITEM_COOLDOWNS)) {
+                        Rpg.get().registerListeners(new SpongeItemCooldownListener());
+                    }
+                }
+        );
+        Rpg.get().getSyncExecutor();
+
+
+
         info("NtRpg plugin successfully loaded in " + elapsedTime + " seconds");
+    }
+
+
+    @Listener
+    public void gameStartedEvent(GameStartedServerEvent event) {
+        GuiHelper.initInventories();
     }
 
     @Listener

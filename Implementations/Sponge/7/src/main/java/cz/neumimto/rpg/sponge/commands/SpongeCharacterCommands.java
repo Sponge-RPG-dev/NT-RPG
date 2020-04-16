@@ -35,16 +35,12 @@ public class SpongeCharacterCommands extends BaseCommand {
     private SpongeRpgPlugin plugin;
 
     @Default
-    public void displayCharacterMenuCommand(Player executor) {
-        IActiveCharacter character = characterService.getCharacter(executor);
-        if (character == null || character.isStub()) {
-            characterList(executor);
-        } else Gui.displayCharacterMenu(character);
+    public void displayCharacterMenuCommand(IActiveCharacter executor) {
+        Gui.displayCharacterMenu(executor);
     }
 
     @Subcommand("list")
-    public void characterList(Player executor) {
-        IActiveCharacter character = characterService.getCharacter(executor);
+    public void characterList(IActiveCharacter character) {
         Gui.sendListOfCharacters(character, character.getCharacterBase());
     }
 
@@ -60,8 +56,7 @@ public class SpongeCharacterCommands extends BaseCommand {
     }
 
     @Subcommand("set-class")
-    public void chooseClassCommand(Player executor, ClassDefinition classDefinition) {
-        IActiveCharacter character = characterService.getCharacter(executor);
+    public void chooseClassCommand(IActiveCharacter character, ClassDefinition classDefinition) {
         characterCommandFacade.commandChooseClass(character, classDefinition);
     }
 

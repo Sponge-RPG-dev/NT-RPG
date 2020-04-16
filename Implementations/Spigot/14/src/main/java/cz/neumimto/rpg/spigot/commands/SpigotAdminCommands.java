@@ -9,6 +9,7 @@ import cz.neumimto.rpg.api.damage.DamageService;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.entity.PropertyService;
+import cz.neumimto.rpg.api.entity.players.CharacterService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
@@ -20,6 +21,8 @@ import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.utils.ActionResult;
 import cz.neumimto.rpg.common.commands.AdminCommandFacade;
 import cz.neumimto.rpg.common.commands.CommandProcessingException;
+import cz.neumimto.rpg.common.commands.InfoCommands;
+import cz.neumimto.rpg.common.commands.OnlineOtherPlayer;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.inventory.SpigotItemService;
 import org.bukkit.ChatColor;
@@ -38,7 +41,7 @@ import java.util.function.Function;
 @Singleton
 @CommandAlias("nadmin|na")
 @CommandPermission("ntrpg.admin")
-public class SpigotAdminCommands extends AbstractAdminCommands<CommandSender, Player> {
+public class SpigotAdminCommands {
 
     @Inject
     private AdminCommandFacade adminCommandFacade;
@@ -59,38 +62,35 @@ public class SpigotAdminCommands extends AbstractAdminCommands<CommandSender, Pl
     private SpigotCharacterCommands spigotCharacterCommands;
 
     @Inject
-    private SpigotInfoCommands spigotInfoCommands;
+    private InfoCommands infoCommands;
 
-    @Override
-    protected IActiveCharacter toCharacter(Player player) {
-        return characterService.getCharacter(player.getUniqueId());
-    }
+    @Inject
+    private CharacterService characterService;
 
     @Subcommand("class add")
-    public void addCharacterClass(CommandSender commandSender, OnlinePlayer player, ClassDefinition classDefinition) {
-        ISpigotCharacter character = characterService.getCharacter(player.player);
+    public void addCharacterClass(CommandSender commandSender, OnlineOtherPlayer player, ClassDefinition classDefinition) {
+        IActiveCharacter character = player.character;
         ActionResult actionResult = adminCommandFacade.addCharacterClass(character, classDefinition);
         if (!actionResult.isOk()) {
             Log.error("Attempt to add player class safely failed, - class slot already occupied, player is lacking permission, missing prerequirements...");
         } else {
-            Log.info("Player gained class via console " + player.getPlayer() + " class " + classDefinition.getName());
+            Log.info("Player gained class via console " + character.getPlayerAccountName() + " class " + classDefinition.getName());
         }
     }
 
     @Subcommand("attributepoints add")
     @Description("Permanently adds X skillpoints to a player")
-    public void addSkillPointsCommand(CommandSender commandSender, OnlinePlayer player, @Default("1") int amount) {
-        ISpigotCharacter character = characterService.getCharacter(player.player);
-        characterService.characterAddAttributePoints(character, amount);
+    public void addSkillPointsCommand(CommandSender commandSender, OnlineOtherPlayer player, @Default("1") int amount) {
+        characterService.characterAddAttributePoints(player.character, amount);
     }
 
     @Subcommand("skillpoints add")
     @Description("Permanently adds X skillpoints to a player")
-    public void addSkillPointsCommand(CommandSender commandSender, OnlinePlayer player, ClassDefinition characterClass, @Default("1") int amount) {
-        ISpigotCharacter character = characterService.getCharacter(player.player);
+    public void addSkillPointsCommand(CommandSender commandSender, OnlineOtherPlayer player, ClassDefinition characterClass, @Default("1") int amount) {
+        IActiveCharacter character = player.character;
         PlayerClassData classByName = character.getClassByName(characterClass.getName());
         if (classByName == null) {
-            throw new CommandException("Player " + player.player.getName() + " character " + character.getName() + " do not have class " + characterClass.getName());
+            throw new CommandException("Player " + character.getPlayerAccountName() + " character " + character.getName() + " do not have class " + characterClass.getName());
         }
         characterService.characterAddSkillPoints(character,characterClass, amount);
 
@@ -98,17 +98,22 @@ public class SpigotAdminCommands extends AbstractAdminCommands<CommandSender, Pl
 
     @Subcommand("effect add")
     @Description("Adds effect, managed by rpg plugin, to the player")
-    public void effectAddCommand(CommandSender commandSender, OnlinePlayer target, IGlobalEffect effect, long duration, String[] args) {
-        super._effectAddCommand(commandSender, target.player, effect, duration, args);
+    public void effectAddCommand(CommandSender commandSender, OnlineOtherPlayer player, IGlobalEffect effect, long duration, String[] args) {
+        String data = String.join("", args);
+        IActiveCharacter character = player.character;
+        try {
+            adminCommandFacade.commandAddEffectToPlayer(data, effect, duration, character);
+        } catch (CommandProcessingException e) {
+            commandSender.sendMessage(e.getMessage());
+        }
     }
 
 
     @Subcommand("exp")
     @Description("Adds N experiences of given source type to a character")
-    public void addExperiencesCommand(CommandSender executor, OnlinePlayer target, double amount, String classOrSource) {
-        ISpigotCharacter character = characterService.getCharacter(target.player);
+    public void addExperiencesCommand(CommandSender executor, OnlineOtherPlayer target, double amount, String classOrSource) {
         try {
-            adminCommandFacade.commandAddExperiences(character, amount, classOrSource);
+            adminCommandFacade.commandAddExperiences(target.character, amount, classOrSource);
         } catch (CommandProcessingException e) {
             executor.sendMessage(e.getMessage());
         }
@@ -116,8 +121,7 @@ public class SpigotAdminCommands extends AbstractAdminCommands<CommandSender, Pl
 
     @Subcommand("skill")
     @CommandCompletion("@skill=skill")
-    public void adminExecuteSkillCommand(Player executor, ISkill skill, @Optional String level) {
-        IActiveCharacter character = characterService.getCharacter(executor);
+    public void adminExecuteSkillCommand(IActiveCharacter character, ISkill skill, @Optional String level) {
         adminCommandFacade.commandExecuteSkill(character, skill, level == null ? 1 : Integer.parseInt(level));
     }
 
@@ -128,21 +132,20 @@ public class SpigotAdminCommands extends AbstractAdminCommands<CommandSender, Pl
     }
 
     @Subcommand("classes")
-    public void showClassesCommandAdmin(CommandSender console, OnlinePlayer executor, @Optional String type) {
-        spigotInfoCommands.showClassesCommand(executor.player, type);
+    public void showClassesCommandAdmin(CommandSender console, OnlineOtherPlayer executor, @Optional String type) {
+        infoCommands.showClassesCommand(executor.character, type);
     }
 
     @Subcommand("class")
     @CommandPermission("ntrpg.info.class")
-    public void showClassCommandAdmin(CommandSender console, OnlinePlayer executor, ClassDefinition classDefinition, @Optional String back) {
-        spigotInfoCommands.showClassCommand(executor.player, classDefinition, back);
+    public void showClassCommandAdmin(CommandSender console, OnlineOtherPlayer executor, ClassDefinition classDefinition, @Optional String back) {
+        infoCommands.showClassCommand(executor.character, classDefinition, back);
     }
 
 
     @Subcommand("add-class")
-    public void addClassToCharacterCommand(CommandSender executor, OnlinePlayer target, ClassDefinition klass) {
-        IActiveCharacter character = characterService.getCharacter(target.player);
-        ActionResult actionResult = adminCommandFacade.addCharacterClass(character, klass);
+    public void addClassToCharacterCommand(CommandSender executor, OnlineOtherPlayer target, ClassDefinition klass) {
+        ActionResult actionResult = adminCommandFacade.addCharacterClass(target.character, klass);
         if (actionResult.isOk()) {
             executor.sendMessage(Rpg.get().getLocalizationService().translate("class.set.ok"));
         } else {
@@ -151,8 +154,8 @@ public class SpigotAdminCommands extends AbstractAdminCommands<CommandSender, Pl
     }
 
     @Subcommand("add-unique-skillpoint")
-    public void addUniqueSkillpoint(CommandSender executor, OnlinePlayer target,  String classType, String sourceKey) {
-        IActiveCharacter character = characterService.getCharacter(target.player);
+    public void addUniqueSkillpoint(CommandSender executor, OnlineOtherPlayer target,  String classType, String sourceKey) {
+        IActiveCharacter character = target.character;
         if (character.isStub()) {
             throw new IllegalStateException("Stub character");
         }
@@ -163,7 +166,7 @@ public class SpigotAdminCommands extends AbstractAdminCommands<CommandSender, Pl
     public void inspectPropertyCommand(CommandSender executor, OnlinePlayer target, String property) {
         try {
             int idByName = propertyService.getIdByName(property);
-            IActiveCharacter character = characterService.getCharacter(target.player);
+            IActiveCharacter character = characterService.getCharacter(target.player.getUniqueId());
             executor.sendMessage(ChatColor.GOLD +"==================");
             executor.sendMessage(ChatColor.GREEN +  property);
 
@@ -225,7 +228,7 @@ public class SpigotAdminCommands extends AbstractAdminCommands<CommandSender, Pl
         executor.sendMessage(ChatColor.GOLD + "==================");
 
 
-        IActiveCharacter character = characterService.getCharacter(player);
+        IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
         executor.sendMessage(ChatColor.RED + "Damage: "+ damageService.getCharacterItemDamage(character, fromItemStack));
         executor.sendMessage(ChatColor.RED + "Details: ");
         executor.sendMessage(ChatColor.GRAY + " - From Item: " + character.getBaseWeaponDamage(fromItemStack));
@@ -275,13 +278,4 @@ public class SpigotAdminCommands extends AbstractAdminCommands<CommandSender, Pl
         return list;
     };
 
-    @Override
-    protected void sendMessageC(CommandSender commandSender, String message) {
-        commandSender.sendMessage(message);
-    }
-
-    @Override
-    protected void sendMessageT(Player player, String message) {
-        player.sendMessage(message);
-    }
 }

@@ -20,7 +20,7 @@ dependencies {
 
     compileOnly 'commons-io:commons-io:2.4'
     compileOnly 'org.spongepowered:spongeapi:' + project.spongeApiVersion
-    compileOnly('org.spongepowered:spongevanilla:1.12.2-7.1.0-BETA-11') {
+    compileOnly('org.spongepowered:spongevanilla:1.12.2-7.2.1-RC350') {
         exclude module: '*'
     }
     compileOnly 'me.lucko.luckperms:luckperms-api:4.2'
@@ -28,8 +28,6 @@ dependencies {
     compileOnly 'it.unimi.dsi:fastutil:8.2.1'
 
     compile "co.aikar:acf-sponge:0.5.0-SNAPSHOT"
-
-    testCompileOnly 'org.spongepowered:spongeapi:' + project.spongeApiVersion
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.1'
     testCompile 'org.junit.jupiter:junit-jupiter-engine:5.4.1'

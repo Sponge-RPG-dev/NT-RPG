@@ -212,7 +212,10 @@ public abstract class AbstractRpg implements RpgApi {
     }
 
     @Override
-    public void init(Path workingDirPath, Object commandManager, Class[] commandClasses, RpgAddon defaultStorageImpl, BiFunction<Map, Map<Class<?>, ?>, Module> fnInjProv, Consumer<Injector> injectorc) {
+    public void init(Path workingDirPath, Object commandManager,
+                     Class[] commandClasses, RpgAddon defaultStorageImpl,
+                     BiFunction<Map, Map<Class<?>, ?>, Module> fnInjProv,
+                     Consumer<Injector> injectorc) {
         reloadMainPluginConfig();
 
         PseudoRandomDistribution p = new PseudoRandomDistribution();
@@ -296,6 +299,7 @@ public abstract class AbstractRpg implements RpgApi {
             Object instance = injector.getInstance(commandClass);
             commands.add((BaseCommand) instance);
         }
+
         ACFBootstrap.initializeACF(((CommandManager) commandManager), commands);
 
         for (RpgAddon rpgAddon : rpgAddons) {
