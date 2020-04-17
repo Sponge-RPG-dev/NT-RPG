@@ -187,13 +187,7 @@ public class Utils {
                 }
             }
         }
-        DamageSource build = new SpongeEntityDamageSourceBuilder()
-                .entity(character.getEntity())
-                .type(NDamageType.DAMAGE_CHECK)
-                .absolute()
-                .build();
-
-        return l.damage(0, build);
+        return true;
     }
 
     public static boolean canDamage(ISpongeEntity entity, Living l) {
