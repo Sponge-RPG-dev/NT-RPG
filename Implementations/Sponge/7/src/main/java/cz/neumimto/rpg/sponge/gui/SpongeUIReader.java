@@ -40,7 +40,7 @@ public class SpongeUIReader extends GuiParser<ItemStack, Inventory> {
 
         return (item, inventory, slotId) -> {
             inventory.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(slotId)))
-                    .offer(item);
+                    .set(item);
         };
     }
 
