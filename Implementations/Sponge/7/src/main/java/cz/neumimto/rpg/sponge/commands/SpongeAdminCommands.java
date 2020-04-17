@@ -23,6 +23,7 @@ import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.utils.ActionResult;
 import cz.neumimto.rpg.common.commands.AdminCommandFacade;
 import cz.neumimto.rpg.common.commands.CommandProcessingException;
+import cz.neumimto.rpg.common.commands.OnlineOtherPlayer;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.common.persistance.dao.ClassDefinitionDao;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
@@ -203,13 +204,11 @@ public class SpongeAdminCommands extends BaseCommand {
 
     @Subcommand("effect")
     @Description("Adds effect, managed by rpg plugin, to the player")
-    public void effectAddCommand(CommandSource executor, OnlinePlayer target, IGlobalEffect effect, long duration, @Default("{}") String[] args) {
+    public void effectAddCommand(CommandSource executor, OnlineOtherPlayer target, IGlobalEffect effect, long duration, @Default("{}") String[] args) {
         String data = String.join("", args);
 
-        IActiveCharacter character = characterService.getCharacter(target.player);
-
         try {
-            adminCommandFacade.commandAddEffectToPlayer(data, effect, duration, character);
+            adminCommandFacade.commandAddEffectToPlayer(data, effect, duration, target.character);
         } catch (CommandProcessingException e) {
             executor.sendMessage(Text.of(e.getMessage()));
         }
@@ -217,25 +216,22 @@ public class SpongeAdminCommands extends BaseCommand {
 
     @Subcommand("exp")
     @Description("Adds N experiences of given source type to a character")
-    public void addExperiencesCommand(CommandSource executor, OnlinePlayer target, double amount, String classOrSource) {
-        ISpongeCharacter character = characterService.getCharacter(target.player);
+    public void addExperiencesCommand(CommandSource executor, OnlineOtherPlayer target, double amount, String classOrSource) {
         try {
-            adminCommandFacade.commandAddExperiences(character, amount, classOrSource);
+            adminCommandFacade.commandAddExperiences(target.character, amount, classOrSource);
         } catch (CommandProcessingException e) {
             executor.sendMessage(Text.of(e.getMessage()));
         }
     }
 
     @Subcommand("skill")
-    public void adminExecuteSkillCommand(Player executor, ISkill skill, @Flags("level") @Default("1") int level) {
-        IActiveCharacter character = characterService.getCharacter(executor);
-        adminCommandFacade.commandExecuteSkill(character, skill, level);
+    public void adminExecuteSkillCommand(IActiveCharacter executor, ISkill skill, @Flags("level") @Default("1") int level) {
+        adminCommandFacade.commandExecuteSkill(executor, skill, level);
     }
 
     @Subcommand("add-class")
-    public void addClassToCharacterCommand(CommandSource executor, OnlinePlayer target, ClassDefinition klass) {
-        IActiveCharacter character = characterService.getCharacter(target.player);
-        ActionResult actionResult = adminCommandFacade.addCharacterClass(character, klass);
+    public void addClassToCharacterCommand(CommandSource executor, OnlineOtherPlayer target, ClassDefinition klass) {
+        ActionResult actionResult = adminCommandFacade.addCharacterClass(target.character, klass);
         if (actionResult.isOk()) {
             executor.sendMessage(TextHelper.parse(Rpg.get().getLocalizationService().translate("class.set.ok")));
         } else {
@@ -245,19 +241,15 @@ public class SpongeAdminCommands extends BaseCommand {
 
 
     @Subcommand("add-unique-skillpoint")
-    public void addUniqueSkillpoint(CommandSource executor, OnlinePlayer target, String classType, String sourceKey) {
-        IActiveCharacter character = characterService.getCharacter(target.player);
-        if (character.isStub()) {
-            throw new IllegalStateException("Stub character");
-        }
-        adminCommandFacade.commandAddUniqueSkillpoint(character, classType, sourceKey);
+    public void addUniqueSkillpoint(CommandSource executor, OnlineOtherPlayer target, String classType, String sourceKey) {
+        adminCommandFacade.commandAddUniqueSkillpoint(target.character, classType, sourceKey);
     }
 
     @Subcommand("inspect property")
-    public void inspectPropertyCommand(CommandSource executor, OnlinePlayer target, String property) {
+    public void inspectPropertyCommand(CommandSource executor, OnlineOtherPlayer target, String property) {
         try {
             int idByName = propertyService.getIdByName(property);
-            IActiveCharacter character = characterService.getCharacter(target.player);
+            IActiveCharacter character = target.character;
             executor.sendMessage(Text.of(TextColors.GOLD, "=================="));
             executor.sendMessage(Text.of(TextColors.GREEN, property));
 

@@ -111,6 +111,7 @@ public class SpigotRpgPlugin extends JavaPlugin {
                 InfoCommands.class,
                 PartyCommands.class,
                 SkillCommands.class,
+                ClassesComand.class,
                 SkilltreeCommands.class,
                 SpigotSkillBindCommands.class
 

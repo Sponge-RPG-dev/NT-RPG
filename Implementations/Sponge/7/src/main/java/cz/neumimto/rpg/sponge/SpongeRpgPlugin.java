@@ -30,10 +30,7 @@ import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.utils.FileUtils;
-import cz.neumimto.rpg.common.commands.InfoCommands;
-import cz.neumimto.rpg.common.commands.OnlineOtherPlayer;
-import cz.neumimto.rpg.common.commands.PartyCommands;
-import cz.neumimto.rpg.common.commands.SkillCommands;
+import cz.neumimto.rpg.common.commands.*;
 import cz.neumimto.rpg.persistence.flatfiles.FlatFilesModule;
 import cz.neumimto.rpg.sponge.commands.*;
 import cz.neumimto.rpg.sponge.gui.GuiHelper;
@@ -347,7 +344,8 @@ public class SpongeRpgPlugin extends Rpg {
                         InfoCommands.class,
                         PartyCommands.class,
                         SkillCommands.class,
-                        SpongeSkilltreeCommands.class,
+                        ClassesComand.class,
+                        SkilltreeCommands.class,
                         SpongeSkillBindCommands.class
                 },
                 new FlatFilesModule(),

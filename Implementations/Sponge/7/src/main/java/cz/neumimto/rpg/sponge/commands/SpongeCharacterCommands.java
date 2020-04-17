@@ -60,12 +60,6 @@ public class SpongeCharacterCommands extends BaseCommand {
         characterCommandFacade.commandChooseClass(character, classDefinition);
     }
 
-    @Subcommand("classes")
-    public void displayClassesCommand(Player executor) {
-        IActiveCharacter character = characterService.getCharacter(executor);
-        Gui.sendClassTypes(character);
-    }
-
     @Subcommand("armor")
     public void displayArmorCommand(Player executor, @Default("0") int page) {
         IActiveCharacter character = characterService.getCharacter(executor);
