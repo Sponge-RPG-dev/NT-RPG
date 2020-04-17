@@ -40,9 +40,8 @@ dependencies {
     testCompile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.26'
 
     jar {
-
-        from {
-            configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+        from configurations.compile.collect {
+            it.isDirectory() ? it : zipTree(it).matching{exclude{it.path.contains('META-INF')}}
         }
         archiveName("NT-RPG-Sponge-7-"+version+".jar")
     }

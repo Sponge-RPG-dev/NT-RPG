@@ -39,7 +39,7 @@ public class SpongeUIReader extends GuiParser<ItemStack, Inventory> {
     protected InventorySlotProcessor<ItemStack, Inventory> getInventorySlotProcessor() {
 
         return (item, inventory, slotId) -> {
-            inventory.query(QueryOperationTypes.INVENTORY_PROPERTY.of(new SlotIndex(slotId)))
+            inventory.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotIndex.of(slotId)))
                     .offer(item);
         };
     }
@@ -131,7 +131,6 @@ public class SpongeUIReader extends GuiParser<ItemStack, Inventory> {
         Inventory i = Inventory.builder()
                 .of(InventoryArchetypes.DOUBLE_CHEST)
                 .property(InventoryTitle.of(Text.of(c, translate)))
-                .property(AcceptsItems.of(Collections.EMPTY_LIST))
                 .build(SpongeRpgPlugin.getInstance());
         return i;
     }
