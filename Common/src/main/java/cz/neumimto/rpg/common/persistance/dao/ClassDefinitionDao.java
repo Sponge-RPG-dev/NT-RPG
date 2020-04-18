@@ -114,7 +114,7 @@ public class ClassDefinitionDao {
                             }
 
                             if (classTypeDefinition == null) {
-                                error(" - Unknown ClassType; Allowed Class Types: " + String.join(", ", types.keySet()));
+                                error(" - Unknown ClassType " + classType + "; Allowed Class Types: " + String.join(", ", types.keySet()));
                             } else {
                                 classDefinition = new ClassDefinition(name, classType);
                                 map.put(name, p);

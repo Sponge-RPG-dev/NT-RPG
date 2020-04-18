@@ -57,14 +57,6 @@ public class VanillaGuiListener {
             Optional<Boolean> menu = transaction.getOriginal().get(NKeys.MENU_INVENTORY);
             menu.ifPresent(m -> event.setCancelled(true));
 
-            Optional<Integer> i = transaction.getOriginal().get(NKeys.MENU_ACTION);
-            i.ifPresent(action -> {
-                if (consumerMap.containsKey(player.getUniqueId()) && consumerMap.get(player.getUniqueId()).containsKey(action)) {
-                    Rpg.get().scheduleSyncLater(() ->
-                            consumerMap.get(player.getUniqueId()).get(action).accept(characterService.getCharacter(player)));
-                }
-            });
-
             Optional<String> s = transaction.getOriginal().get(NKeys.MENU_COMMAND);
             s.ifPresent(command -> Rpg.get().scheduleSyncLater(() -> Sponge.getCommandManager().process(player, command)));
         }

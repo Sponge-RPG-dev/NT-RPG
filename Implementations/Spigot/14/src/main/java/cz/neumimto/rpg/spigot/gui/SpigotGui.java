@@ -232,7 +232,6 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
         Player player = character.getPlayer();
         Inventory i = SpigotGuiHelper.createInventoryTemplate(player, character.getName());
 
-      //  SpigotGuiHelper.fillArmorView(i, character.getAllowedArmor(), "char");
         player.openInventory(i);
 
     }
@@ -242,30 +241,8 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
         Player player = character.getPlayer();
         Inventory i = SpigotGuiHelper.createInventoryTemplate(player, character.getName());
 
-     //   SpigotGuiHelper.fillWeaponView(i, character.getAllowedWeapons(), "char");
         player.openInventory(i);
     }
-
-    public void displayRuneword(ISpigotCharacter character, RuneWord runeword, boolean b) {
-
-    }
-
-    public void displayRunewordAllowedItems(ISpigotCharacter character, RuneWord runeWord) {
-
-    }
-
-    public void displayRunewordAllowedGroups(ISpigotCharacter character, RuneWord runeWord) {
-
-    }
-
-    public void displayRunewordRequiredGroups(ISpigotCharacter character, RuneWord runeWord) {
-
-    }
-
-    public void displayRunewordBlockedGroups(ISpigotCharacter character, RuneWord runeWord) {
-
-    }
-
 
     public void displayCharacterAttributes(Player player, ISpigotCharacter character) {
         Inventory inventory = SpigotGuiHelper.createCharacterAttributeView(player, character);

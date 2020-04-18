@@ -1,7 +1,5 @@
 package cz.neumimto.rpg.common.gui;
 
-import java.util.function.Function;
-
 public class TemplateInventory<T, I> extends DynamicInventory<T, I> {
 
     public TemplateInventory(T[] items, T replaceToken, InventorySlotProcessor<T, I> processor) {

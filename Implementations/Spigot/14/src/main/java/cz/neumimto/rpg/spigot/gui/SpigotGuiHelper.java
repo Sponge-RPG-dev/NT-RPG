@@ -230,27 +230,6 @@ public class SpigotGuiHelper {
         });
     }
 
-    private static ItemStack toItemStack(SpigotRpgItemType type, double damage, String damageLabel) {
-        ItemStack itemStack = new ItemStack(type.getMaterial());
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        if (type.getModelId() != null) {
-            itemMeta.setCustomModelData(Integer.parseInt(type.getModelId()));
-        }
-        if (damage > 0) {
-            List<String> lore = new ArrayList<>();
-            SpigotDamageService spigotDamageService = (SpigotDamageService) Rpg.get().getDamageService();
-            String colorByDamage = spigotDamageService.getColorByDamage(damage);
-            lore.add(damageLabel + ":" + colorByDamage + damage);
-            itemMeta.setLore(lore);
-        }
-        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        itemStack.setItemMeta(itemMeta);
-
-        return unclickableIcon(itemStack);
-    }
-
-
-
     public static Inventory createClassAttributesView(Player player, ClassDefinition cc) {
         String translate = Rpg.get().getLocalizationService().translate(LocalizationKeys.ATTRIBUTES);
         Map<AttributeConfig, Integer> attrs = cc.getStartingAttributes();

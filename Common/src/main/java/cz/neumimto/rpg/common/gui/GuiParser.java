@@ -64,11 +64,13 @@ public abstract class GuiParser<T, I> {
                                 String type = s.getClassType();
                                 Object[] context2 = new Object[]{
                                         type,
-                                        (Supplier<T[]>) () -> api.getClassService().getClassDefinitions()
-                                                .stream().filter(a -> a.getClassType().equals(type))
-                                                .map(this::toItemStack)
-                                                .collect(Collectors.toList())
-                                                .toArray(initArray(api.getClassService().getClassDefinitions().size()))
+                                        (Supplier<T[]>) () -> {
+                                            List<T> collect = api.getClassService().getClassDefinitions()
+                                                    .stream().filter(a -> a.getClassType().equals(type))
+                                                    .map(this::toItemStack)
+                                                    .collect(Collectors.toList());
+                                            return collect.toArray(initArray(collect.size()));
+                                        }
                                 };
                                 ConfigInventory c2 = createCachedMenu(
                                         sFactorz, guiName, gui, context2
@@ -227,7 +229,8 @@ public abstract class GuiParser<T, I> {
                 try {
                     return (String) i.invokeFunction("command", context, command);
                 } catch (ScriptException | NoSuchMethodException e) {
-                    return "";
+                    e.printStackTrace();
+                    return command;
                 }
             });
             if (split[0].equals(dynamicspace)) {

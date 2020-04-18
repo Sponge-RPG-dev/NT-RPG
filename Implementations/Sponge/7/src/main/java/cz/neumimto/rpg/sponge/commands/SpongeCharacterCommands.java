@@ -55,7 +55,7 @@ public class SpongeCharacterCommands extends BaseCommand {
         //TODO
     }
 
-    @Subcommand("set-class")
+    @Subcommand("choose class")
     public void chooseClassCommand(IActiveCharacter character, ClassDefinition classDefinition) {
         characterCommandFacade.commandChooseClass(character, classDefinition);
     }

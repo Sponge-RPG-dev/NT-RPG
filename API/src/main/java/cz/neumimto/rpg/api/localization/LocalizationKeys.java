@@ -70,6 +70,7 @@ public class LocalizationKeys {
     public static final String CONFIRM_SKILL_SELECTION_BUTTON = "gui.button.label.confirm.skill-selection";
     public static final String WEAPONS_MENU_HELP = "gui.label.weapons.tooltip";
     public static final String WEAPONS = "gui.label.weapons";
+    public static final String ITEM_CLASS = "gui.label.item-class";
     public static final String ARMOR = "gui.label.armor";
     public static final String ARMOR_MENU_HELP = "gui.label.armor.tooltip";
     public static final String PROPERTIES = "gui.label.generic.properties";

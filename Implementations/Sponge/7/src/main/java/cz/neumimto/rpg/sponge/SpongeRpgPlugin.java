@@ -22,7 +22,6 @@ import co.aikar.commands.ACFSpongeUtil;
 import co.aikar.commands.CommandIssuer;
 import co.aikar.commands.InvalidCommandArgument;
 import co.aikar.commands.SpongeCommandManager;
-import co.aikar.commands.sponge.contexts.OnlinePlayer;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import cz.neumimto.rpg.api.Rpg;
@@ -32,6 +31,7 @@ import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.utils.FileUtils;
 import cz.neumimto.rpg.common.commands.*;
 import cz.neumimto.rpg.persistence.flatfiles.FlatFilesModule;
+import cz.neumimto.rpg.sponge.bridges.HologramsListener;
 import cz.neumimto.rpg.sponge.commands.*;
 import cz.neumimto.rpg.sponge.gui.GuiHelper;
 import cz.neumimto.rpg.sponge.gui.VanillaMessaging;
@@ -361,10 +361,19 @@ public class SpongeRpgPlugin extends Rpg {
                     if (Boolean.TRUE.equals(Rpg.get().getPluginConfig().ITEM_COOLDOWNS)) {
                         Rpg.get().registerListeners(new SpongeItemCooldownListener());
                     }
+
+
+                    try {
+                        Class.forName("de.randombyte.holograms.api.class.HologramsService");
+                        injector.getInstance(HologramsListener.class).init();
+                        Log.info("Holograms inetgartions enabled");
+                    } catch (ClassNotFoundException e) {
+
+                    }
+
                 }
         );
         Rpg.get().getSyncExecutor();
-
 
 
         info("NtRpg plugin successfully loaded in " + elapsedTime + " seconds");

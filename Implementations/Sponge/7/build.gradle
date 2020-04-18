@@ -5,6 +5,12 @@ plugins {
 group = 'cz.neumimto.rpg'
 version = '2.1.0-SNAPSHOT-2'
 
+repositories {
+    maven {
+        url 'https://jitpack.io'
+    }
+}
+
 compileJava {
     options.compilerArgs += ["-parameters"]
     options.fork = true
@@ -26,7 +32,7 @@ dependencies {
     compileOnly 'me.lucko.luckperms:luckperms-api:4.2'
     compileOnly 'com.github.rojo8399:PlaceholderAPI:4.5.1'
     compileOnly 'it.unimi.dsi:fastutil:8.2.1'
-
+    compileOnly 'com.github.randombyte-developer:holograms:v3.2.0'
     compile "co.aikar:acf-sponge:0.5.0-SNAPSHOT"
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.1'

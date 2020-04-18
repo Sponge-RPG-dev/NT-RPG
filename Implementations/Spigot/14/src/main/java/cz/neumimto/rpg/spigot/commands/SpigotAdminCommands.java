@@ -1,6 +1,7 @@
 package cz.neumimto.rpg.spigot.commands;
 
 
+import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.Optional;
 import co.aikar.commands.annotation.*;
 import co.aikar.commands.bukkit.contexts.OnlinePlayer;
@@ -41,7 +42,7 @@ import java.util.function.Function;
 @Singleton
 @CommandAlias("nadmin|na")
 @CommandPermission("ntrpg.admin")
-public class SpigotAdminCommands {
+public class SpigotAdminCommands extends BaseCommand {
 
     @Inject
     private AdminCommandFacade adminCommandFacade;

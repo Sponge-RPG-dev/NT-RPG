@@ -31,7 +31,6 @@ import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.gui.IPlayerMessage;
 import cz.neumimto.rpg.api.inventory.CannotUseItemReason;
-import cz.neumimto.rpg.api.items.ClassItem;
 import cz.neumimto.rpg.api.localization.Arg;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
@@ -40,8 +39,6 @@ import cz.neumimto.rpg.api.persistance.model.CharacterClass;
 import cz.neumimto.rpg.api.skills.SkillData;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.common.effects.InternalEffectSourceProvider;
-import cz.neumimto.rpg.common.gui.DynamicInventory;
-import cz.neumimto.rpg.common.gui.TemplateInventory;
 import cz.neumimto.rpg.common.inventory.crafting.runewords.ItemUpgrade;
 import cz.neumimto.rpg.common.inventory.crafting.runewords.Rune;
 import cz.neumimto.rpg.common.inventory.runewords.RuneWord;
@@ -54,17 +51,13 @@ import cz.neumimto.rpg.sponge.effects.common.def.BossBarExpNotifier;
 import cz.neumimto.rpg.sponge.effects.common.def.ManaBarNotifier;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
-import cz.neumimto.rpg.sponge.gui.vanilla.CharacterAttributesGui;
 import cz.neumimto.rpg.sponge.inventory.data.InventoryCommandItemMenuData;
 import cz.neumimto.rpg.sponge.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.sponge.inventory.data.SkillTreeInventoryViewControllsData;
 import cz.neumimto.rpg.sponge.inventory.data.manipulators.SkillTreeNode;
 import cz.neumimto.rpg.sponge.inventory.runewords.RWService;
-import cz.neumimto.rpg.sponge.items.SpongeRpgItemType;
 import cz.neumimto.rpg.sponge.skills.SpongeSkillService;
-import cz.neumimto.rpg.sponge.utils.ItemStackUtils;
 import cz.neumimto.rpg.sponge.utils.TextHelper;
-import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
@@ -94,10 +87,10 @@ import org.spongepowered.api.util.Color;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import static cz.neumimto.rpg.sponge.gui.GuiHelper.*;
+import static cz.neumimto.rpg.sponge.gui.GuiHelper.back;
+import static cz.neumimto.rpg.sponge.gui.GuiHelper.getItemLore;
 
 /**
  * Created by NeumimTo on 6.8.2015.
@@ -673,16 +666,16 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
 
     @Override
     public void sendClassesByType(ISpongeCharacter character, String type) {
-        Inventory i = GuiHelper.createMenuInventoryClassTypeView(type);
+        Inventory i = GuiHelper.createMenuInventoryClassesByTypeView(type);
 
         character.getPlayer().openInventory(i);
     }
 
     @Override
     public void sendClassTypes(ISpongeCharacter character) {
-        Inventory i = GuiHelper.createMenuInventoryClassTypesView();
-
-        character.getPlayer().openInventory(i);
+        Player player = character.getPlayer();
+        Inventory inventory = GuiHelper.createMenuInventoryClassTypesView();
+        player.openInventory(inventory);
     }
 
     @Override
@@ -695,7 +688,6 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
     @Override
     public void displayCharacterAttributes(ISpongeCharacter character) {
         character.setAttributesTransaction(new HashMap<>());
-        character.getPlayer().openInventory(new CharacterAttributesGui(character).getInventory());
     }
 
     @Override
@@ -709,18 +701,14 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
 
     @Override
     public void displayCharacterArmor(ISpongeCharacter character, int page) {
-        Inventory inventory = ArmorAndWeaponMenuHelper.listArmor(character, page);
-        if (inventory != null) {
-            character.getPlayer().openInventory(inventory);
-        }
+        Inventory i = GuiHelper.getCharacterAllowedArmor(character, page);
+        character.getPlayer().openInventory(i);
     }
 
     @Override
     public void displayCharacterWeapons(ISpongeCharacter character, int page) {
-        Inventory inventory = ArmorAndWeaponMenuHelper.listWeapons(character, page);
-        if (inventory != null) {
-            character.getPlayer().openInventory(inventory);
-        }
+        Inventory i = GuiHelper.getCharacterAllowedWeapons(character, page);
+        character.getPlayer().openInventory(i);
     }
 
     private Text translate(String key) {

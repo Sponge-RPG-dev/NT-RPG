@@ -2,6 +2,7 @@ package cz.neumimto.rpg.sponge.utils.math;
 
 import com.flowpowered.math.TrigMath;
 import com.flowpowered.math.imaginary.Quaterniond;
+import com.flowpowered.math.vector.Vector2d;
 import com.flowpowered.math.vector.Vector3d;
 
 import java.util.concurrent.ThreadLocalRandom;
@@ -105,5 +106,15 @@ public class VectorUtils {
                 .mul(ThreadLocalRandom.current().nextDouble(start.distance(end)));
     }
 
+    public static Vector2d[] circle(Vector2d[] d, double radius) {
+        double increment = (2 * Math.PI) / d.length;
+        for (int i = 0; i < d.length; i++) {
+            double angle = i * increment;
+            double x = radius * Math.cos(angle);
+            double z = radius * Math.sin(angle);
+            d[i] = new Vector2d(x, z);
+        }
+        return d;
+    }
 
 }

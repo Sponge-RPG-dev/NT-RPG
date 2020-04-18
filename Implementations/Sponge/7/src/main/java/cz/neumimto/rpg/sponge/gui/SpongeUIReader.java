@@ -13,6 +13,8 @@ import cz.neumimto.rpg.sponge.items.SpongeRpgItemType;
 import cz.neumimto.rpg.sponge.utils.TextHelper;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.type.DyeColor;
+import org.spongepowered.api.data.type.DyeColors;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.Inventory;
@@ -61,23 +63,31 @@ public class SpongeUIReader extends GuiParser<ItemStack, Inventory> {
     @Override
     protected ItemStack itemStringToItemStack(String[] split, Supplier<String> command) {
         String s = split[2];
+        DyeColor dye = null;
         if (s.equals("minecraft:oak_sapling")) {
             s = "minecraft:sapling";
         }
         if (s.equals("minecraft:gray_stained_glass_pane")) {
             s = "minecraft:stained_glass_pane";
+            dye = DyeColors.GRAY;
         }
         if (s.equals("minecraft:red_stained_glass_pane")) {
             s = "minecraft:stained_glass_pane";
+            dye = DyeColors.RED;
         }
         if (s.equals("minecraft:white_stained_glass_pane")) {
             s = "minecraft:stained_glass_pane";
+            dye = DyeColors.WHITE;
         }
         Optional<ItemType> type = Sponge.getRegistry().getType(ItemType.class, s);
         ItemType itemType = type.get();
         ItemStack itemStack = ItemStack.of(itemType);
         itemStack.offer(Keys.HIDE_ATTRIBUTES, true);
         itemStack.offer(Keys.HIDE_ENCHANTMENTS, true);
+
+        if (dye != null) {
+            itemStack.offer(Keys.DYE_COLOR, dye);
+        }
 
         int i1 = Integer.parseInt(split[3]);
         if (i1 > 0) {

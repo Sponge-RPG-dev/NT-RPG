@@ -6,8 +6,9 @@ import cz.neumimto.rpg.api.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
-import cz.neumimto.rpg.api.items.ClassItem;
+import cz.neumimto.rpg.api.items.RpgItemType;
 import cz.neumimto.rpg.api.localization.Arg;
+import cz.neumimto.rpg.api.localization.Localization;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.logging.Log;
@@ -19,20 +20,16 @@ import cz.neumimto.rpg.common.gui.ConfigInventory;
 import cz.neumimto.rpg.common.gui.DynamicInventory;
 import cz.neumimto.rpg.common.gui.TemplateInventory;
 import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
-import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.inventory.data.InventoryCommandItemMenuData;
 import cz.neumimto.rpg.sponge.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.sponge.inventory.data.SkillTreeInventoryViewControllsData;
-import cz.neumimto.rpg.sponge.items.SpongeRpgItemType;
 import cz.neumimto.rpg.sponge.listeners.SkillTreeInventoryListener;
 import cz.neumimto.rpg.sponge.skills.NDamageType;
 import cz.neumimto.rpg.sponge.utils.TextHelper;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockTypes;
-import org.spongepowered.api.data.DataContainer;
-import org.spongepowered.api.data.DataQuery;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.DyeColor;
 import org.spongepowered.api.data.type.DyeColors;
@@ -68,9 +65,9 @@ public class GuiHelper {
     public static Map<DamageType, CatalogTypeItemStackBuilder> damageTypeToItemStack = new HashMap<>();
 
     public static Text JOINT = Text.of(TextColors.DARK_GRAY, "[", TextColors.DARK_RED, "+", TextColors.DARK_GRAY, "]");
-    public static Text HEADER_START = Text.of(TextColors.DARK_GRAY,"════════ [ ");
-    public static Text HEADER_END = Text.of(TextColors.DARK_GRAY," ] ════════");
-    public static Text VERTICAL_LINE = Text.of(TextColors.DARK_GRAY, "║ " , TextColors.GRAY);
+    public static Text HEADER_START = Text.of(TextColors.DARK_GRAY, "════════ [ ");
+    public static Text HEADER_END = Text.of(TextColors.DARK_GRAY, " ] ════════");
+    public static Text VERTICAL_LINE = Text.of(TextColors.DARK_GRAY, "║ ", TextColors.GRAY);
     public static Set<String> SKILL_SETTINGS_DURATION_NODES = new HashSet<>();
 
     public static Map<String, Inventory> CACHED_MENUS = new HashMap<>();
@@ -120,7 +117,7 @@ public class GuiHelper {
     }
 
     public static Text header(String header, TextColor textColor) {
-        return Text.of(JOINT, HEADER_START, textColor, header , HEADER_END);
+        return Text.of(JOINT, HEADER_START, textColor, header, HEADER_END);
     }
 
     public static Text line(String line) {
@@ -128,7 +125,7 @@ public class GuiHelper {
     }
 
     public static Text node(String key, String value) {
-        return Text.of(VERTICAL_LINE, TextColors.GRAY, Rpg.get().getLocalizationService().translate(key),TextColors.DARK_GRAY, ": " + value);
+        return Text.of(VERTICAL_LINE, TextColors.GRAY, Rpg.get().getLocalizationService().translate(key), TextColors.DARK_GRAY, ": " + value);
     }
 
 
@@ -139,20 +136,6 @@ public class GuiHelper {
         is.offer(Keys.HIDE_MISCELLANEOUS, true);
         return is;
     }
-
-    public static ItemStack isItemStackUnclickable(ItemStack i) {
-        DataQuery unsafeDataQ = DataQuery.of("UnsafeData", "my.nbt.path");
-        DataContainer container = i.toContainer();
-        container.set(unsafeDataQ, true);
-        i = ItemStack.builder().fromContainer(container).build();
-        return i;
-    }
-
-    public static void makeItemStackUnclickable(ItemStack i) {
-        DataQuery.of("UnsafeData", "ntrpg:menu_inventory");
-    }
-
-
 
     private static ItemStack damageTypeToItemStack(String type) {
         if (type == null) {
@@ -169,50 +152,14 @@ public class GuiHelper {
         return is;
     }
 
-    static Inventory createMenuInventoryClassTypeView(String type) {
-        ClassTypeDefinition classTypeDefinition = Rpg.get().getPluginConfig().CLASS_TYPES.get(type);
-        Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST)
-                .property(InventoryTitle.of(
-                        Text.builder("[ ").color(toTextColor(classTypeDefinition.getSecondaryColor()))
-                                .append(Text.builder(type).color(toTextColor(classTypeDefinition.getPrimaryColor())).style(TextStyles.BOLD).build())
-                                .append(Text.builder(" ]").color(toTextColor(classTypeDefinition.getSecondaryColor())).build())
-                                .build()))
-                .build(SpongeRpgPlugin.getInstance());
-        GuiHelper.makeBorder(i, toDyeColor(classTypeDefinition.getDyeColor()));
-
-        Rpg.get().getClassService().getClassDefinitions().stream()
-                .filter(a -> a.getClassType().equalsIgnoreCase(type))
-                .forEach(a -> i.offer(GuiHelper.toItemStack(a)));
-
-        i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(7, 4))).offer(back("ninfo classes", translate(LocalizationKeys.BACK)));
-
-        return i;
-    }
-
     public static Inventory createMenuInventoryClassTypesView() {
-        Inventory i = Inventory.builder().of(InventoryArchetypes.DOUBLE_CHEST)
-                .property(InventoryTitle.of(translate(LocalizationKeys.CLASS_TYPES)))
-                .build(SpongeRpgPlugin.getInstance());
-
-        makeBorder(i, DyeColors.WHITE);
-
-        for (String type : Rpg.get().getPluginConfig().CLASS_TYPES.keySet()) {
-            i.offer(createClassTypeDefinitionCommand(type));
-        }
-
-        return i;
+        return CACHED_MENUS.get("class_types");
     }
 
-    public static ItemStack createClassTypeDefinitionCommand(String type) {
-        ItemStack i = itemStack(ItemTypes.CRAFTING_TABLE);
-        i.offer(new MenuInventoryData(true));
-        i.offer(Keys.DISPLAY_NAME,
-                Text.builder(type)
-                        .color(toTextColor(Rpg.get().getPluginConfig().CLASS_TYPES.get(type).getPrimaryColor()))
-                        .build());
-        i.offer(new InventoryCommandItemMenuData("ninfo classes " + type));
-        return i;
+    public static Inventory createMenuInventoryClassesByTypeView(String classType) {
+        return CACHED_MENUS.get("classes_by_type" + classType);
     }
+
 
     public static ItemStack propertyToItemStack(int id, float value) {
         ItemStack i = itemStack(ItemTypes.BOOK);
@@ -339,9 +286,9 @@ public class GuiHelper {
             lore.add(node(locService.translate(LocalizationKeys.SKILL_EXECUTION_TYPE), locService.translate(skill.getSkillExecutionType().toString().toLowerCase())));
 
             PlayerSkillContext psc = character.getSkillInfo(skill);
-            String level = psc == null ? " -- " : psc.getLevel() + (psc.getLevel() != psc.getTotalLevel() ? " ("+psc.getTotalLevel()+")" :"");
+            String level = psc == null ? " -- " : psc.getLevel() + (psc.getLevel() != psc.getTotalLevel() ? " (" + psc.getTotalLevel() + ")" : "");
             lore.add(node(locService.translate(LocalizationKeys.LEVEL), level));
-            lore.add(node(locService.translate(LocalizationKeys.SKILL_MAX_LEVEL), ""+ skillData.getMaxSkillLevel()));
+            lore.add(node(locService.translate(LocalizationKeys.SKILL_MAX_LEVEL), "" + skillData.getMaxSkillLevel()));
             if (skillData.getMinPlayerLevel() > 0) {
                 lore.add(node(locService.translate(LocalizationKeys.SKILL_MIN_CLASS_LEVEL), "" + skillData.getMinPlayerLevel()));
             }
@@ -421,7 +368,7 @@ public class GuiHelper {
             while (iterator.hasNext()) {
                 i++;
                 ISkillType next = iterator.next();
-                String translate = locService.translate(next.toString())+" ";
+                String translate = locService.translate(next.toString()) + " ";
                 builder.append(translate);
                 if (i % 4 == 0) {
                     if (firstLine) {
@@ -439,8 +386,6 @@ public class GuiHelper {
 
         return lore;
     }
-
-
 
 
     @SuppressWarnings("unchecked")
@@ -738,6 +683,70 @@ public class GuiHelper {
                 .of(InventoryArchetypes.DOUBLE_CHEST)
                 .property(InventoryTitle.of(Text.of(title)))
                 .build(SpongeRpgPlugin.getInstance());
+    }
+
+    public static Inventory getCharacterAllowedArmor(ISpongeCharacter character, int page) {
+        String name = "char_allowed_items_armor" + character.getName();
+        Inventory inventory = CACHED_MENUS.get(name);
+        if (inventory == null) {
+            TemplateInventory<ItemStack, Inventory> dView = (TemplateInventory<ItemStack, Inventory>) CACHED_MENU_TEMPLATES.get("char_view");
+            Map<RpgItemType, Double> allowedWeapons = character.getAllowedWeapons();
+            List<ItemStack> content = new ArrayList<>();
+            for (Map.Entry<RpgItemType, Double> ent : allowedWeapons.entrySet()) {
+                RpgItemType key = ent.getKey();
+                Double value = ent.getValue();
+                ItemStack is = toItemStack(key, value);
+                content.add(is);
+            }
+            DynamicInventory inv = dView.setActualContent(content.toArray(new ItemStack[content.size() == 0 ? 0 : content.size() - 1]));
+            String translate = Rpg.get().getLocalizationService().translate(LocalizationKeys.CHARACTER_ARMOR);
+            inventory = createInventoryTemplate(translate);
+            inv.fill(inventory);
+            CACHED_MENUS.put(name, inventory);
+        }
+        return inventory;
+    }
+
+    public static Inventory getCharacterAllowedWeapons(ISpongeCharacter character, int page) {
+        String name = "char_allowed_items_weapons" + character.getName();
+        Inventory inventory = CACHED_MENUS.get(name);
+        if (inventory == null) {
+            TemplateInventory<ItemStack, Inventory> dView = (TemplateInventory<ItemStack, Inventory>) CACHED_MENU_TEMPLATES.get("char_view");
+            Set<RpgItemType> allowedWeapons = character.getAllowedArmor();
+            List<ItemStack> content = new ArrayList<>();
+            for (RpgItemType ent : allowedWeapons) {
+                ItemStack is = toItemStack(ent, 0);
+                content.add(is);
+            }
+            DynamicInventory inv = dView.setActualContent(content.toArray(new ItemStack[content.size() == 0 ? 0 : content.size() - 1]));
+            String translate = Rpg.get().getLocalizationService().translate(LocalizationKeys.CHARACTER_ARMOR);
+            inventory = createInventoryTemplate(translate);
+            inv.fill(inventory);
+            CACHED_MENUS.put(name, inventory);
+        }
+        return inventory;
+    }
+
+    private static ItemStack toItemStack(RpgItemType key, double damage) {
+        String id = key.getId();
+        Optional<ItemType> type = Sponge.getRegistry().getType(ItemType.class, id);
+        List<Text> lore = new ArrayList<>();
+        ItemStack is = ItemStack.of(type.get());
+
+        LocalizationService localizationService = Rpg.get().getLocalizationService();
+        String translate = localizationService.translate(LocalizationKeys.ITEM_CLASS);
+        lore.add(Text.of(TextColors.GRAY, translate, ": ", TextColors.GREEN, key.getItemClass().getName()));
+        if (damage > 0) {
+            translate = localizationService.translate(LocalizationKeys.ITEM_DAMAGE);
+            lore.add(Text.of(TextColors.GRAY, translate, ": ", TextColors.RED, damage));
+        }
+        if (Rpg.get().getPluginConfig().DEBUG.isBalance()) {
+            //tood 1.15
+        }
+
+        is.offer(new MenuInventoryData(true));
+        is.offer(Keys.ITEM_LORE, lore);
+        return is;
     }
 
 }

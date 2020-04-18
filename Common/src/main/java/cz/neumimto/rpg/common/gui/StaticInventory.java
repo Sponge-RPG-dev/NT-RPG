@@ -10,30 +10,8 @@ public class StaticInventory<T, I> extends ConfigInventory<T, I> {
 
     @Override
     public void fill(I inventory) {
-        for (int i = 0; i < items.length; ) {
-            //does java automatically unroll loops?
-
+        for (int i = 0; i < 54; i++) {
             processor.setItem(items[i], inventory, i);
-            i++;
-            processor.setItem(items[i], inventory, i);
-            i++;
-            processor.setItem(items[i], inventory, i);
-            i++;
-            processor.setItem(items[i], inventory, i);
-            i++;
-            processor.setItem(items[i], inventory, i);
-            i++;
-            processor.setItem(items[i], inventory, i);
-            i++;
-            processor.setItem(items[i], inventory, i);
-            i++;
-            if (i == 54) {
-                return;
-            }
-            processor.setItem(items[i], inventory, i);
-            i++;
-            processor.setItem(items[i], inventory, i);
-            i++;
         }
     }
 }
