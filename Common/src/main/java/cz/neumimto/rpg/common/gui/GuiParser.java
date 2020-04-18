@@ -70,7 +70,6 @@ public abstract class GuiParser<T, I> {
                                                     .map(this::toItemStack)
                                                     .collect(Collectors.toList());
                                             return collect.toArray(initArray(collect.size()));
-                                        }
                                 };
                                 ConfigInventory c2 = createCachedMenu(
                                         sFactorz, guiName, gui, context2

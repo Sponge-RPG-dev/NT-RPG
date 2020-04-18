@@ -229,19 +229,14 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
 
     @Override
     public void displayCharacterArmor(ISpigotCharacter character, int page) {
-        Player player = character.getPlayer();
-        Inventory i = SpigotGuiHelper.createInventoryTemplate(player, character.getName());
-
-        player.openInventory(i);
-
+        Inventory i = SpigotGuiHelper.getCharacterAllowedArmor(character, page);
+        character.getPlayer().openInventory(i);
     }
 
     @Override
     public void displayCharacterWeapons(ISpigotCharacter character, int page) {
-        Player player = character.getPlayer();
-        Inventory i = SpigotGuiHelper.createInventoryTemplate(player, character.getName());
-
-        player.openInventory(i);
+        Inventory i = SpigotGuiHelper.getCharacterAllowedWeapons(character, page);
+        character.getPlayer().openInventory(i);
     }
 
     public void displayCharacterAttributes(Player player, ISpigotCharacter character) {

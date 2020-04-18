@@ -51,6 +51,7 @@ import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
 import cz.neumimto.rpg.sponge.gui.GuiConfig;
 import cz.neumimto.rpg.sponge.gui.GuiDictionary;
+import cz.neumimto.rpg.sponge.gui.GuiHelper;
 import cz.neumimto.rpg.sponge.gui.ItemLoreBuilderService;
 import cz.neumimto.rpg.sponge.inventory.data.NKeys;
 import cz.neumimto.rpg.sponge.inventory.data.manipulators.*;
@@ -320,8 +321,6 @@ public class SpongeInventoryService extends AbstractInventoryService<ISpongeChar
     }
 
 
-
-
     @Override
     public Set<ActiveSkillPreProcessorWrapper> processItemCost(ISpongeCharacter character, PlayerSkillContext skillInfo) {
         SkillCost invokeCost = skillInfo.getSkillData().getInvokeCost();
@@ -379,5 +378,10 @@ public class SpongeInventoryService extends AbstractInventoryService<ISpongeChar
         return null;
     }
 
-
+    @Override
+    public void invalidateGUICaches(IActiveCharacter cc) {
+        GuiHelper.CACHED_MENUS.remove("char_view" + cc.getName());
+        GuiHelper.CACHED_MENUS.remove("char_allowed_items_armor" + cc.getName());
+        GuiHelper.CACHED_MENUS.remove("char_allowed_items_weapons" + cc.getName());
+    }
 }

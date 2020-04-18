@@ -2,10 +2,12 @@ package cz.neumimto.rpg.common.skills.types;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.ItemString;
 import cz.neumimto.rpg.api.effects.EffectSourceType;
 import cz.neumimto.rpg.api.effects.IEffectSource;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.inventory.InventoryService;
 import cz.neumimto.rpg.api.items.ClassItem;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.items.RpgItemType;
@@ -26,6 +28,9 @@ public class ItemAccessSkill extends AbstractSkill {
 
     @Inject
     private ItemService itemService;
+
+    @Inject
+    private InventoryService inventoryService;
 
     public ItemAccessSkill() {
         super();
@@ -63,6 +68,7 @@ public class ItemAccessSkill extends AbstractSkill {
 
     private void resolveItemAccess(IActiveCharacter c) {
         c.updateItemRestrictions();
+        inventoryService.invalidateGUICaches(c);
     }
 
 

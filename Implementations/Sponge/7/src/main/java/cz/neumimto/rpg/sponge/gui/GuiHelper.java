@@ -2,13 +2,11 @@ package cz.neumimto.rpg.sponge.gui;
 
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
-import cz.neumimto.rpg.api.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.items.RpgItemType;
 import cz.neumimto.rpg.api.localization.Arg;
-import cz.neumimto.rpg.api.localization.Localization;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.logging.Log;
@@ -159,7 +157,6 @@ public class GuiHelper {
     public static Inventory createMenuInventoryClassesByTypeView(String classType) {
         return CACHED_MENUS.get("classes_by_type" + classType);
     }
-
 
     public static ItemStack propertyToItemStack(int id, float value) {
         ItemStack i = itemStack(ItemTypes.BOOK);
@@ -446,13 +443,6 @@ public class GuiHelper {
         return of;
     }
 
-    public static ItemStack createSkillTreeConfirmButtom() {
-        ItemStack itemStack = itemStack(ItemTypes.KNOWLEDGE_BOOK);
-        itemStack.offer(Keys.DISPLAY_NAME, translate(LocalizationKeys.CONFIRM_SKILL_SELECTION_BUTTON));
-        itemStack.offer(new SkillTreeInventoryViewControllsData(SkillTreeControllsButton.CONFIRM));
-        return itemStack;
-    }
-
     public static Inventory createSkillDetailInventoryView(ISpongeCharacter character, SkillTree skillTree, SkillData skillData) {
         Inventory build = Inventory.builder()
                 .of(InventoryArchetypes.DOUBLE_CHEST)
@@ -625,32 +615,10 @@ public class GuiHelper {
             }
 
         }
-
-
         itemStack.offer(Keys.ITEM_LORE, lore);
         itemStack.offer(new InventoryCommandItemMenuData("ninfo class " + a.getName()));
         itemStack.offer(new MenuInventoryData(true));
         return itemStack;
-    }
-
-    public static void makeBorder(Inventory i, DyeColor dyeColor) {
-        if (i.getArchetype() == InventoryArchetypes.DOUBLE_CHEST) {
-            for (int j = 0; j < 9; j++) {
-                ItemStack of = unclickableInterface(dyeColor);
-                i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(j, 0))).offer(of);
-
-                of = unclickableInterface(dyeColor);
-                i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(j, 5))).offer(of);
-            }
-
-            for (int j = 1; j < 5; j++) {
-                ItemStack of = unclickableInterface(dyeColor);
-                i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0, j))).offer(of);
-
-                of = unclickableInterface(dyeColor);
-                i.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(8, j))).offer(of);
-            }
-        }
     }
 
     public static ItemStack itemStack(String itemType) {
@@ -658,20 +626,6 @@ public class GuiHelper {
             return itemStack(ItemTypes.STONE);
         }
         return itemStack(Sponge.getRegistry().getType(ItemType.class, itemType).orElse(ItemTypes.STONE));
-    }
-
-    private static DyeColor toDyeColor(String id) {
-        return Sponge.getRegistry().getType(DyeColor.class, id).orElseGet(() -> {
-            Log.warn("Unknown text color " + id);
-            return DyeColors.WHITE;
-        });
-    }
-
-    private static TextColor toTextColor(String id) {
-        return Sponge.getRegistry().getType(TextColor.class, id).orElseGet(() -> {
-            Log.warn("Unknown text color " + id);
-            return TextColors.WHITE;
-        });
     }
 
     private static Text translate(String id) {

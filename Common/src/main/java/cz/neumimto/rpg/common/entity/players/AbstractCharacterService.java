@@ -1232,6 +1232,8 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
                             Map<String, String> args = new HashMap<>();
                             args.put("player", character.getPlayerAccountName());
                             Rpg.get().executeCommandBatch(args, enterCommands);
+
+                            inventoryService.invalidateGUICaches(character);
                         }
                     });
                 });

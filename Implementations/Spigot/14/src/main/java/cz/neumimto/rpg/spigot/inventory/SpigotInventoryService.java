@@ -2,6 +2,7 @@ package cz.neumimto.rpg.spigot.inventory;
 
 import cz.neumimto.rpg.api.configuration.ItemString;
 import cz.neumimto.rpg.api.configuration.SkillItemCost;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.inventory.RpgInventory;
 import cz.neumimto.rpg.api.items.RpgItemStack;
@@ -14,6 +15,7 @@ import cz.neumimto.rpg.api.skills.mods.ActiveSkillPreProcessorWrapper;
 import cz.neumimto.rpg.common.inventory.AbstractInventoryService;
 import cz.neumimto.rpg.common.inventory.InventoryHandler;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.gui.SpigotGuiHelper;
 import cz.neumimto.rpg.spigot.persistance.SpigotEquipedSlot;
 import de.tr7zw.nbtapi.NBTItem;
 import org.bukkit.Material;
@@ -128,5 +130,12 @@ public class SpigotInventoryService extends AbstractInventoryService<ISpigotChar
             this.amount = amount;
             this.consume = consume;
         }
+    }
+
+    @Override
+    public void invalidateGUICaches(IActiveCharacter cc) {
+        SpigotGuiHelper.CACHED_MENUS.remove("char_view" + cc.getName());
+        SpigotGuiHelper.CACHED_MENUS.remove("char_allowed_items_armor" + cc.getName());
+        SpigotGuiHelper.CACHED_MENUS.remove("char_allowed_items_weapons" + cc.getName());
     }
 }

@@ -549,4 +549,70 @@ public class SpigotGuiHelper {
     }
 
 
+    public static Inventory getCharacterAllowedArmor(ISpigotCharacter character, int page) {
+        String name = "char_allowed_items_armor" + character.getName();
+        Inventory inventory = CACHED_MENUS.get(name);
+        if (inventory == null) {
+            TemplateInventory<ItemStack, Inventory> dView = (TemplateInventory<ItemStack, Inventory>) CACHED_MENU_TEMPLATES.get("char_view");
+            Map<RpgItemType, Double> allowedWeapons = character.getAllowedWeapons();
+            List<ItemStack> content = new ArrayList<>();
+            for (Map.Entry<RpgItemType, Double> ent : allowedWeapons.entrySet()) {
+                RpgItemType key = ent.getKey();
+                Double value = ent.getValue();
+                ItemStack is = toItemStack(key, value);
+                content.add(is);
+            }
+            DynamicInventory inv = dView.setActualContent(content.toArray(new ItemStack[content.size() == 0 ? 0 : content.size() - 1]));
+            String translate = Rpg.get().getLocalizationService().translate(LocalizationKeys.CHARACTER_ARMOR);
+            inventory = createInventoryTemplate(translate);
+            inv.fill(inventory);
+            CACHED_MENUS.put(name, inventory);
+        }
+        return inventory;
+    }
+
+    public static Inventory getCharacterAllowedWeapons(ISpigotCharacter character, int page) {
+        String name = "char_allowed_items_weapons" + character.getName();
+        Inventory inventory = CACHED_MENUS.get(name);
+        if (inventory == null) {
+            TemplateInventory<ItemStack, Inventory> dView = (TemplateInventory<ItemStack, Inventory>) CACHED_MENU_TEMPLATES.get("char_view");
+            Set<RpgItemType> allowedWeapons = character.getAllowedArmor();
+            List<ItemStack> content = new ArrayList<>();
+            for (RpgItemType ent : allowedWeapons) {
+                ItemStack is = toItemStack(ent, 0);
+                content.add(is);
+            }
+            DynamicInventory inv = dView.setActualContent(content.toArray(new ItemStack[content.size() == 0 ? 0 : content.size() - 1]));
+            String translate = Rpg.get().getLocalizationService().translate(LocalizationKeys.CHARACTER_ARMOR);
+            inventory = createInventoryTemplate(translate);
+            inv.fill(inventory);
+            CACHED_MENUS.put(name, inventory);
+        }
+        return inventory;
+    }
+
+    private static ItemStack toItemStack(RpgItemType key, double damage) {
+        Material material = Material.matchMaterial(key.getId());
+        List<String> lore = new ArrayList<>();
+        ItemStack is = new ItemStack(material);
+
+        LocalizationService localizationService = Rpg.get().getLocalizationService();
+        String translate = localizationService.translate(LocalizationKeys.ITEM_CLASS);
+        lore.add(ChatColor.GRAY + translate + ": " + ChatColor.GREEN + key.getItemClass().getName());
+        if (damage > 0) {
+            translate = localizationService.translate(LocalizationKeys.ITEM_DAMAGE);
+            lore.add(ChatColor.GRAY + translate + ": " + ChatColor.RED + damage);
+        }
+        if (Rpg.get().getPluginConfig().DEBUG.isBalance() && key.getModelId() != null || !key.getModelId().isEmpty()) {
+            lore.add(ChatColor.DARK_GRAY + "DEBUG:: CustomModelData:" + key.getModelId());
+        }
+
+        ItemMeta itemMeta = is.getItemMeta();
+        itemMeta.setCustomModelData(Integer.valueOf(key.getModelId()));
+        itemMeta.setLore(lore);
+        is.setItemMeta(itemMeta);
+        unclickableInterface(is);
+
+        return is;
+    }
 }
