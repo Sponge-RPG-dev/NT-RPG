@@ -24,6 +24,7 @@ import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.configuration.ItemString;
 import cz.neumimto.rpg.api.configuration.SkillItemCost;
 import cz.neumimto.rpg.api.configuration.SkillTreeDao;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.gui.ISkillTreeInterfaceModel;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.logging.Log;
@@ -253,6 +254,7 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
 
                 skillNodeDescription = scriptedSkillNodeDescription;
             } catch (ConfigException ee) {
+                skillNodeDescription = character -> Collections.emptyList();
             }
         }
         info.setDescription(skillNodeDescription);

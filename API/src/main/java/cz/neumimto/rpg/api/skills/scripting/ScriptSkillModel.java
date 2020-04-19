@@ -14,9 +14,6 @@ public class ScriptSkillModel {
     @Path("Id")
     private String id;
 
-    @Path("Name")
-    private String name;
-
     @Path("Parent")
     private String parent;
 
@@ -25,12 +22,6 @@ public class ScriptSkillModel {
 
     @Path("Damage-Type")
     private String damageType;
-
-    @Path("Lore")
-    private List<String> lore;
-
-    @Path("Description")
-    private List<String> description;
 
     @Path("Settings")
     @Conversion(SettingsToMap.class)
@@ -50,10 +41,6 @@ public class ScriptSkillModel {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public String getParent() {
         return parent;
     }
@@ -64,14 +51,6 @@ public class ScriptSkillModel {
 
     public String getDamageType() {
         return damageType;
-    }
-
-    public List<String> getLore() {
-        return lore;
-    }
-
-    public List<String> getDescription() {
-        return description;
     }
 
     public Map<String, Float> getSettings() {

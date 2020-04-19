@@ -1,7 +1,5 @@
 package cz.neumimto.rpg.sponge.permission;
 
-import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
-import cz.neumimto.rpg.api.entity.players.classes.PlayerClassPermission;
 import cz.neumimto.rpg.api.permissions.PermissionService;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import org.spongepowered.api.service.permission.SubjectData;

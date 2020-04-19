@@ -152,6 +152,9 @@ public abstract class AbstractSkillService implements SkillService {
 
     @Override
     public void registerAdditionalCatalog(ISkill extraCatalog) {
+        if (extraCatalog == null) {
+            warn("Cannot register skill null");
+        }
         if (extraCatalog.getId() == null) {
             warn("Cannot register skill " + extraCatalog.getId() + ", " + extraCatalog.getClass().getSimpleName() + " getId() returned"
                     + " null");
@@ -209,9 +212,11 @@ public abstract class AbstractSkillService implements SkillService {
             return null;
         }
 
+        String name = scriptSkillModel.getId();
+        name = name.replaceAll("[\\W]", "");
         Class sk = new ByteBuddy()
                 .subclass(type)
-                .name("cz.neumimto.skills.scripts." + scriptSkillModel.getName())
+                .name("cz.neumimto.skills.scripts." + name)
                 .annotateType(AnnotationDescription.Builder.ofType(ResourceLoader.Skill.class)
                         .define("value", scriptSkillModel.getId())
                         .build())

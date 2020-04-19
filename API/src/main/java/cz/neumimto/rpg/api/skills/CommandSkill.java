@@ -4,17 +4,22 @@ import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.permissions.PermissionService;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.api.skills.utils.SkillLoadingErrors;
 
+import javax.inject.Inject;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class CommandSkill extends ActiveSkill {
+
+    @Inject
+    private PermissionService permissionService;
 
     @Override
     public void cast(IActiveCharacter character, PlayerSkillContext info, SkillContext skillContext) {
@@ -26,7 +31,17 @@ public class CommandSkill extends ActiveSkill {
         if (skillData.isConsole()) {
             Rpg.get().executeCommandBatch(args, command);
         } else {
+            boolean permApplied = false;
+
+            if (skillData.permission != null && permissionService.hasPermission(character, skillData.permission)) {
+                permissionService.addPermissions(character, Collections.singletonList(skillData.permission));
+                permApplied = true;
+            }
+
             Rpg.get().executeCommandAs(character.getUUID(), args, command);
+            if (permApplied) {
+                permissionService.removePermissions(character, Collections.singletonList(skillData.permission));
+            }
         }
 
         skillContext.next(character, info, skillContext);
@@ -46,10 +61,16 @@ public class CommandSkill extends ActiveSkill {
             boolean executeAsConsole = c.getBoolean("ExecuteAsConsole");
             data.console = executeAsConsole;
         } catch (ConfigException ignored) {}
+
+        try {
+            String perm = c.getString("Permission");
+            data.permission = perm;
+        } catch (ConfigException ignored) {}
     }
 
     public class CommandData extends SkillData {
 
+        public String permission;
         boolean console;
 
         private String command;

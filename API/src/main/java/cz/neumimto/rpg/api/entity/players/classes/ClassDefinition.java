@@ -18,10 +18,8 @@
 
 package cz.neumimto.rpg.api.entity.players.classes;
 
-import com.electronwill.nightconfig.core.conversion.Conversion;
-import com.electronwill.nightconfig.core.conversion.Converter;
-import com.electronwill.nightconfig.core.conversion.Path;
-import com.electronwill.nightconfig.core.conversion.SpecValidator;
+import com.electronwill.nightconfig.core.conversion.*;
+import com.typesafe.config.Optional;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.configuration.adapters.*;
 import cz.neumimto.rpg.api.effects.*;
@@ -114,9 +112,11 @@ public class ClassDefinition implements IEffectSourceProvider {
     protected SkillTree skillTree;
 
     @Path("SkillPointsPerLevel")
+    @PreserveNotNull
     protected int skillpointsPerLevel;
 
     @Path("AttributePointsPerLevel")
+    @PreserveNotNull
     protected int attributepointsPerLevel;
 
     @Path("Leveling")

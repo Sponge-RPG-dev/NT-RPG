@@ -10,6 +10,7 @@ import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.api.skills.types.ScriptSkill;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,12 +46,15 @@ public class ActiveScriptSkill extends ActiveSkill implements ScriptSkill<Script
         setDamageType(model.getDamageType());
         setCatalogId(model.getId());
         List<String> configTypes = model.getSkillTypes();
-        for (String configType : configTypes) {
-            Optional<ISkillType> skillType = Rpg.get().getSkillService().getSkillType(configType);
-            if (skillType.isPresent()) {
-                addSkillType(skillType.get());
-            } else {
-                Log.warn("Unknown skill type " + configType);
+
+        if (configTypes != null) {
+            for (String configType : configTypes) {
+                Optional<ISkillType> skillType = Rpg.get().getSkillService().getSkillType(configType);
+                if (skillType.isPresent()) {
+                    addSkillType(skillType.get());
+                } else {
+                    Log.warn("Unknown skill type " + configType);
+                }
             }
         }
     }

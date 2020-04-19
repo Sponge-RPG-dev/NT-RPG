@@ -18,13 +18,8 @@ public class SpigotPermissionService implements PermissionService<ISpigotCharact
     @Override
     public void removePermissions(ISpigotCharacter character, Collection<String> perms) {
         Player player = character.getPlayer();
-        Set<PermissionAttachmentInfo> efPerms = player.getEffectivePermissions();
         for (String perm : perms) {
-            for (PermissionAttachmentInfo efPerm : efPerms) {
-                if (efPerm.getPermission().equalsIgnoreCase(perm)) {
-                    player.removeAttachment(efPerm.getAttachment());
-                }
-            }
+            player.addAttachment(SpigotRpgPlugin.getInstance(), perm, false);
         }
     }
 

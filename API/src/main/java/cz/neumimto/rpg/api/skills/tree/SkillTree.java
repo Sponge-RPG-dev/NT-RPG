@@ -87,7 +87,7 @@ public class SkillTree {
     }
 
     public void addSkillTreeId(SkillData value) {
-        if (value.getModelId() != null) {
+        if (value.getSkillTreeId() > 0) {
             skillsById.put(value.getSkillTreeId(), value);
         }
     }

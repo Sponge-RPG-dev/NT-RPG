@@ -99,7 +99,7 @@ function registerAttributes() {
     for (obj in attributes) {
         var a = attributes.get(obj);
         if (a instanceof CharacterAttribute) {
-            GlobalScope.propertyService.registerAttribute(a);
+            Rpg.getPropertyService().registerAttribute(a);
         }
     }
 }
@@ -111,7 +111,7 @@ function registerSkills() {
     for (obj in skills) {
         var s = skills.get(obj);
         s.init();
-        GlobalScope.skillService.registerAdditionalCatalog(s);
+        Rpg.getSkilLService().registerAdditionalCatalog(s);
     }
 }
 
@@ -121,7 +121,7 @@ function registerGlobalEffects() {
     for (obj in globalEffects) {
         var g = globalEffects.get(obj);
         if (g instanceof Java.type("cz.neumimto.rpg.api.effects.IGlobalEffect")) {
-            GlobalScope.effectService.registerGlobalEffect(g);
+            Rpg.getEffectService().registerGlobalEffect(g);
         }
     }
 }
@@ -129,7 +129,7 @@ function registerGlobalEffects() {
 function generateListener() {
     if (!events.isEmpty()) {
         log("generateListener")
-        GlobalScope.jsLoader.generateDynamicListener(events);
+        Rpg.getScriptEngine().generateDynamicListener(events);
     }
     events.clear();
 }

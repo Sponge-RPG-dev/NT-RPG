@@ -201,6 +201,11 @@ public class RpgTests implements RpgApi {
                 return new TestHelper.EquipedSlotImpl(slotId);
             }
 
+            @Override
+            public void invalidateGUICaches(IActiveCharacter cc) {
+
+            }
+
 
         };
     }
