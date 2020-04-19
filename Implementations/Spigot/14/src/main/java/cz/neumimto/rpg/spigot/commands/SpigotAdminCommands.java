@@ -5,8 +5,10 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.Optional;
 import co.aikar.commands.annotation.*;
 import co.aikar.commands.bukkit.contexts.OnlinePlayer;
+import com.google.inject.Injector;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.damage.DamageService;
+import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.entity.PropertyService;
@@ -18,14 +20,17 @@ import cz.neumimto.rpg.api.items.ClassItem;
 import cz.neumimto.rpg.api.items.ItemClass;
 import cz.neumimto.rpg.api.items.RpgItemType;
 import cz.neumimto.rpg.api.logging.Log;
+import cz.neumimto.rpg.api.persistance.model.CharacterBase;
+import cz.neumimto.rpg.api.scripting.IScriptEngine;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.utils.ActionResult;
 import cz.neumimto.rpg.common.commands.AdminCommandFacade;
 import cz.neumimto.rpg.common.commands.CommandProcessingException;
 import cz.neumimto.rpg.common.commands.InfoCommands;
 import cz.neumimto.rpg.common.commands.OnlineOtherPlayer;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.common.persistance.dao.ClassDefinitionDao;
 import cz.neumimto.rpg.spigot.inventory.SpigotItemService;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
@@ -38,6 +43,8 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.*;
 import java.util.function.Function;
+
+import static cz.neumimto.rpg.api.logging.Log.info;
 
 @Singleton
 @CommandAlias("nadmin|na")
@@ -68,6 +75,12 @@ public class SpigotAdminCommands extends BaseCommand {
     @Inject
     private CharacterService characterService;
 
+    @Inject
+    private Injector injector;
+
+    @Inject
+    private EffectService effectService;
+
     @Subcommand("class add")
     public void addCharacterClass(CommandSender commandSender, OnlineOtherPlayer player, ClassDefinition classDefinition) {
         IActiveCharacter character = player.character;
@@ -93,7 +106,7 @@ public class SpigotAdminCommands extends BaseCommand {
         if (classByName == null) {
             throw new CommandException("Player " + character.getPlayerAccountName() + " character " + character.getName() + " do not have class " + characterClass.getName());
         }
-        characterService.characterAddSkillPoints(character,characterClass, amount);
+        characterService.characterAddSkillPoints(character, characterClass, amount);
 
     }
 
@@ -155,7 +168,7 @@ public class SpigotAdminCommands extends BaseCommand {
     }
 
     @Subcommand("add-unique-skillpoint")
-    public void addUniqueSkillpoint(CommandSender executor, OnlineOtherPlayer target,  String classType, String sourceKey) {
+    public void addUniqueSkillpoint(CommandSender executor, OnlineOtherPlayer target, String classType, String sourceKey) {
         IActiveCharacter character = target.character;
         if (character.isStub()) {
             throw new IllegalStateException("Stub character");
@@ -168,13 +181,13 @@ public class SpigotAdminCommands extends BaseCommand {
         try {
             int idByName = propertyService.getIdByName(property);
             IActiveCharacter character = characterService.getCharacter(target.player.getUniqueId());
-            executor.sendMessage(ChatColor.GOLD +"==================");
-            executor.sendMessage(ChatColor.GREEN +  property);
+            executor.sendMessage(ChatColor.GOLD + "==================");
+            executor.sendMessage(ChatColor.GREEN + property);
 
             executor.sendMessage(ChatColor.GOLD + "Value" + ChatColor.WHITE + "/" +
                     ChatColor.AQUA + "Effective Value" + ChatColor.WHITE + "/" +
                     ChatColor.GRAY + "Cap" +
-                    ChatColor.DARK_GRAY+ " .##");
+                    ChatColor.DARK_GRAY + " .##");
 
             NumberFormat formatter = new DecimalFormat("#0.00");
             executor.sendMessage(ChatColor.GOLD + formatter.format(character.getProperty(idByName)) + ChatColor.WHITE + "/" +
@@ -230,7 +243,7 @@ public class SpigotAdminCommands extends BaseCommand {
 
 
         IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
-        executor.sendMessage(ChatColor.RED + "Damage: "+ damageService.getCharacterItemDamage(character, fromItemStack));
+        executor.sendMessage(ChatColor.RED + "Damage: " + damageService.getCharacterItemDamage(character, fromItemStack));
         executor.sendMessage(ChatColor.RED + "Details: ");
         executor.sendMessage(ChatColor.GRAY + " - From Item: " + character.getBaseWeaponDamage(fromItemStack));
 
@@ -263,6 +276,111 @@ public class SpigotAdminCommands extends BaseCommand {
             int integer = iterator.next();
             String nameById = propertyService.getNameById(integer);
             executor.sendMessage(ChatColor.GRAY + "   - " + nameById + ":" + entityService.getEntityProperty(character, integer));
+        }
+    }
+
+    @Subcommand("reload")
+    public void reload(@Optional @Default("a") String arg) {
+        boolean reloadAll = arg.equalsIgnoreCase("a");
+        boolean reloadJs = reloadAll || arg.equalsIgnoreCase("js");
+        boolean reloadLocalizations = reloadAll || arg.equalsIgnoreCase("l");
+        boolean reloadItems = reloadAll || arg.equalsIgnoreCase("i");
+        boolean reloadSkills = reloadAll || arg.equalsIgnoreCase("s");
+        boolean reloadClasses = reloadAll || reloadItems || reloadSkills || arg.equalsIgnoreCase("c");
+
+        info("[RELOAD] Saving current state of players");
+        Set<CharacterBase> characterBases = new HashSet<>();
+        for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+            IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
+            if (character.isStub()) {
+                continue;
+            }
+            characterBases.add(character.getCharacterBase());
+        }
+        for (CharacterBase characterBase : characterBases) {
+            Log.info("[RELOAD] saving character " + characterBase.getLastKnownPlayerName());
+            characterService.save(characterBase);
+        }
+
+        for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+            IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
+            if (character.isStub()) {
+                continue;
+            }
+            IActiveCharacter preloadCharacter = characterService.buildDummyChar(player.getUniqueId());
+            characterService.registerDummyChar(preloadCharacter);
+        }
+
+        if (reloadAll) {
+            info("[RELOAD] Reading Settings.conf file: ");
+            Rpg.get().reloadMainPluginConfig();
+        }
+
+        if (reloadLocalizations) {
+            info("[RELOAD] Reading localization files: ");
+            Locale locale = Locale.forLanguageTag(Rpg.get().getPluginConfig().LOCALE);
+            try {
+                Rpg.get().getResourceLoader().reloadLocalizations(locale);
+            } catch (Exception e) {
+                Log.error("Could not read localizations in locale " + locale.toString() + " - " + e.getMessage());
+            }
+        }
+
+        if (reloadAll) {
+            info("[RELOAD] Reading Entity conf files: ");
+            Rpg.get().getEntityService().reload();
+        }
+
+        if (reloadJs) {
+            info("[RELOAD] Scripts ");
+            IScriptEngine jsLoader = injector.getInstance(IScriptEngine.class);
+            jsLoader.initEngine();
+            jsLoader.reloadSkills();
+        }
+
+        if (reloadItems) {
+            info("[RELOAD] ItemGroups ");
+            Rpg.get().getItemService().reload();
+            Rpg.get().getInventoryService().reload();
+        }
+
+        if (reloadSkills) {
+            info("[RELOAD] Properties, Attributes, Skills");
+            Rpg.get().getSkillService().init();
+            Rpg.get().getPropertyService().reload();
+        }
+
+        if (reloadClasses) {
+            info("[RELOAD] Experiences");
+            Rpg.get().getExperienceService().reload();
+
+            ClassDefinitionDao build = injector.getInstance(ClassDefinitionDao.class);
+            try {
+                info("[RELOAD] Checking class files: ");
+                Rpg.get().getClassService().load();
+                info("[RELOAD] Class files ok");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        Log.info("[RELOAD] Purging effect caches");
+        effectService.purgeEffectCache();
+        effectService.stopEffectScheduler();
+
+        System.gc();
+
+        effectService.startEffectScheduler();
+
+        for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+            List<CharacterBase> playersCharacters = characterService.getPlayersCharacters(player.getUniqueId());
+            if (playersCharacters.isEmpty()) {
+                continue;
+            }
+            CharacterBase max = playersCharacters.stream().max(Comparator.comparing(CharacterBase::getUpdated)).get();
+            IActiveCharacter activeCharacter = characterService.createActiveCharacter(player.getUniqueId(), max);
+            characterService.setActiveCharacter(player.getUniqueId(), activeCharacter);
+            characterService.assignPlayerToCharacter(player.getUniqueId());
         }
     }
 

@@ -260,21 +260,6 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
     }
 
     @Override
-    public double getMaxMana() {
-        return getMana().getMaxValue();
-    }
-
-    @Override
-    public void setMaxMana(float mana) {
-        getMana().setMaxValue(mana);
-    }
-
-    @Override
-    public void setMaxHealth(float maxHealth) {
-        getHealth().setMaxValue(maxHealth);
-    }
-
-    @Override
     public IReservable getMana() {
         return mana;
     }
@@ -288,12 +273,7 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
     public IReservable getHealth() {
         return health;
     }
-
-    @Override
-    public void setHealth(float maxHealth) {
-        getHealth().setValue(maxHealth);
-    }
-
+    
     @Override
     public void setHealth(IReservable health) {
         this.health = health;

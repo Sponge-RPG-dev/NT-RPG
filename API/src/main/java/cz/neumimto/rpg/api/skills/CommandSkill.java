@@ -26,7 +26,7 @@ public class CommandSkill extends ActiveSkill {
         CommandData skillData = (CommandData) info.getSkillData();
         List<String> command = Collections.singletonList(skillData.getCommand());
         Map<String, String> args = new HashMap<>();
-        args.put("{{player}}", character.getPlayerAccountName());
+        args.put("player", character.getPlayerAccountName());
 
         if (skillData.isConsole()) {
             Rpg.get().executeCommandBatch(args, command);
@@ -37,14 +37,16 @@ public class CommandSkill extends ActiveSkill {
                 permissionService.addPermissions(character, Collections.singletonList(skillData.permission));
                 permApplied = true;
             }
-
-            Rpg.get().executeCommandAs(character.getUUID(), args, command);
-            if (permApplied) {
-                permissionService.removePermissions(character, Collections.singletonList(skillData.permission));
+            try {
+                Rpg.get().executeCommandAs(character.getUUID(), args, command);
+            } finally {
+                if (permApplied) {
+                    permissionService.removePermissions(character, Collections.singletonList(skillData.permission));
+                }
             }
         }
 
-        skillContext.next(character, info, skillContext);
+        skillContext.next(character, info, SkillResult.OK);
     }
 
     @Override

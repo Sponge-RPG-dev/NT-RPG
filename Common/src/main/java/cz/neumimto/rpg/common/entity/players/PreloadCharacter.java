@@ -192,26 +192,6 @@ public abstract class PreloadCharacter<T, P extends IParty> implements IActiveCh
     }
 
     @Override
-    public double getMaxMana() {
-        return 0;
-    }
-
-    @Override
-    public void setMaxMana(float mana) {
-
-    }
-
-    @Override
-    public void setMaxHealth(float maxHealth) {
-
-    }
-
-    @Override
-    public void setHealth(float mana) {
-
-    }
-
-    @Override
     public IReservable getMana() {
         return null;
     }

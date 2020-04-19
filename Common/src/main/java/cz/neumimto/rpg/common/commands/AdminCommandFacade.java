@@ -132,7 +132,8 @@ public class AdminCommandFacade {
 
         PlayerSkillContext playerSkillContext = new PlayerSkillContext(null, skill, character);
         playerSkillContext.setLevel(level);
-        SkillData skillData = new SkillData(skill.getId());
+        SkillData skillData = skill.constructSkillData();
+
         skillData.setSkillSettings(defaultSkillSettings);
         playerSkillContext.setSkillData(skillData);
         playerSkillContext.setSkill(skill);

@@ -88,14 +88,6 @@ public interface IActiveCharacter<T, P extends IParty> extends IEntity<T> {
 
     float getCharacterPropertyWithoutLevel(int index);
 
-    double getMaxMana();
-
-    void setMaxMana(float mana);
-
-    void setMaxHealth(float maxHealth);
-
-    void setHealth(float maxHealth);
-
     IReservable getMana();
 
     void setMana(IReservable mana);
