@@ -49,9 +49,9 @@ public class Bandage extends Targeted {
             if (target.hasEffect(Bleeding.name)) {
                 effectService.removeEffectContainer(target.getEffect(Bleeding.name), target);
             }
-            skillContext.next(source, info, SkillResult.OK);
+            skillContext.next(source, info, skillContext.result(SkillResult.OK));
             return;
         }
-        skillContext.next(source, info, SkillResult.CANCELLED);
+        skillContext.next(source, info, skillContext.result(SkillResult.CANCELLED));
     }
 }

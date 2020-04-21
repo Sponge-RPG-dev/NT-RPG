@@ -31,8 +31,11 @@ public abstract class AbstractEntityService<T, I extends IMob<T>> implements Ent
     @Inject
     protected MobSettingsDao dao;
 
+    protected EntityHandler<I> entityHandler;
+
     public AbstractEntityService() {
         entityHashMap = new HashMap<>();
+        setEntityHandler(new EntityHandler<>());
     }
 
     protected abstract UUID getEntityUUID(T t);
@@ -145,46 +148,79 @@ public abstract class AbstractEntityService<T, I extends IMob<T>> implements Ent
 
     @Override
     public double getMobDamage(String dimension, String type) {
-        MobsConfig dimmension = dao.getCache().getDimmension(dimension);
-        if (dimmension != null) {
-            Double aDouble = dimmension.getDamage().get(type);
-            if (aDouble == null) {
-                warn("No damage configured for " + type
-                        + " in world " + dimension);
-                aDouble = 0D;
-            }
-            return aDouble;
-        }
-        return 0;
+       return entityHandler.getMobDamage(dao, dimension, type);
     }
 
     @Override
-    public double getExperiences(String dimension, String type) {
-        MobsConfig dimmension = dao.getCache().getDimmension(dimension);
-        if (dimmension != null) {
-            Double aDouble = dimmension.getExperiences().get(type);
-            if (aDouble == null) {
-                warn("No max experience drop configured for " + type
-                        + " in world " + dimension);
-                aDouble = 0D;
-            }
-            return aDouble;
-        }
-        return 0;
+    public boolean handleMobDamage(UUID uuid) {
+        return entityHandler.handleMobDamage(uuid);
+    }
+
+    @Override
+    public double getExperiences(String dimension, UUID uniqueId, String type) {
+        return entityHandler.getExperiences(dao, uniqueId, dimension, type);
     }
 
     protected void initializeEntity(I iEntity, UUID uuid, String dimmName, String id) {
         iEntity.setExperiences(-1);
-        MobsConfig dimmension = dao.getCache().getDimmension(dimmName);
-        if (!Rpg.get().getPluginConfig().OVERRIDE_MOBS && dimmension != null) {
-            Double aDouble = dimmension.getHealth().get(id);
-            if (aDouble == null) {
-                warn("No max health configured for " + id + " in world " + dimmName);
-            } else {
-                iEntity.getHealth().setMaxValue(aDouble);
-                iEntity.getHealth().setValue(aDouble);
-            }
-        }
+        iEntity = entityHandler.initializeEntity(dao, uuid, iEntity, dimmName, id);
         entityHashMap.put(uuid, iEntity);
+    }
+
+    public EntityHandler<I> getEntityHandler() {
+        return entityHandler;
+    }
+
+    public void setEntityHandler(EntityHandler<I> entityHandler) {
+        this.entityHandler = entityHandler;
+    }
+
+    public static class EntityHandler<I extends IEntity> {
+
+        public I initializeEntity(MobSettingsDao dao, UUID uuid, I iEntity, String dimmName, String id) {
+            MobsConfig dimmension = dao.getCache().getDimmension(dimmName);
+            if (!Rpg.get().getPluginConfig().OVERRIDE_MOBS && dimmension != null) {
+                Double aDouble = dimmension.getHealth().get(id);
+                if (aDouble == null) {
+                    warn("No max health configured for " + id + " in world " + dimmName);
+                } else {
+                    iEntity.getHealth().setMaxValue(aDouble);
+                    iEntity.getHealth().setValue(aDouble);
+                }
+            }
+            return iEntity;
+        }
+
+        public double getExperiences(MobSettingsDao dao, UUID uuid, String dimension, String type) {
+            MobsConfig dimmension = dao.getCache().getDimmension(dimension);
+            if (dimmension != null) {
+                Double aDouble = dimmension.getExperiences().get(type);
+                if (aDouble == null) {
+                    warn("No max experience drop configured for " + type
+                            + " in world " + dimension);
+                    aDouble = 0D;
+                }
+                return aDouble;
+            }
+            return 0;
+        }
+
+        public double getMobDamage(MobSettingsDao dao, String dimension, String type) {
+            MobsConfig dimmension = dao.getCache().getDimmension(dimension);
+            if (dimmension != null) {
+                Double aDouble = dimmension.getDamage().get(type);
+                if (aDouble == null) {
+                    warn("No damage configured for " + type
+                            + " in world " + dimension);
+                    aDouble = 0D;
+                }
+                return aDouble;
+            }
+            return 0;
+        }
+
+        public boolean handleMobDamage(UUID uuid) {
+            return true;
+        }
     }
 }

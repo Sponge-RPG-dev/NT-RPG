@@ -124,7 +124,7 @@ public class SpigotDamageListener extends AbstractDamageListener implements List
             rpgItemStack = character.getMainHand();
         } else {
             LivingEntity entity = (LivingEntity) attacker.getEntity();
-            if (!pluginConfig.OVERRIDE_MOBS) {
+            if (!pluginConfig.OVERRIDE_MOBS && entityService.handleMobDamage(entity.getUniqueId())) {
                 newdamage = entityService.getMobDamage(entity.getWorld().getName(), entity.getType().name());
             }
             if (entity instanceof HumanEntity) {
@@ -202,7 +202,7 @@ public class SpigotDamageListener extends AbstractDamageListener implements List
             newdamage += spigotDamageService.getCharacterProjectileDamage(c, projectile.getType());
         } else if (attacker.getType() == IEntityType.MOB) {
             PluginConfig pluginConfig = Rpg.get().getPluginConfig();
-            if (!pluginConfig.OVERRIDE_MOBS) {
+            if (!pluginConfig.OVERRIDE_MOBS && entityService.handleMobDamage(target.getUUID())) {
                 newdamage = entityService.getMobDamage((LivingEntity) attacker.getEntity());
             }
         }

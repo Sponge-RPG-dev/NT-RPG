@@ -40,6 +40,6 @@ public class ManaShield extends ActiveSkill {
         manaShieldEffectModel.reductionCost = skillContext.getDoubleNodeValue("reduction-manacost");
         ManaShieldEffect effect = new ManaShieldEffect(character, skillContext.getLongNodeValue(SkillNodes.DURATION), manaShieldEffectModel);
         effectService.addEffect(effect, this);
-        skillContext.next(character, info, SkillResult.OK);
+        skillContext.next(character, info, skillContext.result(SkillResult.OK));
     }
 }

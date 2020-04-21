@@ -46,7 +46,7 @@ public class CommandSkill extends ActiveSkill {
             }
         }
 
-        skillContext.next(character, info, SkillResult.OK);
+        skillContext.next(character, info, skillContext.result(SkillResult.OK));
     }
 
     @Override

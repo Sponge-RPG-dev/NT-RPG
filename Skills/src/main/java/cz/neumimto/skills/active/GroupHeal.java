@@ -49,6 +49,6 @@ public class GroupHeal extends ActiveSkill<ISpongeCharacter> {
             Decorator.healEffect(character.getEntity().getLocation().add(0, 1, 0));
         }
 
-        skillContext.next(character, info, SkillResult.OK);
+        skillContext.next(character, info, skillContext.result(SkillResult.OK));
     }
 }

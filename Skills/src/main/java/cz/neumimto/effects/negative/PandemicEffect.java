@@ -35,8 +35,8 @@ public class PandemicEffect extends EffectBase {
     @Override
     public void onTick(IEffect self) {
         Living entity = ((ISpongeEntity) getConsumer()).getEntity();
-        if (Utils.canDamage(caster, entity)) {
-            entity.damage(damage, damageSource);
+        if (entity.damage(damage, damageSource)) {
+            ;
             //todo some particles
             Rpg.get().getEntityService().healEntity(caster, damage, damageSource.getSkill());
         }

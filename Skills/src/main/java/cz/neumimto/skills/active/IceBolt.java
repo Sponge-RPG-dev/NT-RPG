@@ -83,6 +83,6 @@ public class IceBolt extends ActiveSkill<ISpongeCharacter> {
             ((ISpongeEntity) target).getEntity().damage(projectileProperties.getDamage(), s);
             effectService.addEffect(new SlowPotion(target, slowduration, slowamplf), this);
         });
-        skillContext.next(character, info, SkillResult.OK);
+        skillContext.next(character, info, skillContext.result(SkillResult.OK));
     }
 }

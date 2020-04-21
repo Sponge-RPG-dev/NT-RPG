@@ -12,9 +12,14 @@ import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.common.commands.*;
 import cz.neumimto.rpg.persistence.flatfiles.FlatFilesModule;
 import cz.neumimto.rpg.spigot.bridges.HolographicDisplaysExpansion;
+import cz.neumimto.rpg.spigot.bridges.MMOItemsExpansion;
+import cz.neumimto.rpg.spigot.bridges.MythicalMobsExpansion;
 import cz.neumimto.rpg.spigot.bridges.NtRpgPlaceholderExpansion;
 import cz.neumimto.rpg.spigot.commands.*;
+import cz.neumimto.rpg.spigot.entities.SpigotEntityService;
 import cz.neumimto.rpg.spigot.entities.configuration.SpigotMobSettingsDao;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
 import cz.neumimto.rpg.spigot.gui.SpigotGui;
 import cz.neumimto.rpg.spigot.gui.SpigotGuiHelper;
 import cz.neumimto.rpg.spigot.listeners.SpigotItemCooldownListener;
@@ -49,7 +54,9 @@ import java.util.concurrent.Executors;
 @SoftDependsOn(
         value = {
                 @SoftDependency("PlaceholderAPI"),
-                @SoftDependency("HolographicDisplays")
+                @SoftDependency("HolographicDisplays"),
+                @SoftDependency("MythicMobs"),
+                @SoftDependency("MMOItems")
         }
 )
 @DependsOn(
@@ -123,7 +130,7 @@ public class SpigotRpgPlugin extends JavaPlugin {
             injector.getInstance(Gui.class).setVanillaMessaging(injector.getInstance(SpigotGui.class));
             injector.getInstance(SpigotMobSettingsDao.class).load();
 
-            if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
                 Log.info("PlaceholderAPI installed - registering NTRPG placeholders");
                 injector.getInstance(NtRpgPlaceholderExpansion.class).register();
             }
@@ -134,6 +141,21 @@ public class SpigotRpgPlugin extends JavaPlugin {
                 hde.init();
                 Bukkit.getPluginManager().registerEvents(hde, this);
             }
+
+            if (Bukkit.getPluginManager().isPluginEnabled("MMOItems")) {
+                Log.info("MMOItems installed - Provided hook for Power system and some stuff");
+                MMOItemsExpansion mmie = injector.getInstance(MMOItemsExpansion.class);
+                mmie.init(injector.getInstance(SpigotCharacterService.class));
+                Bukkit.getPluginManager().registerEvents(mmie, this);
+            }
+
+            if (Bukkit.getPluginManager().isPluginEnabled("MythicMobs")) {
+                Log.info("MMOItems installed - Provided hook for Power system and some stuff");
+                MythicalMobsExpansion mme = injector.getInstance(MythicalMobsExpansion.class);
+                mme.init(injector.getInstance(SpigotEntityService.class));
+                Bukkit.getPluginManager().registerEvents(mme, this);
+            }
+
             IScriptEngine scriptEngine = Rpg.get().getScriptEngine();
             scriptEngine.getDataToBind().put(EntityDamageEvent.DamageCause.class, JsBinding.Type.CLASS);
             scriptEngine.getDataToBind().put(EntityType.class, JsBinding.Type.CLASS);

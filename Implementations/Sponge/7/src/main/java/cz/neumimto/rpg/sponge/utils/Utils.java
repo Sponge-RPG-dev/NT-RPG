@@ -174,32 +174,6 @@ public class Utils {
         return t.negate();
     }
 
-    //todo
-    public static boolean canDamage(ISpongeCharacter character, Living l) {
-        if (character.getPlayer() == l) {
-            return false;
-        }
-        if (l.getType() == EntityTypes.PLAYER) {
-            if (character.hasParty()) {
-                IActiveCharacter c = Rpg.get().getCharacterService().getCharacter(l.getUniqueId());
-                if (character.getParty().getPlayers().contains(c)) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    public static boolean canDamage(ISpongeEntity entity, Living l) {
-        DamageSource build = new SpongeEntityDamageSourceBuilder()
-                .entity(entity.getEntity())
-                .type(NDamageType.DAMAGE_CHECK)
-                .absolute()
-                .build();
-
-        return l.damage(0, build);
-    }
-
     public static boolean isLivingEntity(Entity entity) {
         if (entity.isRemoved()) {
             return false;

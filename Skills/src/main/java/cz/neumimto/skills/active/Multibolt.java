@@ -46,6 +46,6 @@ public class Multibolt extends Targeted {
         MultiboltModel model = new MultiboltModel(timesToHit, damage);
         IEffect effect = new MultiboltEffect(target, source, model);
         effectService.addEffect(effect, this);
-        skillContext.next(source, info, SkillResult.OK);
+        skillContext.next(source, info, skillContext.result(SkillResult.OK));
     }
 }

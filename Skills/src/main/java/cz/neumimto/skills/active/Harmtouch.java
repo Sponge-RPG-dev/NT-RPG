@@ -69,6 +69,6 @@ public class Harmtouch extends Targeted {
                             .build(),
                     entity.getLocation().getPosition());
         }
-        skillContext.next(source, info, SkillResult.OK);
+        skillContext.next(source, info, skillContext.result(SkillResult.OK));
     }
 }

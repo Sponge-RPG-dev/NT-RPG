@@ -15,6 +15,7 @@ import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.sponge.damage.SkillDamageSource;
 import cz.neumimto.rpg.sponge.damage.SkillDamageSourceBuilder;
+import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.effect.particle.ParticleEffect;
@@ -42,6 +43,9 @@ public class Despair extends ActiveSkill<ISpongeCharacter> {
     @Inject
     private EffectService effectService;
 
+    @Inject
+    private SpongeDamageService spongeDamageService;
+
     @Override
     public void init() {
         super.init();
@@ -64,7 +68,7 @@ public class Despair extends ActiveSkill<ISpongeCharacter> {
         for (Entity nearbyEntity : nearbyEntities) {
             if (Utils.isLivingEntity(nearbyEntity)) {
                 Living l = (Living) nearbyEntity;
-                if (Utils.canDamage(character, l)) {
+                if (spongeDamageService.canDamage(character, l)) {
                     IEntity iEntity = entityService.get(l);
                     SkillDamageSource build = new SkillDamageSourceBuilder()
                             .fromSkill(this)
@@ -91,6 +95,6 @@ public class Despair extends ActiveSkill<ISpongeCharacter> {
             character.getEntity().getLocation().getExtent().spawnParticles(build, location.getPosition().add(vec));
         });
 
-        skillContext.next(character, info, SkillResult.OK);
+        skillContext.next(character, info, skillContext.result(SkillResult.OK));
     }
 }

@@ -120,7 +120,7 @@ public class SpongeDamageListener extends AbstractDamageListener {
         } else {
             Living entity = (Living) attacker.getEntity();
             PluginConfig pluginConfig = Rpg.get().getPluginConfig();
-            if (!pluginConfig.OVERRIDE_MOBS) {
+            if (!pluginConfig.OVERRIDE_MOBS && entityService.handleMobDamage(entity.getUniqueId())) {
                 newdamage = entityService.getMobDamage(entity);
             }
             if (entity instanceof ArmorEquipable) {
@@ -272,7 +272,7 @@ public class SpongeDamageListener extends AbstractDamageListener {
             newdamage = spongeDamageService.getCharacterProjectileDamage(c, projectile.getType());
         } else if (attacker.getType() == IEntityType.MOB) {
             PluginConfig pluginConfig = Rpg.get().getPluginConfig();
-            if (!pluginConfig.OVERRIDE_MOBS) {
+            if  (!pluginConfig.OVERRIDE_MOBS && entityService.handleMobDamage(attacker.getUUID())) {
                 newdamage = entityService.getMobDamage((Living) attacker.getEntity());
             }
         }

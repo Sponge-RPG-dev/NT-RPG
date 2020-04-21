@@ -43,6 +43,6 @@ public class Dementia extends Targeted {
         int skillLevel = skillContext.getIntNodeValue("skill-level");
         AllSkillsBonus bonus = new AllSkillsBonus(target, duration, -1 * skillLevel);
         effectService.addEffect(bonus, this);
-        skillContext.next(source, info, SkillResult.OK);
+        skillContext.next(source, info, skillContext.result(SkillResult.OK));
     }
 }

@@ -19,12 +19,14 @@
 package cz.neumimto.rpg.sponge.damage;
 
 import com.google.common.collect.Lists;
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.CommonProperties;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.items.ClassItem;
 import cz.neumimto.rpg.common.damage.AbstractDamageService;
+import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.properties.SpongeDefaultProperties;
 import cz.neumimto.rpg.sponge.skills.NDamageType;
 import org.spongepowered.api.Sponge;
@@ -45,7 +47,7 @@ import javax.inject.Singleton;
  * Created by NeumimTo on 4.8.15.
  */
 @Singleton
-public class SpongeDamageService extends AbstractDamageService<Living> {
+public class SpongeDamageService extends AbstractDamageService<ISpongeCharacter, Living> {
 
     private Map<Double, TextColor> doubleColorMap = new TreeMap<>();
 
@@ -58,6 +60,10 @@ public class SpongeDamageService extends AbstractDamageService<Living> {
             TextColors.DARK_PURPLE,
             TextColors.DARK_BLUE
     };
+
+    public SpongeDamageService() {
+        setDamageHandler(new SpongeDamageHandler());
+    }
 
     public double getCharacterProjectileDamage(IActiveCharacter character, EntityType type) {
         if (character.isStub() || type == null) {
@@ -154,5 +160,23 @@ public class SpongeDamageService extends AbstractDamageService<Living> {
 
     public DamageType damageTypeById(String damageType) {
         return Sponge.getRegistry().getType(DamageType.class, damageType).orElseThrow(() -> new RuntimeException("Invalid damage type " + damageType));
+    }
+
+    private class SpongeDamageHandler extends DamageHandler<ISpongeCharacter, Living> {
+        @Override
+        public boolean canDamage(ISpongeCharacter damager, Living damaged) {
+            if (damager.getPlayer() == damaged) {
+                return false;
+            }
+            if (damaged.getType() == EntityTypes.PLAYER) {
+                if (damager.hasParty()) {
+                    IActiveCharacter c = Rpg.get().getCharacterService().getCharacter(damaged.getUniqueId());
+                    if (damager.getParty().getPlayers().contains(c)) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
     }
 }

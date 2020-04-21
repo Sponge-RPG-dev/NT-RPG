@@ -49,7 +49,7 @@ public class SpongeEntityService extends AbstractEntityService<Living, SpongeMob
     }
 
     public double getExperiences(Living entity) {
-        return getExperiences(entity.getWorld().getName(), entity.getType().getId());
+        return getExperiences(entity.getWorld().getName(), entity.getUniqueId(), entity.getType().getId());
     }
 
     /**
@@ -65,5 +65,9 @@ public class SpongeEntityService extends AbstractEntityService<Living, SpongeMob
         if (pluginConfig.DEBUG.isBalance()) {
             info(entity + " setting walk speed to " + speed);
         }
+    }
+
+    public static class SpongeEntityHandler extends EntityHandler {
+
     }
 }

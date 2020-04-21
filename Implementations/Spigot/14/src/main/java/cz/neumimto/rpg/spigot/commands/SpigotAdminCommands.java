@@ -29,6 +29,7 @@ import cz.neumimto.rpg.common.commands.CommandProcessingException;
 import cz.neumimto.rpg.common.commands.InfoCommands;
 import cz.neumimto.rpg.common.commands.OnlineOtherPlayer;
 import cz.neumimto.rpg.common.persistance.dao.ClassDefinitionDao;
+import cz.neumimto.rpg.spigot.gui.SpigotGuiHelper;
 import cz.neumimto.rpg.spigot.inventory.SpigotItemService;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -382,6 +383,7 @@ public class SpigotAdminCommands extends BaseCommand {
             characterService.setActiveCharacter(player.getUniqueId(), activeCharacter);
             characterService.assignPlayerToCharacter(player.getUniqueId());
         }
+        SpigotGuiHelper.initInventories();
     }
 
     private Function<ItemClass, List<String>> TO_TEXT = weaponClass -> {

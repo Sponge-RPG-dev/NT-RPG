@@ -17,6 +17,7 @@
 package cz.neumimto.rpg.sponge.skills.types;
 
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.damage.DamageService;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.events.skill.SkillTargetAttemptEvent;
@@ -27,11 +28,17 @@ import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.api.skills.types.ITargeted;
+import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.entity.living.Living;
 
+import javax.inject.Inject;
+
 public abstract class Targeted extends ActiveSkill<ISpongeCharacter> implements ITargeted<ISpongeCharacter> {
+
+    @Inject
+    protected SpongeDamageService damageService;
 
     @Override
     public void init() {
@@ -51,7 +58,7 @@ public abstract class Targeted extends ActiveSkill<ISpongeCharacter> implements 
                 return;
             }
         }
-        if (getDamageType() != null && !Utils.canDamage(caster, l)) {
+        if (getDamageType() != null && !damageService.canDamage(caster, l)) {
             skillContext.next(caster, info, SkillResult.CANCELLED); //dont chain
             return;
         }

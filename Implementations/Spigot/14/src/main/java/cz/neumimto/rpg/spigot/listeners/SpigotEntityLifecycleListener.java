@@ -103,7 +103,7 @@ public class SpigotEntityLifecycleListener implements Listener {
                 ISpigotCharacter character = characterService.getCharacter(source.getUniqueId());
                 if (character != null && source instanceof LivingEntity) {
 
-                    double exp = entityService.getExperiences(targetEntity.getWorld().getName(), targetEntity.getType().getKey().getKey());
+                    double exp = entityService.getExperiences(targetEntity.getWorld().getName(), targetEntity.getUniqueId(), targetEntity.getType().getKey().getKey());
 
                     exp += character.getExperienceBonusFor(targetEntity.getLocation().getWorld().getName(), targetEntity.getType().getKey().getKey());
                     String experienceSource = targetEntity.getType() == EntityType.PLAYER ? ExperienceSources.PVP : ExperienceSources.PVE;

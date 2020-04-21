@@ -13,6 +13,7 @@ import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.sponge.damage.SkillDamageSource;
 import cz.neumimto.rpg.sponge.damage.SkillDamageSourceBuilder;
+import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.entity.Entity;
@@ -36,6 +37,9 @@ public class Pandemic extends ActiveSkill<ISpongeCharacter> {
     @Inject
     private EntityService entityService;
 
+    @Inject
+    private SpongeDamageService spongeDamageService;
+
     @Override
     public void init() {
         super.init();
@@ -58,7 +62,7 @@ public class Pandemic extends ActiveSkill<ISpongeCharacter> {
         for (Entity entity : nearbyEntities) {
             if (Utils.isLivingEntity(entity)) {
                 IEntity iEntity = entityService.get(entity);
-                if (Utils.canDamage(character, (Living) entity)) {
+                if (spongeDamageService.canDamage(character, (Living) entity)) {
                     PandemicEffect effect = new PandemicEffect(character, iEntity, damage, duration, period);
                     SkillDamageSource s = new SkillDamageSourceBuilder()
                             .fromSkill(this)
@@ -70,6 +74,6 @@ public class Pandemic extends ActiveSkill<ISpongeCharacter> {
                 }
             }
         }
-        skillContext.next(character, info, SkillResult.OK);
+        skillContext.next(character, info, skillContext.result(SkillResult.OK));
     }
 }

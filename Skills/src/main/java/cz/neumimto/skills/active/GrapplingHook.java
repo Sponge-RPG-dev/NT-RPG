@@ -120,7 +120,7 @@ public class GrapplingHook extends ActiveSkill<ISpongeCharacter> {
                 .interval(50, TimeUnit.MILLISECONDS)
                 .submit(plugin);
 
-        skillContext.next(character, info, SkillResult.OK);
+        skillContext.next(character, info, skillContext.result(SkillResult.OK));
     }
 
 

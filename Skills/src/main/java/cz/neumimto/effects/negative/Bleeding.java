@@ -47,8 +47,7 @@ public class Bleeding extends EffectBase<Double> {
     @Override
     public void onTick(IEffect self) {
         ISpongeEntity consumer = (ISpongeEntity) getConsumer();
-        if (Utils.canDamage(caster, consumer.getEntity())) {
-            consumer.getEntity().damage(damage, source);
+        if (consumer.getEntity().damage(damage, source)) {
             Location<World> location = consumer.getEntity().getLocation();
             location.getExtent().spawnParticles(particleEffect, location.getPosition());
         }

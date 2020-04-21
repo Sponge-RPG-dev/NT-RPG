@@ -54,7 +54,7 @@ public class BrainSap extends Targeted {
                 .build();
         float damage = skillContext.getFloatNodeValue(SkillNodes.DAMAGE);
         ((ISpongeEntity) target).getEntity().damage(damage, s);
-        skillContext.next(source, info, SkillResult.OK);
+        skillContext.next(source, info, skillContext.result(SkillResult.OK));
     }
 
     @Listener(order = Order.LAST)

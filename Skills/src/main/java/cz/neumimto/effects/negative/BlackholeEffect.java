@@ -4,6 +4,7 @@ import com.flowpowered.math.vector.Vector3d;
 import com.flowpowered.math.vector.Vector3i;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
+import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
 import cz.neumimto.rpg.sponge.effects.ShapedEffectDecorator;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.utils.Utils;
@@ -15,6 +16,7 @@ import org.spongepowered.api.world.Chunk;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
+import javax.inject.Inject;
 import java.util.Optional;
 import java.util.Set;
 
@@ -29,6 +31,9 @@ public class BlackholeEffect extends ShapedEffectDecorator<Location<World>> {
 	private AABB aabb;
 	private double r;
 	private ISpongeCharacter character;
+
+	@Inject
+	private SpongeDamageService spongeDamageService;
 
 	public BlackholeEffect(IEffectConsumer consumer, long duration, long lookupPeriod, double diameter, Location<World> targetLocation) {
 		super(name, consumer);
@@ -55,7 +60,7 @@ public class BlackholeEffect extends ShapedEffectDecorator<Location<World>> {
 			Set<Entity> intersectingEntities = chunk1.getIntersectingEntities(aabb);
 			for (Entity intersectingEntity : intersectingEntities) {
 				if (Utils.isLivingEntity(intersectingEntity)) {
-					if (Utils.canDamage(character, (Living) intersectingEntities)) {
+					if (spongeDamageService.canDamage(character, (Living) intersectingEntities)) {
 						changeGravity(intersectingEntity);
 					}
 				} else if (intersectingEntity.getType() == EntityTypes.ITEM) {

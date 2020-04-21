@@ -19,7 +19,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Singleton
-public class SpigotDamageService extends AbstractDamageService<LivingEntity> {
+public class SpigotDamageService extends AbstractDamageService<ISpigotCharacter, LivingEntity> {
 
     private Map<Double, String> doubleColorMap = new TreeMap<>();
 
@@ -32,6 +32,12 @@ public class SpigotDamageService extends AbstractDamageService<LivingEntity> {
             "§5",
             "§1"
     };
+
+
+
+    public SpigotDamageService() {
+        setDamageHandler(new SpigotDamageHandler());
+    }
 
     @Override
     public void damageEntity(IEntity<LivingEntity> character, double value) {
@@ -124,11 +130,14 @@ public class SpigotDamageService extends AbstractDamageService<LivingEntity> {
         return true;
     }
 
-    public boolean canDamage(ISpigotCharacter caster, LivingEntity l) {
-        if (l.getHealth() <= 0 || l.isDead() || l.isInvulnerable()) {
-            return false;
+    public static class SpigotDamageHandler extends DamageHandler<ISpigotCharacter, LivingEntity> {
+        @Override
+        public boolean canDamage(ISpigotCharacter damager, LivingEntity l) {
+            if (l.getHealth() <= 0 || l.isDead() || l.isInvulnerable()) {
+                return false;
+            }
+            EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(damager.getEntity(), l, DamageCause.CUSTOM, 0);
+            return !event.isCancelled();
         }
-        EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(caster.getEntity(), l, DamageCause.CUSTOM, 0);
-        return !event.isCancelled();
     }
 }

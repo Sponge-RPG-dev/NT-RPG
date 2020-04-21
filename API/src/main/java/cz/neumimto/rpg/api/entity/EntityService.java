@@ -19,7 +19,9 @@ public interface EntityService<T> {
 
     double getMobDamage(String dimension, String type);
 
-    double getExperiences(String dimension, String type);
+    boolean handleMobDamage(UUID uuid);
+
+    double getExperiences(String dimension, UUID uniqueId, String type);
 
     double healEntity(IEntity entity, float amount, IRpgElement source);
 

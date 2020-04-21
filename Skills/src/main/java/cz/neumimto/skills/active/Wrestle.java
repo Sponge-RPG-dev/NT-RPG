@@ -13,6 +13,7 @@ import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.sponge.damage.SkillDamageSource;
 import cz.neumimto.rpg.sponge.damage.SkillDamageSourceBuilder;
+import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.entity.Entity;
@@ -35,6 +36,9 @@ public class Wrestle extends ActiveSkill<ISpongeCharacter> {
     @Inject
     private EntityService entityService;
 
+    @Inject
+    private SpongeDamageService spongeDamageService;
+
     @Override
     public void init() {
         super.init();
@@ -54,7 +58,7 @@ public class Wrestle extends ActiveSkill<ISpongeCharacter> {
         for (Entity entity : source.getPlayer().getNearbyEntities(radius)) {
             if (Utils.isLivingEntity(entity)) {
                 Living l = (Living) entity;
-                if (Utils.canDamage(source, l)) {
+                if (spongeDamageService.canDamage(source, l)) {
                     IEffectConsumer t = entityService.get(l);
                     StunEffect stunEffect = new StunEffect(t, duration);
                     effectService.addEffect(stunEffect, this, source);

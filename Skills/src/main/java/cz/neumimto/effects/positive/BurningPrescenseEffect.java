@@ -65,12 +65,9 @@ public class BurningPrescenseEffect extends EffectBase<BPModel> {
                         continue;
                     }
                     Living livingEntity = (Living) target;
-                    if (!Utils.canDamage(character, livingEntity)) {
-                        continue;
-                    }
-                    boolean success = livingEntity.damage(getValue().damage, sds);
-                    if (success) {
+                    if (livingEntity.damage(getValue().damage, sds)) {
                         livingEntity.getLocation().getExtent().spawnParticles(TARGET_EFFECT, livingEntity.getLocation().getPosition());
+
                     }
                 }
             } else {

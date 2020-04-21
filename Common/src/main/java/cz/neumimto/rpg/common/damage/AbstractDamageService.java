@@ -11,7 +11,7 @@ import cz.neumimto.rpg.api.items.RpgItemType;
 
 import javax.inject.Inject;
 
-public abstract class AbstractDamageService<T> implements DamageService<T> {
+public abstract class AbstractDamageService<W extends IActiveCharacter, T> implements DamageService<W, T> {
 
     @Inject
     protected EntityService entityService;
@@ -21,6 +21,8 @@ public abstract class AbstractDamageService<T> implements DamageService<T> {
 
     @Inject
     protected PluginConfig pluginConfig;
+
+    protected DamageHandler<W, T> damageHandler;
 
     @Override
     public double getCharacterItemDamage(IActiveCharacter character, RpgItemType type) {
@@ -73,4 +75,20 @@ public abstract class AbstractDamageService<T> implements DamageService<T> {
         character.setWeaponDamage(damage);
     }
 
+    @Override
+    public boolean canDamage(W caster, T l) {
+        return damageHandler.canDamage(caster, l);
+    }
+
+    public DamageHandler<W, T> getDamageHandler() {
+        return damageHandler;
+    }
+
+    public void setDamageHandler(DamageHandler<W, T> damageHandler) {
+        this.damageHandler = damageHandler;
+    }
+
+    public abstract static class DamageHandler<W extends IActiveCharacter, T> {
+        public abstract boolean canDamage(W damager, T damaged);
+    }
 }

@@ -94,7 +94,7 @@ public class SkillTargetProcessors {
             ISpongeCharacter character = (SpongeCharacter) caster;
             Living targetedEntity = Utils.getTargetedEntity(character, range.intValue());
             if (targetedEntity != null) {
-                if (Utils.canDamage(character, targetedEntity)) {
+                if (Rpg.get().getDamageService().canDamage(character, targetedEntity)) {
                     return Rpg.get().getEntityService().get(targetedEntity);
                 }
             }

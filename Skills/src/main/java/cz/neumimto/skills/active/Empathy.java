@@ -53,6 +53,6 @@ public class Empathy extends Targeted {
                 .setSource(source)
                 .build();
         ((ISpongeEntity) target).getEntity().damage(a, build);
-        skillContext.next(source, info, SkillResult.OK);
+        skillContext.next(source, info, skillContext.result(SkillResult.OK));
     }
 }

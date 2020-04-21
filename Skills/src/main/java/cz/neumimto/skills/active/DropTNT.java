@@ -51,6 +51,6 @@ public class DropTNT extends ActiveSkill<ISpongeCharacter> {
         int i = skillContext.getIntNodeValue("explosion-radius");
         tnt.offer(Keys.EXPLOSION_RADIUS, Optional.of(i));
         extent.spawnEntity(tnt);
-        skillContext.next(character, info, SkillResult.OK);
+        skillContext.next(character, info, skillContext.result(SkillResult.OK));
     }
 }

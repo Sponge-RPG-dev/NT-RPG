@@ -49,8 +49,7 @@ public class SkillMegabolt extends ActiveSkill<ISpongeCharacter> {
         for (Entity e : nearbyEntities) {
             if (Utils.isLivingEntity(e)) {
                 Living l = (Living) e;
-                if (Utils.canDamage(caster, l)) {
-                    l.damage(damage, s);
+                if (l.damage(damage, s)) {
                     Decorator.strikeLightning(l);
                 }
             }
