@@ -8,15 +8,15 @@ import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.items.ClassItem;
 import cz.neumimto.rpg.common.damage.AbstractDamageService;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
-import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
-import javax.inject.Singleton;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import javax.inject.Singleton;
 
 @Singleton
 public class SpigotDamageService extends AbstractDamageService<ISpigotCharacter, LivingEntity> {
@@ -32,7 +32,6 @@ public class SpigotDamageService extends AbstractDamageService<ISpigotCharacter,
             "§5",
             "§1"
     };
-
 
 
     public SpigotDamageService() {
@@ -96,22 +95,6 @@ public class SpigotDamageService extends AbstractDamageService<ISpigotCharacter,
         return base;
     }
 
-    public double getEntityDamageMult(IEntity entity, DamageCause source) {
-        if (source == DamageCause.ENTITY_ATTACK) {
-            return entityService.getEntityProperty(entity, CommonProperties.physical_damage_bonus_mult);
-        }
-        if (source == DamageCause.MAGIC) {
-            return entityService.getEntityProperty(entity, CommonProperties.magic_damage_bonus_mult);
-        }
-        if (source == DamageCause.FIRE) {
-            return entityService.getEntityProperty(entity, CommonProperties.fire_damage_bonus_mult);
-        }
-        if (source == DamageCause.LIGHTNING) {
-            return entityService.getEntityProperty(entity, CommonProperties.lightning_damage_bonus_mult);
-        }
-        return 1;
-    }
-
     public boolean damage(LivingEntity attacker, LivingEntity target, DamageCause cause, double damage, boolean knockback) {
         if (target.isDead() || target.getHealth() <= 0.0) {
             return false;
@@ -130,14 +113,43 @@ public class SpigotDamageService extends AbstractDamageService<ISpigotCharacter,
         return true;
     }
 
-    public static class SpigotDamageHandler extends DamageHandler<ISpigotCharacter, LivingEntity> {
+    public class SpigotDamageHandler extends DamageHandler<ISpigotCharacter, LivingEntity> {
+
         @Override
         public boolean canDamage(ISpigotCharacter damager, LivingEntity l) {
             if (l.getHealth() <= 0 || l.isDead() || l.isInvulnerable()) {
                 return false;
             }
             EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(damager.getEntity(), l, DamageCause.CUSTOM, 0);
+            //TODO Maybe fire this event?
             return !event.isCancelled();
         }
+
+        @Override
+        public double getEntityResistance(IEntity entity, String damageType) {
+            DamageCause source = DamageCause.valueOf(damageType);
+            //TODO?
+            return 1;
+        }
+
+        @Override
+        public double getEntityDamageMult(IEntity entity, String damageType) {
+            DamageCause source = DamageCause.valueOf(damageType);
+            if (source == DamageCause.ENTITY_ATTACK) {
+                return entityService.getEntityProperty(entity, CommonProperties.physical_damage_bonus_mult);
+            }
+            if (source == DamageCause.MAGIC) {
+                return entityService.getEntityProperty(entity, CommonProperties.magic_damage_bonus_mult);
+            }
+            if (source == DamageCause.FIRE) {
+                return entityService.getEntityProperty(entity, CommonProperties.fire_damage_bonus_mult);
+            }
+            if (source == DamageCause.LIGHTNING) {
+                return entityService.getEntityProperty(entity, CommonProperties.lightning_damage_bonus_mult);
+            }
+            return 1;
+        }
+
     }
+
 }

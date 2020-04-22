@@ -18,6 +18,8 @@
 
 package cz.neumimto.rpg.sponge;
 
+import static cz.neumimto.rpg.api.logging.Log.info;
+
 import co.aikar.commands.ACFSpongeUtil;
 import co.aikar.commands.CommandIssuer;
 import co.aikar.commands.InvalidCommandArgument;
@@ -32,7 +34,10 @@ import cz.neumimto.rpg.api.utils.FileUtils;
 import cz.neumimto.rpg.common.commands.*;
 import cz.neumimto.rpg.persistence.flatfiles.FlatFilesModule;
 import cz.neumimto.rpg.sponge.bridges.HologramsListener;
-import cz.neumimto.rpg.sponge.commands.*;
+import cz.neumimto.rpg.sponge.commands.SpongeAdminCommands;
+import cz.neumimto.rpg.sponge.commands.SpongeCharacterCommands;
+import cz.neumimto.rpg.sponge.commands.SpongeCommandService;
+import cz.neumimto.rpg.sponge.commands.SpongeSkillBindCommands;
 import cz.neumimto.rpg.sponge.gui.GuiHelper;
 import cz.neumimto.rpg.sponge.gui.VanillaMessaging;
 import cz.neumimto.rpg.sponge.inventory.data.*;
@@ -56,7 +61,6 @@ import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.scheduler.SpongeExecutorService;
 
-import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -67,7 +71,7 @@ import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Set;
 
-import static cz.neumimto.rpg.api.logging.Log.info;
+import javax.annotation.Resource;
 
 /**
  * Created by NeumimTo on 29.4.2015.
@@ -317,10 +321,9 @@ public class SpongeRpgPlugin extends Rpg {
         double elapsedTime = (System.nanoTime() - start) / 1000000000.0;
 
 
-
         SpongeCommandManager manager = new SpongeCommandManager(pluginContainer);
 
-        manager.getCommandContexts().registerContext(OnlineOtherPlayer.class, c-> {
+        manager.getCommandContexts().registerContext(OnlineOtherPlayer.class, c -> {
             CommandIssuer issuer = c.getIssuer();
             String lookup = c.popFirstArg();
             boolean allowMissing = c.isOptional();
@@ -391,7 +394,6 @@ public class SpongeRpgPlugin extends Rpg {
         event.register(NDamageType.FIRE);
         event.register(NDamageType.ICE);
         event.register(NDamageType.LIGHTNING);
-        event.register(NDamageType.DAMAGE_CHECK);
     }
 
 }

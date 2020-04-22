@@ -21,10 +21,10 @@ public interface EntityService<T> {
 
     boolean handleMobDamage(UUID uuid);
 
-    double getExperiences(String dimension, UUID uniqueId, String type);
+    double getExperiences(String dimension, String type, UUID uuid);
 
     double healEntity(IEntity entity, float amount, IRpgElement source);
 
-    void updateWalkSpeed(IEntity<? extends T> activeCharacter);
+    void updateWalkSpeed(IEntity<? extends T> entity);
 
 }

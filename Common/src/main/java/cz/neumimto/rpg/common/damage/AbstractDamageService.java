@@ -4,6 +4,7 @@ import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.damage.DamageService;
 import cz.neumimto.rpg.api.entity.EntityService;
+import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.items.RpgItemStack;
@@ -64,7 +65,7 @@ public abstract class AbstractDamageService<W extends IActiveCharacter, T> imple
             if (damage != null) {
                 double damageF = pluginConfig.ITEM_DAMAGE_PROCESSOR.get(character.getWeaponDamage(), damage);
                 character.setWeaponDamage(damageF);
-            };
+            }
         }
     }
 
@@ -89,6 +90,13 @@ public abstract class AbstractDamageService<W extends IActiveCharacter, T> imple
     }
 
     public abstract static class DamageHandler<W extends IActiveCharacter, T> {
+
         public abstract boolean canDamage(W damager, T damaged);
+
+        public abstract double getEntityResistance(IEntity entity, String damageType);
+
+        public abstract double getEntityDamageMult(IEntity entity, String damageType);
+
     }
+
 }

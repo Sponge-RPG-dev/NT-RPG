@@ -16,7 +16,6 @@ import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
 import cz.neumimto.rpg.sponge.entities.SpongeEntityService;
 import cz.neumimto.rpg.sponge.events.damage.*;
 import cz.neumimto.rpg.sponge.inventory.SpongeItemService;
-import cz.neumimto.rpg.sponge.skills.NDamageType;
 import cz.neumimto.rpg.sponge.skills.ProjectileProperties;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.ArmorEquipable;
@@ -31,8 +30,9 @@ import org.spongepowered.api.event.cause.entity.damage.source.IndirectEntityDama
 import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.filter.cause.First;
 
-import javax.inject.Inject;
 import java.util.Optional;
+
+import javax.inject.Inject;
 
 
 @Singleton
@@ -53,10 +53,6 @@ public class SpongeDamageListener extends AbstractDamageListener {
 
     @Listener(order = Order.EARLY, beforeModifications = true)
     public void onEntityDamageEarly(DamageEntityEvent event, @First EntityDamageSource damageSource) {
-        if (damageSource.getType() == NDamageType.DAMAGE_CHECK) {
-            return;
-        }
-
         IEntity target = entityService.get(event.getTargetEntity());
         IEntity attacker;
         if (damageSource instanceof IndirectEntityDamageSource) {
@@ -85,10 +81,6 @@ public class SpongeDamageListener extends AbstractDamageListener {
 
     @Listener(order = Order.LATE)
     public void onEntityDamageLate(DamageEntityEvent event, @First EntityDamageSource damageSource) {
-        if (damageSource.getType() == NDamageType.DAMAGE_CHECK) {
-            return;
-        }
-
         IEntity target = entityService.get(event.getTargetEntity());
         IEntity attacker;
         if (damageSource instanceof IndirectEntityDamageSource) {
@@ -131,7 +123,7 @@ public class SpongeDamageListener extends AbstractDamageListener {
                 }
             }
         }
-        newdamage *= spongeDamageService.getEntityDamageMult(attacker, source.getType());
+        newdamage *= spongeDamageService.getDamageHandler().getEntityDamageMult(attacker, source.getType().getName());
 
         SpongeEntityWeaponDamageEarlyEvent e = Rpg.get().getEventFactory().createEventInstance(SpongeEntityWeaponDamageEarlyEvent.class);
         e.setTarget(target);
@@ -154,7 +146,7 @@ public class SpongeDamageListener extends AbstractDamageListener {
 
     private void processWeaponDamageLate(DamageEntityEvent event, EntityDamageSource source, IEntity attacker, IEntity target) {
         double newdamage = event.getBaseDamage();
-        newdamage *= spongeDamageService.getEntityResistance(target, source.getType());
+        newdamage *= spongeDamageService.getDamageHandler().getEntityResistance(target, source.getType().getName());
 
         RpgItemStack rpgItemStack = null;
         if (attacker.getType() == IEntityType.CHARACTER) {
@@ -200,7 +192,7 @@ public class SpongeDamageListener extends AbstractDamageListener {
                 type = spongeDamageService.damageTypeById(c.getDamageType());
             }
         }
-        double newdamage = event.getBaseDamage() * spongeDamageService.getEntityDamageMult(attacker, type);
+        double newdamage = event.getBaseDamage() * spongeDamageService.getDamageHandler().getEntityDamageMult(attacker, type.getName());
 
         try (CauseStackManager.StackFrame frame = causeStackManager.pushCauseFrame()) {
             if (effect != null) {
@@ -243,7 +235,7 @@ public class SpongeDamageListener extends AbstractDamageListener {
             if (skill != null) {
                 causeStackManager.pushCause(skill);
             }
-            newdamage *= spongeDamageService.getEntityResistance(target, type);
+            newdamage *= spongeDamageService.getDamageHandler().getEntityResistance(target, type.getName());
 
             SpongeEntitySkillDamageLateEvent e = Rpg.get().getEventFactory().createEventInstance(SpongeEntitySkillDamageLateEvent.class);
             e.setTarget(target);
@@ -272,7 +264,7 @@ public class SpongeDamageListener extends AbstractDamageListener {
             newdamage = spongeDamageService.getCharacterProjectileDamage(c, projectile.getType());
         } else if (attacker.getType() == IEntityType.MOB) {
             PluginConfig pluginConfig = Rpg.get().getPluginConfig();
-            if  (!pluginConfig.OVERRIDE_MOBS && entityService.handleMobDamage(attacker.getUUID())) {
+            if (!pluginConfig.OVERRIDE_MOBS && entityService.handleMobDamage(attacker.getUUID())) {
                 newdamage = entityService.getMobDamage((Living) attacker.getEntity());
             }
         }
@@ -298,7 +290,7 @@ public class SpongeDamageListener extends AbstractDamageListener {
 
     private void processProjectileDamageLate(DamageEntityEvent event, IndirectEntityDamageSource source, IEntity attacker, IEntity target, Projectile projectile) {
         double newdamage = event.getBaseDamage();
-        newdamage *= spongeDamageService.getEntityResistance(target, source.getType());
+        newdamage *= spongeDamageService.getDamageHandler().getEntityResistance(target, source.getType().getName());
 
         SpongeEntityProjectileDamageLateEvent e = Rpg.get().getEventFactory().createEventInstance(SpongeEntityProjectileDamageLateEvent.class);
         e.setTarget(target);
@@ -318,4 +310,5 @@ public class SpongeDamageListener extends AbstractDamageListener {
 
         event.setBaseDamage(e.getDamage());
     }
+
 }

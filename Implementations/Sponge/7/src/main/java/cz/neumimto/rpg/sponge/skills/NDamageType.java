@@ -20,23 +20,6 @@ import org.spongepowered.api.event.cause.entity.damage.DamageType;
 
 public class NDamageType {
 
-    public static final DamageType DAMAGE_CHECK = new DamageType() {
-        @Override
-        public String getId() {
-            return "ntrpg:damagecheck";
-        }
-
-        @Override
-        public String getName() {
-            return "damagecheck";
-        }
-
-        @Override
-        public String toString() {
-            return "DAMAGE_CHECK";
-        }
-    };
-
     public static final DamageType FIRE = new DamageType() {
         @Override
         public String getId() {

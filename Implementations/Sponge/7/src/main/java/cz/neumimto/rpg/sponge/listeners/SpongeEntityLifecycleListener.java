@@ -26,11 +26,12 @@ import org.spongepowered.api.event.world.chunk.UnloadChunkEvent;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-import javax.inject.Inject;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+
+import javax.inject.Inject;
 
 
 /**
@@ -38,7 +39,7 @@ import java.util.Set;
  */
 @Singleton
 @ResourceLoader.ListenerClass
-public class EntityLifecycleListener {
+public class SpongeEntityLifecycleListener {
 
     @Inject
     private SpongeCharacterService characterService;
@@ -120,7 +121,7 @@ public class EntityLifecycleListener {
                     if (!Utils.isLivingEntity(source)) {
                         return;
                     }
-                    double exp = entityService.getExperiences(targetEntity.getWorld().getName(), targetEntity.getUniqueId(), targetEntity.getType().getId());
+                    double exp = entityService.getExperiences(targetEntity.getWorld().getName(), targetEntity.getType().getId(), targetEntity.getUniqueId());
 
                     exp += character.getExperienceBonusFor(targetEntity.getLocation().getExtent().getName(), targetEntity.getType().getId());
                     String experienceSource = targetEntity.getType() == EntityTypes.PLAYER ? ExperienceSources.PVP : ExperienceSources.PVE;
@@ -160,5 +161,6 @@ public class EntityLifecycleListener {
             entityService.remove(entity.getUniqueId());
         }
     }
+
 }
 

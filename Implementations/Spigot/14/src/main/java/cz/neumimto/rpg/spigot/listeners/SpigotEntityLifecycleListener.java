@@ -23,10 +23,11 @@ import org.bukkit.event.player.*;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.projectiles.ProjectileSource;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 @Singleton
 @ResourceLoader.ListenerClass
@@ -101,9 +102,9 @@ public class SpigotEntityLifecycleListener implements Listener {
 
             if (source != null) {
                 ISpigotCharacter character = characterService.getCharacter(source.getUniqueId());
-                if (character != null && source instanceof LivingEntity) {
+                if (character != null) {
 
-                    double exp = entityService.getExperiences(targetEntity.getWorld().getName(), targetEntity.getUniqueId(), targetEntity.getType().getKey().getKey());
+                    double exp = entityService.getExperiences(targetEntity.getWorld().getName(), targetEntity.getType().getKey().getKey(), targetEntity.getUniqueId());
 
                     exp += character.getExperienceBonusFor(targetEntity.getLocation().getWorld().getName(), targetEntity.getType().getKey().getKey());
                     String experienceSource = targetEntity.getType() == EntityType.PLAYER ? ExperienceSources.PVP : ExperienceSources.PVE;

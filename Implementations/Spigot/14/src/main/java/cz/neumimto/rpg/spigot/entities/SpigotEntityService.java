@@ -1,5 +1,7 @@
 package cz.neumimto.rpg.spigot.entities;
 
+import static cz.neumimto.rpg.api.logging.Log.info;
+
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.CommonProperties;
 import cz.neumimto.rpg.api.entity.IEntity;
@@ -10,10 +12,9 @@ import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 
-import javax.inject.Singleton;
 import java.util.UUID;
 
-import static cz.neumimto.rpg.api.logging.Log.info;
+import javax.inject.Singleton;
 
 @Singleton
 public class SpigotEntityService extends AbstractEntityService<LivingEntity, SpigotMob> {
@@ -32,7 +33,7 @@ public class SpigotEntityService extends AbstractEntityService<LivingEntity, Spi
     protected IMob createEntity(LivingEntity entity) {
         String dimmName = entity.getLocation().getWorld().getName();
         SpigotMob iEntity = new SpigotMob(entity);
-        initializeEntity(iEntity, entity.getUniqueId(), dimmName, entity.getType().name());
+        initializeEntity(iEntity, dimmName, entity.getType().name());
         return iEntity;
     }
 
@@ -52,4 +53,5 @@ public class SpigotEntityService extends AbstractEntityService<LivingEntity, Spi
     public double getMobDamage(LivingEntity entity) {
         return getMobDamage(entity.getLocation().getWorld().getName(), entity.getName());
     }
+
 }

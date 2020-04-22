@@ -1,5 +1,7 @@
 package cz.neumimto.rpg.common.entity;
 
+import static cz.neumimto.rpg.api.logging.Log.warn;
+
 import cz.neumimto.rpg.api.IRpgElement;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.effects.EffectService;
@@ -9,11 +11,10 @@ import cz.neumimto.rpg.api.events.skill.SkillHealEvent;
 import cz.neumimto.rpg.common.entity.configuration.MobSettingsDao;
 import cz.neumimto.rpg.common.entity.configuration.MobsConfig;
 
-import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.UUID;
 
-import static cz.neumimto.rpg.api.logging.Log.warn;
+import javax.inject.Inject;
 
 public abstract class AbstractEntityService<T, I extends IMob<T>> implements EntityService<T> {
 
@@ -43,7 +44,6 @@ public abstract class AbstractEntityService<T, I extends IMob<T>> implements Ent
     protected abstract boolean isPlayerControlledEntity(T t);
 
     protected abstract IMob createEntity(T entity);
-
 
     @Override
     public IEntity get(T entity) {
@@ -148,7 +148,7 @@ public abstract class AbstractEntityService<T, I extends IMob<T>> implements Ent
 
     @Override
     public double getMobDamage(String dimension, String type) {
-       return entityHandler.getMobDamage(dao, dimension, type);
+        return entityHandler.getMobDamage(dao, dimension, type);
     }
 
     @Override
@@ -157,14 +157,14 @@ public abstract class AbstractEntityService<T, I extends IMob<T>> implements Ent
     }
 
     @Override
-    public double getExperiences(String dimension, UUID uniqueId, String type) {
-        return entityHandler.getExperiences(dao, uniqueId, dimension, type);
+    public double getExperiences(String dimension, String type, UUID uuid) {
+        return entityHandler.getExperiences(dao, dimension, type, uuid);
     }
 
-    protected void initializeEntity(I iEntity, UUID uuid, String dimmName, String id) {
+    protected void initializeEntity(I iEntity, String dimmName, String type) {
         iEntity.setExperiences(-1);
-        iEntity = entityHandler.initializeEntity(dao, uuid, iEntity, dimmName, id);
-        entityHashMap.put(uuid, iEntity);
+        iEntity = entityHandler.initializeEntity(dao, iEntity, dimmName, type);
+        entityHashMap.put(iEntity.getUUID(), iEntity);
     }
 
     public EntityHandler<I> getEntityHandler() {
@@ -177,12 +177,12 @@ public abstract class AbstractEntityService<T, I extends IMob<T>> implements Ent
 
     public static class EntityHandler<I extends IEntity> {
 
-        public I initializeEntity(MobSettingsDao dao, UUID uuid, I iEntity, String dimmName, String id) {
-            MobsConfig dimmension = dao.getCache().getDimmension(dimmName);
-            if (!Rpg.get().getPluginConfig().OVERRIDE_MOBS && dimmension != null) {
-                Double aDouble = dimmension.getHealth().get(id);
+        public I initializeEntity(MobSettingsDao dao, I iEntity, String dimName, String type) {
+            MobsConfig dimension = dao.getCache().getDimmension(dimName);
+            if (!Rpg.get().getPluginConfig().OVERRIDE_MOBS && dimension != null) {
+                Double aDouble = dimension.getHealth().get(type);
                 if (aDouble == null) {
-                    warn("No max health configured for " + id + " in world " + dimmName);
+                    warn("No max health configured for " + type + " in world " + dimName);
                 } else {
                     iEntity.getHealth().setMaxValue(aDouble);
                     iEntity.getHealth().setValue(aDouble);
@@ -191,13 +191,12 @@ public abstract class AbstractEntityService<T, I extends IMob<T>> implements Ent
             return iEntity;
         }
 
-        public double getExperiences(MobSettingsDao dao, UUID uuid, String dimension, String type) {
-            MobsConfig dimmension = dao.getCache().getDimmension(dimension);
-            if (dimmension != null) {
-                Double aDouble = dimmension.getExperiences().get(type);
+        public double getExperiences(MobSettingsDao dao, String dimName, String type, UUID uuid) {
+            MobsConfig dimension = dao.getCache().getDimmension(dimName);
+            if (dimension != null) {
+                Double aDouble = dimension.getExperiences().get(type);
                 if (aDouble == null) {
-                    warn("No max experience drop configured for " + type
-                            + " in world " + dimension);
+                    warn("No max experience drop configured for " + type + " in world " + dimName);
                     aDouble = 0D;
                 }
                 return aDouble;
@@ -205,13 +204,12 @@ public abstract class AbstractEntityService<T, I extends IMob<T>> implements Ent
             return 0;
         }
 
-        public double getMobDamage(MobSettingsDao dao, String dimension, String type) {
-            MobsConfig dimmension = dao.getCache().getDimmension(dimension);
-            if (dimmension != null) {
-                Double aDouble = dimmension.getDamage().get(type);
+        public double getMobDamage(MobSettingsDao dao, String dimName, String type) {
+            MobsConfig dimension = dao.getCache().getDimmension(dimName);
+            if (dimension != null) {
+                Double aDouble = dimension.getDamage().get(type);
                 if (aDouble == null) {
-                    warn("No damage configured for " + type
-                            + " in world " + dimension);
+                    warn("No damage configured for " + type + " in world " + dimName);
                     aDouble = 0D;
                 }
                 return aDouble;
@@ -222,5 +220,7 @@ public abstract class AbstractEntityService<T, I extends IMob<T>> implements Ent
         public boolean handleMobDamage(UUID uuid) {
             return true;
         }
+
     }
+
 }

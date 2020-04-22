@@ -1,5 +1,7 @@
 package cz.neumimto.rpg.sponge.entities;
 
+import static cz.neumimto.rpg.api.logging.Log.info;
+
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.entity.CommonProperties;
@@ -11,19 +13,18 @@ import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.Living;
 
-import javax.inject.Singleton;
 import java.util.UUID;
 
-import static cz.neumimto.rpg.api.logging.Log.info;
+import javax.inject.Singleton;
 
 /**
  * Created by NeumimTo on 19.12.2015.
  */
 @Singleton
-public class SpongeEntityService extends AbstractEntityService<Living, SpongeMob>{
+public class SpongeEntityService extends AbstractEntityService<Living, SpongeMob> {
 
     public IEntity get(Entity id) {
-        return get((Living)id);
+        return get((Living) id);
     }
 
     @Override
@@ -38,9 +39,8 @@ public class SpongeEntityService extends AbstractEntityService<Living, SpongeMob
 
     @Override
     protected IMob createEntity(Living entity) {
-        String dimmName = entity.getLocation().getExtent().getName();
         SpongeMob iEntity = new SpongeMob(entity);
-        initializeEntity(iEntity, entity.getUniqueId(), dimmName, entity.getType().getId());
+        initializeEntity(iEntity, entity.getLocation().getExtent().getName(), entity.getType().getId());
         return iEntity;
     }
 
@@ -49,7 +49,7 @@ public class SpongeEntityService extends AbstractEntityService<Living, SpongeMob
     }
 
     public double getExperiences(Living entity) {
-        return getExperiences(entity.getWorld().getName(), entity.getUniqueId(), entity.getType().getId());
+        return getExperiences(entity.getWorld().getName(), entity.getType().getId(), entity.getUniqueId());
     }
 
     /**
@@ -67,7 +67,4 @@ public class SpongeEntityService extends AbstractEntityService<Living, SpongeMob
         }
     }
 
-    public static class SpongeEntityHandler extends EntityHandler {
-
-    }
 }

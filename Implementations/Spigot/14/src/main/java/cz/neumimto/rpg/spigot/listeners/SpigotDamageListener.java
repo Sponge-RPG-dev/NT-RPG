@@ -13,7 +13,6 @@ import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.damage.AbstractDamageListener;
 import cz.neumimto.rpg.spigot.SpigotRpg;
-import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
 import cz.neumimto.rpg.spigot.entities.ISpigotEntity;
 import cz.neumimto.rpg.spigot.entities.ProjectileCache;
@@ -32,8 +31,9 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.projectiles.ProjectileSource;
 
-import javax.inject.Inject;
 import java.util.Optional;
+
+import javax.inject.Inject;
 
 @Singleton
 @ResourceLoader.ListenerClass
@@ -137,7 +137,7 @@ public class SpigotDamageListener extends AbstractDamageListener implements List
 
             }
         }
-        newdamage *= spigotDamageService.getEntityDamageMult(attacker, event.getCause());
+        newdamage *= spigotDamageService.getDamageHandler().getEntityDamageMult(attacker, event.getCause().name());
 
         IEntityWeaponDamageEarlyEvent e = getWeaponDamage(event, target, newdamage, rpgItemStack, SpigotEntityWeaponDamageEarlyEvent.class);
         if (e == null) {
@@ -175,7 +175,7 @@ public class SpigotDamageListener extends AbstractDamageListener implements List
                 type = spigotDamageService.damageTypeById(c.getDamageType());
             }
         }
-        double newdamage = event.getDamage() * spigotDamageService.getEntityDamageMult(attacker, type);
+        double newdamage = event.getDamage() * spigotDamageService.getDamageHandler().getEntityDamageMult(attacker, type.name());
 
         SpigotEntitySkillDamageEarlyEvent e = Rpg.get().getEventFactory().createEventInstance(SpigotEntitySkillDamageEarlyEvent.class);
         e.setTarget(target);
@@ -195,7 +195,7 @@ public class SpigotDamageListener extends AbstractDamageListener implements List
 
     }
 
-    private void processProjectileDamageEarly(EntityDamageByEntityEvent event,  IEntity attacker, IEntity target, Projectile projectile) {
+    private void processProjectileDamageEarly(EntityDamageByEntityEvent event, IEntity attacker, IEntity target, Projectile projectile) {
         double newdamage = event.getDamage();
         if (attacker.getType() == IEntityType.CHARACTER) {
             ISpigotCharacter c = (ISpigotCharacter) attacker;
@@ -212,7 +212,6 @@ public class SpigotDamageListener extends AbstractDamageListener implements List
         e.setDamage(newdamage);
         e.setProjectile(projectile);
 
-
         if (Rpg.get().postEvent(e)) {
             e.setCancelled(true);
             return;
@@ -224,4 +223,5 @@ public class SpigotDamageListener extends AbstractDamageListener implements List
 
         event.setDamage(e.getDamage());
     }
+
 }

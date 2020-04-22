@@ -21,6 +21,7 @@ package cz.neumimto.rpg.sponge.damage;
 import com.google.common.collect.Lists;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.CommonProperties;
+import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
@@ -41,6 +42,7 @@ import org.spongepowered.api.text.format.TextColors;
 
 import java.util.*;
 import java.util.stream.Collectors;
+
 import javax.inject.Singleton;
 
 /**
@@ -79,44 +81,6 @@ public class SpongeDamageService extends AbstractDamageService<ISpongeCharacter,
         return base;
     }
 
-    public double getEntityResistance(IEntity entity, DamageType source) {
-        if (source == DamageTypes.ATTACK) {
-            return entityService.getEntityProperty(entity, SpongeDefaultProperties.physical_damage_protection_mult);
-        }
-        if (source == DamageTypes.MAGIC) {
-            return entityService.getEntityProperty(entity, SpongeDefaultProperties.magic_damage_protection_mult);
-        }
-        if (source == NDamageType.FIRE) {
-            return entityService.getEntityProperty(entity, SpongeDefaultProperties.fire_damage_protection_mult);
-        }
-        if (source == NDamageType.LIGHTNING) {
-            return entityService.getEntityProperty(entity, SpongeDefaultProperties.lightning_damage_protection_mult);
-        }
-        if (source == NDamageType.ICE) {
-            return entityService.getEntityProperty(entity, SpongeDefaultProperties.ice_damage_protection_mult);
-        }
-        return 1;
-    }
-
-    public double getEntityDamageMult(IEntity entity, DamageType source) {
-        if (source == DamageTypes.ATTACK) {
-            return entityService.getEntityProperty(entity, CommonProperties.physical_damage_bonus_mult);
-        }
-        if (source == DamageTypes.MAGIC) {
-            return entityService.getEntityProperty(entity, CommonProperties.magic_damage_bonus_mult);
-        }
-        if (source == NDamageType.FIRE) {
-            return entityService.getEntityProperty(entity, CommonProperties.fire_damage_bonus_mult);
-        }
-        if (source == NDamageType.LIGHTNING) {
-            return entityService.getEntityProperty(entity, CommonProperties.lightning_damage_bonus_mult);
-        }
-        if (source == NDamageType.ICE) {
-            return entityService.getEntityProperty(entity, SpongeDefaultProperties.ice_damage_bonus_mult);
-        }
-        return 1;
-    }
-
     @Override
     public void init() {
         Collection<ClassDefinition> classes = classService.getClassDefinitions();
@@ -152,7 +116,6 @@ public class SpongeDamageService extends AbstractDamageService<ISpongeCharacter,
         return val;
     }
 
-
     @Override
     public void damageEntity(IEntity<Living> entity, double value) {
         entity.getEntity().damage(value, DamageSource.builder().absolute().type(DamageTypes.ATTACK).build());
@@ -162,7 +125,8 @@ public class SpongeDamageService extends AbstractDamageService<ISpongeCharacter,
         return Sponge.getRegistry().getType(DamageType.class, damageType).orElseThrow(() -> new RuntimeException("Invalid damage type " + damageType));
     }
 
-    private class SpongeDamageHandler extends DamageHandler<ISpongeCharacter, Living> {
+    public static class SpongeDamageHandler extends DamageHandler<ISpongeCharacter, Living> {
+
         @Override
         public boolean canDamage(ISpongeCharacter damager, Living damaged) {
             if (damager.getPlayer() == damaged) {
@@ -178,5 +142,51 @@ public class SpongeDamageService extends AbstractDamageService<ISpongeCharacter,
             }
             return true;
         }
+
+        @Override
+        public double getEntityResistance(IEntity entity, String damageType) {
+            EntityService entityService = Rpg.get().getEntityService();
+            DamageType source = Sponge.getRegistry().getType(DamageType.class, damageType).orElse(DamageTypes.CUSTOM);
+            if (source == DamageTypes.ATTACK) {
+                return entityService.getEntityProperty(entity, SpongeDefaultProperties.physical_damage_protection_mult);
+            }
+            if (source == DamageTypes.MAGIC) {
+                return entityService.getEntityProperty(entity, SpongeDefaultProperties.magic_damage_protection_mult);
+            }
+            if (source == NDamageType.FIRE) {
+                return entityService.getEntityProperty(entity, SpongeDefaultProperties.fire_damage_protection_mult);
+            }
+            if (source == NDamageType.LIGHTNING) {
+                return entityService.getEntityProperty(entity, SpongeDefaultProperties.lightning_damage_protection_mult);
+            }
+            if (source == NDamageType.ICE) {
+                return entityService.getEntityProperty(entity, SpongeDefaultProperties.ice_damage_protection_mult);
+            }
+            return 1;
+        }
+
+        @Override
+        public double getEntityDamageMult(IEntity entity, String damageType) {
+            EntityService entityService = Rpg.get().getEntityService();
+            DamageType source = Sponge.getRegistry().getType(DamageType.class, damageType).orElse(DamageTypes.CUSTOM);
+            if (source == DamageTypes.ATTACK) {
+                return entityService.getEntityProperty(entity, CommonProperties.physical_damage_bonus_mult);
+            }
+            if (source == DamageTypes.MAGIC) {
+                return entityService.getEntityProperty(entity, CommonProperties.magic_damage_bonus_mult);
+            }
+            if (source == NDamageType.FIRE) {
+                return entityService.getEntityProperty(entity, CommonProperties.fire_damage_bonus_mult);
+            }
+            if (source == NDamageType.LIGHTNING) {
+                return entityService.getEntityProperty(entity, CommonProperties.lightning_damage_bonus_mult);
+            }
+            if (source == NDamageType.ICE) {
+                return entityService.getEntityProperty(entity, SpongeDefaultProperties.ice_damage_bonus_mult);
+            }
+            return 1;
+        }
+
     }
+
 }
