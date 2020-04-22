@@ -47,7 +47,7 @@ public class SpigotCharacter extends ActiveCharacter<Player, SpigotParty> implem
     }
 
     @Override
-    public ISkill skillOrEffectDamageCayse() {
+    public ISkill skillOrEffectDamageCause() {
         return soedc;
     }
 

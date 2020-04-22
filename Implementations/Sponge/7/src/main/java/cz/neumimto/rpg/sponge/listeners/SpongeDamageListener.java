@@ -76,7 +76,6 @@ public class SpongeDamageListener extends AbstractDamageListener {
         } else {
             processWeaponDamageEarly(event, damageSource, attacker, target);
         }
-
     }
 
     @Listener(order = Order.LATE)
@@ -138,6 +137,7 @@ public class SpongeDamageListener extends AbstractDamageListener {
         }
 
         if (e.getDamage() <= 0) {
+            event.setCancelled(true);
             return;
         }
 
@@ -176,6 +176,7 @@ public class SpongeDamageListener extends AbstractDamageListener {
         }
 
         if (e.getDamage() <= 0) {
+            event.setCancelled(true);
             return;
         }
 
@@ -215,6 +216,7 @@ public class SpongeDamageListener extends AbstractDamageListener {
             }
 
             if (e.getDamage() <= 0) {
+                event.setCancelled(true);
                 return;
             }
 
@@ -250,6 +252,7 @@ public class SpongeDamageListener extends AbstractDamageListener {
             }
 
             if (e.getDamage() <= 0) {
+                event.setCancelled(true);
                 return;
             }
 
@@ -283,6 +286,7 @@ public class SpongeDamageListener extends AbstractDamageListener {
         }
 
         if (e.getDamage() <= 0) {
+            event.setCancelled(true);
             return;
         }
 
@@ -306,6 +310,7 @@ public class SpongeDamageListener extends AbstractDamageListener {
         }
 
         if (e.getDamage() <= 0) {
+            event.setCancelled(true);
             return;
         }
 

@@ -39,7 +39,6 @@ public class SpigotMob extends AbstractMob<LivingEntity> implements ISpigotEntit
         }
 
 
-
         IParty<ISpigotCharacter> party = character.getParty();
 
         for (ISpigotCharacter iActiveCharacter : party.getPlayers()) {
@@ -58,6 +57,7 @@ public class SpigotMob extends AbstractMob<LivingEntity> implements ISpigotEntit
         this.entity = null;
     }
 
+    @Override
     public LivingEntity getEntity() {
         return entity;
     }
@@ -68,7 +68,7 @@ public class SpigotMob extends AbstractMob<LivingEntity> implements ISpigotEntit
     }
 
     @Override
-    public ISkill skillOrEffectDamageCayse() {
+    public ISkill skillOrEffectDamageCause() {
         return soedc;
     }
 

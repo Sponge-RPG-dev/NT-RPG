@@ -64,7 +64,7 @@ public class SpigotPreloadCharacter extends PreloadCharacter<Player, SpigotParty
     }
 
     @Override
-    public ISkill skillOrEffectDamageCayse() {
+    public ISkill skillOrEffectDamageCause() {
         return null;
     }
 
@@ -87,4 +87,5 @@ public class SpigotPreloadCharacter extends PreloadCharacter<Player, SpigotParty
     public String getPlayerAccountName() {
         return getPlayer().getName();
     }
+
 }

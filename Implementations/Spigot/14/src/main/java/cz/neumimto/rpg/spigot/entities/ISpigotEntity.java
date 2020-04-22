@@ -9,17 +9,19 @@ import java.util.UUID;
 
 public interface ISpigotEntity<T extends LivingEntity> extends IEffectConsumer, IEntity<T>, AutoCloseable {
 
+    @Override
     T getEntity();
 
+    @Override
     UUID getUUID();
 
-    ISkill skillOrEffectDamageCayse();
+    ISkill skillOrEffectDamageCause();
 
     ISpigotEntity setSkillOrEffectDamageCause(ISkill rpgElement);
 
     @Override
     default void close() {
         setSkillOrEffectDamageCause(null);
-    };
+    }
 
 }

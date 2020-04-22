@@ -62,15 +62,15 @@ public class SpigotDamageListener extends AbstractDamageListener implements List
         if (event.getCause() == EntityDamageEvent.DamageCause.CUSTOM) {
             return;
         }
-        Entity damager = event.getDamager();
-        Entity entity = event.getEntity();
+        Entity targetEntity = event.getEntity();
+        Entity attackerEntity = event.getDamager();
 
-        LivingEntity living = (LivingEntity) entity;
+        LivingEntity living = (LivingEntity) targetEntity;
         ISpigotEntity target = (ISpigotEntity) entityService.get(living);
 
         IEntity attacker = null;
         if (event.getCause() == EntityDamageEvent.DamageCause.PROJECTILE) {
-            Projectile projectile = (Projectile) damager;
+            Projectile projectile = (Projectile) attackerEntity;
             ProjectileSource shooter = projectile.getShooter();
 
             if (shooter instanceof LivingEntity) {
@@ -90,13 +90,12 @@ public class SpigotDamageListener extends AbstractDamageListener implements List
                 }
                 processProjectileDamageEarly(event, attacker, target, projectile);
             }
-
         } else {
-            attacker = entityService.get((LivingEntity) damager);
+            attacker = entityService.get((LivingEntity) attackerEntity);
         }
 
-        if (target.skillOrEffectDamageCayse() != null) {
-            processSkillDamageEarly(event, target.skillOrEffectDamageCayse(), attacker, target);
+        if (target.skillOrEffectDamageCause() != null) {
+            processSkillDamageEarly(event, target.skillOrEffectDamageCause(), attacker, target);
             target.setSkillOrEffectDamageCause(null);
         } else {
             processWeaponDamageEarly(event, event.getCause(), attacker, target);
@@ -137,29 +136,22 @@ public class SpigotDamageListener extends AbstractDamageListener implements List
         }
         newdamage *= spigotDamageService.getDamageHandler().getEntityDamageMult(attacker, event.getCause().name());
 
-        IEntityWeaponDamageEarlyEvent e = getWeaponDamage(event, target, newdamage, rpgItemStack, SpigotEntityWeaponDamageEarlyEvent.class);
-        if (e == null) {
-            event.setCancelled(true);
-        } else {
-            event.setDamage(e.getDamage());
-        }
-    }
-
-    protected IEntityWeaponDamageEarlyEvent getWeaponDamage(EntityDamageByEntityEvent event, IEntity target, double newdamage, RpgItemStack rpgItemStack, Class<? extends IEntityWeaponDamageEarlyEvent> impl) {
-        IEntityWeaponDamageEarlyEvent e = Rpg.get().getEventFactory().createEventInstance(impl);
+        IEntityWeaponDamageEarlyEvent e = Rpg.get().getEventFactory().createEventInstance(SpigotEntityWeaponDamageEarlyEvent.class);
         e.setTarget(target);
         e.setDamage(newdamage);
         e.setWeapon(rpgItemStack);
 
         if (Rpg.get().postEvent(e)) {
             event.setCancelled(true);
-            return null;
+            return;
         }
 
         if (e.getDamage() <= 0) {
-            return null;
+            event.setCancelled(true);
+            return;
         }
-        return e;
+
+        event.setDamage(e.getDamage());
     }
 
     private void processSkillDamageEarly(EntityDamageByEntityEvent event, ISkill skill, IEntity attacker, ISpigotEntity target) {
@@ -185,6 +177,7 @@ public class SpigotDamageListener extends AbstractDamageListener implements List
         }
 
         if (e.getDamage() <= 0) {
+            event.setCancelled(true);
             return;
         }
 
@@ -210,11 +203,12 @@ public class SpigotDamageListener extends AbstractDamageListener implements List
         e.setProjectile(projectile);
 
         if (Rpg.get().postEvent(e)) {
-            e.setCancelled(true);
+            event.setCancelled(true);
             return;
         }
 
         if (e.getDamage() <= 0) {
+            event.setCancelled(true);
             return;
         }
 
