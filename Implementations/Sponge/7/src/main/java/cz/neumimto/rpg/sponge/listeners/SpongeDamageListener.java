@@ -110,13 +110,13 @@ public class SpongeDamageListener extends AbstractDamageListener {
             newdamage = character.getWeaponDamage();
             rpgItemStack = character.getMainHand();
         } else {
-            Living entity = (Living) attacker.getEntity();
+            Living attackerEntity = (Living) attacker.getEntity();
             PluginConfig pluginConfig = Rpg.get().getPluginConfig();
-            if (!pluginConfig.OVERRIDE_MOBS && entityService.handleMobDamage(entity.getUniqueId())) {
-                newdamage = entityService.getMobDamage(entity);
+            if (!pluginConfig.OVERRIDE_MOBS && entityService.handleMobDamage(attackerEntity.getWorld().getName(), attackerEntity.getUniqueId())) {
+                newdamage = entityService.getMobDamage(attackerEntity);
             }
-            if (entity instanceof ArmorEquipable) {
-                Optional<RpgItemStack> rpgItemStack1 = ((ArmorEquipable) entity).getItemInHand(HandTypes.MAIN_HAND)
+            if (attackerEntity instanceof ArmorEquipable) {
+                Optional<RpgItemStack> rpgItemStack1 = ((ArmorEquipable) attackerEntity).getItemInHand(HandTypes.MAIN_HAND)
                         .map(itemStack -> itemService.getRpgItemStack(itemStack)).get();
                 if (rpgItemStack1.isPresent()) {
                     rpgItemStack = rpgItemStack1.get();
@@ -263,9 +263,10 @@ public class SpongeDamageListener extends AbstractDamageListener {
             IActiveCharacter c = (IActiveCharacter) attacker;
             newdamage = spongeDamageService.getCharacterProjectileDamage(c, projectile.getType());
         } else if (attacker.getType() == IEntityType.MOB) {
+            Living attackerEntity = (Living) attacker.getEntity();
             PluginConfig pluginConfig = Rpg.get().getPluginConfig();
-            if (!pluginConfig.OVERRIDE_MOBS && entityService.handleMobDamage(attacker.getUUID())) {
-                newdamage = entityService.getMobDamage((Living) attacker.getEntity());
+            if (!pluginConfig.OVERRIDE_MOBS && entityService.handleMobDamage(attackerEntity.getWorld().getName(), attackerEntity.getUniqueId())) {
+                newdamage = entityService.getMobDamage(attackerEntity);
             }
         }
 

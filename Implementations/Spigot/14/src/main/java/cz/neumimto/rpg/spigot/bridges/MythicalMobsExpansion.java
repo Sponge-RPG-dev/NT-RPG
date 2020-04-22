@@ -40,7 +40,7 @@ public class MythicalMobsExpansion implements Listener {
         }
 
         @Override
-        public boolean handleMobDamage(UUID uuid) {
+        public boolean handleMobDamage(String dimension, UUID uuid) {
             return !MythicMobs.inst().getAPIHelper().isMythicMob(uuid);
         }
 

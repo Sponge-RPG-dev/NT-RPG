@@ -101,8 +101,6 @@ public class SpigotDamageListener extends AbstractDamageListener implements List
         } else {
             processWeaponDamageEarly(event, event.getCause(), attacker, target);
         }
-
-
     }
 
     private void processWeaponDamageEarly(EntityDamageByEntityEvent event, EntityDamageEvent.DamageCause cause, IEntity attacker, ISpigotEntity target) {
@@ -123,12 +121,12 @@ public class SpigotDamageListener extends AbstractDamageListener implements List
             newdamage = character.getWeaponDamage();
             rpgItemStack = character.getMainHand();
         } else {
-            LivingEntity entity = (LivingEntity) attacker.getEntity();
-            if (!pluginConfig.OVERRIDE_MOBS && entityService.handleMobDamage(entity.getUniqueId())) {
-                newdamage = entityService.getMobDamage(entity.getWorld().getName(), entity.getType().name());
+            LivingEntity attackerEntity = (LivingEntity) attacker.getEntity();
+            if (!pluginConfig.OVERRIDE_MOBS && entityService.handleMobDamage(attackerEntity.getWorld().getName(), attackerEntity.getUniqueId())) {
+                newdamage = entityService.getMobDamage(attackerEntity);
             }
-            if (entity instanceof HumanEntity) {
-                ItemStack itemStack = ((HumanEntity) entity).getItemInHand();
+            if (attackerEntity instanceof HumanEntity) {
+                ItemStack itemStack = ((HumanEntity) attackerEntity).getItemInHand();
 
                 Optional<RpgItemStack> rpgItemStack1 = itemService.getRpgItemStack(itemStack);
                 if (rpgItemStack1.isPresent()) {
@@ -164,7 +162,6 @@ public class SpigotDamageListener extends AbstractDamageListener implements List
         return e;
     }
 
-
     private void processSkillDamageEarly(EntityDamageByEntityEvent event, ISkill skill, IEntity attacker, ISpigotEntity target) {
 
         EntityDamageEvent.DamageCause type = event.getCause();
@@ -192,7 +189,6 @@ public class SpigotDamageListener extends AbstractDamageListener implements List
         }
 
         event.setDamage(e.getDamage());
-
     }
 
     private void processProjectileDamageEarly(EntityDamageByEntityEvent event, IEntity attacker, IEntity target, Projectile projectile) {
@@ -201,9 +197,10 @@ public class SpigotDamageListener extends AbstractDamageListener implements List
             ISpigotCharacter c = (ISpigotCharacter) attacker;
             newdamage += spigotDamageService.getCharacterProjectileDamage(c, projectile.getType());
         } else if (attacker.getType() == IEntityType.MOB) {
+            LivingEntity attackerEntity = (LivingEntity) attacker.getEntity();
             PluginConfig pluginConfig = Rpg.get().getPluginConfig();
-            if (!pluginConfig.OVERRIDE_MOBS && entityService.handleMobDamage(target.getUUID())) {
-                newdamage = entityService.getMobDamage((LivingEntity) attacker.getEntity());
+            if (!pluginConfig.OVERRIDE_MOBS && entityService.handleMobDamage(attackerEntity.getWorld().getName(), attackerEntity.getUniqueId())) {
+                newdamage = entityService.getMobDamage(attackerEntity);
             }
         }
 

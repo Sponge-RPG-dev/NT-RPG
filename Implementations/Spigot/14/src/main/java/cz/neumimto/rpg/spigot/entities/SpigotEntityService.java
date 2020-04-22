@@ -31,9 +31,9 @@ public class SpigotEntityService extends AbstractEntityService<LivingEntity, Spi
 
     @Override
     protected IMob createEntity(LivingEntity entity) {
-        String dimmName = entity.getLocation().getWorld().getName();
+        String dimName = entity.getWorld().getName();
         SpigotMob iEntity = new SpigotMob(entity);
-        initializeEntity(iEntity, dimmName, entity.getType().name());
+        initializeEntity(iEntity, dimName, entity.getType().name());
         return iEntity;
     }
 
@@ -51,7 +51,7 @@ public class SpigotEntityService extends AbstractEntityService<LivingEntity, Spi
     }
 
     public double getMobDamage(LivingEntity entity) {
-        return getMobDamage(entity.getLocation().getWorld().getName(), entity.getName());
+        return getMobDamage(entity.getWorld().getName(), entity.getName());
     }
 
 }

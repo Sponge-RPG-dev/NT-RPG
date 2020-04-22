@@ -145,7 +145,6 @@ public abstract class AbstractEntityService<T, I extends IMob<T>> implements Ent
         entityToFullHealth.getHealth().setValue(entityToFullHealth.getHealth().getMaxValue());
     }
 
-
     @Override
     public double getMobDamage(String dimension, String type) {
         return entityHandler.getMobDamage(dao, dimension, type);
