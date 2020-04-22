@@ -19,7 +19,7 @@ public interface EntityService<T> {
 
     double getMobDamage(String dimension, String type);
 
-    boolean handleMobDamage(UUID uuid);
+    boolean handleMobDamage(String dimension, UUID uuid);
 
     double getExperiences(String dimension, String type, UUID uuid);
 

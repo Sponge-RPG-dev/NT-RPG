@@ -152,8 +152,8 @@ public abstract class AbstractEntityService<T, I extends IMob<T>> implements Ent
     }
 
     @Override
-    public boolean handleMobDamage(UUID uuid) {
-        return entityHandler.handleMobDamage(uuid);
+    public boolean handleMobDamage(String dimension, UUID uuid) {
+        return entityHandler.handleMobDamage(dimension, uuid);
     }
 
     @Override
@@ -217,7 +217,7 @@ public abstract class AbstractEntityService<T, I extends IMob<T>> implements Ent
             return 0;
         }
 
-        public boolean handleMobDamage(UUID uuid) {
+        public boolean handleMobDamage(String dimension, UUID uuid) {
             return true;
         }
 

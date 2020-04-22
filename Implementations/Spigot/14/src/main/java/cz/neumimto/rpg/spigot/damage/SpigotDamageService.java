@@ -1,7 +1,9 @@
 package cz.neumimto.rpg.spigot.damage;
 
 import com.google.common.collect.Lists;
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.CommonProperties;
+import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
@@ -113,7 +115,7 @@ public class SpigotDamageService extends AbstractDamageService<ISpigotCharacter,
         return true;
     }
 
-    public class SpigotDamageHandler extends DamageHandler<ISpigotCharacter, LivingEntity> {
+    public static class SpigotDamageHandler extends DamageHandler<ISpigotCharacter, LivingEntity> {
 
         @Override
         public boolean canDamage(ISpigotCharacter damager, LivingEntity l) {
@@ -127,6 +129,7 @@ public class SpigotDamageService extends AbstractDamageService<ISpigotCharacter,
 
         @Override
         public double getEntityResistance(IEntity entity, String damageType) {
+            EntityService entityService = Rpg.get().getEntityService();
             DamageCause source = DamageCause.valueOf(damageType);
             //TODO?
             return 1;
@@ -134,6 +137,7 @@ public class SpigotDamageService extends AbstractDamageService<ISpigotCharacter,
 
         @Override
         public double getEntityDamageMult(IEntity entity, String damageType) {
+            EntityService entityService = Rpg.get().getEntityService();
             DamageCause source = DamageCause.valueOf(damageType);
             if (source == DamageCause.ENTITY_ATTACK) {
                 return entityService.getEntityProperty(entity, CommonProperties.physical_damage_bonus_mult);
