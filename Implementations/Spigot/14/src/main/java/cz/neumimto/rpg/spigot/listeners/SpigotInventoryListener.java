@@ -73,10 +73,10 @@ public class SpigotInventoryListener implements Listener {
         HumanEntity whoClicked = event.getWhoClicked();
         ItemStack currentItem = event.getCurrentItem();
 
-        System.out.println(event.getSlot());
-        System.out.println(event.getRawSlot());
-        System.out.println(event.getInventory().getType());
-        System.out.println(event.getSlotType());
+        //System.out.println(event.getSlot());
+        //System.out.println(event.getRawSlot());
+        //System.out.println(event.getInventory().getType());
+        //System.out.println(event.getSlotType());
 
         if (currentItem != null) {
             NBTItem nbti = new NBTItem(currentItem);

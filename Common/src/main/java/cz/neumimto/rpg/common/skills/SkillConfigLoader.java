@@ -36,13 +36,26 @@ public class SkillConfigLoader {
     }
 
     public ISkill build(String id) {
+        ResourceLoader rl = Rpg.get().getResourceLoader();
+
+        Object o = null;
+        try {
+            o = rl.loadClass(generateClass(id));
+        } catch (IllegalAccessException | InstantiationException | ConfigurationException e) {
+            e.printStackTrace();
+        }
+        ISkill o1 = (ISkill) o;
+        return o1;
+    }
+
+    public Class<? extends ISkill> generateClass(String id) {
         info("Generating class for the skill " + id, DebugLevel.DEVELOP);
         //todo use another classloadern
         ByteBuddy byteBuddy = new ByteBuddy();
         String[] split = id.split(":");
         String name = split[split.length - 1];
         ResourceLoader rl = Rpg.get().getResourceLoader();
-        Class<? extends ISkill> value = byteBuddy.subclass(type)
+        return byteBuddy.subclass(type)
                 .name("cz.neumimto.generated." + name + System.currentTimeMillis())
                 .annotateType(AnnotationDescription.Builder.ofType(ResourceLoader.Skill.class)
                         .define("value", id)
@@ -50,14 +63,6 @@ public class SkillConfigLoader {
                 .make()
                 .load(rl.getClass().getClassLoader())
                 .getLoaded();
-        Object o = null;
-        try {
-            o = rl.loadClass(value);
-        } catch (IllegalAccessException | InstantiationException | ConfigurationException e) {
-            e.printStackTrace();
-        }
-        ISkill o1 = (ISkill) o;
-        return o1;
     }
 
 }

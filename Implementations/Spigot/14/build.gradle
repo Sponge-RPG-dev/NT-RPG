@@ -1,5 +1,4 @@
 plugins {
-    id 'com.github.johnrengelman.shadow' version '4.0.4'
     id 'java'
 }
 
@@ -60,7 +59,7 @@ dependencies {
     compileOnly 'com.github.Slikey:EffectLib:d77f639038'
     compileOnly 'me.clip:placeholderapi:2.10.3'
     compileOnly 'com.gmail.filoghost.holographicdisplays:holographicdisplays-api:2.4.0'
-    compileOnly ('net.Indyuce:MMOItems:5.3.2') {
+    compileOnly ('net.Indyuce:MMOItems:5.4') {
         exclude group: 'com.mojang', module: 'authlib'
     }
     compileOnly 'io.lumine.xikage:MythicMobs:4.9.1'
@@ -71,14 +70,6 @@ dependencies {
         }
         archiveName("NT-RPG-Spigot-15.x-"+version+".jar")
     }
-
-
 }
 
-shadowJar {
-    classifier = null
-    // relocate 'co.aikar.commands', 'cz.neumimto.acf'
-}
-
-build.dependsOn shadowJar
 
