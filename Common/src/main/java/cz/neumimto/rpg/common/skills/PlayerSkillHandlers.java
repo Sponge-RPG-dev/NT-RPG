@@ -14,10 +14,19 @@ public class PlayerSkillHandlers {
     public static class SHARED implements IPlayerSkillHandler {
 
         private Map<String, PlayerSkillContext> skills = new HashMap<>();
+        private Map<String, PlayerSkillContext> skillsByName = new HashMap<>();
 
         @Override
         public void add(String iSkill, PlayerSkillContext source) {
             skills.put(iSkill, source);
+            if (source.getSkillData().getSkillName() != null) {
+                skills.put(source.getSkillData().getSkillName(), source);
+            }
+        }
+
+        @Override
+        public PlayerSkillContext getByName(String name) {
+            return skillsByName.get(name);
         }
 
         @Override
@@ -33,6 +42,9 @@ public class PlayerSkillHandlers {
         @Override
         public void remove(ISkill skill, ClassDefinition origin) {
             skills.remove(skill.getId());
+          //todo  if (source.getSkillData().getSkillName() != null) {
+          //todo      skills.put(source.getSkillData().getSkillName(), source);
+          //todo  }
         }
 
         @Override
@@ -49,6 +61,12 @@ public class PlayerSkillHandlers {
         public boolean contains(String name) {
             return skills.containsKey(name);
         }
+
+        @Override
+        public Map<String, PlayerSkillContext> getSkillsByName() {
+            return skillsByName;
+        }
+
     }
 /*
     public static final IPlayerSkillHandler CLASS_PRIORITY = new IPlayerSkillHandler() {

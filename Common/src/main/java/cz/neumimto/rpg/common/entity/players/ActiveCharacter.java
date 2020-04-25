@@ -475,6 +475,11 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
     }
 
     @Override
+    public Map<String, PlayerSkillContext> getSkillsByName() {
+        return skills.getSkillsByName();
+    }
+
+    @Override
     public void addSkill(String id, PlayerSkillContext info) {
         skills.add(id, info);
     }

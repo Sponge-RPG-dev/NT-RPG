@@ -10,12 +10,10 @@ import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.skills.ISkill;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.inventory.runewords.RuneWord;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ACFBootstrap {
@@ -37,10 +35,11 @@ public class ACFBootstrap {
                 Rpg.get().getSkillService().getSkills().keySet()
         );
 
-        manager.getCommandCompletions().registerAsyncCompletion("learnedSkill", c -> {
+        manager.getCommandCompletions().registerCompletion("learnedSkill", c -> {
             UUID uuid = c.getIssuer().getUniqueId();
             IActiveCharacter character = Rpg.get().getCharacterService().getCharacter(uuid);
-            return character.getSkills().keySet();
+            Map<String, PlayerSkillContext> skills = character.getSkillsByName();
+            return skills.keySet();
         });
 
         manager.getCommandContexts().registerContext(ISkill.class, c -> {

@@ -91,12 +91,6 @@ public class SpigotInventoryListener implements Listener {
             if (nbti.hasKey("ntrpg.item-iface")) {
                 event.setResult(Event.Result.DENY);
             }
-            if (nbti.hasKey(SpigotInventoryService.SKILLBIND)) {
-                event.setResult(Event.Result.DENY);
-                Rpg.get().scheduleSyncLater(() -> {
-                    Bukkit.dispatchCommand(whoClicked, "skill " + currentItem.getItemMeta().getDisplayName());
-                });
-            }
         }
     }
 
@@ -131,6 +125,12 @@ public class SpigotInventoryListener implements Listener {
             return;
         }
 */
+        Item itemDrop = event.getItemDrop();
+        NBTItem nbtItem = new NBTItem(itemDrop.getItemStack());
+        if (nbtItem.hasKey(SpigotInventoryService.SKILLBIND)) {
+            itemDrop.remove();
+        }
+
         int selectedSlotIndex = player.getInventory().getHeldItemSlot();
         Map<Class<?>, RpgInventory> managedInventory = character.getManagedInventory();
         RpgInventory rpgInventory = managedInventory.get(PlayerInventory.class);

@@ -142,6 +142,8 @@ public interface IActiveCharacter<T, P extends IParty> extends IEntity<T> {
 
     boolean isSilenced();
 
+    Map<String, PlayerSkillContext> getSkillsByName();
+
     void addSkill(String name, PlayerSkillContext info);
 
     PlayerSkillContext getSkill(String skillName);

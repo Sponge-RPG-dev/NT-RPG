@@ -12,6 +12,8 @@ public interface IPlayerSkillHandler {
 
     void add(String iSkill, PlayerSkillContext source);
 
+    PlayerSkillContext getByName(String name);
+
     PlayerSkillContext get(String id);
 
     default void add(ISkill skill, PlayerSkillContext origin) {
@@ -27,4 +29,6 @@ public interface IPlayerSkillHandler {
     void clear();
 
     boolean contains(String name);
+
+    Map<String, PlayerSkillContext> getSkillsByName();
 }

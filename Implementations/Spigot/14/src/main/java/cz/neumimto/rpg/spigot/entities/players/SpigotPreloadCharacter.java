@@ -1,6 +1,7 @@
 package cz.neumimto.rpg.spigot.entities.players;
 
 import cz.neumimto.rpg.api.skills.ISkill;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.entity.players.PlayerNotInGameException;
 import cz.neumimto.rpg.common.entity.players.PreloadCharacter;
 import cz.neumimto.rpg.spigot.entities.ISpigotEntity;
@@ -61,6 +62,11 @@ public class SpigotPreloadCharacter extends PreloadCharacter<Player, SpigotParty
     @Override
     public UUID getUUID() {
         return uuid;
+    }
+
+    @Override
+    public Map<String, PlayerSkillContext> getSkillsByName() {
+        return Collections.emptyMap();
     }
 
     @Override
