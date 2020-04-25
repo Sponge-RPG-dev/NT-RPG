@@ -6,6 +6,7 @@ import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.common.skills.preprocessors.SkillCostPreprocessor;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.events.skill.SpigotSkillFinishedEvent;
 import cz.neumimto.rpg.spigot.events.skill.SpigotSkillPostUsageEvent;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -15,7 +16,7 @@ import org.bukkit.event.Listener;
 public class SpigotItemCooldownListener implements Listener {
 
     @EventHandler
-    public void onSkillPostUsageEvent(SpigotSkillPostUsageEvent event) {
+    public void onSkillPostUsageEvent(SpigotSkillFinishedEvent event) {
         SkillContext skillContext = event.getSkillContext();
         int cd = (int) skillContext.getFinalCooldown();
         if (cd > 0) {

@@ -50,16 +50,20 @@ public class SkillsCommandFacade {
         }
     }
 
-    public void executeSkill(IActiveCharacter character, ISkill skill) {
-        PlayerSkillContext info = character.getSkillInfo(skill.getId());
+    public void executeSkill(IActiveCharacter character, String skillId) {
+        PlayerSkillContext info = character.getSkillInfo(skillId);
         if (info == PlayerSkillContext.EMPTY || info == null) {
-            Arg arg = Arg.arg("skill", skill.getId());
+            Arg arg = Arg.arg("skill", skillId);
             character.sendMessage(
                     localizationService.translate(LocalizationKeys.CHARACTER_DOES_NOT_HAVE_SKILL,
                             arg));
             return;
         }
         skillService.executeSkill(character, info, ResultNotificationSkillExecutor.INSTANCE);
+    }
+
+    public void executeSkill(IActiveCharacter character, ISkill skill) {
+        executeSkill(character, skill.getId());
     }
 
     public void learnSkill(IActiveCharacter character, ISkill skill, ClassDefinition aClass) {

@@ -23,6 +23,7 @@ import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
 import cz.neumimto.rpg.spigot.gui.SpigotGui;
 import cz.neumimto.rpg.spigot.gui.SpigotGuiHelper;
 import cz.neumimto.rpg.spigot.listeners.SpigotItemCooldownListener;
+import cz.neumimto.rpg.spigot.listeners.skillbinds.OnKeyPress;
 import cz.neumimto.rpg.spigot.resources.SpigotGuiceModule;
 import de.slikey.effectlib.EffectManager;
 import org.bukkit.Bukkit;
@@ -163,6 +164,7 @@ public class SpigotRpgPlugin extends JavaPlugin {
             if (Boolean.TRUE.equals(Rpg.get().getPluginConfig().ITEM_COOLDOWNS)) {
                 Rpg.get().registerListeners(new SpigotItemCooldownListener());
             }
+            Rpg.get().registerListeners(injector.getInstance(OnKeyPress.class));
         });
 
         SpigotGuiHelper.initInventories();

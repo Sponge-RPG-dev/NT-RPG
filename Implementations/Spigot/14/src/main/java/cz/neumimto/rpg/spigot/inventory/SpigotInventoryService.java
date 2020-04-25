@@ -18,8 +18,10 @@ import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.gui.SpigotGuiHelper;
 import cz.neumimto.rpg.spigot.persistance.SpigotEquipedSlot;
 import de.tr7zw.nbtapi.NBTItem;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -90,12 +92,18 @@ public class SpigotInventoryService extends AbstractInventoryService<ISpigotChar
     }
 
     public ItemStack createSkillbind(SkillData skillData) {
-        ItemStack itemStack = new ItemStack(Material.PUMPKIN_SEEDS, 1);
+        String icon = skillData.getIcon();
+        Material material = Material.matchMaterial(icon);
+        ItemStack itemStack = new ItemStack(material, 1);
         ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.setDisplayName(skillData.getSkillName());
+        itemMeta.setDisplayName(ChatColor.GOLD.toString() + ChatColor.BOLD + skillData.getSkillName());
+        itemMeta.addItemFlags(ItemFlag.values());
+        if (skillData.getModelId() != null) {
+            itemMeta.setCustomModelData(skillData.getModelId());
+        }
         itemStack.setItemMeta(itemMeta);
         NBTItem nbtItem = new NBTItem(itemStack);
-        nbtItem.setBoolean(SKILLBIND, true);
+        nbtItem.setString(SKILLBIND, skillData.getSkillId());
         return nbtItem.getItem();
     }
 

@@ -46,6 +46,7 @@ public class SpongeEventFactory extends EventFactoryImpl {
         super.registerProvider(PartyLeaveEvent.class, SpongePartyLeaveEvent::new);
         super.registerProvider(SkillHealEvent.class, SpongeHealEvent::new);
         super.registerProvider(SkillPostUsageEvent.class, SpongeSkillPostUsageEvent::new);
+        super.registerProvider(SkillFinishedEvent.class, SpongeSkillFinishedEvent::new);
         super.registerProvider(SkillPreUsageEvent.class, SpongeSkillPreUsageEvent::new);
         super.registerProvider(SkillTargetAttemptEvent.class, SpongeSkillTargetAttemptEvent::new);
         //by impl

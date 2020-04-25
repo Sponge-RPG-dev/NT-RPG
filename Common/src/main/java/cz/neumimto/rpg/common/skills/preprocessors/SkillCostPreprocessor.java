@@ -4,6 +4,7 @@ import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.events.skill.SkillFinishedEvent;
 import cz.neumimto.rpg.api.events.skill.SkillPostUsageEvent;
 import cz.neumimto.rpg.api.events.skill.SkillPreUsageEvent;
 import cz.neumimto.rpg.api.gui.Gui;
@@ -94,6 +95,12 @@ public class SkillCostPreprocessor extends ActiveSkillPreProcessorWrapper {
                 Gui.displayMana(character);
                 //skillResult.next(character, info, skillResult.result(result));
             }
+
+            SkillFinishedEvent finishedEvent = Rpg.get().getEventFactory().createEventInstance(SkillFinishedEvent.class);
+            finishedEvent.setSkillContext(skillContext);
+            finishedEvent.setSkill(skillContext.getSkill());
+            finishedEvent.setCaster(character);
+            Rpg.get().postEvent(finishedEvent);
         }
     }
 

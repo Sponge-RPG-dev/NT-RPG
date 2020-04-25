@@ -5,6 +5,7 @@ import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
+import cz.neumimto.rpg.sponge.events.skill.SpongeSkillFinishedEvent;
 import cz.neumimto.rpg.sponge.events.skill.SpongeSkillPostUsageEvent;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
@@ -18,7 +19,7 @@ public class SpongeItemCooldownListener {
 
 
     @Listener
-    public void onSkillPostUsageEvent(SpongeSkillPostUsageEvent event) {
+    public void onSkillPostUsageEvent(SpongeSkillFinishedEvent event) {
         SkillContext skillContext = event.getSkillContext();
         int cd = (int) skillContext.getFinalCooldown();
         if (cd > 0) {

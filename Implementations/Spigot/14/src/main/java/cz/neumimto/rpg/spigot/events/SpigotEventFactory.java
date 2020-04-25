@@ -8,10 +8,7 @@ import cz.neumimto.rpg.api.events.party.PartyCreateEvent;
 import cz.neumimto.rpg.api.events.party.PartyInviteEvent;
 import cz.neumimto.rpg.api.events.party.PartyJoinEvent;
 import cz.neumimto.rpg.api.events.party.PartyLeaveEvent;
-import cz.neumimto.rpg.api.events.skill.SkillHealEvent;
-import cz.neumimto.rpg.api.events.skill.SkillPostUsageEvent;
-import cz.neumimto.rpg.api.events.skill.SkillPreUsageEvent;
-import cz.neumimto.rpg.api.events.skill.SkillTargetAttemptEvent;
+import cz.neumimto.rpg.api.events.skill.*;
 import cz.neumimto.rpg.common.events.EventFactoryImpl;
 import cz.neumimto.rpg.spigot.events.character.*;
 import cz.neumimto.rpg.spigot.events.damage.*;
@@ -21,10 +18,7 @@ import cz.neumimto.rpg.spigot.events.party.SpigotPartyCreateEvent;
 import cz.neumimto.rpg.spigot.events.party.SpigotPartyInviteEvent;
 import cz.neumimto.rpg.spigot.events.party.SpigotPartyJoinEvent;
 import cz.neumimto.rpg.spigot.events.party.SpigotPartyLeaveEvent;
-import cz.neumimto.rpg.spigot.events.skill.SpigotHealEvent;
-import cz.neumimto.rpg.spigot.events.skill.SpigotSkillPostUsageEvent;
-import cz.neumimto.rpg.spigot.events.skill.SpigotSkillPreUsageEvent;
-import cz.neumimto.rpg.spigot.events.skill.SpigotSkillTargetAttemptEvent;
+import cz.neumimto.rpg.spigot.events.skill.*;
 
 import javax.inject.Singleton;
 
@@ -58,6 +52,7 @@ public class SpigotEventFactory extends EventFactoryImpl {
         super.registerProvider(PartyLeaveEvent.class, SpigotPartyLeaveEvent::new);
         super.registerProvider(SkillHealEvent.class, SpigotHealEvent::new);
         super.registerProvider(SkillPostUsageEvent.class, SpigotSkillPostUsageEvent::new);
+        super.registerProvider(SkillFinishedEvent.class, SpigotSkillFinishedEvent::new);
         super.registerProvider(SkillPreUsageEvent.class, SpigotSkillPreUsageEvent::new);
         super.registerProvider(SkillTargetAttemptEvent.class, SpigotSkillTargetAttemptEvent::new);
         //by impl
