@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.spigot.listeners;
 
+import com.comphenix.protocol.PacketType;
 import com.google.inject.Singleton;
 import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
@@ -12,6 +13,7 @@ import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.damage.AbstractDamageListener;
+import cz.neumimto.rpg.common.inventory.InventoryHandler;
 import cz.neumimto.rpg.spigot.SpigotRpg;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
 import cz.neumimto.rpg.spigot.entities.ISpigotEntity;
@@ -22,6 +24,7 @@ import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import cz.neumimto.rpg.spigot.events.damage.SpigotEntityProjectileDamageEarlyEvent;
 import cz.neumimto.rpg.spigot.events.damage.SpigotEntitySkillDamageEarlyEvent;
 import cz.neumimto.rpg.spigot.events.damage.SpigotEntityWeaponDamageEarlyEvent;
+import cz.neumimto.rpg.spigot.inventory.SpigotInventoryService;
 import cz.neumimto.rpg.spigot.inventory.SpigotItemService;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -29,6 +32,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.projectiles.ProjectileSource;
 
 import java.util.Optional;
@@ -53,6 +57,10 @@ public class SpigotDamageListener extends AbstractDamageListener implements List
 
     @Inject
     private SpigotRpg spigotRpg;
+
+    @Inject
+    private InventoryHandler inventoryHandler;
+
 
     @EventHandler
     public void onEntityDamageEarly(EntityDamageByEntityEvent event) {
@@ -107,7 +115,17 @@ public class SpigotDamageListener extends AbstractDamageListener implements List
 
         RpgItemStack rpgItemStack = null;
         if (attacker.getType() == IEntityType.CHARACTER) {
-            IActiveCharacter character = (IActiveCharacter) attacker;
+            ISpigotCharacter character = (ISpigotCharacter) attacker;
+            Player player = character.getPlayer();
+            PlayerInventory inventory = player.getInventory();
+
+            int last = character.getLastHotbarSlotInteraction();
+            int selectedSlotIndex = inventory.getHeldItemSlot();
+            if (last != selectedSlotIndex) {
+                SpigotInventoryListener.prepareItemInHand(player, character, player.getItemInHand(),
+                         selectedSlotIndex, null, itemService, inventoryHandler);
+            }
+
             if (character.requiresDamageRecalculation()) {
                 Player entity = (Player) attacker.getEntity();
                 ItemStack itemInMainHand = entity.getInventory().getItemInMainHand();

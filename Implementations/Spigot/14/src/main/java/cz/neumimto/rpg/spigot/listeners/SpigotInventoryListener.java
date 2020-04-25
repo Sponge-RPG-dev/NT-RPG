@@ -231,43 +231,51 @@ public class SpigotInventoryListener implements Listener {
 
             if (last != selectedSlotIndex) {
 
-                Map<Class<?>, RpgInventory> managedInventory = character.getManagedInventory();
-                Map<Integer, ManagedSlot> managedSlots = managedInventory.get(PlayerInventory.class).getManagedSlots();
-
-                if (managedSlots.containsKey(selectedSlotIndex)) {
-
-                    if (rpgItemType == null) {
-                        Optional<RpgItemType> opt = itemService.getRpgItemType(itemStack);
-                        if (opt.isPresent()) {
-                            rpgItemType = opt.get();
-                        } else {
-                            character.setMainHand(null, selectedSlotIndex);
-                            character.setLastHotbarSlotInteraction(selectedSlotIndex);
-                            character.setRequiresDamageRecalculation(true);
-                            return;
-                        }
-                    }
-                    RpgItemStack rpgItemStack = itemService.getRpgItemStack(rpgItemType, itemStack);
-
-
-                    ManagedSlot managedSlot = managedSlots.get(selectedSlotIndex);
-                    if (inventoryHandler.handleCharacterEquipActionPre(character, managedSlot, rpgItemStack)) {
-                        inventoryHandler.handleInventoryInitializationPost(character);
-                        character.setLastHotbarSlotInteraction(selectedSlotIndex);
-                        character.setMainHand(rpgItemStack, selectedSlotIndex);
-                        character.setRequiresDamageRecalculation(true);
-                    } else {
-                        player.getWorld().dropItemNaturally(player.getLocation(), itemStack);
-                        inventory.setItemInMainHand(null);
-                        character.setLastHotbarSlotInteraction(-1);
-                        event.setCancelled(true);
-                        character.setRequiresDamageRecalculation(true);
-                    }
-                }
-
+                boolean b = prepareItemInHand(player, character, itemStack, selectedSlotIndex, rpgItemType, itemService, inventoryHandler);
+                event.setCancelled(b);
             }
         }
 
+    }
+
+    public static boolean prepareItemInHand(Player player, ISpigotCharacter character, ItemStack itemStack,
+                                            int selectedSlotIndex, RpgItemType rpgItemType,
+                                            SpigotItemService itemService, InventoryHandler inventoryHandler) {
+        Map<Class<?>, RpgInventory> managedInventory = character.getManagedInventory();
+        Map<Integer, ManagedSlot> managedSlots = managedInventory.get(PlayerInventory.class).getManagedSlots();
+
+        if (managedSlots.containsKey(selectedSlotIndex)) {
+
+            if (rpgItemType == null) {
+                Optional<RpgItemType> opt = itemService.getRpgItemType(itemStack);
+                if (opt.isPresent()) {
+                    rpgItemType = opt.get();
+                } else {
+                    character.setMainHand(null, selectedSlotIndex);
+                    character.setLastHotbarSlotInteraction(selectedSlotIndex);
+                    character.setRequiresDamageRecalculation(true);
+                    return false;
+                }
+            }
+            RpgItemStack rpgItemStack = itemService.getRpgItemStack(rpgItemType, itemStack);
+
+
+            ManagedSlot managedSlot = managedSlots.get(selectedSlotIndex);
+            if (inventoryHandler.handleCharacterEquipActionPre(character, managedSlot, rpgItemStack)) {
+                inventoryHandler.handleInventoryInitializationPost(character);
+                character.setLastHotbarSlotInteraction(selectedSlotIndex);
+                character.setMainHand(rpgItemStack, selectedSlotIndex);
+                character.setRequiresDamageRecalculation(true);
+                return false;
+            } else {
+                player.getWorld().dropItemNaturally(player.getLocation(), itemStack);
+                player.getInventory().setItemInMainHand(null);
+                character.setLastHotbarSlotInteraction(-1);
+                character.setRequiresDamageRecalculation(true);
+                return true;
+            }
+        }
+        return false;
     }
 
     @EventHandler
