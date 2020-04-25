@@ -64,6 +64,11 @@ public class SpigotItemService extends AbstractItemService {
     }
 
 
+    public RpgItemStack getRpgItemStack(RpgItemType type, ItemStack itemStack) {
+        NBTItem nbtItem = new NBTItem(itemStack);
+        return itemHandler.getItemStack(type, nbtItem);
+    }
+
     @Override
     protected Optional<RpgItemType> createRpgItemType(ItemString parsed, ItemClass wClass) {
         Material type = Material.matchMaterial(parsed.itemId);

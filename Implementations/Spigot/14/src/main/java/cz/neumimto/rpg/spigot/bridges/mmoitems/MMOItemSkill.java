@@ -1,23 +1,17 @@
 package cz.neumimto.rpg.spigot.bridges.mmoitems;
 
-import com.google.gson.JsonObject;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
-import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.ability.Ability;
 import net.Indyuce.mmoitems.api.ability.AbilityResult;
-import net.Indyuce.mmoitems.api.event.AbilityUseEvent;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.PlayerStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.mmogroup.mmolib.api.DamageType;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import sun.misc.Unsafe;
 
 import java.util.Map;
 import java.util.Set;

@@ -7,6 +7,7 @@ import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.inventory.RpgInventory;
 import cz.neumimto.rpg.api.items.ItemClass;
 import cz.neumimto.rpg.api.items.RpgItemStack;
+import cz.neumimto.rpg.api.items.RpgItemType;
 import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.common.inventory.InventoryHandler;
 import cz.neumimto.rpg.spigot.SpigotRpg;
@@ -208,48 +209,62 @@ public class SpigotInventoryListener implements Listener {
         }
 
         ItemStack itemStack = event.getItem();
-        Optional<RpgItemStack> rpgItemStack = itemService.getRpgItemStack(itemStack);
-        if (rpgItemStack.isPresent() && (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)) {
-            RpgItemStack r = rpgItemStack.get();
-            if (r.getItemType().getItemClass() == ItemClass.ARMOR) {
-                event.setCancelled(true);
-                return;
-            }
-        }
-
-
         PlayerInventory inventory = player.getInventory();
 
         int selectedSlotIndex = inventory.getHeldItemSlot();
 
         if (itemStack != null) {
-            if (rpgItemStack.isPresent()) {
-                RpgItemStack rpgItemType1 = rpgItemStack.get();
 
-                int last = character.getLastHotbarSlotInteraction();
-                if (selectedSlotIndex != last) {
-                    Map<Class<?>, RpgInventory> managedInventory = character.getManagedInventory();
-                    Map<Integer, ManagedSlot> managedSlots = managedInventory.get(PlayerInventory.class).getManagedSlots();
-
-                    if (managedSlots.containsKey(selectedSlotIndex)) {
-                        ManagedSlot managedSlot = managedSlots.get(selectedSlotIndex);
-                        if (inventoryHandler.handleCharacterEquipActionPre(character, managedSlot, rpgItemType1)) {
-                            inventoryHandler.handleInventoryInitializationPost(character);
-                            character.setLastHotbarSlotInteraction(selectedSlotIndex);
-                            character.setMainHand(rpgItemType1, selectedSlotIndex);
-                        } else {
-                            player.getWorld().dropItemNaturally(player.getLocation(), itemStack);
-                            inventory.setItemInMainHand(null);
-                            character.setLastHotbarSlotInteraction(-1);
-                            event.setCancelled(true);
-                            character.setRequiresDamageRecalculation(true);
-                        }
+            RpgItemType rpgItemType = null;
+            if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                Optional<RpgItemType> optType = itemService.getRpgItemType(itemStack);
+                if (optType.isPresent()) {
+                    rpgItemType = optType.get();
+                    if (rpgItemType.getItemClass() == ItemClass.ARMOR) {
+                        event.setCancelled(true);
+                        return;
                     }
                 }
-            } else {
-                character.setMainHand(null, -1);
-                character.setLastHotbarSlotInteraction(-1);
-                character.setRequiresDamageRecalculation(true);
+            }
+
+            int last = character.getLastHotbarSlotInteraction();
+
+            if (last != selectedSlotIndex) {
+
+                Map<Class<?>, RpgInventory> managedInventory = character.getManagedInventory();
+                Map<Integer, ManagedSlot> managedSlots = managedInventory.get(PlayerInventory.class).getManagedSlots();
+
+                if (managedSlots.containsKey(selectedSlotIndex)) {
+
+                    if (rpgItemType == null) {
+                        Optional<RpgItemType> opt = itemService.getRpgItemType(itemStack);
+                        if (opt.isPresent()) {
+                            rpgItemType = opt.get();
+                        } else {
+                            character.setMainHand(null, selectedSlotIndex);
+                            character.setLastHotbarSlotInteraction(selectedSlotIndex);
+                            character.setRequiresDamageRecalculation(true);
+                            return;
+                        }
+                    }
+                    RpgItemStack rpgItemStack = itemService.getRpgItemStack(rpgItemType, itemStack);
+
+
+                    ManagedSlot managedSlot = managedSlots.get(selectedSlotIndex);
+                    if (inventoryHandler.handleCharacterEquipActionPre(character, managedSlot, rpgItemStack)) {
+                        inventoryHandler.handleInventoryInitializationPost(character);
+                        character.setLastHotbarSlotInteraction(selectedSlotIndex);
+                        character.setMainHand(rpgItemStack, selectedSlotIndex);
+                        character.setRequiresDamageRecalculation(true);
+                    } else {
+                        player.getWorld().dropItemNaturally(player.getLocation(), itemStack);
+                        inventory.setItemInMainHand(null);
+                        character.setLastHotbarSlotInteraction(-1);
+                        event.setCancelled(true);
+                        character.setRequiresDamageRecalculation(true);
+                    }
+                }
+
             }
         }
 
@@ -355,7 +370,7 @@ public class SpigotInventoryListener implements Listener {
 
             if (!canUse) {
                 int size = inventory.getSize();
-                for (int i = 8; i < size-1; i++) {
+                for (int i = 8; i < size - 1; i++) {
                     ItemStack item1 = inventory.getItem(i);
                     if (item1 == null) {
                         inventory.setItem(i, itemStackToBePickedUp);
