@@ -4,16 +4,16 @@ import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
-import cz.neumimto.rpg.common.skills.preprocessors.SkillCostPreprocessor;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.events.skill.SpigotSkillFinishedEvent;
-import cz.neumimto.rpg.spigot.events.skill.SpigotSkillPostUsageEvent;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 public class SpigotItemCooldownListener implements Listener {
+
+
 
     @EventHandler
     public void onSkillPostUsageEvent(SpigotSkillFinishedEvent event) {

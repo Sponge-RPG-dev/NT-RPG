@@ -2,6 +2,7 @@ package cz.neumimto.rpg.spigot.commands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
@@ -33,6 +34,7 @@ public class SpigotSkillBindCommands extends BaseCommand {
     private SpigotInventoryService inventoryService;
 
     @Default
+    @CommandCompletion("@learnedSkill")
     public void bindSkillCommand(Player executor, ISkill skill) {
         if (!(skill instanceof ActiveSkill)) {
             String msg = localizationService.translate(LocalizationKeys.CANNOT_BIND_NON_EXECUTABLE_SKILL);

@@ -33,6 +33,9 @@ public class OnKeyPress implements Listener {
             return;
         }
         ItemStack item = player.getInventory().getItem(event.getNewSlot());
+        if (item == null) {
+            return;
+        }
         NBTItem nbtItem = new NBTItem(item);
         if (nbtItem.hasKey(SpigotInventoryService.SKILLBIND)) {
             String skillName = nbtItem.getString(SpigotInventoryService.SKILLBIND);
