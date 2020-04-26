@@ -292,10 +292,8 @@ public class InventoryListener {
         if (!rpgItemStackMain.isPresent() && !rpgItemStackOff.isPresent()) {
             return;
         } else {
-            RpgItemStack futureOff = rpgItemStackOff.get();
-            RpgItemStack futureMain = rpgItemStackMain.get();
             Map<Class<?>, RpgInventory> managedInventory = character.getManagedInventory();
-            RpgInventory rpgInventory = managedInventory.get(player.getInventory());
+            RpgInventory rpgInventory = managedInventory.get(player.getInventory().getClass());
 
             Hotbar hotbar = player.getInventory()
                     .query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
@@ -303,16 +301,38 @@ public class InventoryListener {
 
             ManagedSlot managedSlotM = rpgInventory.getManagedSlots().get(selectedSlotIndex);
             ManagedSlot offHandSlotO = rpgInventory.getManagedSlots().get(OFFHAND_SLOT_ID);
+            Optional<RpgItemStack> contentM = managedSlotM.getContent();
+            Optional<RpgItemStack> contentO = offHandSlotO.getContent();
 
-            if (inventoryHandler.handleCharacterEquipActionPre(character, offHandSlotO, futureOff) &&
-                    inventoryHandler.handleCharacterEquipActionPre(character, managedSlotM ,futureMain)
-            ) {
-                Optional<RpgItemStack> content = managedSlotM.getContent();
-                Optional<RpgItemStack> content1 = offHandSlotO.getContent();
-                content.ifPresent(offHandSlotO::setContent);
-                content1.ifPresent(managedSlotM::setContent);
+            if (rpgItemStackOff.isPresent() && !rpgItemStackMain.isPresent()) {
+                RpgItemStack futureOff = rpgItemStackOff.get();
+                if (inventoryHandler.handleCharacterEquipActionPre(character, offHandSlotO, futureOff)) {
+                    managedSlotM.setContent(null);
+                    offHandSlotO.setContent(futureOff);
+                } else {
+                    event.setCancelled(true);
+                }
+            } else if (!rpgItemStackOff.isPresent()) {
+                RpgItemStack futureMain = rpgItemStackMain.get();
+                if (inventoryHandler.handleCharacterEquipActionPre(character, managedSlotM, futureMain)) {
+                    managedSlotM.setContent(futureMain);
+                    offHandSlotO.setContent(null);
+                } else {
+                    event.setCancelled(true);
+                }
             } else {
-                event.setCancelled(true);
+
+                RpgItemStack futureOff = rpgItemStackOff.get();
+                RpgItemStack futureMain = rpgItemStackMain.get();
+
+                if (inventoryHandler.handleCharacterEquipActionPre(character, offHandSlotO, futureOff) &&
+                        inventoryHandler.handleCharacterEquipActionPre(character, managedSlotM, futureMain)
+                ) {
+                    contentM.ifPresent(offHandSlotO::setContent);
+                    contentO.ifPresent(managedSlotM::setContent);
+                } else {
+                    event.setCancelled(true);
+                }
             }
         }
 

@@ -553,7 +553,7 @@ public class SpigotGuiHelper {
         String name = "char_allowed_items_armor" + character.getName();
         Inventory inventory = CACHED_MENUS.get(name);
         if (inventory == null) {
-            TemplateInventory<ItemStack, Inventory> dView = (TemplateInventory<ItemStack, Inventory>) CACHED_MENU_TEMPLATES.get("char_view");
+            TemplateInventory<ItemStack, Inventory> dView = (TemplateInventory<ItemStack, Inventory>) CACHED_MENU_TEMPLATES.get("char_allowed_items");
             Map<RpgItemType, Double> allowedWeapons = character.getAllowedWeapons();
             List<ItemStack> content = new ArrayList<>();
             for (Map.Entry<RpgItemType, Double> ent : allowedWeapons.entrySet()) {
@@ -575,7 +575,7 @@ public class SpigotGuiHelper {
         String name = "char_allowed_items_weapons" + character.getName();
         Inventory inventory = CACHED_MENUS.get(name);
         if (inventory == null) {
-            TemplateInventory<ItemStack, Inventory> dView = (TemplateInventory<ItemStack, Inventory>) CACHED_MENU_TEMPLATES.get("char_view");
+            TemplateInventory<ItemStack, Inventory> dView = (TemplateInventory<ItemStack, Inventory>) CACHED_MENU_TEMPLATES.get("char_allowed_items");
             Set<RpgItemType> allowedWeapons = character.getAllowedArmor();
             List<ItemStack> content = new ArrayList<>();
             for (RpgItemType ent : allowedWeapons) {

@@ -34,7 +34,7 @@ public class SpigotSkillBindCommands extends BaseCommand {
     private SpigotInventoryService inventoryService;
 
     @Default
-    @CommandCompletion("@learnedSkill")
+    @CommandCompletion("@learnedskill")
     public void bindSkillCommand(Player executor, ISkill skill) {
         if (!(skill instanceof ActiveSkill)) {
             String msg = localizationService.translate(LocalizationKeys.CANNOT_BIND_NON_EXECUTABLE_SKILL);

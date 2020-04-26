@@ -118,6 +118,10 @@ public abstract class GuiParser<T, I> {
                         CACHED_MENUS.put(guiName + "_weapons_" + classDef.getName(), i3);
                     }
                     break;
+                case "char_allowed_items":
+                    ConfigInventory c5 = createCachedMenu(sFactorz, guiName, gui, null);
+                    CACHED_MENUS.put(guiName, c5);
+                    break;
                 case "char_view":
                     ConfigInventory c4 = createCachedMenu(sFactorz, guiName, gui, null);
                     CACHED_MENUS.put(guiName, c4);

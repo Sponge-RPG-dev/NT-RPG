@@ -339,6 +339,9 @@ public class ClassDefinition implements IEffectSourceProvider {
     private static class StringSet implements Converter<Set<String>, List<String>> {
         @Override
         public Set<String> convertToField(List<String> value) {
+            if (value == null) {
+                value = Collections.emptyList();
+            }
             return new HashSet<>(value);
         }
 

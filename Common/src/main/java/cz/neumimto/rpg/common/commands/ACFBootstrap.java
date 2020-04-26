@@ -35,7 +35,7 @@ public class ACFBootstrap {
                 Rpg.get().getSkillService().getSkills().keySet()
         );
 
-        manager.getCommandCompletions().registerCompletion("learnedSkill", c -> {
+        manager.getCommandCompletions().registerCompletion("learnedskill", c -> {
             UUID uuid = c.getIssuer().getUniqueId();
             IActiveCharacter character = Rpg.get().getCharacterService().getCharacter(uuid);
             Map<String, PlayerSkillContext> skills = character.getSkillsByName();
