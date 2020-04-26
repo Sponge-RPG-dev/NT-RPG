@@ -35,7 +35,7 @@ public class ResultNotificationSkillExecutor extends SkillExecutorCallback {
                 character.sendMessage(localizationService.translate(LocalizationKeys.PLAYER_IS_SILENCED));
                 break;
             case NO_TARGET:
-                character.sendMessage(localizationService.translate(LocalizationKeys.NO_TARGET));
+                //character.sendMessage(localizationService.translate(LocalizationKeys.NO_TARGET));
                 break;
             case OK:
                 character.sendNotification(info.getSkillData().getSkillName());

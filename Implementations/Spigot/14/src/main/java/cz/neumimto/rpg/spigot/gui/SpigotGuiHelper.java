@@ -603,7 +603,7 @@ public class SpigotGuiHelper {
             translate = localizationService.translate(LocalizationKeys.ITEM_DAMAGE);
             lore.add(ChatColor.GRAY + translate + ": " + ChatColor.RED + damage);
         }
-        if (Rpg.get().getPluginConfig().DEBUG.isBalance() && key.getModelId() != null || !key.getModelId().isEmpty()) {
+        if (Rpg.get().getPluginConfig().DEBUG.isBalance() && key.getModelId() != null && !key.getModelId().isEmpty()) {
             lore.add(ChatColor.DARK_GRAY + "DEBUG:: CustomModelData:" + key.getModelId());
         }
 
