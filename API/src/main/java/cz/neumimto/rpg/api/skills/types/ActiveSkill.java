@@ -57,9 +57,13 @@ public abstract class ActiveSkill<T extends IActiveCharacter> extends AbstractSk
             skillContext.result(SkillResult.CASTER_SILENCED);
             return;
         }
-        skillContext.addExecutor(inventoryService.processItemCost(character, info));
-        skillContext.addExecutor(info.getSkillData().getSkillPreprocessors());
-        skillContext.sort();
+
+        if (!skillContext.isSorted()) {
+            skillContext.addExecutor(inventoryService.processItemCost(character, info));
+            skillContext.addExecutor(info.getSkillData().getSkillPreprocessors());
+            skillContext.sort();
+        }
+
         skillContext.next(character, info, skillContext);
     }
 

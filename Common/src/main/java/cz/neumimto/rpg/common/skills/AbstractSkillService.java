@@ -91,6 +91,13 @@ public abstract class AbstractSkillService implements SkillService {
 
         SkillContext context = esi.getSkill().createSkillExecutorContext(esi);
 
+        executeSkill(character, esi, context, callback);
+    }
+
+    @Override
+    public void executeSkill(IActiveCharacter character, PlayerSkillContext esi, SkillContext context,
+                              SkillExecutorCallback callback) {
+
         context.addExecutor(SkillPreprocessors.SKILL_COST);
         context.addExecutor(callback);
         //skill execution start

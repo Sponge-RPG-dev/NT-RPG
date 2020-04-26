@@ -16,15 +16,16 @@ import java.util.*;
 public class SkillContext {
 
     protected final ArrayList<ActiveSkillPreProcessorWrapper> wrappers = new ArrayList<>();
-    private PlayerSkillContext esi;
-    private int cursor;
+    protected PlayerSkillContext esi;
+    protected int cursor;
     private SkillResult result;
-    private boolean continueExecution;
+    protected boolean continueExecution;
     private float finalCooldown;
+    private boolean sorted = false;
 
     public SkillContext(IActiveSkill activeSkill, PlayerSkillContext esi) {
         this.esi = esi;
-        cursor = -1;
+        resetCursor();
         continueExecution = true;
         wrappers.add(new ActiveSkillPreProcessorWrapper(PreProcessorTarget.EXECUTION) {
             @Override
@@ -38,12 +39,21 @@ public class SkillContext {
 
     }
 
+    public void resetCursor() {
+        this.cursor = -1;
+    }
+
     public ISkill getSkill() {
         return esi.getSkill();
     }
 
     public void sort() {
+        sorted = true;
         wrappers.sort(Comparator.comparing(ActiveSkillPreProcessorWrapper::getTarget));
+    }
+
+    public boolean isSorted() {
+        return sorted;
     }
 
     public void next(IActiveCharacter consumer, PlayerSkillContext info, SkillContext skillResult) {

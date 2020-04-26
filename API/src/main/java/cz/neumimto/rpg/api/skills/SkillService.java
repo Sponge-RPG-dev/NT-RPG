@@ -2,6 +2,7 @@ package cz.neumimto.rpg.api.skills;
 
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.gui.ISkillTreeInterfaceModel;
+import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.mods.SkillExecutorCallback;
 import cz.neumimto.rpg.api.skills.scripting.ScriptSkillModel;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
@@ -23,6 +24,9 @@ public interface SkillService {
     void executeSkill(IActiveCharacter character, ISkill skill, SkillExecutorCallback callback);
 
     void executeSkill(IActiveCharacter character, PlayerSkillContext esi, SkillExecutorCallback callback);
+
+    void executeSkill(IActiveCharacter character, PlayerSkillContext esi, SkillContext context,
+                      SkillExecutorCallback callback);
 
     PlayerSkillContext invokeSkillByCombo(String combo, IActiveCharacter character);
 

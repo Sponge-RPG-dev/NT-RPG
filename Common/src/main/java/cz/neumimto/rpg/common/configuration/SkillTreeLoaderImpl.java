@@ -161,41 +161,65 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
     private void createConfigSkills(List<? extends ConfigObject> sub, SkillTree skillTree) {
         for (ConfigObject co : sub) {
             Config c = co.toConfig();
-            String id = c.getString("SkillId");
-            String type = null;
+            createConfigSkill(skillTree, c);
+        }
+    }
+
+    private void createConfigSkill(SkillTree skillTree, Config c) {
+        String type = null;
+        try {
+            type = c.getString("Type");
+        } catch (ConfigException.Missing ignored) {
+            return;
+        }
+
+        try {
+            Config parent = c.getConfig("Parent");
+            createConfigSkill(skillTree, parent);
+        } catch (ConfigException.Missing ignored) {}
+
+        String id = c.getString("SkillId");
+
+        ISkill skill = Rpg.get().getSkillService().getSkills().get(id.toLowerCase());
+        if (skill == null) {
             try {
-                type = c.getString("Type");
+                final String cType =type;
+                SkillConfigLoader loader = SkillConfigLoaders.getById(type)
+                        .orElseThrow(() ->
+                                new IllegalArgumentException("Unknown skill type " + cType + " in a skiltree " + skillTree.getId())
+                        );
+
+                skill = loader.build(id.toLowerCase());
+
             } catch (ConfigException.Missing ignored) {
-                continue;
             }
-            ISkill skill = Rpg.get().getSkillService().getSkills().get(id.toLowerCase());
-            if (skill == null) {
-                try {
-                    final String cType =type;
-                    SkillConfigLoader loader = SkillConfigLoaders.getById(type)
-                            .orElseThrow(() -> new IllegalArgumentException("Unknown skill type " + cType + " in a skiltree " + skillTree.getId()));
 
-                    skill = loader.build(id.toLowerCase());
-
-                } catch (ConfigException.Missing ignored) {
-                }
-
-            } else {
-                Log.warn("Found duplicit Config skill " + id + ", will be skipped try to avoid such use cases.");
-            }
+        } else {
+            Log.warn("Found duplicit Config skill " + id + ", will be skipped try to avoid such use cases.");
         }
     }
 
     private void loadSkills(List<? extends ConfigObject> sub, SkillTree skillTree) {
         for (ConfigObject co : sub) {
-            loadSkill(skillTree, co);
+            loadSkill(skillTree, co.toConfig());
         }
     }
 
-    protected void loadSkill(SkillTree skillTree, ConfigObject co) {
-        Config c = co.toConfig();
-        SkillData info = getSkillInfo(c.getString("SkillId"), skillTree);
+    protected void loadSkill(SkillTree skillTree, Config c) {
+        String skillId = c.getString("SkillId");
+        try {
+            Config parent = c.getConfig("Parent");
 
+            SkillData info = createSkillInfo(skillTree, skillId);
+
+            loadSkill(skillTree, parent, info);
+        } catch (ConfigException ignored) {}
+
+        SkillData info = getSkillInfo(skillId, skillTree);
+        loadSkill(skillTree, c, info);
+    }
+
+    private void loadSkill(SkillTree skillTree, Config c, SkillData info) {
         try {
             info.setMaxSkillLevel(c.getInt("MaxSkillLevel"));
         } catch (ConfigException e) {
@@ -407,7 +431,6 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
             }
         }
 
-
         SkillLoadingErrors errors = new SkillLoadingErrors(skillTree.getId());
         try {
             info.getSkill().loadSkillData(info, skillTree, errors, c);
@@ -457,14 +480,20 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
         final String lowercased = id.toLowerCase();
         SkillData info = tree.getSkills().get(lowercased);
         if (info == null) {
-            ISkill skill = Rpg.get().getSkillService().getSkills().get(lowercased);
-            if (skill == null) {
-                throw new IllegalStateException("Could not find a skill " + lowercased + " referenced in the skilltree " + tree.getId());
-            }
-            info = skill.constructSkillData();
-            info.setSkill(skill);
-            tree.addSkill(info);
+            info = createSkillInfo(tree, lowercased);
         }
+        return info;
+    }
+
+    private SkillData createSkillInfo(SkillTree tree, String lowercased) {
+
+        ISkill skill = Rpg.get().getSkillService().getSkills().get(lowercased);
+        if (skill == null) {
+            throw new IllegalStateException("Could not find a skill " + lowercased + " referenced in the skilltree " + tree.getId());
+        }
+        SkillData info = skill.constructSkillData();
+        info.setSkill(skill);
+        tree.addSkill(info);
         return info;
     }
 }
