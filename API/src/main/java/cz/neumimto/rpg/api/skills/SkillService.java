@@ -15,8 +15,6 @@ public interface SkillService {
 
     void load();
 
-    void init();
-
     Map<String, ISkill> getSkills();
 
     Map<String, SkillTree> getSkillTrees();
@@ -29,8 +27,6 @@ public interface SkillService {
                       SkillExecutorCallback callback);
 
     PlayerSkillContext invokeSkillByCombo(String combo, IActiveCharacter character);
-
-    void reloadSkillTrees();
 
     void registerAdditionalCatalog(ISkill extraCatalog);
 
@@ -51,4 +47,6 @@ public interface SkillService {
     void registerSkillType(ISkillType skillType);
 
     ISkillTreeInterfaceModel getGuiModelByCharacter(char c);
+
+    Collection<String> getSkillNames();
 }

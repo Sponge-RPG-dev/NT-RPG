@@ -2,6 +2,7 @@ package cz.neumimto.rpg.spigot.commands;
 
 
 import co.aikar.commands.BaseCommand;
+import co.aikar.commands.CommandIssuer;
 import co.aikar.commands.annotation.Optional;
 import co.aikar.commands.annotation.*;
 import co.aikar.commands.bukkit.contexts.OnlinePlayer;
@@ -24,7 +25,7 @@ import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.scripting.IScriptEngine;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.utils.ActionResult;
-import cz.neumimto.rpg.common.commands.AdminCommandFacade;
+import cz.neumimto.rpg.common.commands.AbstractAdminCommand;
 import cz.neumimto.rpg.common.commands.CommandProcessingException;
 import cz.neumimto.rpg.common.commands.InfoCommands;
 import cz.neumimto.rpg.common.commands.OnlineOtherPlayer;
@@ -35,6 +36,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -44,16 +46,12 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.*;
 import java.util.function.Function;
-
-import static cz.neumimto.rpg.api.logging.Log.info;
+import java.util.stream.Collectors;
 
 @Singleton
 @CommandAlias("nadmin|na")
 @CommandPermission("ntrpg.admin")
-public class SpigotAdminCommands extends BaseCommand {
-
-    @Inject
-    private AdminCommandFacade adminCommandFacade;
+public class SpigotAdminCommands extends AbstractAdminCommand {
 
     @Inject
     private PropertyService propertyService;
@@ -71,110 +69,12 @@ public class SpigotAdminCommands extends BaseCommand {
     private SpigotCharacterCommands spigotCharacterCommands;
 
     @Inject
-    private InfoCommands infoCommands;
-
-    @Inject
     private CharacterService characterService;
-
-    @Inject
-    private Injector injector;
-
-    @Inject
-    private EffectService effectService;
-
-    @Subcommand("class add")
-    public void addCharacterClass(CommandSender commandSender, OnlineOtherPlayer player, ClassDefinition classDefinition) {
-        IActiveCharacter character = player.character;
-        ActionResult actionResult = adminCommandFacade.addCharacterClass(character, classDefinition);
-        if (!actionResult.isOk()) {
-            Log.error("Attempt to add player class safely failed, - class slot already occupied, player is lacking permission, missing prerequirements...");
-        } else {
-            Log.info("Player gained class via console " + character.getPlayerAccountName() + " class " + classDefinition.getName());
-        }
-    }
-
-    @Subcommand("attributepoints add")
-    @Description("Permanently adds X skillpoints to a player")
-    public void addSkillPointsCommand(CommandSender commandSender, OnlineOtherPlayer player, @Default("1") int amount) {
-        characterService.characterAddAttributePoints(player.character, amount);
-    }
-
-    @Subcommand("skillpoints add")
-    @Description("Permanently adds X skillpoints to a player")
-    public void addSkillPointsCommand(CommandSender commandSender, OnlineOtherPlayer player, ClassDefinition characterClass, @Default("1") int amount) {
-        IActiveCharacter character = player.character;
-        PlayerClassData classByName = character.getClassByName(characterClass.getName());
-        if (classByName == null) {
-            throw new CommandException("Player " + character.getPlayerAccountName() + " character " + character.getName() + " do not have class " + characterClass.getName());
-        }
-        characterService.characterAddSkillPoints(character, characterClass, amount);
-
-    }
-
-    @Subcommand("effect add")
-    @Description("Adds effect, managed by rpg plugin, to the player")
-    public void effectAddCommand(CommandSender commandSender, OnlineOtherPlayer player, IGlobalEffect effect, long duration, String[] args) {
-        String data = String.join("", args);
-        IActiveCharacter character = player.character;
-        try {
-            adminCommandFacade.commandAddEffectToPlayer(data, effect, duration, character);
-        } catch (CommandProcessingException e) {
-            commandSender.sendMessage(e.getMessage());
-        }
-    }
-
-
-    @Subcommand("exp")
-    @Description("Adds N experiences of given source type to a character")
-    public void addExperiencesCommand(CommandSender executor, OnlineOtherPlayer target, double amount, String classOrSource) {
-        try {
-            adminCommandFacade.commandAddExperiences(target.character, amount, classOrSource);
-        } catch (CommandProcessingException e) {
-            executor.sendMessage(e.getMessage());
-        }
-    }
-
-    @Subcommand("skill")
-    @CommandCompletion("@skill=skill")
-    public void adminExecuteSkillCommand(IActiveCharacter character, ISkill skill, @Optional String level) {
-        adminCommandFacade.commandExecuteSkill(character, skill, level == null ? 1 : Integer.parseInt(level));
-    }
 
     @Subcommand("char")
     @Description("forces opening of character menu on a client")
-    public void adminExecuteSkillCommandAdmin(CommandSender console, OnlinePlayer executor) {
+    public void adminExecuteSkillCommandAdmin(CommandIssuer console, OnlinePlayer executor) {
         spigotCharacterCommands.menu(executor.player);
-    }
-
-    @Subcommand("classes")
-    public void showClassesCommandAdmin(CommandSender console, OnlineOtherPlayer executor, @Optional String type) {
-        infoCommands.showClassesCommand(executor.character, type);
-    }
-
-    @Subcommand("class")
-    @CommandPermission("ntrpg.info.class")
-    public void showClassCommandAdmin(CommandSender console, OnlineOtherPlayer executor, ClassDefinition classDefinition, @Optional String back) {
-        infoCommands.showClassCommand(executor.character, classDefinition, back);
-    }
-
-
-    @Subcommand("add-class")
-    public void addClassToCharacterCommand(CommandSender executor, OnlineOtherPlayer target, ClassDefinition klass) {
-        ActionResult actionResult = adminCommandFacade.addCharacterClass(target.character, klass);
-        if (actionResult.isOk()) {
-            executor.sendMessage(Rpg.get().getLocalizationService().translate("class.set.ok"));
-        } else {
-            executor.sendMessage(actionResult.getMessage());
-        }
-    }
-
-    @Subcommand("add-unique-skillpoint")
-    public void addUniqueSkillpoint(CommandSender executor, OnlineOtherPlayer target, String classType, String sourceKey) {
-        IActiveCharacter character = target.character;
-        if (character.isStub()) {
-            throw new IllegalStateException("Stub character");
-        }
-        adminCommandFacade.commandAddUniqueSkillpoint(character, classType, sourceKey);
     }
 
     @Subcommand("inspect property")
@@ -280,109 +180,13 @@ public class SpigotAdminCommands extends BaseCommand {
         }
     }
 
-    @Subcommand("reload")
-    public void reload(@Optional @Default("a") String arg) {
-        boolean reloadAll = arg.equalsIgnoreCase("a");
-        boolean reloadJs = reloadAll || arg.equalsIgnoreCase("js");
-        boolean reloadLocalizations = reloadAll || arg.equalsIgnoreCase("l");
-        boolean reloadItems = reloadAll || arg.equalsIgnoreCase("i");
-        boolean reloadSkills = reloadAll || arg.equalsIgnoreCase("s");
-        boolean reloadClasses = reloadAll || reloadItems || reloadSkills || arg.equalsIgnoreCase("c");
+    @Override
+    public Set<UUID> getAllOnlinePlayers() {
+        return Bukkit.getServer().getOnlinePlayers().stream().map(Entity::getUniqueId).collect(Collectors.toSet());
+    }
 
-        info("[RELOAD] Saving current state of players");
-        Set<CharacterBase> characterBases = new HashSet<>();
-        for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-            IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
-            if (character.isStub()) {
-                continue;
-            }
-            characterBases.add(character.getCharacterBase());
-        }
-        for (CharacterBase characterBase : characterBases) {
-            Log.info("[RELOAD] saving character " + characterBase.getLastKnownPlayerName());
-            characterService.save(characterBase);
-        }
-
-        for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-            IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
-            if (character.isStub()) {
-                continue;
-            }
-            IActiveCharacter preloadCharacter = characterService.buildDummyChar(player.getUniqueId());
-            characterService.registerDummyChar(preloadCharacter);
-        }
-
-        if (reloadAll) {
-            info("[RELOAD] Reading Settings.conf file: ");
-            Rpg.get().reloadMainPluginConfig();
-        }
-
-        if (reloadLocalizations) {
-            info("[RELOAD] Reading localization files: ");
-            Locale locale = Locale.forLanguageTag(Rpg.get().getPluginConfig().LOCALE);
-            try {
-                Rpg.get().getResourceLoader().reloadLocalizations(locale);
-            } catch (Exception e) {
-                Log.error("Could not read localizations in locale " + locale.toString() + " - " + e.getMessage());
-            }
-        }
-
-        if (reloadAll) {
-            info("[RELOAD] Reading Entity conf files: ");
-            Rpg.get().getEntityService().reload();
-        }
-
-        if (reloadJs) {
-            info("[RELOAD] Scripts ");
-            IScriptEngine jsLoader = injector.getInstance(IScriptEngine.class);
-            jsLoader.initEngine();
-            jsLoader.reloadSkills();
-        }
-
-        if (reloadItems) {
-            info("[RELOAD] ItemGroups ");
-            Rpg.get().getItemService().reload();
-            Rpg.get().getInventoryService().reload();
-        }
-
-        if (reloadSkills) {
-            info("[RELOAD] Properties, Attributes, Skills");
-            Rpg.get().getSkillService().init();
-            Rpg.get().getPropertyService().reload();
-        }
-
-        if (reloadClasses) {
-            info("[RELOAD] Experiences");
-            Rpg.get().getExperienceService().reload();
-
-            ClassDefinitionDao build = injector.getInstance(ClassDefinitionDao.class);
-            try {
-                info("[RELOAD] Checking class files: ");
-                Rpg.get().getClassService().load();
-                info("[RELOAD] Class files ok");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        Log.info("[RELOAD] Purging effect caches");
-        effectService.purgeEffectCache();
-        effectService.stopEffectScheduler();
-
-        System.gc();
-
-        effectService.startEffectScheduler();
-
-        for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-            List<CharacterBase> playersCharacters = characterService.getPlayersCharacters(player.getUniqueId());
-            if (playersCharacters.isEmpty()) {
-                continue;
-            }
-            CharacterBase max = playersCharacters.stream().max(Comparator.comparing(CharacterBase::getUpdated)).get();
-            IActiveCharacter activeCharacter = characterService.createActiveCharacter(player.getUniqueId(), max);
-            characterService.setActiveCharacter(player.getUniqueId(), activeCharacter);
-            characterService.assignPlayerToCharacter(player.getUniqueId());
-        }
+    @Override
+    public void doImplSpecificReload() {
         SpigotGuiHelper.initInventories();
     }
 

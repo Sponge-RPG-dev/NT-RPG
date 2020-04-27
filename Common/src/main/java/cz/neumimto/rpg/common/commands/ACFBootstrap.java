@@ -11,6 +11,7 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.common.inventory.runewords.RuneWord;
 
 import java.util.*;
@@ -30,11 +31,21 @@ public class ACFBootstrap {
             return Rpg.get().getEffectService().getGlobalEffect(s.toLowerCase());
         });
 
-
-        manager.getCommandCompletions().registerAsyncCompletion("skill", c ->
-                Rpg.get().getSkillService().getSkills().keySet()
+        manager.getCommandCompletions().registerAsyncCompletion("skilltree", c ->
+                Rpg.get().getSkillService().getSkillTrees().keySet()
         );
 
+        manager.getCommandContexts().registerContext(SkillTree.class, c -> {
+            String s = c.getFirstArg();
+            return Rpg.get().getSkillService().getSkillTrees().get(s);
+        });
+
+        //may be async as only way to add skills now is to reload ntrpg
+        manager.getCommandCompletions().registerAsyncCompletion("skill", c ->
+                Rpg.get().getSkillService().getSkillNames()
+        );
+
+        //may not be async as playercontext changes at any time
         manager.getCommandCompletions().registerCompletion("learnedskill", c -> {
             UUID uuid = c.getIssuer().getUniqueId();
             IActiveCharacter character = Rpg.get().getCharacterService().getCharacter(uuid);
@@ -43,9 +54,9 @@ public class ACFBootstrap {
         });
 
         manager.getCommandContexts().registerContext(ISkill.class, c -> {
-            String s = c.popFirstArg();
+            String s = c.joinArgs();
 
-            return Rpg.get().getSkillService().getById(s.toLowerCase()).get();
+            return Rpg.get().getSkillService().getSkillByLocalizedName(s.toLowerCase());
         });
 
 

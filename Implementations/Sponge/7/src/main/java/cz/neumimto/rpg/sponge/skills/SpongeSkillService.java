@@ -47,8 +47,7 @@ public class SpongeSkillService extends AbstractSkillService {
     }
 
     @Override
-    public void init() {
-        super.init();
+    public void load() {
         int i = 0;
 
         for (String str : Rpg.get().getPluginConfig().SKILLTREE_RELATIONS) {
@@ -65,6 +64,8 @@ public class SpongeSkillService extends AbstractSkillService {
         }
 
         scriptSkillsParents.put("targeted", TargetedScriptSkill.class);
+
+        super.load();
     }
 
     @Override

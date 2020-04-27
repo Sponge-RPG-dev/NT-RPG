@@ -22,8 +22,7 @@ public class SpigotSkillService extends AbstractSkillService {
     }
 
     @Override
-    public void init() {
-        super.init();
+    public void load() {
         int i = 0;
 
         for (String str : Rpg.get().getPluginConfig().SKILLTREE_GUI) {
@@ -39,8 +38,8 @@ public class SpigotSkillService extends AbstractSkillService {
             guiModelByCharacter.put(split[0].charAt(0), model);
             i++;
         }
-
       //  scriptSkillsParents.put("targeted", TargetedScriptSkill.class);
+        super.load();
     }
 
     @Override

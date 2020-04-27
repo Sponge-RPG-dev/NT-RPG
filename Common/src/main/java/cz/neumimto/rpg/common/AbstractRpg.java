@@ -284,7 +284,6 @@ public abstract class AbstractRpg implements RpgApi {
         getEventFactory().registerEventProviders();
         getExperienceService().load();
 
-        getSkillService().init();
         getPropertyService().load();
 
         getScriptEngine().initEngine();

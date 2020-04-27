@@ -41,19 +41,32 @@ public abstract class AbstractSkillService implements SkillService {
 
     @Inject
     private SkillTreeDao skillTreeDao;
+
     @Inject
     private ClassService classService;
+
     @Inject
     private Injector injector;
 
     @Override
     public void load() {
+        scriptSkillsParents.put("active", ActiveScriptSkill.class);
+        scriptSkillsParents.put("passive", PassiveScriptSkill.class);
+
+        Stream.of(SkillType.values()).forEach(this::registerSkillType);
+
+        skillTrees.clear();
         skillTrees.putAll(skillTreeDao.getAll());
     }
 
     @Override
     public Map<String, ISkill> getSkills() {
         return skills;
+    }
+
+    @Override
+    public Collection<String> getSkillNames() {
+        return skillByNames.keySet();
     }
 
     @Override
@@ -115,46 +128,6 @@ public abstract class AbstractSkillService implements SkillService {
             }
         }
         return null;
-    }
-
-
-    @Override
-    public void reloadSkillTrees() {
-        try {
-            info("Currently its possible to reload ascii maps or add new skill trees");
-            Map<String, SkillTree> all = skillTreeDao.getAll();
-            for (Map.Entry<String, SkillTree> s : all.entrySet()) {
-                SkillTree skillTree = skillTrees.get(s.getKey());
-                if (skillTree == null) {
-                    skillTrees.put(s.getValue().getId(), s.getValue());
-                    info("Found new Skilltree " + s.getValue().getId());
-                } else {
-                    skillTree.setSkillTreeMap(s.getValue().getSkillTreeMap());
-                    skillTree.setCenter(s.getValue().getCenter());
-                    info("Refreshed skilltree view for " + s.getValue().getId());
-                }
-            }
-
-			/* todo thats gonna be quite tricky,
-			   todo  it should be easiest to lock (maybe even joining) specific commands,  save all current data, reset player objects, and recreate
-			    ActiveCharacters
-			for (IActiveCharacter character : characterService.getCharacters()) {
-				Set<ExtendedNClass> classes = character.getClasses();
-				for (ExtendedNClass aClass : classes) {
-					SkillTree skillTree = aClass.getClassDefinition().getSkillTree();
-					if (skillTree == null) continue; //should not happen anyway
-					String id = skillTree.getId();
-					SkillTree skillTree1 = skillTrees.get(id);
-					if (skillTree1 == null) continue;
-					aClass.getClassDefinition().setSkillTree(skillTree1);
-
-					aClass.getClassDefinition().
-				}
-			}
-			*/
-        } catch (Exception e) {
-            warn("Failed to reload Skilltrees: " + e.getMessage());
-        }
     }
 
     @Override
@@ -280,11 +253,4 @@ public abstract class AbstractSkillService implements SkillService {
         skillTypes.put(skillType.getId().toLowerCase(), skillType);
     }
 
-    @Override
-    public void init() {
-        scriptSkillsParents.put("active", ActiveScriptSkill.class);
-        scriptSkillsParents.put("passive", PassiveScriptSkill.class);
-
-        Stream.of(SkillType.values()).forEach(this::registerSkillType);
-    }
 }

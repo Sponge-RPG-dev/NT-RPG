@@ -69,12 +69,16 @@ public class MMOItemsExpansion implements Listener {
         }
         spigotItemService.setItemHandler(new MMOItemStackRpgHandler());
 
+
+        reloadMMOItemSkills();
+    }
+
+    public void reloadMMOItemSkills() {
         Collection<Ability> all = MMOItems.plugin.getAbilities().getAll();
         List<ISkill> iSkills = MMOItemWrapperFactory.generateSkills(all);
         for (ISkill iSkill : iSkills) {
             Rpg.get().getSkillService().registerAdditionalCatalog(iSkill);
         }
-
     }
 
     @EventHandler

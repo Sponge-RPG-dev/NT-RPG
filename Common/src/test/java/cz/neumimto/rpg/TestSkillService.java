@@ -11,7 +11,7 @@ import javax.inject.Singleton;
 public class TestSkillService extends AbstractSkillService {
 
     @Override
-    public void init() {
+    public void load() {
         scriptSkillsParents.put("active", ActiveScriptSkill.class);
         scriptSkillsParents.put("passive", PassiveScriptSkill.class);
     }
