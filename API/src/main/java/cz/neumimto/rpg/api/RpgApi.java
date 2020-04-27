@@ -23,6 +23,7 @@ import cz.neumimto.rpg.api.skills.SkillService;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Executor;
 import java.util.function.BiFunction;
@@ -99,4 +100,8 @@ public interface RpgApi {
     Executor getSyncExecutor();
 
     boolean isDisabledInWorld(String worldName);
+
+    Set<UUID> getOnlinePlayers();
+
+    void doImplSpecificreload();
 }

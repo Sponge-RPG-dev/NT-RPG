@@ -3,6 +3,7 @@ package cz.neumimto.rpg.spigot;
 import cz.neumimto.rpg.api.utils.Console;
 import cz.neumimto.rpg.common.AbstractRpg;
 import cz.neumimto.rpg.common.assets.AssetService;
+import cz.neumimto.rpg.spigot.gui.SpigotGuiHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -18,8 +19,10 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Executor;
+import java.util.stream.Collectors;
 
 import static cz.neumimto.rpg.api.logging.Log.info;
 
@@ -97,6 +100,16 @@ public final class SpigotRpg extends AbstractRpg {
     @Override
     public void scheduleSyncLater(Runnable runnable) {
         Bukkit.getScheduler().scheduleSyncDelayedTask(SpigotRpgPlugin.getInstance(), runnable);
+    }
+
+    @Override
+    public Set<UUID> getOnlinePlayers() {
+        return Bukkit.getServer().getOnlinePlayers().stream().map(Entity::getUniqueId).collect(Collectors.toSet());
+    }
+
+    @Override
+    public void doImplSpecificreload() {
+        SpigotGuiHelper.initInventories();
     }
 
     public boolean isDisabledInWorld(Entity entity) {

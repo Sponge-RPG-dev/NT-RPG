@@ -98,6 +98,8 @@ public class GuiHelper {
     }
 
     public static void initInventories() {
+        CACHED_MENU_TEMPLATES.clear();
+        CACHED_MENUS.clear();
         Map<String, Object> stringObjectMap = new SpongeUIReader().initInventories();
         for (Map.Entry<String, Object> next : stringObjectMap.entrySet()) {
             if (next.getValue() instanceof Inventory) {

@@ -4,6 +4,7 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 import cz.neumimto.rpg.api.RpgAddon;
 import cz.neumimto.rpg.common.AbstractRpg;
+import cz.neumimto.rpg.sponge.gui.GuiHelper;
 import cz.neumimto.rpg.sponge.gui.ParticleDecorator;
 import cz.neumimto.rpg.sponge.gui.VanillaMessaging;
 import cz.neumimto.rpg.sponge.inventory.runewords.RWService;
@@ -18,13 +19,11 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.Executor;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 @Singleton
 public final class SpongeRpg extends AbstractRpg {
@@ -104,6 +103,16 @@ public final class SpongeRpg extends AbstractRpg {
         particleDecorator.initModels();
 
         rwService.load();
+    }
+
+    @Override
+    public Set<UUID> getOnlinePlayers() {
+        return Sponge.getServer().getOnlinePlayers().stream().map(Player::getUniqueId).collect(Collectors.toSet());
+    }
+
+    @Override
+    public void doImplSpecificreload() {
+        GuiHelper.initInventories();
     }
 
     @Override

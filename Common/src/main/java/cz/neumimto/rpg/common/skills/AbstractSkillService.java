@@ -129,11 +129,12 @@ public abstract class AbstractSkillService implements SkillService {
         }
         return null;
     }
-
+    
     @Override
     public void registerAdditionalCatalog(ISkill extraCatalog) {
         if (extraCatalog == null) {
             warn("Cannot register skill null");
+            return;
         }
         if (extraCatalog.getId() == null) {
             warn("Cannot register skill " + extraCatalog.getId() + ", " + extraCatalog.getClass().getSimpleName() + " getId() returned"

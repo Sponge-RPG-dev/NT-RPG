@@ -1,31 +1,22 @@
 package cz.neumimto.rpg.sponge.commands;
 
-import co.aikar.commands.CommandIssuer;
-import co.aikar.commands.annotation.*;
+import co.aikar.commands.BaseCommand;
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.Description;
+import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.sponge.contexts.OnlinePlayer;
-import com.google.inject.Injector;
-import cz.neumimto.rpg.api.ResourceLoader;
-import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.damage.DamageService;
-import cz.neumimto.rpg.api.effects.EffectService;
-import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.items.ClassItem;
 import cz.neumimto.rpg.api.items.ItemClass;
 import cz.neumimto.rpg.api.items.RpgItemType;
-import cz.neumimto.rpg.api.skills.ISkill;
-import cz.neumimto.rpg.api.utils.ActionResult;
-import cz.neumimto.rpg.common.commands.AbstractAdminCommand;
-import cz.neumimto.rpg.common.commands.CommandProcessingException;
 import cz.neumimto.rpg.common.commands.OnlineOtherPlayer;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
 import cz.neumimto.rpg.sponge.gui.GuiHelper;
 import cz.neumimto.rpg.sponge.inventory.SpongeItemService;
-import cz.neumimto.rpg.sponge.utils.TextHelper;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.data.type.HandTypes;
@@ -45,7 +36,7 @@ import java.util.stream.Collectors;
 
 @Singleton
 @CommandAlias("nadmin|na")
-public class SpongeAdminCommands extends AbstractAdminCommand {
+public class SpongeAdminCommands extends BaseCommand {
 
     @Inject
     private SpongeCharacterService characterService;
@@ -186,15 +177,5 @@ public class SpongeAdminCommands extends AbstractAdminCommand {
             String nameById = propertyService.getNameById(integer);
             executor.sendMessage(Text.of(TextColors.GRAY, "   - ", nameById, ":", entityService.getEntityProperty(character, integer)));
         }
-    }
-
-    @Override
-    public Set<UUID> getAllOnlinePlayers() {
-        return Sponge.getServer().getOnlinePlayers().stream().map(Identifiable::getUniqueId).collect(Collectors.toSet());
-    }
-
-    @Override
-    public void doImplSpecificReload() {
-        GuiHelper.initInventories();
     }
 }

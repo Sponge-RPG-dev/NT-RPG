@@ -241,4 +241,14 @@ public class RpgTests implements RpgApi {
     public boolean isDisabledInWorld(String worldName) {
         return false;
     }
+
+    @Override
+    public Set<UUID> getOnlinePlayers() {
+        return null;
+    }
+
+    @Override
+    public void doImplSpecificreload() {
+
+    }
 }

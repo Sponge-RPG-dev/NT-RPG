@@ -27,7 +27,7 @@ public class ACFBootstrap {
         );
 
         manager.getCommandContexts().registerContext(IGlobalEffect.class, c -> {
-            String s = c.getFirstArg();
+            String s = c.popFirstArg();
             return Rpg.get().getEffectService().getGlobalEffect(s.toLowerCase());
         });
 
@@ -37,13 +37,19 @@ public class ACFBootstrap {
 
         manager.getCommandContexts().registerContext(SkillTree.class, c -> {
             String s = c.getFirstArg();
-            return Rpg.get().getSkillService().getSkillTrees().get(s);
+            SkillTree skillTree = Rpg.get().getSkillService().getSkillTrees().get(s);
+            return skillTree;
         });
 
         //may be async as only way to add skills now is to reload ntrpg
         manager.getCommandCompletions().registerAsyncCompletion("skill", c ->
                 Rpg.get().getSkillService().getSkillNames()
         );
+
+        manager.getCommandCompletions().registerAsyncCompletion("skillskctx", c ->
+                Rpg.get().getSkillService().getSkillNames()
+        );
+
 
         //may not be async as playercontext changes at any time
         manager.getCommandCompletions().registerCompletion("learnedskill", c -> {

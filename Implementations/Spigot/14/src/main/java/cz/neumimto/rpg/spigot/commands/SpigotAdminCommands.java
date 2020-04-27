@@ -3,40 +3,24 @@ package cz.neumimto.rpg.spigot.commands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.CommandIssuer;
-import co.aikar.commands.annotation.Optional;
-import co.aikar.commands.annotation.*;
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandPermission;
+import co.aikar.commands.annotation.Description;
+import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.bukkit.contexts.OnlinePlayer;
-import com.google.inject.Injector;
-import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.damage.DamageService;
-import cz.neumimto.rpg.api.effects.EffectService;
-import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.entity.players.CharacterService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.items.ClassItem;
 import cz.neumimto.rpg.api.items.ItemClass;
 import cz.neumimto.rpg.api.items.RpgItemType;
-import cz.neumimto.rpg.api.logging.Log;
-import cz.neumimto.rpg.api.persistance.model.CharacterBase;
-import cz.neumimto.rpg.api.scripting.IScriptEngine;
-import cz.neumimto.rpg.api.skills.ISkill;
-import cz.neumimto.rpg.api.utils.ActionResult;
-import cz.neumimto.rpg.common.commands.AbstractAdminCommand;
-import cz.neumimto.rpg.common.commands.CommandProcessingException;
-import cz.neumimto.rpg.common.commands.InfoCommands;
-import cz.neumimto.rpg.common.commands.OnlineOtherPlayer;
-import cz.neumimto.rpg.common.persistance.dao.ClassDefinitionDao;
 import cz.neumimto.rpg.spigot.gui.SpigotGuiHelper;
 import cz.neumimto.rpg.spigot.inventory.SpigotItemService;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -46,12 +30,11 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.*;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Singleton
 @CommandAlias("nadmin|na")
 @CommandPermission("ntrpg.admin")
-public class SpigotAdminCommands extends AbstractAdminCommand {
+public class SpigotAdminCommands extends BaseCommand {
 
     @Inject
     private PropertyService propertyService;
@@ -178,16 +161,6 @@ public class SpigotAdminCommands extends AbstractAdminCommand {
             String nameById = propertyService.getNameById(integer);
             executor.sendMessage(ChatColor.GRAY + "   - " + nameById + ":" + entityService.getEntityProperty(character, integer));
         }
-    }
-
-    @Override
-    public Set<UUID> getAllOnlinePlayers() {
-        return Bukkit.getServer().getOnlinePlayers().stream().map(Entity::getUniqueId).collect(Collectors.toSet());
-    }
-
-    @Override
-    public void doImplSpecificReload() {
-        SpigotGuiHelper.initInventories();
     }
 
     private Function<ItemClass, List<String>> TO_TEXT = weaponClass -> {

@@ -32,6 +32,7 @@ import cz.neumimto.rpg.api.utils.ActionResult;
 import cz.neumimto.rpg.common.effects.InternalEffectSourceProvider;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.*;
@@ -39,7 +40,10 @@ import java.util.concurrent.TimeUnit;
 
 import static cz.neumimto.rpg.api.logging.Log.info;
 
-public abstract class AbstractAdminCommand extends BaseCommand {
+@Singleton
+@CommandAlias("nadmin|na")
+@CommandPermission("ntrpg.admin")
+public class AdminCommands extends BaseCommand {
 
     @Inject
     private EffectService effectService;
@@ -108,7 +112,7 @@ public abstract class AbstractAdminCommand extends BaseCommand {
     }
 
     @Subcommand("skill")
-    @CommandCompletion("@skill")
+    @CommandCompletion("@skilltree @nothing @skillskctx")
     public void adminExecuteSkillCommand(IActiveCharacter character, SkillTree tree, int level, ISkill skill) {
         commandExecuteSkill(character,tree, skill, level);
     }
@@ -375,8 +379,12 @@ public abstract class AbstractAdminCommand extends BaseCommand {
         }
     }
 
-    public abstract Set<UUID> getAllOnlinePlayers();
+    public Set<UUID> getAllOnlinePlayers() {
+        return Rpg.get().getOnlinePlayers();
+    }
 
-    public abstract void doImplSpecificReload();
+    public void doImplSpecificReload() {
+        Rpg.get().doImplSpecificreload();
+    }
 
 }
