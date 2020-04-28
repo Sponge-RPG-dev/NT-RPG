@@ -1,6 +1,7 @@
 package cz.neumimto.rpg.common.commands;
 
 import co.aikar.commands.BaseCommand;
+import co.aikar.commands.CommandCompletions;
 import co.aikar.commands.CommandManager;
 import co.aikar.commands.InvalidCommandArgument;
 import co.aikar.commands.contexts.ContextResolver;
@@ -11,6 +12,7 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.SkillData;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.common.inventory.runewords.RuneWord;
 
@@ -46,9 +48,12 @@ public class ACFBootstrap {
                 Rpg.get().getSkillService().getSkillNames()
         );
 
-        manager.getCommandCompletions().registerAsyncCompletion("skillskctx", c ->
-                Rpg.get().getSkillService().getSkillNames()
-        );
+        manager.getCommandCompletions().registerAsyncCompletion("skillskctx", c -> {
+            SkillTree tree = (SkillTree) c.getContextValue(SkillTree.class);
+            return tree.getSkills().values().stream()
+                    .map(SkillData::getSkillName)
+                    .collect(Collectors.toSet());
+        });
 
 
         //may not be async as playercontext changes at any time

@@ -3,6 +3,7 @@ package cz.neumimto.rpg.spigot.bridges;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
+import cz.neumimto.rpg.api.entity.players.leveling.ILevelProgression;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
@@ -53,6 +54,9 @@ public class NtRpgPlaceholderExpansion extends PlaceholderExpansion {
      * ntrpg_character_property_((property)) - returns character property value (ei max health, max mana, mana regen, fire resistance etc...)
      * ntrpg_character_class_((class_type)) - returns name of character class of specific type - (ntrpg_character_class_Race - returns name of character race, or null if player has none)
      * ntrpg_character_class_level_((class_type)) - returns level of character class of specific type - (ntrpg_character_class_level_Race - returns level of character race, or null player do not have that class)
+     * ntrpg_character_class_exp_((class_type)) - returns experiences of character class of specific type from the begging of the level - (ntrpg_character_class_level_Race - returns level of character race, or null player do not have that class)
+     * ntrpg_character_class_exp_exptreshold_((class_type)) - returns experiences of character class of specific type from the begging of the level - (ntrpg_character_class_level_Race - returns level of character race, or null player do not have that class)
+     *
      */
     @Override
     public String onPlaceholderRequest(Player player, String identifier){
@@ -83,6 +87,26 @@ public class NtRpgPlaceholderExpansion extends PlaceholderExpansion {
                     PlayerClassData classByType = character.getClassByType(substring);
                     if (classByType != null) {
                         return String.valueOf(classByType.getCharacterClass().getLevel());
+                    }
+                }
+
+                if (substring.startsWith("exp_")) {
+                    substring = substring.substring(4);
+                    PlayerClassData classByType = character.getClassByType(substring);
+                    if (classByType != null) {
+                        return String.valueOf(classByType.getCharacterClass().getExperiences());
+                    }
+                }
+
+                if (substring.startsWith("exptreshold_")) {
+                    substring = substring.substring(12);
+                    PlayerClassData classByType = character.getClassByType(substring);
+                    if (classByType != null) {
+                        int lvl = classByType.getCharacterClass().getLevel();
+                        ILevelProgression levelProgression = classByType.getClassDefinition().getLevelProgression();
+                        if (levelProgression != null) {
+                            return String.valueOf(levelProgression.getLevelMargins()[lvl]);
+                        }
                     }
                 }
 
