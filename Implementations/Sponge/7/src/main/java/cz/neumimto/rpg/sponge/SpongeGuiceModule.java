@@ -45,7 +45,7 @@ import cz.neumimto.rpg.sponge.inventory.runewords.RWService;
 import cz.neumimto.rpg.sponge.permission.SpongePermissionService;
 import cz.neumimto.rpg.sponge.scripting.SpongeClassGenerator;
 import cz.neumimto.rpg.sponge.skills.SpongeSkillService;
-import cz.neumimto.rpg.sponge.utils.Placeholders;
+import cz.neumimto.rpg.sponge.bridges.Placeholders;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.event.CauseStackManager;
