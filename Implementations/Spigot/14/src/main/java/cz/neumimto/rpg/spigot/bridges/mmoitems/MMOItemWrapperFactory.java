@@ -45,7 +45,7 @@ public class MMOItemWrapperFactory {
         skill.setAbility(ability);
         Log.info(" - Settings: " + lowerCaseID , DebugLevel.BALANCE);
         for (String s : skill.getAbility().getModifiers()) {
-            if (s.equals("mana") || s.equals("stamina")) {
+            if (s.equals("mana") || s.equals("stamina") ||s.equals("cooldown")) {
                 continue;
             }
             Log.info("  - " + s, DebugLevel.BALANCE);

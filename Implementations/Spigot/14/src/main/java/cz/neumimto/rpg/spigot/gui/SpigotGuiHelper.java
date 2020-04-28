@@ -390,7 +390,7 @@ public class SpigotGuiHelper {
         }
         itemStack.setItemMeta(itemMeta);
         NBTItem nbtItem = new NBTItem(itemStack);
-        nbtItem.setString("ntrpg.item-command", "skilltree skill " + skill.getId());
+        nbtItem.setString("ntrpg.item-command", "skilltree skill " + skillData.getSkillName());
         return nbtItem.getItem();
     }
 

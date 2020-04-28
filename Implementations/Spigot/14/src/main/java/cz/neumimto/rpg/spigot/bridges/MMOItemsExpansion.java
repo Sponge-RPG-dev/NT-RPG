@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.spigot.bridges;
 
+import com.google.inject.Injector;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.api.entity.CommonProperties;
@@ -37,6 +38,8 @@ public class MMOItemsExpansion implements Listener {
     @Inject
     private SpigotItemService spigotItemService;
 
+    @Inject
+    private Injector injector;
 
     public void init(SpigotCharacterService spigotCharacterService) {
         characterService = spigotCharacterService;
@@ -60,6 +63,7 @@ public class MMOItemsExpansion implements Listener {
         Collection<Ability> all = MMOItems.plugin.getAbilities().getAll();
         List<ISkill> iSkills = MMOItemWrapperFactory.generateSkills(all);
         for (ISkill iSkill : iSkills) {
+            injector.injectMembers(iSkill);
             Rpg.get().getSkillService().registerAdditionalCatalog(iSkill);
         }
     }

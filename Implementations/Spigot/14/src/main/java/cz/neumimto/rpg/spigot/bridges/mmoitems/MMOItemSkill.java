@@ -1,6 +1,7 @@
 package cz.neumimto.rpg.spigot.bridges.mmoitems;
 
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
@@ -43,18 +44,21 @@ public class MMOItemSkill extends ActiveSkill<ISpigotCharacter> {
         for (Map.Entry<String, Float> e : skillContext.getSkillNodes().entrySet()) {
             abilityData.setModifier(e.getKey(), e.getValue());
         }
-        this.cast(stats, new ItemAttackResult(true, DamageType.SKILL), abilityData);
+        boolean casted = this.cast(stats, new ItemAttackResult(true, DamageType.SKILL), abilityData);
+        skillContext.next(character, info, skillContext.result(casted ? SkillResult.OK : SkillResult.CANCELLED));
     }
 
     public Ability getAbility() {
         return ability;
     }
 
-    public void cast(PlayerStats.CachedStats stats, ItemAttackResult attack, AbilityData ability) {
+    public boolean cast(PlayerStats.CachedStats stats, ItemAttackResult attack, AbilityData ability) {
         AbilityResult abilityResult = ability.getAbility().whenRan(stats, null, ability, attack);
         if (abilityResult.isSuccessful()) {
             ability.getAbility().whenCast(stats, abilityResult, attack);
+            return true;
         }
+        return false;
     }
 
     public void setAbility(Ability ability) {

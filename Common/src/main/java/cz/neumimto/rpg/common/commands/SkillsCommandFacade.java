@@ -28,6 +28,7 @@ public class SkillsCommandFacade {
     @Inject
     private SkillService skillService;
 
+    //todo this entire process may be done async
     public void processSkillAction(IActiveCharacter character, ISkill skill, SkillAction action, String flagData) {
         if (action == null) {
             executeSkill(character, skill);

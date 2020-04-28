@@ -10,6 +10,7 @@ import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillData;
@@ -38,10 +39,13 @@ public class ACFBootstrap {
         );
 
         manager.getCommandContexts().registerContext(SkillTree.class, c -> {
-            String s = c.getFirstArg();
+            String s = c.popFirstArg();
             SkillTree skillTree = Rpg.get().getSkillService().getSkillTrees().get(s);
             return skillTree;
         });
+
+      //  manager.getCommandCompletions().registerAsyncCompletion("a", TestCommand.aCompHandler);
+      //  manager.getCommandCompletions().registerAsyncCompletion("b", TestCommand.bCompHandler);
 
         //may be async as only way to add skills now is to reload ntrpg
         manager.getCommandCompletions().registerAsyncCompletion("skill", c ->
@@ -50,11 +54,25 @@ public class ACFBootstrap {
 
         manager.getCommandCompletions().registerAsyncCompletion("skillskctx", c -> {
             SkillTree tree = (SkillTree) c.getContextValue(SkillTree.class);
-            return tree.getSkills().values().stream()
-                    .map(SkillData::getSkillName)
-                    .collect(Collectors.toSet());
+            if (tree != null) {
+                return tree.getSkills().values().stream()
+                        .map(SkillData::getSkillName)
+                        .collect(Collectors.toSet());
+            } else {
+                return Collections.emptySet();
+            }
         });
 
+        manager.getCommandCompletions().registerAsyncCompletion("issuerclasses", c -> {
+            UUID uniqueId = c.getIssuer().getUniqueId();
+            List<String> list = new ArrayList<>();
+            Map<String, PlayerClassData> classes = Rpg.get().getCharacterService().getCharacter(uniqueId).getClasses();
+            for (PlayerClassData value : classes.values()) {
+                list.add(value.getClassDefinition().getName());
+            }
+            return list;
+
+        });
 
         //may not be async as playercontext changes at any time
         manager.getCommandCompletions().registerCompletion("learnedskill", c -> {

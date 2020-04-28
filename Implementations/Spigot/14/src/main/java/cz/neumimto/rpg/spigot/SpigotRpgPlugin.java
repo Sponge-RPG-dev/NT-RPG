@@ -115,6 +115,7 @@ public class SpigotRpgPlugin extends JavaPlugin {
         spigotRpg.init(getDataFolder().toPath(), manager, new Class[]{
                 SpigotAdminCommands.class,
                 AdminCommands.class,
+                CastCommand.class,
                 SpigotCharacterCommands.class,
                 InfoCommands.class,
                 PartyCommands.class,

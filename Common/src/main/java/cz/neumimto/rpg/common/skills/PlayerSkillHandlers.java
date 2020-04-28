@@ -20,7 +20,7 @@ public class PlayerSkillHandlers {
         public void add(String iSkill, PlayerSkillContext source) {
             skills.put(iSkill, source);
             if (source.getSkillData().getSkillName() != null) {
-                skills.put(source.getSkillData().getSkillName(), source);
+                skillsByName.put(source.getSkillData().getSkillName(), source);
             }
         }
 
@@ -55,6 +55,7 @@ public class PlayerSkillHandlers {
         @Override
         public void clear() {
             skills.clear();
+            skillsByName.clear();
         }
 
         @Override
