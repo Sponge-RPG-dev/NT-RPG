@@ -92,7 +92,7 @@ public class SpigotUIReader extends GuiParser<ItemStack, Inventory> {
         list.add(ChatColor.GRAY + damageStr + ": " + colorByDamage + damage);
         itemMeta.setLore(list);
         itemStack.setItemMeta(itemMeta);
-        return itemStack;
+        return SpigotGuiHelper.unclickableInterface(itemStack);
     }
 
     @Override

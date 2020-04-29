@@ -197,9 +197,7 @@ public class SpigotGuiHelper {
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         itemMeta.setCustomModelData(model);
         itemStack.setItemMeta(itemMeta);
-        NBTItem nbti = new NBTItem(itemStack);
-        nbti.setBoolean("ntrpg.item-iface", true);
-        return nbti.getItem();
+        return unclickableInterface(itemStack);
     }
 
     public static void sendcharacters(Player player, ISpigotCharacter player1, CharacterBase currentlyCreated) {
@@ -615,8 +613,7 @@ public class SpigotGuiHelper {
         }
         itemMeta.setLore(lore);
         is.setItemMeta(itemMeta);
-        unclickableInterface(is);
+        return unclickableInterface(is);
 
-        return is;
     }
 }
