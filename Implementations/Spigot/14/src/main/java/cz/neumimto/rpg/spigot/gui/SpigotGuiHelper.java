@@ -610,7 +610,9 @@ public class SpigotGuiHelper {
         }
 
         ItemMeta itemMeta = is.getItemMeta();
-        itemMeta.setCustomModelData(Integer.valueOf(key.getModelId()));
+        if (key.getModelId() != null) {
+            itemMeta.setCustomModelData(Integer.valueOf(key.getModelId()));
+        }
         itemMeta.setLore(lore);
         is.setItemMeta(itemMeta);
         unclickableInterface(is);
