@@ -34,6 +34,7 @@ import cz.neumimto.rpg.api.utils.FileUtils;
 import cz.neumimto.rpg.common.commands.*;
 import cz.neumimto.rpg.persistence.flatfiles.FlatFilesModule;
 import cz.neumimto.rpg.sponge.bridges.HologramsListener;
+import cz.neumimto.rpg.sponge.bridges.Placeholders;
 import cz.neumimto.rpg.sponge.commands.SpongeAdminCommands;
 import cz.neumimto.rpg.sponge.commands.SpongeCharacterCommands;
 import cz.neumimto.rpg.sponge.commands.SpongeCommandService;
@@ -345,6 +346,7 @@ public class SpongeRpgPlugin extends Rpg {
                 new Class[]{
                         SpongeAdminCommands.class,
                         AdminCommands.class,
+                        CastCommand.class,
                         SpongeCharacterCommands.class,
                         InfoCommands.class,
                         PartyCommands.class,
@@ -367,6 +369,10 @@ public class SpongeRpgPlugin extends Rpg {
                         Rpg.get().registerListeners(new SpongeItemCooldownListener());
                     }
 
+
+                    Sponge.getPluginManager().getPlugin("placeholderapi").ifPresent(a -> {
+                        injector.getInstance(Placeholders.class).init();
+                    });
 
                     try {
                         Class.forName("de.randombyte.holograms.api.class.HologramsService");

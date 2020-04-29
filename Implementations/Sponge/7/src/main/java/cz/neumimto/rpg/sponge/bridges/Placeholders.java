@@ -76,7 +76,7 @@ public class Placeholders {
 
 
     @Placeholder(id = "ntrpg_character_class_level_")
-    public int getCharClassLevel(@Source Player src, @Token String classType) {
+    public Integer getCharClassLevel(@Source Player src, @Token String classType) {
         PlayerClassData classData = characterService.getCharacter(src).getClassByType(classType);
         if (classData == null) {
             return 0;
@@ -85,7 +85,7 @@ public class Placeholders {
     }
 
     @Placeholder(id = "ntrpg_character_class_exp_")
-    public double getCharClassExp(@Source Player src, @Token String classType) {
+    public Double getCharClassExp(@Source Player src, @Token String classType) {
         PlayerClassData classData = characterService.getCharacter(src).getClassByType(classType);
         if (classData == null) {
             return 0D;
@@ -94,7 +94,7 @@ public class Placeholders {
     }
 
     @Placeholder(id = "ntrpg_character_class_exptreshold_")
-    public double getCharClassExpTreshold(@Source Player src, @Token String classType) {
+    public Double getCharClassExpTreshold(@Source Player src, @Token String classType) {
         PlayerClassData classData = characterService.getCharacter(src).getClassByType(classType);
         if (classData == null) {
             return 0D;

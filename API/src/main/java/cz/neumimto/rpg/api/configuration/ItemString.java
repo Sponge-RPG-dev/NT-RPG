@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.api.configuration;
 
-import cz.neumimto.rpg.api.utils.MathUtils;
+import cz.neumimto.rpg.api.logging.Log;
 
 public final class ItemString {
     public final String itemId;
@@ -20,34 +20,23 @@ public final class ItemString {
         String id = null;
         String model = null;
         double damage = 0;
-        switch (data.length) {
-            case 1:
-                id = data[0];
-                break;
-            case 2:
-                id = data[0];
-                if (MathUtils.isNumeric(data[1])) {
-                    damage = Double.parseDouble(data[1]);
+        double armor = 0;
+        id = data[0];
+        if (data.length > 1) {
+            for (int i = 1; i < data.length; i++) {
+                String k = data[i].toLowerCase();
+                if (k.startsWith("damage=")) {
+                    damage = Double.parseDouble(k.substring(7));
+                } else if (k.startsWith("model=")) {
+                    model = k.substring(6);
+                } else if (k.startsWith("armor=")) {
+                    armor = Double.parseDouble(k.substring(6));
                 } else {
-                    model = data[1];
+                    Log.warn("Could not parse item " + string);
                 }
-                break;
-            case 3:
-                id = data[0];
-                if (MathUtils.isNumeric(data[1])) {
-                    damage = Double.parseDouble(data[1]);
-                    model = data[2];
-                    break;
-                }
-                if (MathUtils.isNumeric(data[2])) {
-                    damage = Double.parseDouble(data[2]);
-                    model = data[1];
-                }
-                break;
-            default:
-                throw new InvalidItemStringException("Not possible to resolve argument " + string);
+            }
         }
-        return new ItemString(id.toLowerCase(), damage, 0, model);
+        return new ItemString(id.toLowerCase(), damage, armor, model);
     }
 
     public static class InvalidItemStringException extends RuntimeException {

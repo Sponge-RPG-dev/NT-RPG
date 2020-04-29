@@ -102,10 +102,6 @@ public class SpongeGuiceModule extends AbstractRpgGuiceModule {
     protected void configure() {
         super.configure();
 
-        if (SpongeRpgPlugin.INTEGRATIONS.contains("Placeholders")) {
-            bind(Placeholders.class);
-        }
-
         bind(new TypeLiteral<CharacterService>() {
         }).toProvider(SpongeCharacterServiceProvider.class);
         bind(new TypeLiteral<CharacterService<? extends IActiveCharacter>>() {

@@ -24,11 +24,11 @@ class ItemStringTest {
     private static Stream<Arguments> provideItemStrings() {
         return Stream.of(
                 Arguments.of("item:id", new ItemString("item:id", 0, 0, null)),
-                Arguments.of("item:id;10", new ItemString("item:id", 10, 0, null)),
-                Arguments.of("item:id;10.8", new ItemString("item:id", 10.8D, 0, null)),
-                Arguments.of("item:id;variant;10", new ItemString("item:id", 10, 0, "variant")),
-                Arguments.of("item:id;10;variant", new ItemString("item:id", 10, 0, "variant")),
-                Arguments.of("item:id;variant", new ItemString("item:id", 0, 0, "variant"))
+                Arguments.of("item:id;damage=10", new ItemString("item:id", 10, 0, null)),
+                Arguments.of("item:id;damage=10.8", new ItemString("item:id", 10.8D, 0, null)),
+                Arguments.of("item:id;model=variant;damage=10", new ItemString("item:id", 10, 0, "variant")),
+                Arguments.of("item:id;damage=10;model=variant", new ItemString("item:id", 10, 0, "variant")),
+                Arguments.of("item:id;model=variant", new ItemString("item:id", 0, 0, "variant"))
         );
     }
 }
