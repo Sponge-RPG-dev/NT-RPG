@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.spigot.listeners.skillbinds;
 
+import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.common.commands.SkillsCommandFacade;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
@@ -39,11 +40,11 @@ public class OnKeyPress implements Listener {
         NBTItem nbtItem = new NBTItem(item);
         if (nbtItem.hasKey(SpigotInventoryService.SKILLBIND)) {
             String skillName = nbtItem.getString(SpigotInventoryService.SKILLBIND);
-
             ISpigotCharacter character = characterService.getCharacter(player);
-
-            commandFacade.executeSkill(character, skillName);
-            player.getInventory().setHeldItemSlot(event.getPreviousSlot());
+            if (!character.hasCooldown(skillName)) {
+                commandFacade.executeSkill(character, skillName);
+                player.getInventory().setHeldItemSlot(event.getPreviousSlot());
+            }
         }
     }
 }

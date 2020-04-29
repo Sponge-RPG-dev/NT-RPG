@@ -315,7 +315,9 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
 
     @Override
     public boolean hasCooldown(String thing) {
-        return cooldowns.containsKey(thing);
+        Long l = cooldowns.get(thing);
+        if (l == null) return false;
+        return l > System.currentTimeMillis();
     }
 
     private void mergeWeapons(ClassDefinition g) {
