@@ -125,7 +125,19 @@ public enum SkillTreeType {
             if (skillTree == null) {
                 return;
             }
-            //todo
+            int level = playerClassData.getLevel();
+            Map<String, SkillData> skills = skillTree.getSkills();
+
+            for (Map.Entry<String, SkillData> stringSkillDataEntry : skills.entrySet()) {
+                if (stringSkillDataEntry.getValue().getMinPlayerLevel() <= level) {
+                    SkillData skillData = stringSkillDataEntry.getValue();
+                    PlayerSkillContext playerSkillContext = new PlayerSkillContext(classDefinition, skillData.getSkill(), character);
+                    playerSkillContext.setLevel(1);
+                    playerSkillContext.setSkillData(skillData);
+
+                    Rpg.get().getCharacterService().addSkill(character, playerClassData, playerSkillContext);
+                }
+            }
         }
 
         @Override
@@ -145,7 +157,7 @@ public enum SkillTreeType {
 
         private void sendErrorMessage(IActiveCharacter player, String className) {
             String aClass = Rpg.get().getLocalizationService().translate(LocalizationKeys.NOT_ALLOWED_MANUAL_SKILLTREE_MANAGEMENT, Arg.arg("class", className));
-
+            player.sendMessage(aClass);
         }
     };
 

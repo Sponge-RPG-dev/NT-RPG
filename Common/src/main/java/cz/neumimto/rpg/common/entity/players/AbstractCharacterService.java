@@ -159,6 +159,7 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
                 CharacterBase latest = playerCharacters.stream().max(Comparator.comparing(CharacterBase::getUpdated)).get();
                 T activeCharacter = createActiveCharacter(id, latest);
                 activeCharacter.getCharacterBase().setLastKnownPlayerName(playerName);
+
                 Rpg.get().scheduleSyncLater(() -> {
                     setActiveCharacter(id, activeCharacter);
                     assignPlayerToCharacter(id);
@@ -560,6 +561,9 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
             PlayerClassData playerClassData = new PlayerClassData(classDef, characterClass);
             activeCharacter.addClass(playerClassData);
             permissionService.addAllPermissions(activeCharacter, playerClassData);
+            if (classDef.getSkillTreeType() == SkillTreeType.AUTO && classDef.getSkillTree() != SkillTree.Default) {
+                classDef.getSkillTreeType().processCharacterInit(activeCharacter, playerClassData);
+            }
         }
 
         inventoryService.initializeManagedSlots(activeCharacter);
