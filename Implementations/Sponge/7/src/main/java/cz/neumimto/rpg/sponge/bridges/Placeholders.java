@@ -51,8 +51,8 @@ public class Placeholders {
         });
     }
 
-    @Placeholder(id = "ntrpg_character_class_")
-    public Text getClass(@Source Player src, @Token String classType) {
+    @Placeholder(id = "ntrpg_character_class")
+    public Text getClass(@Source Player src, @Token(fix = true) String classType) {
         PlayerClassData classData = characterService.getCharacter(src).getClassByType(classType);
         if (classData == null) {
             return Text.EMPTY;
@@ -67,16 +67,16 @@ public class Placeholders {
     }
 
 
-    @Placeholder(id = "ntrpg_character_property_")
-    public Float getCharacterProperty(@Source Player src, @Token String property) {
+    @Placeholder(id = "ntrpg_character_property")
+    public Float getCharacterProperty(@Source Player src, @Token(fix = true) String property) {
         int idByName = propertyService.getIdByName(property);
         IActiveCharacter character = characterService.getCharacter(src);
         return character.getProperty(idByName);
     }
 
 
-    @Placeholder(id = "ntrpg_character_class_level_")
-    public Integer getCharClassLevel(@Source Player src, @Token String classType) {
+    @Placeholder(id = "ntrpg_character_class_level")
+    public Integer getCharClassLevel(@Source Player src, @Token(fix = true) String classType) {
         PlayerClassData classData = characterService.getCharacter(src).getClassByType(classType);
         if (classData == null) {
             return 0;
@@ -84,8 +84,8 @@ public class Placeholders {
         return classData.getLevel();
     }
 
-    @Placeholder(id = "ntrpg_character_class_exp_")
-    public Double getCharClassExp(@Source Player src, @Token String classType) {
+    @Placeholder(id = "ntrpg_character_class_exp")
+    public Double getCharClassExp(@Source Player src, @Token(fix = true) String classType) {
         PlayerClassData classData = characterService.getCharacter(src).getClassByType(classType);
         if (classData == null) {
             return 0D;
@@ -93,8 +93,8 @@ public class Placeholders {
         return classData.getExperiencesFromLevel();
     }
 
-    @Placeholder(id = "ntrpg_character_class_exptreshold_")
-    public Double getCharClassExpTreshold(@Source Player src, @Token String classType) {
+    @Placeholder(id = "ntrpg_character_class_exptreshold")
+    public Double getCharClassExpTreshold(@Source Player src, @Token(fix = true) String classType) {
         PlayerClassData classData = characterService.getCharacter(src).getClassByType(classType);
         if (classData == null) {
             return 0D;
