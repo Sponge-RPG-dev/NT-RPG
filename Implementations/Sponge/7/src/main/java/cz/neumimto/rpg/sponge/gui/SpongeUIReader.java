@@ -6,6 +6,7 @@ import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.items.ClassItem;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
+import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.common.gui.GuiParser;
 import cz.neumimto.rpg.common.gui.InventorySlotProcessor;
 import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
@@ -133,7 +134,11 @@ public class SpongeUIReader extends GuiParser<ItemStack, Inventory> {
     protected Inventory createInventory(String preferedColor, String header) {
         TextColor c = TextColors.WHITE;
         if (preferedColor != null) {
-            c = Sponge.getRegistry().getType(TextColor.class, preferedColor.toLowerCase()).get();
+
+            c = Sponge.getRegistry().getType(TextColor.class, preferedColor.toLowerCase()).orElseGet(() -> {
+                Log.warn("Unknown color " + preferedColor.toLowerCase());
+                return TextColors.WHITE;
+            });
         }
         String translate = Rpg.get().getLocalizationService().translate(header);
 
