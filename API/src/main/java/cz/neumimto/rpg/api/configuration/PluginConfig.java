@@ -235,7 +235,6 @@ public class PluginConfig {
     public Set<String> DISABLED_WORLDS = new HashSet<>();
 
     @Path("ITEM_COOLDOWNS")
-    @Optional
     public Boolean ITEM_COOLDOWNS = Boolean.TRUE;
 
     private static class ItemDamageProcessorConverter implements Converter<ItemDamageProcessor, String> {

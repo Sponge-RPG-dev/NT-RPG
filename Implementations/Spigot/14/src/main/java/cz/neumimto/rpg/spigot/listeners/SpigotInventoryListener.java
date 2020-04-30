@@ -79,7 +79,7 @@ public class SpigotInventoryListener implements Listener {
         //System.out.println(event.getInventory().getType());
         //System.out.println(event.getSlotType());
 
-        if (currentItem != null) {
+        if (currentItem != null && currentItem.getType() != Material.AIR) {
             NBTItem nbti = new NBTItem(currentItem);
             if (nbti.hasKey("ntrpg.item-command")) {
                 Rpg.get().scheduleSyncLater(() -> {
