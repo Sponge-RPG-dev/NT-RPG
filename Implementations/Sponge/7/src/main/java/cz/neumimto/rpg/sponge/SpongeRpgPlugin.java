@@ -346,6 +346,7 @@ public class SpongeRpgPlugin extends Rpg {
                 new Class[]{
                         SpongeAdminCommands.class,
                         AdminCommands.class,
+                        CharacterCommands.class,
                         CastCommand.class,
                         SpongeCharacterCommands.class,
                         InfoCommands.class,

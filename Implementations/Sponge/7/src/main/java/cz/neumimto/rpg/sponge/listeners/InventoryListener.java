@@ -54,6 +54,7 @@ import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
 import org.spongepowered.api.item.inventory.type.CarriedInventory;
 import org.spongepowered.api.util.Tristate;
+import org.spongepowered.common.event.tracking.phase.packet.drag.DragInventoryAddSlotState;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -78,12 +79,6 @@ public class InventoryListener {
     private InventoryService inventoryService;
     @Inject
     private SpongeItemService itemService;
-
-    @Listener
-    @IsCancelled(Tristate.FALSE)
-    public void onItemPickup(ChangeInventoryEvent event, @Root Player player) {
-        Player player1 = player;
-    }
 
     @Listener
     @IsCancelled(Tristate.FALSE)
@@ -199,7 +194,8 @@ public class InventoryListener {
     @Listener
     @Include({
             ClickInventoryEvent.Primary.class,
-            ClickInventoryEvent.Secondary.class
+            ClickInventoryEvent.Secondary.class,
+            ClickInventoryEvent.Drag.class
     })
     public void onInteract(ClickInventoryEvent event, @Root Player player) {
         final List<SlotTransaction> transactions = event.getTransactions();
@@ -232,7 +228,7 @@ public class InventoryListener {
                         if (k) {
                             inventoryHandler.handleCharacterUnEquipActionPost(character, managedSlot);
                             inventoryHandler.handleCharacterEquipActionPost(character, managedSlot, rpgItemStackF);
-
+                            character.setRequiresDamageRecalculation(true);
                         } else {
                             event.setCancelled(true);
                         }
@@ -240,6 +236,9 @@ public class InventoryListener {
                         //equip
                         if (inventoryHandler.handleCharacterEquipActionPre(character, managedSlot, rpgItemStackF)) {
                             inventoryHandler.handleCharacterEquipActionPost(character, managedSlot, rpgItemStackF);
+                            character.setRequiresDamageRecalculation(true);
+                        } else {
+                            event.setCancelled(true);
                         }
                     }
 

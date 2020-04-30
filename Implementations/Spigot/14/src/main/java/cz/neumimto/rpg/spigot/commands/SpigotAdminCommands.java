@@ -17,6 +17,8 @@ import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.items.ClassItem;
 import cz.neumimto.rpg.api.items.ItemClass;
 import cz.neumimto.rpg.api.items.RpgItemType;
+import cz.neumimto.rpg.common.commands.CharacterCommands;
+import cz.neumimto.rpg.common.commands.OnlineOtherPlayer;
 import cz.neumimto.rpg.spigot.gui.SpigotGuiHelper;
 import cz.neumimto.rpg.spigot.inventory.SpigotItemService;
 import org.bukkit.ChatColor;
@@ -49,15 +51,15 @@ public class SpigotAdminCommands extends BaseCommand {
     private DamageService damageService;
 
     @Inject
-    private SpigotCharacterCommands spigotCharacterCommands;
+    private CharacterCommands spigotCharacterCommands;
 
     @Inject
     private CharacterService characterService;
 
     @Subcommand("char")
     @Description("forces opening of character menu on a client")
-    public void adminExecuteSkillCommandAdmin(CommandIssuer console, OnlinePlayer executor) {
-        spigotCharacterCommands.menu(executor.player);
+    public void adminExecuteSkillCommandAdmin(CommandIssuer console, OnlineOtherPlayer executor) {
+        spigotCharacterCommands.menu(executor.character);
     }
 
     @Subcommand("inspect property")

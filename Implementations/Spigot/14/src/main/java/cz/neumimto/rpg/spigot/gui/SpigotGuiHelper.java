@@ -554,12 +554,10 @@ public class SpigotGuiHelper {
         Inventory inventory = CACHED_MENUS.get(name);
         if (inventory == null) {
             TemplateInventory<ItemStack, Inventory> dView = (TemplateInventory<ItemStack, Inventory>) CACHED_MENU_TEMPLATES.get("char_allowed_items");
-            Map<RpgItemType, Double> allowedWeapons = character.getAllowedWeapons();
+            Set<RpgItemType> allowedWeapons = character.getAllowedArmor();
             List<ItemStack> content = new ArrayList<>();
-            for (Map.Entry<RpgItemType, Double> ent : allowedWeapons.entrySet()) {
-                RpgItemType key = ent.getKey();
-                Double value = ent.getValue();
-                ItemStack is = toItemStack(key, value);
+            for (RpgItemType ent : allowedWeapons) {
+                ItemStack is = toItemStack(ent, 0);
                 content.add(is);
             }
             DynamicInventory inv = dView.setActualContent(content.toArray(new ItemStack[content.size() == 0 ? 0 : content.size() - 1]));
@@ -575,11 +573,13 @@ public class SpigotGuiHelper {
         String name = "char_allowed_items_weapons" + character.getName();
         Inventory inventory = CACHED_MENUS.get(name);
         if (inventory == null) {
-            TemplateInventory<ItemStack, Inventory> dView = (TemplateInventory<ItemStack, Inventory>) CACHED_MENU_TEMPLATES.get("char_allowed_items");
-            Set<RpgItemType> allowedWeapons = character.getAllowedArmor();
+            TemplateInventory<ItemStack, Inventory> dView = (TemplateInventory<ItemStack, Inventory>) CACHED_MENU_TEMPLATES.get("char_allowed_items_weapons");
+            Map<RpgItemType, Double> allowedWeapons = character.getAllowedWeapons();
             List<ItemStack> content = new ArrayList<>();
-            for (RpgItemType ent : allowedWeapons) {
-                ItemStack is = toItemStack(ent, 0);
+            for (Map.Entry<RpgItemType, Double> ent : allowedWeapons.entrySet()) {
+                RpgItemType key = ent.getKey();
+                Double value = ent.getValue();
+                ItemStack is = toItemStack(key, value);
                 content.add(is);
             }
             DynamicInventory inv = dView.setActualContent(content.toArray(new ItemStack[content.size() == 0 ? 0 : content.size() - 1]));

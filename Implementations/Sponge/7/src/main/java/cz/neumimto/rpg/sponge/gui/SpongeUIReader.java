@@ -85,6 +85,7 @@ public class SpongeUIReader extends GuiParser<ItemStack, Inventory> {
         ItemStack itemStack = ItemStack.of(itemType);
         itemStack.offer(Keys.HIDE_ATTRIBUTES, true);
         itemStack.offer(Keys.HIDE_ENCHANTMENTS, true);
+        itemStack.offer(Keys.HIDE_MISCELLANEOUS, true);
 
         if (dye != null) {
             itemStack.offer(Keys.DYE_COLOR, dye);

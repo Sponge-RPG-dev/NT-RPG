@@ -219,7 +219,7 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
 
     @Override
     public void displayCharacterAttributes(ISpigotCharacter character) {
-
+            //todo
     }
 
     @Override
