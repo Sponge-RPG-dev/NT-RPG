@@ -24,7 +24,11 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.inventory.InventoryService;
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.inventory.RpgInventory;
+import cz.neumimto.rpg.api.items.ItemClass;
 import cz.neumimto.rpg.api.items.RpgItemStack;
+import cz.neumimto.rpg.api.items.RpgItemType;
+import cz.neumimto.rpg.api.localization.LocalizationKeys;
+import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.common.inventory.InventoryHandler;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
@@ -53,6 +57,10 @@ import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
 import org.spongepowered.api.item.inventory.type.CarriedInventory;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.chat.ChatType;
+import org.spongepowered.api.text.chat.ChatTypes;
+import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.Tristate;
 import org.spongepowered.common.event.tracking.phase.packet.drag.DragInventoryAddSlotState;
 
@@ -79,6 +87,8 @@ public class InventoryListener {
     private InventoryService inventoryService;
     @Inject
     private SpongeItemService itemService;
+    @Inject
+    private LocalizationService localizationService;
 
     @Listener
     @IsCancelled(Tristate.FALSE)
@@ -178,6 +188,8 @@ public class InventoryListener {
                             ItemStackUtils.dropItem(player, itemStack);
                             player.setItemInHand(HandTypes.MAIN_HAND, ItemStack.empty());
                             character.setLastHotbarSlotInteraction(-1);
+                            String translate = localizationService.translate(LocalizationKeys.CANNOT_USE_ITEM_CONFIGURATION_REASON);
+                            player.sendMessage(ChatTypes.ACTION_BAR, Text.of(TextColors.RED, translate));
                             event.setCancelled(true);
                             character.setRequiresDamageRecalculation(true);
                         }
@@ -195,71 +207,71 @@ public class InventoryListener {
     @Include({
             ClickInventoryEvent.Primary.class,
             ClickInventoryEvent.Secondary.class,
-            ClickInventoryEvent.Drag.class
+            ClickInventoryEvent.Drag.class,
+            ClickInventoryEvent.Shift.class
     })
     public void onInteract(ClickInventoryEvent event, @Root Player player) {
         final List<SlotTransaction> transactions = event.getTransactions();
-        switch (transactions.size()) {
-            case 1:
-                SlotTransaction slotTransaction = transactions.get(0);
-                Slot slot = slotTransaction.getSlot();
-                Slot transformed = slot.transform();
-                Class aClass = transformed.parent().getClass();
-                int slotId = transformed.getInventoryProperty(SlotIndex.class).get().getValue();
-                if (!inventoryService.isManagedInventory(aClass, slotId)) {
-                    return;
-                }
-                IActiveCharacter character = characterService.getCharacter(player);
-                Map<Class<?>, RpgInventory> managedInventory = character.getManagedInventory();
-                RpgInventory rpgInventory = managedInventory.get(aClass);
-                ManagedSlot managedSlot = rpgInventory.getManagedSlots().get(slotId);
-                Optional<RpgItemStack> future = itemService.getRpgItemStack(slotTransaction.getFinal().createStack());
-                Optional<RpgItemStack> original = itemService.getRpgItemStack(slotTransaction.getOriginal().createStack());
-
-                if (future.isPresent()) {
-                    RpgItemStack rpgItemStackF = future.get();
-                    //change
-                    if (original.isPresent()) {
-
-                        RpgItemStack rpgItemStackO = original.get();
-
-                        boolean k = inventoryHandler.handleCharacterEquipActionPre(character, managedSlot, rpgItemStackF)
-                                && inventoryHandler.handleCharacterUnEquipActionPre(character, managedSlot, rpgItemStackO);
-                        if (k) {
-                            inventoryHandler.handleCharacterUnEquipActionPost(character, managedSlot);
-                            inventoryHandler.handleCharacterEquipActionPost(character, managedSlot, rpgItemStackF);
-                            character.setRequiresDamageRecalculation(true);
-                        } else {
-                            event.setCancelled(true);
-                        }
-                    } else {
-                        //equip
-                        if (inventoryHandler.handleCharacterEquipActionPre(character, managedSlot, rpgItemStackF)) {
-                            inventoryHandler.handleCharacterEquipActionPost(character, managedSlot, rpgItemStackF);
-                            character.setRequiresDamageRecalculation(true);
-                        } else {
-                            event.setCancelled(true);
-                        }
-                    }
-
-                } else {
-                    //unequip slot
-                    if (original.isPresent()) {
-                        RpgItemStack rpgItemStack = original.get();
-                        if (inventoryHandler.handleCharacterUnEquipActionPre(character, managedSlot, rpgItemStack)) {
-                            inventoryHandler.handleCharacterUnEquipActionPost(character, managedSlot);
-                        }
-                    }
-                }
-                break;
-            case 2:
-                //???
-                break;
-            default:
-                //???//???
+        for (SlotTransaction slotTransaction : transactions) {
+            Slot slot = slotTransaction.getSlot();
+            Slot transformed = slot.transform();
+            Class aClass = transformed.parent().getClass();
+            int slotId = transformed.getInventoryProperty(SlotIndex.class).get().getValue();
+            if (!inventoryService.isManagedInventory(aClass, slotId)) {
                 return;
-        }
+            }
+            IActiveCharacter character = characterService.getCharacter(player);
+            Map<Class<?>, RpgInventory> managedInventory = character.getManagedInventory();
+            RpgInventory rpgInventory = managedInventory.get(aClass);
+            ManagedSlot managedSlot = rpgInventory.getManagedSlots().get(slotId);
+            Optional<RpgItemStack> future = itemService.getRpgItemStack(slotTransaction.getFinal().createStack());
+            Optional<RpgItemStack> original = itemService.getRpgItemStack(slotTransaction.getOriginal().createStack());
 
+            if (future.isPresent()) {
+                RpgItemStack rpgItemStackF = future.get();
+                //change
+                if (original.isPresent()) {
+
+                    RpgItemStack rpgItemStackO = original.get();
+
+                    boolean k = inventoryHandler.handleCharacterEquipActionPre(character, managedSlot, rpgItemStackF)
+                            && inventoryHandler.handleCharacterUnEquipActionPre(character, managedSlot, rpgItemStackO);
+                    if (k) {
+                        inventoryHandler.handleCharacterUnEquipActionPost(character, managedSlot);
+                        inventoryHandler.handleCharacterEquipActionPost(character, managedSlot, rpgItemStackF);
+                        character.setRequiresDamageRecalculation(true);
+                    } else {
+                        event.setCancelled(true);
+                        return;
+                    }
+                } else {
+                    //equip
+                    //todo do we want to apply custom enchantments from armor from hotbar? I think not => make this configurable
+                    ItemClass itemClass = rpgItemStackF.getItemType().getItemClass();
+                    if (slotId >=0 && slotId <=8 && (itemClass == ItemClass.ARMOR || itemClass == ItemClass.SHIELD)) {
+                        continue;
+                    }
+
+                    if (inventoryHandler.handleCharacterEquipActionPre(character, managedSlot, rpgItemStackF)) {
+                           inventoryHandler.handleCharacterEquipActionPost(character, managedSlot, rpgItemStackF);
+                           character.setRequiresDamageRecalculation(true);
+                    } else {
+                        event.setCancelled(true);
+                        return;
+                    }
+
+                }
+
+            } else {
+                //unequip slot
+                if (original.isPresent()) {
+                    RpgItemStack rpgItemStack = original.get();
+                    if (inventoryHandler.handleCharacterUnEquipActionPre(character, managedSlot, rpgItemStack)) {
+                        inventoryHandler.handleCharacterUnEquipActionPost(character, managedSlot);
+                    }
+                }
+            }
+        }
     }
 
     @Listener

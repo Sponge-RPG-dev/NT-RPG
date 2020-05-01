@@ -26,7 +26,7 @@ public class RepeatingSkill extends ActiveSkill {
 
     @Override
     public WrappedSkill.WrappedSkillData constructSkillData() {
-        return new RepeatingSkillData(getId(), super.constructSkillData());
+        return new RepeatingSkillData(getId());
     }
 
     @Override
@@ -58,8 +58,8 @@ public class RepeatingSkill extends ActiveSkill {
         public long period;
         public long maxDuartion;
 
-        public RepeatingSkillData(String skill, SkillData wrapped) {
-            super(skill, wrapped);
+        public RepeatingSkillData(String skill) {
+            super(skill);
         }
     }
 

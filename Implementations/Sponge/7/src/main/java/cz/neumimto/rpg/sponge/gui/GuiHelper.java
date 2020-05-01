@@ -674,7 +674,7 @@ public class GuiHelper {
                 content.add(is);
             }
             DynamicInventory inv = dView.setActualContent(content.toArray(new ItemStack[content.size() == 0 ? 0 : content.size() - 1]));
-            String translate = Rpg.get().getLocalizationService().translate(LocalizationKeys.CHARACTER_ARMOR);
+            String translate = Rpg.get().getLocalizationService().translate(LocalizationKeys.CHARACTER_WEAPONS);
             inventory = createInventoryTemplate(translate);
             inv.fill(inventory);
             CACHED_MENUS.put(name, inventory);

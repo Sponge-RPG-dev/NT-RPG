@@ -29,6 +29,7 @@ import cz.neumimto.rpg.api.gui.ISkillTreeInterfaceModel;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.skills.*;
+import cz.neumimto.rpg.api.skills.WrappedSkill.WrappedSkillData;
 import cz.neumimto.rpg.api.skills.mods.ActiveSkillPreProcessorWrapper;
 import cz.neumimto.rpg.api.skills.scripting.ScriptedSkillNodeDescription;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
@@ -209,8 +210,8 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
         String skillId = c.getString("SkillId");
         try {
             Config parent = c.getConfig("Parent");
-
-            SkillData info = createSkillInfo(skillTree, skillId);
+            String wrappedSkillId = parent.getString("SkillId");
+            WrappedSkillData info = (WrappedSkillData) createSkillInfo(skillTree, wrappedSkillId);
 
             loadSkill(skillTree, parent, info);
         } catch (ConfigException ignored) {}
@@ -481,6 +482,7 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
         SkillData info = tree.getSkills().get(lowercased);
         if (info == null) {
             info = createSkillInfo(tree, lowercased);
+            tree.addSkill(info);
         }
         return info;
     }
@@ -491,9 +493,18 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
         if (skill == null) {
             throw new IllegalStateException("Could not find a skill " + lowercased + " referenced in the skilltree " + tree.getId());
         }
-        SkillData info = skill.constructSkillData();
+        SkillData info = constructSkillData(skill);
         info.setSkill(skill);
-        tree.addSkill(info);
+        return info;
+    }
+
+    private SkillData constructSkillData(ISkill skill) {
+        SkillData info = skill.constructSkillData();
+        if (info instanceof WrappedSkillData) {
+            WrappedSkillData data = (WrappedSkillData) info;
+            SkillData wrapped = constructSkillData(data.getSkill());
+            data.setWrapped(wrapped);
+        }
         return info;
     }
 }

@@ -33,7 +33,7 @@ public class WrappedSkill implements ISkill {
 
     @Override
     public WrappedSkillData constructSkillData() {
-        return new WrappedSkillData(getId(), inner.constructSkillData());
+        return new WrappedSkillData(getId());
     }
 
     @Override
@@ -116,9 +116,8 @@ public class WrappedSkill implements ISkill {
 
         public SkillData wrapped;
 
-        public WrappedSkillData(String skill, SkillData wrapped) {
+        public WrappedSkillData(String skill) {
             super(skill);
-            this.wrapped = wrapped;
         }
 
         public SkillData getWrapped() {

@@ -8,6 +8,7 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.inventory.InventoryService;
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.inventory.RpgInventory;
+import cz.neumimto.rpg.api.items.ItemClass;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.items.subtypes.ItemSubtype;
 import cz.neumimto.rpg.api.items.subtypes.ItemSubtypes;
@@ -59,7 +60,10 @@ public abstract class AbstractInventoryService<T extends IActiveCharacter> imple
                 } else if (armorIds.contains(value.getSlotId())) {
                     slot = new FilteredManagedSlotImpl(value.getSlotId(), item -> activeCharacter.canWear(item.getItemType()));
                 } else if (value.getSlotId() >= 0 && value.getSlotId() < 9) {
-                    slot = new FilteredManagedSlotImpl(value.getSlotId(), item -> activeCharacter.canUse(item.getItemType(), EntityHand.MAIN));
+                    slot = new FilteredManagedSlotImpl(value.getSlotId(), item
+                            -> activeCharacter.canUse(item.getItemType(), EntityHand.MAIN));
+     //                           || item.getItemType().getItemClass() == ItemClass.ARMOR
+       //                         || item.getItemType().getItemClass() == ItemClass.SHIELD);
                 } else {
                     slot = new ManagedSlotImpl(value.getSlotId());
                 }

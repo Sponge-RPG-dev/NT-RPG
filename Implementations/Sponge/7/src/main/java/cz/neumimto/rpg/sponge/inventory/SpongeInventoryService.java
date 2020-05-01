@@ -145,7 +145,6 @@ public class SpongeInventoryService extends AbstractInventoryService<ISpongeChar
                         } catch (IllegalAccessException e) {
                             e.printStackTrace();
                         }
-                        continue;
                     }
                 }
             }

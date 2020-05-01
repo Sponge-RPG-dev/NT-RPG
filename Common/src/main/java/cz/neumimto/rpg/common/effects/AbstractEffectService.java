@@ -414,7 +414,7 @@ public abstract class AbstractEffectService implements EffectService {
         try {
             StringBuilder finalString = new StringBuilder();
             file.createNewFile();
-            String s = assetService.getAssetAsString("templates/Effect.md");
+            String template = assetService.getAssetAsString("templates/Effect.md");
             for (Map.Entry<String, IGlobalEffect> effect : globalEffects.entrySet()) {
                 Class aClass = effect.getValue().asEffectClass();
                 if (aClass != null && aClass.isAnnotationPresent(Generate.class)) {
@@ -424,6 +424,7 @@ public abstract class AbstractEffectService implements EffectService {
 
                     Class<?> modelType = EffectModelFactory.getModelType(aClass);
 
+                    String s = new String(template);
                     s = s.replaceAll("\\{\\{effect\\.name}}", name);
                     s = s.replaceAll("\\{\\{effect\\.description}}", description);
 
@@ -448,12 +449,12 @@ public abstract class AbstractEffectService implements EffectService {
                 }
             }
 
-            s = assetService.getAssetAsString("templates/Skill.md");
+            template = assetService.getAssetAsString("templates/Skill.md");
             StringBuilder skills = new StringBuilder();
             for (ISkill iSkill : skillService.getAll()) {
 
                 String damageType = iSkill.getDamageType();
-
+                String s = new String(template);
                 s = s.replaceAll("\\{\\{skill\\.damageType}}", damageType == null ? "Deals no damage" : damageType);
 
                 String id = iSkill.getId();
@@ -468,9 +469,9 @@ public abstract class AbstractEffectService implements EffectService {
                 s = s.replaceAll("\\{\\{skill\\.parameters}}", buffer.toString());
                 skills.append(s);
             }
-            s = assetService.getAssetAsString("templates/SE.md");
+            template = assetService.getAssetAsString("templates/SE.md");
 
-            Files.write(file.toPath(), s.replaceAll("\\{\\{effects}}", finalString.toString())
+            Files.write(file.toPath(), template.replaceAll("\\{\\{effects}}", finalString.toString())
                     .replaceAll("\\{\\{skills}}", skills.toString()).getBytes(), StandardOpenOption.APPEND);
         } catch (IOException e) {
             e.printStackTrace();
