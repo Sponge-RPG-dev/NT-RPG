@@ -4,7 +4,6 @@ import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.entity.players.leveling.ILevelProgression;
-import cz.neumimto.rpg.api.skills.tree.SkillTreeSpecialization;
 import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
 import me.rojo8399.placeholderapi.Placeholder;
@@ -17,7 +16,6 @@ import org.spongepowered.api.text.Text;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Set;
 
 import static cz.neumimto.rpg.api.logging.Log.error;
 

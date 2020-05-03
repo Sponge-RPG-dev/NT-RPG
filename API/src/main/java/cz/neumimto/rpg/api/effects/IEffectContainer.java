@@ -6,7 +6,7 @@ import java.util.function.Consumer;
 /**
  * Created by NeumimTo on 1.4.2017.
  */
-public interface IEffectContainer<K, T extends IEffect<K>> extends IEffectSourceProvider{
+public interface IEffectContainer<K, T extends IEffect<K>> extends IEffectSourceProvider {
 
     Set<T> getEffects();
 

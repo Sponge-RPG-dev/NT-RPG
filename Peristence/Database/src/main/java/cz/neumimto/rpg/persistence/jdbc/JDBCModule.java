@@ -50,7 +50,7 @@ public class JDBCModule implements RpgAddon {
         } else {
             Path props = getOrCreateDatabaseProperties((String) implementationScope.get("WORKINGDIR"));
             Properties properties = new Properties();
-            try (FileReader fileReader = new FileReader(props.toFile())){
+            try (FileReader fileReader = new FileReader(props.toFile())) {
                 properties.load(fileReader);
 
                 HikariConfig cfg = new HikariConfig();

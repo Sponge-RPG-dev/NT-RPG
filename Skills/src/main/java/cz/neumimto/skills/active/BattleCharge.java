@@ -32,7 +32,7 @@ public class BattleCharge extends ActiveSkill<ISpongeCharacter> {
     }
 
     @Override
-    public void cast(ISpongeCharacter character, PlayerSkillContext info, SkillContext skillContext) {
+    public SkillResult cast(ISpongeCharacter character, PlayerSkillContext info, SkillContext skillContext) {
         double distSq = Math.pow(skillContext.getDoubleNodeValue(SkillNodes.RADIUS), 2);
         long duration = skillContext.getLongNodeValue(SkillNodes.DURATION);
         float value = skillContext.getFloatNodeValue("speed-per-level");

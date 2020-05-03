@@ -11,6 +11,7 @@ public class SpigotSkillTreeInterfaceModel implements ISkillTreeInterfaceModel {
     private final short id;
 
     private ItemStack cache;
+
     public SpigotSkillTreeInterfaceModel(Integer modelId, Material itemType, short id) {
         this.itemType = itemType;
         this.id = id;

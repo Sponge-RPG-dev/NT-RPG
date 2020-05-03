@@ -1,7 +1,5 @@
 package cz.neumimto.rpg.spigot.entities;
 
-import static cz.neumimto.rpg.api.logging.Log.info;
-
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.CommonProperties;
 import cz.neumimto.rpg.api.entity.IEntity;
@@ -12,9 +10,10 @@ import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 
+import javax.inject.Singleton;
 import java.util.UUID;
 
-import javax.inject.Singleton;
+import static cz.neumimto.rpg.api.logging.Log.info;
 
 @Singleton
 public class SpigotEntityService extends AbstractEntityService<LivingEntity, SpigotMob> {

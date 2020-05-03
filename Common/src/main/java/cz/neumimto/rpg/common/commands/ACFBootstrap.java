@@ -1,7 +1,6 @@
 package cz.neumimto.rpg.common.commands;
 
 import co.aikar.commands.BaseCommand;
-import co.aikar.commands.CommandCompletions;
 import co.aikar.commands.CommandManager;
 import co.aikar.commands.InvalidCommandArgument;
 import co.aikar.commands.contexts.ContextResolver;
@@ -44,8 +43,8 @@ public class ACFBootstrap {
             return skillTree;
         });
 
-      //  manager.getCommandCompletions().registerAsyncCompletion("a", TestCommand.aCompHandler);
-      //  manager.getCommandCompletions().registerAsyncCompletion("b", TestCommand.bCompHandler);
+        //  manager.getCommandCompletions().registerAsyncCompletion("a", TestCommand.aCompHandler);
+        //  manager.getCommandCompletions().registerAsyncCompletion("b", TestCommand.bCompHandler);
 
         //may be async as only way to add skills now is to reload ntrpg
         manager.getCommandCompletions().registerAsyncCompletion("skill", c ->
@@ -95,9 +94,9 @@ public class ACFBootstrap {
 
         manager.getCommandCompletions().registerAsyncCompletion("class", c ->
                 Rpg.get().getClassService().getClassDefinitions().stream()
-                .filter(a -> c.getIssuer().hasPermission("ntrpg.class." + a.getName().toLowerCase()))
-                .map(ClassDefinition::getName)
-                .collect(Collectors.toList())
+                        .filter(a -> c.getIssuer().hasPermission("ntrpg.class." + a.getName().toLowerCase()))
+                        .map(ClassDefinition::getName)
+                        .collect(Collectors.toList())
         );
 
         manager.getCommandContexts().registerContext(ClassDefinition.class, c -> {
@@ -126,7 +125,7 @@ public class ACFBootstrap {
                 Rpg.get().getPluginConfig().CLASS_TYPES.keySet()
         );
 
-        manager.getCommandCompletions().registerCompletion("party-current", c-> {
+        manager.getCommandCompletions().registerCompletion("party-current", c -> {
             UUID uniqueId = c.getIssuer().getUniqueId();
             Set<IActiveCharacter> players = Rpg.get().getCharacterService().getCharacter(uniqueId)
                     .getParty()
@@ -134,15 +133,15 @@ public class ACFBootstrap {
             return players.stream().map(IActiveCharacter::getPlayerAccountName).collect(Collectors.toList());
         });
 
-        manager.getCommandCompletions().registerAsyncCompletion("learned-skill", c->
+        manager.getCommandCompletions().registerAsyncCompletion("learned-skill", c ->
                 Rpg.get().getCharacterService().getCharacter(c.getIssuer().getUniqueId()).getSkills().keySet()
         );
 
-        manager.getCommandCompletions().registerAsyncCompletion("socket-type", c->
+        manager.getCommandCompletions().registerAsyncCompletion("socket-type", c ->
                 Rpg.get().getItemService().getSocketTypes().keySet()
         );
 
-        manager.getCommandCompletions().registerAsyncCompletion("runeword", c-> {
+        manager.getCommandCompletions().registerAsyncCompletion("runeword", c -> {
             return Collections.emptyList();
             //todo
         });

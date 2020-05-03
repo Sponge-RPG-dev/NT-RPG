@@ -14,7 +14,6 @@ import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.api.skills.types.ITargeted;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
-import org.bukkit.FluidCollisionMode;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -32,7 +31,7 @@ public abstract class TargetedEntitySkill extends ActiveSkill<ISpigotCharacter> 
     }
 
     @Override
-    public void cast(ISpigotCharacter caster, PlayerSkillContext info, SkillContext skillContext) {
+    public SkillResult cast(ISpigotCharacter caster, PlayerSkillContext info, SkillContext skillContext) {
         int range = skillContext.getIntNodeValue(SkillNodes.RANGE);
         LivingEntity l = rayTraceEntity(caster.getPlayer(), range);
         if (l == null) {
@@ -57,7 +56,7 @@ public abstract class TargetedEntitySkill extends ActiveSkill<ISpigotCharacter> 
 
         if (Rpg.get().postEvent(event)) {
             //todo https://github.com/Sponge-RPG-dev/NT-RPG/issues/111
-            skillContext.next((ISpigotCharacter)event.getCaster(), info, SkillResult.CANCELLED); //dont chain
+            skillContext.next((ISpigotCharacter) event.getCaster(), info, SkillResult.CANCELLED); //dont chain
             return;
         }
         castOn(event.getTarget(), (ISpigotCharacter) event.getCaster(), info, skillContext);

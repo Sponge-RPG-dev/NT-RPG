@@ -19,7 +19,6 @@
 package cz.neumimto.rpg.api.entity.players.classes;
 
 import com.electronwill.nightconfig.core.conversion.*;
-import com.typesafe.config.Optional;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.configuration.adapters.*;
 import cz.neumimto.rpg.api.effects.*;

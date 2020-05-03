@@ -1,18 +1,12 @@
 package cz.neumimto.rpg.common.skills;
 
-import static cz.neumimto.rpg.api.logging.Log.error;
-import static cz.neumimto.rpg.api.logging.Log.info;
-import static cz.neumimto.rpg.api.logging.Log.warn;
 import com.google.inject.Injector;
 import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.configuration.SkillTreeDao;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.skills.*;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
-import cz.neumimto.rpg.api.skills.mods.SkillExecutorCallback;
 import cz.neumimto.rpg.api.skills.scripting.ActiveScriptSkill;
 import cz.neumimto.rpg.api.skills.scripting.ScriptSkillModel;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
@@ -21,15 +15,19 @@ import cz.neumimto.rpg.api.skills.types.PassiveScriptSkill;
 import cz.neumimto.rpg.api.skills.types.ScriptSkill;
 import cz.neumimto.rpg.api.utils.ClassUtils;
 import cz.neumimto.rpg.api.utils.annotations.CatalogId;
-import cz.neumimto.rpg.common.skills.preprocessors.SkillPreprocessors;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.description.annotation.AnnotationDescription;
 
+import javax.inject.Inject;
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
-import javax.inject.Inject;
+
+import static cz.neumimto.rpg.api.logging.Log.*;
 
 public abstract class AbstractSkillService implements SkillService {
 
@@ -75,47 +73,21 @@ public abstract class AbstractSkillService implements SkillService {
     }
 
     @Override
-    public void executeSkill(IActiveCharacter character, ISkill skill, SkillExecutorCallback callback) {
-        if (character.hasSkill(skill.getId())) {
-            executeSkill(character, character.getSkillInfo(skill), callback);
-        }
-    }
-
-    @Override
-    public void executeSkill(IActiveCharacter character, PlayerSkillContext esi, SkillExecutorCallback callback) {
+    public SkillResult executeSkill(IActiveCharacter character, PlayerSkillContext esi) {
         if (esi == null) {
-            callback.doNext(character, null, new SkillContext().result(SkillResult.WRONG_DATA));
-            return;
+            return SkillResult.WRONG_DATA;
         }
 
         int level = esi.getTotalLevel();
         if (level < 0) {
-            callback.doNext(character, esi, new SkillContext().result(SkillResult.NEGATIVE_SKILL_LEVEL));
-            return;
+            return SkillResult.NEGATIVE_SKILL_LEVEL;
         }
 
-        Long aLong = character.getCooldown(esi.getSkill().getId());
-        long servertime = System.currentTimeMillis();
-        if (aLong != null && aLong > servertime) {
-            Gui.sendCooldownMessage(character, esi.getSkillData().getSkillName(), ((aLong - servertime) / 1000.0));
-            callback.doNext(character, esi, new SkillContext().result(SkillResult.ON_COOLDOWN));
-            return;
+        ISkillExecutor skillExecutor = esi.getSkillData().getSkillExecutor();
+        if (skillExecutor == null) {
+            return SkillResult.NOT_ACTIVE_SKILL;
         }
-
-        SkillContext context = esi.getSkill().createSkillExecutorContext(esi);
-
-        executeSkill(character, esi, context, callback);
-    }
-
-    @Override
-    public void executeSkill(IActiveCharacter character, PlayerSkillContext esi, SkillContext context,
-                              SkillExecutorCallback callback) {
-
-        context.addExecutor(SkillPreprocessors.SKILL_COST);
-        context.addExecutor(callback);
-        //skill execution start
-        esi.getSkill().onPreUse(character, context);
-        //skill execution stop
+        return skillExecutor.execute(character, esi);
     }
 
     @Override
@@ -123,13 +95,13 @@ public abstract class AbstractSkillService implements SkillService {
         Map<String, PlayerSkillContext> skills = character.getSkills();
         for (PlayerSkillContext playerSkillContext : skills.values()) {
             if (combo.equals(playerSkillContext.getSkillData().getCombination())) {
-                executeSkill(character, playerSkillContext, new SkillExecutorCallback());
+                executeSkill(character, playerSkillContext);
                 return playerSkillContext;
             }
         }
         return null;
     }
-    
+
     @Override
     public void registerAdditionalCatalog(ISkill extraCatalog) {
         if (extraCatalog == null) {
@@ -174,7 +146,6 @@ public abstract class AbstractSkillService implements SkillService {
                 throw new RuntimeException("Attempted to register alternate name " + name + " for a skill " + skill.getId() + ". But the name is "
                         + "already taken by the skill " + iSkill.getId());
             }
-            warn("Attempted to register alternate name for a skill " + skill.getId() + ". Skill is already registered under the same name - " + name);
         }
         skillByNames.put(name, skill);
     }

@@ -34,7 +34,7 @@ public class NtRpgPlaceholderExpansion extends PlaceholderExpansion {
     }
 
     @Override
-    public String getVersion(){
+    public String getVersion() {
         return SpigotRpgPlugin.getInstance().getDescription().getVersion();
     }
 
@@ -44,7 +44,7 @@ public class NtRpgPlaceholderExpansion extends PlaceholderExpansion {
     }
 
     @Override
-    public boolean canRegister(){
+    public boolean canRegister() {
         return true;
     }
 
@@ -56,18 +56,17 @@ public class NtRpgPlaceholderExpansion extends PlaceholderExpansion {
      * ntrpg_character_class_level_((class_type)) - returns level of character class of specific type - (ntrpg_character_class_level_Race - returns level of character race, or null player do not have that class)
      * ntrpg_character_class_exp_((class_type)) - returns experiences of character class of specific type from the begging of the level - (ntrpg_character_class_level_Race - returns level of character race, or null player do not have that class)
      * ntrpg_character_class_exptreshold_((class_type)) - returns experiences of character class of specific type from the begging of the level - (ntrpg_character_class_level_Race - returns level of character race, or null player do not have that class)
-     *
      */
     @Override
-    public String onPlaceholderRequest(Player player, String identifier){
+    public String onPlaceholderRequest(Player player, String identifier) {
 
-        if(player == null){
+        if (player == null) {
             return "";
         }
 
 
         ISpigotCharacter character = characterService.getCharacter(player);
-        if(identifier.equals("character_name")){
+        if (identifier.equals("character_name")) {
             return character.getName();
         }
 

@@ -6,21 +6,21 @@ import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 @JsBinding(JsBinding.Type.CLASS)
 public class ShadowRunModel implements UnstackableEffectData<ShadowRunModel> {
 
-	public double damage;
-	public double attackmult;
-	public float walkspeed;
+    public double damage;
+    public double attackmult;
+    public float walkspeed;
 
-	public ShadowRunModel(double damage, double attackmult, float walkspeed) {
-		this.damage = damage;
-		this.attackmult = attackmult;
-		this.walkspeed = walkspeed;
-	}
+    public ShadowRunModel(double damage, double attackmult, float walkspeed) {
+        this.damage = damage;
+        this.attackmult = attackmult;
+        this.walkspeed = walkspeed;
+    }
 
-	public ShadowRunModel() {
-	}
+    public ShadowRunModel() {
+    }
 
-	@Override
-	public int compareTo(ShadowRunModel o) {
-		return 1;
-	}
+    @Override
+    public int compareTo(ShadowRunModel o) {
+        return 1;
+    }
 }

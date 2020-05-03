@@ -26,9 +26,9 @@ import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 import org.spongepowered.api.util.Color;
 
-import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Set;
 
 /**
  * Created by NeumimTo on 15.7.2017.
@@ -59,7 +59,7 @@ public class Despair extends ActiveSkill<ISpongeCharacter> {
     }
 
     @Override
-    public void cast(ISpongeCharacter character, PlayerSkillContext info, SkillContext skillContext) {
+    public SkillResult cast(ISpongeCharacter character, PlayerSkillContext info, SkillContext skillContext) {
         int k = skillContext.getIntNodeValue(SkillNodes.RADIUS);
         Set<Entity> nearbyEntities = Utils.getNearbyEntities(character.getEntity().getLocation(), k);
         double damage = skillContext.getDoubleNodeValue(SkillNodes.DAMAGE);

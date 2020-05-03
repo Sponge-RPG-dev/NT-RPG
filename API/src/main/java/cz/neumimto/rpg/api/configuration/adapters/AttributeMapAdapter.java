@@ -1,6 +1,5 @@
 package cz.neumimto.rpg.api.configuration.adapters;
 
-import static cz.neumimto.rpg.api.logging.Log.warn;
 import com.electronwill.nightconfig.core.Config;
 import com.electronwill.nightconfig.core.conversion.Converter;
 import cz.neumimto.rpg.api.Rpg;
@@ -9,6 +8,8 @@ import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+
+import static cz.neumimto.rpg.api.logging.Log.warn;
 
 /**
  * Created by NeumimTo on 11.3.2019.

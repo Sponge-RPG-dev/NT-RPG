@@ -16,9 +16,12 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-import java.util.*;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Created by NeumimTo on 27.12.2018.
@@ -43,7 +46,7 @@ public class DropTNT extends ActiveSkill<ISpongeCharacter> {
     }
 
     @Override
-    public void cast(ISpongeCharacter character, PlayerSkillContext info, SkillContext skillContext) {
+    public SkillResult cast(ISpongeCharacter character, PlayerSkillContext info, SkillContext skillContext) {
         Player player = character.getPlayer();
         Location<World> location = player.getLocation();
         World extent = location.getExtent();

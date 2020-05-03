@@ -9,6 +9,6 @@ import cz.neumimto.rpg.api.properties.PropertyContainer;
 @PropertyContainer
 public class AdditionalProperties {
 
-	@Property(name = "stun_duration_mult", default_ = 1)
-	public static int stun_duration_mult;
+    @Property(name = "stun_duration_mult", default_ = 1)
+    public static int stun_duration_mult;
 }

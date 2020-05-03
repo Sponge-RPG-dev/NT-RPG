@@ -5,7 +5,6 @@ import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import com.gmail.filoghost.holographicdisplays.api.VisibilityManager;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.events.skill.SkillPostUsageEvent;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
@@ -90,7 +89,7 @@ public class HolographicDisplaysExpansion implements Listener {
             s = ChatColor.WHITE.toString();
         }
 
-        Location location = entity.getLocation().add(0, entity.getHeight() + 0.1,0).add(getLocation());
+        Location location = entity.getLocation().add(0, entity.getHeight() + 0.1, 0).add(getLocation());
         Hologram hologram = HologramsAPI.createHologram(SpigotRpgPlugin.getInstance(), location);
         //todo in future when entitis are able to casts spells
         IActiveCharacter c = (IActiveCharacter) caster;

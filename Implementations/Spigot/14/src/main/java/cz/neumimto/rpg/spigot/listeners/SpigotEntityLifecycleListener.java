@@ -23,11 +23,10 @@ import org.bukkit.event.player.*;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.projectiles.ProjectileSource;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.HashSet;
+import java.util.Set;
 
 @Singleton
 @ResourceLoader.ListenerClass

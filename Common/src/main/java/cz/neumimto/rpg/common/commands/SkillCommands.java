@@ -12,13 +12,13 @@ import javax.inject.Singleton;
 
 @Singleton
 @CommandAlias("skill")
-public class SkillCommands extends BaseCommand  {
+public class SkillCommands extends BaseCommand {
 
     @Inject
     private SkillsCommandFacade skillsCommandFacade;
 
     @Default
-    private void playerRunSkillCommand(IActiveCharacter character , ISkill skill,
+    private void playerRunSkillCommand(IActiveCharacter character, ISkill skill,
                                        @Optional SkillsCommandFacade.SkillAction action,
                                        @Optional String flagData
     ) {

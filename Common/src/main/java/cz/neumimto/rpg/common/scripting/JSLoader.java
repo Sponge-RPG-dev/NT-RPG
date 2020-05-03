@@ -18,8 +18,6 @@
 
 package cz.neumimto.rpg.common.scripting;
 
-import static cz.neumimto.rpg.api.logging.Log.error;
-import static cz.neumimto.rpg.api.logging.Log.info;
 import com.electronwill.nightconfig.core.conversion.ObjectConverter;
 import com.electronwill.nightconfig.core.file.FileConfig;
 import com.google.inject.Injector;
@@ -36,15 +34,18 @@ import cz.neumimto.rpg.common.bytecode.ClassGenerator;
 import cz.neumimto.rpg.common.skills.scripting.SkillComponent;
 import net.bytebuddy.dynamic.loading.MultipleParentClassLoader;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import javax.script.*;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.*;
 import java.util.*;
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import javax.script.*;
+
+import static cz.neumimto.rpg.api.logging.Log.error;
+import static cz.neumimto.rpg.api.logging.Log.info;
 
 /**
  * Created by NeumimTo on 13.3.2015.

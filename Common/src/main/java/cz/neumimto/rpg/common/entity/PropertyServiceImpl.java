@@ -1,6 +1,5 @@
 package cz.neumimto.rpg.common.entity;
 
-import static cz.neumimto.rpg.api.logging.Log.info;
 import com.electronwill.nightconfig.core.conversion.ObjectConverter;
 import com.electronwill.nightconfig.core.file.FileConfig;
 import cz.neumimto.rpg.api.Rpg;
@@ -13,14 +12,19 @@ import cz.neumimto.rpg.api.properties.Property;
 import cz.neumimto.rpg.api.utils.Console;
 import cz.neumimto.rpg.common.assets.AssetService;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.*;
 import java.lang.reflect.Field;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.text.Collator;
 import java.util.*;
 import java.util.function.Supplier;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+
+import static cz.neumimto.rpg.api.logging.Log.info;
 
 @Singleton
 public class PropertyServiceImpl implements PropertyService {

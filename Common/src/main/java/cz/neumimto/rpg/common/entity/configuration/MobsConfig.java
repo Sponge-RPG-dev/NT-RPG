@@ -64,7 +64,7 @@ public class MobsConfig {
             Map<String, Double> m = new HashMap<>();
             Map<String, Object> e = value.valueMap();
             for (Map.Entry<String, Object> entry : e.entrySet()) {
-                m.put(entry.getKey(), ((Number)entry.getValue()).doubleValue());
+                m.put(entry.getKey(), ((Number) entry.getValue()).doubleValue());
             }
             return m;
         }

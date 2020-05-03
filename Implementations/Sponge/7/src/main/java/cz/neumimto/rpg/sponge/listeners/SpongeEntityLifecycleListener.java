@@ -26,12 +26,11 @@ import org.spongepowered.api.event.world.chunk.UnloadChunkEvent;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
+import javax.inject.Inject;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
-
-import javax.inject.Inject;
 
 
 /**

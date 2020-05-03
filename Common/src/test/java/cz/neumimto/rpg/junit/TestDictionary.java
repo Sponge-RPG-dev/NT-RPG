@@ -26,7 +26,7 @@ public class TestDictionary {
 
 
     public void reset() {
-        WEAPON_CLASS_1 = new ItemClass("weaponclass1") ;
+        WEAPON_CLASS_1 = new ItemClass("weaponclass1");
         ITEM_TYPE_WEAPON_1 = new RpgItemTypeImpl("weapon1", null, WEAPON_CLASS_1, 10, 0);
         WEAPON_CLASS_2 = new ItemClass("weaponclass2");
         ITEM_TYPE_WEAPON_2 = new RpgItemTypeImpl("weapon2", null, WEAPON_CLASS_2, 11, 0);
@@ -37,11 +37,11 @@ public class TestDictionary {
         WEAPON_CLASS_2.getItems().add(ITEM_TYPE_WEAPON_2);
         ItemClass.ARMOR.getItems().add(ARMOR_TYPE_1);
 
-        CLASS_PRIMARY = new ClassDefinition("primary","Primary");
-        CLASS_TERTIARY = new ClassDefinition("tertiary","Tertiary");
-        CLASS_SECONDARY = new ClassDefinition("secondary","Secondary");
+        CLASS_PRIMARY = new ClassDefinition("primary", "Primary");
+        CLASS_TERTIARY = new ClassDefinition("tertiary", "Tertiary");
+        CLASS_SECONDARY = new ClassDefinition("secondary", "Secondary");
         STR = new AttributeConfig("str", "str", 100, false, new HashMap<>(), null, null);
-        AGI = new AttributeConfig("agi", "agi", 100,false,  new HashMap<>(), null, null);
+        AGI = new AttributeConfig("agi", "agi", 100, false, new HashMap<>(), null, null);
         AGI.getPropBonus().put(6, 1f);
         STR.getPropBonus().put(5, 2f);
 

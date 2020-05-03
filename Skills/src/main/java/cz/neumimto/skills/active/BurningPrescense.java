@@ -40,7 +40,7 @@ public class BurningPrescense extends ActiveSkill {
     }
 
     @Override
-    public void cast(IActiveCharacter character, PlayerSkillContext info, SkillContext skillContext) {
+    public SkillResult cast(IActiveCharacter character, PlayerSkillContext info, SkillContext skillContext) {
         if (character.hasEffect(BurningPrescenseEffect.name)) {
             effectService.removeEffectContainer(character.getEffect(BurningPrescenseEffect.name), character);
         } else {

@@ -43,6 +43,7 @@ import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillCost;
 import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.api.skills.mods.ActiveSkillPreProcessorWrapper;
+import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.utils.Pair;
 import cz.neumimto.rpg.common.inventory.AbstractInventoryService;
 import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
@@ -321,7 +322,7 @@ public class SpongeInventoryService extends AbstractInventoryService<ISpongeChar
 
 
     @Override
-    public Set<ActiveSkillPreProcessorWrapper> processItemCost(ISpongeCharacter character, PlayerSkillContext skillInfo) {
+    public Set<ActiveSkillPreProcessorWrapper> processItemCost(ISpongeCharacter character, SkillContext skillContext, PlayerSkillContext skillInfo) {
         SkillCost invokeCost = skillInfo.getSkillData().getInvokeCost();
         if (invokeCost == null) {
             return Collections.emptySet();

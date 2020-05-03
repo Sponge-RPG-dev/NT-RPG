@@ -26,5 +26,4 @@ import cz.neumimto.rpg.persistence.model.CharacterBaseImpl;
 public class CharacterBaseTest extends CharacterBaseImpl {
 
 
-
 }

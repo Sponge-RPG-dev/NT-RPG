@@ -30,8 +30,6 @@ import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 
-import java.util.List;
-
 /**
  * Created by NeumimTo on 6.8.2015.
  */

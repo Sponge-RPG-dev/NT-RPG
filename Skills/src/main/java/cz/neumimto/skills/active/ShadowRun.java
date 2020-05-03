@@ -16,9 +16,9 @@ import org.spongepowered.api.data.property.block.GroundLuminanceProperty;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Optional;
 
 @Singleton
 @ResourceLoader.Skill("ntrpg:shadowrun")
@@ -41,7 +41,7 @@ public class ShadowRun extends ActiveSkill<ISpongeCharacter> {
     }
 
     @Override
-    public void cast(ISpongeCharacter character, PlayerSkillContext info, SkillContext skillContext) {
+    public SkillResult cast(ISpongeCharacter character, PlayerSkillContext info, SkillContext skillContext) {
         Location<World> location = character.getPlayer().getLocation();
         Optional<GroundLuminanceProperty> property = location.add(0, -1, 0).getBlock().getProperty(GroundLuminanceProperty.class);
         GroundLuminanceProperty groundLuminanceProperty = property.get();

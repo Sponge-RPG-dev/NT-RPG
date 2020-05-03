@@ -5,9 +5,9 @@ package cz.neumimto.rpg;
  */
 public class TestModel {
 
-	public int l;
-	public Double v;
-	public String q;
-	public String w;
+    public int l;
+    public Double v;
+    public String q;
+    public String w;
 }
 

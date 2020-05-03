@@ -17,9 +17,9 @@ import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
 import org.spongepowered.api.util.Tristate;
 
+import javax.inject.Inject;
 import java.util.*;
 import java.util.function.Consumer;
-import javax.inject.Inject;
 
 @ResourceLoader.ListenerClass
 public class VanillaGuiListener {

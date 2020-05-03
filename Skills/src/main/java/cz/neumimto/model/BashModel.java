@@ -9,21 +9,21 @@ import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 @JsBinding(JsBinding.Type.CLASS)
 public class BashModel implements UnstackableEffectData<BashModel> {
 
-	public long stunDuration;
+    public long stunDuration;
 
-	public int chance;
+    public int chance;
 
-	public long cooldown;
+    public long cooldown;
 
-	public double damage;
+    public double damage;
 
-	public transient long lasttime;
+    public transient long lasttime;
 
-	@Override
-	public int compareTo(BashModel o) {
-		if (o == null) {
-			return -1;
-		}
-		return (int) (((o.damage + o.stunDuration) * o.chance) - ((damage + stunDuration) * chance));
-	}
+    @Override
+    public int compareTo(BashModel o) {
+        if (o == null) {
+            return -1;
+        }
+        return (int) (((o.damage + o.stunDuration) * o.chance) - ((damage + stunDuration) * chance));
+    }
 }

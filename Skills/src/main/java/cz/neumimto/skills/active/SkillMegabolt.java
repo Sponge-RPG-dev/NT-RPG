@@ -16,8 +16,8 @@ import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.Living;
 
-import java.util.Set;
 import javax.inject.Singleton;
+import java.util.Set;
 
 /**
  * Created by NeumimTo on 29.12.2015.
@@ -38,7 +38,7 @@ public class SkillMegabolt extends ActiveSkill<ISpongeCharacter> {
     }
 
     @Override
-    public void cast(ISpongeCharacter caster, PlayerSkillContext info, SkillContext skillContext) {
+    public SkillResult cast(ISpongeCharacter caster, PlayerSkillContext info, SkillContext skillContext) {
         int r = skillContext.getIntNodeValue(SkillNodes.RADIUS);
         Set<Entity> nearbyEntities = Utils.getNearbyEntities(caster.getPlayer().getLocation(), r);
         float damage = skillContext.getFloatNodeValue(SkillNodes.DAMAGE);

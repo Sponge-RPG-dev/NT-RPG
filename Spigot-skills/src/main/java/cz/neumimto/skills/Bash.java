@@ -9,13 +9,10 @@ import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
-import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
 import cz.neumimto.rpg.spigot.skills.TargetedEntitySkill;
 import cz.neumimto.skills.effects.negative.StunEffect;
-import org.bukkit.Particle;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.util.Vector;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

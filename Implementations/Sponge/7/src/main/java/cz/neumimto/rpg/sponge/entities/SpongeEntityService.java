@@ -1,7 +1,5 @@
 package cz.neumimto.rpg.sponge.entities;
 
-import static cz.neumimto.rpg.api.logging.Log.info;
-
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.entity.CommonProperties;
@@ -13,9 +11,10 @@ import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.Living;
 
+import javax.inject.Singleton;
 import java.util.UUID;
 
-import javax.inject.Singleton;
+import static cz.neumimto.rpg.api.logging.Log.info;
 
 /**
  * Created by NeumimTo on 19.12.2015.

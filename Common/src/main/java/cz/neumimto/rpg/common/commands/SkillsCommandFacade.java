@@ -11,7 +11,6 @@ import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillService;
-import cz.neumimto.rpg.api.skills.mods.ResultNotificationSkillExecutor;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 
 import javax.inject.Inject;
@@ -60,7 +59,7 @@ public class SkillsCommandFacade {
                             arg));
             return;
         }
-        skillService.executeSkill(character, info, ResultNotificationSkillExecutor.INSTANCE);
+        skillService.executeSkill(character, info);
     }
 
     public void executeSkill(IActiveCharacter character, ISkill skill) {

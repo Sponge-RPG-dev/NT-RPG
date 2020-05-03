@@ -6,8 +6,11 @@ import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.common.entity.TestCharacter;
 import cz.neumimto.rpg.common.entity.players.AbstractCharacterService;
 
-import java.util.*;
 import javax.inject.Singleton;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 @Singleton
 public class TestCharacterService extends AbstractCharacterService<TestCharacter> {

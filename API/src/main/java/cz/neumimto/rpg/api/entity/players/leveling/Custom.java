@@ -15,7 +15,7 @@ public class Custom extends AbstractLevelProgression {
     //because configurate and lightbend/config are extremly useless libraries once you stopE doing stupid hello fucking world applications.
     @Override
     public double[] initCurve() {
-        double[] doubles = lvlMgrs.stream().map(a->a.doubleValue()).mapToDouble(Double::doubleValue).toArray();
+        double[] doubles = lvlMgrs.stream().map(a -> a.doubleValue()).mapToDouble(Double::doubleValue).toArray();
         lvlMgrs = null;
         return doubles;
     }

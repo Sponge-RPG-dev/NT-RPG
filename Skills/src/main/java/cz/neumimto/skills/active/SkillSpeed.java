@@ -34,7 +34,7 @@ public class SkillSpeed extends ActiveSkill {
     }
 
     @Override
-    public void cast(IActiveCharacter character, PlayerSkillContext info, SkillContext skillContext) {
+    public SkillResult cast(IActiveCharacter character, PlayerSkillContext info, SkillContext skillContext) {
         long duration = skillContext.getLongNodeValue(SkillNodes.DURATION);
         float amount = skillContext.getFloatNodeValue(SkillNodes.AMOUNT);
         SpeedBoost sb = new SpeedBoost(character, duration, amount);

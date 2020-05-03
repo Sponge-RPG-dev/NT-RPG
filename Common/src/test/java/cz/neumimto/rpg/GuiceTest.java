@@ -9,16 +9,16 @@ import org.junit.jupiter.api.Test;
  */
 public class GuiceTest {
 
-	@Test
-	public void test() {
-		Injector injector = Guice.createInjector();
-		injector.getInstance(A.class).callBWhichCallsA();
-		A instance = injector.getInstance(A.class);
-		//is it com.sun.Proxy?
-		System.out.println(instance.getClass().getCanonicalName());
-		A instance1 = injector.getInstance(A.class);
-		assert instance.b == instance1.b;
+    @Test
+    public void test() {
+        Injector injector = Guice.createInjector();
+        injector.getInstance(A.class).callBWhichCallsA();
+        A instance = injector.getInstance(A.class);
+        //is it com.sun.Proxy?
+        System.out.println(instance.getClass().getCanonicalName());
+        A instance1 = injector.getInstance(A.class);
+        assert instance.b == instance1.b;
 
-	}
+    }
 
 }

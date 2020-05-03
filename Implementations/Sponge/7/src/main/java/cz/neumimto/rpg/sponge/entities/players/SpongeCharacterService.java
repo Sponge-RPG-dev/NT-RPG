@@ -12,7 +12,6 @@ import cz.neumimto.rpg.sponge.utils.PermissionUtils;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.event.world.chunk.LoadChunkEvent;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

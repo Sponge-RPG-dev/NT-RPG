@@ -18,8 +18,6 @@
 
 package cz.neumimto.rpg.sponge;
 
-import static cz.neumimto.rpg.api.logging.Log.info;
-
 import co.aikar.commands.ACFSpongeUtil;
 import co.aikar.commands.CommandIssuer;
 import co.aikar.commands.InvalidCommandArgument;
@@ -62,6 +60,7 @@ import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.scheduler.SpongeExecutorService;
 
+import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -72,7 +71,7 @@ import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.annotation.Resource;
+import static cz.neumimto.rpg.api.logging.Log.info;
 
 /**
  * Created by NeumimTo on 29.4.2015.

@@ -32,7 +32,7 @@ public class Jump extends ActiveSkill<ISpigotCharacter> {
     }
 
     @Override
-    public void cast(ISpigotCharacter character, PlayerSkillContext info, SkillContext skillContext) {
+    public SkillResult cast(ISpigotCharacter character, PlayerSkillContext info, SkillContext skillContext) {
         Player player = character.getPlayer();
         Location playerLoc = player.getLocation();
 
@@ -44,8 +44,7 @@ public class Jump extends ActiveSkill<ISpigotCharacter> {
         velVert = Math.min(velVert, 2.0);
 
 
-
-        final Material steppedMaterial  = playerLoc.getBlock().getRelative(BlockFace.DOWN).getType();
+        final Material steppedMaterial = playerLoc.getBlock().getRelative(BlockFace.DOWN).getType();
         if (unstableMaterials.contains(steppedMaterial)) {
             velVert *= 0.75;
             velHor *= 0.75;

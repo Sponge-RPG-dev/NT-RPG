@@ -7,7 +7,6 @@ import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.inventory.RpgInventory;
 import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.persistance.model.EquipedSlot;
-import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillCost;
 import cz.neumimto.rpg.api.skills.SkillData;

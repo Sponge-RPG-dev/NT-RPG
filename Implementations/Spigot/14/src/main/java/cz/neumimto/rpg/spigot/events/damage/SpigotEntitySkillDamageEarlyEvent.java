@@ -24,6 +24,7 @@ public class SpigotEntitySkillDamageEarlyEvent extends SpigotAbstractDamageEvent
     public HandlerList getHandlers() {
         return HANDLERS_LIST;
     }
+
     public static HandlerList getHandlerList() {
         return HANDLERS_LIST;
     }

@@ -34,7 +34,7 @@ public class GroupHeal extends ActiveSkill<ISpongeCharacter> {
     }
 
     @Override
-    public void cast(ISpongeCharacter character, PlayerSkillContext info, SkillContext skillContext) {
+    public SkillResult cast(ISpongeCharacter character, PlayerSkillContext info, SkillContext skillContext) {
         float amnt = skillContext.getFloatNodeValue(SkillNodes.HEALED_AMOUNT);
         if (character.hasParty()) {
             double rad = Math.pow(skillContext.getDoubleNodeValue(SkillNodes.RADIUS), 2);

@@ -26,7 +26,7 @@ import java.util.Iterator;
 public class SkillTreeInventoryListener {
 
     private final SpongeCharacterService characterService;
-    
+
 
     private final SkillService skillService;
 

@@ -7,7 +7,6 @@ import cz.neumimto.rpg.api.damage.DamageService;
 import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.skills.types.AbstractSkill;
 import cz.neumimto.rpg.api.skills.utils.SkillLoadingErrors;
@@ -18,7 +17,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.BiFunction;
 
-public class PropertySkill extends AbstractSkill {
+public class PropertySkill extends AbstractSkill<IActiveCharacter> {
 
     @Inject
     private PropertyService propertyService;
@@ -30,8 +29,8 @@ public class PropertySkill extends AbstractSkill {
     private EntityService entityService;
 
     @Override
-    public void onPreUse(IActiveCharacter character, SkillContext skillContext) {
-        skillContext.result(SkillResult.CANCELLED);
+    public SkillResult onPreUse(IActiveCharacter character, PlayerSkillContext esi) {
+        return SkillResult.CANCELLED;
     }
 
     @Override

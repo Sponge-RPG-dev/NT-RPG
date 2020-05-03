@@ -11,7 +11,6 @@ import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
 import cz.neumimto.rpg.sponge.inventory.SpongeInventoryService;
-import cz.neumimto.rpg.sponge.utils.TextHelper;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.entity.Hotbar;
@@ -42,6 +41,6 @@ public class SpongeSkillBindCommands extends BaseCommand {
             return;
         }
         ItemStack is = inventoryService.createSkillbind(skill);
-        ((Player)executor.getEntity()).getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class)).offer(is);
+        ((Player) executor.getEntity()).getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class)).offer(is);
     }
 }

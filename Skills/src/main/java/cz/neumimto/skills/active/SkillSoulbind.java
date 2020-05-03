@@ -20,9 +20,9 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.entity.DamageEntityEvent;
 
-import java.util.UUID;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.UUID;
 
 /**
  * Created by NeumimTo on 5.2.2016.
@@ -49,7 +49,7 @@ public class SkillSoulbind extends ActiveSkill<ISpongeCharacter> {
     }
 
     @Override
-    public void cast(ISpongeCharacter iActiveCharacter, PlayerSkillContext playerSkillContext, SkillContext skillContext) {
+    public SkillResult cast(ISpongeCharacter iActiveCharacter, PlayerSkillContext playerSkillContext, SkillContext skillContext) {
         float range = skillContext.getFloatNodeValue(SkillNodes.RANGE);
         Living targettedEntity = Utils.getTargetedEntity(iActiveCharacter, (int) range);
         if (targettedEntity != null && targettedEntity.getType() == EntityTypes.PLAYER) {

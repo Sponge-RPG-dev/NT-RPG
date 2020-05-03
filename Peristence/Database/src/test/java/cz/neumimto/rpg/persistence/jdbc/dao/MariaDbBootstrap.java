@@ -17,7 +17,7 @@ public class MariaDbBootstrap {
 
     public static void initializeDataSource() {
         HikariConfig cfg = new HikariConfig();
-        cfg.setJdbcUrl("jdbc:mysql://localhost:"+MariaDbBootstrap.port+"/"+MariaDbBootstrap.NAME);
+        cfg.setJdbcUrl("jdbc:mysql://localhost:" + MariaDbBootstrap.port + "/" + MariaDbBootstrap.NAME);
         cfg.setPassword("chleba");
         cfg.setUsername("root");
         ds = new HikariDataSource(cfg);

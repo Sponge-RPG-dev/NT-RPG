@@ -1,9 +1,9 @@
 package cz.neumimto.rpg.common.skills;
 
+import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.skills.IPlayerSkillHandler;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
-import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -42,9 +42,9 @@ public class PlayerSkillHandlers {
         @Override
         public void remove(ISkill skill, ClassDefinition origin) {
             skills.remove(skill.getId());
-          //todo  if (source.getSkillData().getSkillName() != null) {
-          //todo      skills.put(source.getSkillData().getSkillName(), source);
-          //todo  }
+            //todo  if (source.getSkillData().getSkillName() != null) {
+            //todo      skills.put(source.getSkillData().getSkillName(), source);
+            //todo  }
         }
 
         @Override

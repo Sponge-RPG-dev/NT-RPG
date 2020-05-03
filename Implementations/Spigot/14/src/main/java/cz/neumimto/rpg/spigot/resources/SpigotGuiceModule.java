@@ -52,7 +52,7 @@ public class SpigotGuiceModule extends AbstractRpgGuiceModule {
     private Map extraBindings;
     private Map<Class, Object> providers;
 
-    public SpigotGuiceModule(SpigotRpgPlugin ntRpgPlugin,SpigotRpg spigotRpg, Map extraBindings, Map providers) {
+    public SpigotGuiceModule(SpigotRpgPlugin ntRpgPlugin, SpigotRpg spigotRpg, Map extraBindings, Map providers) {
         this.ntRpgPlugin = ntRpgPlugin;
         this.spigotRpg = spigotRpg;
         this.extraBindings = extraBindings;

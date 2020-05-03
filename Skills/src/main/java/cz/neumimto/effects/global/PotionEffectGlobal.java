@@ -3,8 +3,8 @@ package cz.neumimto.effects.global;
 import cz.neumimto.effects.positive.PotionEffect;
 import cz.neumimto.model.PotionEffectModel;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
-import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
+import cz.neumimto.rpg.api.logging.Log;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.effect.potion.PotionEffectType;
 
@@ -21,7 +21,7 @@ public class PotionEffectGlobal implements IGlobalEffect<PotionEffect> {
             if (type.isPresent()) {
                 model.cooldowns.put(type.get(), Long.parseLong(stringEntry.getValue()));
             } else {
-                Log.warn(" Unknown potion type " + stringEntry.getKey()+"!");
+                Log.warn(" Unknown potion type " + stringEntry.getKey() + "!");
             }
         }
         return new PotionEffect(consumer, duration, model);

@@ -3,29 +3,28 @@ package cz.neumimto.rpg.api.skills.types;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
 import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillData;
 import cz.neumimto.rpg.api.skills.SkillExecutionType;
 import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.skills.utils.SkillLoadingErrors;
 
 import java.util.*;
 import java.util.function.BiFunction;
 
-public class CharacterAttributeSkill extends AbstractSkill {
+public class CharacterAttributeSkill extends AbstractSkill<IActiveCharacter> {
 
     public CharacterAttributeSkill() {
         super();
     }
 
     @Override
-    public void onPreUse(IActiveCharacter character, SkillContext skillContext) {
-        skillContext.result(SkillResult.CANCELLED);
+    public SkillResult onPreUse(IActiveCharacter character, PlayerSkillContext esi) {
+        return SkillResult.CANCELLED;
     }
 
     @Override
@@ -46,7 +45,7 @@ public class CharacterAttributeSkill extends AbstractSkill {
     }
 
     @Override
-    public void skillLearn(IActiveCharacter c,PlayerSkillContext context) {
+    public void skillLearn(IActiveCharacter c, PlayerSkillContext context) {
         super.skillLearn(c, context);
         assignAll(c, 1, (integer, integer2) -> integer <= integer2);
     }

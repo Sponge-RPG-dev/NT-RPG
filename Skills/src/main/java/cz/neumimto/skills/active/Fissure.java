@@ -6,6 +6,7 @@ import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
+import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 
@@ -28,7 +29,7 @@ public class Fissure extends ActiveSkill {
     }
 
     @Override
-    public void cast(IActiveCharacter character, PlayerSkillContext info, SkillContext context) {
+    public SkillResult cast(IActiveCharacter character, PlayerSkillContext info, SkillContext context) {
         long duration = context.getLongNodeValue(SkillNodes.DURATION);
         int range = context.getIntNodeValue(SkillNodes.RANGE);
         FissureEffect effect = new FissureEffect(character, duration, range);

@@ -2,8 +2,6 @@ package cz.neumimto.rpg.spigot.entities.players.party;
 
 import cz.neumimto.rpg.api.entity.players.party.IParty;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
-import org.bukkit.Bukkit;
-import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
 import java.util.Collections;

@@ -51,7 +51,7 @@ public class Wrestle extends ActiveSkill<ISpongeCharacter> {
     }
 
     @Override
-    public void cast(ISpongeCharacter source, PlayerSkillContext info, SkillContext skillContext) {
+    public SkillResult cast(ISpongeCharacter source, PlayerSkillContext info, SkillContext skillContext) {
         int radius = skillContext.getIntNodeValue(SkillNodes.RADIUS);
         float damage = skillContext.getFloatNodeValue(SkillNodes.DAMAGE);
         long duration = skillContext.getLongNodeValue(SkillNodes.DURATION);

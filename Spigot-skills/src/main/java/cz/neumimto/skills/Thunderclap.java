@@ -42,7 +42,7 @@ public class Thunderclap extends ActiveSkill<ISpigotCharacter> {
 
 
     @Override
-    public void cast(ISpigotCharacter character, PlayerSkillContext info, SkillContext skillContext) {
+    public SkillResult cast(ISpigotCharacter character, PlayerSkillContext info, SkillContext skillContext) {
         Player player = character.getPlayer();
         double damage = skillContext.getDoubleNodeValue(SkillNodes.DAMAGE);
         double radius = skillContext.getDoubleNodeValue(SkillNodes.RADIUS);

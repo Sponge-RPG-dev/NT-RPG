@@ -8,8 +8,6 @@ import cz.neumimto.rpg.common.entity.configuration.RootMobConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.LivingEntity;
 
 import javax.inject.Singleton;
 import java.io.File;

@@ -3,6 +3,7 @@ package cz.neumimto.skills;
 import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
+import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
@@ -33,7 +34,7 @@ public class Blizzard extends ActiveSkill<ISpigotCharacter> {
     }
 
     @Override
-    public void cast(ISpigotCharacter character, PlayerSkillContext info, SkillContext skillContext) {
+    public SkillResult cast(ISpigotCharacter character, PlayerSkillContext info, SkillContext skillContext) {
         int duration = skillContext.getIntNodeValue(SkillNodes.DURATION);
 
         CloudEffect cloudEffect = new CloudEffect(SpigotRpgPlugin.getEffectManager()) {

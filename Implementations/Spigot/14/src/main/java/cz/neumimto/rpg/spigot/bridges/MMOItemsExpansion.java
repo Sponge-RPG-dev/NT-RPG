@@ -77,7 +77,7 @@ public class MMOItemsExpansion implements Listener {
     public void onCharacterChange(Void event) {
         //todo
         UUID uuid = null;
-        ((MMOItemsCharacter)PlayerData.get(uuid).getRPG()).character = null;
+        ((MMOItemsCharacter) PlayerData.get(uuid).getRPG()).character = null;
     }
 
 
@@ -103,6 +103,7 @@ public class MMOItemsExpansion implements Listener {
     public static class MMOItemsCharacter extends RPGPlayer {
         private final UUID uuid;
         private ISpigotCharacter character;
+
         public MMOItemsCharacter(PlayerData playerData, UUID uuid) {
             super(playerData);
             this.uuid = uuid;
@@ -111,7 +112,7 @@ public class MMOItemsExpansion implements Listener {
         private ISpigotCharacter getCharacter() {
             if (character == null) {
                 //todo remove
-               character = characterService.getCharacter(uuid);
+                character = characterService.getCharacter(uuid);
             }
             return character;
         }
@@ -153,7 +154,7 @@ public class MMOItemsExpansion implements Listener {
         }
 
         public void setStamina(double value) {
-            getCharacter().getPlayer().setFoodLevel((int)value);
+            getCharacter().getPlayer().setFoodLevel((int) value);
         }
 
         @Override
@@ -167,8 +168,8 @@ public class MMOItemsExpansion implements Listener {
                         double progress = (info.getInitialCooldown() - info.getRemaining()) / info.getInitialCooldown() * 10.0D;
                         String barChar = MMOItems.plugin.getConfig().getString("cooldown-progress-bar-char");
 
-                        for(int j = 0; j < 10; ++j) {
-                            progressBar = progressBar + (progress >= (double)j ? ChatColor.GREEN : ChatColor.WHITE) + barChar;
+                        for (int j = 0; j < 10; ++j) {
+                            progressBar = progressBar + (progress >= (double) j ? ChatColor.GREEN : ChatColor.WHITE) + barChar;
                         }
 
                         Message.SPELL_ON_COOLDOWN.format(ChatColor.RED, new String[]{"#left#", "" + (new DecimalFormat("0.#")).format(info.getRemaining()), "#progress#", progressBar, "#s#", info.getRemaining() >= 2.0D ? "s" : ""}).send(getPlayer(), "ability-cooldown");

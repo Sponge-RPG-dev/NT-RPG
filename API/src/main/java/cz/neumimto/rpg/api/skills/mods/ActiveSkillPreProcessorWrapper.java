@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.api.skills.mods;
 
-import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 
 public abstract class ActiveSkillPreProcessorWrapper {
 
@@ -15,5 +15,5 @@ public abstract class ActiveSkillPreProcessorWrapper {
         return target;
     }
 
-    public abstract void doNext(IActiveCharacter character, PlayerSkillContext info, SkillContext skillResult);
+    public abstract void doNext(IActiveCharacter character, PlayerSkillContext info);
 }

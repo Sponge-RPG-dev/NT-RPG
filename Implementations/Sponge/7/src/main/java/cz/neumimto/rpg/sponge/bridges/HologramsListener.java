@@ -33,7 +33,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public class HologramsListener {
-    
+
     @Inject
     private SkillService skillService;
 
@@ -45,7 +45,7 @@ public class HologramsListener {
 
     private static Map<Hologram, Long> holograms = new HashMap<>();
     private static Map<DamageType, TextColor> colors = new HashMap<>();
-    
+
     private HologramsService hologramsService;
 
     static {
@@ -90,7 +90,6 @@ public class HologramsListener {
     private static XORShiftRnd rnd = new XORShiftRnd();
 
 
-
     private static void put(DamageType damageCause, TextColor tx) {
         colors.put(damageCause, tx);
     }
@@ -125,7 +124,7 @@ public class HologramsListener {
         }
 
         Vector2d vec = getLocation();
-        Location location = entity.getLocation().add(vec.getX(), 2,vec.getY());
+        Location location = entity.getLocation().add(vec.getX(), 2, vec.getY());
         Optional<HologramsService.Hologram> opt = hologramsService.createHologram(location, Text.of(s, skillName));
         opt.ifPresent(o -> holograms.put(o, System.currentTimeMillis() + 2500L));
     }

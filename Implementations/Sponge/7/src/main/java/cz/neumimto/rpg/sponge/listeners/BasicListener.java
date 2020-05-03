@@ -60,10 +60,10 @@ import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-import java.util.List;
-import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.List;
+import java.util.Optional;
 
 
 /**

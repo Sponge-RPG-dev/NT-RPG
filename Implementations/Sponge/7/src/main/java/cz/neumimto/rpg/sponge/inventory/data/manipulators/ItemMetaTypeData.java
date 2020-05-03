@@ -49,7 +49,7 @@ public class ItemMetaTypeData extends AbstractSingleData<ItemMetaType, ItemMetaT
 
     public Optional<ItemMetaTypeData> from(DataView view) {
         if (view.contains(NKeys.ITEM_META_TYPE.getQuery())) {
-            setValue( ((SpongeItemService) Rpg.get().getItemService()).getItemMetaTypes().get(view.getString(NKeys.ITEM_META_TYPE.getQuery()).get()));
+            setValue(((SpongeItemService) Rpg.get().getItemService()).getItemMetaTypes().get(view.getString(NKeys.ITEM_META_TYPE.getQuery()).get()));
             return Optional.of(this);
         }
         return Optional.empty();

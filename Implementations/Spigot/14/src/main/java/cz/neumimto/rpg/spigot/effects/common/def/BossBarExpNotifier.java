@@ -61,7 +61,7 @@ public class BossBarExpNotifier extends EffectBase<Object> implements IEffectCon
             ChatColor textColor = ChatColor.valueOf(preferedColor);
 
             String s = textColor + StringUtils.capitalizeFirst(classname) + " " + localizationService.translate(LocalizationKeys.LEVEL)
-                    + ChatColor.DARK_GRAY +" :" + ChatColor.GOLD + playerClassData.getLevel() + " " + ChatColor.GREEN + changeDf.format(sessionWrapper.currentSessionExp)
+                    + ChatColor.DARK_GRAY + " :" + ChatColor.GOLD + playerClassData.getLevel() + " " + ChatColor.GREEN + changeDf.format(sessionWrapper.currentSessionExp)
                     + " " + df.format(playerClassData.getExperiencesFromLevel()) + " / " + df.format(playerClassData.getClassDefinition().getLevelProgression().getLevelMargins()[playerClassData.getLevel()]);
 
 

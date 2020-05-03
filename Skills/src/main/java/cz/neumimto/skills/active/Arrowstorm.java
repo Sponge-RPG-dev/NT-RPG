@@ -12,9 +12,9 @@ import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 
-import java.util.concurrent.ThreadLocalRandom;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Created by NeumimTo on 4.7.2017.
@@ -40,7 +40,7 @@ public class Arrowstorm extends ActiveSkill {
     }
 
     @Override
-    public void cast(IActiveCharacter character, PlayerSkillContext info, SkillContext skillContext) {
+    public SkillResult cast(IActiveCharacter character, PlayerSkillContext info, SkillContext skillContext) {
         int min = skillContext.getIntNodeValue("min-arrows");
         int max = skillContext.getIntNodeValue("max-arrows");
         int arrows = ThreadLocalRandom.current().nextInt(max - min) + min;

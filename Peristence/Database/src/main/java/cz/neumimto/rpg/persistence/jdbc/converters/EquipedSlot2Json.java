@@ -12,7 +12,7 @@ import java.util.List;
  * Created by NeumimTo on 20.5.2018.
  */
 
-public class EquipedSlot2Json  {
+public class EquipedSlot2Json {
 
     private static Gson gson;
 

@@ -14,7 +14,6 @@ import org.bukkit.event.Listener;
 public class SpigotItemCooldownListener implements Listener {
 
 
-
     @EventHandler
     public void onSkillPostUsageEvent(SpigotSkillFinishedEvent event) {
         SkillContext skillContext = event.getSkillContext();

@@ -34,5 +34,6 @@ public enum SkillResult {
     NO_MANA,
     ON_COOLDOWN,
     WRONG_DATA,
-    NEGATIVE_SKILL_LEVEL
+    NEGATIVE_SKILL_LEVEL,
+    NOT_ACTIVE_SKILL
 }

@@ -42,7 +42,7 @@ public class ClassServiceTest {
     public void before() {
         classDefinition = new ClassDefinition("Test", "TestType");
         classService.registerClassDefinition(classDefinition);
-        classDefinition2 = new ClassDefinition("Test"+ TestPermissionService.MISSING_PERM, "TestType");
+        classDefinition2 = new ClassDefinition("Test" + TestPermissionService.MISSING_PERM, "TestType");
         classService.registerClassDefinition(classDefinition2);
 
     }
@@ -57,7 +57,7 @@ public class ClassServiceTest {
     }
 
     @Test
-    public void testFiltering(@Stage(READY)IActiveCharacter character) {
+    public void testFiltering(@Stage(READY) IActiveCharacter character) {
         Set<ClassDefinition> testType = classService.filterByPlayerAndType(character, "TestType");
         Assertions.assertTrue(testType.contains(classDefinition));
         Assertions.assertFalse(testType.contains(classDefinition2));

@@ -61,7 +61,7 @@ public class IceSpike extends TargetedBlockSkill {
 
         Entity spike = Resourcepack.summonLargeIceSpike(block.getLocation());
 
-        spike.setVelocity(new Vector(0,0.5,0));
+        spike.setVelocity(new Vector(0, 0.5, 0));
         List<Entity> nearbyEntities = spike.getNearbyEntities(radius, radius, radius);
         Player player = character.getPlayer();
         for (Entity nearbyEntity : nearbyEntities) {

@@ -20,7 +20,6 @@ package cz.neumimto.rpg.sponge.events.skill;
 
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.events.skill.SkillPreUsageEvent;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import org.spongepowered.api.event.Cancellable;
 
 /**
@@ -28,19 +27,8 @@ import org.spongepowered.api.event.Cancellable;
  */
 public class SpongeSkillPreUsageEvent extends AbstractSkillEvent implements SkillPreUsageEvent, Cancellable {
 
-    private SkillContext skillContext;
     private IEntity caster;
     private boolean cancelled;
-
-    @Override
-    public SkillContext getSkillContext() {
-        return skillContext;
-    }
-
-    @Override
-    public void setSkillContext(SkillContext skillContext) {
-        this.skillContext = skillContext;
-    }
 
     @Override
     public IEntity getCaster() {

@@ -14,7 +14,7 @@ import org.bukkit.util.RayTraceResult;
 public abstract class TargetedBlockSkill extends ActiveSkill<ISpigotCharacter> {
 
     @Override
-    public void cast(ISpigotCharacter character, PlayerSkillContext info, SkillContext skillContext) {
+    public SkillResult cast(ISpigotCharacter character, PlayerSkillContext info, SkillContext skillContext) {
         Player player = character.getPlayer();
         int range = skillContext.getIntNodeValue(SkillNodes.RANGE);
 

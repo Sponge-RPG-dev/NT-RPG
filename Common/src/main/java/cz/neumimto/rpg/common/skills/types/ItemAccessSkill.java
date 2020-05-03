@@ -2,7 +2,6 @@ package cz.neumimto.rpg.common.skills.types;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
-import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.ItemString;
 import cz.neumimto.rpg.api.effects.EffectSourceType;
 import cz.neumimto.rpg.api.effects.IEffectSource;
@@ -15,7 +14,6 @@ import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillData;
 import cz.neumimto.rpg.api.skills.SkillExecutionType;
 import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.skills.types.AbstractSkill;
 import cz.neumimto.rpg.api.skills.utils.SkillLoadingErrors;
@@ -24,7 +22,7 @@ import javax.inject.Inject;
 import java.util.*;
 
 
-public class ItemAccessSkill extends AbstractSkill {
+public class ItemAccessSkill extends AbstractSkill<IActiveCharacter> {
 
     @Inject
     private ItemService itemService;
@@ -37,8 +35,8 @@ public class ItemAccessSkill extends AbstractSkill {
     }
 
     @Override
-    public void onPreUse(IActiveCharacter character, SkillContext skillContext) {
-        skillContext.result(SkillResult.CANCELLED);
+    public SkillResult onPreUse(IActiveCharacter character, PlayerSkillContext esi) {
+        return SkillResult.CANCELLED;
     }
 
     @Override

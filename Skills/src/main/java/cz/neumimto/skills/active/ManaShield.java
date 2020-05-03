@@ -34,7 +34,7 @@ public class ManaShield extends ActiveSkill {
     }
 
     @Override
-    public void cast(IActiveCharacter character, PlayerSkillContext info, SkillContext skillContext) {
+    public SkillResult cast(IActiveCharacter character, PlayerSkillContext info, SkillContext skillContext) {
         ManaShieldEffectModel manaShieldEffectModel = new ManaShieldEffectModel();
         manaShieldEffectModel.reduction = skillContext.getDoubleNodeValue("reduction");
         manaShieldEffectModel.reductionCost = skillContext.getDoubleNodeValue("reduction-manacost");

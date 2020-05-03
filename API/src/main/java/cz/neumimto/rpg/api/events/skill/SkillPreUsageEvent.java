@@ -20,16 +20,11 @@ package cz.neumimto.rpg.api.events.skill;
 
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.events.Cancellable;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
 
 /**
  * Created by NeumimTo on 1.8.2015.
  */
 public interface SkillPreUsageEvent extends SkillEvent, Cancellable {
-
-    SkillContext getSkillContext();
-
-    void setSkillContext(SkillContext context);
 
     void setCaster(IEntity iEntity);
 

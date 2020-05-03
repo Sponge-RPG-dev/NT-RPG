@@ -22,13 +22,13 @@ public class LocalizationServiceTest {
 
     @Test
     public void testSingleStringTranslation() {
-        localizationService.addTranslationKey("test.singlestr","translated text");
+        localizationService.addTranslationKey("test.singlestr", "translated text");
         Assertions.assertEquals(localizationService.translate("test.singlestr"), "translated text");
     }
 
     @Test
     public void testSingleStringTranslation_SingleArg() {
-        localizationService.addTranslationKey("test.singlestr","translated text {{param}}");
+        localizationService.addTranslationKey("test.singlestr", "translated text {{param}}");
         String translate = localizationService.translate("test.singlestr", Arg.arg("param", "abc"));
         Assertions.assertEquals(translate, "translated text abc");
     }
@@ -36,7 +36,7 @@ public class LocalizationServiceTest {
 
     @Test
     public void testSingleStringTranslation_SingleArg02() {
-        localizationService.addTranslationKey("test.singlestr","translated text {{param}}");
+        localizationService.addTranslationKey("test.singlestr", "translated text {{param}}");
         String translate = localizationService.translate("test.singlestr", "param", "abc");
         Assertions.assertEquals(translate, "translated text abc");
     }

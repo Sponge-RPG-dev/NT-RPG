@@ -14,6 +14,7 @@ public class Arg {
     static {
         EMPTY = arg(Collections.emptyMap());
     }
+
     private Map<String, Object> map = new HashMap<>();
 
 

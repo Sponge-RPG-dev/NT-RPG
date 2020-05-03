@@ -26,9 +26,11 @@ import java.util.function.Function;
 public class SkillActions {
 
     private static SpigotDamageService damageService;
+
     static {
         damageService = (SpigotDamageService) Rpg.get().getDamageService();
     }
+
     @SkillComponent(
             value = "Damaging an Entity with specific damage type",
             usage = "damage(source, target, damage, type, context)",

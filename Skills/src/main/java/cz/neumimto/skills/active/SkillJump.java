@@ -33,7 +33,7 @@ public class SkillJump extends ActiveSkill<ISpongeCharacter> {
 
 
     @Override
-    public void cast(ISpongeCharacter character, PlayerSkillContext info, SkillContext skillContext) {
+    public SkillResult cast(ISpongeCharacter character, PlayerSkillContext info, SkillContext skillContext) {
         Vector3d rotation = character.getEntity().getRotation();
         Vector3d direction = Quaterniond.fromAxesAnglesDeg(rotation.getX(), -rotation.getY(), rotation.getZ()).getDirection();
         Vector3d mul = new Vector3d(0, 1, 0).mul(skillContext.getFloatNodeValue(SkillNodes.VELOCITY));

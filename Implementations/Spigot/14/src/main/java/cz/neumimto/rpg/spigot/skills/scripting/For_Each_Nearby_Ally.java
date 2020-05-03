@@ -41,7 +41,7 @@ public class For_Each_Nearby_Ally implements TriConsumer<ISpigotEntity, Number, 
                 if (!(nearbyEntity instanceof LivingEntity)) {
                     continue;
                 }
-                if (entity instanceof Tameable && ((Tameable)entity).isTamed()) {
+                if (entity instanceof Tameable && ((Tameable) entity).isTamed()) {
                     continue;
                 }
 

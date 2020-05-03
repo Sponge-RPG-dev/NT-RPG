@@ -4,10 +4,8 @@ import cz.neumimto.rpg.api.permissions.PermissionService;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import org.bukkit.entity.Player;
-import org.bukkit.permissions.PermissionAttachmentInfo;
 
 import java.util.Collection;
-import java.util.Set;
 
 public class SpigotPermissionService implements PermissionService<ISpigotCharacter> {
     @Override

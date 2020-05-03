@@ -36,16 +36,14 @@ import cz.neumimto.rpg.api.utils.annotations.CatalogId;
 
 import javax.inject.Inject;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-
 
 
 /**
  * Created by NeumimTo on 12.3.2015.
  */
 @JsBinding(JsBinding.Type.CLASS)
-public abstract class AbstractSkill implements ISkill {
+public abstract class AbstractSkill<T> implements ISkill<T> {
 
     private static final String SKILL = "skill";
     public static final String PLAYER = "player";

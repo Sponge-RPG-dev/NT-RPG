@@ -15,7 +15,9 @@ import cz.neumimto.rpg.spigot.bridges.HolographicDisplaysExpansion;
 import cz.neumimto.rpg.spigot.bridges.MMOItemsExpansion;
 import cz.neumimto.rpg.spigot.bridges.MythicalMobsExpansion;
 import cz.neumimto.rpg.spigot.bridges.NtRpgPlaceholderExpansion;
-import cz.neumimto.rpg.spigot.commands.*;
+import cz.neumimto.rpg.spigot.commands.SpigotAdminCommands;
+import cz.neumimto.rpg.spigot.commands.SpigotCharacterCommands;
+import cz.neumimto.rpg.spigot.commands.SpigotSkillBindCommands;
 import cz.neumimto.rpg.spigot.entities.SpigotEntityService;
 import cz.neumimto.rpg.spigot.entities.configuration.SpigotMobSettingsDao;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
@@ -98,7 +100,7 @@ public class SpigotRpgPlugin extends JavaPlugin {
 
         CommandManager manager = new PaperCommandManager(this);
 
-        manager.getCommandContexts().registerContext(OnlineOtherPlayer.class, c-> {
+        manager.getCommandContexts().registerContext(OnlineOtherPlayer.class, c -> {
             CommandIssuer issuer = c.getIssuer();
             String lookup = c.popFirstArg();
             boolean allowMissing = c.isOptional();

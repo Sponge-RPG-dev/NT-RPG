@@ -35,7 +35,6 @@ import javax.inject.Inject;
 import java.util.UUID;
 
 
-
 /**
  * Created by NeumimTo on 12.2.2015.
  */

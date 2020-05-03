@@ -16,8 +16,6 @@ import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.common.effects.InternalEffectSourceProvider;
-import cz.neumimto.rpg.common.gui.ConfigInventory;
-import cz.neumimto.rpg.common.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.spigot.effects.common.def.BossBarExpNotifier;
 import cz.neumimto.rpg.spigot.effects.common.def.ManaBarNotifier;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
@@ -32,7 +30,6 @@ import org.bukkit.inventory.InventoryView;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.List;
 
 @Singleton
 public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
@@ -219,7 +216,7 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
 
     @Override
     public void displayCharacterAttributes(ISpigotCharacter character) {
-            //todo
+        //todo
     }
 
     @Override

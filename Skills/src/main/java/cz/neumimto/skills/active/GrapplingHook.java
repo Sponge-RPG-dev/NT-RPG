@@ -1,7 +1,5 @@
 package cz.neumimto.skills.active;
 
-import static com.flowpowered.math.TrigMath.cos;
-import static com.flowpowered.math.TrigMath.sin;
 import com.flowpowered.math.imaginary.Quaterniond;
 import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.rpg.api.ResourceLoader;
@@ -24,13 +22,16 @@ import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+
+import static com.flowpowered.math.TrigMath.cos;
+import static com.flowpowered.math.TrigMath.sin;
 
 /**
  * Created by NeumimTo on 5.8.2017.
@@ -60,7 +61,7 @@ public class GrapplingHook extends ActiveSkill<ISpongeCharacter> {
     }
 
     @Override
-    public void cast(ISpongeCharacter character, PlayerSkillContext info, SkillContext skillContext) {
+    public SkillResult cast(ISpongeCharacter character, PlayerSkillContext info, SkillContext skillContext) {
         Player p = character.getPlayer();
         World world = p.getWorld();
         Entity optional = world.createEntity(EntityTypes.TIPPED_ARROW, p.getLocation().getPosition()

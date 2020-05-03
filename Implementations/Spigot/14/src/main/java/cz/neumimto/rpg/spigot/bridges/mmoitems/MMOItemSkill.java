@@ -34,7 +34,7 @@ public class MMOItemSkill extends ActiveSkill<ISpigotCharacter> {
     }
 
     @Override
-    public void cast(ISpigotCharacter character, PlayerSkillContext info, SkillContext skillContext) {
+    public SkillResult cast(ISpigotCharacter character, PlayerSkillContext info, SkillContext skillContext) {
         Player player = character.getPlayer();
         AbilityData abilityData = new AbilityData(getAbility(), Ability.CastingMode.LEFT_CLICK);
         PlayerData playerData = PlayerData.get(player);

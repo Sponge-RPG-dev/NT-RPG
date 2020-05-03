@@ -45,13 +45,13 @@ public class For_Each_Nearby_Ally implements TriConsumer<ISpongeEntity, Number, 
                 if (nearbyEntity.get(Keys.TAMED_OWNER).isPresent()) {
                     continue;
                 }
-                IEntity iEntity = ((SpongeEntityService)Rpg.get().getEntityService()).get(nearbyEntity);
+                IEntity iEntity = ((SpongeEntityService) Rpg.get().getEntityService()).get(nearbyEntity);
                 consumer.accept(iEntity);
             }
         } else if (entity.getType() == IEntityType.CHARACTER) {
             IActiveCharacter character = (IActiveCharacter) entity;
             for (Entity nearbyEntity : nearbyEntities) {
-                IEntity iEntity = ((SpongeEntityService)Rpg.get().getEntityService()).get(nearbyEntity);
+                IEntity iEntity = ((SpongeEntityService) Rpg.get().getEntityService()).get(nearbyEntity);
                 if (iEntity.isFriendlyTo(character)) {
                     consumer.accept(iEntity);
                 }

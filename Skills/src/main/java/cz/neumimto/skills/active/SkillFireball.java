@@ -1,7 +1,5 @@
 package cz.neumimto.skills.active;
 
-import static com.flowpowered.math.TrigMath.cos;
-import static com.flowpowered.math.TrigMath.sin;
 import com.flowpowered.math.imaginary.Quaterniond;
 import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.rpg.api.ResourceLoader;
@@ -27,6 +25,9 @@ import org.spongepowered.api.world.World;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import static com.flowpowered.math.TrigMath.cos;
+import static com.flowpowered.math.TrigMath.sin;
+
 /**
  * Created by NeumimTo on 23.12.2015.
  */
@@ -50,7 +51,7 @@ public class SkillFireball extends ActiveSkill<ISpongeCharacter> {
     }
 
     @Override
-    public void cast(ISpongeCharacter character, PlayerSkillContext info, SkillContext skillContext) {
+    public SkillResult cast(ISpongeCharacter character, PlayerSkillContext info, SkillContext skillContext) {
         Player p = character.getPlayer();
         World world = p.getWorld();
         Entity optional = world.createEntity(EntityTypes.SNOWBALL, p.getLocation().getPosition()

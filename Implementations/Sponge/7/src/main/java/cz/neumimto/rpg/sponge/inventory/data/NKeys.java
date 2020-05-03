@@ -2,8 +2,8 @@ package cz.neumimto.rpg.sponge.inventory.data;
 
 import com.google.common.reflect.TypeToken;
 import cz.neumimto.rpg.api.effects.EffectParams;
-import cz.neumimto.rpg.api.items.sockets.SocketType;
 import cz.neumimto.rpg.api.items.ItemMetaType;
+import cz.neumimto.rpg.api.items.sockets.SocketType;
 import cz.neumimto.rpg.api.items.subtypes.ItemSubtype;
 import cz.neumimto.rpg.sponge.gui.SkillTreeControllsButton;
 import cz.neumimto.rpg.sponge.inventory.ItemDamage;

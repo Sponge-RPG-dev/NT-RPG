@@ -12,7 +12,7 @@ public class ReflectionTestUtils {
             declaredField.setAccessible(true);
             declaredField.set(source, newValue);
         } catch (Exception e) {
-            Log.error("Cannot modify Field " + source.getClass().getSimpleName() + "[" + fieldName + "]",e);
+            Log.error("Cannot modify Field " + source.getClass().getSimpleName() + "[" + fieldName + "]", e);
         }
 
     }

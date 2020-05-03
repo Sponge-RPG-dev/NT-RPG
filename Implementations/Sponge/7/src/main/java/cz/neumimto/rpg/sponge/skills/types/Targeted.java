@@ -17,7 +17,6 @@
 package cz.neumimto.rpg.sponge.skills.types;
 
 import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.damage.DamageService;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.events.skill.SkillTargetAttemptEvent;
@@ -47,7 +46,7 @@ public abstract class Targeted extends ActiveSkill<ISpongeCharacter> implements 
     }
 
     @Override
-    public void cast(ISpongeCharacter caster, PlayerSkillContext info, SkillContext skillContext) {
+    public SkillResult cast(ISpongeCharacter caster, PlayerSkillContext info, SkillContext skillContext) {
         int range = skillContext.getIntNodeValue(SkillNodes.RANGE);
         Living l = Utils.getTargetedEntity(caster, range);
         if (l == null) {

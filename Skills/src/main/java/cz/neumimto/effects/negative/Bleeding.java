@@ -7,7 +7,6 @@ import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.sponge.damage.SkillDamageSource;
 import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
-import cz.neumimto.rpg.sponge.utils.Utils;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.effect.particle.ParticleEffect;

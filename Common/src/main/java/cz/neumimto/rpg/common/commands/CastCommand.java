@@ -20,7 +20,7 @@ public class CastCommand extends BaseCommand {
 
     @Default
     @CommandCompletion("@learnedskill")
-    private void playerRunSkillCommand(IActiveCharacter character , ISkill skill) {
+    private void playerRunSkillCommand(IActiveCharacter character, ISkill skill) {
         skillsCommandFacade.executeSkill(character, skill);
     }
 }

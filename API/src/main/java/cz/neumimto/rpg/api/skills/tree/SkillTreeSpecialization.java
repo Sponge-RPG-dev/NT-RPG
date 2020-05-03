@@ -2,17 +2,16 @@ package cz.neumimto.rpg.api.skills.tree;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
-import cz.neumimto.rpg.api.localization.Arg;
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.localization.Arg;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.SkillData;
 import cz.neumimto.rpg.api.skills.SkillPathData;
 import cz.neumimto.rpg.api.skills.SkillSettings;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.types.PassiveSkill;
-import cz.neumimto.rpg.api.skills.SkillData;
 import cz.neumimto.rpg.api.skills.utils.SkillLoadingErrors;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 
 import java.util.HashMap;
 import java.util.List;

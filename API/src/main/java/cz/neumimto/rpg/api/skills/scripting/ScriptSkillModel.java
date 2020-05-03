@@ -75,7 +75,7 @@ public class ScriptSkillModel {
             }
             Map<String, Object> stringObjectMap = value.valueMap();
             for (Map.Entry<String, Object> stringObjectEntry : stringObjectMap.entrySet()) {
-                f.put(stringObjectEntry.getKey(), ((Number)stringObjectEntry.getValue()).floatValue());
+                f.put(stringObjectEntry.getKey(), ((Number) stringObjectEntry.getValue()).floatValue());
             }
             return f;
         }

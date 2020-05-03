@@ -19,12 +19,15 @@
 package cz.neumimto.rpg.api.skills;
 
 import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * Created by NeumimTo on 26.7.2015.
@@ -34,8 +37,8 @@ public class PlayerSkillContext {
     public static final PlayerSkillContext EMPTY;
 
     static {
-         EMPTY = new PlayerSkillContext(null, null, null);
-         EMPTY.setSkillData(SkillData.EMPTY);
+        EMPTY = new PlayerSkillContext(null, null, null);
+        EMPTY.setSkillData(SkillData.EMPTY);
     }
 
     private final IActiveCharacter character;
@@ -112,6 +115,42 @@ public class PlayerSkillContext {
             }
         }
         return cachedComputedSkillSettings;
+    }
+
+    private float getLevelNodeValue(String s) {
+        return getCachedComputedSkillSettings().getFloat(s);
+    }
+
+    public float getFloatNodeValue(ISkillNode node) {
+        return getFloatNodeValue(node.value());
+    }
+
+    public float getFloatNodeValue(String node) {
+        return getLevelNodeValue(node);
+    }
+
+    public int getIntNodeValue(ISkillNode node) {
+        return getIntNodeValue(node.value());
+    }
+
+    public int getIntNodeValue(String node) {
+        return (int) getLevelNodeValue(node);
+    }
+
+    public long getLongNodeValue(ISkillNode node) {
+        return getLongNodeValue(node.value());
+    }
+
+    public long getLongNodeValue(String node) {
+        return (long) getLevelNodeValue(node);
+    }
+
+    public double getDoubleNodeValue(String node) {
+        return getLevelNodeValue(node);
+    }
+
+    public double getDoubleNodeValue(ISkillNode node) {
+        return getDoubleNodeValue(node.value());
     }
 
     public void populateCache(Set<String> complexKeySuffixes, Collection<AttributeConfig> attributes) {

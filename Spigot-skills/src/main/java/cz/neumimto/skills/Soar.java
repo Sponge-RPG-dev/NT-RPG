@@ -1,7 +1,10 @@
 package cz.neumimto.skills;
 
 import cz.neumimto.rpg.api.ResourceLoader;
-import cz.neumimto.rpg.api.effects.*;
+import cz.neumimto.rpg.api.effects.CommonEffectTypes;
+import cz.neumimto.rpg.api.effects.EffectService;
+import cz.neumimto.rpg.api.effects.IEffect;
+import cz.neumimto.rpg.api.effects.UnstackableEffectBase;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
@@ -9,7 +12,6 @@ import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
-import cz.neumimto.rpg.spigot.SpigotRpg;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
 import cz.neumimto.rpg.spigot.entities.ISpigotEntity;
@@ -22,12 +24,13 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 import static org.bukkit.event.entity.EntityDamageEvent.DamageCause.*;
 
@@ -67,7 +70,7 @@ public class Soar extends ActiveSkill<ISpigotCharacter> {
     }
 
     @Override
-    public void cast(ISpigotCharacter character, PlayerSkillContext info, SkillContext skillContext) {
+    public SkillResult cast(ISpigotCharacter character, PlayerSkillContext info, SkillContext skillContext) {
 
         final Player player = character.getPlayer();
 
@@ -90,7 +93,7 @@ public class Soar extends ActiveSkill<ISpigotCharacter> {
         }
 
         if (!targets.isEmpty()) {
-            player.setVelocity(new Vector(0,1,0));
+            player.setVelocity(new Vector(0, 1, 0));
             Bukkit.getScheduler().scheduleSyncDelayedTask(SpigotRpgPlugin.getInstance(), () -> {
                 effectService.addEffect(new SoaringStrikeEffect(character, targets, dashDmg), this);
             }, 15);
@@ -112,6 +115,7 @@ public class Soar extends ActiveSkill<ISpigotCharacter> {
         private Location last;
         private int ticks;
         private BukkitRunnable runnable;
+
         public SoaringStrikeEffect(ISpigotEntity character, Set<LivingEntity> affected, double dashDamage) {
             super(name, character);
             this.affected = affected.iterator();
@@ -177,7 +181,7 @@ public class Soar extends ActiveSkill<ISpigotCharacter> {
 
                 damageService.damage(entityCaster, currentTarget, ENTITY_ATTACK, dashDamage, false);
                 currentTarget.getWorld().playSound(targetLocation, Sound.ENTITY_PLAYER_ATTACK_KNOCKBACK, 1.0F, 1.0F);
-                currentTarget.getWorld().spawnParticle(Particle.BLOCK_CRACK, targetLocation, 30, 2,2,2, Material.REDSTONE_BLOCK.getData());
+                currentTarget.getWorld().spawnParticle(Particle.BLOCK_CRACK, targetLocation, 30, 2, 2, 2, Material.REDSTONE_BLOCK.getData());
                 IEntity targAle = entityService.get(currentTarget);
                 SoaringLevitationEffect effect = (SoaringLevitationEffect) targAle.getEffect(SoarStrikeAffected_NAME);
                 if (effect != null) {
@@ -194,7 +198,7 @@ public class Soar extends ActiveSkill<ISpigotCharacter> {
         }
 
         protected boolean updateTargetOrStop() {
-            if (!affected.hasNext()){
+            if (!affected.hasNext()) {
                 setDuration(0);
                 return true;
             }
@@ -205,6 +209,7 @@ public class Soar extends ActiveSkill<ISpigotCharacter> {
     }
 
     private String SoarStrikeAffected_NAME = "SoarStrikeEffect_NEG";
+
     private class SoaringLevitationEffect extends UnstackableEffectBase {
 
         private final LivingEntity l;
@@ -233,7 +238,7 @@ public class Soar extends ActiveSkill<ISpigotCharacter> {
         @Override
         public void onTick(IEffect self) {
             if (getLastTickTime() + 500L > System.currentTimeMillis() && l.hasGravity()) {
-                l.setVelocity(new Vector(0,0,0));
+                l.setVelocity(new Vector(0, 0, 0));
                 l.setGravity(false);
                 loc = l.getLocation();
             } else if (loc != null && l.getLocation().distanceSquared(loc) <= 2) {

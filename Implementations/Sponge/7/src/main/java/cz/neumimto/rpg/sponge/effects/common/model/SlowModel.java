@@ -5,5 +5,4 @@ public class SlowModel {
     public boolean decreasedJumpHeight;
 
 
-
 }

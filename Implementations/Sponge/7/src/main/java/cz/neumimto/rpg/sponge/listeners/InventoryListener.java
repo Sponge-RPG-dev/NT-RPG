@@ -26,7 +26,6 @@ import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.inventory.RpgInventory;
 import cz.neumimto.rpg.api.items.ItemClass;
 import cz.neumimto.rpg.api.items.RpgItemStack;
-import cz.neumimto.rpg.api.items.RpgItemType;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.common.inventory.InventoryHandler;
@@ -58,11 +57,9 @@ import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
 import org.spongepowered.api.item.inventory.type.CarriedInventory;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.chat.ChatType;
 import org.spongepowered.api.text.chat.ChatTypes;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.Tristate;
-import org.spongepowered.common.event.tracking.phase.packet.drag.DragInventoryAddSlotState;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -248,13 +245,13 @@ public class InventoryListener {
                     //equip
                     //todo do we want to apply custom enchantments from armor from hotbar? I think not => make this configurable
                     ItemClass itemClass = rpgItemStackF.getItemType().getItemClass();
-                    if (slotId >=0 && slotId <=8 && (itemClass == ItemClass.ARMOR || itemClass == ItemClass.SHIELD)) {
+                    if (slotId >= 0 && slotId <= 8 && (itemClass == ItemClass.ARMOR || itemClass == ItemClass.SHIELD)) {
                         continue;
                     }
 
                     if (inventoryHandler.handleCharacterEquipActionPre(character, managedSlot, rpgItemStackF)) {
-                           inventoryHandler.handleCharacterEquipActionPost(character, managedSlot, rpgItemStackF);
-                           character.setRequiresDamageRecalculation(true);
+                        inventoryHandler.handleCharacterEquipActionPost(character, managedSlot, rpgItemStackF);
+                        character.setRequiresDamageRecalculation(true);
                     } else {
                         event.setCancelled(true);
                         return;

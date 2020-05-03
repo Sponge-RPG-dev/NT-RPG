@@ -59,7 +59,7 @@ dependencies {
     compileOnly 'com.github.Slikey:EffectLib:d77f639038'
     compileOnly 'me.clip:placeholderapi:2.10.3'
     compileOnly 'com.gmail.filoghost.holographicdisplays:holographicdisplays-api:2.4.0'
-    compileOnly ('net.Indyuce:MMOItems:5.4') {
+    compileOnly('net.Indyuce:MMOItems:5.4') {
         exclude group: 'com.mojang', module: 'authlib'
     }
     compileOnly 'io.lumine.xikage:MythicMobs:4.9.1'
@@ -68,7 +68,7 @@ dependencies {
         from {
             configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
         }
-        archiveName("NT-RPG-Spigot-15.x-"+version+".jar")
+        archiveName("NT-RPG-Spigot-15.x-" + version + ".jar")
     }
 }
 

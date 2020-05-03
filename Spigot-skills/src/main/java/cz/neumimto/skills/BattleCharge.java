@@ -71,7 +71,7 @@ public class BattleCharge extends TargetedEntitySkill {
                 if (entity.isOnGround()) {
                     cancel();
 
-                    Collection<Entity> nearbyEntities = entity.getNearbyEntities(r,r,r);
+                    Collection<Entity> nearbyEntities = entity.getNearbyEntities(r, r, r);
                     for (Entity nearbyEntity : nearbyEntities) {
                         if (nearbyEntity instanceof LivingEntity) {
                             LivingEntity living = (LivingEntity) nearbyEntity;

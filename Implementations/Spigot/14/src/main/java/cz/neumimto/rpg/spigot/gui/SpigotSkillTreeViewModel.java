@@ -2,7 +2,6 @@ package cz.neumimto.rpg.spigot.gui;
 
 import cz.neumimto.rpg.api.gui.SkillTreeViewModel;
 import cz.neumimto.rpg.api.skills.ISkill;
-import cz.neumimto.rpg.api.utils.Pair;
 
 import java.util.HashMap;
 import java.util.List;

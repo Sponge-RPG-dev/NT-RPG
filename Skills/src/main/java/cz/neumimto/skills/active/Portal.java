@@ -38,7 +38,7 @@ public class Portal extends ActiveSkill {
     }
 
     @Override
-    public void cast(IActiveCharacter character, PlayerSkillContext info, SkillContext skillContext) {
+    public SkillResult cast(IActiveCharacter character, PlayerSkillContext info, SkillContext skillContext) {
         if (character.hasEffect(PortalEffect.name)) {
             effectService.removeEffect(PortalEffect.name, character, this);
             skillContext.next(character, info, skillContext.result(SkillResult.CANCELLED));

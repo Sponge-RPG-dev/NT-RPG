@@ -18,8 +18,8 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.TeleportHelper;
 import org.spongepowered.api.world.World;
 
-import java.util.Optional;
 import javax.inject.Singleton;
+import java.util.Optional;
 
 /**
  * Created by NeumimTo on 29.12.2015.
@@ -36,7 +36,7 @@ public class SkillTeleport extends ActiveSkill<ISpongeCharacter> {
     }
 
     @Override
-    public void cast(ISpongeCharacter character, PlayerSkillContext playerSkillContext, SkillContext skillContext) {
+    public SkillResult cast(ISpongeCharacter character, PlayerSkillContext playerSkillContext, SkillContext skillContext) {
         Player player = character.getPlayer();
         double doubleNodeValue = skillContext.getDoubleNodeValue(SkillNodes.RANGE);
 

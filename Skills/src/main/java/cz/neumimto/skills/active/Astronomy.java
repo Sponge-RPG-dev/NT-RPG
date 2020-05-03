@@ -35,7 +35,7 @@ public class Astronomy extends ActiveSkill<ISpongeCharacter> {
     }
 
     @Override
-    public void cast(ISpongeCharacter character, PlayerSkillContext info, SkillContext skillContext) {
+    public SkillResult cast(ISpongeCharacter character, PlayerSkillContext info, SkillContext skillContext) {
         Player character1 = character.getEntity();
 
         if (character1.getWorld().getWeather() == Weathers.CLEAR) {

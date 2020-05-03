@@ -34,7 +34,6 @@ import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.jar.JarEntry;
@@ -351,7 +350,7 @@ public class ResourceManagerImpl implements ResourceLoader {
     @Override
     public void reloadLocalizations(Locale locale) {
         loadLocalizationsFromClasspath("localizations/core_localization_en.properties");
-        loadLocalizationsFromClasspath("localizations/core_localization_"+locale.getLanguage()+".properties");
+        loadLocalizationsFromClasspath("localizations/core_localization_" + locale.getLanguage() + ".properties");
 
         File localizations = new File(Rpg.get().getWorkingDirectory() + "/localizations");
         String language = locale.getLanguage();
@@ -370,10 +369,10 @@ public class ResourceManagerImpl implements ResourceLoader {
     }
 
     protected void loadLocalizationsFromClasspath(String classpathLoc) {
-        try (InputStream is = getClass().getClassLoader().getResourceAsStream(classpathLoc)){
+        try (InputStream is = getClass().getClassLoader().getResourceAsStream(classpathLoc)) {
             loadLocalizations(is);
         } catch (IOException e) {
-            Log.error("Could not read localization file classpath: "+ classpathLoc, e);
+            Log.error("Could not read localization file classpath: " + classpathLoc, e);
         }
     }
 
