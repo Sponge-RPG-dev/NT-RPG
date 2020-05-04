@@ -18,6 +18,7 @@
 
 package cz.neumimto.rpg.common.configuration;
 
+import com.google.inject.Injector;
 import com.typesafe.config.*;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
@@ -64,6 +65,9 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
 
     @Inject
     private LocalizationService localizationService;
+
+    @Inject
+    private Injector injector;
 
     @Override
     public Map<String, SkillTree> getAll() {
@@ -211,6 +215,9 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
                 String wrappedSkillId = parentConfig.getString("SkillId");
                 SkillData infoWrapped = createSkillInfo(skillTree, wrappedSkillId);
                 loadSkill(skillTree, parentConfig, infoWrapped);
+                if (infoWrapped.getSkill() instanceof ActiveSkill) {
+                    infoWrapped.setSkillExecutor(injector.getInstance(SkillExecutor.class).init(info));
+                }
                 WrappedSkillData wrapper = (WrappedSkillData) childSkill;
                 wrapper.setWrapped(infoWrapped);
                 childSkill = infoWrapped;
@@ -221,7 +228,7 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
 
         loadSkill(skillTree, c, info);
         if (info.getSkill() instanceof ActiveSkill) {
-            info.setSkillExecutor(new SkillExecutor().init(info));
+            info.setSkillExecutor(injector.getInstance(SkillExecutor.class).init(info));
         }
         skillTree.getSkills().put(info.getSkillId().toLowerCase(), info);
     }

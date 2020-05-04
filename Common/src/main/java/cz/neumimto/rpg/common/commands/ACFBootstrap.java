@@ -83,8 +83,11 @@ public class ACFBootstrap {
 
         manager.getCommandContexts().registerContext(ISkill.class, c -> {
             String s = c.joinArgs();
-
-            return Rpg.get().getSkillService().getSkillByLocalizedName(s.toLowerCase());
+            if (s.contains(":")) {
+                return Rpg.get().getSkillService().getById(s.toLowerCase());
+            } else {
+                return Rpg.get().getSkillService().getSkillByLocalizedName(s.toLowerCase());
+            }
         });
 
 

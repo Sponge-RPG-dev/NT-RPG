@@ -5,6 +5,7 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.events.skill.SkillPostUsageEvent;
 import cz.neumimto.rpg.api.events.skill.SkillPreUsageEvent;
 import cz.neumimto.rpg.api.skills.ISkillExecutor;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
@@ -104,6 +105,12 @@ public class SkillExecutor implements ISkillExecutor {
                 expm.processAfterSuccess(character, playerSkillContext);
             }
         }
+        SkillPostUsageEvent eventPost = Rpg.get().getEventFactory().createEventInstance(SkillPostUsageEvent.class);
+        eventPost.setSkill(playerSkillContext.getSkill());
+        eventPost.setCaster(character);
+
+        Rpg.get().postEvent(eventPost);
+
         return result;
     }
 
