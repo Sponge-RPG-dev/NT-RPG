@@ -39,7 +39,7 @@ public class Arrowstorm extends ActiveSkill {
     }
 
     @Override
-    public SkillResult cast(IActiveCharacter character, PlayerSkillContext  skillContext) {
+    public SkillResult cast(IActiveCharacter character, PlayerSkillContext skillContext) {
         int min = skillContext.getIntNodeValue("min-arrows");
         int max = skillContext.getIntNodeValue("max-arrows");
         int arrows = ThreadLocalRandom.current().nextInt(max - min) + min;

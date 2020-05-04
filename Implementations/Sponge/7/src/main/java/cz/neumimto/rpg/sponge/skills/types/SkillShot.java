@@ -53,7 +53,7 @@ public abstract class SkillShot extends ActiveSkill<ISpongeCharacter> {
         return SkillResult.CANCELLED;
     }
 
-    protected abstract ProjectileProperties getProjectileProperties(IActiveCharacter character, PlayerSkillContext info,                                                                     Projectile projectile);
+    protected abstract ProjectileProperties getProjectileProperties(IActiveCharacter character, PlayerSkillContext info, Projectile projectile);
 
     protected abstract Class<Projectile> getProjectile(IActiveCharacter character, PlayerSkillContext info);
 

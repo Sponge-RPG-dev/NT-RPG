@@ -1,10 +1,8 @@
 package cz.neumimto.rpg.sponge.entities.players;
 
-import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
-import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.common.entity.players.AbstractCharacterService;

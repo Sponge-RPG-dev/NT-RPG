@@ -4,7 +4,6 @@ import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
-
 import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.spigot.Resourcepack;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
@@ -53,7 +52,7 @@ public class IceSpike extends TargetedBlockSkill {
     }
 
     @Override
-    protected SkillResult castOn(Block block, ISpigotCharacter character, PlayerSkillContext  skillContext) {
+    protected SkillResult castOn(Block block, ISpigotCharacter character, PlayerSkillContext skillContext) {
 
         double damage = skillContext.getDoubleNodeValue(SkillNodes.DAMAGE);
         double damageInitial = skillContext.getDoubleNodeValue("damage-initial");

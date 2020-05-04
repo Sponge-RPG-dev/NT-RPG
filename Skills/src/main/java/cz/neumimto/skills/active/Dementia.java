@@ -8,7 +8,6 @@ import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
-
 import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.skills.types.Targeted;

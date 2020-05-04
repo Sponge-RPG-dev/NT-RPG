@@ -5,7 +5,6 @@ import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
-
 import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.spigot.entities.ProjectileCache;
@@ -37,7 +36,7 @@ public class Fireball extends ActiveSkill<ISpigotCharacter> {
     }
 
     @Override
-    public SkillResult cast(ISpigotCharacter character, PlayerSkillContext  skillContext) {
+    public SkillResult cast(ISpigotCharacter character, PlayerSkillContext skillContext) {
         Player p = character.getPlayer();
         World world = p.getWorld();
 

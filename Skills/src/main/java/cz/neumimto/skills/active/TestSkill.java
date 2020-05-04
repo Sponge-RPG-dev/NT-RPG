@@ -3,7 +3,6 @@ package cz.neumimto.skills.active;
 import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
-
 import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.skills.NDamageType;

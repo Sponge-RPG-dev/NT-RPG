@@ -1,6 +1,5 @@
 package cz.neumimto.rpg.spigot.entities.players;
 
-import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterSkill;

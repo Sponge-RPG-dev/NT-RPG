@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Executor;
 
@@ -70,6 +71,16 @@ public class PluginSettingsTest {
 
         @Override
         public void scheduleSyncLater(Runnable runnable) {
+
+        }
+
+        @Override
+        public Set<UUID> getOnlinePlayers() {
+            return null;
+        }
+
+        @Override
+        public void doImplSpecificreload() {
 
         }
     }

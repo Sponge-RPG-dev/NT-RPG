@@ -7,7 +7,6 @@ import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
-
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.sponge.damage.SkillDamageSourceBuilder;
 import cz.neumimto.rpg.sponge.entities.ISpongeEntity;

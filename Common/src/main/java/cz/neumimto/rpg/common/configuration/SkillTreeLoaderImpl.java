@@ -22,8 +22,6 @@ import com.google.inject.Injector;
 import com.typesafe.config.*;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
-import cz.neumimto.rpg.api.configuration.ItemString;
-import cz.neumimto.rpg.api.configuration.SkillItemCost;
 import cz.neumimto.rpg.api.configuration.SkillTreeDao;
 import cz.neumimto.rpg.api.gui.ISkillTreeInterfaceModel;
 import cz.neumimto.rpg.api.localization.LocalizationService;
@@ -297,31 +295,31 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
         }
         info.setDescription(skillNodeDescription);
 
-      // try {
-      //     Config reagent = c.getConfig("InvokeCost");
-      //     SkillCost itemCost = new SkillCost();
-      //     info.setInvokeCost(itemCost);
-      //     List<? extends ConfigObject> list = reagent.getObjectList("Items");
+        // try {
+        //     Config reagent = c.getConfig("InvokeCost");
+        //     SkillCost itemCost = new SkillCost();
+        //     info.setInvokeCost(itemCost);
+        //     List<? extends ConfigObject> list = reagent.getObjectList("Items");
 
-      //     for (ConfigObject configObject : list) {
-      //         try {
-      //             SkillItemCost q = new SkillItemCost();
-      //             q.setAmount(Integer.parseInt(configObject.get("Amount").unwrapped().toString()));
-      //             String type = configObject.get("Item").unwrapped().toString();
-      //             boolean consume = Boolean.valueOf(configObject.get("Consume").unwrapped().toString());
-      //             q.setConsumeItems(consume);
-      //             ItemString parse = ItemString.parse(type);
-      //             q.setItemType(parse);
-      //             itemCost.getItemCost().add(q);
+        //     for (ConfigObject configObject : list) {
+        //         try {
+        //             SkillItemCost q = new SkillItemCost();
+        //             q.setAmount(Integer.parseInt(configObject.get("Amount").unwrapped().toString()));
+        //             String type = configObject.get("Item").unwrapped().toString();
+        //             boolean consume = Boolean.valueOf(configObject.get("Consume").unwrapped().toString());
+        //             q.setConsumeItems(consume);
+        //             ItemString parse = ItemString.parse(type);
+        //             q.setItemType(parse);
+        //             itemCost.getItemCost().add(q);
 
-      //         } catch (Exception e) {
-      //             e.printStackTrace();
-      //         }
-      //      }
+        //         } catch (Exception e) {
+        //             e.printStackTrace();
+        //         }
+        //      }
 
-      //  } catch (Exception e) {
+        //  } catch (Exception e) {
 
-      //  }
+        //  }
 
         try {
             for (String conflicts : c.getStringList("Conflicts")) {

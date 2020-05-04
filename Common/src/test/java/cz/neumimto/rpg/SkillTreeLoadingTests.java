@@ -1,7 +1,6 @@
 package cz.neumimto.rpg;
 
 import cz.neumimto.rpg.api.RpgApi;
-import cz.neumimto.rpg.api.configuration.SkillItemCost;
 import cz.neumimto.rpg.api.configuration.SkillTreeDao;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.localization.LocalizationService;

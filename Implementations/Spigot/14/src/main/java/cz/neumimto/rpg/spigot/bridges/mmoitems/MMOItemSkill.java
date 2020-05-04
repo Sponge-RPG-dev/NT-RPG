@@ -15,7 +15,6 @@ import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.mmogroup.mmolib.api.DamageType;
 import org.bukkit.entity.Player;
 
-import java.util.Map;
 import java.util.Set;
 
 public class MMOItemSkill extends ActiveSkill<ISpigotCharacter> {

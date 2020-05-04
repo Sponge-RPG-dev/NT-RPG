@@ -5,7 +5,6 @@ import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
-
 import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.skills.TargetedEntitySkill;
@@ -31,7 +30,7 @@ public class Lightning extends TargetedEntitySkill {
     }
 
     @Override
-    public SkillResult castOn(IEntity target, ISpigotCharacter character, PlayerSkillContext  skillContext) {
+    public SkillResult castOn(IEntity target, ISpigotCharacter character, PlayerSkillContext skillContext) {
         LivingEntity livingEntity = (LivingEntity) target.getEntity();
         if (damageService.canDamage(character, livingEntity)) {
 

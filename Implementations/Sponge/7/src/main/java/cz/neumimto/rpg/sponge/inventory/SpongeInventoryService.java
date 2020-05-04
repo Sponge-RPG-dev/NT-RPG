@@ -313,52 +313,52 @@ public class SpongeInventoryService extends AbstractInventoryService<ISpongeChar
         }
     }
 
-/*
-    public Set<ActiveSkillPreProcessorWrapper> processItemCost(ISpongeCharacter character, SkillContext skillContext, PlayerSkillContext skillInfo) {
-        SkillCost invokeCost = skillInfo.getSkillData().getInvokeCost();
-        if (invokeCost == null) {
-            return Collections.emptySet();
-        }
-        Player player = character.getPlayer();
-        Inventory query = player.getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
-        Map<Inventory, Result> itemsToTake = new HashMap<>();
-        int c = 0;
-        outer:
-        for (SkillItemCost skillItemCost : invokeCost.getItemCost()) {
-            ItemString parsedItemType = skillItemCost.getItemType();
-            int requiredAmount = skillItemCost.getAmount();
-            for (Inventory inventory : query) {
-                Optional<ItemStack> peek = inventory.peek();
-                if (peek.isPresent()) {
-                    ItemStack itemStack = peek.get();
-                    ItemType itemType = Sponge.getRegistry().getType(ItemType.class, parsedItemType.itemId).get();
-                    if (itemStack.getType() == itemType) {
-                        if (itemStack.getQuantity() - requiredAmount < 0) {
-                            itemsToTake.put(inventory, new Result(itemStack.getQuantity(), skillItemCost.consumeItems()));
-                            requiredAmount -= itemStack.getQuantity();
-                        } else {
-                            itemsToTake.put(inventory, new Result(requiredAmount, skillItemCost.consumeItems()));
-                            c++;
-                            break outer;
+    /*
+        public Set<ActiveSkillPreProcessorWrapper> processItemCost(ISpongeCharacter character, SkillContext skillContext, PlayerSkillContext skillInfo) {
+            SkillCost invokeCost = skillInfo.getSkillData().getInvokeCost();
+            if (invokeCost == null) {
+                return Collections.emptySet();
+            }
+            Player player = character.getPlayer();
+            Inventory query = player.getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
+            Map<Inventory, Result> itemsToTake = new HashMap<>();
+            int c = 0;
+            outer:
+            for (SkillItemCost skillItemCost : invokeCost.getItemCost()) {
+                ItemString parsedItemType = skillItemCost.getItemType();
+                int requiredAmount = skillItemCost.getAmount();
+                for (Inventory inventory : query) {
+                    Optional<ItemStack> peek = inventory.peek();
+                    if (peek.isPresent()) {
+                        ItemStack itemStack = peek.get();
+                        ItemType itemType = Sponge.getRegistry().getType(ItemType.class, parsedItemType.itemId).get();
+                        if (itemStack.getType() == itemType) {
+                            if (itemStack.getQuantity() - requiredAmount < 0) {
+                                itemsToTake.put(inventory, new Result(itemStack.getQuantity(), skillItemCost.consumeItems()));
+                                requiredAmount -= itemStack.getQuantity();
+                            } else {
+                                itemsToTake.put(inventory, new Result(requiredAmount, skillItemCost.consumeItems()));
+                                c++;
+                                break outer;
+                            }
                         }
                     }
                 }
             }
-        }
-        if (c == invokeCost.getItemCost().size()) {
-            for (Map.Entry<Inventory, Result> e : itemsToTake.entrySet()) {
-                Result result = e.getValue();
-                if (result.consume) {
-                    Inventory slot = e.getKey();
-                    slot.poll(result.amount);
+            if (c == invokeCost.getItemCost().size()) {
+                for (Map.Entry<Inventory, Result> e : itemsToTake.entrySet()) {
+                    Result result = e.getValue();
+                    if (result.consume) {
+                        Inventory slot = e.getKey();
+                        slot.poll(result.amount);
+                    }
                 }
+            } else {
+                return invokeCost.getInsufficientProcessors();
             }
-        } else {
-            return invokeCost.getInsufficientProcessors();
+            return Collections.emptySet();
         }
-        return Collections.emptySet();
-    }
-*/
+    */
     @Override
     public EquipedSlot createEquipedSlot(String className, int slotId) {
         try {

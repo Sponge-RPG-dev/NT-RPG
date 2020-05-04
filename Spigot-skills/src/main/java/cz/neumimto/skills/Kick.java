@@ -5,7 +5,6 @@ import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
-
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
@@ -37,7 +36,7 @@ public class Kick extends TargetedEntitySkill {
     }
 
     @Override
-    public SkillResult castOn(IEntity target, ISpigotCharacter source, PlayerSkillContext  skillContext) {
+    public SkillResult castOn(IEntity target, ISpigotCharacter source, PlayerSkillContext skillContext) {
         LivingEntity entity = (LivingEntity) target.getEntity();
 
         double damage = skillContext.getDoubleNodeValue(SkillNodes.DAMAGE);
