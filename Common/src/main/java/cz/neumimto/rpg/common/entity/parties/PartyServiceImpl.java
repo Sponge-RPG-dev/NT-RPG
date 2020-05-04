@@ -19,15 +19,15 @@
 package cz.neumimto.rpg.common.entity.parties;
 
 
-import cz.neumimto.rpg.api.localization.Arg;
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.parties.PartyService;
 import cz.neumimto.rpg.api.entity.players.party.IParty;
 import cz.neumimto.rpg.api.events.party.PartyCreateEvent;
 import cz.neumimto.rpg.api.events.party.PartyInviteEvent;
 import cz.neumimto.rpg.api.events.party.PartyJoinEvent;
 import cz.neumimto.rpg.api.events.party.PartyLeaveEvent;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.localization.Arg;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 
@@ -67,7 +67,7 @@ public abstract class PartyServiceImpl<T extends IActiveCharacter> implements Pa
             event.getParty().removePlayer(event.getCharacter());
             event.getCharacter().setParty(null);
             event.getParty().getInvites().remove(event.getCharacter().getUUID());
-            return true;            
+            return true;
         }
         return false;
     }

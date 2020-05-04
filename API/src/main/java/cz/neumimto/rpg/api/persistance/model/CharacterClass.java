@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.api.persistance.model;
 
-public interface CharacterClass extends TimestampEntity  {
+public interface CharacterClass extends TimestampEntity {
     Long getId();
 
     void setId(Long id);

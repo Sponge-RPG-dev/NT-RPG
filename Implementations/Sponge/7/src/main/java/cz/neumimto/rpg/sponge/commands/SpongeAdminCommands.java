@@ -15,7 +15,6 @@ import cz.neumimto.rpg.api.items.RpgItemType;
 import cz.neumimto.rpg.common.commands.OnlineOtherPlayer;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
-import cz.neumimto.rpg.sponge.gui.GuiHelper;
 import cz.neumimto.rpg.sponge.inventory.SpongeItemService;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandSource;
@@ -24,7 +23,6 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.util.Identifiable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -32,7 +30,6 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.*;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Singleton
 @CommandAlias("nadmin|na")

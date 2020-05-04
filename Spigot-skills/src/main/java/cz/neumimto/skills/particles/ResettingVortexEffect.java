@@ -10,6 +10,7 @@ public class ResettingVortexEffect extends VortexEffect {
         super(effectManager);
         this.maxy = maxy;
     }
+
     @Override
     public void onRun() {
         if (step * grow > maxy) {

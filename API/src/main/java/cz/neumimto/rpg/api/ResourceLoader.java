@@ -7,7 +7,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.net.URLClassLoader;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 public interface ResourceLoader {
 

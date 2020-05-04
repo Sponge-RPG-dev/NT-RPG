@@ -5,7 +5,6 @@ import com.typesafe.config.ConfigException;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.permissions.PermissionService;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.api.skills.utils.SkillLoadingErrors;
@@ -16,13 +15,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CommandSkill extends ActiveSkill {
+public class CommandSkill extends ActiveSkill<IActiveCharacter> {
 
     @Inject
     private PermissionService permissionService;
 
     @Override
-    public void cast(IActiveCharacter character, PlayerSkillContext info, SkillContext skillContext) {
+    public SkillResult cast(IActiveCharacter character, PlayerSkillContext info) {
         CommandData skillData = (CommandData) info.getSkillData();
         List<String> command = Collections.singletonList(skillData.getCommand());
         Map<String, String> args = new HashMap<>();
@@ -46,7 +45,7 @@ public class CommandSkill extends ActiveSkill {
             }
         }
 
-        skillContext.next(character, info, skillContext.result(SkillResult.OK));
+        return SkillResult.OK;
     }
 
     @Override
@@ -62,12 +61,14 @@ public class CommandSkill extends ActiveSkill {
         try {
             boolean executeAsConsole = c.getBoolean("ExecuteAsConsole");
             data.console = executeAsConsole;
-        } catch (ConfigException ignored) {}
+        } catch (ConfigException ignored) {
+        }
 
         try {
             String perm = c.getString("Permission");
             data.permission = perm;
-        } catch (ConfigException ignored) {}
+        } catch (ConfigException ignored) {
+        }
     }
 
     public class CommandData extends SkillData {

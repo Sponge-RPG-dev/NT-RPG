@@ -1,6 +1,5 @@
 package cz.neumimto.rpg;
 
-import static cz.neumimto.rpg.junit.CharactersExtension.Stage.Stages.READY;
 import com.google.inject.Injector;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.SkillTreeDao;
@@ -13,7 +12,6 @@ import cz.neumimto.rpg.api.events.EventFactoryService;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.scripting.IScriptEngine;
 import cz.neumimto.rpg.api.skills.*;
-import cz.neumimto.rpg.api.skills.mods.*;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.junit.CharactersExtension;
 import cz.neumimto.rpg.junit.CharactersExtension.Stage;
@@ -26,8 +24,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import java.util.concurrent.atomic.AtomicBoolean;
 import javax.inject.Inject;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import static cz.neumimto.rpg.junit.CharactersExtension.Stage.Stages.READY;
 
 @ExtendWith({NtRpgExtension.class, GuiceExtension.class, CharactersExtension.class})
 @IncludeModule(TestGuiceModule.class)
@@ -172,38 +172,12 @@ public class SkillExecutionTests {
         SkillData skillData = new SkillData(testSkill.getId());
         AtomicBoolean runFirst = new AtomicBoolean(false);
         AtomicBoolean runLast = new AtomicBoolean(false);
-        skillData.getSkillPreprocessors().add(new ActiveSkillPreProcessorWrapper(PreProcessorTarget.EARLY) {
-            @Override
-            public void doNext(IActiveCharacter character, PlayerSkillContext info, SkillContext skillResult) {
-                runFirst.set(true);
-                Assertions.assertFalse(runLast.get());
-                Assertions.assertFalse(hadRun);
-                skillResult.next(character, info, skillResult);
-            }
-        });
-        skillData.getSkillPreprocessors().add(new ActiveSkillPreProcessorWrapper(PreProcessorTarget.LATE) {
-            @Override
-            public void doNext(IActiveCharacter character, PlayerSkillContext info, SkillContext skillResult) {
-                Assertions.assertTrue(runFirst.get());
-                Assertions.assertTrue(hadRun);
-                runLast.set(true);
-                skillResult.next(character, info, skillResult);
-            }
-        });
 
         skillData.setSkillSettings(new SkillSettings());
         skillData.setSkill(testSkill);
         playerSkillContext.setSkillData(skillData);
         character.addSkill("test", playerSkillContext);
 
-        Rpg.get().getSkillService().executeSkill(character, character.getSkill("test"), new SkillExecutorCallback() {
-            @Override
-            public void doNext(IActiveCharacter character, PlayerSkillContext info, SkillContext skillResult) {
-                Assertions.assertTrue(runFirst.get());
-                Assertions.assertTrue(runLast.get());
-                super.doNext(character, info, skillResult.result(SkillResult.OK));
-            }
-        });
         Assertions.assertTrue(runFirst.get());
         Assertions.assertTrue(runLast.get());
         Assertions.assertTrue(hadRun);
@@ -217,9 +191,9 @@ public class SkillExecutionTests {
         }
 
         @Override
-        public void cast(IActiveCharacter character, PlayerSkillContext info, SkillContext modifier) {
+        public SkillResult cast(IActiveCharacter character, PlayerSkillContext info) {
             hadRun = true;
-            modifier.next(character, info, modifier.result(SkillResult.OK));
+            return SkillResult.OK;
         }
     }
 }

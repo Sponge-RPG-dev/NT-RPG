@@ -18,9 +18,9 @@ import java.util.List;
  * Created by NeumimTo on 5.11.2017.
  */
 public class RuneCommandElement extends CommandElement {
-   
+
     private final RWService rwService;
-    
+
     public RuneCommandElement(@Nullable Text key, RWService rwService) {
         super(key);
         this.rwService = rwService;

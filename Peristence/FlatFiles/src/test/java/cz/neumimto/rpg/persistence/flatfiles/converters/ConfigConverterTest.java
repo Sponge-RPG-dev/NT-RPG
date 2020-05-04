@@ -11,6 +11,7 @@ import cz.neumimto.rpg.api.persistance.model.DateKeyPair;
 import cz.neumimto.rpg.api.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.mods.ActiveSkillPreProcessorWrapper;
+import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.common.inventory.AbstractInventoryService;
 import cz.neumimto.rpg.persistence.flatfiles.dao.FlatFilePlayerDao;
 import cz.neumimto.rpg.persistence.model.CharacterBaseImpl;
@@ -33,7 +34,7 @@ class ConfigConverterTest {
             public InventoryService getInventoryService() {
                 return new AbstractInventoryService() {
                     @Override
-                    public Set<ActiveSkillPreProcessorWrapper> processItemCost(IActiveCharacter character, PlayerSkillContext info) {
+                    public Set<ActiveSkillPreProcessorWrapper> processItemCost(IActiveCharacter character, SkillContext skillContext, PlayerSkillContext info) {
                         return null;
                     }
 
@@ -45,6 +46,11 @@ class ConfigConverterTest {
                     @Override
                     public EquipedSlot createEquipedSlot(String className, int slotId) {
                         return () -> slotId;
+                    }
+
+                    @Override
+                    public void invalidateGUICaches(IActiveCharacter cc) {
+
                     }
                 };
             }

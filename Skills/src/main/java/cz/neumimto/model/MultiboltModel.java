@@ -8,11 +8,11 @@ import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 @JsBinding(JsBinding.Type.CLASS)
 public class MultiboltModel {
 
-	public int timesToHit;
-	public double damage;
+    public int timesToHit;
+    public double damage;
 
-	public MultiboltModel(int timesToHit, double damage) {
-		this.timesToHit = timesToHit;
-		this.damage = damage;
-	}
+    public MultiboltModel(int timesToHit, double damage) {
+        this.timesToHit = timesToHit;
+        this.damage = damage;
+    }
 }

@@ -25,7 +25,7 @@ import java.util.List;
 public class SpongeMobSettingsDao extends MobSettingsDao {
 
     @Override
-    protected RootMobConfig createDefaults()  {
+    protected RootMobConfig createDefaults() {
         File properties = new File(Rpg.get().getWorkingDirectory(), "MobSettings.conf");
         if (!properties.exists()) {
             Collection<EntityType> types = Sponge.getGame().getRegistry().getAllOf(EntityType.class);

@@ -18,8 +18,6 @@
 
 package cz.neumimto.rpg.sponge;
 
-import static cz.neumimto.rpg.api.logging.Log.info;
-
 import co.aikar.commands.ACFSpongeUtil;
 import co.aikar.commands.CommandIssuer;
 import co.aikar.commands.InvalidCommandArgument;
@@ -43,7 +41,6 @@ import cz.neumimto.rpg.sponge.gui.GuiHelper;
 import cz.neumimto.rpg.sponge.gui.VanillaMessaging;
 import cz.neumimto.rpg.sponge.inventory.data.*;
 import cz.neumimto.rpg.sponge.inventory.data.manipulators.*;
-import cz.neumimto.rpg.sponge.listeners.SpongeItemCooldownListener;
 import cz.neumimto.rpg.sponge.skills.NDamageType;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
@@ -62,6 +59,7 @@ import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.scheduler.SpongeExecutorService;
 
+import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -72,7 +70,7 @@ import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.annotation.Resource;
+import static cz.neumimto.rpg.api.logging.Log.info;
 
 /**
  * Created by NeumimTo on 29.4.2015.
@@ -365,10 +363,6 @@ public class SpongeRpgPlugin extends Rpg {
                     commandService.registerStandartCommands();
 
                     injector.getInstance(Gui.class).setVanillaMessaging(injector.getInstance(VanillaMessaging.class));
-
-                    if (Boolean.TRUE.equals(Rpg.get().getPluginConfig().ITEM_COOLDOWNS)) {
-                        Rpg.get().registerListeners(new SpongeItemCooldownListener());
-                    }
 
 
                     Sponge.getPluginManager().getPlugin("placeholderapi").ifPresent(a -> {

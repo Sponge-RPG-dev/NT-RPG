@@ -1,13 +1,11 @@
 package cz.neumimto.rpg.spigot.listeners;
 
-import com.comphenix.protocol.PacketType;
 import com.google.inject.Singleton;
 import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.IEntityType;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.events.damage.IEntityWeaponDamageEarlyEvent;
 import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.skills.ISkill;
@@ -24,7 +22,6 @@ import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import cz.neumimto.rpg.spigot.events.damage.SpigotEntityProjectileDamageEarlyEvent;
 import cz.neumimto.rpg.spigot.events.damage.SpigotEntitySkillDamageEarlyEvent;
 import cz.neumimto.rpg.spigot.events.damage.SpigotEntityWeaponDamageEarlyEvent;
-import cz.neumimto.rpg.spigot.inventory.SpigotInventoryService;
 import cz.neumimto.rpg.spigot.inventory.SpigotItemService;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -35,9 +32,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.projectiles.ProjectileSource;
 
-import java.util.Optional;
-
 import javax.inject.Inject;
+import java.util.Optional;
 
 @Singleton
 @ResourceLoader.ListenerClass
@@ -72,6 +68,10 @@ public class SpigotDamageListener extends AbstractDamageListener implements List
         }
         Entity targetEntity = event.getEntity();
         Entity attackerEntity = event.getDamager();
+
+        if (!(targetEntity instanceof LivingEntity)) {
+            return;
+        }
 
         LivingEntity living = (LivingEntity) targetEntity;
         ISpigotEntity target = (ISpigotEntity) entityService.get(living);
@@ -123,7 +123,7 @@ public class SpigotDamageListener extends AbstractDamageListener implements List
             int selectedSlotIndex = inventory.getHeldItemSlot();
             if (last != selectedSlotIndex) {
                 SpigotInventoryListener.prepareItemInHand(player, character, player.getItemInHand(),
-                         selectedSlotIndex, null, itemService, inventoryHandler);
+                        selectedSlotIndex, null, itemService, inventoryHandler);
             }
 
             if (character.requiresDamageRecalculation()) {

@@ -5,9 +5,9 @@ import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.common.skills.scripting.SkillComponent;
 
-import java.util.function.BiConsumer;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.function.BiConsumer;
 
 @JsBinding(JsBinding.Type.OBJECT)
 @SkillComponent(

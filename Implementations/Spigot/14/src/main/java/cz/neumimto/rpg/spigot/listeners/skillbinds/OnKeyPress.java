@@ -1,6 +1,5 @@
 package cz.neumimto.rpg.spigot.listeners.skillbinds;
 
-import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.common.commands.SkillsCommandFacade;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;

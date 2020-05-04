@@ -46,7 +46,7 @@ public class ItemStackUpgradeData extends AbstractSingleData<SocketType, ItemSta
     public Optional<ItemStackUpgradeData> from(DataView view) {
         if (view.contains(NKeys.ITEMSTACK_UPGRADE.getQuery())) {
             String s = view.getString(NKeys.ITEMSTACK_UPGRADE.getQuery()).get();
-            SocketType socketType =  ((SpongeItemService) Rpg.get().getItemService()).getSocketTypes().get(s);
+            SocketType socketType = ((SpongeItemService) Rpg.get().getItemService()).getSocketTypes().get(s);
             setValue(socketType);
             return Optional.of(this);
         }

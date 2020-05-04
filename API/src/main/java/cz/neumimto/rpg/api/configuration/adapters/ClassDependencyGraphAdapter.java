@@ -1,13 +1,11 @@
 package cz.neumimto.rpg.api.configuration.adapters;
 
 import com.electronwill.nightconfig.core.Config;
-import com.electronwill.nightconfig.core.conversion.Converter;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.DependencyGraph;
 
-import javax.security.auth.callback.ConfirmationCallback;
 import java.util.*;
 import java.util.stream.Collectors;
 

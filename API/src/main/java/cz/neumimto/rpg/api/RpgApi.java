@@ -9,7 +9,6 @@ import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.entity.players.CharacterService;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.parties.PartyService;
 import cz.neumimto.rpg.api.events.EventFactoryService;
 import cz.neumimto.rpg.api.exp.ExperienceService;
@@ -44,7 +43,6 @@ public interface RpgApi {
     void executeCommandAs(UUID sender, Map<String, String> args, List<String> enterCommands);
 
     /**
-     *
      * @param event
      * @return True if cancelled
      */

@@ -7,7 +7,6 @@ import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
@@ -35,7 +34,7 @@ public class Astronomy extends ActiveSkill<ISpongeCharacter> {
     }
 
     @Override
-    public void cast(ISpongeCharacter character, PlayerSkillContext info, SkillContext skillContext) {
+    public SkillResult cast(ISpongeCharacter character, PlayerSkillContext skillContext) {
         Player character1 = character.getEntity();
 
         if (character1.getWorld().getWeather() == Weathers.CLEAR) {
@@ -43,17 +42,14 @@ public class Astronomy extends ActiveSkill<ISpongeCharacter> {
             if (character1.getWorld().getHighestYAt(position.getFloorX(), position.getFloorZ()) > position.getFloorY()) {
                 String translate = Rpg.get().getLocalizationService().translate(SkillLocalization.ASTRONOMY_CANNOT_SEE_THE_SKY);
                 character.sendNotification(translate);
-                skillContext.next(character, info, skillContext.result(SkillResult.CANCELLED));
-                return;
+                return SkillResult.CANCELLED;
             }
             ItemStack is = Utils.createTeleportationScroll(character.getLocation());
             character.getEntity().getInventory().offer(is);
-            skillContext.next(character, info, skillContext.result(SkillResult.OK));
-            return;
+            return SkillResult.OK;
         }
         String translate = Rpg.get().getLocalizationService().translate(SkillLocalization.ASTRONOMY_CANNOT_SEE_THE_SKY);
         character.sendNotification(translate);
-        skillContext.next(character, info, skillContext.result(SkillResult.CANCELLED));
-        return;
+        return SkillResult.CANCELLED;
     }
 }

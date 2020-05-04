@@ -21,7 +21,6 @@ package cz.neumimto.rpg.api.configuration;
 import com.electronwill.nightconfig.core.conversion.Conversion;
 import com.electronwill.nightconfig.core.conversion.Converter;
 import com.electronwill.nightconfig.core.conversion.Path;
-import com.typesafe.config.Optional;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.utils.DebugLevel;
 

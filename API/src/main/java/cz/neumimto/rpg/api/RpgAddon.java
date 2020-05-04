@@ -8,9 +8,11 @@ public interface RpgAddon {
 
     Map<Class<?>, Class<?>> getBindings();
 
-    default void processStageEarly(Injector injector) {}
+    default void processStageEarly(Injector injector) {
+    }
 
-    default void processStageLate(Injector injector) {}
+    default void processStageLate(Injector injector) {
+    }
 
     Map<Class<?>, ?> getProviders(Map<String, Object> implementationScope);
 }

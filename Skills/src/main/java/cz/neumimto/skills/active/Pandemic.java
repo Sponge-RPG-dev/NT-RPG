@@ -8,7 +8,7 @@ import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
+
 import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.sponge.damage.SkillDamageSource;
@@ -20,9 +20,9 @@ import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 
-import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Set;
 
 /**
  * Created by NeumimTo on 6.8.2017.
@@ -53,7 +53,7 @@ public class Pandemic extends ActiveSkill<ISpongeCharacter> {
     }
 
     @Override
-    public void cast(ISpongeCharacter character, PlayerSkillContext info, SkillContext skillContext) {
+    public SkillResult cast(ISpongeCharacter character, PlayerSkillContext skillContext) {
         float damage = skillContext.getFloatNodeValue(SkillNodes.DAMAGE);
         int radius = skillContext.getIntNodeValue(SkillNodes.RADIUS);
         long period = skillContext.getLongNodeValue(SkillNodes.PERIOD);
@@ -74,6 +74,6 @@ public class Pandemic extends ActiveSkill<ISpongeCharacter> {
                 }
             }
         }
-        skillContext.next(character, info, skillContext.result(SkillResult.OK));
+        return SkillResult.OK;
     }
 }

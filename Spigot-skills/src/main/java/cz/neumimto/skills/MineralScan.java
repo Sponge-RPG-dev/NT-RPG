@@ -9,7 +9,7 @@ import com.comphenix.protocol.wrappers.WrappedWatchableObject;
 import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
+
 import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
@@ -20,12 +20,9 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 import javax.inject.Singleton;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -44,7 +41,7 @@ public class MineralScan extends ActiveSkill<ISpigotCharacter> {
     }
 
     @Override
-    public void cast(ISpigotCharacter character, PlayerSkillContext info, SkillContext skillContext) {
+    public SkillResult cast(ISpigotCharacter character, PlayerSkillContext  skillContext) {
         Player player = character.getPlayer();
         World world = player.getWorld();
         Location location = player.getLocation();
@@ -75,7 +72,7 @@ public class MineralScan extends ActiveSkill<ISpigotCharacter> {
                 }
             }
         }
-        skillContext.next(character, info, skillContext.result(SkillResult.OK));
+        return SkillResult.OK;
     }
 
 
@@ -93,7 +90,7 @@ public class MineralScan extends ActiveSkill<ISpigotCharacter> {
         WrapperPlayServerEntityMetadata metadata = new WrapperPlayServerEntityMetadata();
         metadata.setEntityID(ID);
         List<WrappedWatchableObject> list = new ArrayList<>();
-      //  list.add(new WrappedWatchableObject());
+        //  list.add(new WrappedWatchableObject());
         metadata.setMetadata(list);
         ID--;
         living.sendPacket(player);

@@ -277,7 +277,7 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
             String defaultCl = definition.getDefaultClass();
             if (defaultCl != null) {
                 ClassDefinition defClassDefinition = classService.getClassDefinitionByName(defaultCl);
-                if (defClassDefinition != null ) {
+                if (defClassDefinition != null) {
                     addNewBaseClass(characterBase, defClassDefinition);
                 } else {
                     Log.error("Could not add default class to player character " + characterBase.getUuid() + " Class " + defaultCl + " not found");
@@ -285,7 +285,6 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
             }
         }
     }
-
 
 
     /**
@@ -575,7 +574,6 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
         }
 
 
-
         return activeCharacter;
     }
 
@@ -593,7 +591,6 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
         if (skills.containsKey(skill.getId())) {
             cc = character.getCharacterBase().getCharacterClass(classDef);
         }
-
 
 
         PlayerSkillContext playerSkillContext = character.getSkillInfo(skill);
@@ -698,8 +695,6 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
             String text = localizationService.translate(LocalizationKeys.NO_SKILLPOINTS, arg("skill", info.getSkillName()));
             return ActionResult.withErrorMessage(text);
         }
-
-
 
 
         if (info == null) {
@@ -1384,7 +1379,7 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
             throw new IllegalStateException("SourceKey is requried");
         }
         if (characterClass == null) {
-             throw new IllegalStateException("Player " + character.toString() + " has no class type of " + characterClass);
+            throw new IllegalStateException("Player " + character.toString() + " has no class type of " + characterClass);
         }
         sourceKey = sourceKey.toLowerCase();
         Map<String, Set<DateKeyPair>> uniqueSkillpoints = characterBase.getUniqueSkillpoints();
@@ -1406,12 +1401,11 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
         uniques.add(new DateKeyPair(new Date(), sourceKey));
 
 
-
-
         addSkillPoint(character, classByType, 1);
 
         Log.error("Character " + character.getUUID() + " gained " + sourceKey + " skillpoint");
         return ActionResult.ok();
     }
+
 }
 

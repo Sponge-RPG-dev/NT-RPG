@@ -23,7 +23,7 @@ public abstract class MobSettingsDao {
     }
 
     protected RootMobConfig loadFile(Path path) {
-        try (FileConfig fc = FileConfig.of(path)){
+        try (FileConfig fc = FileConfig.of(path)) {
             fc.load();
             return new ObjectConverter().toObject(fc, RootMobConfig::new);
         }

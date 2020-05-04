@@ -18,18 +18,13 @@
 
 package cz.neumimto.rpg.sponge.utils;
 
-import static cz.neumimto.rpg.api.logging.Log.info;
 import com.flowpowered.math.imaginary.Quaterniond;
 import com.flowpowered.math.vector.Vector3d;
-import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.IEntity;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.utils.Console;
 import cz.neumimto.rpg.api.utils.MathUtils;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
-import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
-import cz.neumimto.rpg.sponge.skills.NDamageType;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.BlockTypes;
@@ -38,23 +33,22 @@ import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.property.entity.EyeLocationProperty;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityType;
-import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.projectile.Projectile;
-import org.spongepowered.api.event.cause.entity.damage.source.DamageSource;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.util.blockray.BlockRay;
 import org.spongepowered.api.util.blockray.BlockRayHit;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.extent.EntityUniverse;
-import org.spongepowered.common.event.damage.SpongeEntityDamageSourceBuilder;
 
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static cz.neumimto.rpg.api.logging.Log.info;
 
 /**
  * Created by NeumimTo on 25.7.2015.
@@ -194,7 +188,6 @@ public class Utils {
             }
         }
     }
-
 
 
     public static String extractClassMember(String string) {

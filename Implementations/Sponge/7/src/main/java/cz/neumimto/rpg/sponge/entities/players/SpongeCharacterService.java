@@ -1,7 +1,11 @@
 package cz.neumimto.rpg.sponge.entities.players;
 
+import cz.neumimto.rpg.api.entity.IEntity;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
+import cz.neumimto.rpg.api.skills.ISkill;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.common.entity.players.AbstractCharacterService;
 import cz.neumimto.rpg.common.entity.players.CharacterMana;
@@ -12,11 +16,12 @@ import cz.neumimto.rpg.sponge.utils.PermissionUtils;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.event.world.chunk.LoadChunkEvent;
+import org.spongepowered.api.item.ItemType;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -117,5 +122,27 @@ public class SpongeCharacterService extends AbstractCharacterService<ISpongeChar
             return 2;
         }
         return 0;
+    }
+
+    @Override
+    public void notifyCooldown(IActiveCharacter caster, PlayerSkillContext skillInfo, long cd) {
+        if (cd > 0) {
+
+            if (caster instanceof ISpongeCharacter) {
+                ISpongeCharacter character = (ISpongeCharacter) caster;
+                Player player = character.getPlayer();
+
+                String icon = skillInfo.getSkillData().getIcon();
+
+                if (icon != null) {
+                    cd /= 50;
+                    Optional<ItemType> type = Sponge.getRegistry().getType(ItemType.class, icon);
+                    if (type.isPresent()) {
+                        ItemType itemType = type.get();
+                        player.getCooldownTracker().setCooldown(itemType, (int) cd);
+                    }
+                }
+            }
+        }
     }
 }

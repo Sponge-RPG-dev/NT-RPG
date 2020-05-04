@@ -9,7 +9,7 @@ import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
+
 import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.skills.NDamageType;
@@ -40,12 +40,12 @@ public class Multibolt extends Targeted {
     }
 
     @Override
-    public void castOn(IEntity target, ISpongeCharacter source, PlayerSkillContext info, SkillContext skillContext) {
+    public SkillResult castOn(IEntity target, ISpongeCharacter source, PlayerSkillContext skillContext) {
         float damage = skillContext.getFloatNodeValue(SkillNodes.DAMAGE);
         int timesToHit = skillContext.getIntNodeValue("times-hit");
         MultiboltModel model = new MultiboltModel(timesToHit, damage);
         IEffect effect = new MultiboltEffect(target, source, model);
         effectService.addEffect(effect, this);
-        skillContext.next(source, info, skillContext.result(SkillResult.OK));
+        return SkillResult.OK;
     }
 }

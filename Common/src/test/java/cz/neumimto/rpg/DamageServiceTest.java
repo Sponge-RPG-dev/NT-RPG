@@ -1,14 +1,16 @@
 package cz.neumimto.rpg;
 
-import static cz.neumimto.rpg.junit.CharactersExtension.Stage.Stages.READY;
 import cz.neumimto.rpg.api.damage.DamageService;
 import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.items.RpgItemType;
 import cz.neumimto.rpg.common.impl.TestItemService;
-import cz.neumimto.rpg.junit.*;
+import cz.neumimto.rpg.junit.CharactersExtension;
 import cz.neumimto.rpg.junit.CharactersExtension.Stage;
+import cz.neumimto.rpg.junit.NtRpgExtension;
+import cz.neumimto.rpg.junit.TestDictionary;
+import cz.neumimto.rpg.junit.TestGuiceModule;
 import name.falgout.jeffrey.testing.junit.guice.GuiceExtension;
 import name.falgout.jeffrey.testing.junit.guice.IncludeModule;
 import org.junit.jupiter.api.Assertions;
@@ -16,6 +18,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import javax.inject.Inject;
+
+import static cz.neumimto.rpg.junit.CharactersExtension.Stage.Stages.READY;
 
 @ExtendWith({GuiceExtension.class, NtRpgExtension.class, CharactersExtension.class})
 @IncludeModule(TestGuiceModule.class)

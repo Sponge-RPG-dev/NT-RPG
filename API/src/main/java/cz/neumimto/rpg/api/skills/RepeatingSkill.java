@@ -8,8 +8,6 @@ import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
-import cz.neumimto.rpg.api.skills.mods.SkillExecutorCallback;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.api.skills.utils.SkillLoadingErrors;
@@ -19,7 +17,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public class RepeatingSkill extends ActiveSkill {
+public class RepeatingSkill extends ActiveSkill<IActiveCharacter> {
 
     @Inject
     private EffectService effectService;
@@ -34,9 +32,9 @@ public class RepeatingSkill extends ActiveSkill {
         RepeatingSkillData data = (RepeatingSkillData) skillData;
         data.period = c.getLong("Repeat-period");
         try {
-            data.maxDuartion = c.getLong("Repeat-maxDuration");
+            data.countRemaining = c.getInt("Repeat-count");
         } catch (ConfigException ignored) {
-            data.maxDuartion = -1;
+            data.countRemaining = 1;
         }
 
         Config inner = c.getConfig("Parent");
@@ -44,19 +42,19 @@ public class RepeatingSkill extends ActiveSkill {
     }
 
     @Override
-    public void cast(IActiveCharacter character, PlayerSkillContext info, SkillContext skillContext) {
+    public SkillResult cast(IActiveCharacter character, PlayerSkillContext info) {
         RepeatingSkillData skillData = (RepeatingSkillData) info.getSkillData();
 
         RepeatingSkillEffect repeatingSkillEffect = new RepeatingSkillEffect(skillData, character);
         effectService.addEffect(repeatingSkillEffect, this);
 
-        skillContext.next(character, info, skillContext.result(SkillResult.OK));
+        return SkillResult.OK;
     }
 
 
     public static class RepeatingSkillData extends WrappedSkill.WrappedSkillData {
         public long period;
-        public long maxDuartion;
+        public int countRemaining;
 
         public RepeatingSkillData(String skill) {
             super(skill);
@@ -67,19 +65,19 @@ public class RepeatingSkill extends ActiveSkill {
 
         private final RepeatingSkillData skillData;
         private final IActiveCharacter character;
-        private final PlayerSkillContext info;
-        private final RepeatingNotificationSkillExecutor executor;
-        private final SkillContext skillContext;
+        private PlayerSkillContext info;
+        private int countRemaining;
 
         public RepeatingSkillEffect(RepeatingSkillData skillData, IActiveCharacter character) {
             super("repeating_" + skillData.getSkillId(), character);
             this.skillData = skillData;
             this.character = character;
-            this.info = character.getSkillInfo(skillData.getWrapped().getSkill());
-            setDuration(skillData.maxDuartion);
+            this.info = character.getSkillInfo(skillData.getSkill());
+            info = new PlayerSkillContext(info.getClassDefinition(), skillData.getWrapped().getSkill(), character);
+            info.setSkillData(skillData);
+            countRemaining = skillData.countRemaining;
+            setDuration(-1);
             setPeriod(skillData.period);
-            executor = new RepeatingNotificationSkillExecutor(this);
-            skillContext = new SkillContext(RepeatingSkill.this, info);
         }
 
         public RepeatingSkillData getSkillData() {
@@ -88,7 +86,11 @@ public class RepeatingSkill extends ActiveSkill {
 
         @Override
         public void onTick(IEffect self) {
-            Rpg.get().getSkillService().executeSkill(character, info, skillContext, executor);
+            if (countRemaining-- < 0) {
+                setDuration(0);
+            } else {
+                Rpg.get().getSkillService().executeSkill(character, info);
+            }
         }
 
 
@@ -113,28 +115,6 @@ public class RepeatingSkill extends ActiveSkill {
             return this;
         }
 
-    }
-
-
-    static class RepeatingNotificationSkillExecutor extends SkillExecutorCallback {
-
-        private RepeatingSkillEffect repeatingSkillEffect;
-
-        public RepeatingNotificationSkillExecutor(RepeatingSkillEffect repeatingSkillEffect) {
-            this.repeatingSkillEffect = repeatingSkillEffect;
-        }
-
-        @Override
-        public void doNext(IActiveCharacter character, PlayerSkillContext info, SkillContext skillResult) {
-            switch (skillResult.getResult()) {
-                case NO_MANA:
-                case NO_HP:
-                    repeatingSkillEffect.setDuration(0);
-                    break;
-                default:
-                    skillResult.resetCursor();
-            }
-        }
     }
 
 }

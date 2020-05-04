@@ -4,7 +4,7 @@ import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
+
 import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
@@ -32,7 +32,7 @@ public class Jump extends ActiveSkill<ISpigotCharacter> {
     }
 
     @Override
-    public void cast(ISpigotCharacter character, PlayerSkillContext info, SkillContext skillContext) {
+    public SkillResult cast(ISpigotCharacter character, PlayerSkillContext  skillContext) {
         Player player = character.getPlayer();
         Location playerLoc = player.getLocation();
 
@@ -44,8 +44,7 @@ public class Jump extends ActiveSkill<ISpigotCharacter> {
         velVert = Math.min(velVert, 2.0);
 
 
-
-        final Material steppedMaterial  = playerLoc.getBlock().getRelative(BlockFace.DOWN).getType();
+        final Material steppedMaterial = playerLoc.getBlock().getRelative(BlockFace.DOWN).getType();
         if (unstableMaterials.contains(steppedMaterial)) {
             velVert *= 0.75;
             velHor *= 0.75;
@@ -60,7 +59,7 @@ public class Jump extends ActiveSkill<ISpigotCharacter> {
         player.getWorld().spawnParticle(Particle.BLOCK_DUST, player.getLocation(), 15, 0.0, 0.3, 0.0, steppedMaterial.data);
         player.getWorld().spawnParticle(Particle.BLOCK_CRACK, player.getLocation(), 15, 0.0, 0.1, 0.0, steppedMaterial.data);
 
-        skillContext.next(character, info, skillContext.result(SkillResult.OK));
+        return SkillResult.OK;
     }
 
     static {

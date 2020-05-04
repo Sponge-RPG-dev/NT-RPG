@@ -20,7 +20,6 @@ package cz.neumimto.rpg.spigot.events.skill;
 
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.events.skill.SkillPostUsageEvent;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import org.bukkit.event.HandlerList;
 
 /**
@@ -28,19 +27,8 @@ import org.bukkit.event.HandlerList;
  */
 public class SpigotSkillPostUsageEvent extends SpigotAbstractSkillEvent implements SkillPostUsageEvent {
 
-    private SkillContext skillContext;
     private IEntity caster;
     private long cooldown;
-
-    @Override
-    public SkillContext getSkillContext() {
-        return skillContext;
-    }
-
-    @Override
-    public void setSkillContext(SkillContext skillContext) {
-        this.skillContext = skillContext;
-    }
 
     @Override
     public IEntity getCaster() {
@@ -66,6 +54,7 @@ public class SpigotSkillPostUsageEvent extends SpigotAbstractSkillEvent implemen
     public HandlerList getHandlers() {
         return HANDLERS_LIST;
     }
+
     public static HandlerList getHandlerList() {
         return HANDLERS_LIST;
     }

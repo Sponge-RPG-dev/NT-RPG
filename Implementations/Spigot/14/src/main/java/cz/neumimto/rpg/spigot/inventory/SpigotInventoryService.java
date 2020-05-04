@@ -1,17 +1,11 @@
 package cz.neumimto.rpg.spigot.inventory;
 
-import cz.neumimto.rpg.api.configuration.ItemString;
-import cz.neumimto.rpg.api.configuration.SkillItemCost;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.inventory.RpgInventory;
 import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.persistance.model.EquipedSlot;
-import cz.neumimto.rpg.api.skills.ISkill;
-import cz.neumimto.rpg.api.skills.PlayerSkillContext;
-import cz.neumimto.rpg.api.skills.SkillCost;
 import cz.neumimto.rpg.api.skills.SkillData;
-import cz.neumimto.rpg.api.skills.mods.ActiveSkillPreProcessorWrapper;
 import cz.neumimto.rpg.common.inventory.AbstractInventoryService;
 import cz.neumimto.rpg.common.inventory.InventoryHandler;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
@@ -23,12 +17,12 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.*;
+import java.util.Map;
+import java.util.Optional;
 
 @Singleton
 public class SpigotInventoryService extends AbstractInventoryService<ISpigotCharacter> {
@@ -41,6 +35,7 @@ public class SpigotInventoryService extends AbstractInventoryService<ISpigotChar
     @Inject
     private SpigotItemService itemService;
 
+    /*
     @Override
     public Set<ActiveSkillPreProcessorWrapper> processItemCost(ISpigotCharacter character, PlayerSkillContext skillInfo) {
         SkillCost invokeCost = skillInfo.getSkillData().getInvokeCost();
@@ -85,6 +80,7 @@ public class SpigotInventoryService extends AbstractInventoryService<ISpigotChar
         }
         return Collections.emptySet();
     }
+*/
 
     @Override
     public EquipedSlot createEquipedSlot(String className, int slotId) {

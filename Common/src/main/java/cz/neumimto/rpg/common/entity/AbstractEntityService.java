@@ -1,7 +1,5 @@
 package cz.neumimto.rpg.common.entity;
 
-import static cz.neumimto.rpg.api.logging.Log.warn;
-
 import cz.neumimto.rpg.api.IRpgElement;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.effects.EffectService;
@@ -11,10 +9,11 @@ import cz.neumimto.rpg.api.events.skill.SkillHealEvent;
 import cz.neumimto.rpg.common.entity.configuration.MobSettingsDao;
 import cz.neumimto.rpg.common.entity.configuration.MobsConfig;
 
+import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.UUID;
 
-import javax.inject.Inject;
+import static cz.neumimto.rpg.api.logging.Log.warn;
 
 public abstract class AbstractEntityService<T, I extends IMob<T>> implements EntityService<T> {
 

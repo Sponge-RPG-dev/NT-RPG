@@ -29,8 +29,6 @@ import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 
-import java.util.List;
-
 /**
  * Created by NeumimTo on 12.2.2015.
  */
@@ -42,7 +40,8 @@ public class Gui {
 
     private static IPlayerMessage mod;
 
-    public Gui() {}
+    public Gui() {
+    }
 
     public Gui(IPlayerMessage vanilla) {
         Gui.vanilla = vanilla;
@@ -66,7 +65,6 @@ public class Gui {
     public static void sendEffectStatus(IActiveCharacter player, EffectStatusType type, IEffect effect) {
         getMessageTypeOf(player).sendEffectStatus(player, type, effect);
     }
-
 
 
     public static void showCharacterInfo(IActiveCharacter player, IActiveCharacter character) {

@@ -96,7 +96,7 @@ public class ItemStackUtils {
 
 
     public static boolean hasSockets(ItemStack itemStack) {
-        return ((SpongeRpg)Rpg.get()).getRwService().getSocketCount(itemStack) > 0;
+        return ((SpongeRpg) Rpg.get()).getRwService().getSocketCount(itemStack) > 0;
     }
 
     /**

@@ -7,14 +7,13 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 
-import java.util.concurrent.ThreadLocalRandom;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Created by NeumimTo on 4.7.2017.
@@ -40,13 +39,13 @@ public class Arrowstorm extends ActiveSkill {
     }
 
     @Override
-    public void cast(IActiveCharacter character, PlayerSkillContext info, SkillContext skillContext) {
+    public SkillResult cast(IActiveCharacter character, PlayerSkillContext  skillContext) {
         int min = skillContext.getIntNodeValue("min-arrows");
         int max = skillContext.getIntNodeValue("max-arrows");
         int arrows = ThreadLocalRandom.current().nextInt(max - min) + min;
         min = skillContext.getIntNodeValue(SkillNodes.PERIOD);
         min = min <= 0 ? 1 : min;
         effectService.addEffect(new ArrowstormEffect(character, min, arrows), this);
-        skillContext.next(character, info, skillContext.result(SkillResult.OK));
+        return SkillResult.OK;
     }
 }

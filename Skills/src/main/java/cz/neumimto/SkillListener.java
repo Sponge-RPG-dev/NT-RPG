@@ -12,7 +12,10 @@ import cz.neumimto.events.ManaDrainEvent;
 import cz.neumimto.model.*;
 import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
-import cz.neumimto.rpg.api.entity.*;
+import cz.neumimto.rpg.api.entity.CommonProperties;
+import cz.neumimto.rpg.api.entity.IEntity;
+import cz.neumimto.rpg.api.entity.IEntityType;
+import cz.neumimto.rpg.api.entity.IReservable;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.utils.rng.XORShiftRnd;
@@ -61,11 +64,11 @@ import org.spongepowered.api.util.Tristate;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 
 /**
  * Created by ja on 21.5.2016.

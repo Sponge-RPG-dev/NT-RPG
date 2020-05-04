@@ -144,7 +144,8 @@ public class LocalizationKeys {
     public static final String ITEM_ARMOR = "label.item-armor";
     public static final String CLASS_TYPE = "label.item.class.class-type";
     public static final String DESCRIPTION = "label.item.class.description";
-    public static final String LORE = "label.item.class.lore";;
+    public static final String LORE = "label.item.class.lore";
+    ;
     public static final String SKILL_EXECUTION_TYPE = "label.item.skill.exec-type";
     public static final String SKILL_TRAITS = "label.item.skill.traits";
     public static final String SKILL_TYPES = "label.item.skill.types";

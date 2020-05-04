@@ -56,7 +56,7 @@ public class SkillpackListener implements Listener {
         if (effect != null) {
             Float mult = (Float) effect.getStackedValue();
             spigotDamageService.damage(livingEntity, EntityDamageEvent.DamageCause.MAGIC, event.getAmount() * mult, false);
-            livingEntity.getWorld().spawnParticle(Particle.DAMAGE_INDICATOR, livingEntity.getLocation(), 5, 2,2,2);
+            livingEntity.getWorld().spawnParticle(Particle.DAMAGE_INDICATOR, livingEntity.getLocation(), 5, 2, 2, 2);
         }
     }
 

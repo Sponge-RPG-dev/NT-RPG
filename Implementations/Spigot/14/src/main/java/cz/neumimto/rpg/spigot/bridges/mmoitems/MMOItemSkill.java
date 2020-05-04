@@ -2,9 +2,10 @@ package cz.neumimto.rpg.spigot.bridges.mmoitems;
 
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import it.unimi.dsi.fastutil.objects.Object2FloatMap;
+import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
 import net.Indyuce.mmoitems.api.ability.Ability;
 import net.Indyuce.mmoitems.api.ability.AbilityResult;
@@ -34,18 +35,20 @@ public class MMOItemSkill extends ActiveSkill<ISpigotCharacter> {
     }
 
     @Override
-    public void cast(ISpigotCharacter character, PlayerSkillContext info, SkillContext skillContext) {
+    public SkillResult cast(ISpigotCharacter character, PlayerSkillContext skillContext) {
         Player player = character.getPlayer();
         AbilityData abilityData = new AbilityData(getAbility(), Ability.CastingMode.LEFT_CLICK);
         PlayerData playerData = PlayerData.get(player);
         PlayerStats playerStats = new PlayerStats(playerData);
         PlayerStats.CachedStats stats = playerStats.newTemporary();
 
-        for (Map.Entry<String, Float> e : skillContext.getSkillNodes().entrySet()) {
-            abilityData.setModifier(e.getKey(), e.getValue());
+        Object2FloatOpenHashMap<String> compSettings = skillContext.getCachedComputedSkillSettings();
+        for (Object2FloatMap.Entry<String> e : compSettings.object2FloatEntrySet()) {
+            abilityData.setModifier(e.getKey(), e.getFloatValue());
         }
+
         boolean casted = this.cast(stats, new ItemAttackResult(true, DamageType.SKILL), abilityData);
-        skillContext.next(character, info, skillContext.result(casted ? SkillResult.OK : SkillResult.CANCELLED));
+        return casted ? SkillResult.OK : SkillResult.CANCELLED;
     }
 
     public Ability getAbility() {

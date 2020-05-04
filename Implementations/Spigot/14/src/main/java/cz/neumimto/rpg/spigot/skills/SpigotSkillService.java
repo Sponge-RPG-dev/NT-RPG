@@ -38,7 +38,7 @@ public class SpigotSkillService extends AbstractSkillService {
             guiModelByCharacter.put(split[0].charAt(0), model);
             i++;
         }
-      //  scriptSkillsParents.put("targeted", TargetedScriptSkill.class);
+        //  scriptSkillsParents.put("targeted", TargetedScriptSkill.class);
         super.load();
     }
 

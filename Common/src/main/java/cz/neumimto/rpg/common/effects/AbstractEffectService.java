@@ -29,6 +29,7 @@ import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.api.skills.SkillSettings;
 import cz.neumimto.rpg.common.assets.AssetService;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -36,7 +37,6 @@ import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
 import java.util.function.Consumer;
-import javax.inject.Inject;
 
 
 /**

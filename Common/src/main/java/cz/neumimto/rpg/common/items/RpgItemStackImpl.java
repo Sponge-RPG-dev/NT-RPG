@@ -24,7 +24,7 @@ public class RpgItemStackImpl implements RpgItemStack {
                             Map<AttributeConfig, Integer> minimalAttributeRequirements,
                             Map<ClassDefinition, Integer> classRequirements,
                             Map<String, Double> itemData
-                            ) {
+    ) {
         this.rpgItemType = rpgItemType;
         this.enchantments = enchantments;
         this.bonusAttributes = bonusAttributes;

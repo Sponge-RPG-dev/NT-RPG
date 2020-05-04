@@ -40,10 +40,9 @@ import org.spongepowered.api.event.cause.entity.damage.source.DamageSource;
 import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 
+import javax.inject.Singleton;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import javax.inject.Singleton;
 
 /**
  * Created by NeumimTo on 4.8.15.

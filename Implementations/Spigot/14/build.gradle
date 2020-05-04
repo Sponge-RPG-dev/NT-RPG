@@ -51,6 +51,7 @@ dependencies {
     annotationProcessor "org.spigotmc:plugin-annotations:1.2.2-SNAPSHOT"
 
     compileOnly fileTree(dir: 'lib', include: '*.jar')
+    compileOnly 'it.unimi.dsi:fastutil:8.2.1'
 
     compileOnly "org.spigotmc:spigot-api:1.15.1-R0.1-SNAPSHOT"
     compileOnly "org.spigotmc:plugin-annotations:1.2.2-SNAPSHOT"
@@ -59,7 +60,7 @@ dependencies {
     compileOnly 'com.github.Slikey:EffectLib:d77f639038'
     compileOnly 'me.clip:placeholderapi:2.10.3'
     compileOnly 'com.gmail.filoghost.holographicdisplays:holographicdisplays-api:2.4.0'
-    compileOnly ('net.Indyuce:MMOItems:5.4') {
+    compileOnly('net.Indyuce:MMOItems:5.4') {
         exclude group: 'com.mojang', module: 'authlib'
     }
     compileOnly 'io.lumine.xikage:MythicMobs:4.9.1'
@@ -68,7 +69,7 @@ dependencies {
         from {
             configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
         }
-        archiveName("NT-RPG-Spigot-15.x-"+version+".jar")
+        archiveName("NT-RPG-Spigot-15.x-" + version + ".jar")
     }
 }
 

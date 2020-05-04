@@ -20,25 +20,13 @@ package cz.neumimto.rpg.sponge.events.skill;
 
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.events.skill.SkillPostUsageEvent;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
 
 /**
  * Created by NeumimTo on 7.8.2015.
  */
 public class SpongeSkillPostUsageEvent extends AbstractSkillEvent implements SkillPostUsageEvent {
 
-    private SkillContext skillContext;
     private IEntity caster;
-
-    @Override
-    public SkillContext getSkillContext() {
-        return skillContext;
-    }
-
-    @Override
-    public void setSkillContext(SkillContext skillContext) {
-        this.skillContext = skillContext;
-    }
 
     @Override
     public IEntity getCaster() {

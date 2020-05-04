@@ -10,17 +10,18 @@ import com.google.inject.Singleton;
 @Singleton
 public class A {
 
-	@Inject B b;
+    @Inject
+    B b;
 
-	public void callB() {
-		b.b();
-	}
+    public void callB() {
+        b.b();
+    }
 
-	public void callBWhichCallsA() {
-		b.a.callB();
-	}
+    public void callBWhichCallsA() {
+        b.a.callB();
+    }
 
-	public void a() {
-		System.out.println("A.a()");
-	}
+    public void a() {
+        System.out.println("A.a()");
+    }
 }

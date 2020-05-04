@@ -38,7 +38,7 @@ public class CharactersExtension implements ParameterResolver {
         Annotation[] annotations = parameterContext.getParameter().getAnnotations();
         for (Annotation annotation : annotations) {
             if (annotation instanceof Stage) {
-                switch (((Stage)annotation).value()) {
+                switch (((Stage) annotation).value()) {
                     case READY:
                         return initializedCharacter();
                     default:
@@ -108,6 +108,7 @@ public class CharactersExtension implements ParameterResolver {
     @Retention(RetentionPolicy.RUNTIME)
     public @interface Stage {
         Stages value();
+
         enum Stages {
             READY
         }

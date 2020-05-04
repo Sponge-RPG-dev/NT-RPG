@@ -140,7 +140,7 @@ public class CharacterCommandFacade {
                 current.sendMessage(localizationService.translate(LocalizationKeys.NON_EXISTING_CHARACTER));
             }
         }, Rpg.get().getAsyncExecutor()).exceptionally(throwable -> {
-            Log.error("Could not change character" , throwable);
+            Log.error("Could not change character", throwable);
             return null;
         });
     }
@@ -161,7 +161,7 @@ public class CharacterCommandFacade {
             character.getSkillTreeViewLocation().put(skillTree.getId(), skillTreeViewModel);
             skillTreeViewModel.setSkillTree(skillTree);
         } else {
-            ((SkillTreeViewModel)character.getSkillTreeViewLocation().get(skillTree.getId())).setCurrent(true);
+            ((SkillTreeViewModel) character.getSkillTreeViewLocation().get(skillTree.getId())).setCurrent(true);
         }
         Gui.openSkillTreeMenu(character);
     }

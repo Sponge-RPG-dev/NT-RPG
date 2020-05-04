@@ -47,16 +47,16 @@ dependencies {
 
     jar {
         from configurations.compile.collect {
-            it.isDirectory() ? it : zipTree(it).matching{exclude{it.path.contains('META-INF')}}
+            it.isDirectory() ? it : zipTree(it).matching { exclude { it.path.contains('META-INF') } }
         }
-        archiveName("NT-RPG-Sponge-7-"+version+".jar")
+        archiveName("NT-RPG-Sponge-7-" + version + ".jar")
     }
 
 }
 
 shadowJar {
     classifier = null
-    
+
     relocate 'co.aikar.commands', 'cz.neumimto.acf'
     exclude '**/module-info.class'
 }

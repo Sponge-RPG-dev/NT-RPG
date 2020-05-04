@@ -4,7 +4,7 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 
 import java.util.List;
 
-public class SkillNodeDescription implements ISkillNodeDescription{
+public class SkillNodeDescription implements ISkillNodeDescription {
 
     private final List<String> description;
 

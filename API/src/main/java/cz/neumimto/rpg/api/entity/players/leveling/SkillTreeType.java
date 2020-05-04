@@ -2,8 +2,8 @@ package cz.neumimto.rpg.api.entity.players.leveling;
 
 
 import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.CharacterService;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.events.character.CharacterGainedLevelEvent;
@@ -80,7 +80,7 @@ public enum SkillTreeType {
                     characterService.save(character.getCharacterBase());
                     Rpg.get().getCharacterService().removePersistantSkill(characterSkill);
                 }, Rpg.get().getAsyncExecutor()).exceptionally(throwable -> {
-                    Log.error("Could not refund a skillpoint " , throwable);
+                    Log.error("Could not refund a skillpoint ", throwable);
                     return null;
                 });
             } else {

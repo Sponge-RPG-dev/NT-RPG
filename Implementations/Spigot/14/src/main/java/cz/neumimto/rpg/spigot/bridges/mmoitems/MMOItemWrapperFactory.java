@@ -2,7 +2,6 @@ package cz.neumimto.rpg.spigot.bridges.mmoitems;
 
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.skills.ISkill;
-import cz.neumimto.rpg.api.skills.SkillSettings;
 import cz.neumimto.rpg.api.utils.DebugLevel;
 import cz.neumimto.rpg.common.skills.SkillConfigLoader;
 import net.Indyuce.mmoitems.api.ability.Ability;
@@ -33,7 +32,7 @@ public class MMOItemWrapperFactory {
 
     public static ISkill generateSkill(Ability ability, SkillConfigLoader skillConfigLoader) {
 
-        String lowerCaseID = "mmoitems:" + ability.getLowerCaseID().replaceAll("-","");
+        String lowerCaseID = "mmoitems:" + ability.getLowerCaseID().replaceAll("-", "");
 
         MMOItemSkill skill = null;
         try {
@@ -43,9 +42,9 @@ public class MMOItemWrapperFactory {
             throw new IllegalArgumentException(e.getMessage());
         }
         skill.setAbility(ability);
-        Log.info(" - Settings: " + lowerCaseID , DebugLevel.BALANCE);
+        Log.info(" - Settings: " + lowerCaseID, DebugLevel.BALANCE);
         for (String s : skill.getAbility().getModifiers()) {
-            if (s.equals("mana") || s.equals("stamina") ||s.equals("cooldown")) {
+            if (s.equals("mana") || s.equals("stamina") || s.equals("cooldown")) {
                 continue;
             }
             Log.info("  - " + s, DebugLevel.BALANCE);

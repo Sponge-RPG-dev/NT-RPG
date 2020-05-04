@@ -153,4 +153,7 @@ public interface CharacterService<T extends IActiveCharacter> {
     ActionResult addUniqueSkillpoint(T character, PlayerClassData classByType, String sourceKey);
 
     void setHeathscale(T character, double scale);
+
+    void notifyCooldown(IActiveCharacter caster, PlayerSkillContext skillInfo, long cd);
+
 }

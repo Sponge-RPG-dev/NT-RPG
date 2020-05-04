@@ -19,9 +19,9 @@
 package cz.neumimto.rpg.sponge.entities.players.party;
 
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.party.IParty;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import org.spongepowered.api.scoreboard.Team;
 import org.spongepowered.api.text.Text;
@@ -75,7 +75,7 @@ public class SpongeParty implements IParty<ISpongeCharacter> {
     @Override
     public void removePlayer(ISpongeCharacter character) {
         players.remove(character);
-        team.removeMember(((ISpongeCharacter)character).getPlayer().getTeamRepresentation());
+        team.removeMember(((ISpongeCharacter) character).getPlayer().getTeamRepresentation());
     }
 
     @Override

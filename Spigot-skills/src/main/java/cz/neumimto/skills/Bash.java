@@ -6,16 +6,12 @@ import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
-import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
 import cz.neumimto.rpg.spigot.skills.TargetedEntitySkill;
 import cz.neumimto.skills.effects.negative.StunEffect;
-import org.bukkit.Particle;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.util.Vector;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -40,7 +36,7 @@ public class Bash extends TargetedEntitySkill {
     }
 
     @Override
-    public void castOn(IEntity target, ISpigotCharacter source, PlayerSkillContext info, SkillContext skillContext) {
+    public SkillResult castOn(IEntity target, ISpigotCharacter source, PlayerSkillContext skillContext) {
         LivingEntity entity = (LivingEntity) target.getEntity();
         double damage = skillContext.getDoubleNodeValue(SkillNodes.DAMAGE);
         if (damage > 0) {
@@ -49,7 +45,7 @@ public class Bash extends TargetedEntitySkill {
         long duration = skillContext.getLongNodeValue(SkillNodes.DURATION);
         StunEffect stunEffect = new StunEffect(target, duration);
         effectService.addEffect(stunEffect, this);
-        skillContext.next(source, info, skillContext.result(SkillResult.OK));
+        return SkillResult.OK;
     }
 
 }

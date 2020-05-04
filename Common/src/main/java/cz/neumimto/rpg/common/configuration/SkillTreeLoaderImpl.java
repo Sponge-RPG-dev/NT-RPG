@@ -18,28 +18,28 @@
 
 package cz.neumimto.rpg.common.configuration;
 
+import com.google.inject.Injector;
 import com.typesafe.config.*;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.configuration.ItemString;
 import cz.neumimto.rpg.api.configuration.SkillItemCost;
 import cz.neumimto.rpg.api.configuration.SkillTreeDao;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.gui.ISkillTreeInterfaceModel;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.skills.*;
 import cz.neumimto.rpg.api.skills.WrappedSkill.WrappedSkillData;
-import cz.neumimto.rpg.api.skills.mods.ActiveSkillPreProcessorWrapper;
 import cz.neumimto.rpg.api.skills.scripting.ScriptedSkillNodeDescription;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
+import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.api.skills.utils.SkillLoadingErrors;
 import cz.neumimto.rpg.api.utils.FileUtils;
 import cz.neumimto.rpg.api.utils.MathUtils;
 import cz.neumimto.rpg.api.utils.Pair;
 import cz.neumimto.rpg.common.skills.SkillConfigLoader;
 import cz.neumimto.rpg.common.skills.SkillConfigLoaders;
-import cz.neumimto.rpg.common.skills.preprocessors.SkillPreprocessorFactories;
+import cz.neumimto.rpg.common.skills.SkillExecutor;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -50,7 +50,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static cz.neumimto.rpg.api.logging.Log.*;
 
@@ -66,6 +65,9 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
 
     @Inject
     private LocalizationService localizationService;
+
+    @Inject
+    private Injector injector;
 
     @Override
     public Map<String, SkillTree> getAll() {
@@ -174,17 +176,12 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
             return;
         }
 
-        try {
-            Config parent = c.getConfig("Parent");
-            createConfigSkill(skillTree, parent);
-        } catch (ConfigException.Missing ignored) {}
-
         String id = c.getString("SkillId");
 
         ISkill skill = Rpg.get().getSkillService().getSkills().get(id.toLowerCase());
         if (skill == null) {
             try {
-                final String cType =type;
+                final String cType = type;
                 SkillConfigLoader loader = SkillConfigLoaders.getById(type)
                         .orElseThrow(() ->
                                 new IllegalArgumentException("Unknown skill type " + cType + " in a skiltree " + skillTree.getId())
@@ -208,16 +205,32 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
 
     protected void loadSkill(SkillTree skillTree, Config c) {
         String skillId = c.getString("SkillId");
-        try {
-            Config parent = c.getConfig("Parent");
-            String wrappedSkillId = parent.getString("SkillId");
-            WrappedSkillData info = (WrappedSkillData) createSkillInfo(skillTree, wrappedSkillId);
-
-            loadSkill(skillTree, parent, info);
-        } catch (ConfigException ignored) {}
-
         SkillData info = getSkillInfo(skillId, skillTree);
+
+        try {
+            Config parentConfig = c;
+            SkillData childSkill = info;
+            while (parentConfig.hasPath("Parent")) {
+                parentConfig = c.getConfig("Parent");
+                String wrappedSkillId = parentConfig.getString("SkillId");
+                SkillData infoWrapped = createSkillInfo(skillTree, wrappedSkillId);
+                loadSkill(skillTree, parentConfig, infoWrapped);
+                if (infoWrapped.getSkill() instanceof ActiveSkill) {
+                    infoWrapped.setSkillExecutor(injector.getInstance(SkillExecutor.class).init(info));
+                }
+                WrappedSkillData wrapper = (WrappedSkillData) childSkill;
+                wrapper.setWrapped(infoWrapped);
+                childSkill = infoWrapped;
+            }
+
+        } catch (ConfigException ignored) {
+        }
+
         loadSkill(skillTree, c, info);
+        if (info.getSkill() instanceof ActiveSkill) {
+            info.setSkillExecutor(injector.getInstance(SkillExecutor.class).init(info));
+        }
+        skillTree.getSkills().put(info.getSkillId().toLowerCase(), info);
     }
 
     private void loadSkill(SkillTree skillTree, Config c, SkillData info) {
@@ -284,35 +297,31 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
         }
         info.setDescription(skillNodeDescription);
 
-        try {
-            Config reagent = c.getConfig("InvokeCost");
-            SkillCost itemCost = new SkillCost();
-            info.setInvokeCost(itemCost);
-            List<? extends ConfigObject> list = reagent.getObjectList("Items");
+      // try {
+      //     Config reagent = c.getConfig("InvokeCost");
+      //     SkillCost itemCost = new SkillCost();
+      //     info.setInvokeCost(itemCost);
+      //     List<? extends ConfigObject> list = reagent.getObjectList("Items");
 
-            for (ConfigObject configObject : list) {
-                try {
-                    SkillItemCost q = new SkillItemCost();
-                    q.setAmount(Integer.parseInt(configObject.get("Amount").unwrapped().toString()));
-                    String type = configObject.get("Item").unwrapped().toString();
-                    boolean consume = Boolean.valueOf(configObject.get("Consume").unwrapped().toString());
-                    q.setConsumeItems(consume);
-                    ItemString parse = ItemString.parse(type);
-                    q.setItemType(parse);
-                    itemCost.getItemCost().add(q);
+      //     for (ConfigObject configObject : list) {
+      //         try {
+      //             SkillItemCost q = new SkillItemCost();
+      //             q.setAmount(Integer.parseInt(configObject.get("Amount").unwrapped().toString()));
+      //             String type = configObject.get("Item").unwrapped().toString();
+      //             boolean consume = Boolean.valueOf(configObject.get("Consume").unwrapped().toString());
+      //             q.setConsumeItems(consume);
+      //             ItemString parse = ItemString.parse(type);
+      //             q.setItemType(parse);
+      //             itemCost.getItemCost().add(q);
 
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            list = reagent.getObjectList("Insufficient");
-            for (ConfigObject configObject : list) {
-                Set<ActiveSkillPreProcessorWrapper> preprocessors = itemCost.getInsufficientProcessors();
-                loadPreprocessor(configObject, preprocessors);
-            }
-        } catch (Exception e) {
+      //         } catch (Exception e) {
+      //             e.printStackTrace();
+      //         }
+      //      }
 
-        }
+      //  } catch (Exception e) {
+
+      //  }
 
         try {
             for (String conflicts : c.getStringList("Conflicts")) {
@@ -364,10 +373,12 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
         }
 
         try {
-            List<ActiveSkillPreProcessorWrapper> skillPreprocessors = info.getSkillPreprocessors();
-            List<? extends ConfigObject> preprocessors = c.getObjectList("Preprocessors");
+            List<? extends ConfigObject> preprocessors = c.getObjectList("CastConditions");
+
+            Map<String, SkillCastCondition> map = new HashMap<>();
+            info.setSkillCastConditions(map);
             for (ConfigObject preprocessor : preprocessors) {
-                loadPreprocessor(preprocessor, skillPreprocessors);
+                loadCastConditions(preprocessor, map);
             }
         } catch (ConfigException e) {
 
@@ -443,24 +454,12 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
         }
 
 
-        skillTree.getSkills().put(info.getSkillId().toLowerCase(), info);
     }
 
-    private void loadPreprocessor(ConfigObject configObject, Collection<ActiveSkillPreProcessorWrapper> preprocessors) {
-        String preprocessorFactoryId = configObject.get("Id").unwrapped().toString();
-        Optional<SkillPreProcessorFactory> id = SkillPreprocessorFactories.getById(preprocessorFactoryId);
-        if (id.isPresent()) {
-            SkillPreProcessorFactory skillPreProcessorFactory = id.get();
-            ActiveSkillPreProcessorWrapper parse = skillPreProcessorFactory.parse(configObject);
-            preprocessors.add(parse);
-        } else {
-            warn("- Unknown processor type " + configObject.get("Id").render() + ", use one of: " +
-                    SkillPreprocessorFactories.getAll()
-                    .stream()
-                    .map(SkillPreProcessorFactory::getId)
-                    .collect(Collectors.joining(", ")));
-        }
+    private ConfigObject loadCastConditions(ConfigObject preprocessor, Map<String, SkillCastCondition> map) {
+        return null;
     }
+
 
     private void addRequiredIfMissing(SkillSettings skillSettings) {
         Map.Entry<String, Float> q = skillSettings.getFloatNodeEntry(SkillNodes.HPCOST.name());
@@ -500,11 +499,6 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
 
     private SkillData constructSkillData(ISkill skill) {
         SkillData info = skill.constructSkillData();
-        if (info instanceof WrappedSkillData) {
-            WrappedSkillData data = (WrappedSkillData) info;
-            SkillData wrapped = constructSkillData(data.getSkill());
-            data.setWrapped(wrapped);
-        }
         return info;
     }
 }

@@ -19,7 +19,6 @@ import cz.neumimto.rpg.api.items.ItemClass;
 import cz.neumimto.rpg.api.items.RpgItemType;
 import cz.neumimto.rpg.common.commands.CharacterCommands;
 import cz.neumimto.rpg.common.commands.OnlineOtherPlayer;
-import cz.neumimto.rpg.spigot.gui.SpigotGuiHelper;
 import cz.neumimto.rpg.spigot.inventory.SpigotItemService;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;

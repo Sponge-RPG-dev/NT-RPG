@@ -12,42 +12,42 @@ import org.spongepowered.api.event.Cancellable;
 @JsBinding(JsBinding.Type.CLASS)
 public class ManaDrainEvent extends AbstractNEvent implements Cancellable {
 
-	private final IEntity source;
-	private final IActiveCharacter target;
-	private double amountDrained;
-	private boolean cancelled;
+    private final IEntity source;
+    private final IActiveCharacter target;
+    private double amountDrained;
+    private boolean cancelled;
 
-	public ManaDrainEvent(IEntity source, IActiveCharacter target, double k) {
-		this.source = source;
-		this.target = target;
-		this.amountDrained = k;
-	}
+    public ManaDrainEvent(IEntity source, IActiveCharacter target, double k) {
+        this.source = source;
+        this.target = target;
+        this.amountDrained = k;
+    }
 
 
-	@Override
-	public boolean isCancelled() {
-		return cancelled;
-	}
+    @Override
+    public boolean isCancelled() {
+        return cancelled;
+    }
 
-	@Override
-	public void setCancelled(boolean cancel) {
-		this.cancelled = cancel;
-	}
+    @Override
+    public void setCancelled(boolean cancel) {
+        this.cancelled = cancel;
+    }
 
-	@Override
-	public IEntity getSource() {
-		return source;
-	}
+    @Override
+    public IEntity getSource() {
+        return source;
+    }
 
-	public IActiveCharacter getTarget() {
-		return target;
-	}
+    public IActiveCharacter getTarget() {
+        return target;
+    }
 
-	public double getAmountDrained() {
-		return amountDrained;
-	}
+    public double getAmountDrained() {
+        return amountDrained;
+    }
 
-	public void setAmountDrained(double amountDrained) {
-		this.amountDrained = amountDrained;
-	}
+    public void setAmountDrained(double amountDrained) {
+        this.amountDrained = amountDrained;
+    }
 }

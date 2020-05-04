@@ -33,7 +33,7 @@ public class SkillTargetProcessors {
     )
     public static final BiFunction<IEntity<LivingEntity>, Number, List<IEntity>> NEARBY_ALLIES = ((entity, radius) -> {
         double v = radius.doubleValue();
-        Collection<Entity> nearbyEntities = entity.getEntity().getNearbyEntities(v,v,v);
+        Collection<Entity> nearbyEntities = entity.getEntity().getNearbyEntities(v, v, v);
         List<IEntity> nearby = new ArrayList<>();
         if (entity.getType() == IEntityType.MOB) {
             for (Entity nearbyEntity : nearbyEntities) {

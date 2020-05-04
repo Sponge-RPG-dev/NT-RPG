@@ -10,10 +10,10 @@ import cz.neumimto.rpg.api.skills.types.PassiveSkill;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.effect.potion.PotionEffectType;
 
+import javax.inject.Singleton;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import javax.inject.Singleton;
 
 /**
  * Created by NeumimTo on 20.8.2017.

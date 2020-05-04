@@ -21,7 +21,6 @@ import cz.neumimto.rpg.api.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.api.scripting.IScriptEngine;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillService;
-import cz.neumimto.rpg.api.skills.mods.ActiveSkillPreProcessorWrapper;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -184,11 +183,6 @@ public class RpgTests implements RpgApi {
             @Override
             public boolean isManagedInventory(Class aClass, int slotId) {
                 return false;
-            }
-
-            @Override
-            public Set<ActiveSkillPreProcessorWrapper> processItemCost(IActiveCharacter character, PlayerSkillContext info) {
-                return null;
             }
 
             @Override

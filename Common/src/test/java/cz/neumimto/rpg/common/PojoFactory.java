@@ -31,7 +31,7 @@ public class PojoFactory {
         return loaded;
     }
 
-    public static Object createInstance(Class iFace)  {
+    public static Object createInstance(Class iFace) {
         try {
             return create(iFace).newInstance();
         } catch (InstantiationException | IllegalAccessException e) {

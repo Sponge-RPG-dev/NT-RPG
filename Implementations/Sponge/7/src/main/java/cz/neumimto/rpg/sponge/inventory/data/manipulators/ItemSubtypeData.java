@@ -45,7 +45,7 @@ public class ItemSubtypeData extends AbstractSingleData<ItemSubtype, ItemSubtype
     public Optional<ItemSubtypeData> from(DataView view) {
         if (view.contains(NKeys.ITEM_META_SUBTYPE.getQuery())) {
             String s = view.getString(NKeys.ITEM_META_SUBTYPE.getQuery()).get();
-            ItemSubtype itemSubtype =  ((SpongeItemService)Rpg.get().getItemService()).getItemSubtypes().get(s);
+            ItemSubtype itemSubtype = ((SpongeItemService) Rpg.get().getItemService()).getItemSubtypes().get(s);
             setValue(itemSubtype);
             return Optional.of(this);
         }

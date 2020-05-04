@@ -3,7 +3,6 @@ package cz.neumimto.rpg.spigot.skills;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import org.bukkit.FluidCollisionMode;
@@ -14,19 +13,19 @@ import org.bukkit.util.RayTraceResult;
 public abstract class TargetedBlockSkill extends ActiveSkill<ISpigotCharacter> {
 
     @Override
-    public void cast(ISpigotCharacter character, PlayerSkillContext info, SkillContext skillContext) {
+    public SkillResult cast(ISpigotCharacter character, PlayerSkillContext skillContext) {
         Player player = character.getPlayer();
         int range = skillContext.getIntNodeValue(SkillNodes.RANGE);
 
         Block block = rayTraceBlock(player, range);
         if (block != null && isValidBlock(block)) {
-            castOn(block, character, info, skillContext);
+            return castOn(block, character, skillContext);
         } else {
-            skillContext.next(character, info, SkillResult.NO_TARGET); //dont chain
+            return SkillResult.NO_TARGET;
         }
     }
 
-    protected abstract void castOn(Block block, ISpigotCharacter character, PlayerSkillContext info, SkillContext skillContext);
+    protected abstract SkillResult castOn(Block block, ISpigotCharacter character, PlayerSkillContext skillContext);
 
     protected boolean isValidBlock(Block block) {
         return true;

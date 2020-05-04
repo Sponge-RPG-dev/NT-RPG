@@ -27,7 +27,7 @@ public class StunEffect extends UnstackableEffectBase<Long> {
 
     @Generate.Constructor
     public StunEffect(IEffectConsumer consumer, long duration) {
-        this((ISpigotEntity)consumer, duration);
+        this((ISpigotEntity) consumer, duration);
     }
 
 

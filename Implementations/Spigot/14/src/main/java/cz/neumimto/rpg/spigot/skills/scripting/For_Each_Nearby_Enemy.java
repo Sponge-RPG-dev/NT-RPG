@@ -29,6 +29,7 @@ import java.util.function.Consumer;
 public class For_Each_Nearby_Enemy implements TriConsumer<ISpigotEntity, Number, Consumer<IEntity>> {
 
     public static For_Each_Nearby_Enemy INSTANCE;
+
     static {
         INSTANCE = new For_Each_Nearby_Enemy();
     }
@@ -36,13 +37,13 @@ public class For_Each_Nearby_Enemy implements TriConsumer<ISpigotEntity, Number,
     @Override
     public void accept(ISpigotEntity entity, Number radius, Consumer<IEntity> consumer) {
         double r = radius.doubleValue();
-        Collection<Entity> nearbyEntities = entity.getEntity().getNearbyEntities(r,r,r);
+        Collection<Entity> nearbyEntities = entity.getEntity().getNearbyEntities(r, r, r);
         ISpigotCharacter character = (ISpigotCharacter) entity;
         for (Entity nearbyEntity : nearbyEntities) {
             if (nearbyEntity instanceof LivingEntity) {
                 LivingEntity living = (LivingEntity) nearbyEntity;
                 IEntity iEntity = Rpg.get().getEntityService().get(nearbyEntity);
-                if (!iEntity.isFriendlyTo(character) && ((SpigotDamageService)Rpg.get().getDamageService()).canDamage(character, living)) {
+                if (!iEntity.isFriendlyTo(character) && ((SpigotDamageService) Rpg.get().getDamageService()).canDamage(character, living)) {
                     consumer.accept(iEntity);
                 }
             }

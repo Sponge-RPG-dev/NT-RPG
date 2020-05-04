@@ -7,14 +7,14 @@ version = '3.0.5'
 
 dependencies {
     annotationProcessor project(':Generator')
-    
+
     compileOnly project(':Sponge-7')
     compileOnly project(':API')
-    
+
     compileOnly 'org.spongepowered:spongeapi:' + project.spongeApiVersion
 
 
     jar {
-        archiveName("Sponge-Skills-"+version+".jar")
+        archiveName("Sponge-Skills-" + version + ".jar")
     }
 }

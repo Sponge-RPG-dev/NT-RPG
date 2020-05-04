@@ -19,7 +19,7 @@ public class UnhealEffect extends EffectBase<Float> {
     }
 
     public void process(LivingEntity entity, double healedAmount, SpigotDamageService damageService) {
-        damageService.damage(entity, EntityDamageEvent.DamageCause.MAGIC,healedAmount * getValue(), false);
+        damageService.damage(entity, EntityDamageEvent.DamageCause.MAGIC, healedAmount * getValue(), false);
 
     }
 

@@ -1,7 +1,10 @@
 package cz.neumimto.rpg.junit;
 
 import com.google.inject.*;
-import cz.neumimto.rpg.*;
+import cz.neumimto.rpg.TestApiImpl;
+import cz.neumimto.rpg.TestDamageService;
+import cz.neumimto.rpg.TestResourceLoader;
+import cz.neumimto.rpg.TestSkillService;
 import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.RpgApi;
 import cz.neumimto.rpg.api.classes.ClassService;
@@ -43,7 +46,10 @@ import cz.neumimto.rpg.common.inventory.InventoryHandler;
 import cz.neumimto.rpg.common.inventory.TestInventoryService;
 import cz.neumimto.rpg.common.inventory.crafting.runewords.RWDao;
 import cz.neumimto.rpg.common.localization.LocalizationServiceImpl;
-import cz.neumimto.rpg.common.persistance.dao.*;
+import cz.neumimto.rpg.common.persistance.dao.ClassDefinitionDao;
+import cz.neumimto.rpg.common.persistance.dao.ICharacterClassDao;
+import cz.neumimto.rpg.common.persistance.dao.IPersistenceHandler;
+import cz.neumimto.rpg.common.persistance.dao.IPlayerDao;
 import cz.neumimto.rpg.common.scripting.JSLoader;
 import cz.neumimto.rpg.effects.TestEffectService;
 import cz.neumimto.rpg.entity.TestEntityService;

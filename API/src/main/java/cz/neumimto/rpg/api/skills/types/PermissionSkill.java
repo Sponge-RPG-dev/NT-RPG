@@ -16,17 +16,16 @@
 
 package cz.neumimto.rpg.api.skills.types;
 
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillExecutionType;
 import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 
-public class PermissionSkill extends AbstractSkill {
+public class PermissionSkill extends AbstractSkill<IActiveCharacter> {
 
     @Override
-    public void onPreUse(IActiveCharacter character, SkillContext skillContext) {
-        skillContext.result(SkillResult.CANCELLED);
+    public SkillResult onPreUse(IActiveCharacter character, PlayerSkillContext esi) {
+        return SkillResult.CANCELLED;
     }
 
     @Override

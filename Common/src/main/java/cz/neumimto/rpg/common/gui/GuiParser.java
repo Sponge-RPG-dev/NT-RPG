@@ -70,7 +70,7 @@ public abstract class GuiParser<T, I> {
                                                     .map(this::toItemStack)
                                                     .collect(Collectors.toList());
                                             return collect.toArray(initArray(collect.size()));
-                                }};
+                                        }};
                                 ConfigInventory c2 = createCachedMenu(
                                         sFactorz, guiName, gui, context2
                                 );
@@ -89,7 +89,7 @@ public abstract class GuiParser<T, I> {
                                 .collect(Collectors.toList())
                                 .toArray(initArray(allowedArmor.size()));
 
-                        Object[] context3 = new Object[] {
+                        Object[] context3 = new Object[]{
                                 classDef,
                                 supplier
                         };
@@ -106,7 +106,7 @@ public abstract class GuiParser<T, I> {
                                 .stream().map(this::toItemStack)
                                 .collect(Collectors.toList())
                                 .toArray(initArray(allowedWeapon.size()));
-                        context3 = new Object[] {
+                        context3 = new Object[]{
                                 classDef,
                                 supplier
                         };
@@ -147,7 +147,8 @@ public abstract class GuiParser<T, I> {
         boolean template = false;
         try {
             template = gui.getBoolean("template");
-        } catch (ConfigException ignored) {}
+        } catch (ConfigException ignored) {
+        }
 
         ScriptEngine scriptEngine = factory.getScriptEngine();
         try {
@@ -161,12 +162,12 @@ public abstract class GuiParser<T, I> {
     }
 
     private ConfigInventory createCachedMenu(Invocable i,
-                                               String guiName,
-                                               List<String> inv,
-                                               String dynamicSpace,
-                                               List<String> items,
-                                               boolean template,
-                                               Object context
+                                             String guiName,
+                                             List<String> inv,
+                                             String dynamicSpace,
+                                             List<String> items,
+                                             boolean template,
+                                             Object context
     ) {
 
 
@@ -250,7 +251,7 @@ public abstract class GuiParser<T, I> {
         if (size == 0) {
             return (T[]) new Object[0];
         }
-        return (T[]) new Object[size -1];
+        return (T[]) new Object[size - 1];
     }
 
     protected abstract InventorySlotProcessor getInventorySlotProcessor();

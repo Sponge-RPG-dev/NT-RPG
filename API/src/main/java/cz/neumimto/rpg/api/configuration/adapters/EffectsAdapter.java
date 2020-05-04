@@ -1,7 +1,10 @@
 package cz.neumimto.rpg.api.configuration.adapters;
 
 import com.electronwill.nightconfig.core.Config;
-import com.electronwill.nightconfig.core.conversion.*;
+import com.electronwill.nightconfig.core.conversion.Conversion;
+import com.electronwill.nightconfig.core.conversion.Converter;
+import com.electronwill.nightconfig.core.conversion.ObjectConverter;
+import com.electronwill.nightconfig.core.conversion.Path;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.effects.EffectParams;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;

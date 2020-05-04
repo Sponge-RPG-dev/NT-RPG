@@ -105,7 +105,7 @@ public class ItemSocketsData extends AbstractData<ItemSocketsData, ItemSocketsDa
             this.sockets = ((List<String>) view.getList(NKeys.ITEM_SOCKET_CONTAINER.getQuery()).get())
                     .stream()
                     .map(a -> {
-                        return ((SpongeItemService)Rpg.get().getItemService()).getSocketTypes().get(a);
+                        return ((SpongeItemService) Rpg.get().getItemService()).getSocketTypes().get(a);
                     })
                     .filter(Objects::nonNull)
                     .collect(Collectors.toList());

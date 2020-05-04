@@ -72,7 +72,7 @@ class InventoryHandlerTest {
         boolean mayUse = inventoryHandler.handleCharacterEquipActionPre(character,
                 character.getManagedInventory().get(Object.class).getManagedSlots().get(i),
                 testItemStack);
-        Log.info("Id: "+i+" result: "+ result);
+        Log.info("Id: " + i + " result: " + result);
         Assertions.assertSame(mayUse, result);
     }
 

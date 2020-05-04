@@ -59,7 +59,7 @@ public class RootMobConfig {
                 Config sub = Config.inMemory();
                 for (Map.Entry<String, MobsConfig> entry : value.entrySet()) {
                     new ObjectConverter().toConfig(entry.getValue(), sub);
-                    config.add(entry.getKey(),  sub);
+                    config.add(entry.getKey(), sub);
                     sub = Config.inMemory();
                 }
             }

@@ -8,6 +8,8 @@ import cz.neumimto.rpg.api.inventory.RpgInventory;
 import cz.neumimto.rpg.api.items.ItemClass;
 import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.items.RpgItemType;
+import cz.neumimto.rpg.api.localization.LocalizationKeys;
+import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.common.inventory.InventoryHandler;
 import cz.neumimto.rpg.spigot.SpigotRpg;
@@ -16,7 +18,11 @@ import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
 import cz.neumimto.rpg.spigot.inventory.SpigotInventoryService;
 import cz.neumimto.rpg.spigot.inventory.SpigotItemService;
 import de.tr7zw.nbtapi.NBTItem;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.HumanEntity;
@@ -44,6 +50,9 @@ import java.util.Optional;
 @Singleton
 @ResourceLoader.ListenerClass
 public class SpigotInventoryListener implements Listener {
+
+    @Inject
+    private LocalizationService localizationService;
 
     @Inject
     private SpigotCharacterService spigotCharacterService;
@@ -269,6 +278,9 @@ public class SpigotInventoryListener implements Listener {
                 return false;
             } else {
                 player.getWorld().dropItemNaturally(player.getLocation(), itemStack);
+                String message = Rpg.get().getLocalizationService().translate(LocalizationKeys.CANNOT_USE_ITEM_CONFIGURATION_REASON);
+                BaseComponent c = TextComponent.fromLegacyText(ChatColor.RED + message)[0];
+                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, c);
                 player.getInventory().setItemInMainHand(null);
                 character.setLastHotbarSlotInteraction(-1);
                 character.setRequiresDamageRecalculation(true);

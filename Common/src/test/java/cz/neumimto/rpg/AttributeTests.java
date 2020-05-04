@@ -1,8 +1,8 @@
 package cz.neumimto.rpg;
 
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.CharacterService;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.events.EventFactoryService;
 import cz.neumimto.rpg.api.utils.ActionResult;
 import cz.neumimto.rpg.junit.CharactersExtension;
@@ -41,7 +41,7 @@ public class AttributeTests {
     }
 
     @Test
-    public void testAttributeAdd(@Stage(READY)IActiveCharacter iActiveCharacter) {
+    public void testAttributeAdd(@Stage(READY) IActiveCharacter iActiveCharacter) {
         iActiveCharacter.setAttributePoints(0);
         ActionResult i = characterService.addAttribute(iActiveCharacter, TestDictionary.AGI);
         Integer attributeValue = iActiveCharacter.getAttributeValue(TestDictionary.AGI);
@@ -50,7 +50,7 @@ public class AttributeTests {
     }
 
     @Test
-    public void testAttributeAdd2(@Stage(READY)IActiveCharacter iActiveCharacter) {
+    public void testAttributeAdd2(@Stage(READY) IActiveCharacter iActiveCharacter) {
         iActiveCharacter.setAttributePoints(1);
         HashMap<AttributeConfig, Integer> map = new HashMap<>();
         map.put(TestDictionary.AGI, 2);
@@ -61,7 +61,7 @@ public class AttributeTests {
     }
 
     @Test
-    public void testAttributeAdd_ok(@Stage(READY)IActiveCharacter iActiveCharacter) {
+    public void testAttributeAdd_ok(@Stage(READY) IActiveCharacter iActiveCharacter) {
         iActiveCharacter.getCharacterBase().setUuid(UUID.randomUUID());
         characterService.create(iActiveCharacter.getCharacterBase());
         iActiveCharacter.setAttributePoints(2);
@@ -72,15 +72,15 @@ public class AttributeTests {
         Integer attributeValue = iActiveCharacter.getAttributeValue(TestDictionary.AGI);
         Assertions.assertEquals(attributeValue, 101);
         Assertions.assertTrue(i.isOk());
-        Assertions.assertEquals(iActiveCharacter.getAttributePoints(),0);
-        Assertions.assertEquals(iActiveCharacter.getCharacterBase().getAttributePointsSpent(),2);
+        Assertions.assertEquals(iActiveCharacter.getAttributePoints(), 0);
+        Assertions.assertEquals(iActiveCharacter.getCharacterBase().getAttributePointsSpent(), 2);
         Assertions.assertTrue(iActiveCharacter.requiresDamageRecalculation());
 
         characterService.putInSaveQueue(iActiveCharacter.getCharacterBase());
     }
 
     @Test
-    public void testAttributeAddTransient_ok(@Stage(READY)IActiveCharacter iActiveCharacter) {
+    public void testAttributeAddTransient_ok(@Stage(READY) IActiveCharacter iActiveCharacter) {
 
         Assertions.assertEquals(iActiveCharacter.getProperty(5), 0);
         Assertions.assertEquals(iActiveCharacter.getProperty(6), 0);

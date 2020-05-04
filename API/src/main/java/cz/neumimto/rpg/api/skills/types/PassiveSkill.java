@@ -19,16 +19,14 @@
 package cz.neumimto.rpg.api.skills.types;
 
 import cz.neumimto.rpg.api.effects.EffectService;
-import cz.neumimto.rpg.api.localization.Arg;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.inventory.InventoryService;
+import cz.neumimto.rpg.api.localization.Arg;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillExecutionType;
 import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-
 
 import javax.inject.Inject;
 
@@ -36,7 +34,7 @@ import javax.inject.Inject;
  * Created by NeumimTo on 6.8.2015.
  */
 @JsBinding(JsBinding.Type.CLASS)
-public abstract class PassiveSkill extends AbstractSkill {
+public abstract class PassiveSkill extends AbstractSkill<IActiveCharacter> {
 
     @Inject
     protected EffectService effectService;
@@ -54,12 +52,12 @@ public abstract class PassiveSkill extends AbstractSkill {
     }
 
     @Override
-    public void onPreUse(IActiveCharacter character, SkillContext skillContext) {
+    public SkillResult onPreUse(IActiveCharacter character, PlayerSkillContext esi) {
         PlayerSkillContext info = character.getSkillInfo(this);
         String msg = localizationService.translate(LocalizationKeys.CANT_USE_PASSIVE_SKILL,
                 Arg.arg("skill", info.getSkillData().getSkillName()));
         character.sendMessage(msg);
-        skillContext.result(SkillResult.CANCELLED);
+        return SkillResult.CANCELLED;
     }
 
     private void update(IActiveCharacter IActiveCharacter) {

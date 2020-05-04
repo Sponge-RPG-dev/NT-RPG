@@ -273,7 +273,7 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
     public IReservable getHealth() {
         return health;
     }
-    
+
     @Override
     public void setHealth(IReservable health) {
         this.health = health;

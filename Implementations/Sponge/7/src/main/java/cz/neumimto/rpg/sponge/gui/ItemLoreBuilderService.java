@@ -27,10 +27,10 @@ import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
-import java.util.*;
-import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**

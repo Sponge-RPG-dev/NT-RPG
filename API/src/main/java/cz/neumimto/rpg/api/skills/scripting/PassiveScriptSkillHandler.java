@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.api.skills.scripting;
 
-import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 
 /**
  * Created by NeumimTo on 7.10.2018.

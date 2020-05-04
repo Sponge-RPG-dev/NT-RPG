@@ -27,9 +27,9 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 
+import javax.inject.Singleton;
 import java.util.HashMap;
 import java.util.Map;
-import javax.inject.Singleton;
 
 /**
  * Created by NeumimTo on 1.1.2015.

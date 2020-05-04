@@ -11,37 +11,37 @@ import org.spongepowered.api.event.Cancellable;
 @JsBinding(JsBinding.Type.CLASS)
 public class CriticalStrikeEvent extends AbstractNEvent implements Cancellable {
 
-	private final IEntity source;
-	private final IEntity target;
-	private final double damage;
-	private boolean cancelled;
+    private final IEntity source;
+    private final IEntity target;
+    private final double damage;
+    private boolean cancelled;
 
-	public CriticalStrikeEvent(IEntity source, IEntity target, double effect) {
-		this.source = source;
-		this.target = target;
-		this.damage = effect;
-	}
+    public CriticalStrikeEvent(IEntity source, IEntity target, double effect) {
+        this.source = source;
+        this.target = target;
+        this.damage = effect;
+    }
 
-	@Override
-	public IEntity getSource() {
-		return source;
-	}
+    @Override
+    public IEntity getSource() {
+        return source;
+    }
 
-	public IEntity getTarget() {
-		return target;
-	}
+    public IEntity getTarget() {
+        return target;
+    }
 
-	public double getDamage() {
-		return damage;
-	}
+    public double getDamage() {
+        return damage;
+    }
 
-	@Override
-	public boolean isCancelled() {
-		return cancelled;
-	}
+    @Override
+    public boolean isCancelled() {
+        return cancelled;
+    }
 
-	@Override
-	public void setCancelled(boolean cancel) {
-		this.cancelled = cancel;
-	}
+    @Override
+    public void setCancelled(boolean cancel) {
+        this.cancelled = cancel;
+    }
 }

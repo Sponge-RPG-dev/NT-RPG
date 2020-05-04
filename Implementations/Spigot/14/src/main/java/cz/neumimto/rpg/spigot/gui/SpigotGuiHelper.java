@@ -7,7 +7,6 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.gui.SkillTreeViewModel;
-import cz.neumimto.rpg.api.items.ClassItem;
 import cz.neumimto.rpg.api.items.RpgItemType;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
@@ -21,9 +20,7 @@ import cz.neumimto.rpg.common.gui.ConfigInventory;
 import cz.neumimto.rpg.common.gui.DynamicInventory;
 import cz.neumimto.rpg.common.gui.TemplateInventory;
 import cz.neumimto.rpg.spigot.Resourcepack;
-import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
-import cz.neumimto.rpg.spigot.items.SpigotRpgItemType;
 import cz.neumimto.rpg.spigot.skills.SpigotSkillService;
 import cz.neumimto.rpg.spigot.skills.SpigotSkillTreeInterfaceModel;
 import de.tr7zw.nbtapi.NBTItem;
@@ -573,7 +570,7 @@ public class SpigotGuiHelper {
         String name = "char_allowed_items_weapons" + character.getName();
         Inventory inventory = CACHED_MENUS.get(name);
         if (inventory == null) {
-            TemplateInventory<ItemStack, Inventory> dView = (TemplateInventory<ItemStack, Inventory>) CACHED_MENU_TEMPLATES.get("char_allowed_items_weapons");
+            TemplateInventory<ItemStack, Inventory> dView = (TemplateInventory<ItemStack, Inventory>) CACHED_MENU_TEMPLATES.get("char_allowed_items");
             Map<RpgItemType, Double> allowedWeapons = character.getAllowedWeapons();
             List<ItemStack> content = new ArrayList<>();
             for (Map.Entry<RpgItemType, Double> ent : allowedWeapons.entrySet()) {

@@ -26,7 +26,6 @@ import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillExecutionType;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.api.skills.tree.SkillType;
 
@@ -34,7 +33,7 @@ import cz.neumimto.rpg.api.skills.tree.SkillType;
  * Created by NeumimTo on 26.7.2015.
  */
 @JsBinding(JsBinding.Type.CLASS)
-public abstract class ActiveSkill<T extends IActiveCharacter> extends AbstractSkill implements IActiveSkill<T> {
+public abstract class ActiveSkill<T extends IActiveCharacter> extends AbstractSkill<T> implements IActiveSkill<T> {
 
     @Inject
     private InventoryService inventoryService;
@@ -48,31 +47,18 @@ public abstract class ActiveSkill<T extends IActiveCharacter> extends AbstractSk
     }
 
     @Override
-    public void onPreUse(IActiveCharacter character, SkillContext skillContext) {
-        PlayerSkillContext info = character.getSkillInfo(this);
+    public SkillResult onPreUse(T character, PlayerSkillContext esi) {
 
         if (character.isSilenced() && !getSkillTypes().contains(SkillType.CAN_CAST_WHILE_SILENCED)) {
             String translate = localizationService.translate(LocalizationKeys.PLAYER_SILENCED);
             character.sendMessage(translate);
-            skillContext.result(SkillResult.CASTER_SILENCED);
-            return;
+            return SkillResult.CASTER_SILENCED;
         }
 
-        if (!skillContext.isSorted()) {
-            skillContext.addExecutor(inventoryService.processItemCost(character, info));
-            skillContext.addExecutor(info.getSkillData().getSkillPreprocessors());
-            skillContext.sort();
-        }
-
-        skillContext.next(character, info, skillContext);
+        return cast(character, esi);
     }
 
-    public abstract void cast(T character, PlayerSkillContext info, SkillContext skillContext);
-
-
-    public SkillContext createSkillExecutorContext(PlayerSkillContext esi) {
-        return new SkillContext(this, esi);
-    }
+    public abstract SkillResult cast(T character, PlayerSkillContext info);
 
     @Override
     public SkillExecutionType getSkillExecutionType() {

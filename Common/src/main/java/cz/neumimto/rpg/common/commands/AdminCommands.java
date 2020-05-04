@@ -7,7 +7,6 @@ import co.aikar.commands.annotation.*;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.effects.EffectParams;
 import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
@@ -20,14 +19,8 @@ import cz.neumimto.rpg.api.events.skill.SkillPostUsageEvent;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.scripting.IScriptEngine;
-import cz.neumimto.rpg.api.skills.ISkill;
-import cz.neumimto.rpg.api.skills.PlayerSkillContext;
-import cz.neumimto.rpg.api.skills.SkillData;
-import cz.neumimto.rpg.api.skills.SkillSettings;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
-import cz.neumimto.rpg.api.skills.mods.SkillExecutorCallback;
+import cz.neumimto.rpg.api.skills.*;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
-import cz.neumimto.rpg.api.skills.types.IActiveSkill;
 import cz.neumimto.rpg.api.utils.ActionResult;
 import cz.neumimto.rpg.common.effects.InternalEffectSourceProvider;
 
@@ -114,7 +107,7 @@ public class AdminCommands extends BaseCommand {
     @Subcommand("skill")
     @CommandCompletion("@skilltree @nothing @skillskctx")
     public void adminExecuteSkillCommand(IActiveCharacter character, SkillTree tree, int level, ISkill skill) {
-        commandExecuteSkill(character,tree, skill, level);
+        commandExecuteSkill(character, tree, skill, level);
     }
 
     @Subcommand("classes")
@@ -349,24 +342,19 @@ public class AdminCommands extends BaseCommand {
         playerSkillContext.setSkillData(skillData);
         playerSkillContext.setSkill(skill);
 
-        SkillContext skillContext = new SkillContext((IActiveSkill) skill, playerSkillContext) {{
-            wrappers.add(new SkillExecutorCallback() {
-                @Override
-                public void doNext(IActiveCharacter character, PlayerSkillContext info, SkillContext skillResult) {
-                    long e = System.nanoTime();
-                    SkillPostUsageEvent eventPost = Rpg.get().getEventFactory().createEventInstance(SkillPostUsageEvent.class);
-                    eventPost.setSkillContext(skillResult);
-                    eventPost.setSkill(skillResult.getSkill());
-                    eventPost.setCaster(character);
-                    Rpg.get().postEvent(eventPost);
-                    if (Rpg.get().getPluginConfig().DEBUG.isBalance()) {
-                        character.sendMessage("Exec Time: " + TimeUnit.MILLISECONDS.convert(e - l, TimeUnit.NANOSECONDS));
-                    }
-                }
-            });
-        }};
-        skillContext.sort();
-        skillContext.next(character, playerSkillContext, skillContext);
+        SkillResult result = Rpg.get().getSkillService().executeSkill(character, playerSkillContext);
+
+        long e = System.nanoTime();
+        if (result == SkillResult.OK) {
+            SkillPostUsageEvent eventPost = Rpg.get().getEventFactory().createEventInstance(SkillPostUsageEvent.class);
+            eventPost.setSkill(skill);
+            eventPost.setCaster(character);
+            Rpg.get().postEvent(eventPost);
+        }
+        if (Rpg.get().getPluginConfig().DEBUG.isBalance()) {
+            character.sendMessage("Exec Time: " + TimeUnit.MILLISECONDS.convert(e - l, TimeUnit.NANOSECONDS));
+        }
+
     }
 
     public void commandAddUniqueSkillpoint(IActiveCharacter character, String classType, String sourceKey) {

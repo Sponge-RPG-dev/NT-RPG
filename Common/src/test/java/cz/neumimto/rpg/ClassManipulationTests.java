@@ -51,8 +51,8 @@ public class ClassManipulationTests {
 
 
         Rpg.get().getPluginConfig().CLASS_TYPES = new LinkedHashMap<String, ClassTypeDefinition>() {{
-            put("Primary", new ClassTypeDefinition(null, null, null, false, 1,0));
-            put("Secondary", new ClassTypeDefinition(null, null, null, false, 2,0));
+            put("Primary", new ClassTypeDefinition(null, null, null, false, 1, 0));
+            put("Secondary", new ClassTypeDefinition(null, null, null, false, 2, 0));
         }};
 
         pc1 = new ClassDefinition("class1", "Primary");

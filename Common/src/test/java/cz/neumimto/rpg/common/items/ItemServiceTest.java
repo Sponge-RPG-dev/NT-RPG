@@ -15,9 +15,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.util.Optional;
-import javax.inject.Inject;
 
 @ExtendWith({GuiceExtension.class, NtRpgExtension.class})
 @IncludeModule(TestGuiceModule.class)

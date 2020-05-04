@@ -8,7 +8,7 @@ import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
+
 import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.sponge.damage.SkillDamageSource;
@@ -51,7 +51,7 @@ public class Wrestle extends ActiveSkill<ISpongeCharacter> {
     }
 
     @Override
-    public void cast(ISpongeCharacter source, PlayerSkillContext info, SkillContext skillContext) {
+    public SkillResult cast(ISpongeCharacter source, PlayerSkillContext skillContext) {
         int radius = skillContext.getIntNodeValue(SkillNodes.RADIUS);
         float damage = skillContext.getFloatNodeValue(SkillNodes.DAMAGE);
         long duration = skillContext.getLongNodeValue(SkillNodes.DURATION);
@@ -72,6 +72,6 @@ public class Wrestle extends ActiveSkill<ISpongeCharacter> {
                 }
             }
         }
-        skillContext.next(source, info, skillContext.result(SkillResult.OK));
+        return SkillResult.OK;
     }
 }

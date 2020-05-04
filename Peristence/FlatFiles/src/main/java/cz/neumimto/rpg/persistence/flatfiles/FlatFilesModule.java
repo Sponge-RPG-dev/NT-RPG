@@ -11,7 +11,6 @@ import cz.neumimto.rpg.persistence.flatfiles.dao.FlatFilePlayerDao;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 
 public class FlatFilesModule implements RpgAddon {

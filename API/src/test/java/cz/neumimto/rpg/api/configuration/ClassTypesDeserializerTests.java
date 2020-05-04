@@ -23,9 +23,9 @@ public class ClassTypesDeserializerTests {
             ClassTypeDefinition definition = map.get("Primary");
             Assertions.assertEquals("Test", definition.getDefaultClass());
 
-            Assertions.assertEquals("Color",definition.getPrimaryColor());
-            Assertions.assertEquals("Color",definition.getSecondaryColor());
-            Assertions.assertEquals("Color",definition.getDyeColor());
+            Assertions.assertEquals("Color", definition.getPrimaryColor());
+            Assertions.assertEquals("Color", definition.getSecondaryColor());
+            Assertions.assertEquals("Color", definition.getDyeColor());
             Assertions.assertFalse(definition.isChangeable());
             Assertions.assertEquals(1, definition.getOrder());
 

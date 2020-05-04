@@ -1,17 +1,11 @@
 package cz.neumimto.rpg.api.skills;
 
-import com.typesafe.config.Config;
 import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.skills.mods.ActiveSkillPreProcessorWrapper;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
-import cz.neumimto.rpg.api.skills.tree.SkillTree;
-import cz.neumimto.rpg.api.skills.utils.SkillLoadingErrors;
 
-import java.util.List;
 import java.util.Set;
 
-public class WrappedSkill implements ISkill {
+public class WrappedSkill implements ISkill<IActiveCharacter> {
 
     private ISkill inner;
     private String catalogId;
@@ -34,12 +28,6 @@ public class WrappedSkill implements ISkill {
     @Override
     public WrappedSkillData constructSkillData() {
         return new WrappedSkillData(getId());
-    }
-
-    @Override
-    public <T extends SkillData> void loadSkillData(T skillData, SkillTree context, SkillLoadingErrors errors, Config c) {
-        Config inner = c.getConfig("Parent");
-        loadSkillData(skillData, context, errors, inner);
     }
 
     @Override
@@ -78,8 +66,8 @@ public class WrappedSkill implements ISkill {
     }
 
     @Override
-    public void onPreUse(IActiveCharacter character, SkillContext skillContext) {
-        inner.onPreUse(character, skillContext);
+    public SkillResult onPreUse(IActiveCharacter character, PlayerSkillContext esi) {
+        return inner.onPreUse(character, esi);
     }
 
     @Override

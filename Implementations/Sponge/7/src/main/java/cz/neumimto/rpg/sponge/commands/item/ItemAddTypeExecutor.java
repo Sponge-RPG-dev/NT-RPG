@@ -1,8 +1,8 @@
 package cz.neumimto.rpg.sponge.commands.item;
 
 import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.items.ItemMetaType;
+import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.sponge.inventory.SpongeInventoryService;
 import cz.neumimto.rpg.sponge.utils.TextHelper;
 import org.spongepowered.api.command.CommandException;

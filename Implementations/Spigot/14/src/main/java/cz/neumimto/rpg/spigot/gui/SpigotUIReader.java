@@ -2,14 +2,13 @@ package cz.neumimto.rpg.spigot.gui;
 
 
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.configuration.ClassTypeDefinition;
+import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.items.ClassItem;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
-import cz.neumimto.rpg.common.gui.ConfigInventory;
 import cz.neumimto.rpg.common.gui.GuiParser;
 import cz.neumimto.rpg.common.gui.InventorySlotProcessor;
-import cz.neumimto.rpg.api.configuration.ClassTypeDefinition;
-import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.spigot.items.SpigotRpgItemType;
 import de.tr7zw.nbtapi.NBTItem;
 import org.bukkit.Bukkit;
@@ -102,6 +101,6 @@ public class SpigotUIReader extends GuiParser<ItemStack, Inventory> {
             c = ChatColor.valueOf(preferedColor.toUpperCase());
         }
         String translate = Rpg.get().getLocalizationService().translate(header);
-        return Bukkit.createInventory(null, 6*9, c + translate);
+        return Bukkit.createInventory(null, 6 * 9, c + translate);
     }
 }

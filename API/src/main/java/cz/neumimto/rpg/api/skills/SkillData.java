@@ -19,12 +19,11 @@
 package cz.neumimto.rpg.api.skills;
 
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.skills.mods.ActiveSkillPreProcessorWrapper;
 import cz.neumimto.rpg.api.skills.scripting.ScriptedSkillNodeDescription;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -57,14 +56,13 @@ public class SkillData {
     private int skillTreeId;
     private int levelGap;
     private String skillName;
-    private SkillCost invokeCost;
     private ISkillNodeDescription description;
     private boolean useDescriptionOnly;
-    private List<ActiveSkillPreProcessorWrapper> skillPreprocessors = new ArrayList<>();
-
     private String icon;
 
     private Integer modelId;
+    private ISkillExecutor skillExecutor;
+    private Map<String, SkillCastCondition> skillCastConditions;
 
     public SkillData(String skill) {
         this.skill = skill;
@@ -186,14 +184,6 @@ public class SkillData {
         this.skillName = skillName;
     }
 
-    public SkillCost getInvokeCost() {
-        return invokeCost;
-    }
-
-    public void setInvokeCost(SkillCost invokeCost) {
-        this.invokeCost = invokeCost;
-    }
-
     public List<String> getDescription(IActiveCharacter character) {
         return description.getDescription(character);
     }
@@ -207,10 +197,6 @@ public class SkillData {
         return useDescriptionOnly;
     }
 
-
-    public List<ActiveSkillPreProcessorWrapper> getSkillPreprocessors() {
-        return skillPreprocessors;
-    }
 
     public String getIcon() {
         return icon;
@@ -226,5 +212,21 @@ public class SkillData {
 
     public void setModelId(Integer modelId) {
         this.modelId = modelId;
+    }
+
+    public ISkillExecutor getSkillExecutor() {
+        return skillExecutor;
+    }
+
+    public void setSkillExecutor(ISkillExecutor skillExecutor) {
+        this.skillExecutor = skillExecutor;
+    }
+
+    public Map<String, SkillCastCondition> getSkillCastConditions() {
+        return skillCastConditions;
+    }
+
+    public void setSkillCastConditions(Map<String, SkillCastCondition> skillCastConditions) {
+        this.skillCastConditions = skillCastConditions;
     }
 }

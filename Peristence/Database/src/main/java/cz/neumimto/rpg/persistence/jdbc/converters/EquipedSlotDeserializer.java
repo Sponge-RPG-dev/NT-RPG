@@ -17,12 +17,11 @@ public class EquipedSlotDeserializer implements JsonDeserializer<EquipedSlot> {
         String className = null;
         int slotId = 0;
         if (object.has("classname")) {
-             className = object.get("className").getAsString();
+            className = object.get("className").getAsString();
         }
         if (object.has("slotIndex")) {
-             slotId = object.get("slotIndex").getAsInt();
+            slotId = object.get("slotIndex").getAsInt();
         }
-
 
 
         return Rpg.get().getInventoryService().createEquipedSlot(className, slotId);

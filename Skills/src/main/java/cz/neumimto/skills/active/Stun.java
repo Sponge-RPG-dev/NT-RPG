@@ -7,7 +7,7 @@ import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
+
 import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.sponge.damage.SkillDamageSource;
 import cz.neumimto.rpg.sponge.damage.SkillDamageSourceBuilder;
@@ -40,7 +40,7 @@ public class Stun extends Targeted {
     }
 
     @Override
-    public void castOn(IEntity target, ISpongeCharacter source, PlayerSkillContext info, SkillContext skillContext) {
+    public SkillResult castOn(IEntity target, ISpongeCharacter source, PlayerSkillContext skillContext) {
         long duration = skillContext.getLongNodeValue(SkillNodes.DURATION);
         double damage = skillContext.getDoubleNodeValue(SkillNodes.DAMAGE);
         StunEffect stunEffect = new StunEffect(target, duration);
@@ -52,7 +52,7 @@ public class Stun extends Targeted {
                     .build();
             ((ISpongeEntity) target).getEntity().damage(damage, s);
         }
-        skillContext.next(source, info, skillContext.result(SkillResult.OK));
+        return SkillResult.OK;
     }
 
 }

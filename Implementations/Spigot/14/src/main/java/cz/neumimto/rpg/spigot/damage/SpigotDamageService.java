@@ -15,10 +15,9 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
+import javax.inject.Singleton;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import javax.inject.Singleton;
 
 @Singleton
 public class SpigotDamageService extends AbstractDamageService<ISpigotCharacter, LivingEntity> {

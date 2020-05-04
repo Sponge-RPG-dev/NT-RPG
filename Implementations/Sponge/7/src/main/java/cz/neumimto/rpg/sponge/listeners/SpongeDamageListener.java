@@ -30,9 +30,8 @@ import org.spongepowered.api.event.cause.entity.damage.source.IndirectEntityDama
 import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.filter.cause.First;
 
-import java.util.Optional;
-
 import javax.inject.Inject;
+import java.util.Optional;
 
 
 @Singleton

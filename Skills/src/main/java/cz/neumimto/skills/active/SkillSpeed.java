@@ -7,7 +7,7 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
+
 import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 
@@ -34,11 +34,11 @@ public class SkillSpeed extends ActiveSkill {
     }
 
     @Override
-    public void cast(IActiveCharacter character, PlayerSkillContext info, SkillContext skillContext) {
+    public SkillResult cast(IActiveCharacter character, PlayerSkillContext skillContext) {
         long duration = skillContext.getLongNodeValue(SkillNodes.DURATION);
         float amount = skillContext.getFloatNodeValue(SkillNodes.AMOUNT);
         SpeedBoost sb = new SpeedBoost(character, duration, amount);
         effectService.addEffect(sb, this);
-        skillContext.next(character, info, skillContext.result(SkillResult.OK));
+        return SkillResult.OK;
     }
 }

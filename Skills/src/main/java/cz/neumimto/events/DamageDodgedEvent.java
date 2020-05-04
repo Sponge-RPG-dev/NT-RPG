@@ -13,38 +13,38 @@ import org.spongepowered.api.event.Cancellable;
 @JsBinding(JsBinding.Type.CLASS)
 public class DamageDodgedEvent extends AbstractNEvent implements Cancellable {
 
-	private final IEntity source;
-	private final IEntity target;
-	private final IEffectContainer<Float, DodgeEffect> effect;
-	private boolean cancelled;
+    private final IEntity source;
+    private final IEntity target;
+    private final IEffectContainer<Float, DodgeEffect> effect;
+    private boolean cancelled;
 
-	public DamageDodgedEvent(IEntity source, IEntity target, IEffectContainer<Float, DodgeEffect> effect) {
-		this.source = source;
-		this.target = target;
-		this.effect = effect;
-	}
+    public DamageDodgedEvent(IEntity source, IEntity target, IEffectContainer<Float, DodgeEffect> effect) {
+        this.source = source;
+        this.target = target;
+        this.effect = effect;
+    }
 
 
-	@Override
-	public boolean isCancelled() {
-		return cancelled;
-	}
+    @Override
+    public boolean isCancelled() {
+        return cancelled;
+    }
 
-	@Override
-	public void setCancelled(boolean cancel) {
-		this.cancelled = cancel;
-	}
+    @Override
+    public void setCancelled(boolean cancel) {
+        this.cancelled = cancel;
+    }
 
-	@Override
-	public IEntity getSource() {
-		return source;
-	}
+    @Override
+    public IEntity getSource() {
+        return source;
+    }
 
-	public IEntity getTarget() {
-		return target;
-	}
+    public IEntity getTarget() {
+        return target;
+    }
 
-	public IEffectContainer<Float, DodgeEffect> getEffect() {
-		return effect;
-	}
+    public IEffectContainer<Float, DodgeEffect> getEffect() {
+        return effect;
+    }
 }

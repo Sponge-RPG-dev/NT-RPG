@@ -5,7 +5,7 @@ import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
+
 import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.spigot.entities.ProjectileCache;
@@ -37,22 +37,22 @@ public class Fireball extends ActiveSkill<ISpigotCharacter> {
     }
 
     @Override
-    public void cast(ISpigotCharacter character, PlayerSkillContext info, SkillContext skillContext) {
+    public SkillResult cast(ISpigotCharacter character, PlayerSkillContext  skillContext) {
         Player p = character.getPlayer();
         World world = p.getWorld();
 
-        SmallFireball fireball = (SmallFireball) world.spawnEntity(p.getLocation().clone().add(0,1,0).add(p.getLocation().getDirection()), EntityType.SMALL_FIREBALL);
+        SmallFireball fireball = (SmallFireball) world.spawnEntity(p.getLocation().clone().add(0, 1, 0).add(p.getLocation().getDirection()), EntityType.SMALL_FIREBALL);
         fireball.setVelocity(p.getLocation().getDirection().multiply(skillContext.getFloatNodeValue(SkillNodes.VELOCITY)));
         fireball.setShooter(p);
         fireball.setFireTicks(99);
 
 
         ProjectileCache projectileProperties = ProjectileCache.putAndGet(fireball, character);
-        projectileProperties.setSkill(info);
+        projectileProperties.setSkill(skillContext);
         projectileProperties.onHit((event, attacker, target) -> {
             event.setDamage(skillContext.getDoubleNodeValue(SkillNodes.DAMAGE));
         });
-        skillContext.next(character, info, skillContext.result(SkillResult.OK));
+        return SkillResult.OK;
     }
 }
 

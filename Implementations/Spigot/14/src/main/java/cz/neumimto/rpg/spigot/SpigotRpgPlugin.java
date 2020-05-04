@@ -15,13 +15,14 @@ import cz.neumimto.rpg.spigot.bridges.HolographicDisplaysExpansion;
 import cz.neumimto.rpg.spigot.bridges.MMOItemsExpansion;
 import cz.neumimto.rpg.spigot.bridges.MythicalMobsExpansion;
 import cz.neumimto.rpg.spigot.bridges.NtRpgPlaceholderExpansion;
-import cz.neumimto.rpg.spigot.commands.*;
+import cz.neumimto.rpg.spigot.commands.SpigotAdminCommands;
+import cz.neumimto.rpg.spigot.commands.SpigotCharacterCommands;
+import cz.neumimto.rpg.spigot.commands.SpigotSkillBindCommands;
 import cz.neumimto.rpg.spigot.entities.SpigotEntityService;
 import cz.neumimto.rpg.spigot.entities.configuration.SpigotMobSettingsDao;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
 import cz.neumimto.rpg.spigot.gui.SpigotGui;
 import cz.neumimto.rpg.spigot.gui.SpigotGuiHelper;
-import cz.neumimto.rpg.spigot.listeners.SpigotItemCooldownListener;
 import cz.neumimto.rpg.spigot.listeners.skillbinds.OnKeyPress;
 import cz.neumimto.rpg.spigot.resources.SpigotGuiceModule;
 import de.slikey.effectlib.EffectManager;
@@ -98,7 +99,7 @@ public class SpigotRpgPlugin extends JavaPlugin {
 
         CommandManager manager = new PaperCommandManager(this);
 
-        manager.getCommandContexts().registerContext(OnlineOtherPlayer.class, c-> {
+        manager.getCommandContexts().registerContext(OnlineOtherPlayer.class, c -> {
             CommandIssuer issuer = c.getIssuer();
             String lookup = c.popFirstArg();
             boolean allowMissing = c.isOptional();
@@ -163,9 +164,6 @@ public class SpigotRpgPlugin extends JavaPlugin {
             scriptEngine.getDataToBind().put(EntityDamageEvent.DamageCause.class, JsBinding.Type.CLASS);
             scriptEngine.getDataToBind().put(EntityType.class, JsBinding.Type.CLASS);
 
-            if (Boolean.TRUE.equals(Rpg.get().getPluginConfig().ITEM_COOLDOWNS)) {
-                Rpg.get().registerListeners(new SpigotItemCooldownListener());
-            }
             Rpg.get().registerListeners(injector.getInstance(OnKeyPress.class));
         });
 

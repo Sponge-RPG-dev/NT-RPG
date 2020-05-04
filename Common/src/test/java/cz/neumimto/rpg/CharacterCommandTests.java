@@ -57,11 +57,11 @@ public class CharacterCommandTests {
     }
 
     @Test
-    public void testCommandAddAttribute(@Stage(READY)IActiveCharacter iActiveCharacter) {
+    public void testCommandAddAttribute(@Stage(READY) IActiveCharacter iActiveCharacter) {
 
 
-        AttributeConfig attributeConfig = new AttributeConfig("test","test", 100,false, Collections.emptyMap(),"test", "test");
-        propertyService.getAttributes().put(attributeConfig.getId(),attributeConfig);
+        AttributeConfig attributeConfig = new AttributeConfig("test", "test", 100, false, Collections.emptyMap(), "test", "test");
+        propertyService.getAttributes().put(attributeConfig.getId(), attributeConfig);
 
         iActiveCharacter.getCharacterBase().setAttributePoints(1);
         iActiveCharacter.getTransientAttributes().put("test", 0);
@@ -77,14 +77,14 @@ public class CharacterCommandTests {
     }
 
     @Test
-    public void testAddExpCommand(@Stage(READY)IActiveCharacter iActiveCharacter) {
+    public void testAddExpCommand(@Stage(READY) IActiveCharacter iActiveCharacter) {
         ClassDefinition classDefinition = new ClassDefinition("test", Rpg.get().getPluginConfig().CLASS_TYPES.keySet().iterator().next());
         characterCommandFacade.commandChooseClass(iActiveCharacter, classDefinition);
         Assertions.assertTrue(iActiveCharacter.getClasses().containsKey("test"));
     }
 
     @Test
-    public void testAddExpCommand_Wrong_Order(@Stage(READY)IActiveCharacter iActiveCharacter) {
+    public void testAddExpCommand_Wrong_Order(@Stage(READY) IActiveCharacter iActiveCharacter) {
         Iterator<String> iterator = Rpg.get().getPluginConfig().CLASS_TYPES.keySet().iterator();
         iterator.next();
         String i = iterator.next();
@@ -96,7 +96,7 @@ public class CharacterCommandTests {
     @Test
     public void testCharacterCreated() {
         CountDownLatch latch = new CountDownLatch(1);
-        characterCommandFacade.commandCreateCharacter(UUID.randomUUID(), "test","", actionResult -> {
+        characterCommandFacade.commandCreateCharacter(UUID.randomUUID(), "test", "", actionResult -> {
             Log.info(actionResult.getMessage());
             Assertions.assertTrue(actionResult.isOk());
             latch.countDown();

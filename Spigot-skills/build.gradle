@@ -27,7 +27,7 @@ repositories {
 
 dependencies {
     annotationProcessor project(':Generator')
-    
+
     compileOnly project(':Spigot-14')
     compileOnly project(':API')
     compileOnly "org.spigotmc:spigot-api:1.15.1-R0.1-SNAPSHOT"
@@ -37,6 +37,6 @@ dependencies {
     compileOnly 'net.blitzcube.peapi:API:0.7.1-SNAPSHOT'
 
     jar {
-        archiveName("Spigot-Skills-"+version+".jar")
+        archiveName("Spigot-Skills-" + version + ".jar")
     }
 }

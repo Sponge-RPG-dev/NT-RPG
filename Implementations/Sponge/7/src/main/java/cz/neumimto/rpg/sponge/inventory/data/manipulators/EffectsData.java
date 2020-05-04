@@ -12,7 +12,10 @@ import org.spongepowered.api.data.merge.MergeFunction;
 import org.spongepowered.api.data.persistence.AbstractDataBuilder;
 import org.spongepowered.api.data.persistence.InvalidDataException;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * Created by NeumimTo on 12.1.2018.

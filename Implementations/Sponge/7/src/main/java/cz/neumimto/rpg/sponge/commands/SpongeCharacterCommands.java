@@ -9,8 +9,6 @@ import co.aikar.commands.annotation.Subcommand;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
-import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.common.commands.CharacterCommandFacade;
 import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
@@ -18,10 +16,10 @@ import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 
-import java.util.Map;
-import java.util.UUID;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Map;
+import java.util.UUID;
 
 @Singleton
 @CommandAlias("character|char|c")
