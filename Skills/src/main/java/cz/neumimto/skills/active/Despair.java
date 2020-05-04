@@ -10,7 +10,7 @@ import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
+
 import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.sponge.damage.SkillDamageSource;
@@ -59,7 +59,7 @@ public class Despair extends ActiveSkill<ISpongeCharacter> {
     }
 
     @Override
-    public SkillResult cast(ISpongeCharacter character, PlayerSkillContext info, SkillContext skillContext) {
+    public SkillResult cast(ISpongeCharacter character, PlayerSkillContext skillContext) {
         int k = skillContext.getIntNodeValue(SkillNodes.RADIUS);
         Set<Entity> nearbyEntities = Utils.getNearbyEntities(character.getEntity().getLocation(), k);
         double damage = skillContext.getDoubleNodeValue(SkillNodes.DAMAGE);
@@ -95,6 +95,6 @@ public class Despair extends ActiveSkill<ISpongeCharacter> {
             character.getEntity().getLocation().getExtent().spawnParticles(build, location.getPosition().add(vec));
         });
 
-        skillContext.next(character, info, skillContext.result(SkillResult.OK));
+        return SkillResult.OK;
     }
 }

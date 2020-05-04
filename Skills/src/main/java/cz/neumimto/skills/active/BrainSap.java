@@ -6,7 +6,7 @@ import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
+
 import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.sponge.damage.ISkillDamageSource;
 import cz.neumimto.rpg.sponge.damage.SkillDamageSource;
@@ -47,14 +47,14 @@ public class BrainSap extends Targeted {
     }
 
     @Override
-    public void castOn(IEntity target, ISpongeCharacter source, PlayerSkillContext info, SkillContext skillContext) {
+    public SkillResult castOn(IEntity target, ISpongeCharacter source, PlayerSkillContext skillContext) {
         SkillDamageSource s = new SkillDamageSourceBuilder()
                 .fromSkill(this)
                 .setSource(source)
                 .build();
         float damage = skillContext.getFloatNodeValue(SkillNodes.DAMAGE);
         ((ISpongeEntity) target).getEntity().damage(damage, s);
-        skillContext.next(source, info, skillContext.result(SkillResult.OK));
+        return SkillResult.OK;
     }
 
     @Listener(order = Order.LAST)

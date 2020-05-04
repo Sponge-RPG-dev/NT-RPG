@@ -43,19 +43,17 @@ public abstract class SkillShot extends ActiveSkill<ISpongeCharacter> {
 
 
     @Override
-    public SkillResult cast(ISpongeCharacter character, PlayerSkillContext info, SkillContext modifier) {
+    public SkillResult cast(ISpongeCharacter character, PlayerSkillContext info) {
         Optional<Projectile> projectile = character.getPlayer().launchProjectile(getProjectile(character, info));
         if (projectile.isPresent()) {
-            ProjectileProperties projectileProperties = getProjectileProperties(character, info, modifier, projectile.get());
+            ProjectileProperties projectileProperties = getProjectileProperties(character, info, projectile.get());
             projectileProperties.onHit(getHitConsumer());
-            modifier.result(SkillResult.OK);
-            return;
+            return SkillResult.OK;
         }
-        modifier.result(SkillResult.CANCELLED);
+        return SkillResult.CANCELLED;
     }
 
-    protected abstract ProjectileProperties getProjectileProperties(IActiveCharacter character, PlayerSkillContext info, SkillContext modifier,
-                                                                    Projectile projectile);
+    protected abstract ProjectileProperties getProjectileProperties(IActiveCharacter character, PlayerSkillContext info,                                                                     Projectile projectile);
 
     protected abstract Class<Projectile> getProjectile(IActiveCharacter character, PlayerSkillContext info);
 

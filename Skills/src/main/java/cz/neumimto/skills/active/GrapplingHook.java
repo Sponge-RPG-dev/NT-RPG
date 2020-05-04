@@ -6,7 +6,7 @@ import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
+
 import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
@@ -61,7 +61,7 @@ public class GrapplingHook extends ActiveSkill<ISpongeCharacter> {
     }
 
     @Override
-    public SkillResult cast(ISpongeCharacter character, PlayerSkillContext info, SkillContext skillContext) {
+    public SkillResult cast(ISpongeCharacter character, PlayerSkillContext skillContext) {
         Player p = character.getPlayer();
         World world = p.getWorld();
         Entity optional = world.createEntity(EntityTypes.TIPPED_ARROW, p.getLocation().getPosition()
@@ -121,7 +121,7 @@ public class GrapplingHook extends ActiveSkill<ISpongeCharacter> {
                 .interval(50, TimeUnit.MILLISECONDS)
                 .submit(plugin);
 
-        skillContext.next(character, info, skillContext.result(SkillResult.OK));
+        return SkillResult.OK;
     }
 
 

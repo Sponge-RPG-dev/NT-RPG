@@ -9,7 +9,7 @@ import com.comphenix.protocol.wrappers.WrappedWatchableObject;
 import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
+
 import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
@@ -41,7 +41,7 @@ public class MineralScan extends ActiveSkill<ISpigotCharacter> {
     }
 
     @Override
-    public SkillResult cast(ISpigotCharacter character, PlayerSkillContext info, SkillContext skillContext) {
+    public SkillResult cast(ISpigotCharacter character, PlayerSkillContext  skillContext) {
         Player player = character.getPlayer();
         World world = player.getWorld();
         Location location = player.getLocation();
@@ -72,7 +72,7 @@ public class MineralScan extends ActiveSkill<ISpigotCharacter> {
                 }
             }
         }
-        skillContext.next(character, info, skillContext.result(SkillResult.OK));
+        return SkillResult.OK;
     }
 
 

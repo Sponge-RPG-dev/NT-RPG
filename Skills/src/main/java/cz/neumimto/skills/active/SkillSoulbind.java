@@ -7,7 +7,7 @@ import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
+
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.sponge.damage.SkillDamageSourceBuilder;
 import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
@@ -49,7 +49,7 @@ public class SkillSoulbind extends ActiveSkill<ISpongeCharacter> {
     }
 
     @Override
-    public SkillResult cast(ISpongeCharacter iActiveCharacter, PlayerSkillContext playerSkillContext, SkillContext skillContext) {
+    public SkillResult cast(ISpongeCharacter iActiveCharacter, PlayerSkillContext skillContext) {
         float range = skillContext.getFloatNodeValue(SkillNodes.RANGE);
         Living targettedEntity = Utils.getTargetedEntity(iActiveCharacter, (int) range);
         if (targettedEntity != null && targettedEntity.getType() == EntityTypes.PLAYER) {
@@ -61,7 +61,7 @@ public class SkillSoulbind extends ActiveSkill<ISpongeCharacter> {
                 effectService.addEffect(effect, this);
             }
         }
-        skillContext.next(iActiveCharacter, playerSkillContext, skillContext.result(SkillResult.OK));
+        return SkillResult.OK;
     }
 
     @Listener(order = Order.LAST)

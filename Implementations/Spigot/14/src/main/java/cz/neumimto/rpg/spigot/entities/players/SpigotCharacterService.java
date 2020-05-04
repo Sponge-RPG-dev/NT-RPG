@@ -1,12 +1,17 @@
 package cz.neumimto.rpg.spigot.entities.players;
 
+import cz.neumimto.rpg.api.entity.IEntity;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
+import cz.neumimto.rpg.api.skills.ISkill;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.common.entity.players.AbstractCharacterService;
 import cz.neumimto.rpg.common.entity.players.CharacterMana;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import javax.inject.Singleton;
@@ -65,5 +70,26 @@ public class SpigotCharacterService extends AbstractCharacterService<ISpigotChar
         character.getCharacterBase().setHealthScale(i);
         character.getPlayer().setHealthScale(i);
         putInSaveQueue(character.getCharacterBase());
+    }
+
+    @Override
+    public void notifyCooldown(IActiveCharacter caster, PlayerSkillContext skillContext, long cd) {
+        if (cd > 0) {
+            ISkill skill = skillContext.getSkill();
+
+            if (caster instanceof ISpigotCharacter) {
+                ISpigotCharacter character = (ISpigotCharacter) caster;
+                Player player = character.getPlayer();
+
+                PlayerSkillContext skillInfo = character.getSkillInfo(skill);
+                String icon = skillInfo.getSkillData().getIcon();
+
+                if (icon != null) {
+                    cd /= 50;
+                    Material material = Material.matchMaterial(icon);
+                    player.setCooldown(material, (int) cd);
+                }
+            }
+        }
     }
 }

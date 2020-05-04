@@ -5,7 +5,7 @@ import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
+
 import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
@@ -46,7 +46,7 @@ public class DropTNT extends ActiveSkill<ISpongeCharacter> {
     }
 
     @Override
-    public SkillResult cast(ISpongeCharacter character, PlayerSkillContext info, SkillContext skillContext) {
+    public SkillResult cast(ISpongeCharacter character, PlayerSkillContext skillContext) {
         Player player = character.getPlayer();
         Location<World> location = player.getLocation();
         World extent = location.getExtent();
@@ -54,6 +54,6 @@ public class DropTNT extends ActiveSkill<ISpongeCharacter> {
         int i = skillContext.getIntNodeValue("explosion-radius");
         tnt.offer(Keys.EXPLOSION_RADIUS, Optional.of(i));
         extent.spawnEntity(tnt);
-        skillContext.next(character, info, skillContext.result(SkillResult.OK));
+        return SkillResult.OK;
     }
 }

@@ -6,7 +6,7 @@ import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
+
 import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
@@ -34,7 +34,7 @@ public class GroupHeal extends ActiveSkill<ISpongeCharacter> {
     }
 
     @Override
-    public SkillResult cast(ISpongeCharacter character, PlayerSkillContext info, SkillContext skillContext) {
+    public SkillResult cast(ISpongeCharacter character, PlayerSkillContext skillContext) {
         float amnt = skillContext.getFloatNodeValue(SkillNodes.HEALED_AMOUNT);
         if (character.hasParty()) {
             double rad = Math.pow(skillContext.getDoubleNodeValue(SkillNodes.RADIUS), 2);
@@ -49,6 +49,6 @@ public class GroupHeal extends ActiveSkill<ISpongeCharacter> {
             Decorator.healEffect(character.getEntity().getLocation().add(0, 1, 0));
         }
 
-        skillContext.next(character, info, skillContext.result(SkillResult.OK));
+        return SkillResult.OK;
     }
 }

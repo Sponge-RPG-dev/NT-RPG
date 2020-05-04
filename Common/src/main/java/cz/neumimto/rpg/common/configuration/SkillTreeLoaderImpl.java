@@ -290,31 +290,31 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
         }
         info.setDescription(skillNodeDescription);
 
-        try {
-            Config reagent = c.getConfig("InvokeCost");
-            SkillCost itemCost = new SkillCost();
-            info.setInvokeCost(itemCost);
-            List<? extends ConfigObject> list = reagent.getObjectList("Items");
+      // try {
+      //     Config reagent = c.getConfig("InvokeCost");
+      //     SkillCost itemCost = new SkillCost();
+      //     info.setInvokeCost(itemCost);
+      //     List<? extends ConfigObject> list = reagent.getObjectList("Items");
 
-            for (ConfigObject configObject : list) {
-                try {
-                    SkillItemCost q = new SkillItemCost();
-                    q.setAmount(Integer.parseInt(configObject.get("Amount").unwrapped().toString()));
-                    String type = configObject.get("Item").unwrapped().toString();
-                    boolean consume = Boolean.valueOf(configObject.get("Consume").unwrapped().toString());
-                    q.setConsumeItems(consume);
-                    ItemString parse = ItemString.parse(type);
-                    q.setItemType(parse);
-                    itemCost.getItemCost().add(q);
+      //     for (ConfigObject configObject : list) {
+      //         try {
+      //             SkillItemCost q = new SkillItemCost();
+      //             q.setAmount(Integer.parseInt(configObject.get("Amount").unwrapped().toString()));
+      //             String type = configObject.get("Item").unwrapped().toString();
+      //             boolean consume = Boolean.valueOf(configObject.get("Consume").unwrapped().toString());
+      //             q.setConsumeItems(consume);
+      //             ItemString parse = ItemString.parse(type);
+      //             q.setItemType(parse);
+      //             itemCost.getItemCost().add(q);
 
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+      //         } catch (Exception e) {
+      //             e.printStackTrace();
+      //         }
+      //      }
 
-        } catch (Exception e) {
+      //  } catch (Exception e) {
 
-        }
+      //  }
 
         try {
             for (String conflicts : c.getStringList("Conflicts")) {

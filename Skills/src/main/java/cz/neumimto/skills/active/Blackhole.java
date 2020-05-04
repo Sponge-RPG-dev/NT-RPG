@@ -4,7 +4,6 @@ import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.sponge.gui.ParticleDecorator;
 
@@ -40,7 +39,7 @@ public class Blackhole extends ActiveSkill {
     }
 
     @Override
-    public SkillResult cast(IActiveCharacter character, PlayerSkillContext info, SkillContext modifier) {
-        ;
+    public SkillResult cast(IActiveCharacter character, PlayerSkillContext modifier) {
+        return SkillResult.OK;
     }
 }

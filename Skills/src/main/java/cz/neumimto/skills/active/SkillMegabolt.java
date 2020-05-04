@@ -5,7 +5,7 @@ import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
+
 import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.sponge.damage.SkillDamageSource;
@@ -38,7 +38,7 @@ public class SkillMegabolt extends ActiveSkill<ISpongeCharacter> {
     }
 
     @Override
-    public SkillResult cast(ISpongeCharacter caster, PlayerSkillContext info, SkillContext skillContext) {
+    public SkillResult cast(ISpongeCharacter caster, PlayerSkillContext skillContext) {
         int r = skillContext.getIntNodeValue(SkillNodes.RADIUS);
         Set<Entity> nearbyEntities = Utils.getNearbyEntities(caster.getPlayer().getLocation(), r);
         float damage = skillContext.getFloatNodeValue(SkillNodes.DAMAGE);
@@ -54,6 +54,6 @@ public class SkillMegabolt extends ActiveSkill<ISpongeCharacter> {
                 }
             }
         }
-        skillContext.next(caster, info, skillContext.result(SkillResult.OK));
+        return SkillResult.OK;
     }
 }

@@ -41,7 +41,6 @@ import cz.neumimto.rpg.sponge.gui.GuiHelper;
 import cz.neumimto.rpg.sponge.gui.VanillaMessaging;
 import cz.neumimto.rpg.sponge.inventory.data.*;
 import cz.neumimto.rpg.sponge.inventory.data.manipulators.*;
-import cz.neumimto.rpg.sponge.listeners.SpongeItemCooldownListener;
 import cz.neumimto.rpg.sponge.skills.NDamageType;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
@@ -364,10 +363,6 @@ public class SpongeRpgPlugin extends Rpg {
                     commandService.registerStandartCommands();
 
                     injector.getInstance(Gui.class).setVanillaMessaging(injector.getInstance(VanillaMessaging.class));
-
-                    if (Boolean.TRUE.equals(Rpg.get().getPluginConfig().ITEM_COOLDOWNS)) {
-                        Rpg.get().registerListeners(new SpongeItemCooldownListener());
-                    }
 
 
                     Sponge.getPluginManager().getPlugin("placeholderapi").ifPresent(a -> {

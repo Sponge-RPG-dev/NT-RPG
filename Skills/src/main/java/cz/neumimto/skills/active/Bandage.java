@@ -9,7 +9,6 @@ import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.sponge.entities.ISpongeEntity;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
@@ -40,7 +39,7 @@ public class Bandage extends Targeted {
     }
 
     @Override
-    public void castOn(IEntity target, ISpongeCharacter source, PlayerSkillContext info, SkillContext skillContext) {
+    public SkillResult castOn(IEntity target, ISpongeCharacter source, PlayerSkillContext skillContext) {
         if (target.isFriendlyTo(source)) {
             float floatNodeValue = skillContext.getFloatNodeValue(SkillNodes.HEALED_AMOUNT);
             entityService.healEntity(target, floatNodeValue, this);
@@ -49,9 +48,8 @@ public class Bandage extends Targeted {
             if (target.hasEffect(Bleeding.name)) {
                 effectService.removeEffectContainer(target.getEffect(Bleeding.name), target);
             }
-            skillContext.next(source, info, skillContext.result(SkillResult.OK));
-            return;
+            return SkillResult.OK;
         }
-        skillContext.next(source, info, skillContext.result(SkillResult.CANCELLED));
+        return SkillResult.CANCELLED;
     }
 }

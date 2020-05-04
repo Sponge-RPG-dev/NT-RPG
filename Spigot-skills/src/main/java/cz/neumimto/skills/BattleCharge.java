@@ -5,7 +5,7 @@ import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
+
 import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
@@ -48,7 +48,7 @@ public class BattleCharge extends TargetedEntitySkill {
     }
 
     @Override
-    public void castOn(IEntity target, ISpigotCharacter source, PlayerSkillContext info, SkillContext skillContext) {
+    public SkillResult castOn(IEntity target, ISpigotCharacter source, PlayerSkillContext  skillContext) {
         Player entity = source.getEntity();
         LivingEntity entity1 = (LivingEntity) target.getEntity();
         Location b = entity.getLocation();
@@ -90,6 +90,6 @@ public class BattleCharge extends TargetedEntitySkill {
             }
         }.runTaskTimer(SpigotRpgPlugin.getInstance(), 10L, 2L);
 
-        skillContext.next(source, info, skillContext.result(SkillResult.OK));
+        return SkillResult.OK;
     }
 }

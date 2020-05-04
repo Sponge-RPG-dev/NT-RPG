@@ -24,8 +24,6 @@ import com.electronwill.nightconfig.core.file.FileConfig;
 import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.classes.ClassService;
-import cz.neumimto.rpg.api.configuration.ItemString;
-import cz.neumimto.rpg.api.configuration.SkillItemCost;
 import cz.neumimto.rpg.api.effects.EffectParams;
 import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.entity.PropertyService;
@@ -39,11 +37,7 @@ import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.api.skills.ISkill;
-import cz.neumimto.rpg.api.skills.PlayerSkillContext;
-import cz.neumimto.rpg.api.skills.SkillCost;
 import cz.neumimto.rpg.api.skills.SkillService;
-import cz.neumimto.rpg.api.skills.mods.ActiveSkillPreProcessorWrapper;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.utils.Pair;
 import cz.neumimto.rpg.common.inventory.AbstractInventoryService;
 import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
@@ -73,7 +67,6 @@ import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.Slot;
-import org.spongepowered.api.item.inventory.entity.Hotbar;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.api.text.Text;
@@ -320,8 +313,7 @@ public class SpongeInventoryService extends AbstractInventoryService<ISpongeChar
         }
     }
 
-
-    @Override
+/*
     public Set<ActiveSkillPreProcessorWrapper> processItemCost(ISpongeCharacter character, SkillContext skillContext, PlayerSkillContext skillInfo) {
         SkillCost invokeCost = skillInfo.getSkillData().getInvokeCost();
         if (invokeCost == null) {
@@ -366,7 +358,7 @@ public class SpongeInventoryService extends AbstractInventoryService<ISpongeChar
         }
         return Collections.emptySet();
     }
-
+*/
     @Override
     public EquipedSlot createEquipedSlot(String className, int slotId) {
         try {

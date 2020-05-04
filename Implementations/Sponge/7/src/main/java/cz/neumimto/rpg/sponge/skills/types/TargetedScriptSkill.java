@@ -6,7 +6,6 @@ import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.skills.ISkillType;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.scripting.ScriptSkillModel;
 import cz.neumimto.rpg.api.skills.scripting.SkillScriptContext;
 import cz.neumimto.rpg.api.skills.scripting.TargetedScriptExecutorSkill;
@@ -26,11 +25,11 @@ public class TargetedScriptSkill extends Targeted implements ITargetedScriptSkil
     private ScriptSkillModel model;
 
     @Override
-    public void castOn(IEntity target, ISpongeCharacter source, PlayerSkillContext info, SkillContext skillContext) {
-        SkillScriptContext context = new SkillScriptContext(this, info);
-        executor.cast(source, target, skillContext, context);
-        context.setResult(context.getResult() == null ? SkillResult.OK : context.getResult());
-        skillContext.next(source, info, context.getResult());
+    public SkillResult castOn(IEntity target, ISpongeCharacter source, PlayerSkillContext skillContext) {
+        SkillScriptContext context = new SkillScriptContext(this, skillContext);
+        executor.cast(source, target, context);
+        return context.getResult() == null ? SkillResult.OK : context.getResult();
+
     }
 
     @Override

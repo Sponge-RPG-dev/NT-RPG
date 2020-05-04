@@ -5,7 +5,7 @@ import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
+
 import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
@@ -36,7 +36,7 @@ public class SkillTeleport extends ActiveSkill<ISpongeCharacter> {
     }
 
     @Override
-    public SkillResult cast(ISpongeCharacter character, PlayerSkillContext playerSkillContext, SkillContext skillContext) {
+    public SkillResult cast(ISpongeCharacter character, PlayerSkillContext skillContext) {
         Player player = character.getPlayer();
         double doubleNodeValue = skillContext.getDoubleNodeValue(SkillNodes.RANGE);
 
@@ -51,6 +51,6 @@ public class SkillTeleport extends ActiveSkill<ISpongeCharacter> {
                 player.setLocation(safeLocation.get());
             }
         }
-        skillContext.next(character, playerSkillContext, skillContext.result(SkillResult.OK));
+        return SkillResult.OK;
     }
 }

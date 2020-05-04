@@ -8,7 +8,6 @@ import cz.neumimto.rpg.api.events.skill.SkillTargetAttemptEvent;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.api.skills.types.ITargeted;
@@ -31,20 +30,18 @@ public abstract class TargetedEntitySkill extends ActiveSkill<ISpigotCharacter> 
     }
 
     @Override
-    public SkillResult cast(ISpigotCharacter caster, PlayerSkillContext info, SkillContext skillContext) {
+    public SkillResult cast(ISpigotCharacter caster, PlayerSkillContext skillContext) {
         int range = skillContext.getIntNodeValue(SkillNodes.RANGE);
         LivingEntity l = rayTraceEntity(caster.getPlayer(), range);
         if (l == null) {
             if (getDamageType() == null && !getSkillTypes().contains(SkillType.CANNOT_BE_SELF_CASTED)) {
                 l = caster.getEntity();
             } else {
-                skillContext.next(caster, info, SkillResult.NO_TARGET); //dont chain
-                return;
+                return SkillResult.NO_TARGET;
             }
         }
         if (getDamageType() != null && !damageService.canDamage(caster, l)) {
-            skillContext.next(caster, info, SkillResult.CANCELLED); //dont chain
-            return;
+            return SkillResult.CANCELLED;
         }
         IEntity<LivingEntity> target = Rpg.get().getEntityService().get(l);
 
@@ -56,10 +53,9 @@ public abstract class TargetedEntitySkill extends ActiveSkill<ISpigotCharacter> 
 
         if (Rpg.get().postEvent(event)) {
             //todo https://github.com/Sponge-RPG-dev/NT-RPG/issues/111
-            skillContext.next((ISpigotCharacter) event.getCaster(), info, SkillResult.CANCELLED); //dont chain
-            return;
+            return SkillResult.CANCELLED;
         }
-        castOn(event.getTarget(), (ISpigotCharacter) event.getCaster(), info, skillContext);
+        return castOn(event.getTarget(), (ISpigotCharacter) event.getCaster(), skillContext);
     }
 
 

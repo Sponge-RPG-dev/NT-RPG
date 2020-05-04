@@ -56,7 +56,6 @@ public class SkillData {
     private int skillTreeId;
     private int levelGap;
     private String skillName;
-    private SkillCost invokeCost;
     private ISkillNodeDescription description;
     private boolean useDescriptionOnly;
     private String icon;
@@ -183,14 +182,6 @@ public class SkillData {
 
     public void setSkillName(String skillName) {
         this.skillName = skillName;
-    }
-
-    public SkillCost getInvokeCost() {
-        return invokeCost;
-    }
-
-    public void setInvokeCost(SkillCost invokeCost) {
-        this.invokeCost = invokeCost;
     }
 
     public List<String> getDescription(IActiveCharacter character) {
