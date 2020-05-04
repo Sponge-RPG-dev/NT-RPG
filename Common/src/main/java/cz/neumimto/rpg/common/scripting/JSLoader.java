@@ -108,7 +108,8 @@ public class JSLoader implements IScriptEngine {
         list.addAll(resourceLoader.getClassLoaderMap().values());
         MultipleParentClassLoader multipleParentClassLoader = new MultipleParentClassLoader(list);
         engine = (ScriptEngine) fct.getClass().getMethod("getScriptEngine", String[].class, ClassLoader.class)
-                .invoke(fct, Rpg.get().getPluginConfig().JJS_ARGS.split(" "), multipleParentClassLoader);
+                .invoke(fct, (Rpg.get().getPluginConfig().JJS_ARGS + " --language=es6")
+                        .split(" "), multipleParentClassLoader);
     }
 
     private void setup() {
