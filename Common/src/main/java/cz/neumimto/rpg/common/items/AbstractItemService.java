@@ -294,7 +294,8 @@ public abstract class AbstractItemService implements ItemService {
 
     public abstract Set<String> getAllItemIds();
 
-    private List<ItemString> parsePotentialItemStringWildcard(ItemString i) {
+    @Override
+    public List<ItemString> parsePotentialItemStringWildcard(ItemString i) {
         String itemId = i.itemId;
         if (!itemId.contains("*")) {
             return Collections.singletonList(i);

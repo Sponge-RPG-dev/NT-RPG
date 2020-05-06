@@ -2,6 +2,7 @@ package cz.neumimto.rpg.api.items;
 
 import com.typesafe.config.Config;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
+import cz.neumimto.rpg.api.configuration.ItemString;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.items.sockets.SocketType;
 import cz.neumimto.rpg.api.items.subtypes.ItemSubtype;
@@ -17,6 +18,8 @@ public interface ItemService {
     Map<String, ItemMetaType> getItemMetaTypes();
 
     Map<String, ItemSubtype> getItemSubtypes();
+
+    List<ItemString> parsePotentialItemStringWildcard(ItemString i);
 
     void reload();
 

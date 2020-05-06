@@ -34,13 +34,15 @@ public class ClassRpgItemTypeAdapter implements Converter<Set<ClassItem>, List<S
                     }
                 }
             } else {
-                ItemString parsed = ItemString.parse(s);
-                Optional<RpgItemType> rpgItemType = Rpg.get().getItemService().getRpgItemType(parsed.itemId, parsed.variant);
-                if (rpgItemType.isPresent()) {
-                    RpgItemType rpgItemType1 = rpgItemType.get();
-                    fromConfig.put(rpgItemType1, parsed.damage);
-                } else {
-                    Log.error("- Not managed item type " + RpgItemType.KEY_BUILDER.apply(parsed.itemId, parsed.variant));
+                ItemString origin = ItemString.parse(s);
+                for (ItemString parsed : Rpg.get().getItemService().parsePotentialItemStringWildcard(origin)) {
+                    Optional<RpgItemType> rpgItemType = Rpg.get().getItemService().getRpgItemType(parsed.itemId, parsed.variant);
+                    if (rpgItemType.isPresent()) {
+                        RpgItemType rpgItemType1 = rpgItemType.get();
+                        fromConfig.put(rpgItemType1, parsed.damage);
+                    } else {
+                        Log.error("- Not managed item type " + RpgItemType.KEY_BUILDER.apply(parsed.itemId, parsed.variant));
+                    }
                 }
             }
         }
