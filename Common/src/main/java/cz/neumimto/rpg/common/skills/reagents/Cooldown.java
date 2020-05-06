@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.common.skills.reagents;
 
+import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.entity.CommonProperties;
 import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.entity.players.CharacterService;
@@ -21,6 +22,9 @@ public class Cooldown extends SkillCostPipelineMechanic {
     @Inject
     private CharacterService characterService;
 
+    @Inject
+    private PluginConfig pluginConfig;
+
     private long getCooldown(IActiveCharacter character, PlayerSkillContext context) {
         return (long) (context.getFloatNodeValue(SkillNodes.COOLDOWN)
                 * entityService.getEntityProperty(character, CommonProperties.cooldown_reduce_mult));
@@ -41,7 +45,9 @@ public class Cooldown extends SkillCostPipelineMechanic {
         cd = cd + System.currentTimeMillis();
         character.getCooldowns().put(skillData.getSkill().getId(), cd);
 
-        characterService.notifyCooldown(character, context, cd);
+        if (pluginConfig.ITEM_COOLDOWNS) {
+            characterService.notifyCooldown(character, context, cd);
+        }
     }
 
     @Override

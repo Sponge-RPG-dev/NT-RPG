@@ -46,12 +46,15 @@ public abstract class AbstractSkillService implements SkillService {
     @Inject
     private Injector injector;
 
-    @Override
-    public void load() {
+    public AbstractSkillService() {
         scriptSkillsParents.put("active", ActiveScriptSkill.class);
         scriptSkillsParents.put("passive", PassiveScriptSkill.class);
 
         Stream.of(SkillType.values()).forEach(this::registerSkillType);
+    }
+
+    @Override
+    public void load() {
 
         skillTrees.clear();
         skillTrees.putAll(skillTreeDao.getAll());
