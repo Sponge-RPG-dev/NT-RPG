@@ -27,31 +27,37 @@ public class Decorator {
             .velocity(new Vector3d(0, 1, 0).normalize())
             .build();
 
-    static {
-        decorator = SpongeRpgPlugin.getInstance().injector.getInstance(ParticleDecorator.class);
-    }
-
     public static void strikeLightning(Entity entity) {
         strikeLightning(entity.getLocation());
     }
 
     public static void strikeLightning(Location<World> location) {
+        init();
         decorator.strikeLightning(location);
     }
 
     public static void createTrajectory(Entity entity, int interval, int maxticks, BiConsumer<Task, Entity> e) {
+        init();
         decorator.createTrajectory(entity, interval, maxticks, e);
     }
 
     public static void circle(Location location, int count, double radius, Consumer<Location> callback) {
+        init();
         decorator.circle(location, count, radius, callback);
     }
 
     public static void ellipse(Vector3d[] vector3ds, double a, double b, double vecmult, Vector3d rotationAngle) {
+        init();
         decorator.ellipse(vector3ds, a, b, vecmult, rotationAngle);
     }
 
     public static void healEffect(Location<World> worldLocation) {
         worldLocation.getExtent().spawnParticles(healingEffect, worldLocation.getPosition());
+    }
+
+    private static void init() {
+        if (decorator == null) {
+            decorator = SpongeRpgPlugin.getInstance().injector.getInstance(ParticleDecorator.class);
+        }
     }
 }

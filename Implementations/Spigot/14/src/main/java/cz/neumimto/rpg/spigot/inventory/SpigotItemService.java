@@ -18,15 +18,15 @@ import de.tr7zw.nbtapi.NBTCompoundList;
 import de.tr7zw.nbtapi.NBTItem;
 import de.tr7zw.nbtapi.NBTListCompound;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Singleton
 public class SpigotItemService extends AbstractItemService {
@@ -78,6 +78,14 @@ public class SpigotItemService extends AbstractItemService {
         }
 
         return Optional.of(new SpigotRpgItemType(type.getKey().toString(), parsed.variant, wClass, parsed.damage, parsed.armor, type));
+    }
+
+    @Override
+    public Set<String> getAllItemIds() {
+        return Stream.of(Material.values())
+                .map(Material::getKey)
+                .map(NamespacedKey::toString)
+                .collect(Collectors.toSet());
     }
 
     public static class SpigotItemHandler {

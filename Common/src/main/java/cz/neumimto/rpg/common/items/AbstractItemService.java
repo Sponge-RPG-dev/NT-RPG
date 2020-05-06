@@ -15,11 +15,13 @@ import cz.neumimto.rpg.api.items.sockets.SocketType;
 import cz.neumimto.rpg.api.items.subtypes.ItemSubtype;
 import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
+import cz.neumimto.rpg.common.utils.Wildcards;
 
 import javax.inject.Inject;
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static cz.neumimto.rpg.api.logging.Log.*;
 
@@ -167,14 +169,21 @@ public abstract class AbstractItemService implements ItemService {
 
         info("Loading Armor configuration");
         for (String armor : config.getStringList("Armor")) {
-            Optional<RpgItemType> rpgItemType = createRpgItemType(ItemString.parse(armor), ItemClass.ARMOR);
-            rpgItemType.ifPresent(this::registerRpgItemType);
+            ItemString parse = ItemString.parse(armor);
+            for (ItemString itemString : parsePotentialItemStringWildcard(parse)) {
+                Optional<RpgItemType> rpgItemType = createRpgItemType(itemString, ItemClass.ARMOR);
+                rpgItemType.ifPresent(this::registerRpgItemType);
+            }
         }
 
         info("Loading Shields configuration");
         for (String shield : config.getStringList("Shields")) {
-            Optional<RpgItemType> rpgItemType = createRpgItemType(ItemString.parse(shield), ItemClass.SHIELD);
-            rpgItemType.ifPresent(this::registerRpgItemType);
+            ItemString parse = ItemString.parse(shield);
+
+            for (ItemString itemString : parsePotentialItemStringWildcard(parse)) {
+                Optional<RpgItemType> rpgItemType = createRpgItemType(itemString, ItemClass.SHIELD);
+                rpgItemType.ifPresent(this::registerRpgItemType);
+            }
         }
     }
 
@@ -203,12 +212,14 @@ public abstract class AbstractItemService implements ItemService {
             info("  - Reading \"Items\" config section" + weaponClass);
             List<String> items = itemGroup.getStringList("Items");
             for (String item : items) {
-                ItemString parsed = ItemString.parse(item);
-                Optional<RpgItemType> rpgItemType = createRpgItemType(parsed, weapons);
-                rpgItemType.ifPresent(a -> {
-                    registerRpgItemType(a);
-                    weapons.getItems().add(a);
-                });
+                ItemString parse = ItemString.parse(item);
+                for (ItemString itemString : parsePotentialItemStringWildcard(parse)) {
+                    Optional<RpgItemType> rpgItemType = createRpgItemType(itemString, weapons);
+                    rpgItemType.ifPresent(a -> {
+                        registerRpgItemType(a);
+                        weapons.getItems().add(a);
+                    });
+                }
             }
         } catch (ConfigException e) {
             try {
@@ -279,6 +290,19 @@ public abstract class AbstractItemService implements ItemService {
     @Override
     public Map<String, ItemSubtype> getItemSubtypes() {
         return itemSubtypes;
+    }
+
+    public abstract Set<String> getAllItemIds();
+
+    private List<ItemString> parsePotentialItemStringWildcard(ItemString i) {
+        String itemId = i.itemId;
+        if (!itemId.contains("*")) {
+            return Collections.singletonList(i);
+        }
+        return Wildcards.substract(itemId, getAllItemIds())
+                .stream()
+                .map(a -> new ItemString(a, i.damage, i.armor, i.variant))
+                .collect(Collectors.toList());
     }
 
     @Override

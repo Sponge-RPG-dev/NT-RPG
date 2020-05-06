@@ -15,17 +15,20 @@ import cz.neumimto.rpg.common.items.RpgItemStackImpl;
 import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
 import cz.neumimto.rpg.sponge.inventory.data.NKeys;
 import cz.neumimto.rpg.sponge.items.SpongeRpgItemType;
+import org.spongepowered.api.CatalogType;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.DataQuery;
 import org.spongepowered.api.data.DataView;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.item.ItemType;
+import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -112,4 +115,12 @@ public class SpongeItemService extends AbstractItemService {
     }
 
 
+    @Override
+    public Set<String> getAllItemIds() {
+        return Sponge.getRegistry().getAllOf(ItemType.class)
+                .stream()
+                .map(CatalogType::getId)
+                .collect(Collectors.toSet());
+
+    }
 }

@@ -8,7 +8,7 @@ public final class ItemString {
     public final double armor;
     public final String variant;
 
-    protected ItemString(String itemId, double damage, double armor, String variant) {
+    public ItemString(String itemId, double damage, double armor, String variant) {
         this.itemId = itemId;
         this.damage = damage;
         this.armor = armor;
