@@ -4,6 +4,9 @@ import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.skills.scripting.ScriptSkillModel;
 
+import javax.script.Compilable;
+import javax.script.CompiledScript;
+import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 
 public interface ScriptSkill<T> {
@@ -12,13 +15,16 @@ public interface ScriptSkill<T> {
         ScriptSkillModel model = getModel();
         String s = bindScriptToTemplate(model);
         try {
-            Rpg.get().getScriptEngine().getEngine().eval(s);
-            T t = (T) Rpg.get().getScriptEngine().getEngine().eval(model.getId().replaceAll(":", "") + "_executor");
-            setExecutor(t);
+            ScriptEngine engine = Rpg.get().getScriptEngine().getEngine();
+            Compilable c = (Compilable) engine;
+            CompiledScript compile = c.compile(s);
+            setScript(compile);
         } catch (ScriptException e) {
             Log.error("Could not init script ", e);
         }
     }
+
+    void setScript(CompiledScript compile);
 
     void setExecutor(T ses);
 

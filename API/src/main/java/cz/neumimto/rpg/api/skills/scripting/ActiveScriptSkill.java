@@ -9,6 +9,9 @@ import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.api.skills.types.ScriptSkill;
 
+import javax.script.Bindings;
+import javax.script.CompiledScript;
+import javax.script.SimpleBindings;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,11 +24,19 @@ public class ActiveScriptSkill extends ActiveSkill<IActiveCharacter> implements 
 
     private ScriptSkillModel model;
 
+    private CompiledScript compiledScript;
+
     @Override
     public SkillResult cast(IActiveCharacter character, PlayerSkillContext info) {
-        SkillScriptContext context = new SkillScriptContext(this, info);
-        executor.cast(character, info, context);
-        return context.getResult() == null ? SkillResult.OK : context.getResult();
+        Bindings bindings = new SimpleBindings();
+        compiledScript.eval(bindings);
+        SkillResult skillResult = executor.cast(character, info);
+        return skillResult == null ? SkillResult.OK : skillResult;
+    }
+
+    @Override
+    public void setScript(CompiledScript compile) {
+        this.compiledScript = compile;
     }
 
     @Override

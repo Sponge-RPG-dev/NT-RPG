@@ -20,7 +20,7 @@ compileJava {
 dependencies {
     compile project(':Common')
     compile project(':FlatFiles-Persistence')
-
+    compile "co.aikar:acf-sponge:0.5.0-SNAPSHOT"
 
     //compile 'com.scireum:parsii:1.5'
 
@@ -33,7 +33,7 @@ dependencies {
     compileOnly 'com.github.rojo8399:PlaceholderAPI:4.5.1'
     compileOnly 'it.unimi.dsi:fastutil:8.2.1'
     compileOnly 'com.github.randombyte-developer:holograms:v3.2.0'
-    compile "co.aikar:acf-sponge:0.5.0-SNAPSHOT"
+    compileOnly 'com.github.OnapleRPG:CrowdBinding:v0.4.1'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.1'
     testCompile 'org.junit.jupiter:junit-jupiter-engine:5.4.1'

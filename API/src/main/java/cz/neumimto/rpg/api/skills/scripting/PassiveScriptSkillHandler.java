@@ -10,5 +10,5 @@ import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 @JsBinding(JsBinding.Type.CLASS)
 public interface PassiveScriptSkillHandler {
 
-    void init(IEffectConsumer consumer, PlayerSkillContext info, SkillScriptContext context);
+    void init(IEffectConsumer consumer, PlayerSkillContext context);
 }
