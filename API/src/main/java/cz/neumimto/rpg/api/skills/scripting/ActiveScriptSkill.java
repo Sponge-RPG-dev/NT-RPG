@@ -8,9 +8,11 @@ import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.api.skills.types.ScriptSkill;
+import jdk.nashorn.api.scripting.ScriptObjectMirror;
 
 import javax.script.Bindings;
 import javax.script.CompiledScript;
+import javax.script.ScriptException;
 import javax.script.SimpleBindings;
 import java.util.List;
 import java.util.Optional;
@@ -27,11 +29,18 @@ public class ActiveScriptSkill extends ActiveSkill<IActiveCharacter> implements 
     private CompiledScript compiledScript;
 
     @Override
-    public SkillResult cast(IActiveCharacter character, PlayerSkillContext info) {
+    public SkillResult cast(IActiveCharacter character, PlayerSkillContext context) {
         Bindings bindings = new SimpleBindings();
-        compiledScript.eval(bindings);
-        SkillResult skillResult = executor.cast(character, info);
-        return skillResult == null ? SkillResult.OK : skillResult;
+        bindings.put("_caster", character);
+        bindings.put("_context", context);
+        try {
+            //todo ScriptObjectMirror ?
+            SkillResult result = (SkillResult) compiledScript.eval(bindings);
+            return result == null ? SkillResult.OK : result;
+        } catch (ScriptException s) {
+            Log.error("Could not execute JS skill script ", s);
+            return SkillResult.OK; //just apply cooldowns anyway
+        }
     }
 
     @Override
