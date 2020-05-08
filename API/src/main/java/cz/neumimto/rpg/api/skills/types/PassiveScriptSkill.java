@@ -7,8 +7,11 @@ import cz.neumimto.rpg.api.skills.ISkillType;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.scripting.PassiveScriptSkillHandler;
 import cz.neumimto.rpg.api.skills.scripting.ScriptSkillModel;
-import cz.neumimto.rpg.api.skills.scripting.SkillScriptContext;
 
+import javax.script.Bindings;
+import javax.script.CompiledScript;
+import javax.script.ScriptException;
+import javax.script.SimpleBindings;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,18 +21,25 @@ import java.util.Optional;
 public class PassiveScriptSkill extends PassiveSkill implements IPassiveScriptSkill {
 
 
-    private PassiveScriptSkillHandler handler;
+    private CompiledScript compiledScript;
 
     private ScriptSkillModel model;
 
     @Override
-    public void applyEffect(PlayerSkillContext info, IActiveCharacter character) {
-        handler.init(character, info, new SkillScriptContext(this, info));
+    public void applyEffect(PlayerSkillContext context, IActiveCharacter character) {
+        Bindings bindings = new SimpleBindings();
+        bindings.put("_context", context);
+        bindings.put("_caster", character);
+        try {
+            compiledScript.eval(bindings);
+        } catch (ScriptException e) {
+            Log.error("Could not initialize Passive JS skill ", e);
+        }
     }
 
     @Override
-    public void setExecutor(PassiveScriptSkillHandler ses) {
-        this.handler = ses;
+    public void setScript(CompiledScript compiledScript) {
+        this.compiledScript = compiledScript;
     }
 
     @Override

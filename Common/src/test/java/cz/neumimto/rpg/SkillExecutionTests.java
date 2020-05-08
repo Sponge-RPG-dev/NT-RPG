@@ -80,13 +80,7 @@ public class SkillExecutionTests {
         skillData.setSkill(testSkill);
         playerSkillContext.setSkillData(skillData);
         character.addSkill("test", playerSkillContext);
-        Rpg.get().getSkillService().executeSkill(character, character.getSkill("test"), new SkillExecutorCallback() {
-            @Override
-            public void doNext(IActiveCharacter character, PlayerSkillContext info, SkillContext skillResult) {
-                super.doNext(character, info, skillResult);
-                Assertions.assertSame(skillResult.getResult(), SkillResult.OK);
-            }
-        });
+        Rpg.get().getSkillService().executeSkill(character, character.getSkill("test"));
         Assertions.assertTrue(hadRun);
     }
 
@@ -104,13 +98,7 @@ public class SkillExecutionTests {
         playerSkillContext.setSkillData(skillData);
         character.addSkill("test", playerSkillContext);
 
-        Rpg.get().getSkillService().executeSkill(character, character.getSkill("test"), new SkillExecutorCallback() {
-            @Override
-            public void doNext(IActiveCharacter character, PlayerSkillContext info, SkillContext skillResult) {
-                super.doNext(character, info, skillResult);
-                Assertions.assertSame(skillResult.getResult(), SkillResult.NO_MANA);
-            }
-        });
+        Rpg.get().getSkillService().executeSkill(character, character.getSkill("test"));
         Assertions.assertFalse(hadRun);
     }
 
@@ -128,13 +116,7 @@ public class SkillExecutionTests {
         playerSkillContext.setSkillData(skillData);
         character.addSkill("test", playerSkillContext);
 
-        Rpg.get().getSkillService().executeSkill(character, character.getSkill("test"), new SkillExecutorCallback() {
-            @Override
-            public void doNext(IActiveCharacter character, PlayerSkillContext info, SkillContext skillResult) {
-                super.doNext(character, info, skillResult);
-                Assertions.assertSame(skillResult.getResult(), SkillResult.NO_HP);
-            }
-        });
+        Rpg.get().getSkillService().executeSkill(character, character.getSkill("test"));
         Assertions.assertFalse(hadRun);
     }
 
@@ -152,13 +134,7 @@ public class SkillExecutionTests {
         playerSkillContext.setSkillData(skillData);
         character.addSkill("test", playerSkillContext);
 
-        Rpg.get().getSkillService().executeSkill(character, character.getSkill("test"), new SkillExecutorCallback() {
-            @Override
-            public void doNext(IActiveCharacter character, PlayerSkillContext info, SkillContext skillResult) {
-                super.doNext(character, info, skillResult);
-                Assertions.assertSame(skillResult.getResult(), SkillResult.ON_COOLDOWN);
-            }
-        });
+        Rpg.get().getSkillService().executeSkill(character, character.getSkill("test"));
         Assertions.assertFalse(hadRun);
     }
 

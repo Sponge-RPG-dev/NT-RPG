@@ -43,9 +43,6 @@ public class ACFBootstrap {
             return skillTree;
         });
 
-        //  manager.getCommandCompletions().registerAsyncCompletion("a", TestCommand.aCompHandler);
-        //  manager.getCommandCompletions().registerAsyncCompletion("b", TestCommand.bCompHandler);
-
         //may be async as only way to add skills now is to reload ntrpg
         manager.getCommandCompletions().registerAsyncCompletion("skill", c ->
                 Rpg.get().getSkillService().getSkillNames()

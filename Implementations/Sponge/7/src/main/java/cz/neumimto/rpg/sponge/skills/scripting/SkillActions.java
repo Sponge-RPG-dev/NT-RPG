@@ -4,8 +4,8 @@ import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.F;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
-import cz.neumimto.rpg.api.skills.scripting.SkillScriptContext;
 import cz.neumimto.rpg.api.utils.TriConsumer;
 import cz.neumimto.rpg.common.skills.scripting.SkillComponent;
 import cz.neumimto.rpg.sponge.damage.SkillDamageSource;
@@ -49,7 +49,7 @@ public class SkillActions {
                     @SkillComponent.Param("@returns - true if the damage was dealt"),
             }
     )
-    public static F.QuadFunction<IEntity<Living>, IEntity<Living>, Number, SkillScriptContext, Boolean> DAMAGE = (caster, target, damage, context) -> {
+    public static F.QuadFunction<IEntity<Living>, IEntity<Living>, Number, PlayerSkillContext, Boolean> DAMAGE = (caster, target, damage, context) -> {
         SkillDamageSource s = new SkillDamageSourceBuilder()
                 .fromSkill(context.getSkill())
                 .setSource(caster)
@@ -69,7 +69,7 @@ public class SkillActions {
                     @SkillComponent.Param("@returns - true if the damage was dealt"),
             }
     )
-    public static F.PentaFunction<IEntity<Living>, IEntity<Living>, Number, String, SkillScriptContext, Boolean> DAMAGE_WITH_TYPE = (caster, target, damage, damageType, context) -> {
+    public static F.PentaFunction<IEntity<Living>, IEntity<Living>, Number, String, PlayerSkillContext, Boolean> DAMAGE_WITH_TYPE = (caster, target, damage, damageType, context) -> {
         Optional<DamageType> type = Sponge.getRegistry().getType(DamageType.class, damageType);
         if (!type.isPresent()) {
             throw new RuntimeException(
@@ -97,10 +97,8 @@ public class SkillActions {
                     @SkillComponent.Param("@returns - float value"),
             }
     )
-    public static BiFunction<String, SkillScriptContext, Float> PARAM = (node, skillScriptContext) ->
-            skillScriptContext.getSkillInfo().getSkillData()
-                    .getSkillSettings()
-                    .getLevelNodeValue(node, skillScriptContext.getSkillInfo().getTotalLevel());
+    public static BiFunction<String, PlayerSkillContext, Float> PARAM = (node,playerSkillContext) ->
+            playerSkillContext.getFloatNodeValue(node);
 
     @SkillComponent(
             value = "Applies an effect to a specifc entity, each effect has different constructor parameters",
@@ -111,7 +109,7 @@ public class SkillActions {
                     @SkillComponent.Param("source - source/caster entity (may be null)")
             }
     )
-    public static TriConsumer<IEffect, SkillScriptContext, IEntity> APPLY_EFFECT = (effect, context, source) -> {
+    public static TriConsumer<IEffect, PlayerSkillContext, IEntity> APPLY_EFFECT = (effect, context, source) -> {
         Rpg.get().getEffectService().addEffect(effect, context.getSkill(), source);
     };
 
@@ -170,7 +168,7 @@ public class SkillActions {
                     @SkillComponent.Param("context - skill context"),
             }
     )
-    public static TriConsumer<IEntity, Number, SkillScriptContext> HEAL = (iEntity, aNumber, context) ->
+    public static TriConsumer<IEntity, Number, PlayerSkillContext> HEAL = (iEntity, aNumber, context) ->
             Rpg.get().getEntityService().healEntity(iEntity, aNumber.floatValue(), context.getSkill());
 
 

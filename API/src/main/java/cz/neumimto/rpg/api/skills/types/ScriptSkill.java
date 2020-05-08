@@ -13,7 +13,7 @@ public interface ScriptSkill<T> {
 
     default void initScript() {
         ScriptSkillModel model = getModel();
-        String s = bindScriptToTemplate(model);
+        String s = model.getScript();
         try {
             ScriptEngine engine = Rpg.get().getScriptEngine().getEngine();
             Compilable c = (Compilable) engine;
@@ -25,8 +25,6 @@ public interface ScriptSkill<T> {
     }
 
     void setScript(CompiledScript compile);
-
-    void setExecutor(T ses);
 
     ScriptSkillModel getModel();
 

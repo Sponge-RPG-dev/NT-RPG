@@ -4,6 +4,7 @@ import com.electronwill.nightconfig.core.Config;
 import com.electronwill.nightconfig.core.conversion.Conversion;
 import com.electronwill.nightconfig.core.conversion.Converter;
 import com.electronwill.nightconfig.core.conversion.Path;
+import com.typesafe.config.Optional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -30,8 +31,17 @@ public class ScriptSkillModel {
     @Path("Loader")
     private String loader;
 
-    @Path("Script")
-    private String script;
+    @Path("OnExecute")
+    private String onExecute;
+
+    @Path("OnLoad")
+    @Optional
+    private String onLoad;
+
+    public String getScript(){
+        return "";
+    }
+
 
     public String getId() {
         return id;
@@ -61,9 +71,6 @@ public class ScriptSkillModel {
         return loader;
     }
 
-    public String getScript() {
-        return script;
-    }
 
     private static class SettingsToMap implements Converter<Map<String, Float>, Config> {
 

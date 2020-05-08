@@ -47,7 +47,7 @@ public class AssetsLoadingTest {
         bindings.put("ScriptExecutorSkill", ScriptExecutorSkill.class);
         jsLoader.getEngine().eval("var ScriptExecutorSkill = Java.type(\"" + ScriptExecutorSkill.class.getCanonicalName() + "\")");
         jsLoader.getEngine().setBindings(bindings, ScriptContext.GLOBAL_SCOPE);
-        skillService.init();
+        skillService.load();
     }
 
     @Test

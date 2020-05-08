@@ -11,7 +11,7 @@ import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.gui.IPlayerMessage;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterClass;
-import cz.neumimto.rpg.common.commands.AbstractAdminCommand;
+import cz.neumimto.rpg.common.commands.AdminCommands;
 import cz.neumimto.rpg.common.effects.AbstractEffectService;
 import cz.neumimto.rpg.effects.TestEffectFloat;
 import cz.neumimto.rpg.effects.TestEffectFloatGlobal;
@@ -36,7 +36,7 @@ import static cz.neumimto.rpg.junit.CharactersExtension.Stage.Stages.READY;
 public class AdminCommandTests {
 
     @Inject
-    private AbstractAdminCommand abstractAdminCommand;
+    private AdminCommands abstractAdminCommand;
 
     @Inject
     private AbstractEffectService effectService;

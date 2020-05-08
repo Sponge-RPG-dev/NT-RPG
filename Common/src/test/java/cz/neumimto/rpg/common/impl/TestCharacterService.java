@@ -1,7 +1,9 @@
 package cz.neumimto.rpg.common.impl;
 
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.common.entity.TestCharacter;
 import cz.neumimto.rpg.common.entity.players.AbstractCharacterService;
@@ -81,6 +83,16 @@ public class TestCharacterService extends AbstractCharacterService<TestCharacter
 
     @Override
     public void removePersistantSkill(CharacterSkill characterSkill) {
+
+    }
+
+    @Override
+    public void setHeathscale(TestCharacter character, double scale) {
+
+    }
+
+    @Override
+    public void notifyCooldown(IActiveCharacter caster, PlayerSkillContext skillInfo, long cd) {
 
     }
 

@@ -27,10 +27,7 @@ import javax.inject.Singleton;
 import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Path;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.function.BiFunction;
@@ -246,5 +243,15 @@ public class TestApiImpl implements RpgApi {
     @Override
     public boolean isDisabledInWorld(String worldName) {
         return false;
+    }
+
+    @Override
+    public Set<UUID> getOnlinePlayers() {
+        return null;
+    }
+
+    @Override
+    public void doImplSpecificreload() {
+
     }
 }

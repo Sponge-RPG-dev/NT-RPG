@@ -4,8 +4,8 @@ import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.F;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
-import cz.neumimto.rpg.api.skills.scripting.SkillScriptContext;
 import cz.neumimto.rpg.api.utils.TriConsumer;
 import cz.neumimto.rpg.common.skills.scripting.SkillComponent;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
@@ -43,7 +43,7 @@ public class SkillActions {
                     @SkillComponent.Param("@returns - true if the damage was dealt"),
             }
     )
-    public static F.PentaFunction<ISpigotCharacter, IEntity<LivingEntity>, Number, EntityDamageEvent.DamageCause, SkillScriptContext, Boolean> DAMAGE = (caster, target, damage, DamageCause, context) -> {
+    public static F.PentaFunction<ISpigotCharacter, IEntity<LivingEntity>, Number, EntityDamageEvent.DamageCause, PlayerSkillContext, Boolean> DAMAGE = (caster, target, damage, DamageCause, context) -> {
         if (damageService.canDamage(caster, target.getEntity())) {
             damageService.damage(caster.getEntity(), target.getEntity(), DamageCause, damage.doubleValue(), false);
             return true;
@@ -61,10 +61,8 @@ public class SkillActions {
                     @SkillComponent.Param("@returns - float value"),
             }
     )
-    public static BiFunction<String, SkillScriptContext, Float> PARAM = (node, skillScriptContext) ->
-            skillScriptContext.getSkillInfo().getSkillData()
-                    .getSkillSettings()
-                    .getLevelNodeValue(node, skillScriptContext.getSkillInfo().getTotalLevel());
+    public static BiFunction<String, PlayerSkillContext, Float> PARAM = (node, playerSkillContext) ->
+            playerSkillContext.getFloatNodeValue(node);
 
     @SkillComponent(
             value = "Applies an effect to a specifc entity, each effect has different constructor parameters",
@@ -75,7 +73,7 @@ public class SkillActions {
                     @SkillComponent.Param("source - source/caster entity (may be null)")
             }
     )
-    public static TriConsumer<IEffect, SkillScriptContext, IEntity> APPLY_EFFECT = (effect, context, source) -> {
+    public static TriConsumer<IEffect, PlayerSkillContext, IEntity> APPLY_EFFECT = (effect, context, source) -> {
         Rpg.get().getEffectService().addEffect(effect, context.getSkill(), source);
     };
 
@@ -132,7 +130,7 @@ public class SkillActions {
                     @SkillComponent.Param("context - skill context"),
             }
     )
-    public static TriConsumer<IEntity, Number, SkillScriptContext> HEAL = (iEntity, aNumber, context) ->
+    public static TriConsumer<IEntity, Number, PlayerSkillContext> HEAL = (iEntity, aNumber, context) ->
             Rpg.get().getEntityService().healEntity(iEntity, aNumber.floatValue(), context.getSkill());
 
 

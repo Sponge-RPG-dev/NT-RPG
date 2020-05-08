@@ -74,6 +74,8 @@ public class JSLoader implements IScriptEngine {
     @Inject
     private AssetService assetService;
 
+    private CompiledScript lib;
+
     private Map<Class<?>, JsBinding.Type> dataToBind = new HashMap<>();
 
     @Override
@@ -165,11 +167,23 @@ public class JSLoader implements IScriptEngine {
                 info("===== Bindings END =====");
             }
             engine.setBindings(bindings, ScriptContext.ENGINE_SCOPE);
-            engine.eval(rs);
+
+            Compilable compilable = (Compilable) engine;
+            lib = compilable.compile(rs);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private ScriptContext initContext(CompiledScript lib) {
+        ScriptContext context = new SimpleScriptContext();
+        try {
+            lib.eval(context);
+        } catch (ScriptException e) {
+            e.printStackTrace();
+        }
+        return context;
     }
 
     private void dumpDocumentedFunctions(List<SkillComponent> skillComponents) {

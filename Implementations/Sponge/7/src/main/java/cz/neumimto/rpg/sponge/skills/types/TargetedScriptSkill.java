@@ -7,10 +7,13 @@ import cz.neumimto.rpg.api.skills.ISkillType;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.scripting.ScriptSkillModel;
-import cz.neumimto.rpg.api.skills.scripting.TargetedScriptExecutorSkill;
 import cz.neumimto.rpg.api.skills.types.ITargetedScriptSkill;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 
+import javax.script.Bindings;
+import javax.script.CompiledScript;
+import javax.script.ScriptException;
+import javax.script.SimpleBindings;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,19 +22,28 @@ import java.util.Optional;
  */
 public class TargetedScriptSkill extends Targeted implements ITargetedScriptSkill {
 
-    private TargetedScriptExecutorSkill executor;
-
     private ScriptSkillModel model;
+
+    private CompiledScript compiledScript;
 
     @Override
     public SkillResult castOn(IEntity target, ISpongeCharacter source, PlayerSkillContext skillContext) {
-        SkillResult skillResult = executor.cast(source, target, skillContext);
-        return skillResult == null ? SkillResult.OK : skillResult;
+
+        Bindings bindings = new SimpleBindings();
+        bindings.put("_target", target);
+        bindings.put("_caster", source);
+        bindings.put("_context", skillContext);
+        try {
+            SkillResult skillResult = (SkillResult) compiledScript.eval(bindings);
+            return skillResult == null ? SkillResult.OK : skillResult;
+        } catch (ScriptException e) {
+            return SkillResult.OK;
+        }
     }
 
     @Override
-    public void setExecutor(TargetedScriptExecutorSkill ses) {
-        this.executor = ses;
+    public void setScript(CompiledScript compiledScript) {
+        this.compiledScript = compiledScript;
     }
 
     @Override

@@ -22,8 +22,6 @@ import java.util.Optional;
  */
 public class ActiveScriptSkill extends ActiveSkill<IActiveCharacter> implements ScriptSkill<ScriptExecutorSkill> {
 
-    private ScriptExecutorSkill executor;
-
     private ScriptSkillModel model;
 
     private CompiledScript compiledScript;
@@ -46,11 +44,6 @@ public class ActiveScriptSkill extends ActiveSkill<IActiveCharacter> implements 
     @Override
     public void setScript(CompiledScript compile) {
         this.compiledScript = compile;
-    }
-
-    @Override
-    public void setExecutor(ScriptExecutorSkill ses) {
-        this.executor = ses;
     }
 
     @Override
