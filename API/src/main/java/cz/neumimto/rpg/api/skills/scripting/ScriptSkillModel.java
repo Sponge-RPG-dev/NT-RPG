@@ -32,16 +32,20 @@ public class ScriptSkillModel {
     private String loader;
 
     @Path("OnExecute")
-    private String onExecute;
+    @Optional
+    private String fncCast;
 
     @Path("OnLoad")
     @Optional
-    private String onLoad;
+    private String fncLoad;
 
-    public String getScript(){
-        return "";
+    public String fncCast() {
+        return fncCast;
     }
 
+    public String fncLoad() {
+        return fncLoad;
+    }
 
     public String getId() {
         return id;

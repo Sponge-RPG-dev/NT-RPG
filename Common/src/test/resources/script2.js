@@ -1,17 +1,24 @@
-var module = {}
+registerSkillHandler({
+    onCast: function(caster, context) {
+        caster.add("Test")
+    }
+})
 
-var test = function (args) {
-    print('test')
-}
-
-function test2(args) {
-    print('test 2')
-}
-//attempting to export with namespace so methods wont conflict
-modules['test'] = test;
-modules['test2'] = test2;
-
-//export these
-function() {
-    return module;
-}
+registerEventListener(
+    {
+        type: function() {
+            return "org.spongepowered.api.event.network.ClientConnectionEvent";
+        },
+        consumer: function() {
+            return function() {
+                log(event);
+            }
+        },
+        order: function() {
+            return "BEFORE_POST";
+        },
+        beforeModifications: function() {
+            return false;
+        }
+    }
+);

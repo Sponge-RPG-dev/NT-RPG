@@ -190,13 +190,11 @@ public abstract class AbstractSkillService implements SkillService {
             ((ISkill) s).setSettings(settings);
             injectCatalogId((ISkill) s, scriptSkillModel.getId());
             s.setModel(scriptSkillModel);
-            //	IoC.get().get(sk, s);
-            s.initScript();
             if (Rpg.get().getPluginConfig().DEBUG.isDevelop()) {
                 info("-------- Created skill from skill def.");
                 info("+ ClassName " + s.getClass().getName());
                 info("+ ClassLoader " + s.getClass().getClassLoader());
-                info("+ Script:\n " + s.bindScriptToTemplate(scriptSkillModel));
+                info("+ Script fnc " + s.getModel().fncCast());
             }
             return (ISkill) s;
         } catch (Exception e) {

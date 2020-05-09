@@ -42,11 +42,6 @@ public class TargetedScriptSkill extends Targeted implements ITargetedScriptSkil
     }
 
     @Override
-    public void setScript(CompiledScript compiledScript) {
-        this.compiledScript = compiledScript;
-    }
-
-    @Override
     public ScriptSkillModel getModel() {
         return model;
     }

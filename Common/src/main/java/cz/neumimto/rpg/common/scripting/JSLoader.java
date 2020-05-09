@@ -32,6 +32,7 @@ import cz.neumimto.rpg.api.utils.FileUtils;
 import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.bytecode.ClassGenerator;
 import cz.neumimto.rpg.common.skills.scripting.SkillComponent;
+import jdk.nashorn.api.scripting.JSObject;
 import net.bytebuddy.dynamic.loading.MultipleParentClassLoader;
 
 import javax.inject.Inject;
@@ -91,10 +92,6 @@ public class JSLoader implements IScriptEngine {
             loadNashorn();
             if (engine != null) {
                 setup();
-                reloadGlobalEffects();
-                reloadSkills();
-                reloadAttributes();
-                generateListener();
                 info("JS resources loaded.");
             }
         } catch (Exception e) {
@@ -170,20 +167,10 @@ public class JSLoader implements IScriptEngine {
 
             Compilable compilable = (Compilable) engine;
             lib = compilable.compile(rs);
-
+            lib.eval();
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    private ScriptContext initContext(CompiledScript lib) {
-        ScriptContext context = new SimpleScriptContext();
-        try {
-            lib.eval(context);
-        } catch (ScriptException e) {
-            e.printStackTrace();
-        }
-        return context;
     }
 
     private void dumpDocumentedFunctions(List<SkillComponent> skillComponents) {
@@ -210,17 +197,6 @@ public class JSLoader implements IScriptEngine {
             e.printStackTrace();
         }
 
-    }
-
-    @Override
-    public void generateDynamicListener(List list) {
-        if (listener != null) {
-            info("Found JS listener: " + listener.getClass().getSimpleName() + " Unregistering");
-            Rpg.get().unregisterListeners(listener);
-        }
-        listener = classGenerator.generateDynamicListener(list);
-        info("Registering js listener: " + listener.getClass().getSimpleName());
-        Rpg.get().registerListeners(listener);
     }
 
     @Override
@@ -275,39 +251,41 @@ public class JSLoader implements IScriptEngine {
     }
 
     @Override
-    public void reloadGlobalEffects() {
-        Invocable invocable = (Invocable) engine;
-        try {
-            invocable.invokeFunction("registerGlobalEffects");
-        } catch (ScriptException | NoSuchMethodException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void reloadAttributes() {
-        Invocable invocable = (Invocable) engine;
-        try {
-            invocable.invokeFunction("registerAttributes");
-        } catch (ScriptException | NoSuchMethodException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void generateListener() {
-        Invocable invocable = (Invocable) engine;
-        try {
-            invocable.invokeFunction("generateListener");
-        } catch (ScriptException | NoSuchMethodException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
     public Map<Class<?>, JsBinding.Type> getDataToBind() {
         return dataToBind;
     }
 
+    @Override
+    public Object executeScript(String functionName, Object... args) {
+        try {
+            Invocable invocableEngine = (Invocable) lib.getEngine();
+            return invocableEngine.invokeFunction(functionName, args);
+        } catch (ScriptException | NoSuchMethodException e) {
+            throw new ScriptExecutionException(" Could not execute the script function/method " + functionName,e);
+        }
+    }
+
+    @Override
+    public Object executeScript(String functionName) {
+        try {
+            Invocable invocableEngine = (Invocable) lib.getEngine();
+            return invocableEngine.invokeFunction(functionName);
+        } catch (ScriptException | NoSuchMethodException e) {
+            throw new ScriptExecutionException(" Could not execute the script function/method " + functionName,e);
+        }
+    }
+
+    @Override
+    public <T> T toInterface(JSObject object, Class<T> iface) {
+        Invocable invocableEngine = (Invocable) lib.getEngine();
+        return invocableEngine.getInterface(object, iface);
+    }
+
+    private static class ScriptExecutionException extends RuntimeException {
+
+        public ScriptExecutionException(String message, Throwable cause) {
+            super(message, cause);
+        }
+    }
 }
 

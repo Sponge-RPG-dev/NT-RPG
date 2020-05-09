@@ -77,15 +77,6 @@ function registerEventListener(eventData) {
     events.add(eventData);
 }
 
-function registerAttributes() {
-    log("registerAttributes, " + attributes.size())
-    for (obj in attributes) {
-        var a = attributes.get(obj);
-        if (a instanceof CharacterAttribute) {
-            GlobalScope.propertyService.registerAttribute(a);
-        }
-    }
-}
 
 function registerSkills() {
     log("registerSkills, " + skills.size())

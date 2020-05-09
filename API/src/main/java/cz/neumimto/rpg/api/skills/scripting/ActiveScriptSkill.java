@@ -3,16 +3,15 @@ package cz.neumimto.rpg.api.skills.scripting;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.logging.Log;
+import cz.neumimto.rpg.api.scripting.IScriptEngine;
 import cz.neumimto.rpg.api.skills.ISkillType;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.api.skills.types.ScriptSkill;
-import jdk.nashorn.api.scripting.ScriptObjectMirror;
 
+import javax.inject.Inject;
 import javax.script.Bindings;
-import javax.script.CompiledScript;
-import javax.script.ScriptException;
 import javax.script.SimpleBindings;
 import java.util.List;
 import java.util.Optional;
@@ -22,28 +21,27 @@ import java.util.Optional;
  */
 public class ActiveScriptSkill extends ActiveSkill<IActiveCharacter> implements ScriptSkill<ScriptExecutorSkill> {
 
-    private ScriptSkillModel model;
+    @Inject
+    private IScriptEngine scriptEngine;
 
-    private CompiledScript compiledScript;
+    private ScriptSkillModel model;
 
     @Override
     public SkillResult cast(IActiveCharacter character, PlayerSkillContext context) {
         Bindings bindings = new SimpleBindings();
         bindings.put("_caster", character);
         bindings.put("_context", context);
-        try {
-            //todo ScriptObjectMirror ?
-            SkillResult result = (SkillResult) compiledScript.eval(bindings);
-            return result == null ? SkillResult.OK : result;
-        } catch (ScriptException s) {
-            Log.error("Could not execute JS skill script ", s);
-            return SkillResult.OK; //just apply cooldowns anyway
+
+        if (model.fncCast() == null) {
+            return SkillResult.FAIL;
         }
+
+        SkillResult result = (SkillResult) getScriptEngine().executeScript(model.fncCast(), character, context);
+        return result == null ? SkillResult.OK : result;
     }
 
-    @Override
-    public void setScript(CompiledScript compile) {
-        this.compiledScript = compile;
+    public IScriptEngine getScriptEngine() {
+        return scriptEngine;
     }
 
     @Override
@@ -67,10 +65,5 @@ public class ActiveScriptSkill extends ActiveSkill<IActiveCharacter> implements 
                 }
             }
         }
-    }
-
-    @Override
-    public String getTemplateName() {
-        return "templates/active.js";
     }
 }

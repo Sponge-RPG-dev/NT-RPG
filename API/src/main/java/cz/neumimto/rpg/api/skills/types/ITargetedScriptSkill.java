@@ -7,8 +7,4 @@ import cz.neumimto.rpg.api.skills.scripting.TargetedScriptExecutorSkill;
  */
 public interface ITargetedScriptSkill extends ScriptSkill<TargetedScriptExecutorSkill> {
 
-    @Override
-    default String getTemplateName() {
-        return "templates/targeted.js";
-    }
 }

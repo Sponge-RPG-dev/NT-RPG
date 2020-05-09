@@ -21,8 +21,6 @@ import java.util.Optional;
 public class PassiveScriptSkill extends PassiveSkill implements IPassiveScriptSkill {
 
 
-    private CompiledScript compiledScript;
-
     private ScriptSkillModel model;
 
     @Override
@@ -30,17 +28,9 @@ public class PassiveScriptSkill extends PassiveSkill implements IPassiveScriptSk
         Bindings bindings = new SimpleBindings();
         bindings.put("_context", context);
         bindings.put("_caster", character);
-        try {
-            compiledScript.eval(bindings);
-        } catch (ScriptException e) {
-            Log.error("Could not initialize Passive JS skill ", e);
-        }
+
     }
 
-    @Override
-    public void setScript(CompiledScript compiledScript) {
-        this.compiledScript = compiledScript;
-    }
 
     @Override
     public ScriptSkillModel getModel() {
