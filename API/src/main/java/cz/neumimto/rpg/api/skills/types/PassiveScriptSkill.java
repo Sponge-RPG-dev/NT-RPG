@@ -3,14 +3,12 @@ package cz.neumimto.rpg.api.skills.types;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.logging.Log;
+import cz.neumimto.rpg.api.scripting.SkillScriptHandlers;
 import cz.neumimto.rpg.api.skills.ISkillType;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
-import cz.neumimto.rpg.api.skills.scripting.PassiveScriptSkillHandler;
 import cz.neumimto.rpg.api.skills.scripting.ScriptSkillModel;
 
 import javax.script.Bindings;
-import javax.script.CompiledScript;
-import javax.script.ScriptException;
 import javax.script.SimpleBindings;
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +18,7 @@ import java.util.Optional;
  */
 public class PassiveScriptSkill extends PassiveSkill implements IPassiveScriptSkill {
 
+    private SkillScriptHandlers.Passive handler;
 
     private ScriptSkillModel model;
 
@@ -29,8 +28,14 @@ public class PassiveScriptSkill extends PassiveSkill implements IPassiveScriptSk
         bindings.put("_context", context);
         bindings.put("_caster", character);
 
+        handler.init(character, context);
     }
 
+
+    @Override
+    public void setHandler(SkillScriptHandlers handler) {
+        this.handler = (SkillScriptHandlers.Passive) handler;
+    }
 
     @Override
     public ScriptSkillModel getModel() {

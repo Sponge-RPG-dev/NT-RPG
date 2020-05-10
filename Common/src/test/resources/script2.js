@@ -6,19 +6,11 @@ registerSkillHandler({
 
 registerEventListener(
     {
-        type: function() {
-            return "org.spongepowered.api.event.network.ClientConnectionEvent";
-        },
-        consumer: function() {
-            return function() {
+        type: "org.spongepowered.api.event.network.ClientConnectionEvent",
+        consumer: function(event) {
                 log(event);
-            }
         },
-        order: function() {
-            return "BEFORE_POST";
-        },
-        beforeModifications: function() {
-            return false;
-        }
+        order: "BEFORE_POST",
+        beforeModifications: false
     }
 );

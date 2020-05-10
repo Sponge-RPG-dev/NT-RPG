@@ -63,8 +63,6 @@ public class SpongeSkillService extends AbstractSkillService {
             i++;
         }
 
-        scriptSkillsParents.put("targeted", TargetedScriptSkill.class);
-
         super.load();
     }
 

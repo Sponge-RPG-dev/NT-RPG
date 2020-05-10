@@ -4,6 +4,7 @@ import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.scripting.IScriptEngine;
+import cz.neumimto.rpg.api.scripting.SkillScriptHandlers;
 import cz.neumimto.rpg.api.skills.ISkillType;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillResult;
@@ -24,6 +25,8 @@ public class ActiveScriptSkill extends ActiveSkill<IActiveCharacter> implements 
     @Inject
     private IScriptEngine scriptEngine;
 
+    private SkillScriptHandlers.Active handler;
+
     private ScriptSkillModel model;
 
     @Override
@@ -32,12 +35,13 @@ public class ActiveScriptSkill extends ActiveSkill<IActiveCharacter> implements 
         bindings.put("_caster", character);
         bindings.put("_context", context);
 
-        if (model.fncCast() == null) {
-            return SkillResult.FAIL;
-        }
-
-        SkillResult result = (SkillResult) getScriptEngine().executeScript(model.fncCast(), character, context);
+        SkillResult result = handler.cast(character, context);
         return result == null ? SkillResult.OK : result;
+    }
+
+    @Override
+    public void setHandler(SkillScriptHandlers handler) {
+        this.handler = (SkillScriptHandlers.Active) handler;
     }
 
     public IScriptEngine getScriptEngine() {

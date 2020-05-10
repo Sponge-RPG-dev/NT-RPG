@@ -16,8 +16,6 @@ public interface IScriptEngine {
 
     void initEngine();
 
-    void reloadSkills();
-
     void loadSkillDefinitionFile(URLClassLoader urlClassLoader, File confFile);
 
     Map<Class<?>, JsBinding.Type> getDataToBind();

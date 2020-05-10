@@ -6,14 +6,18 @@ import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.configuration.SkillTreeDao;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.logging.Log;
+import cz.neumimto.rpg.api.scripting.SkillScriptHandlers;
 import cz.neumimto.rpg.api.skills.*;
 import cz.neumimto.rpg.api.skills.scripting.ActiveScriptSkill;
 import cz.neumimto.rpg.api.skills.scripting.ScriptSkillModel;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.skills.tree.SkillType;
+import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.api.skills.types.PassiveScriptSkill;
 import cz.neumimto.rpg.api.skills.types.ScriptSkill;
 import cz.neumimto.rpg.api.utils.ClassUtils;
+import cz.neumimto.rpg.api.utils.DebugLevel;
 import cz.neumimto.rpg.api.utils.annotations.CatalogId;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.description.annotation.AnnotationDescription;
@@ -35,7 +39,6 @@ public abstract class AbstractSkillService implements SkillService {
     protected Map<String, SkillTree> skillTrees = new ConcurrentHashMap<>();
     protected Map<String, ISkill> skillByNames = new HashMap<>();
     protected Map<String, ISkillType> skillTypes = new HashMap<>();
-    protected Map<String, Class<?>> scriptSkillsParents = new HashMap<>();
 
     @Inject
     private SkillTreeDao skillTreeDao;
@@ -46,10 +49,9 @@ public abstract class AbstractSkillService implements SkillService {
     @Inject
     private Injector injector;
 
-    public AbstractSkillService() {
-        scriptSkillsParents.put("active", ActiveScriptSkill.class);
-        scriptSkillsParents.put("passive", PassiveScriptSkill.class);
+    private Map<String, SkillScriptHandlers> skillHandlers = new HashMap<>();
 
+    public AbstractSkillService() {
         Stream.of(SkillType.values()).forEach(this::registerSkillType);
     }
 
@@ -68,6 +70,19 @@ public abstract class AbstractSkillService implements SkillService {
     @Override
     public Collection<String> getSkillNames() {
         return skillByNames.keySet();
+    }
+
+    @Override
+    public void registerSkillHandler(String key, SkillScriptHandlers toInterface) {
+        key = key.toLowerCase();
+        skillHandlers.put(key, toInterface);
+        Log.info("Registered skill handler " + key + " type " + toInterface.getClass().getSimpleName(), DebugLevel.DEVELOP);
+    }
+
+    @Override
+    public SkillScriptHandlers getSkillHandler(String id) {
+        id = id.toLowerCase();
+        return skillHandlers.get(id);
     }
 
     @Override
@@ -155,22 +170,27 @@ public abstract class AbstractSkillService implements SkillService {
 
     @Override
     public ISkill skillDefinitionToSkill(ScriptSkillModel scriptSkillModel, ClassLoader classLoader) {
-        String parent = scriptSkillModel.getParent();
-        if (parent == null) {
-            warn("Could not load skill " + scriptSkillModel.getId() + " missing parent node");
+
+        SkillScriptHandlers type = getSkillHandler(scriptSkillModel.getHandlerId());
+        if (type == null) {
+            warn("Could not load skill " + scriptSkillModel.getId() + " unknown handler " + scriptSkillModel.getHandlerId());
             return null;
         }
 
-        Class type = scriptSkillsParents.get(parent.toLowerCase());
-        if (type == null) {
-            warn("Could not load skill " + scriptSkillModel.getId() + " unknown parent " + scriptSkillModel.getParent());
-            return null;
+        //todo
+        Class subClass = null;
+        if (type instanceof SkillScriptHandlers.Active) {
+            subClass = ActiveScriptSkill.class;
+        } else if (type instanceof SkillScriptHandlers.Passive) {
+            subClass = PassiveScriptSkill.class;
+        } else if (type instanceof SkillScriptHandlers.Targetted) {
+            //todo
         }
 
         String name = scriptSkillModel.getId();
         name = name.replaceAll("[\\W]", "");
         Class sk = new ByteBuddy()
-                .subclass(type)
+                .subclass(subClass)
                 .name("cz.neumimto.skills.scripts." + name)
                 .annotateType(AnnotationDescription.Builder.ofType(ResourceLoader.Skill.class)
                         .define("value", scriptSkillModel.getId())
@@ -181,12 +201,8 @@ public abstract class AbstractSkillService implements SkillService {
         try {
 
             ScriptSkill s = (ScriptSkill) injector.getInstance(sk);
-
+            s.setHandler(type);
             SkillSettings settings = new SkillSettings();
-            Map<String, Float> settings2 = scriptSkillModel.getSettings();
-            for (Map.Entry<String, Float> w : settings2.entrySet()) {
-                settings.addNode(w.getKey(), w.getValue());
-            }
             ((ISkill) s).setSettings(settings);
             injectCatalogId((ISkill) s, scriptSkillModel.getId());
             s.setModel(scriptSkillModel);
@@ -194,7 +210,8 @@ public abstract class AbstractSkillService implements SkillService {
                 info("-------- Created skill from skill def.");
                 info("+ ClassName " + s.getClass().getName());
                 info("+ ClassLoader " + s.getClass().getClassLoader());
-                info("+ Script fnc " + s.getModel().fncCast());
+                info("+ Handler Id " + s.getModel().getHandlerId());
+                info("+ Type " + subClass.getSimpleName());
             }
             return (ISkill) s;
         } catch (Exception e) {

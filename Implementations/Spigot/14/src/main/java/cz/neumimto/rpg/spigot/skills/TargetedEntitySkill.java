@@ -3,6 +3,7 @@ package cz.neumimto.rpg.spigot.skills;
 
 import com.google.inject.Inject;
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.damage.DamageService;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.events.skill.SkillTargetAttemptEvent;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
@@ -21,7 +22,7 @@ import org.bukkit.util.RayTraceResult;
 public abstract class TargetedEntitySkill extends ActiveSkill<ISpigotCharacter> implements ITargeted<ISpigotCharacter> {
 
     @Inject
-    protected SpigotDamageService damageService;
+    protected DamageService damageService;
 
     @Override
     public void init() {
@@ -64,7 +65,11 @@ public abstract class TargetedEntitySkill extends ActiveSkill<ISpigotCharacter> 
             return null;
         }
         RayTraceResult rayTraceResult = player.getWorld()
-                .rayTraceEntities(player.getEyeLocation(), player.getEyeLocation().getDirection(), maxDistance, entity -> entity != player);
+                .rayTraceEntities(
+                        player.getEyeLocation(),
+                        player.getEyeLocation().getDirection(),
+                        maxDistance,
+                        entity -> entity != player);
         if (rayTraceResult != null) {
             Entity hitEntity = rayTraceResult.getHitEntity();
             if (hitEntity != null) {

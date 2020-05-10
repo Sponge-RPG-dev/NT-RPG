@@ -2,6 +2,7 @@ package cz.neumimto.rpg.api.skills;
 
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.gui.ISkillTreeInterfaceModel;
+import cz.neumimto.rpg.api.scripting.SkillScriptHandlers;
 import cz.neumimto.rpg.api.skills.scripting.ScriptSkillModel;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 
@@ -14,6 +15,8 @@ public interface SkillService {
     void load();
 
     Map<String, ISkill> getSkills();
+
+    SkillScriptHandlers getSkillHandler(String id);
 
     Map<String, SkillTree> getSkillTrees();
 
@@ -42,4 +45,6 @@ public interface SkillService {
     ISkillTreeInterfaceModel getGuiModelByCharacter(char c);
 
     Collection<String> getSkillNames();
+
+    void registerSkillHandler(String key, SkillScriptHandlers toInterface);
 }

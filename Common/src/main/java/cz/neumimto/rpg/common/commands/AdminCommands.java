@@ -195,7 +195,6 @@ public class AdminCommands extends BaseCommand {
         if (reloadJs) {
             info("[RELOAD] Scripts ");
             scriptEngine.initEngine();
-            scriptEngine.reloadSkills();
         }
 
         if (reloadItems) {

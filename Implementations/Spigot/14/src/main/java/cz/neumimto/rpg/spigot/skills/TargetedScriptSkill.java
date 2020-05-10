@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.sponge.skills.types;
+package cz.neumimto.rpg.spigot.skills;
 
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.EntityService;
@@ -10,7 +10,7 @@ import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.scripting.ScriptSkillModel;
 import cz.neumimto.rpg.api.skills.types.ITargetedScriptSkill;
-import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
+import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 
 import javax.inject.Inject;
 import javax.script.Bindings;
@@ -21,7 +21,7 @@ import java.util.Optional;
 /**
  * Created by NeumimTo on 3.9.2018.
  */
-public class TargetedScriptSkill extends Targeted implements ITargetedScriptSkill {
+public class TargetedScriptSkill extends TargetedEntitySkill implements ITargetedScriptSkill {
 
     @Inject
     private EntityService entityService;
@@ -31,7 +31,7 @@ public class TargetedScriptSkill extends Targeted implements ITargetedScriptSkil
     private SkillScriptHandlers.Targetted handler;
 
     @Override
-    public SkillResult castOn(IEntity target, ISpongeCharacter source, PlayerSkillContext skillContext) {
+    public SkillResult castOn(IEntity target, ISpigotCharacter source, PlayerSkillContext skillContext) {
         Bindings bindings = new SimpleBindings();
         bindings.put("_target", target);
         bindings.put("_caster", source);
