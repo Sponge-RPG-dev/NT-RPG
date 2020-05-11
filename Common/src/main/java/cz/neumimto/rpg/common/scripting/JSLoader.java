@@ -116,6 +116,9 @@ public class JSLoader implements IScriptEngine {
                 }
                 skillService.registerSkillHandler(entry.getKey(), toInterface(entry.getValue(), handlers));
             }
+
+            List<JSObject> eventListeners = scriptLib.getEventListeners();
+            classGenerator.generateDynamicListener(eventListeners);
         } catch (Exception e) {
             error("Could not load script engine", e);
         }

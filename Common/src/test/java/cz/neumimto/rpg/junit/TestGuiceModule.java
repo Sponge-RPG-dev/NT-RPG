@@ -56,8 +56,10 @@ import cz.neumimto.rpg.entity.TestEntityService;
 import cz.neumimto.rpg.model.TestPersistanceHandler;
 import cz.neumimto.rpg.persistence.InMemoryPlayerStorage;
 import cz.neumimto.rpg.sponge.permission.TestPermissionService;
+import jdk.nashorn.api.scripting.JSObject;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import net.bytebuddy.ByteBuddy;
+import net.bytebuddy.dynamic.DynamicType;
 import net.bytebuddy.dynamic.loading.ClassLoadingStrategy;
 import net.bytebuddy.implementation.InvocationHandlerAdapter;
 import net.bytebuddy.matcher.ElementMatchers;
@@ -85,7 +87,10 @@ public class TestGuiceModule extends AbstractModule {
         bind(ExperienceService.class).to(TestExperienceService.class);
         bind(ClassGenerator.class).toProvider(() -> new ClassGenerator() {
             @Override
-            public Object generateDynamicListener(List<ScriptObjectMirror> list) {
+            public void generateDynamicListener(List<JSObject> list) {}
+
+            @Override
+            protected DynamicType.Builder<Object> visitImplSpecAnnListener(DynamicType.Builder.MethodDefinition.ReceiverTypeDefinition<Object> classBuilder, JSObject object) {
                 return null;
             }
         });
