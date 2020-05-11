@@ -49,7 +49,7 @@ registerSkillHandler('ntrpg:heal', {
 
 registerEventListener({
     type: "org.spongepowered.api.event.network.ClientConnectionEvent",
-    consumer: function(event) {
+    consumer: function apply(event) {
         log("I'm javascript Event handler")
     },
     order:"BEFORE_POST",

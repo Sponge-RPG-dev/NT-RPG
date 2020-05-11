@@ -6,6 +6,7 @@ import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.common.scripting.JSLoader;
 import jdk.internal.dynalink.beans.StaticClass;
 import jdk.nashorn.api.scripting.JSObject;
+import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.description.modifier.Visibility;
 import net.bytebuddy.dynamic.DynamicType;
@@ -25,10 +26,6 @@ public abstract class ClassGenerator {
     @Inject
     private ResourceLoader resourceLoader;
 
-    @Inject
-    private JSLoader jsLoader;
-
-
     public void generateDynamicListener(List<JSObject> list) {
         String name = "DynamicListener" + System.currentTimeMillis();
 
@@ -43,8 +40,14 @@ public abstract class ClassGenerator {
                     Log.warn("JS event listener missing function consumer, skipping");
                     continue;
                 }
+                //todo Why binding wont work here?
+                //Consumer consumer = jsLoader.toInterface((JSObject) object.getMember("consumer"), Consumer.class);
+                //jsLoader.toInterface((JSObject) o, Consumer.class);
 
-                Consumer consumer = jsLoader.toInterface((JSObject) object.getMember("consumer"), Consumer.class);
+                ScriptObjectMirror mirror = (ScriptObjectMirror) object.getMember("consumer");
+
+                Consumer consumer = o -> mirror.call(mirror, o);
+
 
                 String className = "";
                 if (!object.hasMember("type")) {
