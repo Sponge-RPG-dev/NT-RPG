@@ -35,7 +35,7 @@ public class ActiveScriptSkill extends ActiveSkill<IActiveCharacter> implements 
         bindings.put("_caster", character);
         bindings.put("_context", context);
 
-        SkillResult result = handler.cast(character, context);
+        SkillResult result = handler.onCast(character, context);
         return result == null ? SkillResult.OK : result;
     }
 

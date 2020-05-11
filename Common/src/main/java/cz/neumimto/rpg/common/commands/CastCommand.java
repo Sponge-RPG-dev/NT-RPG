@@ -12,7 +12,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-@CommandAlias("cast|ncast|nc")
+@CommandAlias("ncast|nc")
 public class CastCommand extends BaseCommand {
 
     @Inject

@@ -23,6 +23,7 @@ import com.electronwill.nightconfig.core.file.FileConfig;
 import com.google.inject.Injector;
 import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.scripting.IScriptEngine;
 import cz.neumimto.rpg.api.scripting.SkillScriptHandlers;
 import cz.neumimto.rpg.api.skills.SkillService;
@@ -79,6 +80,7 @@ public class JSLoader implements IScriptEngine {
     private CompiledScript lib;
 
     private Map<Class<?>, JsBinding.Type> dataToBind = new HashMap<>();
+    private ScriptContext scriptContext;
 
     @Override
     public ScriptEngine getEngine() {
@@ -95,25 +97,25 @@ public class JSLoader implements IScriptEngine {
                 setup();
                 info("JS resources loaded.");
             }
-            JSObject libObject = (JSObject) lib.getEngine().get("lib");
+            JSObject libObject = (JSObject) scriptContext.getBindings(ScriptContext.ENGINE_SCOPE).get("lib");
             ScriptLib scriptLib = toInterface(libObject, ScriptLib.class);
             Map<String, JSObject> skillHandlers = scriptLib.getSkillHandlers();
 
             for (Map.Entry<String, JSObject> entry : skillHandlers.entrySet()) {
                 JSObject value = entry.getValue();
                 Class<? extends SkillScriptHandlers> handlers = null;
-                if (value.hasMember("cast") && ((JSObject)value.getMember("cast")).isFunction()) {
+                if (value.hasMember("onCast") && ((JSObject)value.getMember("onCast")).isFunction()) {
                     handlers = SkillScriptHandlers.Active.class;
                 } else if (value.hasMember("castOnTarget") && ((JSObject)value.getMember("castOnTarget")).isFunction()) {
                     handlers = SkillScriptHandlers.Targetted.class;
                 } else if (value.hasMember("init") && ((JSObject)value.getMember("init")).isFunction()) {
                     handlers = SkillScriptHandlers.Passive.class;
                 } else {
-                    skillService.registerSkillHandler(entry.getKey(), toInterface(entry.getValue(), handlers));
+                    Log.warn("unknown object " + value.toString());
+                    continue;
                 }
+                skillService.registerSkillHandler(entry.getKey(), toInterface(entry.getValue(), handlers));
             }
-
-
         } catch (Exception e) {
             error("Could not load script engine", e);
         }
@@ -144,8 +146,10 @@ public class JSLoader implements IScriptEngine {
         for (File file : files) {
             if (file.getName().endsWith(".js")) {
                 try {
-                    main += "// " + file.getName();
-                    main += Files.readAllLines(file.toPath());
+                    main += "// " + file.getName() + "\n";
+                    for (String line : Files.readAllLines(file.toPath())) {
+                        main += line + "\n";
+                    }
                     main += "\n";
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -163,7 +167,7 @@ public class JSLoader implements IScriptEngine {
         Path path = mergeScriptFiles();
         List<SkillComponent> skillComponents = new ArrayList<>();
         try (InputStreamReader rs = new InputStreamReader(new FileInputStream(path.toFile()))) {
-            Bindings bindings = new SimpleBindings();
+            Bindings bindings = engine.createBindings();
             bindings.put("Injector", injector);
             bindings.put("Folder", scripts_root);
             bindings.put("Rpg", Rpg.get());
@@ -204,11 +208,13 @@ public class JSLoader implements IScriptEngine {
                 }
                 info("===== Bindings END =====");
             }
-            engine.setBindings(bindings, ScriptContext.ENGINE_SCOPE);
 
+            ScriptContext scriptContext = new SimpleScriptContext();
+            scriptContext.setBindings(bindings, ScriptContext.ENGINE_SCOPE);
             Compilable compilable = (Compilable) engine;
             lib = compilable.compile(rs);
-            lib.eval();
+            lib.eval(scriptContext);
+            this.scriptContext = scriptContext;
         } catch (Exception e) {
             e.printStackTrace();
         }

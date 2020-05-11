@@ -8,7 +8,7 @@ import cz.neumimto.rpg.api.skills.SkillResult;
 public interface SkillScriptHandlers {
 
     interface Active extends SkillScriptHandlers {
-        SkillResult cast(IActiveCharacter caster, PlayerSkillContext context);
+        SkillResult onCast(IActiveCharacter caster, PlayerSkillContext context);
     }
 
     interface Targetted extends SkillScriptHandlers  {

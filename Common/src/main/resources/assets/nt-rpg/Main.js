@@ -17,9 +17,10 @@ let registerGlobalEffect = function(obj) {
 }
 
 let registerSkillHandler = function(id,obj) {
-    if (skillHandlers.contains(id)) {
+    if (skillHandlers.containsKey(id)) {
         log("Multiple scripts attempted to register skill handler id " + id + " will be skipped.")
     } else {
+        log(id + ", " + obj)
         skillHandlers.put(id,obj);
     }
 }
@@ -61,6 +62,7 @@ var lib = {
         return globalEffects;
     },
     getSkillHandlers: function() {
+        log(skillHandlers.size());
         return skillHandlers;
     }
 }

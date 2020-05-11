@@ -11,7 +11,7 @@ public abstract class SkillCostPipelineMechanic implements ISkillCostMechanic {
     }
 
     boolean isValid(SkillData context, String string) {
-        return context.getSkillSettings().getNodeValue(string) > 0f;
+        return context.getSkillSettings() != null && context.getSkillSettings().getNodes().containsKey(string) && context.getSkillSettings().getNodeValue(string) > 0f;
     }
 
 }
