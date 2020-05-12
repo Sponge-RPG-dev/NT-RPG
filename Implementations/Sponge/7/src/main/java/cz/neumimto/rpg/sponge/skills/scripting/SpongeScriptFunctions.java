@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.sponge.skills.scripting;
 
+import com.flowpowered.math.vector.Vector3d;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.entity.IEntity;
@@ -36,7 +37,7 @@ import java.util.stream.Collectors;
 import static cz.neumimto.rpg.api.logging.Log.info;
 
 @JsBinding(JsBinding.Type.CONTAINER)
-public class SkillActions {
+public class SpongeScriptFunctions {
 
     @SkillComponent(
             value = "Damaging an Entity",
@@ -238,5 +239,19 @@ public class SkillActions {
             params = {}
     )
     public static Function<String, List<Text>> TO_MULTILINE_TEXT = TextHelper::splitStringByDelimiter;
+
+    @SkillComponent(
+            value = "Sets entity velocity",
+            usage = "set_velocity(entity, x, y, z)",
+            params = {
+                    @SkillComponent.Param("entity - target minecraft entity"),
+                    @SkillComponent.Param("x - Velocity vector - x"),
+                    @SkillComponent.Param("y - Velocity vector - y"),
+                    @SkillComponent.Param("z - Velocity vector - z")
+            }
+    )
+    public static F.QuadConsumer<Entity, Double, Double, Double> SET_VELOCITY = (entity, x, y, z) -> {
+        entity.setVelocity(new Vector3d(x,y,z));
+    };
 
 }

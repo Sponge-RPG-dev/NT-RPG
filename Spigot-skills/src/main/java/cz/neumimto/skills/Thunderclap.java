@@ -9,7 +9,7 @@ import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
 import cz.neumimto.rpg.spigot.entities.SpigotEntityService;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
-import cz.neumimto.rpg.spigot.skills.scripting.SkillActions;
+import cz.neumimto.rpg.spigot.skills.scripting.SpigotScriptFunctions;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -50,7 +50,7 @@ public class Thunderclap extends ActiveSkill<ISpigotCharacter> {
             if (nearbyEntity instanceof LivingEntity) {
                 LivingEntity livingEntity = (LivingEntity) nearbyEntity;
                 if (damageService.canDamage(character, livingEntity)) {
-                    SkillActions.SPAWN_LIGHTNING.accept(livingEntity.getLocation());
+                    SpigotScriptFunctions.SPAWN_LIGHTNING.accept(livingEntity.getLocation());
                     damageService.damage(player, livingEntity, EntityDamageEvent.DamageCause.LIGHTNING, damage, false);
                 }
             }

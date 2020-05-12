@@ -57,7 +57,6 @@ public abstract class AbstractSkillService implements SkillService {
 
     @Override
     public void load() {
-
         skillTrees.clear();
         skillTrees.putAll(skillTreeDao.getAll());
     }
@@ -161,8 +160,9 @@ public abstract class AbstractSkillService implements SkillService {
         if (skillByNames.containsKey(name)) {
             ISkill iSkill = skillByNames.get(name);
             if (iSkill != skill) {
-                throw new RuntimeException("Attempted to register alternate name " + name + " for a skill " + skill.getId() + ". But the name is "
-                        + "already taken by the skill " + iSkill.getId());
+                Log.error("Attempted to register alternate name " + name + " for a skill " + skill.getId() + ". But the name is "
+                        + "already taken by the skill " + iSkill.getId() + ", skipped!");
+                return;
             }
         }
         skillByNames.put(name, skill);

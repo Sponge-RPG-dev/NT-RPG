@@ -117,8 +117,15 @@ public class JSLoader implements IScriptEngine {
                 skillService.registerSkillHandler(entry.getKey(), toInterface(entry.getValue(), handlers));
             }
 
+            List<JSObject> globalEffects = scriptLib.getGlobalEffects();
+            for (JSObject globalEffect : globalEffects) {
+                //todo
+            }
+
             List<JSObject> eventListeners = scriptLib.getEventListeners();
             classGenerator.generateDynamicListener(eventListeners);
+
+            reloadSkills();
         } catch (Exception e) {
             error("Could not load script engine", e);
         }
@@ -218,7 +225,7 @@ public class JSLoader implements IScriptEngine {
             lib = compilable.compile(rs);
             lib.eval(scriptContext);
             this.scriptContext = scriptContext;
-        } catch (Exception e) {
+        } catch (Throwable e) {
             e.printStackTrace();
         }
     }
@@ -251,12 +258,6 @@ public class JSLoader implements IScriptEngine {
     }
 
     public void reloadSkills() {
-        Invocable invocable = (Invocable) engine;
-        try {
-            invocable.invokeFunction("registerSkills");
-        } catch (ScriptException | NoSuchMethodException e) {
-            error("Could not invoke JS function registerSkills()", e);
-        }
         Path addonDir = Paths.get(Rpg.get().getWorkingDirectory() + File.separator + "addons");
         File file = addonDir.resolve("Skills-Definition.conf").toFile();
         if (!file.exists()) {
@@ -296,7 +297,7 @@ public class JSLoader implements IScriptEngine {
                     .map(a -> skillService.skillDefinitionToSkill(a, urlClassLoader))
                     .forEach(a -> skillService.registerAdditionalCatalog(a));
         } catch (Exception e) {
-            throw new RuntimeException("Could not load file " + confFile, e);
+            Log.error("Could not load file " + confFile, e);
         }
     }
 

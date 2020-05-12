@@ -1,14 +1,9 @@
 package cz.neumimto.rpg.api.skills.scripting;
 
-import com.electronwill.nightconfig.core.Config;
-import com.electronwill.nightconfig.core.conversion.Conversion;
-import com.electronwill.nightconfig.core.conversion.Converter;
 import com.electronwill.nightconfig.core.conversion.Path;
 import com.typesafe.config.Optional;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ScriptSkillModel {
 

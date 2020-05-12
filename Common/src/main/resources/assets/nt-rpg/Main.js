@@ -20,7 +20,6 @@ let registerSkillHandler = function(id,obj) {
     if (skillHandlers.containsKey(id)) {
         log("Multiple scripts attempted to register skill handler id " + id + " will be skipped.")
     } else {
-        log(id + ", " + obj)
         skillHandlers.put(id,obj);
     }
 }

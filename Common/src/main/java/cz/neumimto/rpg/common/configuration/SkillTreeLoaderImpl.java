@@ -74,9 +74,13 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
         Map<String, SkillTree> map = new HashMap<>();
         try (DirectoryStream<Path> paths = Files.newDirectoryStream(dir, "*.conf")) {
             paths.forEach(path -> {
-                info("Loading skilltree from a file " + path.getFileName());
-                Config config = ConfigFactory.parseFile(path.toFile());
-                populateMap(map, config);
+                try {
+                    info("Loading skilltree from a file " + path.getFileName());
+                    Config config = ConfigFactory.parseFile(path.toFile());
+                    populateMap(map, config);
+                } catch (InvalidSkillTreeException e) {
+                    Log.error("Unable to load skilltree " + path,e);
+                }
             });
         } catch (IOException e) {
             e.printStackTrace();
@@ -488,7 +492,7 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
 
         ISkill skill = Rpg.get().getSkillService().getSkills().get(lowercased);
         if (skill == null) {
-            throw new IllegalStateException("Could not find a skill " + lowercased + " referenced in the skilltree " + tree.getId());
+            throw new InvalidSkillTreeException("Could not find a skill " + lowercased + " referenced in the skilltree " + tree.getId());
         }
         SkillData info = constructSkillData(skill);
         info.setSkill(skill);
@@ -498,5 +502,11 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
     private SkillData constructSkillData(ISkill skill) {
         SkillData info = skill.constructSkillData();
         return info;
+    }
+
+    private class InvalidSkillTreeException extends RuntimeException {
+        public InvalidSkillTreeException(String s) {
+            super(s);
+        }
     }
 }

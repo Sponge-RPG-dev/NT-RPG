@@ -81,7 +81,7 @@ public class ACFBootstrap {
         manager.getCommandContexts().registerContext(ISkill.class, c -> {
             String s = c.joinArgs();
             if (s.contains(":")) {
-                return Rpg.get().getSkillService().getById(s.toLowerCase());
+                return Rpg.get().getSkillService().getById(s.toLowerCase()).orElseThrow(() -> new RuntimeException("Unknown skill " + c));
             } else {
                 return Rpg.get().getSkillService().getSkillByLocalizedName(s.toLowerCase());
             }

@@ -192,6 +192,8 @@ public class SpigotRpgPlugin extends JavaPlugin {
         for (IActiveCharacter character : characters) {
             characterService.save(character.getCharacterBase());
         }
-        effectManager.disposeOnTermination();
+        if (getEffectManager() != null) {
+            getEffectManager().disposeOnTermination();
+        }
     }
 }

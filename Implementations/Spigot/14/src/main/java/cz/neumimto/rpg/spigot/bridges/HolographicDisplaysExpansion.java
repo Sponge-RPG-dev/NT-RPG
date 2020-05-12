@@ -94,6 +94,9 @@ public class HolographicDisplaysExpansion implements Listener {
         //todo in future when entitis are able to casts spells
         IActiveCharacter c = (IActiveCharacter) caster;
         PlayerSkillContext info = c.getSkillInfo(skill.getId());
+        if (info == null) {
+            return; //nadmin / contextless
+        }
         String skillName = info.getSkillData().getSkillName();
         //ran as nadmin skill <id> we have no context to grab name from
         if (skillName == null) {

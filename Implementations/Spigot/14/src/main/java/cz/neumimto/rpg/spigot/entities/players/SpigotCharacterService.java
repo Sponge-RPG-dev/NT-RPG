@@ -81,6 +81,9 @@ public class SpigotCharacterService extends AbstractCharacterService<ISpigotChar
                 Player player = character.getPlayer();
 
                 PlayerSkillContext skillInfo = character.getSkillInfo(skill);
+                if (skillInfo == null) { //nadmin command
+                    return;
+                }
                 String icon = skillInfo.getSkillData().getIcon();
 
                 if (icon != null) {

@@ -12,9 +12,11 @@ import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.util.Vector;
 
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
@@ -23,7 +25,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 @JsBinding(JsBinding.Type.CONTAINER)
-public class SkillActions {
+public class SpigotScriptFunctions {
 
     private static SpigotDamageService damageService;
 
@@ -170,5 +172,18 @@ public class SkillActions {
         return (int) (convert / 3);
     };
 
+    @SkillComponent(
+            value = "Sets entity velocity",
+            usage = "set_velocity(entity, x, y, z)",
+            params = {
+                    @SkillComponent.Param("entity - target minecraft entity"),
+                    @SkillComponent.Param("x - Velocity vector - x"),
+                    @SkillComponent.Param("y - Velocity vector - y"),
+                    @SkillComponent.Param("z - Velocity vector - z")
+            }
+    )
+    public static F.QuadConsumer<Entity, Double, Double, Double> SET_VELOCITY = (entity, x, y, z) -> {
+        entity.setVelocity(new Vector(x,y,z));
+    };
 
 }
