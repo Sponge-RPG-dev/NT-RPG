@@ -18,14 +18,14 @@ registerSkillHandler('mynamespace:jump_vertical',{
 registerSkillHandler('ntrpg:aoe_lightning_damage', {
     onCast: function(character, context) {
         var totalDamage = param("damage", context);
-        var totalRange = param("range", context);
-
+        var totalRange = param("radius", context);
         for_each_nearby_enemy(character, totalRange, function(entity) {
             var location = get_location(entity);
-            if (damage(character, entity, totalDamage, context)) {
+            if (damage(character, entity, totalDamage, DamageCause.MAGIC, context)) {
                 spawn_lightning(location);
             }
         });
+        return SkillResult.OK;
     }
 });
 

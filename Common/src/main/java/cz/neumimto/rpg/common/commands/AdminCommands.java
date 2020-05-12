@@ -326,8 +326,6 @@ public class AdminCommands extends BaseCommand {
         if (character.isStub()) {
             throw new RuntimeException("Character is required even for an admin.");
         }
-        SkillSettings defaultSkillSettings = skill.getSettings();
-
         Long l = System.nanoTime();
 
         PlayerSkillContext playerSkillContext = new PlayerSkillContext(null, skill, character);
@@ -337,7 +335,6 @@ public class AdminCommands extends BaseCommand {
             throw new IllegalArgumentException("Skill " + skillData.getSkillId() + " is not present in the tree " + skillTree.getId());
         }
 
-        skillData.setSkillSettings(defaultSkillSettings);
         playerSkillContext.setSkillData(skillData);
         playerSkillContext.setSkill(skill);
 
