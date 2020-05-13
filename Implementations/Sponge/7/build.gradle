@@ -3,7 +3,7 @@ plugins {
 }
 
 group = 'cz.neumimto.rpg'
-version = '2.1.0-SNAPSHOT-5'
+version = '2.1.0-SNAPSHOT-10'
 
 repositories {
     maven {

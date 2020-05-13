@@ -102,4 +102,6 @@ public interface RpgApi {
     Set<UUID> getOnlinePlayers();
 
     void doImplSpecificreload();
+
+    String getPlatform();
 }

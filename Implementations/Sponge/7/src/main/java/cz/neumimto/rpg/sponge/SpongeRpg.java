@@ -131,4 +131,9 @@ public final class SpongeRpg extends AbstractRpg {
     public RWService getRwService() {
         return rwService;
     }
+
+    @Override
+    public String getPlatform() {
+        return "Sponge";
+    }
 }

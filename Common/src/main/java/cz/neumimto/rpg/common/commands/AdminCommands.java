@@ -106,7 +106,7 @@ public class AdminCommands extends BaseCommand {
 
     @Subcommand("skill")
     @CommandCompletion("@skilltree @nothing @skillskctx")
-    public void adminExecuteSkillCommand(IActiveCharacter character, SkillTree tree, int level, ISkill skill) {
+    public void adminExecuteSkillCommand(IActiveCharacter character, SkillTree tree, int level,  ISkill skill) {
         commandExecuteSkill(character, tree, skill, level);
     }
 

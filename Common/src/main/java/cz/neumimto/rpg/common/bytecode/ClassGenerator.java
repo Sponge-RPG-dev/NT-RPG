@@ -71,7 +71,7 @@ public abstract class ClassGenerator {
                     continue;
                 }
                 i++;
-                String methodName = extract(object, "methodName", "on" + className + "" + i);
+                String methodName = extract(object, "methodName", "on" + type.getSimpleName() + "" + i);
 
                 ReceiverTypeDefinition intercept = classBuilder
                         .defineMethod(methodName, void.class, Visibility.PUBLIC)

@@ -244,4 +244,9 @@ public class RpgTests implements RpgApi {
     public void doImplSpecificreload() {
 
     }
+
+    @Override
+    public String getPlatform() {
+        return "Test";
+    }
 }

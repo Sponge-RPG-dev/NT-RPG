@@ -122,4 +122,9 @@ public final class SpigotRpg extends AbstractRpg {
     public boolean isDisabledInWorld(World world) {
         return isDisabledInWorld(world.getName());
     }
+
+    @Override
+    public String getPlatform() {
+        return "Spigot";
+    }
 }

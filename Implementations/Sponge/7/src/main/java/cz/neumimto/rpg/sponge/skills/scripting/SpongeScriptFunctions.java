@@ -177,7 +177,7 @@ public class SpongeScriptFunctions {
             value = "Returns entity location",
             usage = "get_location(player_or_entity)",
             params = {
-                    @SkillComponent.Param("entity - An entitz"),
+                    @SkillComponent.Param("entity - An entity"),
                     @SkillComponent.Param("@return - location object"),
             }
     )

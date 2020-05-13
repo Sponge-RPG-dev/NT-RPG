@@ -160,9 +160,8 @@ public abstract class AbstractSkillService implements SkillService {
         if (skillByNames.containsKey(name)) {
             ISkill iSkill = skillByNames.get(name);
             if (iSkill != skill) {
-                Log.error("Attempted to register alternate name " + name + " for a skill " + skill.getId() + ". But the name is "
-                        + "already taken by the skill " + iSkill.getId() + ", skipped!");
-                return;
+                Log.warn("Alternate name " + name + " for a skill " + skill.getId() + ". But the name is "
+                        + "already taken by the skill " + iSkill.getId() + "! If you are reloading you can ignore this message");
             }
         }
         skillByNames.put(name, skill);
