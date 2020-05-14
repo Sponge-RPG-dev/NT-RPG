@@ -14,7 +14,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class Cooldown extends SkillCostPipelineMechanic {
+public class Cooldown extends SkillCastMechanic {
 
     @Inject
     private EntityService entityService;

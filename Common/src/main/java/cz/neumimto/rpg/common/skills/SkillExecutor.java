@@ -11,17 +11,11 @@ import cz.neumimto.rpg.api.skills.ISkillExecutor;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillData;
 import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.common.skills.preprocessors.ISkillCondition;
-import cz.neumimto.rpg.common.skills.reagents.Cooldown;
-import cz.neumimto.rpg.common.skills.reagents.HPCost;
-import cz.neumimto.rpg.common.skills.reagents.ISkillCostMechanic;
-import cz.neumimto.rpg.common.skills.reagents.ManaCost;
+import cz.neumimto.rpg.common.skills.processors.ISkillCondition;
+import cz.neumimto.rpg.common.skills.reagents.*;
 
 import javax.inject.Inject;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @SuppressWarnings("unchecked")
 public class SkillExecutor implements ISkillExecutor {
@@ -29,49 +23,37 @@ public class SkillExecutor implements ISkillExecutor {
     @Inject
     private Injector injector;
 
-    @Inject
-    private ManaCost manaCost;
+    private ISkillCastMechanic[] skillCost;
 
-    @Inject
-    private Cooldown cooldown;
-
-    @Inject
-    private HPCost hpCost;
-
-    private List<ISkillCostMechanic> skillCost;
-
-    private List<ISkillCondition> conditions;
+    private ISkillCondition[] conditions;
 
     @Override
     public ISkillExecutor init(SkillData skillData) {
-        skillCost = new LinkedList<>();
-        conditions = new LinkedList<>();
+        skillCost = new ISkillCastMechanic[0];
+        conditions = new ISkillCondition[0];
 
-        if (cooldown.isValidForContext(skillData)) {
-            skillCost.add(cooldown);
-        }
-        if (manaCost.isValidForContext(skillData)) {
-            skillCost.add(manaCost);
-        }
-        if (hpCost.isValidForContext(skillData)) {
-            skillCost.add(hpCost);
-        }
-
-        Set<ISkillCondition> allConds = new HashSet<>();
         for (Key<?> key : injector.getAllBindings().keySet()) {
             if (ISkillCondition.class.isAssignableFrom(key.getTypeLiteral().getRawType())) {
                 ISkillCondition skillCondition = (ISkillCondition) injector.getInstance(key);
-                allConds.add(skillCondition);
+                if (skillCondition.isValidForContext(skillData)) {
+                    conditions = push(conditions, skillCondition);
+                }
             }
-        }
-
-        for (ISkillCondition skillCondition : allConds) {
-            if (skillCondition.isValidForContext(skillData)) {
-                conditions.add(skillCondition);
+            if (ISkillCastMechanic.class.isAssignableFrom(key.getTypeLiteral().getRawType())) {
+                ISkillCastMechanic m = (ISkillCastMechanic) injector.getInstance(key);
+                if (m.isValidForContext(skillData)) {
+                    skillCost = push(skillCost, m);
+                }
             }
         }
 
         return this;
+    }
+
+    private static <T> T[] push(T[] arr, T item) {
+        T[] tmp = Arrays.copyOf(arr, arr.length + 1);
+        tmp[tmp.length - 1] = item;
+        return tmp;
     }
 
     @Override
@@ -91,7 +73,7 @@ public class SkillExecutor implements ISkillExecutor {
         }
 
         SkillResult result;
-        for (ISkillCostMechanic expm : skillCost) {
+        for (ISkillCastMechanic expm : skillCost) {
             result = expm.processBefore(character, playerSkillContext);
             if (result != SkillResult.OK) {
                 return result;
@@ -100,16 +82,18 @@ public class SkillExecutor implements ISkillExecutor {
 
         result = playerSkillContext.getSkill().onPreUse(character, playerSkillContext);
 
-        if (result == SkillResult.OK) {
-            for (ISkillCostMechanic expm : skillCost) {
-                expm.processAfterSuccess(character, playerSkillContext);
-            }
-        }
+
         SkillPostUsageEvent eventPost = Rpg.get().getEventFactory().createEventInstance(SkillPostUsageEvent.class);
         eventPost.setSkill(playerSkillContext.getSkill());
         eventPost.setCaster(character);
 
-        Rpg.get().postEvent(eventPost);
+        if (!Rpg.get().postEvent(eventPost)) {
+            if (result == SkillResult.OK) {
+                for (ISkillCastMechanic expm : skillCost) {
+                    expm.processAfterSuccess(character, playerSkillContext);
+                }
+            }
+        }
 
         return result;
     }

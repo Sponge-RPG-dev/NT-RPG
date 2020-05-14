@@ -13,7 +13,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class ManaCost extends SkillCostPipelineMechanic {
+public class ManaCast extends SkillCastMechanic {
 
     @Inject
     private EntityService entityService;

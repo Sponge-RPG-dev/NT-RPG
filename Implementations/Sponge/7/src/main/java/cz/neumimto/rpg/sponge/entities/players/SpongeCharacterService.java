@@ -143,4 +143,15 @@ public class SpongeCharacterService extends AbstractCharacterService<ISpongeChar
             }
         }
     }
+
+    @Override
+    public void addExperiences(ISpongeCharacter character, double exp, String source) {
+        if ("VANILLA".equals(source)) {
+            Player player = character.getPlayer();
+            Integer integer = player.get(Keys.EXPERIENCE_FROM_START_OF_LEVEL).orElse(0);
+            player.offer(Keys.EXPERIENCE_FROM_START_OF_LEVEL, integer + (int) exp);
+        } else {
+            super.addExperiences(character, exp, source);
+        }
+    }
 }

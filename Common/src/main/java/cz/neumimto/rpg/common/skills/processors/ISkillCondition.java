@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.common.skills.preprocessors;
+package cz.neumimto.rpg.common.skills.processors;
 
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;

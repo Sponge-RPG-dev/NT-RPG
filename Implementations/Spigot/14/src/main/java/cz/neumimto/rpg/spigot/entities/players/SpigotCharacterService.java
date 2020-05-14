@@ -94,4 +94,13 @@ public class SpigotCharacterService extends AbstractCharacterService<ISpigotChar
             }
         }
     }
+
+    @Override
+    public void addExperiences(ISpigotCharacter character, double exp, String source) {
+        if ("VANILLA".equals(source)) {
+            character.getPlayer().giveExp((int)exp);
+        } else {
+            super.addExperiences(character, exp, source);
+        }
+    }
 }

@@ -2,7 +2,6 @@ package cz.neumimto.rpg.common;
 
 import com.google.inject.ConfigurationException;
 import com.google.inject.Injector;
-import com.google.inject.Singleton;
 import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.RpgAddon;
@@ -28,7 +27,9 @@ import cz.neumimto.rpg.common.utils.ResourceClassLoader;
 import org.apache.commons.io.FileUtils;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.*;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
@@ -279,6 +280,9 @@ public class ResourceManagerImpl implements ResourceLoader {
             container = injector.getInstance(clazz);
             Rpg.get().registerListeners(container);
         }
+        if (clazz.isAnnotationPresent(Singleton.class) && hasDefaultCtr(clazz)) {
+            container = injector.getInstance(clazz);
+        }
         return container;
     }
 
@@ -420,5 +424,14 @@ public class ResourceManagerImpl implements ResourceLoader {
         } catch (IllegalAccessException | InstantiationException | ConfigurationException e) {
             e.printStackTrace();
         }
+    }
+
+    private boolean hasDefaultCtr(Class<?> clazz) {
+        for (Constructor<?> constructor : clazz.getConstructors()) {
+            if (constructor.getParameterCount() == 0) {
+                return true;
+            }
+        }
+        return false;
     }
 }

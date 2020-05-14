@@ -197,7 +197,6 @@ public class SkillData {
         return useDescriptionOnly;
     }
 
-
     public String getIcon() {
         return icon;
     }

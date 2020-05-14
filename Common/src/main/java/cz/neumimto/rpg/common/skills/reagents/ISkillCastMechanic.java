@@ -5,11 +5,13 @@ import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillData;
 import cz.neumimto.rpg.api.skills.SkillResult;
 
-public interface ISkillCostMechanic {
+public interface ISkillCastMechanic {
 
-    SkillResult processBefore(IActiveCharacter character, PlayerSkillContext context);
+    default SkillResult processBefore(IActiveCharacter character, PlayerSkillContext context){
+        return SkillResult.OK;
+    }
 
-    void processAfterSuccess(IActiveCharacter character, PlayerSkillContext context);
+    default void processAfterSuccess(IActiveCharacter character, PlayerSkillContext context){}
 
     boolean isValidForContext(SkillData skillData);
 }

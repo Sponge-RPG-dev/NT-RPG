@@ -129,6 +129,10 @@ public class PlayerSkillContext {
         return getLevelNodeValue(node);
     }
 
+    public boolean hasNode(String node) {
+        return cachedComputedSkillSettings.containsKey(node);
+    }
+
     public int getIntNodeValue(ISkillNode node) {
         return getIntNodeValue(node.value());
     }
