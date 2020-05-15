@@ -387,6 +387,9 @@ public abstract class AbstractEffectService implements EffectService {
 
     @Override
     public void purgeEffectCache() {
+        for (IEffect iEffect : effectSet) {
+            iEffect.onRemove(iEffect);
+        }
         effectSet.clear();
         pendingAdditions.clear();
         pendingRemovals.clear();

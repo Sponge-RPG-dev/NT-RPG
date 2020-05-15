@@ -75,7 +75,7 @@ public class SpongeParty implements IParty<ISpongeCharacter> {
     @Override
     public void removePlayer(ISpongeCharacter character) {
         players.remove(character);
-        team.removeMember(((ISpongeCharacter) character).getPlayer().getTeamRepresentation());
+        team.removeMember((character).getPlayer().getTeamRepresentation());
     }
 
     @Override
