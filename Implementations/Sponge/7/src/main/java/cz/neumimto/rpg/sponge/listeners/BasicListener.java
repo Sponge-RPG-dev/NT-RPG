@@ -113,7 +113,7 @@ public class BasicListener {
                 return;
             }
             if (first.isPresent()) {
-                if (character.getParty() == target.getParty() && !character.getParty().isFriendlyfire()) {
+                if (character.getParty() != null && character.getParty() == target.getParty() && !character.getParty().isFriendlyfire()) {
                     event.setCancelled(true);
                 }
             }
