@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.sponge.entities.players;
 
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
@@ -148,8 +149,9 @@ public class SpongeCharacterService extends AbstractCharacterService<ISpongeChar
     public void addExperiences(ISpongeCharacter character, double exp, String source) {
         if ("VANILLA".equals(source)) {
             Player player = character.getPlayer();
-            Integer integer = player.get(Keys.EXPERIENCE_FROM_START_OF_LEVEL).orElse(0);
-            player.offer(Keys.EXPERIENCE_FROM_START_OF_LEVEL, integer + (int) exp);
+           //fix your shit sponge Integer integer = player.get(Keys.EXPERIENCE_FROM_START_OF_LEVEL).orElse(0);
+           //fix your shit sponge player.offer(Keys.EXPERIENCE_FROM_START_OF_LEVEL, integer + (int) exp);
+            Sponge.getCommandManager().process(Sponge.getServer().getConsole(), "xp " + (int)exp + " " + player.getName());
         } else {
             super.addExperiences(character, exp, source);
         }
