@@ -1390,6 +1390,7 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
         if (uniques == null) {
             uniques = new HashSet<>();
             uniqueSkillpoints.put(key, uniques);
+            characterBase.setUniqueSkillpoints(uniqueSkillpoints);
         }
         for (DateKeyPair unique : uniques) {
             if (sourceKey.equalsIgnoreCase(unique.getSourceKey())) {

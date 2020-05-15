@@ -274,6 +274,11 @@ public class CharacterBaseImpl extends TimestampEntityImpl implements CharacterB
         return uniqueSkillpoints;
     }
 
+    @Override
+    public void setUniqueSkillpoints(Map<String, Set<DateKeyPair>> uniqueSkillpoints) {
+        this.uniqueSkillpoints = uniqueSkillpoints;
+    }
+
     public void postLoad() {
         for (BaseCharacterAttribute characterAttribute : baseCharacterAttribute) {
             cachedAttributes.put(characterAttribute.getName(), characterAttribute.getLevel());

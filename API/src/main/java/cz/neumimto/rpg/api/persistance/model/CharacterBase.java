@@ -87,4 +87,6 @@ public interface CharacterBase extends TimestampEntity {
     void setAttributePointsSpent(Integer attributePointsSpent);
 
     Map<String, Set<DateKeyPair>> getUniqueSkillpoints();
+
+    void setUniqueSkillpoints(Map<String, Set<DateKeyPair>> uniqueSkillpoints);
 }

@@ -349,7 +349,7 @@ public class GuiHelper {
             }
 
             List<String> description = skillData.getDescription(character);
-            if (description != null && description.size() > 0) {
+            if (description != null && !description.isEmpty()) {
                 lore.add(header(locService.translate(LocalizationKeys.DESCRIPTION)));
 
                 for (String s : description) {
@@ -357,26 +357,28 @@ public class GuiHelper {
                 }
             }
 
-            lore.add(header(locService.translate(LocalizationKeys.SKILL_TRAITS)));
             Set<ISkillType> skillTypes = skill.getSkillTypes();
-            StringBuilder builder = new StringBuilder();
-            Iterator<ISkillType> iterator = skillTypes.iterator();
-            int i = 0;
-            boolean firstLine = true;
-            while (iterator.hasNext()) {
-                i++;
-                ISkillType next = iterator.next();
-                String translate = locService.translate(next.toString()) + " ";
-                builder.append(translate);
-                if (i % 4 == 0) {
-                    if (firstLine) {
-                        lore.add(node(locService.translate(LocalizationKeys.SKILL_TYPES), builder.toString()));
-                    } else {
-                        lore.add(line(" - " + builder.toString()));
-                    }
+            if (!skillTypes.isEmpty()) {
+                lore.add(header(locService.translate(LocalizationKeys.SKILL_TRAITS)));
+                StringBuilder builder = new StringBuilder();
+                Iterator<ISkillType> iterator = skillTypes.iterator();
+                int i = 0;
+                boolean firstLine = true;
+                while (iterator.hasNext()) {
+                    i++;
+                    ISkillType next = iterator.next();
+                    String translate = locService.translate(next.toString()) + " ";
+                    builder.append(translate);
+                    if (i % 4 == 0) {
+                        if (firstLine) {
+                            lore.add(node(locService.translate(LocalizationKeys.SKILL_TYPES), builder.toString()));
+                        } else {
+                            lore.add(line(" - " + builder.toString()));
+                        }
 
-                    builder = new StringBuilder();
-                    firstLine = false;
+                        builder = new StringBuilder();
+                        firstLine = false;
+                    }
                 }
             }
         }
@@ -452,7 +454,7 @@ public class GuiHelper {
                 .build(SpongeRpgPlugin.getInstance());
 
         SpongeSkillTreeViewModel skillTreeViewModel = character.getLastTimeInvokedSkillTreeView();
-        ItemStack back = back("skilltree view" + skillTreeViewModel.getViewedClass().getName(), translate(LocalizationKeys.SKILLTREE));
+        ItemStack back = back("skilltree view " + skillTreeViewModel.getViewedClass().getName(), translate(LocalizationKeys.SKILLTREE));
         build.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0, 0))).offer(back);
 
         if (skillData instanceof SkillPathData) {
