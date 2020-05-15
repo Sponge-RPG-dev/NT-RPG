@@ -359,6 +359,8 @@ public class AdminCommands extends BaseCommand {
             ActionResult result = characterService.addUniqueSkillpoint(character, classByType, sourceKey);
             if (result.isOk()) {
                 characterService.putInSaveQueue(character.getCharacterBase());
+            } else {
+                Log.warn("Character " + character.getUUID() + " could not gain unique sp ClassType: " + classType + " " +result.getMessage());
             }
         }
     }

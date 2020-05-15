@@ -83,7 +83,7 @@ public class SkillTreeInventoryListener {
                             ISkill iSkill = skillService.getById(node).get();
 
                             ClassDefinition classDefinition = viewModel.getViewedClass();
-                            PlayerClassData playerClassData = character.getClasses().get(classDefinition.getName());
+                            PlayerClassData playerClassData = character.getClassByName(classDefinition.getName());
 
                             if (character.getSkill(iSkill.getId()) == null) {
                                 classDefinition.getSkillTreeType().processLearnSkill(character, playerClassData, iSkill);

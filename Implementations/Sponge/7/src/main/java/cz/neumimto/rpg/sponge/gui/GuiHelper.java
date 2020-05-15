@@ -452,7 +452,7 @@ public class GuiHelper {
                 .build(SpongeRpgPlugin.getInstance());
 
         SpongeSkillTreeViewModel skillTreeViewModel = character.getLastTimeInvokedSkillTreeView();
-        ItemStack back = back("skilltree " + skillTreeViewModel.getViewedClass().getName(), translate(LocalizationKeys.SKILLTREE));
+        ItemStack back = back("skilltree view" + skillTreeViewModel.getViewedClass().getName(), translate(LocalizationKeys.SKILLTREE));
         build.query(QueryOperationTypes.INVENTORY_PROPERTY.of(SlotPos.of(0, 0))).offer(back);
 
         if (skillData instanceof SkillPathData) {

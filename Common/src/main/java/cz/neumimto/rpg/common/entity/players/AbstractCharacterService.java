@@ -1403,7 +1403,7 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
 
         addSkillPoint(character, classByType, 1);
 
-        Log.error("Character " + character.getUUID() + " gained " + sourceKey + " skillpoint");
+        Log.info("Character " + character.getUUID() + " gained " + sourceKey + " skillpoint");
         return ActionResult.ok();
     }
 
