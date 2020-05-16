@@ -47,8 +47,10 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.file.*;
-import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.*;
 
 import javax.inject.Inject;
@@ -131,11 +133,6 @@ public class JSLoader implements IScriptEngine {
             classGenerator.generateDynamicListener(eventListeners);
 
             reloadSkills();
-
-            JSObject postInit = (JSObject) scriptContext.getBindings(ScriptContext.ENGINE_SCOPE).get("runPostInitialization");
-            if (postInit != null && postInit.isFunction()) {
-                postInit.call(null);
-            }
         } catch (Exception e) {
             error("Could not load script engine", e);
         }
@@ -162,33 +159,24 @@ public class JSLoader implements IScriptEngine {
         final StringBuilder bigChunkOfCode = new StringBuilder();
         bigChunkOfCode.append(assetService.getAssetAsString("Main.js")).append(System.lineSeparator());
 
-        Path additionalMainPath = Paths.get(scripts_root + File.separator + "MainAdd.js");
-        if (!additionalMainPath.toFile().exists()) assetService.copyToFile("MainAdd.js", additionalMainPath);
-
         try {
-            for (String line : Files.readAllLines(additionalMainPath))
-                bigChunkOfCode.append(line).append(System.lineSeparator());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            Files.walkFileTree(scripts_root, new SimpleFileVisitor<Path>() {
-                @Override
-                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                    if (file.toString().endsWith(".js") && !file.toString().endsWith("MainAdd.js")) {
+            Queue<Path> directories = new PriorityQueue<>();
+            directories.add(scripts_root);
+            while (directories.size() != 0) {
+                Files.list(directories.poll()).forEach((file -> {
+                    if (file.toFile().isDirectory()) directories.add(file);
+                    else if (file.toFile().getName().endsWith(".js")) {
                         bigChunkOfCode.append(System.lineSeparator()).append("// ").append(file.toFile().getName()).append(System.lineSeparator());
-                        for (String line : Files.readAllLines(file))
-                            bigChunkOfCode.append(line).append(System.lineSeparator());
+                        try {
+                            for (String line : Files.readAllLines(file))
+                                bigChunkOfCode.append(line).append(System.lineSeparator());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
-                    return super.visitFile(file, attrs);
-                }
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+                }));
+            }
 
-        try {
             return Files.write(path, bigChunkOfCode.toString().getBytes(), StandardOpenOption.CREATE_NEW);
         } catch (IOException e) {
             throw new RuntimeException("Could not write .deployed.js ", e);
