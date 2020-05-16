@@ -22,7 +22,6 @@ import static cz.neumimto.rpg.api.logging.Log.error;
 /**
  * Created by NeumimTo on 25.8.2018.
  */
-@Singleton
 public class Placeholders {
 
     @Inject

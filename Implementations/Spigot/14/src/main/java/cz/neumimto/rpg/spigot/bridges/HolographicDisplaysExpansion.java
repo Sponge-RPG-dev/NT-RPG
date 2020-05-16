@@ -30,7 +30,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-@Singleton
 public class HolographicDisplaysExpansion implements Listener {
 
     @Inject

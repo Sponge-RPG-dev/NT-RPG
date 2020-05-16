@@ -41,6 +41,10 @@ public class SpigotItemService extends AbstractItemService {
 
     private SpigotItemHandler itemHandler;
 
+    public SpigotItemService() {
+        itemHandler = new SpigotItemHandler();
+    }
+
     public Optional<RpgItemType> getRpgItemType(ItemStack itemStack) {
         if (itemStack == null) {
             return Optional.empty();
