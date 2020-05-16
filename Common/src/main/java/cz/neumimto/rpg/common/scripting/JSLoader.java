@@ -18,6 +18,9 @@
 
 package cz.neumimto.rpg.common.scripting;
 
+import static cz.neumimto.rpg.api.logging.Log.error;
+import static cz.neumimto.rpg.api.logging.Log.info;
+
 import com.electronwill.nightconfig.core.conversion.ObjectConverter;
 import com.electronwill.nightconfig.core.file.FileConfig;
 import com.google.inject.Injector;
@@ -37,18 +40,20 @@ import cz.neumimto.rpg.common.skills.scripting.SkillComponent;
 import jdk.nashorn.api.scripting.JSObject;
 import net.bytebuddy.dynamic.loading.MultipleParentClassLoader;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import javax.script.*;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
 
-import static cz.neumimto.rpg.api.logging.Log.error;
-import static cz.neumimto.rpg.api.logging.Log.info;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import javax.script.*;
 
 /**
  * Created by NeumimTo on 13.3.2015.
@@ -104,11 +109,11 @@ public class JSLoader implements IScriptEngine {
             for (Map.Entry<String, JSObject> entry : skillHandlers.entrySet()) {
                 JSObject value = entry.getValue();
                 Class<? extends SkillScriptHandlers> handlers = null;
-                if (value.hasMember("onCast") && ((JSObject)value.getMember("onCast")).isFunction()) {
+                if (value.hasMember("onCast") && ((JSObject) value.getMember("onCast")).isFunction()) {
                     handlers = SkillScriptHandlers.Active.class;
-                } else if (value.hasMember("castOnTarget") && ((JSObject)value.getMember("castOnTarget")).isFunction()) {
+                } else if (value.hasMember("castOnTarget") && ((JSObject) value.getMember("castOnTarget")).isFunction()) {
                     handlers = SkillScriptHandlers.Targetted.class;
-                } else if (value.hasMember("init") && ((JSObject)value.getMember("init")).isFunction()) {
+                } else if (value.hasMember("init") && ((JSObject) value.getMember("init")).isFunction()) {
                     handlers = SkillScriptHandlers.Passive.class;
                 } else {
                     Log.warn("unknown object " + value.toString());
@@ -126,6 +131,11 @@ public class JSLoader implements IScriptEngine {
             classGenerator.generateDynamicListener(eventListeners);
 
             reloadSkills();
+
+            JSObject postInit = (JSObject) scriptContext.getBindings(ScriptContext.ENGINE_SCOPE).get("runPostInitialization");
+            if (postInit != null && postInit.isFunction()) {
+                postInit.call(null);
+            }
         } catch (Exception e) {
             error("Could not load script engine", e);
         }
@@ -149,25 +159,37 @@ public class JSLoader implements IScriptEngine {
             path.toFile().delete();
         }
 
-        String main = assetService.getAssetAsString("Main.js") + "\n";
+        final StringBuilder bigChunkOfCode = new StringBuilder();
+        bigChunkOfCode.append(assetService.getAssetAsString("Main.js")).append(System.lineSeparator());
 
-        File[] files = scripts_root.toFile().listFiles();
-        Arrays.sort(files);
-        for (File file : files) {
-            if (file.getName().endsWith(".js")) {
-                try {
-                    main += "// " + file.getName() + "\n";
-                    for (String line : Files.readAllLines(file.toPath())) {
-                        main += line + "\n";
-                    }
-                    main += "\n";
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+        Path additionalMainPath = Paths.get(scripts_root + File.separator + "MainAdd.js");
+        if (!additionalMainPath.toFile().exists()) assetService.copyToFile("MainAdd.js", additionalMainPath);
+
         try {
-            return Files.write(path, main.getBytes(), StandardOpenOption.CREATE_NEW);
+            for (String line : Files.readAllLines(additionalMainPath))
+                bigChunkOfCode.append(line).append(System.lineSeparator());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            Files.walkFileTree(scripts_root, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    if (file.toString().endsWith(".js") && !file.toString().endsWith("MainAdd.js")) {
+                        bigChunkOfCode.append(System.lineSeparator()).append("// ").append(file.toFile().getName()).append(System.lineSeparator());
+                        for (String line : Files.readAllLines(file))
+                            bigChunkOfCode.append(line).append(System.lineSeparator());
+                    }
+                    return super.visitFile(file, attrs);
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            return Files.write(path, bigChunkOfCode.toString().getBytes(), StandardOpenOption.CREATE_NEW);
         } catch (IOException e) {
             throw new RuntimeException("Could not write .deployed.js ", e);
         }
@@ -177,7 +199,7 @@ public class JSLoader implements IScriptEngine {
         Path path = mergeScriptFiles();
         List<SkillComponent> skillComponents = new ArrayList<>();
         try (InputStreamReader rs = new InputStreamReader(new FileInputStream(path.toFile()))) {
-            Bindings bindings = engine.createBindings();
+            Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
             bindings.put("Injector", injector);
             bindings.put("Folder", scripts_root);
             bindings.put("Rpg", Rpg.get());
@@ -219,12 +241,10 @@ public class JSLoader implements IScriptEngine {
                 info("===== Bindings END =====");
             }
 
-            ScriptContext scriptContext = new SimpleScriptContext();
-            scriptContext.setBindings(bindings, ScriptContext.ENGINE_SCOPE);
+            this.scriptContext = engine.getContext();
             Compilable compilable = (Compilable) engine;
             lib = compilable.compile(rs);
-            lib.eval(scriptContext);
-            this.scriptContext = scriptContext;
+            lib.eval();
         } catch (Throwable e) {
             e.printStackTrace();
         }
@@ -312,7 +332,7 @@ public class JSLoader implements IScriptEngine {
             Invocable invocableEngine = (Invocable) lib.getEngine();
             return invocableEngine.invokeFunction(functionName, args);
         } catch (ScriptException | NoSuchMethodException e) {
-            throw new ScriptExecutionException(" Could not execute the script function/method " + functionName,e);
+            throw new ScriptExecutionException(" Could not execute the script function/method " + functionName, e);
         }
     }
 
@@ -322,7 +342,7 @@ public class JSLoader implements IScriptEngine {
             Invocable invocableEngine = (Invocable) lib.getEngine();
             return invocableEngine.invokeFunction(functionName);
         } catch (ScriptException | NoSuchMethodException e) {
-            throw new ScriptExecutionException(" Could not execute the script function/method " + functionName,e);
+            throw new ScriptExecutionException(" Could not execute the script function/method " + functionName, e);
         }
     }
 
@@ -337,6 +357,8 @@ public class JSLoader implements IScriptEngine {
         public ScriptExecutionException(String message, Throwable cause) {
             super(message, cause);
         }
+
     }
+
 }
 
