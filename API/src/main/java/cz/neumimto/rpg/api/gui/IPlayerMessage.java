@@ -94,4 +94,6 @@ public interface IPlayerMessage<T extends IActiveCharacter> {
     void displayCharacterArmor(T character, int page);
 
     void displayCharacterWeapons(T character, int page);
+
+    void displaySpellbook(T character);
 }

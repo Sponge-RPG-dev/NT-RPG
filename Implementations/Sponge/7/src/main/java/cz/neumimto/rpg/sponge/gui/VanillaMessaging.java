@@ -711,6 +711,11 @@ public class VanillaMessaging implements IPlayerMessage<ISpongeCharacter> {
         character.getPlayer().openInventory(i);
     }
 
+    @Override
+    public void displaySpellbook(ISpongeCharacter character) {
+        throw new RuntimeException("Not implemented");
+    }
+
     private Text translate(String key) {
         return TextHelper.parse(localizationService.translate(key));
     }

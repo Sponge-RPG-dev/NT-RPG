@@ -15,6 +15,7 @@ import cz.neumimto.rpg.common.inventory.InventoryHandler;
 import cz.neumimto.rpg.spigot.SpigotRpg;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
+import cz.neumimto.rpg.spigot.gui.SpellbookListener;
 import cz.neumimto.rpg.spigot.inventory.SpigotInventoryService;
 import cz.neumimto.rpg.spigot.inventory.SpigotItemService;
 import de.tr7zw.nbtapi.NBTItem;
@@ -98,6 +99,18 @@ public class SpigotInventoryListener implements Listener {
                 event.setResult(Event.Result.DENY);
             }
             if (nbti.hasKey("ntrpg.item-iface")) {
+                event.setResult(Event.Result.DENY);
+            }
+            if (nbti.hasKey("ntrpg.spellbook.learnedspell")) {
+                String skillName = nbti.getString("ntrpg.spellbook.learnedspell");
+                NBTItem futureIcon = new NBTItem(SpellbookListener.toBindIcon(currentItem, skillName));
+
+                futureIcon.setBoolean("ntrpg.spellbook.learnedspell.bindicon", true);
+                event.setCurrentItem(futureIcon.getItem());
+                event.setResult(Event.Result.DENY);
+            }
+            if (nbti.hasKey("ntrpg.spellbook.learnedspell.bindicon")) {
+                event.setCurrentItem(null);
                 event.setResult(Event.Result.DENY);
             }
         }

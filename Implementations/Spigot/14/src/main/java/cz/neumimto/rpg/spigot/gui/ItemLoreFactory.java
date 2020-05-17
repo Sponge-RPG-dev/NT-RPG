@@ -71,7 +71,7 @@ public class ItemLoreFactory {
     }
 
 
-    public List<String> toLore(ISpigotCharacter character, SkillData skillData, ChatColor nameColor, SkillTree skillTree) {
+    public List<String> toLore(ISpigotCharacter character, SkillData skillData, ChatColor nameColor) {
         ISkill skill = skillData.getSkill();
         List<String> lore = new ArrayList<>();
         if (skillData.useDescriptionOnly()) {

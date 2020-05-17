@@ -14,6 +14,7 @@ import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterClass;
 import cz.neumimto.rpg.api.skills.ISkill;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillData;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.common.gui.ConfigInventory;
@@ -362,19 +363,20 @@ public class SpigotGuiHelper {
         List<String> fromCache = model.getFromCache(skill);
 
         if (fromCache == null) {
-            lore = itemLoreFactory.toLore(character, skillData, nameColor, skillTree);
+            lore = itemLoreFactory.toLore(character, skillData, nameColor);
             model.addToCache(skill, lore);
         } else {
             lore = fromCache;
         }
 
-        Material material;
-        if (skillData.getIcon() != null) {
-            material = Material.matchMaterial(skillData.getIcon());
-        } else {
-            material = Material.STONE;
-        }
+        Material material = getSkillIcon(skillData);
+        ItemStack itemStack = createSkillIconItemStack(material, skillData, lore);
+        NBTItem nbtItem = new NBTItem(itemStack);
+        nbtItem.setString("ntrpg.item-command", "skilltree skill " + skillData.getSkillName());
+        return nbtItem.getItem();
+    }
 
+    private static ItemStack createSkillIconItemStack(Material material, SkillData skillData, List<String> lore) {
         ItemStack itemStack = new ItemStack(material);
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName(" ");
@@ -384,9 +386,28 @@ public class SpigotGuiHelper {
             itemMeta.setCustomModelData(skillData.getModelId());
         }
         itemStack.setItemMeta(itemMeta);
+        return itemStack;
+    }
+
+    private static Material getSkillIcon(SkillData skillData) {
+        if (skillData.getIcon() != null) {
+            return Material.matchMaterial(skillData.getIcon());
+        } else {
+            return Material.STONE;
+        }
+    }
+
+    public static ItemStack toItemStack(ISpigotCharacter character, PlayerSkillContext skillContext) {
+        SkillData skillData = skillContext.getSkillData();
+        List<String> lore = itemLoreFactory.toLore(character, skillData, ChatColor.GREEN);
+
+        Material material = getSkillIcon(skillData);
+        ItemStack itemStack = createSkillIconItemStack(material, skillData, lore);
+
         NBTItem nbtItem = new NBTItem(itemStack);
-        nbtItem.setString("ntrpg.item-command", "skilltree skill " + skillData.getSkillName());
+        nbtItem.setString("ntrpg.spellbook.learnedspell", skillData.getSkillName());
         return nbtItem.getItem();
+
     }
 
     private static ItemStack interactiveModeToitemStack(ISpigotCharacter character, SkillTreeViewModel.InteractiveMode interactiveMode) {
@@ -612,5 +633,49 @@ public class SpigotGuiHelper {
         is.setItemMeta(itemMeta);
         return unclickableInterface(is);
 
+    }
+
+    public static Inventory createSpellbookInventory(ISpigotCharacter character) {
+        LocalizationService localizationService = Rpg.get().getLocalizationService();
+        Inventory i = createInventoryTemplate(localizationService.translate("gui.spellbook.label"));
+        CharacterBase characterBase = character.getCharacterBase();
+
+        Map<String, PlayerSkillContext> skillsByName = character.getSkillsByName();
+        Map<String, PlayerSkillContext> sorted = new TreeMap<>(Comparator.naturalOrder());
+        sorted.putAll(skillsByName);
+
+        String[][] rows = characterBase.getSpellbookPages();
+
+        if (rows == null) {
+            for (int j = 27; j < 54; j++) {
+                i.setItem(j, createEmptySlot());
+            }
+        } else {
+            int q = 27;
+            for (String[] row : rows) {
+                for (String s : row) {
+                    if ("-".equals(s)) {
+                        i.setItem(q, createEmptySlot());
+                    } else {
+                        PlayerSkillContext skill = character.getSkill(s);
+                        if (skill == null) {
+                            i.setItem(q, createEmptySlot());
+                        } else {
+                            i.setItem(q, toItemStack(character, skill));
+                        }
+                    }
+                    q++;
+                }
+            }
+        }
+        SpellbookListener.addInventory(character, i,sorted);
+        return i;
+    }
+
+    public static ItemStack createEmptySlot() {
+        ItemStack itemStack = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
+        NBTItem nbtItem = new NBTItem(itemStack);
+        nbtItem.setBoolean("ntrpg.skillbook.emptyslot", true);
+        return nbtItem.getItem();
     }
 }

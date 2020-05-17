@@ -5,6 +5,7 @@ import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.effects.EffectStatusType;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.gui.IPlayerMessage;
@@ -241,8 +242,13 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
         player.openInventory(inventory);
     }
 
-
     public void refreshAttributeView(Player player, ISpigotCharacter character, int slotMod, AttributeConfig a) {
         SpigotGuiHelper.refreshCharacterAttributeView(player, character, player.getOpenInventory().getTopInventory(), slotMod, a);
+    }
+
+    @Override
+    public void displaySpellbook(ISpigotCharacter character) {
+        Inventory i = SpigotGuiHelper.createSpellbookInventory(character);
+        character.getPlayer().openInventory(i);
     }
 }

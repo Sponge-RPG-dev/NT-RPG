@@ -49,6 +49,8 @@ public class CharacterBaseImpl extends TimestampEntityImpl implements CharacterB
     private String world;
     private Map<String, Set<DateKeyPair>> uniqueSkillpoints = new HashMap<>();
 
+    private String[][] spellBookpages;
+
     private transient Map<String, Integer> cachedAttributes = new HashMap<>();
 
     @Override
@@ -283,6 +285,16 @@ public class CharacterBaseImpl extends TimestampEntityImpl implements CharacterB
         for (BaseCharacterAttribute characterAttribute : baseCharacterAttribute) {
             cachedAttributes.put(characterAttribute.getName(), characterAttribute.getLevel());
         }
+    }
+
+    @Override
+    public String[][] getSpellbookPages() {
+        return spellBookpages;
+    }
+
+    @Override
+    public void setSpellbookPages(String[][] spellbookPages) {
+        this.spellBookpages = spellbookPages;
     }
 
     @Override

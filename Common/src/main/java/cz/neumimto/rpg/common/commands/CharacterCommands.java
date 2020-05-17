@@ -80,5 +80,9 @@ public class CharacterCommands extends BaseCommand {
         characterService.putInSaveQueue(character.getCharacterBase());
     }
 
+    @Subcommand("spellbook")
+    public void spellbookCommand(IActiveCharacter character) {
+        Gui.displaySpellbook(character);
+    }
 }
 

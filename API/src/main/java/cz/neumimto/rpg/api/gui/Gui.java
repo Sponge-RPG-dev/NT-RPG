@@ -155,6 +155,10 @@ public class Gui {
         getMessageTypeOf(character).displayCharacterWeapons(character, page);
     }
 
+    public static void displaySpellbook(IActiveCharacter character) {
+        getMessageTypeOf(character).displaySpellbook(character);
+    }
+
     public void setVanillaMessaging(IPlayerMessage instance) {
         vanilla = instance;
     }
