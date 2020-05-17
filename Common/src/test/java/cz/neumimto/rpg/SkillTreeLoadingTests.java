@@ -4,7 +4,7 @@ import cz.neumimto.rpg.api.RpgApi;
 import cz.neumimto.rpg.api.configuration.SkillTreeDao;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.localization.LocalizationService;
-import cz.neumimto.rpg.api.scripting.IScriptEngine;
+import cz.neumimto.rpg.api.scripting.IRpgScriptEngine;
 import cz.neumimto.rpg.api.skills.*;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
@@ -34,9 +34,6 @@ public class SkillTreeLoadingTests {
     private SkillService skillService;
 
     @Inject
-    private IScriptEngine scriptEngine;
-
-    @Inject
     private LocalizationService localizationService;
 
     @Inject
@@ -47,7 +44,6 @@ public class SkillTreeLoadingTests {
         new RpgTest(rpgApi);
         skillService.getSkills().put("test", new TestSkill("test"));
         skillService.getSkills().put("test2", new TestSkill("test2"));
-        scriptEngine.loadNashorn();
     }
 
     @Test

@@ -86,7 +86,7 @@ public class PluginSettingsTest {
 
         @Override
         public String getPlatform() {
-            return null;
+            return "Test";
         }
     }
 }

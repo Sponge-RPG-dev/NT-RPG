@@ -41,6 +41,8 @@ import cz.neumimto.rpg.api.skills.preprocessors.InterruptableSkillPreprocessor;
 import cz.neumimto.rpg.api.skills.tree.SkillTreeSpecialization;
 import cz.neumimto.rpg.common.skills.PlayerSkillHandlers;
 import cz.neumimto.rpg.common.skills.types.ItemAccessSkill;
+import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
 
 import java.lang.ref.WeakReference;
 import java.util.*;
@@ -81,21 +83,23 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
     private transient P party;
 
     private transient Map<String, IEffectContainer<Object, IEffect<Object>>> effects = new HashMap<>();
-    private IPlayerSkillHandler skills;
+    private final IPlayerSkillHandler skills;
 
-    private transient Set<RpgItemType> allowedArmorIds = new HashSet<>();
+    private transient final Set<RpgItemType> allowedArmorIds = new HashSet<>();
 
-    private transient Map<RpgItemType, Double> allowedWeapons = new HashMap<>();
+    private transient final Object2DoubleOpenHashMap<RpgItemType> allowedWeapons = new Object2DoubleOpenHashMap<>();
+    private transient final Object2DoubleOpenHashMap<String> projectileDamage = new Object2DoubleOpenHashMap<>(30);
+    private final Object2LongOpenHashMap<String> cooldowns = new Object2LongOpenHashMap<>(10);
 
-    private transient Map<String, Double> projectileDamage = new HashMap<>();
-    private transient Set<RpgItemType> allowedOffHandWeapons = new HashSet<>();
-    private Map<String, Long> cooldowns = new HashMap<>();
+    private transient final Set<RpgItemType> allowedOffHandWeapons = new HashSet<>();
+
     private transient WeakReference<P> pendingPartyInvite = new WeakReference<>(null);
     private transient double weaponDamage;
     private transient double armorvalue;
 
     private transient String preferedDamageType = null;
-    private transient Map<String, Integer> transientAttributes = new HashMap<>();
+
+    private transient final Map<String, Integer> transientAttributes = new HashMap<>();
 
     private transient List<Integer> slotsToReinitialize;
 
@@ -315,9 +319,7 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
 
     @Override
     public boolean hasCooldown(String thing) {
-        Long l = cooldowns.get(thing);
-        if (l == null) return false;
-        return l > System.currentTimeMillis();
+        return cooldowns.getOrDefault(thing,0L) > System.currentTimeMillis();
     }
 
     private void mergeWeapons(ClassDefinition g) {
@@ -334,7 +336,7 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
             if (!allowedWeapons.containsKey(weapon.getType())) {
                 allowedWeapons.put(weapon.getType(), weapon.getDamage());
             } else {
-                double dmg = itemDamageProcessor.get(allowedWeapons.get(weapon.getType()), weapon.getDamage());
+                double dmg = itemDamageProcessor.get(allowedWeapons.getDouble(weapon.getType()), weapon.getDamage());
                 allowedWeapons.put(weapon.getType(), dmg);
             }
         }
@@ -342,19 +344,12 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
 
     @Override
     public double getBaseWeaponDamage(RpgItemType weaponItemType) {
-        Double aDouble = allowedWeapons.get(weaponItemType);
-        if (aDouble == null)
-            return 0D;
-        return aDouble;
+        return allowedWeapons.getOrDefault(weaponItemType, 0);
     }
 
     @Override
     public double getBaseProjectileDamage(String id) {
-        Double d = getProjectileDamages().get(id);
-        if (d == null) {
-            return 0;
-        }
-        return d;
+        return projectileDamage.getOrDefault(id, 0);
     }
 
     @Override

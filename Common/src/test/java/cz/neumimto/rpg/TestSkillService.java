@@ -10,10 +10,6 @@ import javax.inject.Singleton;
 @Singleton
 public class TestSkillService extends AbstractSkillService {
 
-    @Override
-    public void load() {
-
-    }
 
     @Override
     public ISkillTreeInterfaceModel getGuiModelByCharacter(char c) {

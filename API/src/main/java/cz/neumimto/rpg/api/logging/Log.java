@@ -40,4 +40,8 @@ public class Log {
     public static void setLogger(Logger logger) {
         Log.logger = logger;
     }
+
+    public Logger logger() {
+        return logger;
+    }
 }

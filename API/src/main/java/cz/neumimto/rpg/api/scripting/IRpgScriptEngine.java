@@ -9,22 +9,18 @@ import java.net.URLClassLoader;
 import java.nio.file.Path;
 import java.util.Map;
 
-public interface IScriptEngine {
-    ScriptEngine getEngine();
+public interface IRpgScriptEngine {
 
-    Path getScriptsRootFolder();
-
-    void initEngine();
+    void prepareEngine();
 
     void loadSkillDefinitionFile(URLClassLoader urlClassLoader, File confFile);
 
     Map<Class<?>, JsBinding.Type> getDataToBind();
-
-    void loadNashorn() throws Exception;
 
     Object executeScript(String functionName, Object... args);
 
     Object executeScript(String functionName);
 
     <T> T toInterface(JSObject object, Class<T> iface);
+
 }

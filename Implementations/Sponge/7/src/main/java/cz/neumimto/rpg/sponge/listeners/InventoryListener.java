@@ -28,15 +28,21 @@ import cz.neumimto.rpg.api.items.ItemClass;
 import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.common.inventory.InventoryHandler;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
 import cz.neumimto.rpg.sponge.inventory.SpongeItemService;
+import cz.neumimto.rpg.sponge.inventory.data.NKeys;
+import cz.neumimto.rpg.sponge.inventory.data.manipulators.SkillBindData;
 import cz.neumimto.rpg.sponge.utils.ItemStackUtils;
+import org.spongepowered.api.data.type.HandType;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
+import org.spongepowered.api.event.entity.ChangeEntityEquipmentEvent;
 import org.spongepowered.api.event.entity.MoveEntityEvent;
 import org.spongepowered.api.event.entity.living.humanoid.HandInteractEvent;
 import org.spongepowered.api.event.filter.IsCancelled;
@@ -86,6 +92,8 @@ public class InventoryListener {
     private SpongeItemService itemService;
     @Inject
     private LocalizationService localizationService;
+    @Inject
+    private SkillService skillService;
 
     @Listener
     @IsCancelled(Tristate.FALSE)
@@ -351,5 +359,31 @@ public class InventoryListener {
         character.setRequiresDamageRecalculation(true);
     }
 
+    @Listener(order = Order.LAST)
+    public void onCharacterHeldItemChange(ChangeInventoryEvent.Held event, @Root Player player) {
+        if (player.getOpenInventory().isPresent()) {
+            return;
+        }
 
+        Hotbar hotbar = player.getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class));
+        int selectedSlotIndex = hotbar.getSelectedSlotIndex();
+
+        Optional<ItemStack> itemInHand = player.getItemInHand(HandTypes.MAIN_HAND);
+        if (itemInHand.isPresent()) {
+            ItemStack itemStack = itemInHand.get();
+            Optional<String> skillBindData = itemStack.get(NKeys.SKILLBIND);
+            if (skillBindData.isPresent()) {
+                String skillName = skillBindData.get();
+                ISpongeCharacter character = characterService.getCharacter(player);
+                if (!character.hasCooldown(skillName)) {
+                    PlayerSkillContext skill = character.getSkill(skillName);
+                    if (skill != null) {
+                        skillService.executeSkill(character, skill);
+
+                        hotbar.setSelectedSlotIndex(event.getOriginalSlot().transform().getInventoryProperty(SlotIndex.class).get().getValue());
+                    }
+                }
+            }
+        }
+    }
 }

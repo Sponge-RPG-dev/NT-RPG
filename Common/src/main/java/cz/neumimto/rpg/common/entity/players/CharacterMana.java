@@ -20,8 +20,12 @@ package cz.neumimto.rpg.common.entity.players;
 
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.CommonProperties;
+import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.entity.IReservable;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import it.unimi.dsi.fastutil.doubles.DoubleCollection;
+import it.unimi.dsi.fastutil.doubles.DoubleIterator;
+import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 
 /**
  * Created by NeumimTo on 30.12.2014.
@@ -29,14 +33,21 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 public class CharacterMana implements IReservable {
 
     private final IActiveCharacter character;
+    private EntityService entityService;
+
+    private Object2DoubleOpenHashMap<String> additionalValues;
+
+    private double additionalValue;
 
     public CharacterMana(IActiveCharacter activeCharacter) {
+        this.entityService = Rpg.get().getEntityService();
         this.character = activeCharacter;
+        this.additionalValues = new Object2DoubleOpenHashMap<>();
     }
 
     @Override
     public double getMaxValue() {
-        return Rpg.get().getEntityService().getEntityProperty(character, CommonProperties.max_mana);
+        return additionalValue + entityService.getEntityProperty(character, CommonProperties.max_mana);
     }
 
     @Override
@@ -51,12 +62,12 @@ public class CharacterMana implements IReservable {
 
     @Override
     public double getReservedAmount() {
-        return Rpg.get().getEntityService().getEntityProperty(character, CommonProperties.reserved_mana);
+        return entityService.getEntityProperty(character, CommonProperties.reserved_mana);
     }
 
     @Override
     public double getValue() {
-        return Rpg.get().getEntityService().getEntityProperty(character, CommonProperties.mana);
+        return entityService.getEntityProperty(character, CommonProperties.mana);
     }
 
     @Override
@@ -69,11 +80,28 @@ public class CharacterMana implements IReservable {
 
     @Override
     public double getRegen() {
-        return Rpg.get().getEntityService().getEntityProperty(character, CommonProperties.mana_regen);
+        return entityService.getEntityProperty(character, CommonProperties.mana_regen);
     }
 
     @Override
     public void setRegen(float f) {
         character.setProperty(CommonProperties.mana_regen, f);
+    }
+
+    public void withSource(String key, double value) {
+        additionalValues.addTo(key, value);
+        recalc();
+    }
+
+    public void removeSource(String key) {
+        additionalValues.removeDouble(key);
+        recalc();
+    }
+
+    private void recalc() {
+        DoubleIterator iterator = additionalValues.values().iterator();
+        while (iterator.hasNext()) {
+            additionalValue += iterator.nextDouble();
+        }
     }
 }

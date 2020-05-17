@@ -13,6 +13,7 @@ dependencies {
     compileOnly 'commons-io:commons-io:2.4'
 
     compileOnly 'com.google.inject:guice:4.2.2'
+    compileOnly 'it.unimi.dsi:fastutil:8.2.1'
 
     // compile 'com.scireum:parsii:1.5'
     compileOnly 'com.google.inject:guice:4.2.2'
@@ -24,6 +25,13 @@ dependencies {
     compileOnly 'it.unimi.dsi:fastutil:8.2.1'
 
     compileOnly 'org.apache.commons:commons-lang3:3.9'
+
+
+    compileOnly 'org.graalvm.sdk:graal-sdk:20.0.0'
+    compileOnly 'org.graalvm.js:js:20.0.0'
+
+    testCompile 'org.graalvm.sdk:graal-sdk:20.0.0'
+    testCompile 'org.graalvm.js:js:20.0.0'
 
     testCompile project(':Database-Persistence')
 

@@ -13,6 +13,7 @@ import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
 import cz.neumimto.rpg.spigot.inventory.SpigotInventoryService;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -48,7 +49,9 @@ public class SpigotSkillBindCommands extends BaseCommand {
             }
             PlayerSkillContext info = character.getSkillInfo(skill);
             ItemStack is = inventoryService.createSkillbind(info.getSkillData());
-            executor.setItemInHand(is);
+            if (executor.getItemInHand().getType() == Material.AIR) {
+                executor.setItemInHand(is);
+            }
         }
     }
 }

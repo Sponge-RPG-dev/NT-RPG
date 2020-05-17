@@ -25,7 +25,7 @@ import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.permissions.PermissionService;
-import cz.neumimto.rpg.api.scripting.IScriptEngine;
+import cz.neumimto.rpg.api.scripting.IRpgScriptEngine;
 import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.assets.TestAssetService;
 import cz.neumimto.rpg.common.TestPartyService;
@@ -50,7 +50,7 @@ import cz.neumimto.rpg.common.persistance.dao.ClassDefinitionDao;
 import cz.neumimto.rpg.common.persistance.dao.ICharacterClassDao;
 import cz.neumimto.rpg.common.persistance.dao.IPersistenceHandler;
 import cz.neumimto.rpg.common.persistance.dao.IPlayerDao;
-import cz.neumimto.rpg.common.scripting.JSLoader;
+import cz.neumimto.rpg.common.scripting.NashornRpgScriptEngine;
 import cz.neumimto.rpg.common.skills.reagents.Cooldown;
 import cz.neumimto.rpg.common.skills.reagents.HPCast;
 import cz.neumimto.rpg.common.skills.reagents.ManaCast;
@@ -133,7 +133,7 @@ public class TestGuiceModule extends AbstractModule {
         bind(RWDao.class);
         bind(RpgApi.class).to(TestApiImpl.class);
 
-        bind(IScriptEngine.class).to(JSLoader.class);
+        bind(IRpgScriptEngine.class).to(NashornRpgScriptEngine.class);
 
         bind(PermissionService.class).to(TestPermissionService.class);
         bind(EventFactoryService.class).to(TestEventFactory.class);

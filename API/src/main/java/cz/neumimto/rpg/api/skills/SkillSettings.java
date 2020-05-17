@@ -39,7 +39,9 @@ public class SkillSettings {
     public static final String BONUS_SUFFIX = "_levelbonus";
 
     private Map<String, Float> skillSettings = new HashMap<>();
+
     private Map<String, String> objMap = new HashMap<>();
+
     private Map<AttributeConfig, AttributeSettings> attributeSettingsMap = new HashMap<>();
 
     public void addNode(ISkillNode n, float val, float levelbonux) {

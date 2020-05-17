@@ -9,7 +9,7 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.events.EventFactoryService;
 import cz.neumimto.rpg.api.localization.LocalizationService;
-import cz.neumimto.rpg.api.scripting.IScriptEngine;
+import cz.neumimto.rpg.api.scripting.IRpgScriptEngine;
 import cz.neumimto.rpg.api.skills.*;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.common.skills.SkillExecutor;
@@ -39,7 +39,7 @@ public class SkillExecutionTests {
     private SkillService skillService;
 
     @Inject
-    private IScriptEngine scriptEngine;
+    private IRpgScriptEngine scriptEngine;
 
     @Inject
     private LocalizationService localizationService;

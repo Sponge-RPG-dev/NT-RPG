@@ -18,7 +18,7 @@ import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.events.skill.SkillPostUsageEvent;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
-import cz.neumimto.rpg.api.scripting.IScriptEngine;
+import cz.neumimto.rpg.api.scripting.IRpgScriptEngine;
 import cz.neumimto.rpg.api.skills.*;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.utils.ActionResult;
@@ -48,7 +48,7 @@ public class AdminCommands extends BaseCommand {
     private InfoCommands infoCommands;
 
     @Inject
-    private IScriptEngine scriptEngine;
+    private IRpgScriptEngine scriptEngine;
 
     private Gson gson = new Gson();
 
@@ -194,7 +194,7 @@ public class AdminCommands extends BaseCommand {
 
         if (reloadJs) {
             info("[RELOAD] Scripts ");
-            scriptEngine.initEngine();
+            scriptEngine.prepareEngine();
         }
 
         if (reloadItems) {
