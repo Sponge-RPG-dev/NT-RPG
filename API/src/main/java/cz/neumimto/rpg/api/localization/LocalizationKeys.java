@@ -156,6 +156,11 @@ public class LocalizationKeys {
     public static final String SKILL_ATTRIBUTE_SETTINGS = "label.item.skill.attribute-settings";
     public static final String SKILL_ATTRIBUTE_SETTING_PATTERN = "label.item.skill.attribute-setting-pattern";
 
+    public static final String SPELLBOOK_DISABLE = "label.item.spellbook.disable";
+    public static final String SPELLBOOK_ENABLE = "label.item.spellbook.enable";
+    public static final String SPELLBOOK_COMMIT = "label.item.spellbook.commit";
+    public static final String SPELLBOOK_ADDPAGE = "label.item.spellbook.addpage";
+
     private LocalizationKeys() {
     }
 }

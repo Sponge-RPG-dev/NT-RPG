@@ -6,6 +6,7 @@ import cz.neumimto.rpg.spigot.entities.ISpigotEntity;
 import cz.neumimto.rpg.spigot.entities.players.party.SpigotParty;
 import cz.neumimto.rpg.spigot.gui.SpigotSkillTreeViewModel;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.Map;
 
@@ -17,4 +18,11 @@ public interface ISpigotCharacter extends IActiveCharacter<Player, SpigotParty>,
 
     Map<String, SpigotSkillTreeViewModel> getSkillTreeViewLocation();
 
+    boolean isSpellRotationActive();
+
+    void setSpellbook(ItemStack[][] itemStacks);
+
+    ItemStack[][] getSpellbook();
+
+    void setSpellRotation(boolean active);
 }

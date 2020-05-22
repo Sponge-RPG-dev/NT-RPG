@@ -97,7 +97,7 @@ public class SpigotGuiHelper {
             ItemStack[] chars = cc.getClasses().values()
                     .stream()
                     .map(PlayerClassData::getClassDefinition)
-                    .map(a -> toItemStack(a, "char"))
+                    .map(a -> toSpellbookItemStack(a, "char"))
                     .collect(Collectors.toList())
                     .toArray(new ItemStack[cc.getClasses().size() == 0 ? 0 : cc.getClasses().size() - 1]);
             DynamicInventory inv = dView.setActualContent(chars);
@@ -108,7 +108,7 @@ public class SpigotGuiHelper {
         return dynamicInventory;
     }
 
-    public static ItemStack toItemStack(ClassDefinition a, String backCommand) {
+    public static ItemStack toSpellbookItemStack(ClassDefinition a, String backCommand) {
         String sItemType = a.getItemType();
         Material material = Material.matchMaterial(sItemType);
         ItemStack itemStack = button(material, ChatColor.valueOf(a.getPreferedColor()) + a.getName(), "ninfo class " + a.getName() + " " + backCommand);
@@ -140,7 +140,7 @@ public class SpigotGuiHelper {
     }
 
 
-    private static ItemStack button(Material material, String name, String command) {
+    public static ItemStack button(Material material, String name, String command) {
         ItemStack itemStack = new ItemStack(material);
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -184,18 +184,38 @@ public class SpigotGuiHelper {
         return nbti.getItem();
     }
 
+    public static ItemStack unclickableIcon(ItemStack itemStack, String tag) {
+        NBTItem nbti = new NBTItem(itemStack);
+        nbti.setBoolean("ntrpg.item-iface", true);
+        nbti.setBoolean(tag, true);
+        return nbti.getItem();
+    }
+
     public static ItemStack unclickableInterface(Material material, int model) {
         ItemStack itemStack = new ItemStack(material);
         return unclickableInterface(itemStack, model);
     }
 
     private static ItemStack unclickableInterface(ItemStack itemStack, int model) {
+        setUnclickableInterfaceItemMeta(itemStack, model);
+        return unclickableIcon(itemStack);
+    }
+
+    private static void setUnclickableInterfaceItemMeta(ItemStack itemStack, int model) {
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName(" ");
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         itemMeta.setCustomModelData(model);
         itemStack.setItemMeta(itemMeta);
-        return unclickableInterface(itemStack);
+    }
+
+    public static ItemStack unclickableInterface(Material material, int model, String tag) {
+        return unclickableInterface(new ItemStack(material), model, tag);
+    }
+
+    public static ItemStack unclickableInterface(ItemStack itemStack, int model, String tag) {
+        setUnclickableInterfaceItemMeta(itemStack, model);
+        return unclickableIcon(itemStack, tag);
     }
 
     public static void sendcharacters(Player player, ISpigotCharacter player1, CharacterBase currentlyCreated) {
@@ -397,7 +417,8 @@ public class SpigotGuiHelper {
         }
     }
 
-    public static ItemStack toItemStack(ISpigotCharacter character, PlayerSkillContext skillContext) {
+
+    public static ItemStack toSpellbookItemStack(ISpigotCharacter character, PlayerSkillContext skillContext) {
         SkillData skillData = skillContext.getSkillData();
         List<String> lore = itemLoreFactory.toLore(character, skillData, ChatColor.GREEN);
 
@@ -407,7 +428,6 @@ public class SpigotGuiHelper {
         NBTItem nbtItem = new NBTItem(itemStack);
         nbtItem.setString("ntrpg.spellbook.learnedspell", skillData.getSkillName());
         return nbtItem.getItem();
-
     }
 
     private static ItemStack interactiveModeToitemStack(ISpigotCharacter character, SkillTreeViewModel.InteractiveMode interactiveMode) {
@@ -575,7 +595,7 @@ public class SpigotGuiHelper {
             Set<RpgItemType> allowedWeapons = character.getAllowedArmor();
             List<ItemStack> content = new ArrayList<>();
             for (RpgItemType ent : allowedWeapons) {
-                ItemStack is = toItemStack(ent, 0);
+                ItemStack is = toSpellbookItemStack(ent, 0);
                 content.add(is);
             }
             DynamicInventory inv = dView.setActualContent(content.toArray(new ItemStack[content.size() == 0 ? 0 : content.size() - 1]));
@@ -597,7 +617,7 @@ public class SpigotGuiHelper {
             for (Map.Entry<RpgItemType, Double> ent : allowedWeapons.entrySet()) {
                 RpgItemType key = ent.getKey();
                 Double value = ent.getValue();
-                ItemStack is = toItemStack(key, value);
+                ItemStack is = toSpellbookItemStack(key, value);
                 content.add(is);
             }
             DynamicInventory inv = dView.setActualContent(content.toArray(new ItemStack[content.size() == 0 ? 0 : content.size() - 1]));
@@ -609,7 +629,7 @@ public class SpigotGuiHelper {
         return inventory;
     }
 
-    private static ItemStack toItemStack(RpgItemType key, double damage) {
+    private static ItemStack toSpellbookItemStack(RpgItemType key, double damage) {
         Material material = Material.matchMaterial(key.getId());
         List<String> lore = new ArrayList<>();
         ItemStack is = new ItemStack(material);
@@ -661,7 +681,7 @@ public class SpigotGuiHelper {
                         if (skill == null) {
                             i.setItem(q, createEmptySlot());
                         } else {
-                            i.setItem(q, toItemStack(character, skill));
+                            i.setItem(q, toSpellbookItemStack(character, skill));
                         }
                     }
                     q++;
@@ -673,9 +693,7 @@ public class SpigotGuiHelper {
     }
 
     public static ItemStack createEmptySlot() {
-        ItemStack itemStack = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
-        NBTItem nbtItem = new NBTItem(itemStack);
-        nbtItem.setBoolean("ntrpg.skillbook.emptyslot", true);
-        return nbtItem.getItem();
+        return SpigotGuiHelper.unclickableInterface(Material.WHITE_STAINED_GLASS_PANE, 12345, "ntrpg.skillbook.emptyslot");
     }
+
 }

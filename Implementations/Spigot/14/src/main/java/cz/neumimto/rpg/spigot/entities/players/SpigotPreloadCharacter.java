@@ -11,6 +11,7 @@ import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -47,6 +48,26 @@ public class SpigotPreloadCharacter extends PreloadCharacter<Player, SpigotParty
     @Override
     public Map<String, SpigotSkillTreeViewModel> getSkillTreeViewLocation() {
         return Collections.emptyMap();
+    }
+
+    @Override
+    public boolean isSpellRotationActive() {
+        return false;
+    }
+
+    @Override
+    public void setSpellbook(ItemStack[][] itemStacks) {
+
+    }
+
+    @Override
+    public ItemStack[][] getSpellbook() {
+        return new ItemStack[0][];
+    }
+
+    @Override
+    public void setSpellRotation(boolean active) {
+
     }
 
     @Override

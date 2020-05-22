@@ -1,6 +1,5 @@
 package cz.neumimto.rpg.sponge.entities.players;
 
-import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
@@ -46,6 +45,16 @@ public class SpongeCharacterService extends AbstractCharacterService<ISpongeChar
         spongeCharacter.setMana(new CharacterMana(spongeCharacter));
         spongeCharacter.setHealth(new SpongeCharacterHealth(spongeCharacter));
         return spongeCharacter;
+    }
+
+    @Override
+    protected void initSpellbook(ISpongeCharacter activeCharacter, String[][] spellbookPages) {
+
+    }
+
+    @Override
+    protected void initSpellbook(ISpongeCharacter activeCharacter, int i, int j, PlayerSkillContext skill) {
+
     }
 
     @Override

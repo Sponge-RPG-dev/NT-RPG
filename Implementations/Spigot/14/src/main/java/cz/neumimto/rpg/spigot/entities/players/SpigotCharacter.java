@@ -11,6 +11,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,6 +21,8 @@ public class SpigotCharacter extends ActiveCharacter<Player, SpigotParty> implem
 
     private ISkill soedc;
     private Map<String, SpigotSkillTreeViewModel> skillTreeviewLocation = new HashMap<>();
+    private boolean spellbookRotationActive = true;
+    private ItemStack[][] spellbook;
 
     public SpigotCharacter(UUID uuid, CharacterBase base, int propertyCount) {
         super(uuid, base, propertyCount);
@@ -39,6 +42,26 @@ public class SpigotCharacter extends ActiveCharacter<Player, SpigotParty> implem
     @Override
     public Map<String, SpigotSkillTreeViewModel> getSkillTreeViewLocation() {
         return skillTreeviewLocation;
+    }
+
+    @Override
+    public boolean isSpellRotationActive() {
+        return spellbookRotationActive;
+    }
+
+    @Override
+    public void setSpellbook(ItemStack[][] itemStacks) {
+        this.spellbook = itemStacks;
+    }
+
+    @Override
+    public ItemStack[][] getSpellbook() {
+        return spellbook;
+    }
+
+    @Override
+    public void setSpellRotation(boolean active) {
+        this.spellbookRotationActive = true;
     }
 
     @Override

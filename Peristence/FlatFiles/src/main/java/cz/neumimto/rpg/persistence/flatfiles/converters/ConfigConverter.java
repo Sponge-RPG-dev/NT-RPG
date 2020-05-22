@@ -3,6 +3,7 @@ package cz.neumimto.rpg.persistence.flatfiles.converters;
 import com.electronwill.nightconfig.core.Config;
 import com.electronwill.nightconfig.core.file.FileConfig;
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.effects.model.mappers.SingleValueModelMapper;
 import cz.neumimto.rpg.api.persistance.model.*;
 import cz.neumimto.rpg.persistence.model.BaseCharacterAttributeImpl;
 import cz.neumimto.rpg.persistence.model.CharacterBaseImpl;
@@ -52,6 +53,8 @@ public class ConfigConverter {
     private static final String UNIQUE_SKILLPOINTS = "UniqueSkillPoints";
     private static final String DATE_PAIR_DATE = "Date";
     private static final String DATE_PAIR_KEY = "SourceKey";
+
+    private static final String SPELLBOOK = "PersonalSkillbook";
 
     public static Config toConfig(CharacterBase c, FileConfig config) {
 
@@ -106,6 +109,9 @@ public class ConfigConverter {
 
         Map<String, Set<DateKeyPair>> uniqueSkillpoints = c.getUniqueSkillpoints();
         config.set(UNIQUE_SKILLPOINTS, toConfig(uniqueSkillpoints));
+
+        String[][] spellbookPages = c.getSpellbookPages();
+        config.set(SPELLBOOK, spellbookPages);
 
         return config;
     }
@@ -259,6 +265,15 @@ public class ConfigConverter {
         Config uniqueSkillpoints = config.get(UNIQUE_SKILLPOINTS);
         Map<String, Set<DateKeyPair>> stringSetMap = uniqueSkillpointsFromConfig(uniqueSkillpoints);
         characterBase.getUniqueSkillpoints().putAll(stringSetMap);
+
+
+        List<List<String>> spellbookPages = config.getOrElse(SPELLBOOK,  new ArrayList<>());
+        String[][] pages = spellbookPages
+                .stream()
+                .map((l) -> l.toArray(new String[l.size()]))
+                .collect(Collectors.toList())
+                .toArray(new String[spellbookPages.size()][]);
+        characterBase.setSpellbookPages(pages);
         return characterBase;
     }
 

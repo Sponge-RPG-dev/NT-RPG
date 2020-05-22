@@ -9,9 +9,11 @@ import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.common.entity.players.AbstractCharacterService;
 import cz.neumimto.rpg.common.entity.players.CharacterMana;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
+import cz.neumimto.rpg.spigot.gui.SpigotGuiHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import javax.inject.Singleton;
 import java.util.UUID;
@@ -29,6 +31,15 @@ public class SpigotCharacterService extends AbstractCharacterService<ISpigotChar
         return iActiveCharacter;
     }
 
+    @Override
+    protected void initSpellbook(ISpigotCharacter activeCharacter, String[][] spellbookPages) {
+        activeCharacter.setSpellbook(new ItemStack[3][9]);
+    }
+
+    @Override
+    protected void initSpellbook(ISpigotCharacter activeCharacter, int i, int j, PlayerSkillContext skill) {
+        activeCharacter.getSpellbook()[i][j] = SpigotGuiHelper.toSpellbookItemStack(activeCharacter, skill);
+    }
 
     @Override
     public ISpigotCharacter buildDummyChar(UUID uuid) {
@@ -98,7 +109,7 @@ public class SpigotCharacterService extends AbstractCharacterService<ISpigotChar
     @Override
     public void addExperiences(ISpigotCharacter character, double exp, String source) {
         if ("VANILLA".equals(source)) {
-            character.getPlayer().giveExp((int)exp);
+            character.getPlayer().giveExp((int) exp);
         } else {
             super.addExperiences(character, exp, source);
         }

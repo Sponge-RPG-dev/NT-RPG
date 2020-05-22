@@ -9,9 +9,6 @@ import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterClass;
 import cz.neumimto.rpg.api.persistance.model.DateKeyPair;
 import cz.neumimto.rpg.api.persistance.model.EquipedSlot;
-import cz.neumimto.rpg.api.skills.PlayerSkillContext;
-import cz.neumimto.rpg.api.skills.mods.ActiveSkillPreProcessorWrapper;
-import cz.neumimto.rpg.api.skills.mods.SkillContext;
 import cz.neumimto.rpg.common.inventory.AbstractInventoryService;
 import cz.neumimto.rpg.persistence.flatfiles.dao.FlatFilePlayerDao;
 import cz.neumimto.rpg.persistence.model.CharacterBaseImpl;
@@ -33,10 +30,6 @@ class ConfigConverterTest {
             @Override
             public InventoryService getInventoryService() {
                 return new AbstractInventoryService() {
-                    @Override
-                    public Set<ActiveSkillPreProcessorWrapper> processItemCost(IActiveCharacter character, SkillContext skillContext, PlayerSkillContext info) {
-                        return null;
-                    }
 
                     @Override
                     public void initializeCharacterInventory(IActiveCharacter character) {
@@ -86,6 +79,9 @@ class ConfigConverterTest {
         Assertions.assertEquals(characterBase.getY(), loadded.getY());
         Assertions.assertEquals(characterBase.getZ(), loadded.getZ());
 
+        Assertions.assertNotNull(characterBase.getSpellbookPages());
+        Assertions.assertArrayEquals(characterBase.getSpellbookPages(), loadded.getSpellbookPages());
+
         if (characterBase.getInventoryEquipSlotOrder() != null) {
             Assertions.assertEquals(characterBase.getInventoryEquipSlotOrder().size(), loadded.getInventoryEquipSlotOrder().size());
             for (int i = 0; i < characterBase.getInventoryEquipSlotOrder().size(); i++) {
@@ -125,6 +121,7 @@ class ConfigConverterTest {
             Assertions.assertEquals(characterClass.getSkillPoints(), loadedClass.getSkillPoints());
             Assertions.assertEquals(characterClass.getUsedSkillPoints(), loadedClass.getUsedSkillPoints());
         }
+
 
 
     }

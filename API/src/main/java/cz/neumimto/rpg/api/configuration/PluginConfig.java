@@ -21,6 +21,8 @@ package cz.neumimto.rpg.api.configuration;
 import com.electronwill.nightconfig.core.conversion.Conversion;
 import com.electronwill.nightconfig.core.conversion.Converter;
 import com.electronwill.nightconfig.core.conversion.Path;
+import com.electronwill.nightconfig.core.conversion.PreserveNotNull;
+import com.typesafe.config.Optional;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.utils.DebugLevel;
 
@@ -235,6 +237,10 @@ public class PluginConfig {
 
     @Path("ITEM_COOLDOWNS")
     public Boolean ITEM_COOLDOWNS = Boolean.TRUE;
+
+    @PreserveNotNull
+    @Path("SPELLBOOK_ROTATION_COOLDOWN")
+    public long SPELLBOOK_COOLDOWN = 1000L;
 
     private static class ItemDamageProcessorConverter implements Converter<ItemDamageProcessor, String> {
 

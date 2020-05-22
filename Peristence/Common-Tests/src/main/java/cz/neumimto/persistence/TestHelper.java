@@ -29,6 +29,12 @@ public class TestHelper {
         characterBase.setZ(-31);
         characterBase.getUniqueSkillpoints().put("test",
                 new HashSet<>(Arrays.asList(new DateKeyPair("uq1"), new DateKeyPair("uq2"))));
+
+        characterBase.setSpellbookPages(new String[][]{
+                {"test", "test2",null,"123"},
+                {null, null,null,null}
+        });
+
         return characterBase;
     }
 

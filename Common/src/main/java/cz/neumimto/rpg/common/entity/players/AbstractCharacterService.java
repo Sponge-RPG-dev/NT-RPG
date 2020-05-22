@@ -159,10 +159,11 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
                 CharacterBase latest = playerCharacters.stream().max(Comparator.comparing(CharacterBase::getUpdated)).get();
                 T activeCharacter = createActiveCharacter(id, latest);
                 activeCharacter.getCharacterBase().setLastKnownPlayerName(playerName);
-
+                initSpellbook(activeCharacter, latest.getSpellbookPages());
                 Rpg.get().scheduleSyncLater(() -> {
                     setActiveCharacter(id, activeCharacter);
                     assignPlayerToCharacter(id);
+                    initSpellbook(activeCharacter);
                 });
             }
         }, Rpg.get().getAsyncExecutor()).exceptionally(throwable -> {
@@ -170,6 +171,25 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
             return null;
         });
     }
+
+    protected abstract void initSpellbook(T activeCharacter, String[][] spellbookPages);
+
+    protected void initSpellbook(T activeCharacter) {
+        String[][] spellbookPages = activeCharacter.getCharacterBase().getSpellbookPages();
+        for (int i = 0; i < spellbookPages.length; i++) {
+            for (int j = 0; j < spellbookPages[i].length; j++) {
+                String skillId = spellbookPages[i][j];
+                PlayerSkillContext skill = activeCharacter.getSkill(skillId);
+                if (skill == null) {
+                    spellbookPages[i][j] = null;
+                } else {
+                    initSpellbook(activeCharacter, i, j, skill);
+                }
+            }
+        }
+    }
+
+    protected abstract void initSpellbook(T activeCharacter, int i, int j, PlayerSkillContext skill);
 
 
     /**

@@ -106,12 +106,26 @@ public class SpigotInventoryListener implements Listener {
                 NBTItem futureIcon = new NBTItem(SpellbookListener.toBindIcon(currentItem, skillName));
 
                 futureIcon.setBoolean("ntrpg.spellbook.learnedspell.bindicon", true);
-                event.setCurrentItem(futureIcon.getItem());
+                event.setCursor(futureIcon.getItem());
                 event.setResult(Event.Result.DENY);
             }
             if (nbti.hasKey("ntrpg.spellbook.learnedspell.bindicon")) {
-                event.setCurrentItem(null);
+                event.setCurrentItem(SpellbookListener.createEmptySlot());
+                event.setCursor(null);
                 event.setResult(Event.Result.DENY);
+            }
+            if (nbti.hasKey("ntrpg.spellbook-empty")) {
+                ItemStack cursor = event.getCursor();
+                if (cursor.getType() == Material.AIR) {
+                    event.setResult(Event.Result.DENY);
+                    return;
+                }
+
+                NBTItem nbtItem = new NBTItem(cursor);
+                if (nbtItem.hasKey("ntrpg.spellbook.learnedspell.bindicon")) {
+                    event.setCurrentItem(cursor);
+                    event.setCursor(null);
+                }
             }
         }
     }

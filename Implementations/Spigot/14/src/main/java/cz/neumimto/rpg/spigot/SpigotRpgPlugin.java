@@ -21,6 +21,7 @@ import cz.neumimto.rpg.spigot.commands.SpigotSkillBindCommands;
 import cz.neumimto.rpg.spigot.entities.SpigotEntityService;
 import cz.neumimto.rpg.spigot.entities.configuration.SpigotMobSettingsDao;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
+import cz.neumimto.rpg.spigot.gui.SpellbookListener;
 import cz.neumimto.rpg.spigot.gui.SpigotGui;
 import cz.neumimto.rpg.spigot.gui.SpigotGuiHelper;
 import cz.neumimto.rpg.spigot.listeners.skillbinds.OnKeyPress;
@@ -215,6 +216,7 @@ public class SpigotRpgPlugin extends JavaPlugin {
             scriptEngine.getDataToBind().put(Color.class, JsBinding.Type.CLASS);
 
             Rpg.get().registerListeners(injector.getInstance(OnKeyPress.class));
+            SpellbookListener.initBtns();
         });
 
         SpigotGuiHelper.initInventories();

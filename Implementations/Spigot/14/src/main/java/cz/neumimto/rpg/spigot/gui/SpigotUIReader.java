@@ -44,7 +44,7 @@ public class SpigotUIReader extends GuiParser<ItemStack, Inventory> {
 
     @Override
     protected ItemStack toItemStack(ClassDefinition a) {
-        return SpigotGuiHelper.toItemStack(a, "");
+        return SpigotGuiHelper.toSpellbookItemStack(a, "");
     }
 
     @Override
