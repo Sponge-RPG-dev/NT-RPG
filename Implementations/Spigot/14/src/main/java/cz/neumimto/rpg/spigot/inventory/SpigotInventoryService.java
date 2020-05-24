@@ -126,14 +126,25 @@ public class SpigotInventoryService extends AbstractInventoryService<ISpigotChar
         }
     }
 
-    public static final class SCost {
-        final int amount;
-        final boolean consume;
-
-        public SCost(int amount, boolean consume) {
-            this.amount = amount;
-            this.consume = consume;
+    public void rotatePlayerSpellbook(Player player, ISpigotCharacter character) {
+        int page = character.getSpellbookPage();
+        if (page > character.getSpellbook().length - 1) {
+            page = 0;
         }
+        ItemStack[] itemStacks = character.getSpellbook()[page];
+        for (int i = 0; i < itemStacks.length -1; i++) {
+            ItemStack item = player.getInventory().getItem(i);
+            if (item == null || item.getType() == Material.AIR) {
+                player.getInventory().setItem(i, itemStacks[i]);
+                continue;
+            }
+            NBTItem nbtItem = new NBTItem(item);
+            String skillName = nbtItem.getString(SKILLBIND);
+            if (!skillName.isEmpty()) {
+                player.getInventory().setItem(i, itemStacks[i]);
+            }
+        }
+        character.setSpellbookPage(page++);
     }
 
     @Override

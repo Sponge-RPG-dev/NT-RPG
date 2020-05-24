@@ -5,6 +5,7 @@ import cz.neumimto.rpg.api.entity.CommonProperties;
 import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.entity.players.CharacterService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillData;
 import cz.neumimto.rpg.api.skills.SkillNodes;
@@ -42,16 +43,21 @@ public class Cooldown extends SkillCastMechanic {
         if (cd > 59999L) {
             character.getCharacterBase().getCharacterSkill(skillData.getSkill()).setCooldown(cd);
         }
-        cd = cd + System.currentTimeMillis();
-        character.getCooldowns().put(skillData.getSkill().getId(), cd);
-
         if (pluginConfig.ITEM_COOLDOWNS) {
             characterService.notifyCooldown(character, context, cd);
         }
+        cd = cd + System.currentTimeMillis();
+        character.getCooldowns().put(skillData.getSkill().getId(), cd);
     }
 
     @Override
     public boolean isValidForContext(SkillData skillData) {
         return super.isValid(skillData, SkillNodes.COOLDOWN);
+    }
+
+    @Override
+    public void notifyFailure(IActiveCharacter character, PlayerSkillContext context) {
+        long l = System.currentTimeMillis() - (long) context.getSkillData().getSkillSettings().getNodeValue(SkillNodes.COOLDOWN);
+        Gui.sendCooldownMessage(character, context.getSkillData().getSkillName(), l);
     }
 }

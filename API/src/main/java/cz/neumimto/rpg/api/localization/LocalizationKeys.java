@@ -160,6 +160,7 @@ public class LocalizationKeys {
     public static final String SPELLBOOK_ENABLE = "label.item.spellbook.enable";
     public static final String SPELLBOOK_COMMIT = "label.item.spellbook.commit";
     public static final String SPELLBOOK_ADDPAGE = "label.item.spellbook.addpage";
+    public static final String SPELLBOOK_ROTATION = "spellbook.cooldown.text";
 
     private LocalizationKeys() {
     }

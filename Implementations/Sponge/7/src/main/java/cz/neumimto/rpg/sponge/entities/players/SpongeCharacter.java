@@ -6,6 +6,7 @@ import cz.neumimto.rpg.sponge.entities.players.party.SpongeParty;
 import cz.neumimto.rpg.sponge.gui.SpongeSkillTreeViewModel;
 import cz.neumimto.rpg.sponge.utils.TextHelper;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.chat.ChatTypes;
 
 import java.util.HashMap;
@@ -15,6 +16,8 @@ import java.util.UUID;
 public class SpongeCharacter extends ActiveCharacter<Player, SpongeParty> implements ISpongeCharacter {
 
     protected Map<String, SpongeSkillTreeViewModel> skillTreeViewLocation = new HashMap<>();
+    private boolean spellbookRotation;
+    private ItemStack[][] spellbook;
 
     public SpongeCharacter(UUID uuid, CharacterBase base, int propertyCount) {
         super(uuid, base, propertyCount);
@@ -50,5 +53,26 @@ public class SpongeCharacter extends ActiveCharacter<Player, SpongeParty> implem
         }
         return null;
     }
+
+    @Override
+    public boolean isSpellRotationActive() {
+        return spellbookRotation;
+    }
+
+    @Override
+    public void setSpellbook(ItemStack[][] itemStacks) {
+        this.spellbook = itemStacks;
+    }
+
+    @Override
+    public ItemStack[][] getSpellbook() {
+        return this.spellbook;
+    }
+
+    @Override
+    public void setSpellRotation(boolean active) {
+        this.spellbookRotation = active;
+    }
+
 
 }

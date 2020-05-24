@@ -66,6 +66,7 @@ import net.bytebuddy.matcher.ElementMatchers;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.List;
 
 
@@ -88,6 +89,11 @@ public class TestGuiceModule extends AbstractModule {
         bind(ClassGenerator.class).toProvider(() -> new ClassGenerator() {
             @Override
             public void generateDynamicListener(List<JSObject> list) {}
+
+            @Override
+            protected Type getListenerSubclass() {
+                return null;
+            }
 
             @Override
             protected DynamicType.Builder<Object> visitImplSpecAnnListener(DynamicType.Builder.MethodDefinition.ReceiverTypeDefinition<Object> classBuilder, JSObject object) {

@@ -277,4 +277,6 @@ public interface IActiveCharacter<T, P extends IParty> extends IEntity<T> {
     Map<String, ? extends SkillTreeViewModel> getSkillTreeViewLocation();
 
     SkillTreeViewModel getLastTimeInvokedSkillTreeView();
+
+
 }

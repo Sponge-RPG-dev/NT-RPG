@@ -3,6 +3,7 @@ package cz.neumimto.rpg.sponge.entities.players;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
+import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.common.entity.players.AbstractCharacterService;
@@ -10,11 +11,13 @@ import cz.neumimto.rpg.common.entity.players.CharacterMana;
 import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
 import cz.neumimto.rpg.sponge.entities.SpongeEntityService;
 import cz.neumimto.rpg.sponge.entities.players.party.SpongePartyService;
+import cz.neumimto.rpg.sponge.inventory.SpongeInventoryService;
 import cz.neumimto.rpg.sponge.utils.PermissionUtils;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemType;
+import org.spongepowered.api.item.inventory.ItemStack;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -38,6 +41,9 @@ public class SpongeCharacterService extends AbstractCharacterService<ISpongeChar
 
     @Inject
     private SpongePartyService partyService;
+
+    @Inject
+    private SpongeInventoryService inventoryService;
 
     @Override
     public ISpongeCharacter createCharacter(UUID player, CharacterBase characterBase) {
@@ -164,5 +170,18 @@ public class SpongeCharacterService extends AbstractCharacterService<ISpongeChar
         } else {
             super.addExperiences(character, exp, source);
         }
+    }
+
+    @Override
+    public void updateSpellbook(ISpongeCharacter character, int page, int slot, ISkill o) {
+        if (o != null) {
+            ItemStack is = inventoryService.createSkillbind(character, o);
+            character.getSpellbook()[page - 1][slot - 1] = is;
+            character.getCharacterBase().getSpellbookPages()[page - 1][slot - 1] = is.get(Keys.DISPLAY_NAME).get().toPlain();
+        } else {
+            character.getSpellbook()[page - 1][slot - 1] = null;
+            character.getCharacterBase().getSpellbookPages()[page - 1][slot - 1] = null;;
+        }
+        putInSaveQueue(character.getCharacterBase());
     }
 }

@@ -40,7 +40,7 @@ public class SpongeSkillBindCommands extends BaseCommand {
             executor.sendMessage(msg);
             return;
         }
-        ItemStack is = inventoryService.createSkillbind(skill);
+        ItemStack is = inventoryService.createSkillbind(executor, skill);
         ((Player) executor.getEntity()).getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(Hotbar.class)).offer(is);
     }
 }

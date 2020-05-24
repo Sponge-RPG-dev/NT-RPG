@@ -254,4 +254,9 @@ public class TestApiImpl implements RpgApi {
     public void doImplSpecificreload() {
 
     }
+
+    @Override
+    public String getPlatform() {
+        return null;
+    }
 }

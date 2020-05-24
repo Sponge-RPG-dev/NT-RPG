@@ -14,4 +14,6 @@ public interface ISkillCastMechanic {
     default void processAfterSuccess(IActiveCharacter character, PlayerSkillContext context){}
 
     boolean isValidForContext(SkillData skillData);
+
+    default void notifyFailure(IActiveCharacter character, PlayerSkillContext context) {}
 }

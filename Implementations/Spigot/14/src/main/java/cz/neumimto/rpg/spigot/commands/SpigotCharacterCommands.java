@@ -12,6 +12,8 @@ import cz.neumimto.rpg.common.commands.CharacterCommandFacade;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
 import cz.neumimto.rpg.spigot.gui.SpigotGui;
+import de.tr7zw.nbtapi.NBTItem;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
@@ -20,6 +22,7 @@ import org.bukkit.inventory.ItemStack;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Collections;
 import java.util.Map;
 import java.util.UUID;
 
@@ -75,12 +78,12 @@ public class SpigotCharacterCommands extends BaseCommand {
         int i = 27;
 
         String[][] persisted = new String[character.getSpellbook().length -1][character.getSpellbook()[0].length -1];
-        for (int w = 0; w < character.getSpellbook().length - 1; w++) {
+        for (int w = 0; w < character.getSpellbook().length; w++) {
 
             ItemStack[] page = character.getSpellbook()[w];
             for (int j = 0; j < page.length - 1; j++) {
                 ItemStack item = openInventory.getItem(i);
-                if (item == null || item.getType() == Material.AIR) {
+                if (item == null || item.getType() == Material.AIR || isBlank(item)) {
                     page[j] = null;
                 } else {
                     page[j] = item;
@@ -93,11 +96,21 @@ public class SpigotCharacterCommands extends BaseCommand {
         }
         character.getCharacterBase().setSpellbookPages(persisted);
         characterService.putInSaveQueue(character.getCharacterBase());
+
+        Bukkit.dispatchCommand(executor, "char");
+    }
+
+    private boolean isBlank(ItemStack item) {
+        if (item.getType() == Material.YELLOW_STAINED_GLASS_PANE) {
+            NBTItem nbtItem = new NBTItem(item);
+            return nbtItem.hasKey("ntrpg.spellbook-empty");
+        }
+        return false;
     }
 
     @Subcommand("spell-rotation")
-    public void toggleSpellRotation(Player executor, boolean status) {
+    public void toggleSpellRotation(Player executor, boolean state) {
         ISpigotCharacter character = characterService.getCharacter(executor);
-        character.setSpellRotation(status);
+        character.setSpellRotation(state);
     }
 }

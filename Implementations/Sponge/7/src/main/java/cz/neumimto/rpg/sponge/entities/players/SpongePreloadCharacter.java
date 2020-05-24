@@ -8,6 +8,7 @@ import cz.neumimto.rpg.sponge.gui.SpongeSkillTreeViewModel;
 import cz.neumimto.rpg.sponge.utils.TextHelper;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.chat.ChatTypes;
 
 import java.util.*;
@@ -42,6 +43,26 @@ public class SpongePreloadCharacter extends PreloadCharacter<Player, SpongeParty
     @Override
     public SpongeSkillTreeViewModel getLastTimeInvokedSkillTreeView() {
         return null;
+    }
+
+    @Override
+    public boolean isSpellRotationActive() {
+        return false;
+    }
+
+    @Override
+    public void setSpellbook(ItemStack[][] itemStacks) {
+
+    }
+
+    @Override
+    public ItemStack[][] getSpellbook() {
+        return new ItemStack[0][];
+    }
+
+    @Override
+    public void setSpellRotation(boolean active) {
+
     }
 
     @Override

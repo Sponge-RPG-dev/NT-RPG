@@ -31,6 +31,7 @@ import org.bukkit.inventory.InventoryView;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.text.NumberFormat;
 
 @Singleton
 public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
@@ -48,7 +49,7 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
 
     @Override
     public void sendCooldownMessage(ISpigotCharacter player, String message, double cooldown) {
-        player.sendMessage(localizationService.translate(LocalizationKeys.ON_COOLDOWN, Arg.arg("skill", message).with("time", cooldown)));
+        player.sendMessage(localizationService.translate(LocalizationKeys.ON_COOLDOWN, Arg.arg("skill", message).with("time", String.format("%.2f",cooldown))));
     }
 
     @Override

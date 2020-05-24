@@ -25,4 +25,8 @@ public interface ISpigotCharacter extends IActiveCharacter<Player, SpigotParty>,
     ItemStack[][] getSpellbook();
 
     void setSpellRotation(boolean active);
+
+    int getSpellbookPage();
+
+    void setSpellbookPage(int page);
 }

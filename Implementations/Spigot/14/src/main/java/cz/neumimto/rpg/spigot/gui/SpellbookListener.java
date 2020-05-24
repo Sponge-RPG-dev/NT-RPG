@@ -154,31 +154,11 @@ public class SpellbookListener implements Listener {
     }
 
 
-    @EventHandler
-    public void onSpellBookClick(InventoryClickEvent event) {
-        ItemStack currentItem = event.getCurrentItem();
-        if (currentItem == null) {
-            return;
-        }
-        Inventory clickedInventory = event.getClickedInventory();
-        State state = openedInventories.get(clickedInventory);
-        if (state == null) {
-            return;
-        }
-        HumanEntity humanEntity = clickedInventory.getViewers().get(0);
-        IActiveCharacter character = characterService.getCharacter(humanEntity.getUniqueId());
-
-    }
 
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
         Inventory inventory = event.getInventory();
         State removed = openedInventories.remove(inventory);
-        if (removed != null) {
-
-        }
-
     }
-
 
 }

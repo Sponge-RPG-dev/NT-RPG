@@ -12,10 +12,10 @@ import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillData;
 import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.common.skills.processors.ISkillCondition;
-import cz.neumimto.rpg.common.skills.reagents.*;
+import cz.neumimto.rpg.common.skills.reagents.ISkillCastMechanic;
 
 import javax.inject.Inject;
-import java.util.*;
+import java.util.Arrays;
 
 @SuppressWarnings("unchecked")
 public class SkillExecutor implements ISkillExecutor {
@@ -76,19 +76,18 @@ public class SkillExecutor implements ISkillExecutor {
         for (ISkillCastMechanic expm : skillCost) {
             result = expm.processBefore(character, playerSkillContext);
             if (result != SkillResult.OK) {
+                expm.notifyFailure(character, playerSkillContext);
                 return result;
             }
         }
 
         result = playerSkillContext.getSkill().onPreUse(character, playerSkillContext);
 
-
-        SkillPostUsageEvent eventPost = Rpg.get().getEventFactory().createEventInstance(SkillPostUsageEvent.class);
-        eventPost.setSkill(playerSkillContext.getSkill());
-        eventPost.setCaster(character);
-
-        if (!Rpg.get().postEvent(eventPost)) {
-            if (result == SkillResult.OK) {
+        if (result == SkillResult.OK) {
+            SkillPostUsageEvent eventPost = Rpg.get().getEventFactory().createEventInstance(SkillPostUsageEvent.class);
+            eventPost.setSkill(playerSkillContext.getSkill());
+            eventPost.setCaster(character);
+            if (!Rpg.get().postEvent(eventPost)) {
                 for (ISkillCastMechanic expm : skillCost) {
                     expm.processAfterSuccess(character, playerSkillContext);
                 }

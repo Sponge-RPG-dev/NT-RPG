@@ -71,6 +71,16 @@ public class SpigotPreloadCharacter extends PreloadCharacter<Player, SpigotParty
     }
 
     @Override
+    public int getSpellbookPage() {
+        return 1;
+    }
+
+    @Override
+    public void setSpellbookPage(int page) {
+
+    }
+
+    @Override
     public Map<String, Integer> getAttributesTransaction() {
         return Collections.emptyMap();
     }

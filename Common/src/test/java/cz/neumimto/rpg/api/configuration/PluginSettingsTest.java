@@ -83,5 +83,10 @@ public class PluginSettingsTest {
         public void doImplSpecificreload() {
 
         }
+
+        @Override
+        public String getPlatform() {
+            return null;
+        }
     }
 }

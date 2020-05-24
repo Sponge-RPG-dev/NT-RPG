@@ -8,6 +8,7 @@ import cz.neumimto.rpg.sponge.gui.SpongeSkillTreeViewModel;
 import cz.neumimto.rpg.sponge.utils.TextHelper;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.item.inventory.ItemStack;
 
 import java.util.Map;
 
@@ -30,6 +31,14 @@ public interface ISpongeCharacter extends IActiveCharacter<Player, SpongeParty>,
     Map<String, SpongeSkillTreeViewModel> getSkillTreeViewLocation();
 
     SpongeSkillTreeViewModel getLastTimeInvokedSkillTreeView();
+
+    boolean isSpellRotationActive();
+
+    void setSpellbook(ItemStack[][] itemStacks);
+
+    ItemStack[][] getSpellbook();
+
+    void setSpellRotation(boolean active);
 
 
 }

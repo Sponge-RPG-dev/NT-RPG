@@ -37,6 +37,8 @@ import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.api.skills.ISkill;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.SkillData;
 import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.api.utils.Pair;
 import cz.neumimto.rpg.common.inventory.AbstractInventoryService;
@@ -271,11 +273,14 @@ public class SpongeInventoryService extends AbstractInventoryService<ISpongeChar
         itemStack.offer(orCreate);
     }
 
-    public ItemStack createSkillbind(ISkill iSkill) {
-        ItemStack itemStack = ItemStack.of(ItemTypes.PUMPKIN_SEEDS, 1);
-        SkillBindData orCreate = itemStack.getOrCreate(SkillBindData.class).orElse(new SkillBindData(iSkill.getId()));
+    public ItemStack createSkillbind(IActiveCharacter character, ISkill iSkill) {
+        PlayerSkillContext info = character.getSkillInfo(iSkill);
+        SkillData skillData = info.getSkillData();
+        ItemType type = Sponge.getRegistry().getType(ItemType.class, skillData.getIcon()).orElse(ItemTypes.PUMPKIN_SEEDS);
+        ItemStack itemStack = ItemStack.of(type, 1);
+        SkillBindData orCreate = itemStack.getOrCreate(SkillBindData.class).orElse(new SkillBindData(skillData.getSkillName()));
         orCreate.set(NKeys.SKILLBIND, iSkill.getId());
-        itemStack.offer(Keys.DISPLAY_NAME, Text.of(iSkill.getId()));
+        itemStack.offer(Keys.DISPLAY_NAME, Text.of(skillData.getSkillName()));
         itemStack.offer(orCreate);
         return itemStack;
     }

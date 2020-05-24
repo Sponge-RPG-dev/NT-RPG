@@ -3,6 +3,7 @@ package cz.neumimto.rpg.spigot.listeners;
 import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.inventory.RpgInventory;
 import cz.neumimto.rpg.api.items.ItemClass;
@@ -10,6 +11,7 @@ import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.items.RpgItemType;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.common.inventory.InventoryHandler;
 import cz.neumimto.rpg.spigot.SpigotRpg;
@@ -103,7 +105,10 @@ public class SpigotInventoryListener implements Listener {
             }
             if (nbti.hasKey("ntrpg.spellbook.learnedspell")) {
                 String skillName = nbti.getString("ntrpg.spellbook.learnedspell");
-                NBTItem futureIcon = new NBTItem(SpellbookListener.toBindIcon(currentItem, skillName));
+                ISpigotCharacter character = spigotCharacterService.getCharacter(whoClicked.getUniqueId());
+                PlayerSkillContext playerSkillContext = character.getSkillsByName().get(skillName);
+                ItemStack skillbind = inventoryService.createSkillbind(playerSkillContext.getSkillData());
+                NBTItem futureIcon = new NBTItem(skillbind);
 
                 futureIcon.setBoolean("ntrpg.spellbook.learnedspell.bindicon", true);
                 event.setCursor(futureIcon.getItem());
@@ -195,8 +200,22 @@ public class SpigotInventoryListener implements Listener {
 
         Player player = event.getPlayer();
 
-        IActiveCharacter character = spigotCharacterService.getCharacter(player);
+        ISpigotCharacter character = spigotCharacterService.getCharacter(player);
         if (character.isStub()) {
+            return;
+        }
+
+        if (character.isSpellRotationActive()) {
+            if (!character.hasCooldown("spellbook-rotation")) {
+                inventoryService.rotatePlayerSpellbook(player, character);
+                long cd = Rpg.get().getPluginConfig().SPELLBOOK_COOLDOWN + System.currentTimeMillis();
+                character.getCooldowns().put("spellbook-rotation", cd);
+            } else {
+                long cd = System.currentTimeMillis() - character.getCooldown("spellbook-rotation");
+                String s = localizationService.translate(LocalizationKeys.SPELLBOOK_ROTATION);
+                Gui.sendCooldownMessage(character, s, cd);
+            }
+            event.setCancelled(true);
             return;
         }
 

@@ -12,8 +12,7 @@ public class TestSkillService extends AbstractSkillService {
 
     @Override
     public void load() {
-        scriptSkillsParents.put("active", ActiveScriptSkill.class);
-        scriptSkillsParents.put("passive", PassiveScriptSkill.class);
+
     }
 
     @Override

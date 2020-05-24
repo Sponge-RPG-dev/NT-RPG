@@ -1,11 +1,16 @@
 package cz.neumimto.rpg.spigot.listeners.skillbinds;
 
+import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.gui.Gui;
+import cz.neumimto.rpg.api.localization.LocalizationKeys;
+import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.common.commands.SkillsCommandFacade;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
 import cz.neumimto.rpg.spigot.inventory.SpigotInventoryService;
 import de.tr7zw.nbtapi.NBTItem;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -26,6 +31,9 @@ public class OnKeyPress implements Listener {
     @Inject
     private SkillsCommandFacade commandFacade;
 
+    @Inject
+    private LocalizationService localizationService;
+
     @EventHandler
     public void onCharacterHeldItemChange(PlayerItemHeldEvent event) {
         Player player = event.getPlayer();
@@ -33,17 +41,15 @@ public class OnKeyPress implements Listener {
             return;
         }
         ItemStack item = player.getInventory().getItem(event.getNewSlot());
-        if (item == null) {
+        if (item == null || item.getType() == Material.AIR) {
             return;
         }
         NBTItem nbtItem = new NBTItem(item);
         if (nbtItem.hasKey(SpigotInventoryService.SKILLBIND)) {
             String skillName = nbtItem.getString(SpigotInventoryService.SKILLBIND);
             ISpigotCharacter character = characterService.getCharacter(player);
-            if (!character.hasCooldown(skillName)) {
-                commandFacade.executeSkill(character, skillName);
-                player.getInventory().setHeldItemSlot(event.getPreviousSlot());
-            }
+            commandFacade.executeSkill(character, skillName);
+            player.getInventory().setHeldItemSlot(event.getPreviousSlot());
         }
     }
 }

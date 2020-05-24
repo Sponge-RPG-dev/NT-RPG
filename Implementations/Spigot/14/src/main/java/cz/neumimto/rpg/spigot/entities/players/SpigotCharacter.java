@@ -23,6 +23,7 @@ public class SpigotCharacter extends ActiveCharacter<Player, SpigotParty> implem
     private Map<String, SpigotSkillTreeViewModel> skillTreeviewLocation = new HashMap<>();
     private boolean spellbookRotationActive = true;
     private ItemStack[][] spellbook;
+    private int spellbookPage;
 
     public SpigotCharacter(UUID uuid, CharacterBase base, int propertyCount) {
         super(uuid, base, propertyCount);
@@ -62,6 +63,16 @@ public class SpigotCharacter extends ActiveCharacter<Player, SpigotParty> implem
     @Override
     public void setSpellRotation(boolean active) {
         this.spellbookRotationActive = true;
+    }
+
+    @Override
+    public int getSpellbookPage() {
+        return spellbookPage;
+    }
+
+    @Override
+    public void setSpellbookPage(int page) {
+        this.spellbookPage = page;
     }
 
     @Override
