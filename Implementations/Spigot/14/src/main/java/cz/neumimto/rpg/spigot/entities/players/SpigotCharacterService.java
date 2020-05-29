@@ -107,9 +107,10 @@ public class SpigotCharacterService extends AbstractCharacterService<ISpigotChar
     }
 
     @Override
-    public void updateSpellbook(ISpigotCharacter character, int page, int slot, ISkill o) {
+    public void updateSpellbook(ISpigotCharacter character, int page, String line, ISkill[] o) {
 
     }
+
 
     @Override
     public void addExperiences(ISpigotCharacter character, double exp, String source) {

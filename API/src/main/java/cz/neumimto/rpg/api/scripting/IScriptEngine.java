@@ -3,16 +3,16 @@ package cz.neumimto.rpg.api.scripting;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import jdk.nashorn.api.scripting.JSObject;
 
-import javax.script.CompiledScript;
 import javax.script.ScriptEngine;
-import javax.script.ScriptException;
 import java.io.File;
 import java.net.URLClassLoader;
-import java.util.List;
+import java.nio.file.Path;
 import java.util.Map;
 
 public interface IScriptEngine {
     ScriptEngine getEngine();
+
+    Path getScriptsRootFolder();
 
     void initEngine();
 

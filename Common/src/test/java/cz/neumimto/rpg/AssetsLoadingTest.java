@@ -4,6 +4,7 @@ import com.google.inject.Injector;
 import cz.neumimto.rpg.api.scripting.IScriptEngine;
 import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.api.skills.scripting.ScriptExecutorSkill;
+import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.junit.NtRpgExtension;
 import cz.neumimto.rpg.junit.TestGuiceModule;
 import name.falgout.jeffrey.testing.junit.guice.GuiceExtension;
@@ -21,6 +22,7 @@ import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Path;
 
 @ExtendWith({GuiceExtension.class, NtRpgExtension.class})
 @IncludeModule(TestGuiceModule.class)
@@ -38,9 +40,17 @@ public class AssetsLoadingTest {
     @Inject
     private TestApiImpl api;
 
+    @Inject
+    private AssetService assetService;
+
     @BeforeEach
     public void beforeEach() throws Exception {
         new RpgTest(api);
+        Path scriptsRootFolder = jsLoader.getScriptsRootFolder();
+
+        scriptsRootFolder.resolve("skillhandlerstest.js").toFile().delete();
+        assetService.copyToFile("skillhandlerstest.js", scriptsRootFolder.resolve("skillhandlerstest.js"));
+
         jsLoader.initEngine();
         Bindings bindings = jsLoader.getEngine().getBindings(ScriptContext.GLOBAL_SCOPE);
         bindings = bindings == null ? new SimpleBindings() : bindings;

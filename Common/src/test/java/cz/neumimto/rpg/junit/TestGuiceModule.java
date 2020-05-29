@@ -55,9 +55,12 @@ import cz.neumimto.rpg.effects.TestEffectService;
 import cz.neumimto.rpg.entity.TestEntityService;
 import cz.neumimto.rpg.model.TestPersistanceHandler;
 import cz.neumimto.rpg.persistence.InMemoryPlayerStorage;
+import cz.neumimto.rpg.reagents.Cooldown;
+import cz.neumimto.rpg.reagents.HPCast;
+import cz.neumimto.rpg.reagents.ManaCast;
+import cz.neumimto.rpg.skills.reagents.CooldownTest;
 import cz.neumimto.rpg.sponge.permission.TestPermissionService;
 import jdk.nashorn.api.scripting.JSObject;
-import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.dynamic.DynamicType;
 import net.bytebuddy.dynamic.loading.ClassLoadingStrategy;
@@ -148,6 +151,9 @@ public class TestGuiceModule extends AbstractModule {
         bind(new TypeLiteral<CharacterService<IActiveCharacter>>() {
         })
                 .toProvider(SpongeCharacterServiceProvider.class);
+        bind(Cooldown.class).to(CooldownTest.class);
+        bind(HPCast.class);
+        bind(ManaCast.class);
     }
 
     private static TestCharacterService scs;

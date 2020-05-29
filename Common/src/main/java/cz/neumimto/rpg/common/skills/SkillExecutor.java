@@ -5,6 +5,7 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.events.EventFactoryService;
 import cz.neumimto.rpg.api.events.skill.SkillPostUsageEvent;
 import cz.neumimto.rpg.api.events.skill.SkillPreUsageEvent;
 import cz.neumimto.rpg.api.skills.ISkillExecutor;
@@ -12,7 +13,7 @@ import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillData;
 import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.common.skills.processors.ISkillCondition;
-import cz.neumimto.rpg.common.skills.reagents.ISkillCastMechanic;
+import cz.neumimto.rpg.reagents.ISkillCastMechanic;
 
 import javax.inject.Inject;
 import java.util.Arrays;
@@ -22,6 +23,9 @@ public class SkillExecutor implements ISkillExecutor {
 
     @Inject
     private Injector injector;
+
+    @Inject
+    private EventFactoryService eventFactory;
 
     private ISkillCastMechanic[] skillCost;
 
@@ -58,7 +62,7 @@ public class SkillExecutor implements ISkillExecutor {
 
     @Override
     public SkillResult execute(IActiveCharacter character, PlayerSkillContext playerSkillContext) {
-        SkillPreUsageEvent eventPre = Rpg.get().getEventFactory().createEventInstance(SkillPreUsageEvent.class);
+        SkillPreUsageEvent eventPre = eventFactory.createEventInstance(SkillPreUsageEvent.class);
         eventPre.setSkill(playerSkillContext.getSkill());
         eventPre.setCaster(character);
 
@@ -84,7 +88,7 @@ public class SkillExecutor implements ISkillExecutor {
         result = playerSkillContext.getSkill().onPreUse(character, playerSkillContext);
 
         if (result == SkillResult.OK) {
-            SkillPostUsageEvent eventPost = Rpg.get().getEventFactory().createEventInstance(SkillPostUsageEvent.class);
+            SkillPostUsageEvent eventPost = eventFactory.createEventInstance(SkillPostUsageEvent.class);
             eventPost.setSkill(playerSkillContext.getSkill());
             eventPost.setCaster(character);
             if (!Rpg.get().postEvent(eventPost)) {

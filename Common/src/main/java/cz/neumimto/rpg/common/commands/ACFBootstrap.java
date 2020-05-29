@@ -4,6 +4,7 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.CommandManager;
 import co.aikar.commands.InvalidCommandArgument;
 import co.aikar.commands.contexts.ContextResolver;
+import co.aikar.locales.MessageKey;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
@@ -163,6 +164,28 @@ public class ACFBootstrap {
             throw new IllegalStateException("Required to register OnlineOtherPlayer acf context resolver!!");
         }
 
+        manager.getCommandCompletions().registerAsyncCompletion("@skillbook", c -> {
+            UUID uuid = c.getIssuer().getUniqueId();
+            IActiveCharacter character = Rpg.get().getCharacterService().getCharacter(uuid);
+            Map<String, PlayerSkillContext> skills = character.getSkillsByName();
+            Set<String> set = new HashSet<>(skills.keySet());
+            set.add("-");
+            return set;
+        });
+
+        manager.getCommandContexts().registerIssuerAwareContext(ISkill[].class, c -> {
+            UUID uuid = c.getIssuer().getUniqueId();
+            IActiveCharacter character = Rpg.get().getCharacterService().getCharacter(uuid);
+            int i = 0;
+            while (!c.isLastArg()) {
+                String s = c.popFirstArg();
+                i++;
+            }
+            if (i != 8) {
+                c.getIssuer().sendError(MessageKey.of(""));
+            }
+            return null;
+        });
 
         for (BaseCommand o : commandClasses) {
             manager.registerCommand(o);

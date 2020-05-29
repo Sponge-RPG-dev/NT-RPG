@@ -108,18 +108,6 @@ public class ClassServiceImpl implements ClassService {
 
         classDefinitions.forEach(this::registerClassDefinition);
 
-        for (ClassDefinition result : classDefinitions) {
-            Map<String, ClassDefinition> classes = getClasses();
-            for (ClassDefinition classDefinition : classes.values()) {
-                if (classDefinition.getName().equalsIgnoreCase(result.getName())) {
-                    continue;
-                }
-                if (classDefinition.getClassType().equalsIgnoreCase(result.getClassType())) {
-                    result.getClassDependencyGraph().getConflicts().add(classDefinition);
-                }
-            }
-        }
-
         Log.info("Successfully loaded " + classes.size() + " classes");
     }
 }

@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.common.skills.reagents;
+package cz.neumimto.rpg.reagents;
 
 import cz.neumimto.rpg.api.entity.CommonProperties;
 import cz.neumimto.rpg.api.entity.EntityService;

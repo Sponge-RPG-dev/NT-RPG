@@ -22,7 +22,6 @@ import com.electronwill.nightconfig.core.conversion.Conversion;
 import com.electronwill.nightconfig.core.conversion.Converter;
 import com.electronwill.nightconfig.core.conversion.Path;
 import com.electronwill.nightconfig.core.conversion.PreserveNotNull;
-import com.typesafe.config.Optional;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.utils.DebugLevel;
 
@@ -92,17 +91,6 @@ public class PluginConfig {
 
     @Path("MAX_PARTY_SIZE")
     public double MAX_PARTY_SIZE = -1;
-
-
-    /* "If a player chooses a race and a class, where both those classes define damage value for one specific weapon, or "
-            + "projectile" +
-            " this option specifies how the weapon damage will be calculated." +
-            "1 = sum" +
-            "2 = take highest value")
-
-     */
-    @Path("WEAPON_MERGE_STRATEGY")
-    public int WEAPON_MERGE_STRATEGY = 2;
 
     @Path("PLAYER_CHOOSED_SKILLTREE_SPECIALIZATION_GLOBAL_MESSAGE")
     public boolean PLAYER_CHOOSED_SKILLTREE_SPECIALIZATION_GLOBAL_MESSAGE;
@@ -251,6 +239,10 @@ public class PluginConfig {
 
         @Override
         public ItemDamageProcessor convertToField(String value) {
+            if (value == null) {
+                Log.error("Unknown item damage processor definition - Could not find class " + value + ". SEtting to Max()");
+                return new Max();
+            }
             try {
                 return (ItemDamageProcessor) Class.forName(value).newInstance();
             } catch (Exception e) {

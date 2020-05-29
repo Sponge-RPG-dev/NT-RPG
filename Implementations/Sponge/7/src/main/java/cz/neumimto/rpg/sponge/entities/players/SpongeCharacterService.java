@@ -17,7 +17,6 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemType;
-import org.spongepowered.api.item.inventory.ItemStack;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -173,14 +172,14 @@ public class SpongeCharacterService extends AbstractCharacterService<ISpongeChar
     }
 
     @Override
-    public void updateSpellbook(ISpongeCharacter character, int page, int slot, ISkill o) {
+    public void updateSpellbook(ISpongeCharacter character, int page, String line, ISkill[] o) {
         if (o != null) {
-            ItemStack is = inventoryService.createSkillbind(character, o);
-            character.getSpellbook()[page - 1][slot - 1] = is;
-            character.getCharacterBase().getSpellbookPages()[page - 1][slot - 1] = is.get(Keys.DISPLAY_NAME).get().toPlain();
-        } else {
-            character.getSpellbook()[page - 1][slot - 1] = null;
-            character.getCharacterBase().getSpellbookPages()[page - 1][slot - 1] = null;;
+      //      ItemStack is = inventoryService.createSkillbind(character, o);
+      //      character.getSpellbook()[page - 1][slot - 1] = is;
+      //      character.getCharacterBase().getSpellbookPages()[page - 1][slot - 1] = is.get(Keys.DISPLAY_NAME).get().toPlain();
+      //  } else {
+      //      character.getSpellbook()[page - 1][slot - 1] = null;
+      //      character.getCharacterBase().getSpellbookPages()[page - 1][slot - 1] = null;;
         }
         putInSaveQueue(character.getCharacterBase());
     }

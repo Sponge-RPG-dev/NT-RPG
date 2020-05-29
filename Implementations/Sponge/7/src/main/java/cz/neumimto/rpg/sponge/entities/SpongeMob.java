@@ -19,7 +19,7 @@ public class SpongeMob extends AbstractMob<Living> implements ISpongeEntity<Livi
 
     public SpongeMob(Living entity) {
         this.entity = entity;
-        this.entityHealth = new SpongeEntityHealth(this);
+        super.entityHealth = new SpongeEntityHealth(entity);
     }
 
     //todo remove casts

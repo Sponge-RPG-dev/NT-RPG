@@ -18,9 +18,6 @@
 
 package cz.neumimto.rpg.common.scripting;
 
-import static cz.neumimto.rpg.api.logging.Log.error;
-import static cz.neumimto.rpg.api.logging.Log.info;
-
 import com.electronwill.nightconfig.core.conversion.ObjectConverter;
 import com.electronwill.nightconfig.core.file.FileConfig;
 import com.google.inject.Injector;
@@ -40,6 +37,9 @@ import cz.neumimto.rpg.common.skills.scripting.SkillComponent;
 import jdk.nashorn.api.scripting.JSObject;
 import net.bytebuddy.dynamic.loading.MultipleParentClassLoader;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import javax.script.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -53,9 +53,8 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import javax.script.*;
+import static cz.neumimto.rpg.api.logging.Log.error;
+import static cz.neumimto.rpg.api.logging.Log.info;
 
 /**
  * Created by NeumimTo on 13.3.2015.
@@ -95,10 +94,17 @@ public class JSLoader implements IScriptEngine {
     }
 
     @Override
-    public void initEngine() {
-        try {
+    public Path getScriptsRootFolder() {
+        if (scripts_root == null) {
             scripts_root = Paths.get(Rpg.get().getWorkingDirectory() + "/scripts");
             FileUtils.createDirectoryIfNotExists(scripts_root);
+        }
+        return scripts_root;
+    }
+
+    @Override
+    public void initEngine() {
+        try {
             loadNashorn();
             if (engine != null) {
                 setup();
@@ -151,7 +157,7 @@ public class JSLoader implements IScriptEngine {
     }
 
     private Path mergeScriptFiles() {
-        Path path = Paths.get(scripts_root + File.separator + ".deployed.js");
+        Path path = Paths.get(getScriptsRootFolder() + File.separator + ".deployed.js");
         if (path.toFile().exists()) {
             path.toFile().delete();
         }
@@ -161,7 +167,7 @@ public class JSLoader implements IScriptEngine {
 
         try {
             Queue<Path> directories = new PriorityQueue<>();
-            directories.add(scripts_root);
+            directories.add(getScriptsRootFolder());
             while (directories.size() != 0) {
                 Files.list(directories.poll()).forEach((file -> {
                     if (file.toFile().isDirectory()) directories.add(file);
@@ -189,7 +195,7 @@ public class JSLoader implements IScriptEngine {
         try (InputStreamReader rs = new InputStreamReader(new FileInputStream(path.toFile()))) {
             Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
             bindings.put("Injector", injector);
-            bindings.put("Folder", scripts_root);
+            bindings.put("Folder", getScriptsRootFolder());
             bindings.put("Rpg", Rpg.get());
             bindings.put("Bindings", new BindingsHelper(engine));
             for (Map.Entry<Class<?>, JsBinding.Type> objectTypeEntry : dataToBind.entrySet()) {

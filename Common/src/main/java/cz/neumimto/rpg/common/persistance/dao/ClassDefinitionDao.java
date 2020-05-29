@@ -23,6 +23,7 @@ import com.electronwill.nightconfig.core.file.FileConfig;
 import com.electronwill.nightconfig.core.file.NoFormatFoundException;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.ClassTypeDefinition;
+import cz.neumimto.rpg.api.configuration.adapters.ClassDependencyGraphAdapter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.leveling.EmptyLevelProgression;
 
@@ -46,14 +47,20 @@ import static cz.neumimto.rpg.api.logging.Log.info;
 @Singleton
 public class ClassDefinitionDao {
 
-    public Set<ClassDefinition> parseClassFiles() {
+    public Path getClassDirectory() {
         Path path = Paths.get(Rpg.get().getWorkingDirectory(), "classes");
-
-
-        Set<ClassDefinition> set = new HashSet<>();
         try {
             Files.createDirectories(path);
-            Map<String, Path> stringPathMap = preloadClassDefs(path, set);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return path;
+    }
+
+    public Set<ClassDefinition> parseClassFiles() {
+        Set<ClassDefinition> set = new HashSet<>();
+        try {
+            Map<String, Path> stringPathMap = preloadClassDefs(getClassDirectory(), set);
             for (Map.Entry<String, Path> stringPathEntry : stringPathMap.entrySet()) {
                 String key = stringPathEntry.getKey();
                 Path p = stringPathEntry.getValue();
@@ -89,6 +96,7 @@ public class ClassDefinitionDao {
     //because of dependency graph
     private Map<String, Path> preloadClassDefs(Path path, Set<ClassDefinition> set) throws IOException {
         Map<String, Path> map = new HashMap<>();
+
         Files.walk(path)
                 .filter(Files::isRegularFile)
                 .forEach(p -> {
@@ -125,6 +133,24 @@ public class ClassDefinitionDao {
                         error(" - File malformed", e);
                     }
                 });
+
+        Files.walk(path)
+                .filter(Files::isRegularFile)
+                .forEach(p -> {
+                    try (FileConfig fileConfig = FileConfig.of(p)) {
+                        fileConfig.load();
+                        if (fileConfig.contains("Name") && fileConfig.contains("ClassType") && fileConfig.contains("Dependencies")) {
+                            info("Preloading class dependency graph file " + p.getFileName());
+                            for (ClassDefinition classDefinition : set) {
+                                if (classDefinition.getName().equals(fileConfig.get("Name"))) {
+                                    ClassDependencyGraphAdapter.load(fileConfig.get("Dependencies"), classDefinition, set);
+                                }
+                            }
+                        }
+                    }
+                });
+
+
         return map;
     }
 }

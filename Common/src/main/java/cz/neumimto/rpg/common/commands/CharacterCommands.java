@@ -2,16 +2,17 @@ package cz.neumimto.rpg.common.commands;
 
 
 import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.*;
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandCompletion;
+import co.aikar.commands.annotation.Default;
+import co.aikar.commands.annotation.Subcommand;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.entity.players.CharacterService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.gui.Gui;
-import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.skills.ISkill;
-import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -86,17 +87,13 @@ public class CharacterCommands extends BaseCommand {
         Gui.displaySpellbook(character);
     }
 
-    @Subcommand("spellbook-put")
-    @CommandCompletion("@range:1-3 @range:1-8 @learnedskill")
-    public void spellbookPut(IActiveCharacter character, int page, int slot, @Optional ISkill skill) {
-        if (skill == null) {
-            characterService.updateSpellbook(character, page, slot, null);
-        } else {
-            CharacterBase characterBase = character.getCharacterBase();
-            characterBase.getSpellbookPages()[page - 1][slot - 1] = null;
-            PlayerSkillContext info = character.getSkillInfo(skill);
 
-        }
+    @Subcommand("spellbook-put")
+    @CommandCompletion("@range:1-3 ")
+    public void spellbookPut(IActiveCharacter character, int page, ISkill[] skills) {
+      // characterService.updateSpellbook(character, page, skills);
     }
+
+
 }
 

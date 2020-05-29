@@ -4,7 +4,7 @@ import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillData;
-import cz.neumimto.rpg.common.skills.reagents.ISkillCastMechanic;
+import cz.neumimto.rpg.reagents.ISkillCastMechanic;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

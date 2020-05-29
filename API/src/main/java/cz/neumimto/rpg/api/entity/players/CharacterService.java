@@ -156,5 +156,5 @@ public interface CharacterService<T extends IActiveCharacter> {
 
     void notifyCooldown(IActiveCharacter caster, PlayerSkillContext skillInfo, long cd);
 
-    void updateSpellbook(T character, int page, int slot, ISkill o);
+    void updateSpellbook(T character, int page, String line, ISkill[] o);
 }

@@ -1,6 +1,5 @@
 package cz.neumimto.rpg.sponge.entities;
 
-import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.IEntityResource;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.Living;
@@ -10,38 +9,30 @@ import org.spongepowered.api.entity.living.Living;
  */
 public class SpongeEntityHealth implements IEntityResource {
 
-    public IEntity<Living> entity;
+    public Living entity;
 
-    public SpongeEntityHealth(IEntity entity) {
-        this.entity = entity;
-    }
-
-    public IEntity getEntity() {
-        return entity;
-    }
-
-    public void setEntity(IEntity entity) {
+    public SpongeEntityHealth(Living entity) {
         this.entity = entity;
     }
 
     @Override
     public double getMaxValue() {
-        return entity.getEntity().maxHealth().getMaxValue();
+        return entity.maxHealth().getMaxValue();
     }
 
     @Override
     public void setMaxValue(double f) {
-        entity.getEntity().offer(Keys.MAX_HEALTH, f);
+        entity.offer(Keys.MAX_HEALTH, f);
     }
 
     @Override
     public double getValue() {
-        return entity.getEntity().get(Keys.HEALTH).get();
+        return entity.get(Keys.HEALTH).get();
     }
 
     @Override
     public void setValue(double f) {
-        entity.getEntity().offer(Keys.HEALTH, f);
+        entity.offer(Keys.HEALTH, f);
     }
 
     @Override

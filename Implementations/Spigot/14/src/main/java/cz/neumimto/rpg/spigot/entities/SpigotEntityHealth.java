@@ -11,14 +11,6 @@ public class SpigotEntityHealth implements IEntityResource {
         this.entity = entity;
     }
 
-    public LivingEntity getEntity() {
-        return entity;
-    }
-
-    public void setEntity(LivingEntity entity) {
-        this.entity = entity;
-    }
-
     @Override
     public double getMaxValue() {
         return entity.getMaxHealth();

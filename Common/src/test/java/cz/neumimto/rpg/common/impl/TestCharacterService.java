@@ -108,9 +108,10 @@ public class TestCharacterService extends AbstractCharacterService<TestCharacter
     }
 
     @Override
-    public void updateSpellbook(TestCharacter character, int page, int slot, ISkill o) {
+    public void updateSpellbook(TestCharacter character, int page, String line, ISkill[] o) {
 
     }
+
 
     @Override
     protected void scheduleNextTick(Runnable r) {

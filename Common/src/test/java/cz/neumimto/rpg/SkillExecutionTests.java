@@ -1,7 +1,6 @@
 package cz.neumimto.rpg;
 
 import com.google.inject.Injector;
-import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.SkillTreeDao;
 import cz.neumimto.rpg.api.entity.CommonProperties;
 import cz.neumimto.rpg.api.entity.EntityService;
@@ -13,6 +12,7 @@ import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.scripting.IScriptEngine;
 import cz.neumimto.rpg.api.skills.*;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
+import cz.neumimto.rpg.common.skills.SkillExecutor;
 import cz.neumimto.rpg.junit.CharactersExtension;
 import cz.neumimto.rpg.junit.CharactersExtension.Stage;
 import cz.neumimto.rpg.junit.NtRpgExtension;
@@ -25,7 +25,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import javax.inject.Inject;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static cz.neumimto.rpg.junit.CharactersExtension.Stage.Stages.READY;
 
@@ -57,12 +56,16 @@ public class SkillExecutionTests {
     @Inject
     private Injector injector;
 
+    @Inject
+    private TestApiImpl api;
+
     private TestSkill testSkill;
 
     protected static boolean hadRun;
 
     @BeforeEach
     public void before() {
+        new RpgTest(api);
         testSkill = injector.getInstance(TestSkill.class);
         skillService.getSkills().put("test", testSkill);
         hadRun = false;
@@ -76,11 +79,14 @@ public class SkillExecutionTests {
 
         SkillData skillData = new SkillData(testSkill.getId());
         skillData.setSkillSettings(new SkillSettings());
-
+        skillData.setSkillExecutor(injector.getInstance(SkillExecutor.class));
+        skillData.getSkillExecutor().init(skillData);
         skillData.setSkill(testSkill);
+        
         playerSkillContext.setSkillData(skillData);
         character.addSkill("test", playerSkillContext);
-        Rpg.get().getSkillService().executeSkill(character, character.getSkill("test"));
+
+        skillService.executeSkill(character, character.getSkill("test"));
         Assertions.assertTrue(hadRun);
     }
 
@@ -94,11 +100,13 @@ public class SkillExecutionTests {
         skillData.setSkillSettings(new SkillSettings());
         skillData.getSkillSettings().addNode(SkillNodes.MANACOST, 100, 100);
         character.setProperty(CommonProperties.mana_cost_reduce, 1);
+        skillData.setSkillExecutor(injector.getInstance(SkillExecutor.class));
+        skillData.getSkillExecutor().init(skillData);
         skillData.setSkill(testSkill);
         playerSkillContext.setSkillData(skillData);
         character.addSkill("test", playerSkillContext);
 
-        Rpg.get().getSkillService().executeSkill(character, character.getSkill("test"));
+        skillService.executeSkill(character, character.getSkill("test"));
         Assertions.assertFalse(hadRun);
     }
 
@@ -112,11 +120,13 @@ public class SkillExecutionTests {
         skillData.setSkillSettings(new SkillSettings());
         skillData.getSkillSettings().addNode(SkillNodes.HPCOST, 100, 100);
         character.setProperty(CommonProperties.health_cost_reduce, 1);
+        skillData.setSkillExecutor(injector.getInstance(SkillExecutor.class));
+        skillData.getSkillExecutor().init(skillData);
         skillData.setSkill(testSkill);
         playerSkillContext.setSkillData(skillData);
         character.addSkill("test", playerSkillContext);
 
-        Rpg.get().getSkillService().executeSkill(character, character.getSkill("test"));
+        skillService.executeSkill(character, character.getSkill("test"));
         Assertions.assertFalse(hadRun);
     }
 
@@ -128,35 +138,18 @@ public class SkillExecutionTests {
 
         SkillData skillData = new SkillData(testSkill.getId());
         skillData.setSkillSettings(new SkillSettings());
+        skillData.getSkillSettings().addNode(SkillNodes.COOLDOWN, 100, 100);
+
         character.getCooldowns().put(testSkill.getId(), Long.MAX_VALUE);
         character.setProperty(CommonProperties.health_cost_reduce, 1);
+        skillData.setSkillExecutor(injector.getInstance(SkillExecutor.class));
+        skillData.getSkillExecutor().init(skillData);
         skillData.setSkill(testSkill);
         playerSkillContext.setSkillData(skillData);
         character.addSkill("test", playerSkillContext);
 
-        Rpg.get().getSkillService().executeSkill(character, character.getSkill("test"));
+        skillService.executeSkill(character, character.getSkill("test"));
         Assertions.assertFalse(hadRun);
-    }
-
-
-    @Test
-    public void testBasicSkillExecution_Configured_Preprocessor(@Stage(READY) IActiveCharacter character) {
-        PlayerClassData primary = (PlayerClassData) character.getClasses().get("primary");
-        PlayerSkillContext playerSkillContext = new PlayerSkillContext(primary.getClassDefinition(), testSkill, character);
-        playerSkillContext.setSkill(testSkill);
-
-        SkillData skillData = new SkillData(testSkill.getId());
-        AtomicBoolean runFirst = new AtomicBoolean(false);
-        AtomicBoolean runLast = new AtomicBoolean(false);
-
-        skillData.setSkillSettings(new SkillSettings());
-        skillData.setSkill(testSkill);
-        playerSkillContext.setSkillData(skillData);
-        character.addSkill("test", playerSkillContext);
-
-        Assertions.assertTrue(runFirst.get());
-        Assertions.assertTrue(runLast.get());
-        Assertions.assertTrue(hadRun);
     }
 
     private static class TestSkill extends ActiveSkill {
