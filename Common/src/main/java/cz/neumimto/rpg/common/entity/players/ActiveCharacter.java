@@ -526,6 +526,11 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
     }
 
     @Override
+    public void removeClass(ClassDefinition classDefinition) {
+        classes.remove(classDefinition.getName().toLowerCase());
+    }
+
+    @Override
     public int getLevel() {
         if (primaryClass == null) {
             return 1;

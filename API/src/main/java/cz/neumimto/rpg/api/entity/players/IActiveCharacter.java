@@ -136,6 +136,8 @@ public interface IActiveCharacter<T, P extends IParty> extends IEntity<T> {
 
     boolean hasSkill(String name);
 
+    void removeClass(ClassDefinition classDefinition);
+
     int getLevel();
 
     PlayerSkillContext getSkillInfo(String s);

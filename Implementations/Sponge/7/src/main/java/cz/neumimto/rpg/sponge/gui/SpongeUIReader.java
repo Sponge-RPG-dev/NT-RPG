@@ -10,6 +10,7 @@ import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.common.gui.GuiParser;
 import cz.neumimto.rpg.common.gui.InventorySlotProcessor;
 import cz.neumimto.rpg.sponge.SpongeRpgPlugin;
+import cz.neumimto.rpg.sponge.inventory.data.MenuInventoryData;
 import cz.neumimto.rpg.sponge.items.SpongeRpgItemType;
 import cz.neumimto.rpg.sponge.utils.TextHelper;
 import org.spongepowered.api.Sponge;
@@ -130,6 +131,8 @@ public class SpongeUIReader extends GuiParser<ItemStack, Inventory> {
 
         list.add(Text.of(TextColors.GRAY, damageStr + ": ", colorByDamage, damage));
         itemStack.offer(Keys.ITEM_LORE, list);
+        itemStack.offer(new MenuInventoryData(true));
+
         return itemStack;
     }
 

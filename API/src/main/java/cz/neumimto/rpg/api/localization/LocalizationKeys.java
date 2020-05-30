@@ -75,6 +75,7 @@ public class LocalizationKeys {
     public static final String ARMOR_MENU_HELP = "gui.label.armor.tooltip";
     public static final String PROPERTIES = "gui.label.generic.properties";
     public static final String CLASS_TYPES = "gui.label.class-types";
+    public static final String CLASS_TYPE_IMMUTABLE = "player.message.class-type.immutable";
     public static final String BACK = "gui.button.back";
     public static final String LEVEL = "gui.label.level";
     public static final String PARTY_CREATED = "player.party-created.message";
@@ -161,6 +162,7 @@ public class LocalizationKeys {
     public static final String SPELLBOOK_COMMIT = "label.item.spellbook.commit";
     public static final String SPELLBOOK_ADDPAGE = "label.item.spellbook.addpage";
     public static final String SPELLBOOK_ROTATION = "spellbook.cooldown.text";
+
 
     private LocalizationKeys() {
     }

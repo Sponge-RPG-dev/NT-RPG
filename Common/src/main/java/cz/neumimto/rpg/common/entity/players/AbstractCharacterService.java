@@ -40,6 +40,7 @@ import cz.neumimto.rpg.api.events.EventFactoryService;
 import cz.neumimto.rpg.api.events.character.*;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.inventory.InventoryService;
+import cz.neumimto.rpg.api.localization.Arg;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.logging.Log;
@@ -176,6 +177,8 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
 
     protected void initSpellbook(T activeCharacter) {
         String[][] spellbookPages = activeCharacter.getCharacterBase().getSpellbookPages();
+        if (spellbookPages == null)
+            return;
         for (int i = 0; i < spellbookPages.length; i++) {
             for (int j = 0; j < spellbookPages[i].length; j++) {
                 String skillId = spellbookPages[i][j];
@@ -1175,6 +1178,13 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
         }
 
         PluginConfig pluginConfig = Rpg.get().getPluginConfig();
+
+        ClassTypeDefinition classTypeDefinition = pluginConfig.CLASS_TYPES.get(klass.getClassType());
+        PlayerClassData classByType = character.getClassByType(klass.getClassType());
+        if (!classTypeDefinition.isChangeable() && classByType != null) {
+            String text = localizationService.translate(LocalizationKeys.CLASS_TYPE_IMMUTABLE, Arg.arg("type", klass.getClassType()));
+            return ActionResult.withErrorMessage(text);
+        }
         if (pluginConfig.RESPECT_CLASS_SELECTION_ORDER) {
             Set<String> classTypes = pluginConfig.CLASS_TYPES.keySet();
             Iterator<String> ctype = classTypes.iterator();
@@ -1185,7 +1195,7 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
                 if (first.equalsIgnoreCase(classType) && first.equalsIgnoreCase(klass.getClassType())) {
                     break;
                 }
-                PlayerClassData classByType = character.getClassByType(classType);
+                classByType = character.getClassByType(classType);
                 if (classByType == null) {
                     String text = localizationService.translate(LocalizationKeys.MISSING_CLASS_DEPENDENCIES);
                     return ActionResult.withErrorMessage(text);
@@ -1219,9 +1229,21 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
         return cc;
     }
 
+    public void removeBaseClass(CharacterBase characterBase, ClassDefinition klass) {
+        characterBase.getCharacterClasses().removeIf(next -> next.getName().equals(klass.getName()));
+    }
+
+
     @Override
     public ActionResult addNewClass(T character, ClassDefinition klass) {
         CharacterBase characterBase = character.getCharacterBase();
+
+        PlayerClassData classByType = character.getClassByType(klass.getClassType());
+        if (classByType != null) {
+            character.removeClass(classByType.getClassDefinition());
+        }
+        removeBaseClass(characterBase, klass);
+
         CharacterClass cc = addNewBaseClass(characterBase, klass);
 
         characterBase.getCharacterClasses().add(cc);
@@ -1229,6 +1251,7 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
 
         PlayerClassData playerClassData = new PlayerClassData(klass, cc);
         character.addClass(playerClassData);
+
 
         scheduleNextTick(() -> {
             recalculateProperties(character);

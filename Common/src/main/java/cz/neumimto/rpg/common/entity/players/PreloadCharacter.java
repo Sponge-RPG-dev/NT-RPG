@@ -431,6 +431,11 @@ public abstract class PreloadCharacter<T, P extends IParty> implements IActiveCh
     }
 
     @Override
+    public void removeClass(ClassDefinition classDefinition) {
+
+    }
+
+    @Override
     public void removeSkillTreeSpecialization(SkillTreeSpecialization specialization) {
 
     }

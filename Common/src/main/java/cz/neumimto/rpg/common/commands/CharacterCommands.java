@@ -13,6 +13,7 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.skills.ISkill;
+import cz.neumimto.rpg.api.utils.ActionResult;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -43,7 +44,13 @@ public class CharacterCommands extends BaseCommand {
 
     @Subcommand("choose class")
     public void chooseCharacterClass(IActiveCharacter character, ClassDefinition classDefinition) {
-        characterService.addNewClass(character, classDefinition);
+        ActionResult actionResult = characterService.canGainClass(character, classDefinition);
+        if (actionResult.isOk()) {
+            characterService.addNewClass(character, classDefinition);
+        } else {
+            String message = actionResult.getMessage();
+            character.sendMessage(message);
+        }
     }
 
     @Subcommand("attributes")

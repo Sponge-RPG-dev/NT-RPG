@@ -72,21 +72,6 @@ public class CharacterCommandFacade {
         }
     }
 
-    public boolean commandChooseClass(IActiveCharacter character, ClassDefinition configClass) {
-        if (character.isStub()) {
-            character.sendMessage(localizationService.translate(LocalizationKeys.CHARACTER_IS_REQUIRED));
-            return false;
-        }
-
-        ActionResult result = characterService.canGainClass(character, configClass);
-        if (result.isOk()) {
-            characterService.addNewClass(character, configClass);
-        } else {
-            character.sendMessage(result.getMessage());
-        }
-        return true;
-    }
-
     public void commandCreateCharacter(UUID uuid, String name, String playerName, Consumer<ActionResult> actionResultConsumer) {
         CompletableFuture.runAsync(() -> {
             int i = characterService.canCreateNewCharacter(uuid, name);

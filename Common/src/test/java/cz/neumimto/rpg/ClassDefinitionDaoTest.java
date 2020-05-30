@@ -1,5 +1,6 @@
 package cz.neumimto.rpg;
 
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.RpgApi;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.configuration.ClassTypeDefinition;
@@ -39,7 +40,6 @@ public class ClassDefinitionDaoTest {
     @BeforeEach
     public void before() {
         new RpgTest(rpgApi);
-        rpgApi.getPluginConfig().CLASS_TYPES.put("primary", new ClassTypeDefinition());
         Path classDirectory = classDefinitionDao.getClassDirectory();
         classDirectory.resolve("class1.conf").toFile().delete();
         classDirectory.resolve("class2.conf").toFile().delete();
@@ -50,6 +50,7 @@ public class ClassDefinitionDaoTest {
 
     @Test
     public void test_class_def_ependencies_loading() {
+        Rpg.get().getPluginConfig().CLASS_TYPES.put("primary", new ClassTypeDefinition());
 
         Set<ClassDefinition> classDefinitions = classDefinitionDao.parseClassFiles();
 
