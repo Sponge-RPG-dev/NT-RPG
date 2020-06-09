@@ -3,22 +3,16 @@ package cz.neumimto.rpg.spigot.gui;
 import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.players.CharacterService;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
-import cz.neumimto.rpg.spigot.events.skill.SpigotHealEvent;
 import de.tr7zw.nbtapi.NBTItem;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -128,19 +122,35 @@ public class SpellbookListener implements Listener {
     }
 
     public static ItemStack createEmptySlot() {
-        return SpigotGuiHelper.unclickableInterface(Material.YELLOW_STAINED_GLASS_PANE, 12345, "ntrpg.spellbook-empty");
+        return SpigotGuiHelper.unclickableInterface(emptySlotMaterial(), 12345, "ntrpg.spellbook-empty");
     }
 
-    public static ItemStack toBindIcon(ItemStack toBeCloned, String name) {
-        ItemStack next = new ItemStack(toBeCloned.getType());
-        ItemMeta itemMeta = toBeCloned.getItemMeta();
-        ItemMeta itemMeta1 = next.getItemMeta();
-        if (itemMeta.hasCustomModelData()){
-            itemMeta1.setCustomModelData(itemMeta.getCustomModelData());
+    private static Material emptySlotMaterial() {
+        return Material.YELLOW_STAINED_GLASS_PANE;
+    }
+
+    public static boolean isInInventory(Inventory topInventory) {
+        return openedInventories.containsKey(topInventory);
+    }
+
+    public static void commit(ISpigotCharacter character, Inventory topInventory) {
+        for (int columns = 3; columns < 7; columns++) {
+            for (int rows = 0; rows < 9; rows++) {
+                int slotId = columns * rows;
+                ItemStack item = topInventory.getItem(slotId);
+                NBTItem nbtItem = new NBTItem(item);
+                if (nbtItem.hasKey("ntrpg.spellbook-empty")) {
+                    character.getSpellbook()[columns][rows] = null;
+                    character.getCharacterBase().getSpellbookPages()[columns][rows] = null;
+                } else {
+                    String skillName = nbtItem.getString("ntrpg.spellbook.learnedspell");
+                    PlayerSkillContext playerSkillContext = character.getSkillsByName().get(skillName);
+
+                    character.getSpellbook()[columns][rows] = item;
+                    character.getCharacterBase().getSpellbookPages()[columns][rows] = playerSkillContext.getSkillData().getSkillId();
+                }
+            }
         }
-        itemMeta1.setDisplayName(ChatColor.GOLD + name);
-        next.setItemMeta(itemMeta1);
-        return next;
     }
 
     private static class State {

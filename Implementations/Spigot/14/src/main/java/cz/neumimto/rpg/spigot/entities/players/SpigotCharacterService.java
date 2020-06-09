@@ -1,18 +1,21 @@
 package cz.neumimto.rpg.spigot.entities.players;
 
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
-import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.common.entity.players.AbstractCharacterService;
 import cz.neumimto.rpg.common.entity.players.CharacterMana;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
+import cz.neumimto.rpg.spigot.gui.SpellbookListener;
 import cz.neumimto.rpg.spigot.gui.SpigotGuiHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
 import javax.inject.Singleton;
@@ -62,10 +65,6 @@ public class SpigotCharacterService extends AbstractCharacterService<ISpigotChar
         return 0;
     }
 
-    @Override
-    public void removePersistantSkill(CharacterSkill characterSkill) {
-
-    }
 
     @Override
     protected void scheduleNextTick(Runnable r) {
@@ -107,8 +106,15 @@ public class SpigotCharacterService extends AbstractCharacterService<ISpigotChar
     }
 
     @Override
-    public void updateSpellbook(ISpigotCharacter character, int page, String line, ISkill[] o) {
-
+    public void updateSpellbook(ISpigotCharacter character) {
+        Player player = character.getPlayer();
+        InventoryView openInventory = player.getOpenInventory();
+        Inventory topInventory = openInventory.getTopInventory();
+        if (SpellbookListener.isInInventory(topInventory)) {
+            SpellbookListener.commit(character, topInventory);
+            putInSaveQueue(character.getCharacterBase());
+            Gui.displayCharacterMenu(character);
+        }
     }
 
 

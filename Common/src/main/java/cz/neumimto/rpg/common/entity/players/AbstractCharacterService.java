@@ -309,6 +309,10 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
         }
     }
 
+    @Override
+    public void removePersistantSkill(CharacterSkill characterSkill) {
+        playerDao.removePersitantSkill(characterSkill);
+    }
 
     /**
      * Activates character for specified player, replaces old
@@ -932,6 +936,18 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
         String msg = localizationService.translate(LocalizationKeys.CHARACTER_GAINED_ATTRIBUTE_POINTS, arg("attributes", attributepoint));
         character.sendMessage(msg);
         putInSaveQueue(character.getCharacterBase());
+    }
+
+
+    public void updateSpellbook(IActiveCharacter character, SkillData[][] o) {
+        CharacterBase characterBase = character.getCharacterBase();
+        String[][] spellbookPages = characterBase.getSpellbookPages();
+        for (int i = 0; i < spellbookPages.length; i++) {
+            String[] spellbookPage = spellbookPages[i];
+            for (int j = 0; j < spellbookPage[i].length(); j++) {
+                spellbookPage[j] = o[i][j].getSkill().getId();
+            }
+        }
     }
 
     @Override

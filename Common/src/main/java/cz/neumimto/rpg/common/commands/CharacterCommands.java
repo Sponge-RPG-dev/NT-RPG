@@ -3,7 +3,6 @@ package cz.neumimto.rpg.common.commands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Subcommand;
 import cz.neumimto.rpg.api.classes.ClassService;
@@ -12,7 +11,6 @@ import cz.neumimto.rpg.api.entity.players.CharacterService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.gui.Gui;
-import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.utils.ActionResult;
 
 import javax.inject.Inject;
@@ -95,10 +93,9 @@ public class CharacterCommands extends BaseCommand {
     }
 
 
-    @Subcommand("spellbook-put")
-    @CommandCompletion("@range:1-3 ")
-    public void spellbookPut(IActiveCharacter character, int page, ISkill[] skills) {
-      // characterService.updateSpellbook(character, page, skills);
+    @Subcommand("spellbook-commit")
+    public void spellbookCommit(IActiveCharacter character) {
+        characterService.updateSpellbook(character);
     }
 
 

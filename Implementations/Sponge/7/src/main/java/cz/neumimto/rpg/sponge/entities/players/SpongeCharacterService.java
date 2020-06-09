@@ -2,8 +2,6 @@ package cz.neumimto.rpg.sponge.entities.players;
 
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
-import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
-import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.common.entity.players.AbstractCharacterService;
@@ -121,11 +119,6 @@ public class SpongeCharacterService extends AbstractCharacterService<ISpongeChar
     }
 
     @Override
-    public void removePersistantSkill(CharacterSkill characterSkill) {
-        playerDao.removePersitantSkill(characterSkill);
-    }
-
-    @Override
     public int canCreateNewCharacter(UUID uniqueId, String name) {
         List<CharacterBase> list = getPlayersCharacters(uniqueId);
         if (list.size() >= PermissionUtils.getMaximalCharacterLimit(uniqueId)) {
@@ -160,6 +153,11 @@ public class SpongeCharacterService extends AbstractCharacterService<ISpongeChar
     }
 
     @Override
+    public void updateSpellbook(ISpongeCharacter character) {
+        throw new IllegalStateException("Not Implemented");
+    }
+
+    @Override
     public void addExperiences(ISpongeCharacter character, double exp, String source) {
         if ("VANILLA".equals(source)) {
             Player player = character.getPlayer();
@@ -171,16 +169,4 @@ public class SpongeCharacterService extends AbstractCharacterService<ISpongeChar
         }
     }
 
-    @Override
-    public void updateSpellbook(ISpongeCharacter character, int page, String line, ISkill[] o) {
-        if (o != null) {
-      //      ItemStack is = inventoryService.createSkillbind(character, o);
-      //      character.getSpellbook()[page - 1][slot - 1] = is;
-      //      character.getCharacterBase().getSpellbookPages()[page - 1][slot - 1] = is.get(Keys.DISPLAY_NAME).get().toPlain();
-      //  } else {
-      //      character.getSpellbook()[page - 1][slot - 1] = null;
-      //      character.getCharacterBase().getSpellbookPages()[page - 1][slot - 1] = null;;
-        }
-        putInSaveQueue(character.getCharacterBase());
-    }
 }

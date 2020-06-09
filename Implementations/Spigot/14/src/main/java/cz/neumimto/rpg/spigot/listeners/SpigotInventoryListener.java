@@ -103,6 +103,7 @@ public class SpigotInventoryListener implements Listener {
             if (nbti.hasKey("ntrpg.item-iface")) {
                 event.setResult(Event.Result.DENY);
             }
+            //spellbook commands
             if (nbti.hasKey("ntrpg.spellbook.learnedspell")) {
                 String skillName = nbti.getString("ntrpg.spellbook.learnedspell");
                 ISpigotCharacter character = spigotCharacterService.getCharacter(whoClicked.getUniqueId());
