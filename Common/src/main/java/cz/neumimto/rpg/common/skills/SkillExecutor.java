@@ -13,7 +13,7 @@ import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillData;
 import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.common.skills.processors.ISkillCondition;
-import cz.neumimto.rpg.reagents.ISkillCastMechanic;
+import cz.neumimto.rpg.common.skills.reagents.ISkillCastMechanic;
 
 import javax.inject.Inject;
 import java.util.Arrays;

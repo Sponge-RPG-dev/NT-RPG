@@ -1,6 +1,7 @@
 package cz.neumimto.rpg.api.skills.scripting;
 
 import com.electronwill.nightconfig.core.conversion.Path;
+import com.typesafe.config.Config;
 import com.typesafe.config.Optional;
 
 import java.util.List;
@@ -19,6 +20,10 @@ public class ScriptSkillModel {
     @Path("Handler")
     @Optional
     private String handlerId;
+
+    @Optional
+    @Path("Spell")
+    private List<Config> spell;
 
     public String getHandlerId() {
         return handlerId;
@@ -44,4 +49,7 @@ public class ScriptSkillModel {
         return damageType;
     }
 
+    public List<Config> getSpell() {
+        return spell;
+    }
 }

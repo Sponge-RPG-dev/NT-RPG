@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.reagents;
+package cz.neumimto.rpg.common.skills.reagents;
 
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
