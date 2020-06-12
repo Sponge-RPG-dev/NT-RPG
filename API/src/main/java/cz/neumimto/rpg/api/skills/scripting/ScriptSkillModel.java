@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.api.skills.scripting;
 
+import com.electronwill.nightconfig.core.Config;
 import com.electronwill.nightconfig.core.conversion.Path;
-import com.typesafe.config.Config;
 import com.typesafe.config.Optional;
 
 import java.util.List;
@@ -51,5 +51,9 @@ public class ScriptSkillModel {
 
     public List<Config> getSpell() {
         return spell;
+    }
+
+    public void setSpell(List<Config> spell) {
+        this.spell = spell;
     }
 }

@@ -1,13 +1,13 @@
 package cz.neumimto.rpg.common.skills.scripting;
 
-import cz.neumimto.rpg.api.entity.IEntity;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import java.util.Collection;
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+public @interface TargetSelector {
 
-public interface TargetSelector {
-
-    Collection<IEntity> findTargets(IActiveCharacter caster, PlayerSkillContext context);
-
+    String value();
 }
