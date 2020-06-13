@@ -156,8 +156,8 @@ public class CustomSkillGenerator implements Opcodes {
                 if (isSkillSettingsSkillNode(path)) {
                     path = getSkillSettingsNodeName(path);
                     visitReadSkillSettingsVariable(methodVisitor, path, path, localVariableId, index_context, label);
+                    localVariables.put(path, new LocalVariableHelper(localVariableId, FLOAD));
                     localVariableId++;
-                    localVariables.put(path, new LocalVariableHelper(localVariableId, ALOAD));
                 }
             }
 
