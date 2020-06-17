@@ -3,7 +3,6 @@ package cz.neumimto.rpg.common.impl;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
-import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.common.entity.TestCharacter;
@@ -108,7 +107,7 @@ public class TestCharacterService extends AbstractCharacterService<TestCharacter
     }
 
     @Override
-    public void updateSpellbook(TestCharacter character, int page, String line, ISkill[] o) {
+    public void updateSpellbook(TestCharacter character) {
 
     }
 

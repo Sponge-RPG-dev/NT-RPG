@@ -9,7 +9,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-@SkillMechanic("ntrpg:damage")
+@SkillMechanic("damage")
 public class DamageMechanic {
 
     @Inject

@@ -5,30 +5,29 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.scripting.ScriptSkillModel;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
-import jdk.internal.org.objectweb.asm.Type;
+import cz.neumimto.rpg.common.skills.mech.TargetSelectorSelf;
 import net.bytebuddy.ByteBuddy;
+import net.bytebuddy.asm.AsmVisitorWrapper;
 import net.bytebuddy.description.annotation.AnnotationDescription;
 import net.bytebuddy.description.method.MethodDescription;
 import net.bytebuddy.description.modifier.Ownership;
 import net.bytebuddy.description.modifier.Visibility;
 import net.bytebuddy.dynamic.DynamicType;
 import net.bytebuddy.implementation.Implementation;
-import net.bytebuddy.implementation.MethodDelegation;
 import net.bytebuddy.implementation.bytecode.ByteCodeAppender;
-import net.bytebuddy.implementation.bytecode.StackManipulation;
-import net.bytebuddy.jar.asm.Label;
-import net.bytebuddy.jar.asm.MethodVisitor;
-import net.bytebuddy.jar.asm.Opcodes;
+import net.bytebuddy.jar.asm.*;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.io.File;
+import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.invoke.MethodHandles;
-import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
@@ -41,24 +40,28 @@ public class CustomSkillGenerator implements Opcodes {
     @Inject
     private Injector injector;
 
-    public void generate(ScriptSkillModel scriptSkillModel) {
+    public Class<? extends ISkill> generate(ScriptSkillModel scriptSkillModel) {
         if (scriptSkillModel == null || scriptSkillModel.getSpell() == null) {
-            return;
+            return null;
         }
 
         String className = "cz.neumimto.skills.scripts.Custom" + System.currentTimeMillis();
 
         DynamicType.Builder<ActiveSkill> builder = new ByteBuddy()
                 .subclass(ActiveSkill.class)
+                .visit(new AsmVisitorWrapper.ForDeclaredMethods().writerFlags(ClassWriter.COMPUTE_MAXS))
                 .name(className)
                 .annotateType(AnnotationDescription.Builder.ofType(ResourceLoader.Skill.class)
                         .define("value", scriptSkillModel.getId())
                         .build())
                 .annotateType(AnnotationDescription.Builder.ofType(Singleton.class).build());
 
-        Set<Object> mechanics = getRelevantMechanics(getMechanics(), scriptSkillModel.getSpell());
-
-        for (Object mechanic : mechanics) {
+        SpellData data = getRelevantMechanics(getMechanics(), scriptSkillModel.getSpell());
+        if (data.targetSelector == null) {
+            data.targetSelector = injector.getInstance(TargetSelectorSelf.class);
+        }
+        List<Object> futureFields = data.getAll();
+        for (Object mechanic : futureFields) {
             builder = builder.defineField(mechanic.getClass().getSimpleName(), mechanic.getClass(), Modifier.PRIVATE)
                     .annotateField(AnnotationDescription.Builder.ofType(Inject.class).build());
         }
@@ -67,35 +70,54 @@ public class CustomSkillGenerator implements Opcodes {
         builder = builder
                 .defineMethod("cast", SkillResult.class, Ownership.MEMBER, Visibility.PUBLIC)
                 .withParameters(IActiveCharacter.class, PlayerSkillContext.class)
-                .intercept(MethodDelegation.to(new Interceptor(mechanics, scriptSkillModel.getSpell(), className.replaceAll("\\.", "/"))));
+                .intercept(new Implementation.Simple(new Interceptor(data, scriptSkillModel.getSpell(), className.replaceAll("\\.", "/"))));
 
 
-        Class<? extends ActiveSkill> skillClass = builder.make()
-                .load(getClass().getClassLoader())
+        DynamicType.Unloaded<ActiveSkill> make = builder.make();
+
+        try {
+            make.saveIn(new File("."));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return make.load(getClass().getClassLoader())
                 .getLoaded();
     }
 
-    private Set<Object> getRelevantMechanics(Set<Object> mechanics, List<Config> spell) {
-        Set finalSet = new HashSet();
+    private SpellData getRelevantMechanics(Set<Object> mechanics, List<Config> spell) {
+        SpellData spellData = new SpellData();
         for (Object mechanic : mechanics) {
             for (Config config : spell) {
                 String type = config.get("Target-Selector");
-                if (mechanic.getClass().getAnnotation(TargetSelector.class).value().equalsIgnoreCase(type)) {
-                    finalSet.add(mechanic);
+
+                if (mechanic.getClass().isAnnotationPresent(TargetSelector.class) && mechanic.getClass().getAnnotation(TargetSelector.class).value().equalsIgnoreCase(type)) {
+                    spellData.targetSelector = mechanic;
                     continue;
                 }
                 List<Config> list = config.get("Mechanics");
                 for (Config config1 : list) {
                     type = config1.get("Type");
-                    if (mechanic.getClass().getAnnotation(SkillMechanic.class).value().equalsIgnoreCase(type)) {
-                        finalSet.add(mechanic);
+                    if (mechanic.getClass().isAnnotationPresent(SkillMechanic.class) && mechanic.getClass().getAnnotation(SkillMechanic.class).value().equalsIgnoreCase(type)) {
+                        spellData.mechanics.add(mechanic);
                     }
                 }
             }
         }
-        return finalSet;
+        return spellData;
     }
 
+    private class SpellData {
+        Object targetSelector;
+        List<Object> mechanics = new ArrayList<>();
+
+        private List<Object> getAll() {
+            return new ArrayList<Object>() {{
+                addAll(mechanics);
+                add(targetSelector);
+            }};
+        }
+    }
 
     private static class Helper {
         protected final Map<String, List<? extends Config>> targetSelectors;
@@ -118,21 +140,23 @@ public class CustomSkillGenerator implements Opcodes {
 
     protected class Interceptor implements ByteCodeAppender {
 
-        private final Set<Object> mechanics;
+        private final SpellData mechanics;
         private final Helper helper;
         private final String internalClassName;
 
-        public Interceptor(Set<Object> mechanics, List<Config> spell, String internalClassName) {
+        private Map<String, String> localVars;
+
+        public Interceptor(SpellData mechanics, List<Config> spell, String internalClassName) {
             this.mechanics = mechanics;
             this.helper = Helper.parse(spell);
             this.internalClassName = internalClassName;
+            this.localVars = findRequiredLocalVars(mechanics);
         }
 
         @Override
         public Size apply(MethodVisitor methodVisitor, Implementation.Context implementationContext, MethodDescription instrumentedMethod) {
             methodVisitor.visitCode();
 
-            Map<String, String> localVars = findRequiredLocalVars(mechanics);
 
             int index_this = 0;
             int index_caster = 1;
@@ -155,7 +179,7 @@ public class CustomSkillGenerator implements Opcodes {
                 String type = e.getValue();
                 if (isSkillSettingsSkillNode(path)) {
                     path = getSkillSettingsNodeName(path);
-                    visitReadSkillSettingsVariable(methodVisitor, path, path, localVariableId, index_context, label);
+                    readSkillSettings(methodVisitor, path, path, localVariableId, index_context, label);
                     localVariables.put(path, new LocalVariableHelper(localVariableId, FLOAD));
                     localVariableId++;
                 }
@@ -169,13 +193,13 @@ public class CustomSkillGenerator implements Opcodes {
                 String fieldName = targetSelector.getSimpleName();
 
                 for (Config mechanic : mechanics) {
-                    visitMechanicInvokeInst(methodVisitor, index_this, new MethodInvocationHelper(internalClassName, mechanic, localVariables));
+                    Object o = filterMechanicById(mechanic);
+                    visitMechanicInvokeInst(methodVisitor, index_this, new MethodInvocationHelper(internalClassName, o, localVariables));
                 }
 
             }
 
-            StackManipulation.Size operandStackSize = new StackManipulation.Compound().apply(methodVisitor, implementationContext);
-            return new Size(operandStackSize.getMaximalSize(), instrumentedMethod.getStackSize());
+            return new Size(0, 0);
         }
     }
 
@@ -262,7 +286,7 @@ public class CustomSkillGenerator implements Opcodes {
         return "L" + getInternalName(c) + ";";
     }
 
-    private void visitReadSkillSettingsVariable(MethodVisitor mv, String settingsNode, String variableName, int localVariableId, int index_context, Label label) {
+    private void readSkillSettings(MethodVisitor mv, String settingsNode, String variableName, int localVariableId, int index_context, Label label) {
         mv.visitVarInsn(ALOAD, index_context);
         mv.visitMethodInsn(INVOKEVIRTUAL, "cz/neumimto/rpg/api/skills/PlayerSkillContext", "getCachedComputedSkillSettings", "()Lit/unimi/dsi/fastutil/objects/Object2FloatOpenHashMap;", false);
         mv.visitLdcInsn(settingsNode);
@@ -286,10 +310,13 @@ public class CustomSkillGenerator implements Opcodes {
         return list;
     }
 
-    private Map<String, String> findRequiredLocalVars(Set<Object> mechanics) {
+    private Map<String, String> findRequiredLocalVars(SpellData data) {
+
         Map<String, String> map = new HashMap<>();
-        for (Object mechanic : mechanics) {
-            Method relevantMethod = getRelevantMethod(mechanic.getClass()).get();
+        for (Object mechanic : data.getAll()) {
+            Method relevantMethod = getRelevantMethod(mechanic.getClass()).orElseThrow(() ->
+                    new IllegalArgumentException("Mechanic " + mechanic.getClass().getCanonicalName() + " has no handler method")
+            );
             for (int i = 0; i < relevantMethod.getParameterCount(); i++) {
                 Parameter parameter = relevantMethod.getParameters()[i];
                 Annotation[] annotations = relevantMethod.getParameterAnnotations()[i];
@@ -314,18 +341,23 @@ public class CustomSkillGenerator implements Opcodes {
         return skillMechanics;
     }
 
+    protected Object filterMechanicById(Config config) {
+        String type = config.get("Type");
+        return filterMechanicById(type);
+    }
+
     protected Object filterMechanicById(String id) {
         for (Object mechanic : getMechanics()) {
             String annotationId = getAnnotationId(mechanic.getClass());
-            if (id.equalsIgnoreCase(annotationId)) {
-                return null;
+            if (id != null && id.equalsIgnoreCase(annotationId)) {
+                return mechanic;
             }
         }
-        return null;
+        throw new IllegalStateException("Unknown mechanic id " + id);
     }
 
     protected boolean hasAnnotation(Class<?> c) {
-        return getAnnotationId(c) != null;
+        return c.isAnnotationPresent(SkillMechanic.class) || c.isAnnotationPresent(TargetSelector.class);
     }
 
     protected String getAnnotationId(Class<?> rawType) {
@@ -334,13 +366,16 @@ public class CustomSkillGenerator implements Opcodes {
     }
 
     protected Optional<Method> getRelevantMethod(Class<?> rawType) {
-        return Stream.of(rawType.getMethods())
-                .filter(AccessibleObject::isAccessible)
-                .filter(method -> !Modifier.isStatic(rawType.getModifiers()))
-                .filter(method -> Modifier.isPublic(rawType.getModifiers()))
-                .filter(this::hasAnnotatedArgument)
+        return Stream.of(rawType.getDeclaredMethods())
+                .filter(this::isHandlerMethod)
                 .findFirst();
 
+    }
+
+    private boolean isHandlerMethod(Method method) {
+        return Modifier.isPublic(method.getModifiers())
+                && !Modifier.isStatic(method.getModifiers())
+                && (method.isAnnotationPresent(Handler.class) || hasAnnotatedArgument(method));
     }
 
     private boolean hasAnnotatedArgument(Method method) {
