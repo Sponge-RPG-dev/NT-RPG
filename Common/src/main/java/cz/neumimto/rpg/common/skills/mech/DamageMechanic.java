@@ -16,7 +16,7 @@ public class DamageMechanic {
     private DamageService damageService;
 
     @Handler
-    public void damage(@Caster IActiveCharacter character, @Target IEntity entity, @SkillArgument("damage") float damage) {
+    public void damage(@Caster IActiveCharacter character, @Target IEntity entity, @SkillArgument("settings.damage") float damage) {
         if (damageService.canDamage(character, entity)) {
             damageService.damageEntity(character, damage);
         }

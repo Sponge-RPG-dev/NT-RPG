@@ -11,6 +11,7 @@ import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.scripting.ScriptSkillModel;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.common.skills.mech.TargetSelectorSelf;
+import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.asm.AsmVisitorWrapper;
 import net.bytebuddy.description.annotation.AnnotationDescription;
@@ -154,55 +155,67 @@ public class CustomSkillGenerator implements Opcodes {
         }
 
         @Override
-        public Size apply(MethodVisitor methodVisitor, Implementation.Context implementationContext, MethodDescription instrumentedMethod) {
-            methodVisitor.visitCode();
+        public Size apply(MethodVisitor m, Implementation.Context implementationContext, MethodDescription instrumentedMethod) {
 
 
             int index_this = 0;
             int index_caster = 1;
             int index_context = 2;
+            int index_hashmap = 3;
 
-            Label label = new Label();
+            Label label0 = new Label();
+            m.visitLineNumber(19, label0);
+            methodCall(m, ALOAD, index_context,
+                          PlayerSkillContext.class, "getCachedComputedSkillSettings", "()L"+getInternalName(Object2FloatOpenHashMap.class)+";",
+                          ASTORE, index_hashmap);
 
-            methodVisitor.visitLocalVariable("this", "L" + internalClassName + ";", null, label, label, index_this);
-            methodVisitor.visitLocalVariable("character", getObjectTypeDescriptor(IActiveCharacter.class), null, label, label, index_caster);
-            methodVisitor.visitLocalVariable("context", getObjectTypeDescriptor(PlayerSkillContext.class), null, label, label, index_context);
-
-            Map<String, LocalVariableHelper> localVariables = new HashMap<>();
-            localVariables.put("caster", new LocalVariableHelper(index_caster, ALOAD));
-            localVariables.put("context", new LocalVariableHelper(index_context, ALOAD));
-            localVariables.put("this", new LocalVariableHelper(index_this, ALOAD));
-
-            int localVariableId = 3;
+            int localVariableId = 4;
+            int lineNumber = 20;
             for (Map.Entry<String, String> e : localVars.entrySet()) {
                 String path = e.getKey();
-                String type = e.getValue();
                 if (isSkillSettingsSkillNode(path)) {
                     path = getSkillSettingsNodeName(path);
-                    readSkillSettings(methodVisitor, path, path, localVariableId, index_context, label);
-                    localVariables.put(path, new LocalVariableHelper(localVariableId, FLOAD));
+
+                    Label labelv = new Label();
+                    m.visitLineNumber(lineNumber, labelv);
+                    visitSettingsF(m, index_hashmap, path, localVariableId);
+
                     localVariableId++;
+                    lineNumber++;
                 }
             }
 
-            for (Map.Entry<String, List<? extends Config>> entry : helper.targetSelectors.entrySet()) {
-                String targetSelectorId = entry.getKey();
-                List<? extends Config> mechanics = entry.getValue();
+            //for (Map.Entry<String, List<? extends Config>> entry : helper.targetSelectors.entrySet()) {
+            //    String targetSelectorId = entry.getKey();
+            //    List<? extends Config> mechanics = entry.getValue();
+//
+            //    Class<?> targetSelector = filterMechanicById(targetSelectorId).getClass();
+            //    String fieldName = targetSelector.getSimpleName();
+//
+            //    for (Config mechanic : mechanics) {
+            //        Object o = filterMechanicById(mechanic);
+            //        visitMechanicInvokeInst(m, index_this, new MethodInvocationHelper(internalClassName, o, localVariables));
+            //    }
+//
+            //}
 
-                Class<?> targetSelector = filterMechanicById(targetSelectorId).getClass();
-                String fieldName = targetSelector.getSimpleName();
-
-                for (Config mechanic : mechanics) {
-                    Object o = filterMechanicById(mechanic);
-                    visitMechanicInvokeInst(methodVisitor, index_this, new MethodInvocationHelper(internalClassName, o, localVariables));
-                }
-
-            }
-
+            visitReturn(m, SkillResult.OK);
             return new Size(0, 0);
         }
     }
 
+    private void methodCall(MethodVisitor m, int load_inst, int load_index, Class methodOwner, String methodName, String descriptor, int store_inst, int store_index) {
+        m.visitVarInsn(load_inst, load_index);
+        m.visitMethodInsn(INVOKEVIRTUAL, getInternalName(methodOwner), methodName, descriptor, false);
+        m.visitVarInsn(store_inst, store_index);
+    }
+
+    private void visitSettingsF(MethodVisitor m, int hashmap_index, String variableName, int var_index) {
+        m.visitVarInsn(ALOAD, hashmap_index);
+        m.visitLdcInsn(variableName);
+        m.visitMethodInsn(INVOKEVIRTUAL, getInternalName(Object2FloatOpenHashMap.class), "getFloat", "(Ljava/lang/Object;)F", false);
+        m.visitVarInsn(FSTORE, var_index);
+    }
 
     private void visitMechanicInvokeInst(MethodVisitor mv, int this_index, MethodInvocationHelper mih) {
         mv.visitVarInsn(ALOAD, this_index);
@@ -213,6 +226,10 @@ public class CustomSkillGenerator implements Opcodes {
         mv.visitMethodInsn(INVOKEVIRTUAL, mih.methodOwner, mih.methodName, mih.methodDescriptor, false);
     }
 
+    private void visitReturn(MethodVisitor m, SkillResult skillResult) {
+        m.visitFieldInsn(GETSTATIC, getInternalName(skillResult.getDeclaringClass()), skillResult.name(), "L"+getInternalName(skillResult.getDeclaringClass())+";");
+        m.visitInsn(ARETURN);
+    }
 
     private class MethodInvocationHelper {
         final String owner;
@@ -400,6 +417,6 @@ public class CustomSkillGenerator implements Opcodes {
     }
 
     private boolean is(Annotation a, Class<?> c) {
-        return a.getClass() == c;
+        return a.annotationType() == c;
     }
 }
