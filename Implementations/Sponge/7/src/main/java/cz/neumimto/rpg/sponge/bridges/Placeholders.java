@@ -13,9 +13,11 @@ import me.rojo8399.placeholderapi.Token;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextColor;
+import org.spongepowered.api.text.format.TextColors;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
+import java.util.Optional;
 
 import static cz.neumimto.rpg.api.logging.Log.error;
 
@@ -54,7 +56,8 @@ public class Placeholders {
         if (classData == null) {
             return Text.EMPTY;
         }
-        return Text.of(classData.getClassDefinition().getPreferedColor(), classData.getClassDefinition().getName());
+        Optional<TextColor> color = Sponge.getRegistry().getType(TextColor.class, classData.getClassDefinition().getPreferedColor());
+        return Text.of(color.orElse(TextColors.WHITE), classData.getClassDefinition().getName());
     }
 
     @Placeholder(id = "ntrpg_character_name")
