@@ -213,7 +213,11 @@ public class InventoryListener {
             Slot slot = slotTransaction.getSlot();
             Slot transformed = slot.transform();
             Class aClass = transformed.parent().getClass();
-            int slotId = transformed.getInventoryProperty(SlotIndex.class).get().getValue();
+            Optional<SlotIndex> inventoryProperty = transformed.getInventoryProperty(SlotIndex.class);
+            if (!inventoryProperty.isPresent()) {
+                continue;
+            }
+            int slotId = inventoryProperty.get().getValue();
             if (!inventoryService.isManagedInventory(aClass, slotId)) {
                 return;
             }

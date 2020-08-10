@@ -8,6 +8,7 @@ import cz.neumimto.rpg.common.entity.TestCharacter;
 import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.effects.TestEffectService;
 import cz.neumimto.rpg.model.CharacterBaseTest;
+import jdk.internal.dynalink.beans.StaticClass;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import org.junit.jupiter.api.Assertions;
@@ -140,9 +141,10 @@ public class EffectTests {
         processEffectStacking(effect, test);
     }
 
-
+    @Test
     public void test_Effect_Expirable_stackable_2_js() throws Exception {
         ScriptEngine scriptEngine = new NashornScriptEngineFactory().getScriptEngine("--optimistic-types=true"/*, "-d=bytecode/"*/);
+
         IEffect effect = createEffectJsMock("test", scriptEngine);
         IEffect test = createEffectJsMock("test", scriptEngine);
         processEffectStacking(effect, test);
@@ -150,10 +152,11 @@ public class EffectTests {
 
     private IEffect createEffectJsMock(String test, ScriptEngine scriptEngine) throws Exception {
         ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(getClass().getResource("effects/effect01.js").getFile());
+        File file = new File(getClass().getClassLoader().getResource("effects/effect01.js").getFile());
         byte[] bytes = Files.readAllBytes(file.toPath());
         scriptEngine.eval(new String(bytes));
         Invocable invocable = (Invocable) scriptEngine;
+        StaticClass staticClass = (StaticClass) scriptEngine.eval("SuperNiceEffect");;
         ScriptObjectMirror mirror = (ScriptObjectMirror) scriptEngine.eval("SuperNiceEffect");
         return (IEffect) (Object) mirror;
     }

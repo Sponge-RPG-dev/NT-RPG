@@ -167,11 +167,9 @@ public class CustomSkillGenerator implements Opcodes {
 
             settingsVariables.put("$caster", new LocalVariableHelper(index_caster, ALOAD));
             settingsVariables.put("$context", new LocalVariableHelper(index_context, ALOAD));
-
             settingsVariables.put("$settingsMap", new LocalVariableHelper(index_hashmap, ALOAD));
 
-
-            newLine(m);
+            Label first = newLine(m);
             methodCall(m, ALOAD, index_context,
                           PlayerSkillContext.class, "getCachedComputedSkillSettings", "()L"+getInternalName(Object2FloatOpenHashMap.class)+";",
                           ASTORE, index_hashmap);
@@ -200,23 +198,39 @@ public class CustomSkillGenerator implements Opcodes {
                 settingsVariables.put("$target", new LocalVariableHelper(localVariableId, ALOAD));
                 localVariableId++;
 
-                List<? extends Config> mechanics = entry.getValue();
-                for (Config mechanic : mechanics) {
-                    o = filterMechanicById(mechanic);
-                    helper = new MethodInvocationHelper(internalClassName, o, settingsVariables);
-                    newLine(m);
-                    visitMechanicInvokeInst(m, index_this, helper);
-                }
+               // List<? extends Config> mechanics = entry.getValue();
+               // for (Config mechanic : mechanics) {
+               //     o = filterMechanicById(mechanic);
+               //     helper = new MethodInvocationHelper(internalClassName, o, settingsVariables);
+               //     newLine(m);
+               //     visitMechanicInvokeInst(m, index_this, helper);
+               // }
             }
 
+            newLine(m);
             visitReturn(m, SkillResult.OK);
+
+            Label label = new Label();
+            m.visitLabel(label);
+            m.visitLocalVariable("this", "L"+internalClassName+";", null, first, label, 0);
+            m.visitLocalVariable("character", "L"+getInternalName(IActiveCharacter.class)+";", null, first, label, 1);
+            m.visitLocalVariable("info", "L"+getInternalName(PlayerSkillContext.class)+";", null, first, label, 2);
+            m.visitLocalVariable("settings", "L"+getInternalName(Object2FloatOpenHashMap.class)+";", "Lit/unimi/dsi/fastutil/objects/Object2FloatOpenHashMap<Ljava/lang/String;>;", first, label, 3);
+
+            m.visitLocalVariable("damage", "F", null, first, label, 4);
+
+            m.visitLocalVariable("target", "Lcz/neumimto/rpg/api/entity/IEntity;", null, first, label, 5);
+            
+            
             return new Size(0, 0);
         }
 
-        private void newLine(MethodVisitor m) {
+        private Label newLine(MethodVisitor m) {
             Label label = new Label();
+            m.visitLabel(label);
             m.visitLineNumber(lineNumber, label);
             lineNumber++;
+            return label;
         }
     }
 
