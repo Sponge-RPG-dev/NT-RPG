@@ -1,9 +1,9 @@
 package cz.neumimto.rpg.common.scripting;
 
 import cz.neumimto.rpg.api.logging.Log;
-import jdk.nashorn.api.scripting.JSObject;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Engine;
+import org.graalvm.polyglot.HostAccess;
 import org.graalvm.polyglot.Source;
 
 import java.io.IOException;
@@ -19,13 +19,16 @@ public class GraalVmScriptEngine extends AbstractRpgScriptEngine {
     //I could use even tsc
     @Override
     public void prepareEngine() {
-        Context.Builder contextBuilder = Context.newBuilder("js");
-        contextBuilder.allowAllAccess(true);
-        prepareBindings((s, o) -> context.getBindings("js").putMember(s,o));
         engine = Engine.create();
-        contextBuilder.engine(engine);
+        Context.Builder contextBuilder = Context.newBuilder()
+                .allowExperimentalOptions(true)
+                .allowHostClassLookup(s -> true)
+                .option("js.nashorn-compat", "true")
+                .allowHostAccess(HostAccess.ALL)
+                .engine(engine);
         context = contextBuilder.build();
         Path path = mergeScriptFiles();
+        prepareBindings((s, o) -> context.getBindings("js").putMember(s,o));
         try {
             context.eval(Source.newBuilder("js", path.toFile()).build());
         } catch (IOException e) {
@@ -40,12 +43,7 @@ public class GraalVmScriptEngine extends AbstractRpgScriptEngine {
 
     @Override
     public Object executeScript(String functionName) {
-        return context.getBindings("js").getMember(functionName);
-    }
-
-    @Override
-    public <T> T toInterface(JSObject object, Class<T> iface) {
-        return null;
+        return context.getBindings("js").getMember(functionName).execute();
     }
 
     public Engine getEngine() {

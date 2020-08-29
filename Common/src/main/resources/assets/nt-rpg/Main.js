@@ -61,7 +61,6 @@ var lib = {
         return globalEffects;
     },
     getSkillHandlers: function() {
-        log(skillHandlers.size());
         return skillHandlers;
     }
 }

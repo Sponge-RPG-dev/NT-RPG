@@ -18,44 +18,23 @@
 
 package cz.neumimto.rpg.common.scripting;
 
-import static cz.neumimto.rpg.api.logging.Log.error;
-import static cz.neumimto.rpg.api.logging.Log.info;
-
-import com.electronwill.nightconfig.core.conversion.ObjectConverter;
-import com.electronwill.nightconfig.core.file.FileConfig;
-import com.google.inject.Injector;
-import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.logging.Log;
-import cz.neumimto.rpg.api.scripting.IRpgScriptEngine;
 import cz.neumimto.rpg.api.scripting.SkillScriptHandlers;
-import cz.neumimto.rpg.api.skills.SkillService;
-import cz.neumimto.rpg.api.skills.SkillsDefinition;
-import cz.neumimto.rpg.api.skills.scripting.JsBinding;
-import cz.neumimto.rpg.api.utils.DebugLevel;
-import cz.neumimto.rpg.api.utils.FileUtils;
-import cz.neumimto.rpg.common.assets.AssetService;
-import cz.neumimto.rpg.common.bytecode.ClassGenerator;
-import cz.neumimto.rpg.common.skills.scripting.SkillComponent;
 import jdk.nashorn.api.scripting.JSObject;
 import net.bytebuddy.dynamic.loading.MultipleParentClassLoader;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.lang.reflect.Field;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import java.util.*;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.script.*;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
+import static cz.neumimto.rpg.api.logging.Log.error;
+import static cz.neumimto.rpg.api.logging.Log.info;
 
 /**
  * Created by NeumimTo on 13.3.2015.
@@ -178,8 +157,7 @@ public class NashornRpgScriptEngine extends AbstractRpgScriptEngine {
         }
     }
 
-    @Override
-    public <T> T toInterface(JSObject object, Class<T> iface) {
+    private  <T> T toInterface(JSObject object, Class<T> iface) {
         Invocable invocableEngine = (Invocable) lib.getEngine();
         return invocableEngine.getInterface(object, iface);
     }
