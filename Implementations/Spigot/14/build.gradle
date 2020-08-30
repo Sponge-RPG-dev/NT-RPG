@@ -41,6 +41,7 @@ compileJava {
 
 
 dependencies {
+    annotationProcessor project(':Generator')
     compile project(':Common')
     compile project(':FlatFiles-Persistence')
 

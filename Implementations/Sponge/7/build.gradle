@@ -18,6 +18,7 @@ compileJava {
 }
 
 dependencies {
+    annotationProcessor project(':Generator')
     compile project(':Common')
     compile project(':FlatFiles-Persistence')
     compile "co.aikar:acf-sponge:0.5.0-SNAPSHOT"

@@ -1,7 +1,6 @@
 rootProject.name = 'NtRpgParent'
 
 include ':Generator'
-include ':NT-RPG-Skills'
 include ':API'
 include ':Common'
 include ':Database-Persistence'
@@ -11,7 +10,6 @@ include ':Common-Persistence-Test'
 
 include ':Spigot-14'
 include ':Sponge-7'
-include ':Spigot-Skills'
 
 
 project(':API').projectDir = file('API')
@@ -21,9 +19,6 @@ project(':Database-Persistence').projectDir = file('Peristence/Database')
 project(':FlatFiles-Persistence').projectDir = file('Peristence/FlatFiles')
 project(':Common-Persistence').projectDir = file('Peristence/Common')
 project(':Common-Persistence-Test').projectDir = file('Peristence/Common-Tests')
-
-project(':NT-RPG-Skills').projectDir = file('Skills')
-project(':Spigot-Skills').projectDir = file('Spigot-skills')
 
 project(':Spigot-14').projectDir = file('Implementations/Spigot/14')
 project(':Sponge-7').projectDir = file('Implementations/Sponge/7')
