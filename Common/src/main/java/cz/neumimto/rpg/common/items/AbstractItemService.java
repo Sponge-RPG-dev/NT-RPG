@@ -185,13 +185,17 @@ public abstract class AbstractItemService implements ItemService {
                 rpgItemType.ifPresent(this::registerRpgItemType);
             }
         }
+
+        info("Loading Projectiles configuration");
+        List<? extends Config> projectiles = config.getConfigList("Projectiles");
+        loadWeaponGroups(projectiles, ItemClass.PROJECTILES);
     }
 
     private void loadWeaponGroups(List<? extends Config> itemGroups, ItemClass parent) {
         for (Config itemGroup : itemGroups) {
             String weaponClass;
             try {
-                weaponClass = itemGroup.getString("WeaponClass");
+                weaponClass = itemGroup.getString("Class");
                 info(" - Loading WeaponClass " + weaponClass);
                 ItemClass weapons = new ItemClass(weaponClass);
                 weapons.setParent(parent);
