@@ -56,8 +56,8 @@ public class NashornRpgScriptEngine extends AbstractRpgScriptEngine {
                 setup();
                 info("JS resources loaded.");
             }
-            JSObject libObject = (JSObject) scriptContext.getBindings(ScriptContext.ENGINE_SCOPE).get("lib");
-            ScriptLib scriptLib = toInterface(libObject, ScriptLib.class);
+
+            ScriptLib scriptLib = getLib();
             Map<String, JSObject> skillHandlers = scriptLib.getSkillHandlers();
 
             for (Map.Entry<String, JSObject> entry : skillHandlers.entrySet()) {
@@ -164,6 +164,12 @@ public class NashornRpgScriptEngine extends AbstractRpgScriptEngine {
 
     public CompiledScript getCompiledLib() {
         return lib;
+    }
+
+    @Override
+    public ScriptLib getLib() {
+        JSObject libObject = (JSObject) scriptContext.getBindings(ScriptContext.ENGINE_SCOPE).get("lib");
+        return toInterface(libObject, ScriptLib.class);
     }
 }
 

@@ -64,3 +64,15 @@ var lib = {
         return skillHandlers;
     }
 }
+
+
+registerSkillHandler('mynamespace:speed_boost',{
+    onCast: function (character, context) {
+        var duration = context.getLevelNode(extendedSkillInfo, SkillNodes.DURATION);
+        var amount = getLevelNode(extendedSkillInfo, SkillNodes.AMOUNT);
+        apply_effect(new SpeedBoost(character, duration, amount), context.getSkill());
+        return SkillResult.OK;
+    },
+    test: function(a) {
+    return 0;}
+})
