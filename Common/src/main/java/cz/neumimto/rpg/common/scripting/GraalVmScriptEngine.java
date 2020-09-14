@@ -10,6 +10,7 @@ import org.graalvm.polyglot.*;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -43,7 +44,6 @@ public class GraalVmScriptEngine extends AbstractRpgScriptEngine {
 
             Map<String, Map> skillHandlers = (Map<String, Map>) ((Object) lib.getSkillHandlers());
             if (skillHandlers != null) {
-
                 for (Map.Entry<String, Map> e : skillHandlers.entrySet()) {
                     String key = e.getKey();
                     Map<String, Function<Object[], Object>> mapAndFnc = e.getValue();
@@ -85,7 +85,7 @@ public class GraalVmScriptEngine extends AbstractRpgScriptEngine {
         return engine;
     }
 
-    @Override
+
     protected ScriptLib getLib() {
         return context.getBindings("js").getMember("lib").as(ScriptLib.class);
     }
@@ -125,6 +125,12 @@ public class GraalVmScriptEngine extends AbstractRpgScriptEngine {
         public SkillResult init(IActiveCharacter caster, PlayerSkillContext context) {
             return (SkillResult) fnc.apply(new Object[]{caster, context});
         }
+    }
+
+    public interface ScriptLib {
+        Map<String, Value> getSkillHandlers();
+        List<Value> getGlobalEffects();
+        List<Value> getEventListeners();
     }
 
 }

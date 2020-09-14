@@ -157,7 +157,7 @@ public class NashornRpgScriptEngine extends AbstractRpgScriptEngine {
         }
     }
 
-    private  <T> T toInterface(JSObject object, Class<T> iface) {
+    private <T> T toInterface(JSObject object, Class<T> iface) {
         Invocable invocableEngine = (Invocable) lib.getEngine();
         return invocableEngine.getInterface(object, iface);
     }
@@ -166,10 +166,16 @@ public class NashornRpgScriptEngine extends AbstractRpgScriptEngine {
         return lib;
     }
 
-    @Override
     public ScriptLib getLib() {
         JSObject libObject = (JSObject) scriptContext.getBindings(ScriptContext.ENGINE_SCOPE).get("lib");
         return toInterface(libObject, ScriptLib.class);
     }
+
+    public interface ScriptLib {
+        Map<String, JSObject> getSkillHandlers();
+        List<JSObject> getGlobalEffects();
+        List<JSObject> getEventListeners();
+    }
+
 }
 

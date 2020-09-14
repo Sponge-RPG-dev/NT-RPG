@@ -13,8 +13,11 @@ import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.common.exp.ExperienceDAO;
 import cz.neumimto.rpg.common.localization.LocalizationServiceImpl;
 import cz.neumimto.rpg.common.persistance.dao.ClassDefinitionDao;
+import cz.neumimto.rpg.common.scripting.GraalVmScriptEngine;
 import cz.neumimto.rpg.common.scripting.NashornRpgScriptEngine;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,6 +33,9 @@ public class AbstractRpgGuiceModule extends AbstractModule {
         map.put(ExperienceDAO.class, null);
         map.put(Gui.class, null);
         map.put(LocalizationService.class, LocalizationServiceImpl.class);
+
+        map.put(ScriptEngine.class, new ScriptEngineManager().getEngineByName("graal.js") == null ? NashornRpgScriptEngine.class : GraalVmScriptEngine.class);
+
         return map;
     }
 

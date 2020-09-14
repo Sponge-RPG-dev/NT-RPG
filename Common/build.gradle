@@ -26,7 +26,6 @@ dependencies {
 
     compileOnly 'org.apache.commons:commons-lang3:3.9'
 
-
     compileOnly 'org.graalvm.sdk:graal-sdk:20.0.0'
     compileOnly 'org.graalvm.js:js:20.0.0'
 
