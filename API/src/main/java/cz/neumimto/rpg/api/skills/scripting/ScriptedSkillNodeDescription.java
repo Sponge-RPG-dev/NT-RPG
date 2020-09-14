@@ -27,11 +27,13 @@ public class ScriptedSkillNodeDescription implements ISkillNodeDescription {
         simpleBindings.put("character", character);
         Arg arg = new Arg();
         simpleBindings.put("arg", arg);
-        try {
+        /*try {
             Rpg.get().getScriptEngine().getEngine().eval(function, simpleBindings);
         } catch (ScriptException e) {
             Log.error("Could not build skill node description", e);
         }
+
+         */
         return Rpg.get().getLocalizationService().translateRaw(template, arg);
     }
 

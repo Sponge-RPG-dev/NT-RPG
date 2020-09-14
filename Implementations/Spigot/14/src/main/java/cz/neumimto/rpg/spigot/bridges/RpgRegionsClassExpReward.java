@@ -16,6 +16,7 @@ public class RpgRegionsClassExpReward extends DiscoveryReward {
     }
 
     public RpgRegionsClassExpReward() {
+
     }
 
     @Override

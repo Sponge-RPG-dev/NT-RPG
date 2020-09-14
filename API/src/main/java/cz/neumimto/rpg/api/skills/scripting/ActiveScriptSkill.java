@@ -3,7 +3,7 @@ package cz.neumimto.rpg.api.skills.scripting;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.logging.Log;
-import cz.neumimto.rpg.api.scripting.IScriptEngine;
+import cz.neumimto.rpg.api.scripting.IRpgScriptEngine;
 import cz.neumimto.rpg.api.scripting.SkillScriptHandlers;
 import cz.neumimto.rpg.api.skills.ISkillType;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
@@ -23,7 +23,7 @@ import java.util.Optional;
 public class ActiveScriptSkill extends ActiveSkill<IActiveCharacter> implements ScriptSkill<ScriptExecutorSkill> {
 
     @Inject
-    private IScriptEngine scriptEngine;
+    private IRpgScriptEngine scriptEngine;
 
     private SkillScriptHandlers.Active handler;
 
@@ -44,7 +44,7 @@ public class ActiveScriptSkill extends ActiveSkill<IActiveCharacter> implements 
         this.handler = (SkillScriptHandlers.Active) handler;
     }
 
-    public IScriptEngine getScriptEngine() {
+    public IRpgScriptEngine getScriptEngine() {
         return scriptEngine;
     }
 

@@ -13,6 +13,8 @@ public class ItemClass {
 
     public static final ItemClass SHIELD = new ItemClass("Shield");
 
+    public static final ItemClass PROJECTILES = new ItemClass("Projectile");
+
     public static final ItemClass ACCESSORY = new ItemClass("Accessory");
 
     static {

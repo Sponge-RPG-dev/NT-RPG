@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.common.classes;
 
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.damage.DamageService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
@@ -8,11 +9,17 @@ import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassPermission;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.permissions.PermissionService;
+import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.persistance.dao.ClassDefinitionDao;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Stream;
 
 @Singleton
 public class ClassServiceImpl implements ClassService {
@@ -27,6 +34,9 @@ public class ClassServiceImpl implements ClassService {
 
     @Inject
     private PermissionService permissionService;
+
+    @Inject
+    private AssetService assetService;
 
     private Map<String, ClassDefinition> classes = new HashMap<>();
 
@@ -103,11 +113,30 @@ public class ClassServiceImpl implements ClassService {
 
     @Override
     public void load() {
+        copyDefaultFiles();
         Set<ClassDefinition> classDefinitions = classDefinitionDao.parseClassFiles();
         classes.clear();
 
         classDefinitions.forEach(this::registerClassDefinition);
 
         Log.info("Successfully loaded " + classes.size() + " classes");
+    }
+
+    private void copyDefaultFiles() {
+        Path path = Paths.get(Rpg.get().getWorkingDirectory(), "classes");
+        try {
+            Stream<Path> pathStream = Files.find(path, Integer.MAX_VALUE, (p, bfa) -> bfa.isRegularFile());
+            if (pathStream.count() == 0) {
+                assetService.copyToFile("defaults/classes/primary_classes/Mage.conf", path.resolve("primary/Mage.conf"));
+                assetService.copyToFile("defaults/classes/primary_classes/Rogue.conf", path.resolve("primary/Rogue.conf"));
+                assetService.copyToFile("defaults/classes/primary_classes/Warrior.conf", path.resolve("primary/Warrior.conf"));
+                assetService.copyToFile("defaults/classes/races/Mage.conf", path.resolve("races/Mage.conf"));
+                assetService.copyToFile("defaults/classes/races/Rogue.conf", path.resolve("races/Rogue.conf"));
+                assetService.copyToFile("defaults/classes/races/Human.conf", path.resolve("races/Human.conf"));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }

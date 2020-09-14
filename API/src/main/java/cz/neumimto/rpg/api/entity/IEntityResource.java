@@ -17,4 +17,5 @@ public interface IEntityResource {
     double getRegen();
 
     void setRegen(float f);
+
 }

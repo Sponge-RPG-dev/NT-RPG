@@ -7,7 +7,7 @@ import cz.neumimto.rpg.api.entity.players.CharacterService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.logging.Log;
-import cz.neumimto.rpg.api.scripting.IScriptEngine;
+import cz.neumimto.rpg.api.scripting.IRpgScriptEngine;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.common.commands.*;
 import cz.neumimto.rpg.persistence.flatfiles.FlatFilesModule;
@@ -164,7 +164,7 @@ public class SpigotRpgPlugin extends JavaPlugin {
                 Bukkit.getPluginManager().registerEvents(mme, this);
             }
 
-            IScriptEngine scriptEngine = Rpg.get().getScriptEngine();
+            IRpgScriptEngine scriptEngine = Rpg.get().getScriptEngine();
             scriptEngine.getDataToBind().put(EntityDamageEvent.DamageCause.class, JsBinding.Type.CLASS);
             scriptEngine.getDataToBind().put(EntityType.class, JsBinding.Type.CLASS);
 

@@ -3,7 +3,6 @@ package cz.neumimto.rpg.common.bytecode;
 import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.logging.Log;
-import cz.neumimto.rpg.common.scripting.JSLoader;
 import jdk.internal.dynalink.beans.StaticClass;
 import jdk.nashorn.api.scripting.JSObject;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
@@ -15,7 +14,6 @@ import net.bytebuddy.implementation.MethodDelegation;
 import net.bytebuddy.implementation.bind.annotation.Argument;
 
 import javax.inject.Inject;
-import javax.sql.ConnectionEvent;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.function.Consumer;

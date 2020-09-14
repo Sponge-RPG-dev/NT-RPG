@@ -27,7 +27,7 @@ import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.localization.Arg;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.logging.Log;
-import cz.neumimto.rpg.api.scripting.IScriptEngine;
+import cz.neumimto.rpg.api.scripting.IRpgScriptEngine;
 import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.api.utils.FileUtils;
 import cz.neumimto.rpg.api.utils.rng.PseudoRandomDistribution;
@@ -65,7 +65,7 @@ public abstract class AbstractRpg implements RpgApi {
     @Inject
     private InventoryService inventoryService;
     @Inject
-    private IScriptEngine scriptEngine;
+    private IRpgScriptEngine scriptEngine;
     @Inject
     private PartyService partyService;
     @Inject
@@ -170,7 +170,7 @@ public abstract class AbstractRpg implements RpgApi {
     }
 
     @Override
-    public IScriptEngine getScriptEngine() {
+    public IRpgScriptEngine getScriptEngine() {
         return scriptEngine;
     }
 
@@ -286,7 +286,7 @@ public abstract class AbstractRpg implements RpgApi {
 
         getPropertyService().load();
 
-        getScriptEngine().initEngine();
+        getScriptEngine().prepareEngine();
         getSkillService().load();
         getClassService().load();
         getEffectService().load();

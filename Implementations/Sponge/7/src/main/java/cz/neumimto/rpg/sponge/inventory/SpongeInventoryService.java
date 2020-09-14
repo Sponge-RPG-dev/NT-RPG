@@ -72,6 +72,7 @@ import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextColors;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -273,14 +274,18 @@ public class SpongeInventoryService extends AbstractInventoryService<ISpongeChar
         itemStack.offer(orCreate);
     }
 
-    public ItemStack createSkillbind(IActiveCharacter character, ISkill iSkill) {
-        PlayerSkillContext info = character.getSkillInfo(iSkill);
-        SkillData skillData = info.getSkillData();
-        ItemType type = Sponge.getRegistry().getType(ItemType.class, skillData.getIcon()).orElse(ItemTypes.PUMPKIN_SEEDS);
-        ItemStack itemStack = ItemStack.of(type, 1);
-        SkillBindData orCreate = itemStack.getOrCreate(SkillBindData.class).orElse(new SkillBindData(skillData.getSkillName()));
-        orCreate.set(NKeys.SKILLBIND, iSkill.getId());
-        itemStack.offer(Keys.DISPLAY_NAME, Text.of(skillData.getSkillName()));
+    public ItemStack createSkillbind(PlayerSkillContext iSkill) {
+        SkillData skillData = iSkill.getSkillData();
+        String icon = skillData.getIcon();
+        if (icon == null) {
+            icon = "minecraft:pumpkin_seeds";
+        }
+        ItemType itemType = Sponge.getRegistry().getType(ItemType.class, icon).orElse(ItemTypes.PUMPKIN_SEEDS);
+        ItemStack itemStack = ItemStack.of(itemType, 1);
+        String skillName = skillData.getSkillName();
+        SkillBindData orCreate = itemStack.getOrCreate(SkillBindData.class).orElse(new SkillBindData(skillName));
+        orCreate.set(NKeys.SKILLBIND, skillName);
+        itemStack.offer(Keys.DISPLAY_NAME, Text.of(TextColors.GOLD, skillName));
         itemStack.offer(orCreate);
         return itemStack;
     }

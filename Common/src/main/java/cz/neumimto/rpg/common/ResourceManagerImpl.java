@@ -14,7 +14,7 @@ import cz.neumimto.rpg.api.localization.Localization;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.properties.PropertyContainer;
-import cz.neumimto.rpg.api.scripting.IScriptEngine;
+import cz.neumimto.rpg.api.scripting.IRpgScriptEngine;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
@@ -53,7 +53,7 @@ public class ResourceManagerImpl implements ResourceLoader {
     private static Set<Class> classesToLoad = new HashSet<>();
 
     @Inject
-    protected IScriptEngine jsEngine;
+    protected IRpgScriptEngine jsEngine;
     @Inject
     protected Injector injector;
     @Inject
