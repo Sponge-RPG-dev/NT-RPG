@@ -62,6 +62,26 @@ public class CustomSkillGeneratorTests {
         }
     }
 
+
+    @Test
+    public void test2() {
+        URL resource = getClass().getClassLoader().getResource("skillgen/test02.conf");
+        ScriptSkillModel model;
+        try (FileConfig fileConfig = FileConfig.of(new File(resource.getPath()))) {
+            fileConfig.load();
+
+            model = new ObjectConverter().toObject(fileConfig, ScriptSkillModel::new);
+            injector.getInstance(DamageMechanic.class);
+
+            Class<ActiveSkill> i= (Class<ActiveSkill>) customSkillGenerator.generate(model);
+
+            PlayerSkillContext context = new PlayerSkillContext(null, null, null);
+
+            injector.getInstance(i).cast(null, context);
+        }
+    }
+
+
     @Singleton
     @SkillMechanic("ntrpg:test_mechanic")
     private static class TestMechanic {
