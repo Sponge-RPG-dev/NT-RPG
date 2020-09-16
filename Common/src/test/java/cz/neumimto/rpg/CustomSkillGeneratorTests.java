@@ -4,6 +4,7 @@ import com.electronwill.nightconfig.core.conversion.ObjectConverter;
 import com.electronwill.nightconfig.core.file.FileConfig;
 import com.google.inject.Injector;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.scripting.ScriptSkillModel;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.common.skills.mech.DamageMechanic;
@@ -54,7 +55,10 @@ public class CustomSkillGeneratorTests {
             injector.getInstance(DamageMechanic.class);
 
             Class<ActiveSkill> i= (Class<ActiveSkill>) customSkillGenerator.generate(model);
-            injector.getInstance(i).cast(null, null);
+
+            PlayerSkillContext context = new PlayerSkillContext(null, null, null);
+
+            injector.getInstance(i).cast(null, context);
         }
     }
 

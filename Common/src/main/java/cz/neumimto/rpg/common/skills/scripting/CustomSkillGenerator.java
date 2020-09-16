@@ -28,7 +28,6 @@ import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
-import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
@@ -171,8 +170,8 @@ public class CustomSkillGenerator implements Opcodes {
 
             Label first = newLine(m);
             methodCall(m, ALOAD, index_context,
-                          PlayerSkillContext.class, "getCachedComputedSkillSettings", "()L"+getInternalName(Object2FloatOpenHashMap.class)+";",
-                          ASTORE, index_hashmap);
+                    PlayerSkillContext.class, "getCachedComputedSkillSettings", "()L" + getInternalName(Object2FloatOpenHashMap.class) + ";",
+                    ASTORE, index_hashmap);
 
             int localVariableId = 4;
             for (Map.Entry<String, String> e : localVars.entrySet()) {
@@ -182,29 +181,49 @@ public class CustomSkillGenerator implements Opcodes {
 
                     newLine(m);
                     visitSettingsF(m, index_hashmap, path, localVariableId);
-                    settingsVariables.put(path, new LocalVariableHelper(localVariableId, FLOAD));
+                    settingsVariables.put(path, new LocalVariableHelper(localVariableId, FLOAD, path, "F"));
 
                     localVariableId++;
                 }
             }
+            newLine(m);
 
             for (Map.Entry<String, List<? extends Config>> entry : helper.targetSelectors.entrySet()) {
                 String targetSelectorId = entry.getKey();
+                Label label = newLine(m);
 
                 Object o = filterMechanicById(targetSelectorId);
+
+                int target_id = localVariableId;
+                //visit field
+                m.visitVarInsn(ALOAD, index_this); //injected field to stack
+                m.visitFieldInsn(GETFIELD, internalClassName, o.getClass().getSimpleName(), getObjectTypeDescriptor(o.getClass()));
+                //       //invoke method
+                m.visitVarInsn(ALOAD, index_caster);
                 MethodInvocationHelper helper = new MethodInvocationHelper(internalClassName, o, settingsVariables);
-                newLine(m);
-                visitLoadTargetVar(m, index_this, helper, localVariableId);
-                settingsVariables.put("$target", new LocalVariableHelper(localVariableId, ALOAD));
+
+                m.visitMethodInsn(INVOKEVIRTUAL, helper.methodOwner, helper.methodName, helper.methodDescriptor, false);
+
+                m.visitVarInsn(ASTORE, target_id); //store return value
+                settingsVariables.put("$target", new LocalVariableHelper(localVariableId, ALOAD, "target", helper.returnTypeDescriptor));
                 localVariableId++;
 
-               // List<? extends Config> mechanics = entry.getValue();
-               // for (Config mechanic : mechanics) {
-               //     o = filterMechanicById(mechanic);
-               //     helper = new MethodInvocationHelper(internalClassName, o, settingsVariables);
-               //     newLine(m);
-               //     visitMechanicInvokeInst(m, index_this, helper);
-               // }
+                List<? extends Config> mechanics = entry.getValue();
+                for (Config c : mechanics) {
+                    newLine(m);
+                    Object mechanic = filterMechanicById(c);
+
+                    MethodInvocationHelper helper1 = new MethodInvocationHelper(internalClassName, mechanic, settingsVariables);
+                    m.visitVarInsn(ALOAD, index_this);
+                    m.visitFieldInsn(GETFIELD, internalClassName, mechanic.getClass().getSimpleName(), getObjectTypeDescriptor(mechanic.getClass()));
+                    for (LocalVariableHelper toVisit : helper1.visitVarInst) {
+                        m.visitVarInsn(toVisit.opCodeLoadInst, toVisit.fieldIndex);
+                    }
+                    m.visitMethodInsn(INVOKEVIRTUAL, helper1.methodOwner, helper1.methodName, helper1.methodDescriptor, false);
+
+                }
+
+
             }
 
             newLine(m);
@@ -212,16 +231,22 @@ public class CustomSkillGenerator implements Opcodes {
 
             Label label = new Label();
             m.visitLabel(label);
-            m.visitLocalVariable("this", "L"+internalClassName+";", null, first, label, 0);
-            m.visitLocalVariable("character", "L"+getInternalName(IActiveCharacter.class)+";", null, first, label, 1);
-            m.visitLocalVariable("info", "L"+getInternalName(PlayerSkillContext.class)+";", null, first, label, 2);
-            m.visitLocalVariable("settings", "L"+getInternalName(Object2FloatOpenHashMap.class)+";", "Lit/unimi/dsi/fastutil/objects/Object2FloatOpenHashMap<Ljava/lang/String;>;", first, label, 3);
+            m.visitLocalVariable("this", "L" + internalClassName + ";", null, first, label, index_this);
+            m.visitLocalVariable("character", "L" + getInternalName(IActiveCharacter.class) + ";", null, first, label, index_caster);
+            m.visitLocalVariable("info", "L" + getInternalName(PlayerSkillContext.class) + ";", null, first, label, index_context);
+            m.visitLocalVariable("settings", "L" + getInternalName(Object2FloatOpenHashMap.class) + ";", "Lit/unimi/dsi/fastutil/objects/Object2FloatOpenHashMap<Ljava/lang/String;>;", first, label, index_hashmap);
 
-            m.visitLocalVariable("damage", "F", null, first, label, 4);
+            for (Map.Entry<String, LocalVariableHelper> e : settingsVariables.entrySet()) {
+                LocalVariableHelper value = e.getValue();
+                if (value.fieldIndex > index_hashmap) {
+                    m.visitLocalVariable(value.path, value.descriptor, null, first, label, value.fieldIndex);
+                }
+            }
 
-            m.visitLocalVariable("target", "Lcz/neumimto/rpg/api/entity/IEntity;", null, first, label, 5);
-            
-            
+            //m.visitLocalVariable("damage", "F", null, first, label, 4);
+//
+            //m.visitLocalVariable("target", "Lcz/neumimto/rpg/api/entity/IEntity;", null, first, label, 5);
+
             return new Size(0, 0);
         }
 
@@ -262,7 +287,7 @@ public class CustomSkillGenerator implements Opcodes {
     }
 
     private void visitReturn(MethodVisitor m, SkillResult skillResult) {
-        m.visitFieldInsn(GETSTATIC, getInternalName(skillResult.getDeclaringClass()), skillResult.name(), "L"+getInternalName(skillResult.getDeclaringClass())+";");
+        m.visitFieldInsn(GETSTATIC, getInternalName(skillResult.getDeclaringClass()), skillResult.name(), "L" + getInternalName(skillResult.getDeclaringClass()) + ";");
         m.visitInsn(ARETURN);
     }
 
@@ -274,6 +299,7 @@ public class CustomSkillGenerator implements Opcodes {
         final String methodName;
         final String methodDescriptor;
         final List<LocalVariableHelper> visitVarInst;
+        final String returnTypeDescriptor;
 
         public MethodInvocationHelper(String parent, Object mechanic, Map<String, LocalVariableHelper> localVars) {
             this.visitVarInst = new ArrayList<>();
@@ -284,7 +310,7 @@ public class CustomSkillGenerator implements Opcodes {
             Method method = getRelevantMethod(mechanic.getClass()).get();
             this.methodName = method.getName();
             this.methodDescriptor = getMethodDescriptor(method);
-
+            this.returnTypeDescriptor = Type.getReturnType(method).toString();
             List<Annotation> methodParameterAnnotations = getMethodParameterAnnotations(method);
             for (Annotation annotation : methodParameterAnnotations) {
                 if (is(annotation, Caster.class)) {
@@ -314,10 +340,18 @@ public class CustomSkillGenerator implements Opcodes {
     private static class LocalVariableHelper {
         final int fieldIndex;
         final int opCodeLoadInst;
+        String path;
+        String descriptor;
 
         private LocalVariableHelper(int fieldIndex, int opCodeLoadInst) {
             this.fieldIndex = fieldIndex;
             this.opCodeLoadInst = opCodeLoadInst;
+        }
+
+        public LocalVariableHelper(int localVariableId, int fload, String path, String descriptor) {
+            this(localVariableId, fload);
+            this.path = path;
+            this.descriptor = descriptor;
         }
     }
 
@@ -326,16 +360,11 @@ public class CustomSkillGenerator implements Opcodes {
     }
 
     private String getMethodDescriptor(Method method) {
-        try {
-            return MethodHandles.lookup().unreflect(method).type().toMethodDescriptorString();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return Type.getMethodDescriptor(method);
     }
 
     private String getObjectTypeDescriptor(Class<?> c) {
-        return "L" + getInternalName(c) + ";";
+        return Type.getDescriptor(c);//"L" + getInternalName(c) + ";";
     }
 
     private List<Annotation> getMethodParameterAnnotations(Method method) {
@@ -424,7 +453,7 @@ public class CustomSkillGenerator implements Opcodes {
         Annotation[][] parameterAnnotations = method.getParameterAnnotations();
         for (Annotation[] parameterAnnotation : parameterAnnotations) {
             for (Annotation a : parameterAnnotation) {
-                if (isOneOf(a, new Class[] { Caster.class, Target.class, SkillArgument.class })) {
+                if (isOneOf(a, new Class[]{Caster.class, Target.class, SkillArgument.class})) {
                     return true;
                 }
             }
