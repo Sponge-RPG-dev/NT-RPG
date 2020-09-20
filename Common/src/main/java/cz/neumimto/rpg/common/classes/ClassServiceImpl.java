@@ -113,30 +113,52 @@ public class ClassServiceImpl implements ClassService {
 
     @Override
     public void load() {
-        copyDefaultFiles();
-        Set<ClassDefinition> classDefinitions = classDefinitionDao.parseClassFiles();
-        classes.clear();
+        Path loadFrom = null;
+        if (isClassDirEmpty()) {
+            loadFrom = prepareTempDir();
+        } else {
+            loadFrom = classDefinitionDao.getClassDirectory();
 
+        }
+        Set<ClassDefinition> classDefinitions = classDefinitionDao.parseClassFiles(loadFrom);
+        classes.clear();
         classDefinitions.forEach(this::registerClassDefinition);
 
         Log.info("Successfully loaded " + classes.size() + " classes");
     }
 
-    private void copyDefaultFiles() {
+
+    private void copyDefaultFilesToClassDir(Path path) {
+        assetService.copyToFile("defaults/classes/primary_classes/Mage.conf", path.resolve("primary/Mage.conf"));
+        assetService.copyToFile("defaults/classes/primary_classes/Rogue.conf", path.resolve("primary/Rogue.conf"));
+        assetService.copyToFile("defaults/classes/primary_classes/Warrior.conf", path.resolve("primary/Warrior.conf"));
+        assetService.copyToFile("defaults/classes/races/Mage.conf", path.resolve("races/Mage.conf"));
+        assetService.copyToFile("defaults/classes/races/Rogue.conf", path.resolve("races/Rogue.conf"));
+        assetService.copyToFile("defaults/classes/races/Human.conf", path.resolve("races/Human.conf"));
+    }
+
+    private Path prepareTempDir() {
+        try {
+            Path tempDirectory = Files.createTempDirectory("ntrpg",null);
+
+            copyDefaultFilesToClassDir(tempDirectory);
+            return tempDirectory;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private boolean isClassDirEmpty() {
         Path path = Paths.get(Rpg.get().getWorkingDirectory(), "classes");
         try {
             Stream<Path> pathStream = Files.find(path, Integer.MAX_VALUE, (p, bfa) -> bfa.isRegularFile());
             if (pathStream.count() == 0) {
-                assetService.copyToFile("defaults/classes/primary_classes/Mage.conf", path.resolve("primary/Mage.conf"));
-                assetService.copyToFile("defaults/classes/primary_classes/Rogue.conf", path.resolve("primary/Rogue.conf"));
-                assetService.copyToFile("defaults/classes/primary_classes/Warrior.conf", path.resolve("primary/Warrior.conf"));
-                assetService.copyToFile("defaults/classes/races/Mage.conf", path.resolve("races/Mage.conf"));
-                assetService.copyToFile("defaults/classes/races/Rogue.conf", path.resolve("races/Rogue.conf"));
-                assetService.copyToFile("defaults/classes/races/Human.conf", path.resolve("races/Human.conf"));
+                return true;
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        return false;
     }
 }

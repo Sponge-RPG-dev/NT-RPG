@@ -18,6 +18,7 @@
 
 package cz.neumimto.rpg.common.persistance.dao;
 
+import com.electronwill.nightconfig.core.Config;
 import com.electronwill.nightconfig.core.conversion.ObjectConverter;
 import com.electronwill.nightconfig.core.file.FileConfig;
 import com.electronwill.nightconfig.core.file.NoFormatFoundException;
@@ -57,10 +58,12 @@ public class ClassDefinitionDao {
         return path;
     }
 
-    public Set<ClassDefinition> parseClassFiles() {
+
+
+    public Set<ClassDefinition> parseClassFiles(Path path) {
         Set<ClassDefinition> set = new HashSet<>();
         try {
-            Map<String, Path> stringPathMap = preloadClassDefs(getClassDirectory(), set);
+            Map<String, Path> stringPathMap = preloadClassDefs(path, set);
             for (Map.Entry<String, Path> stringPathEntry : stringPathMap.entrySet()) {
                 String key = stringPathEntry.getKey();
                 Path p = stringPathEntry.getValue();
@@ -105,30 +108,7 @@ public class ClassDefinitionDao {
                     ClassDefinition classDefinition = null;
                     try (FileConfig fileConfig = FileConfig.of(p)) {
                         fileConfig.load();
-                        if (!fileConfig.contains("Name") && !fileConfig.contains("ClassType")) {
-                            error(" - Nodes Name and ClassType are mandatory");
-                        } else {
-                            String name = fileConfig.get("Name");
-                            String classType = fileConfig.get("ClassType");
-                            Map<String, ClassTypeDefinition> types = Rpg.get().getPluginConfig().CLASS_TYPES;
-                            ClassTypeDefinition classTypeDefinition = null;
-
-                            for (Map.Entry<String, ClassTypeDefinition> e : types.entrySet()) {
-                                if (e.getKey().equalsIgnoreCase(classType)) {
-                                    classType = e.getKey();
-                                    classTypeDefinition = e.getValue();
-                                    break;
-                                }
-                            }
-
-                            if (classTypeDefinition == null) {
-                                error(" - Unknown ClassType " + classType + "; Allowed Class Types: " + String.join(", ", types.keySet()));
-                            } else {
-                                classDefinition = new ClassDefinition(name, classType);
-                                map.put(name, p);
-                                set.add(classDefinition);
-                            }
-                        }
+                        preloadClassConfig(set, map, p, fileConfig);
                     } catch (NoFormatFoundException e) {
                         error(" - File malformed", e);
                     }
@@ -139,18 +119,50 @@ public class ClassDefinitionDao {
                 .forEach(p -> {
                     try (FileConfig fileConfig = FileConfig.of(p)) {
                         fileConfig.load();
-                        if (fileConfig.contains("Name") && fileConfig.contains("ClassType") && fileConfig.contains("Dependencies")) {
-                            info("Preloading class dependency graph file " + p.getFileName());
-                            for (ClassDefinition classDefinition : set) {
-                                if (classDefinition.getName().equals(fileConfig.get("Name"))) {
-                                    ClassDependencyGraphAdapter.load(fileConfig.get("Dependencies"), classDefinition, set);
-                                }
-                            }
-                        }
+                        preloadClassDependencyGraphConfig(set, p, fileConfig);
                     }
                 });
 
 
         return map;
+    }
+
+    private void preloadClassDependencyGraphConfig(Set<ClassDefinition> set, Path p, FileConfig fileConfig) {
+        if (fileConfig.contains("Name") && fileConfig.contains("ClassType") && fileConfig.contains("Dependencies")) {
+            info("Preloading class dependency graph file " + p.getFileName());
+            for (ClassDefinition classDefinition : set) {
+                if (classDefinition.getName().equals(fileConfig.get("Name"))) {
+                    ClassDependencyGraphAdapter.load(fileConfig.get("Dependencies"), classDefinition, set);
+                }
+            }
+        }
+    }
+
+    public void preloadClassConfig(Set<ClassDefinition> set, Map<String, Path> map, Path p, Config fileConfig) {
+        ClassDefinition classDefinition;
+        if (!fileConfig.contains("Name") && !fileConfig.contains("ClassType")) {
+            error(" - Nodes Name and ClassType are mandatory");
+        } else {
+            String name = fileConfig.get("Name");
+            String classType = fileConfig.get("ClassType");
+            Map<String, ClassTypeDefinition> types = Rpg.get().getPluginConfig().CLASS_TYPES;
+            ClassTypeDefinition classTypeDefinition = null;
+
+            for (Map.Entry<String, ClassTypeDefinition> e : types.entrySet()) {
+                if (e.getKey().equalsIgnoreCase(classType)) {
+                    classType = e.getKey();
+                    classTypeDefinition = e.getValue();
+                    break;
+                }
+            }
+
+            if (classTypeDefinition == null) {
+                error(" - Unknown ClassType " + classType + "; Allowed Class Types: " + String.join(", ", types.keySet()));
+            } else {
+                classDefinition = new ClassDefinition(name, classType);
+                map.put(name, p);
+                set.add(classDefinition);
+            }
+        }
     }
 }
