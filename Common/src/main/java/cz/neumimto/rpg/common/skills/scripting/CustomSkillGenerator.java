@@ -209,17 +209,7 @@ public class CustomSkillGenerator implements Opcodes {
                 MethodInvocationHelper helper = new MethodInvocationHelper(internalClassName, o, settingsVariables);
                 Class targetSelectorReturnType = getRelevantMethod(o.getClass()).get().getReturnType();
 
-                //**********************************************
-                //var target = targetMechanic.getTarget(params)
-                //visit field
-                m.visitVarInsn(ALOAD, index_this); //injected field to stack
-                m.visitFieldInsn(GETFIELD, internalClassName, fieldName(o.getClass().getSimpleName()), getObjectTypeDescriptor(o.getClass()));
-                //       //invoke method
-                for (LocalVariableHelper toVisit : helper.visitVarInst) {
-                    m.visitVarInsn(toVisit.opCodeLoadInst, toVisit.fieldIndex);
-                }
-                m.visitMethodInsn(INVOKEVIRTUAL, helper.methodOwner, helper.methodName, helper.methodDescriptor, false);
-
+                helper.invoke(m, index_this, internalClassName, o);
                 m.visitVarInsn(ASTORE, localVariableId); //store return value
 
 
@@ -243,14 +233,14 @@ public class CustomSkillGenerator implements Opcodes {
                     m.visitJumpInsn(IFEQ, label6);
                     m.visitVarInsn(ALOAD, localVariableId);
                     m.visitMethodInsn(INVOKEINTERFACE, "java/util/Iterator", "next", "()Ljava/lang/Object;", true);
-             //       m.visitTypeInsn(CHECKCAST, "cz/neumimto/rpg/api/entity/IEntity");
+                    //       m.visitTypeInsn(CHECKCAST, "cz/neumimto/rpg/api/entity/IEntity");
                     localVariableId++;
                     m.visitVarInsn(ASTORE, localVariableId); //store iterator.next()
 
                     Label label = newLine(m);
 
                     java.lang.reflect.Type[] actualTypeArguments = ((ParameterizedType) getRelevantMethod(o.getClass()).get().getGenericReturnType()).getActualTypeArguments();
-                    settingsVariables.put("$target", new LocalVariableHelper(localVariableId, ALOAD, "target", Type.getDescriptor((Class)actualTypeArguments[0]), label, null));
+                    settingsVariables.put("$target", new LocalVariableHelper(localVariableId, ALOAD, "target", Type.getDescriptor((Class) actualTypeArguments[0]), label, null));
 
                     visitMechanicsCall(m, settingsVariables, index_this, entry);
 
@@ -291,8 +281,8 @@ public class CustomSkillGenerator implements Opcodes {
                             value.fieldIndex);
                 }
             }
-        //    m.visitLocalVariable("targets", "Ljava/util/List;", "Ljava/util/List<Lcz/neumimto/rpg/api/entity/IEntity;>;", label7, last, 6);
-        //    m.visitLocalVariable("iEntity", "Lcz/neumimto/rpg/api/entity/IEntity;", null, first, label8, 8);
+            //    m.visitLocalVariable("targets", "Ljava/util/List;", "Ljava/util/List<Lcz/neumimto/rpg/api/entity/IEntity;>;", label7, last, 6);
+            //    m.visitLocalVariable("iEntity", "Lcz/neumimto/rpg/api/entity/IEntity;", null, first, label8, 8);
 
             return new Size(0, 0);
         }
@@ -383,6 +373,20 @@ public class CustomSkillGenerator implements Opcodes {
                     }
                 }
             }
+        }
+
+        public void invoke(MethodVisitor m, int index_this, String internalClassName, Object mechanic) {
+            //**********************************************
+            //var target = targetMechanic.getTarget(params)
+            //visit field
+            m.visitVarInsn(ALOAD, index_this); //injected field to stack
+            m.visitFieldInsn(GETFIELD, internalClassName, fieldName(mechanic.getClass().getSimpleName()), getObjectTypeDescriptor(mechanic.getClass()));
+            //       //invoke method
+            for (LocalVariableHelper toVisit : visitVarInst) {
+                m.visitVarInsn(toVisit.opCodeLoadInst, toVisit.fieldIndex);
+            }
+            m.visitMethodInsn(INVOKEVIRTUAL, methodOwner, methodName, methodDescriptor, false);
+
         }
     }
 
@@ -550,25 +554,42 @@ public class CustomSkillGenerator implements Opcodes {
         void apply(MethodVisitor methodVisitor, Config config);
     }
 
-
+    /**
+     * So far we cannot do else branch
+     */
     private static class Condition {
 
+        private final Config config;
         private MethodVisitor methodVisitor;
+        private Object boolmechanic;
+        private final String internalClassName;
+        private final int idx;
 
+        private Label label_if;
+        public Condition(Config config, Object boolmechanic, String internalClassName, int idx) {
+            this.config = config;
+            this.boolmechanic = boolmechanic;
+            this.internalClassName = internalClassName;
+            this.idx = idx;
+        }
 
         public void _if(MethodInvocationHelper methodInvocationHelper) {
-            methodVisitor.visitVarInsn(ALOAD, 8);
-            methodVisitor.visitMethodInsn(INVOKESTATIC, "cz/neumimto/rpg/sponge/utils/Utils", "isLivingEntity", "(Lorg/spongepowered/api/entity/Entity;)Z", false);
-
+            methodInvocationHelper.invoke(methodVisitor, idx, internalClassName, boolmechanic);
+            label_if = new Label();
+            methodVisitor.visitJumpInsn(IFEQ, label_if);
         }
 
         public void _then() {
-
+            //do shit here
+            methodVisitor.visitLabel(label_if);
+            methodVisitor.visitLineNumber(99999, label_if);
+            methodVisitor.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
+//xxxx if mechanics called in current frame had return value that i push on the stack then
+            methodVisitor.visitFrame(Opcodes.F_CHOP, 0, null, 0, null);
         }
 
         public void _else() {
-
-        }
+       }
     }
 
 }
