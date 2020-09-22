@@ -45,6 +45,14 @@ public class CustomSkillGenerator implements Opcodes {
     @Inject
     private NearbyEnemies nearbyEnemies;
 
+    private static Map<String, InlineMechanic> inlineMechanic = new HashMap<>();
+
+    static {
+        inlineMechanic.put("apply_effect", (methodVisitor, config) -> {
+
+        });
+    }
+
     public Class<? extends ISkill> generate(ScriptSkillModel scriptSkillModel) {
         if (scriptSkillModel == null || scriptSkillModel.getSpell() == null) {
             return null;
@@ -255,6 +263,7 @@ public class CustomSkillGenerator implements Opcodes {
                     settingsVariables.get("$target").lastLabel = lastFramelabel;
                 } else {
                     settingsVariables.put("$target", new LocalVariableHelper(localVariableId, ALOAD, "target", ""));
+
                     visitMechanicsCall(m, settingsVariables, index_this, entry);
                 }
 
@@ -292,16 +301,19 @@ public class CustomSkillGenerator implements Opcodes {
             List<? extends Config> mechanics = entry.getValue();
             for (Config c : mechanics) {
                 newLine(m);
-                Object mechanic = filterMechanicById(c);
 
-                MethodInvocationHelper helper1 = new MethodInvocationHelper(internalClassName, mechanic, settingsVariables);
-                m.visitVarInsn(ALOAD, index_this);
-                m.visitFieldInsn(GETFIELD, internalClassName, fieldName(mechanic.getClass().getSimpleName()), getObjectTypeDescriptor(mechanic.getClass()));
-                for (LocalVariableHelper toVisit : helper1.visitVarInst) {
-                    m.visitVarInsn(toVisit.opCodeLoadInst, toVisit.fieldIndex);
+                if (isInlineMechanic(c)) {
+
+                } else {
+                    Object mechanic = filterMechanicById(c);
+                    MethodInvocationHelper helper1 = new MethodInvocationHelper(internalClassName, mechanic, settingsVariables);
+                    m.visitVarInsn(ALOAD, index_this);
+                    m.visitFieldInsn(GETFIELD, internalClassName, fieldName(mechanic.getClass().getSimpleName()), getObjectTypeDescriptor(mechanic.getClass()));
+                    for (LocalVariableHelper toVisit : helper1.visitVarInst) {
+                        m.visitVarInsn(toVisit.opCodeLoadInst, toVisit.fieldIndex);
+                    }
+                    m.visitMethodInsn(INVOKEVIRTUAL, helper1.methodOwner, helper1.methodName, helper1.methodDescriptor, false);
                 }
-                m.visitMethodInsn(INVOKEVIRTUAL, helper1.methodOwner, helper1.methodName, helper1.methodDescriptor, false);
-
             }
         }
 
@@ -465,6 +477,11 @@ public class CustomSkillGenerator implements Opcodes {
         return skillMechanics;
     }
 
+    protected boolean isInlineMechanic(Config config) {
+        String type = config.get("Type");
+        return inlineMechanic.containsKey(type);
+    }
+
     protected Object filterMechanicById(Config config) {
         String type = config.get("Type");
         return filterMechanicById(type);
@@ -526,4 +543,32 @@ public class CustomSkillGenerator implements Opcodes {
     private boolean is(Annotation a, Class<?> c) {
         return a.annotationType() == c || a.getClass() == c;
     }
+
+
+    @FunctionalInterface
+    private interface InlineMechanic {
+        void apply(MethodVisitor methodVisitor, Config config);
+    }
+
+
+    private static class Condition {
+
+        private MethodVisitor methodVisitor;
+
+
+        public void _if(MethodInvocationHelper methodInvocationHelper) {
+            methodVisitor.visitVarInsn(ALOAD, 8);
+            methodVisitor.visitMethodInsn(INVOKESTATIC, "cz/neumimto/rpg/sponge/utils/Utils", "isLivingEntity", "(Lorg/spongepowered/api/entity/Entity;)Z", false);
+
+        }
+
+        public void _then() {
+
+        }
+
+        public void _else() {
+
+        }
+    }
+
 }

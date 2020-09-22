@@ -129,17 +129,23 @@ public class ClassServiceImpl implements ClassService {
 
 
     private void copyDefaultFilesToClassDir(Path path) {
+        try {
+            Files.createDirectory(path.resolve("primary/"));
+            Files.createDirectory(path.resolve("races/"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         assetService.copyToFile("defaults/classes/primary_classes/Mage.conf", path.resolve("primary/Mage.conf"));
         assetService.copyToFile("defaults/classes/primary_classes/Rogue.conf", path.resolve("primary/Rogue.conf"));
         assetService.copyToFile("defaults/classes/primary_classes/Warrior.conf", path.resolve("primary/Warrior.conf"));
-        assetService.copyToFile("defaults/classes/races/Mage.conf", path.resolve("races/Mage.conf"));
-        assetService.copyToFile("defaults/classes/races/Rogue.conf", path.resolve("races/Rogue.conf"));
+        assetService.copyToFile("defaults/classes/races/Dwarf.conf", path.resolve("races/Mage.conf"));
+        assetService.copyToFile("defaults/classes/races/Elf.conf", path.resolve("races/Rogue.conf"));
         assetService.copyToFile("defaults/classes/races/Human.conf", path.resolve("races/Human.conf"));
     }
 
     private Path prepareTempDir() {
         try {
-            Path tempDirectory = Files.createTempDirectory("ntrpg",null);
+            Path tempDirectory = Files.createTempDirectory("ntrpg");
 
             copyDefaultFilesToClassDir(tempDirectory);
             return tempDirectory;

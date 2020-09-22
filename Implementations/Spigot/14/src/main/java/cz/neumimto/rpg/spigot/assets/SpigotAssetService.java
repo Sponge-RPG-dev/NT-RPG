@@ -19,6 +19,9 @@ public class SpigotAssetService implements AssetService {
     @Override
     public String getAssetAsString(String path) {
         try (InputStream is = getClass().getClassLoader().getResourceAsStream("assets/nt-rpg/" + path)) {
+            if (is == null) {
+                throw new IllegalArgumentException("Unknown path \"assets/nt-rpg/" + path + "\"");
+            }
             try (InputStreamReader isr = new InputStreamReader(is, Charsets.UTF_8)) {
                 return CharStreams.toString(isr);
             }

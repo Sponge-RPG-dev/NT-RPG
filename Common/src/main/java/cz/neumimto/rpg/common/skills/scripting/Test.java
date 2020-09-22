@@ -6,6 +6,7 @@ import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.common.skills.mech.DamageMechanic;
+import cz.neumimto.rpg.common.skills.mech.NearbyEnemies;
 import cz.neumimto.rpg.common.skills.mech.TargetSelectorSelf;
 import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;
 
@@ -18,6 +19,9 @@ public class Test extends ActiveSkill {
 
     @Inject
     private TargetSelectorSelf targetSelectorSelf;
+
+    @Inject
+    private NearbyEnemies nearbyEnemies;
 
     @Override
     public SkillResult cast(IActiveCharacter character, PlayerSkillContext info) {
