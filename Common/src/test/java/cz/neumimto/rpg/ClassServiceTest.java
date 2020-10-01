@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import javax.inject.Inject;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -67,7 +68,7 @@ public class ClassServiceTest {
     public void testLoadClasses() {
         ClassDefinitionDao dao = new ClassDefinitionDao() {
             @Override
-            public Set<ClassDefinition> parseClassFiles() {
+            public Set<ClassDefinition> parseClassFiles(Path path) {
                 return new HashSet<>(Arrays.asList(classDefinition, classDefinition2));
             }
         };

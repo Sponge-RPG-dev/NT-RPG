@@ -32,7 +32,7 @@ public class SkillExampleGen extends ActiveSkill {
         List<IEntity> targets = NearbyEnemies.getTargets(character, range);
         for (IEntity iEntity : targets) {
 
-            TickableEffect effect = new TickableEffect("test", iEntity, effectDuration0, effectDuration1);
+          //  TickableEffect effect = new TickableEffect("test", iEntity, effectDuration0, effectDuration1);
             EffectService effectService;
           //  effectService.addEffect(effect, this, character);
         }

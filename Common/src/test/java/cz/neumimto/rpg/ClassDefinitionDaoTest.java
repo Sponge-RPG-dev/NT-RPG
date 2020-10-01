@@ -52,7 +52,7 @@ public class ClassDefinitionDaoTest {
     public void test_class_def_ependencies_loading() {
         Rpg.get().getPluginConfig().CLASS_TYPES.put("primary", new ClassTypeDefinition());
 
-        Set<ClassDefinition> classDefinitions = classDefinitionDao.parseClassFiles();
+        Set<ClassDefinition> classDefinitions = classDefinitionDao.parseClassFiles(null);
 
         boolean run = false;
         for (ClassDefinition classDefinition : classDefinitions) {

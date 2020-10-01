@@ -65,7 +65,7 @@ public class CustomSkillGeneratorTests {
 
     @Test
     public void test2() {
-        URL resource = getClass().getClassLoader().getResource("skillgen/test02.conf");
+        URL resource = getClass().getClassLoader().getResource("skillgen/test03.conf");
         ScriptSkillModel model;
         try (FileConfig fileConfig = FileConfig.of(new File(resource.getPath()))) {
             fileConfig.load();

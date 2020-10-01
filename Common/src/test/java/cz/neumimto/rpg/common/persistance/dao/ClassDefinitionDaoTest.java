@@ -48,7 +48,7 @@ public class ClassDefinitionDaoTest {
 
     @Test
     void testClassConfigLoading() {
-        Set<ClassDefinition> classDefinitions = classDefinitionDao.parseClassFiles();
+        Set<ClassDefinition> classDefinitions = classDefinitionDao.parseClassFiles(null);
         Assertions.assertSame(classDefinitions.size(), 1);
         ClassDefinition c = classDefinitions.iterator().next();
         Assertions.assertEquals(c.getName(), "ClassExample1");
