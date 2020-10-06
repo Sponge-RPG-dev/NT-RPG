@@ -1,10 +1,8 @@
 package cz.neumimto.rpg.common.skills.mech;
 
 
-import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.common.skills.scripting.Caster;
 import cz.neumimto.rpg.common.skills.scripting.Handler;
 import cz.neumimto.rpg.common.skills.scripting.SkillMechanic;
@@ -18,7 +16,6 @@ public class DamageCheck {
 
     @Handler
     public boolean check(@Caster IActiveCharacter caster, @Target IEntity entity) {
-        //    effectService.addEffect(effect, entity, source);
         return true;
     }
 

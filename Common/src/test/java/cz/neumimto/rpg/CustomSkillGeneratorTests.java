@@ -7,7 +7,9 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.scripting.ScriptSkillModel;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
+import cz.neumimto.rpg.common.skills.mech.DamageCheck;
 import cz.neumimto.rpg.common.skills.mech.DamageMechanic;
+import cz.neumimto.rpg.common.skills.mech.NearbyEnemies;
 import cz.neumimto.rpg.common.skills.scripting.Caster;
 import cz.neumimto.rpg.common.skills.scripting.CustomSkillGenerator;
 import cz.neumimto.rpg.common.skills.scripting.SkillArgument;
@@ -33,6 +35,12 @@ public class CustomSkillGeneratorTests {
 
     @Inject
     private CustomSkillGenerator customSkillGenerator;
+
+    @Inject
+    private NearbyEnemies nearbyEnemies;
+
+    @Inject
+    private DamageCheck damageCheck;
 
     @Inject
     private Injector injector;

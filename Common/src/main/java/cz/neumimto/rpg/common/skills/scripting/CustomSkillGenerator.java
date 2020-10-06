@@ -11,7 +11,6 @@ import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.scripting.ScriptSkillModel;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
-import cz.neumimto.rpg.common.skills.mech.TargetSelectorSelf;
 import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;
 import net.bytebuddy.jar.asm.Label;
 import net.bytebuddy.jar.asm.Opcodes;
@@ -27,6 +26,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
+import java.lang.reflect.ParameterizedType;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -52,7 +52,7 @@ public class CustomSkillGenerator implements Opcodes {
 
         SpellData data = getRelevantMechanics(getMechanics(), scriptSkillModel.getSpell());
         if (data.targetSelector == null) {
-            data.targetSelector = injector.getInstance(TargetSelectorSelf.class);
+            throw new UnknownMechanicException(scriptSkillModel.getId());
         }
         List<Object> futureFields = data.getAll();
 
@@ -90,6 +90,37 @@ public class CustomSkillGenerator implements Opcodes {
         return null;
     }
 
+    private static class MethodHandler {
+        final Class mechanic;
+        final String fieldName;
+        final Method relevantMethod;
+        final Class returnType;
+        final String methodName;
+
+        private MethodHandler(Class mechanic, String fieldName, Method relevantMethod, Class returnType, String methodName) {
+            this.mechanic = mechanic;
+            this.fieldName = fieldName;
+            this.relevantMethod = relevantMethod;
+            this.returnType = returnType;
+            this.methodName = methodName;
+        }
+
+        static MethodHandler of(Object mechanic) {
+            Class targetSelector = mechanic.getClass();
+            String fieldName = fieldName(targetSelector.getSimpleName());
+            Method relevantMethod = getRelevantMethod(targetSelector).get();
+            Class<?> returnType = relevantMethod.getReturnType();
+            String method = relevantMethod.getName();
+            return new MethodHandler(
+                    mechanic.getClass(),
+                    fieldName,
+                    relevantMethod,
+                    returnType,
+                    method
+            );
+        }
+    }
+
     private CodeBlock parseModel(ScriptSkillModel scriptSkillModel, SpellData data) {
         Map<String, String> requiredLocalVars = findRequiredLocalVars(data);
         CodeBlock.Builder builder = CodeBlock.builder()
@@ -98,18 +129,28 @@ public class CustomSkillGenerator implements Opcodes {
             builder.addStatement("float $L = map.getFloat($S)", getSkillSettingsNodeName(en.getKey()), getSkillSettingsNodeName(en.getKey()));
         }
 
-        Class targetSelector = data.targetSelector.getClass();
-        String fieldName = fieldName(targetSelector.getSimpleName());
-        Method relevantMethod = getRelevantMethod(targetSelector).get();
-        Class<?> returnType = relevantMethod.getReturnType();
-        String method = relevantMethod.getName();
+
+        MethodHandler methodHandler = MethodHandler.of(data.targetSelector);
+
+        List<Config> spell = scriptSkillModel.getSpell();
+        List<Config> mechs = spell.get(0).get("Mechanics");
 
 
-        if (Iterable.class.isAssignableFrom(returnType)) {
+
+        if (Iterable.class.isAssignableFrom(methodHandler.returnType)) {
 
             List<String> list = parseMethodCall(data.targetSelector, data.paramsTs);
-            List<String> collect = list.stream().map(a -> "$L, ").collect(Collectors.toList());
-            builder.beginControlFlow("for ($T target : $L.$L("+ String.join(", ", collect) +"))", relevantMethod.getGenericReturnType(), fieldName, method);
+
+            Object[] args = parseMethodArguments(list);
+
+            java.lang.reflect.Type actualTypeArgument = ((ParameterizedType) methodHandler.relevantMethod.getGenericReturnType()).getActualTypeArguments()[0];
+            Object[] objects = {actualTypeArgument, methodHandler.fieldName, methodHandler.methodName};
+            builder.beginControlFlow("for ($T target : $L.$L("+ String.join(", ", list) +"))", objects);
+
+            for (Config mechanic : mechs) {
+                writeCallMechanic(mechanic, builder);
+            }
+
             builder.endControlFlow();
 
         }
@@ -118,6 +159,57 @@ public class CustomSkillGenerator implements Opcodes {
         return builder.build();
     }
 
+    private Object[] parseMethodArguments(List<String> list) {
+        list.stream().map(a -> "$L").collect(Collectors.toList());
+        Object[] args = list.toArray();
+        return args;
+    }
+
+
+    private void writeCallMechanic(Config config, CodeBlock.Builder builder) {
+        List<String> params = config.get("Params");
+        if (params == null) {
+            params = new ArrayList<>();
+        }
+        if (config.contains("If")) {
+
+            Object mechanic = filterMechanicById((String)config.get("If"));
+            params = parseMethodCall(mechanic, params);
+            Method relevantMethod = getRelevantMethod(mechanic.getClass()).get();
+            if (relevantMethod.getReturnType() != boolean.class) {
+                throw new IllegalArgumentException("Conditional requires return type boolean, got " + mechanic.getClass().getSimpleName());
+            }
+            if (!config.contains("Then")) {
+                throw new IllegalArgumentException("Conditional requires positive branch");
+            }
+            List<? extends Config> then = config.get("Then");
+
+
+            MethodHandler methodHandler = MethodHandler.of(mechanic);
+            Object[] args = parseMethodArguments(params);
+            Object[] objects = {methodHandler.fieldName, methodHandler.methodName};
+
+            builder.beginControlFlow("if ($L.$L("+String.join(", ", params)+"))", objects);
+
+            for (Config posB : then) {
+                writeCallMechanic(posB, builder);
+            }
+
+            builder.endControlFlow();
+        } else if (config.contains("Type")) {
+            String type = config.get("Type");
+            Object mechanic = filterMechanicById(type);
+            params = parseMethodCall(mechanic, params);
+
+            MethodHandler methodHandler = MethodHandler.of(mechanic);
+            Object[] args = parseMethodArguments(params);
+            Object[] objects = {methodHandler.fieldName, methodHandler.methodName};
+            objects = Stream.concat(Arrays.stream(objects), Arrays.stream(args)).toArray();
+
+            builder.add(CodeBlock.of("$L.$L("+String.join(", ", params)+")",objects));
+        }
+
+    }
 
     private SpellData getRelevantMechanics(Set<Object> mechanics, List<Config> spell) {
         SpellData spellData = new SpellData();
@@ -136,6 +228,9 @@ public class CustomSkillGenerator implements Opcodes {
                 List<Config> list = config.get("Mechanics");
                 for (Config config1 : list) {
                     type = config1.get("Type");
+                    if (type == null) {
+                        type = config1.get("If");
+                    }
                     if (mechanic.getClass().isAnnotationPresent(SkillMechanic.class) && mechanic.getClass().getAnnotation(SkillMechanic.class).value().equalsIgnoreCase(type)) {
                         spellData.mechanics.add(mechanic);
                         spellData.paramsM.add(config1.getOrElse("Params", new ArrayList<>()));
@@ -161,7 +256,7 @@ public class CustomSkillGenerator implements Opcodes {
         }
     }
 
-    private String fieldName(String string) {
+    private static String fieldName(String string) {
         return Character.toLowerCase(string.charAt(0)) + string.substring(1);
     }
 
@@ -305,20 +400,20 @@ public class CustomSkillGenerator implements Opcodes {
                 rawType.getAnnotation(SkillMechanic.class).value() : rawType.getAnnotation(TargetSelector.class).value();
     }
 
-    protected Optional<Method> getRelevantMethod(Class<?> rawType) {
+    protected static Optional<Method> getRelevantMethod(Class<?> rawType) {
         return Stream.of(rawType.getDeclaredMethods())
-                .filter(this::isHandlerMethod)
+                .filter(CustomSkillGenerator::isHandlerMethod)
                 .findFirst();
 
     }
 
-    private boolean isHandlerMethod(Method method) {
+    private static boolean isHandlerMethod(Method method) {
         return Modifier.isPublic(method.getModifiers())
                 && !Modifier.isStatic(method.getModifiers())
                 && (method.isAnnotationPresent(Handler.class) || hasAnnotatedArgument(method));
     }
 
-    private boolean hasAnnotatedArgument(Method method) {
+    private static boolean hasAnnotatedArgument(Method method) {
         Annotation[][] parameterAnnotations = method.getParameterAnnotations();
         for (Annotation[] parameterAnnotation : parameterAnnotations) {
             for (Annotation a : parameterAnnotation) {
@@ -330,7 +425,7 @@ public class CustomSkillGenerator implements Opcodes {
         return false;
     }
 
-    private boolean isOneOf(Annotation a, Class<?>... c) {
+    private static boolean isOneOf(Annotation a, Class<?>... c) {
         for (Class<?> aClass : c) {
             if (is(a, aClass)) {
                 return true;
@@ -339,8 +434,19 @@ public class CustomSkillGenerator implements Opcodes {
         return false;
     }
 
-    private boolean is(Annotation a, Class<?> c) {
+    private static boolean is(Annotation a, Class<?> c) {
         return a.annotationType() == c || a.getClass() == c;
     }
 
+    private class UnknownMechanicException extends RuntimeException {
+        public UnknownMechanicException(String id) {
+            super(id);
+        }
+    }
+
+    private class IllegalReturnTypeException extends RuntimeException {
+        public IllegalReturnTypeException(String message) {
+            super(message);
+        }
+    }
 }
