@@ -9,7 +9,7 @@ import cz.neumimto.rpg.spigot.Resourcepack;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
 import cz.neumimto.rpg.spigot.effects.SpigotEffectService;
-import cz.neumimto.rpg.spigot.effects.positive.IceSpikeEffect;
+import cz.neumimto.rpg.spigot.effects.common.IceSpikeEffect;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.skills.particles.ResettingVortexEffect;
 import de.slikey.effectlib.effect.VortexEffect;

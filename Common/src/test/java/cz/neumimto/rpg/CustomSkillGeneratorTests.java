@@ -7,6 +7,7 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.scripting.ScriptSkillModel;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
+import cz.neumimto.rpg.common.skills.mech.ApplyEffect;
 import cz.neumimto.rpg.common.skills.mech.DamageCheck;
 import cz.neumimto.rpg.common.skills.mech.DamageMechanic;
 import cz.neumimto.rpg.common.skills.mech.NearbyEnemies;
@@ -38,6 +39,9 @@ public class CustomSkillGeneratorTests {
 
     @Inject
     private NearbyEnemies nearbyEnemies;
+
+    @Inject
+    private ApplyEffect applyEffect;
 
     @Inject
     private DamageCheck damageCheck;

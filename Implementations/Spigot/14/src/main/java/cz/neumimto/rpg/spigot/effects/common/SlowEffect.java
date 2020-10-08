@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.spigot.effects.common.negative;
+package cz.neumimto.rpg.spigot.effects.common;
 
 import cz.neumimto.rpg.api.effects.CommonEffectTypes;
 import cz.neumimto.rpg.api.effects.EffectBase;

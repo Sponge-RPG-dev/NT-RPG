@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.spigot.effects.common.mechanics;
+package cz.neumimto.rpg.spigot.effects.common;
 
 import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.Generate;

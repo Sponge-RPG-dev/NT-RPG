@@ -7,7 +7,7 @@ import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
-import cz.neumimto.rpg.spigot.effects.negative.StunEffect;
+import cz.neumimto.rpg.spigot.effects.common.StunEffect;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageEvent;

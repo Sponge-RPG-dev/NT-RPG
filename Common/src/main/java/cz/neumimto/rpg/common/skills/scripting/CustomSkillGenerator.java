@@ -12,9 +12,6 @@ import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.scripting.ScriptSkillModel;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;
-import net.bytebuddy.jar.asm.Label;
-import net.bytebuddy.jar.asm.Opcodes;
-import net.bytebuddy.jar.asm.Type;
 import org.codehaus.commons.compiler.CompileException;
 import org.codehaus.janino.SimpleCompiler;
 import org.slf4j.Logger;
@@ -28,6 +25,8 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.ParameterizedType;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -35,7 +34,7 @@ import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
 @Singleton
-public class CustomSkillGenerator implements Opcodes {
+public class CustomSkillGenerator {
 
     private static Logger logger = LoggerFactory.getLogger(CustomSkillGenerator.class);
 
@@ -54,7 +53,7 @@ public class CustomSkillGenerator implements Opcodes {
         if (data.targetSelector == null) {
             throw new UnknownMechanicException(scriptSkillModel.getId());
         }
-        List<Object> futureFields = data.getAll();
+        Set<Object> futureFields = new HashSet<>(data.getAll());
 
         TypeSpec.Builder type = TypeSpec.classBuilder(className)
                 .addAnnotation(AnnotationSpec.builder(ResourceLoader.Skill.class).addMember("value", "$S", scriptSkillModel.getId()).build())
@@ -126,9 +125,13 @@ public class CustomSkillGenerator implements Opcodes {
         CodeBlock.Builder builder = CodeBlock.builder()
                 .addStatement("$T<$T> map = context.getCachedComputedSkillSettings()", Object2FloatOpenHashMap.class, String.class);
         for (Map.Entry<String, String> en : requiredLocalVars.entrySet()) {
-            builder.addStatement("float $L = map.getFloat($S)", getSkillSettingsNodeName(en.getKey()), getSkillSettingsNodeName(en.getKey()));
+            if ("$this".equals(en.getKey())) {
+                continue;
+            }
+            builder.addStatement(en.getValue() +" $L = map.getFloat($S)", getSkillSettingsNodeName(en.getKey()), getSkillSettingsNodeName(en.getKey()));
         }
 
+        List<String> localVars = requiredLocalVars.keySet().stream().map(this::getSkillSettingsNodeName).collect(Collectors.toList());
 
         MethodHandler methodHandler = MethodHandler.of(data.targetSelector);
 
@@ -141,14 +144,12 @@ public class CustomSkillGenerator implements Opcodes {
 
             List<String> list = parseMethodCall(data.targetSelector, data.paramsTs);
 
-            Object[] args = parseMethodArguments(list);
-
             java.lang.reflect.Type actualTypeArgument = ((ParameterizedType) methodHandler.relevantMethod.getGenericReturnType()).getActualTypeArguments()[0];
             Object[] objects = {actualTypeArgument, methodHandler.fieldName, methodHandler.methodName};
             builder.beginControlFlow("for ($T target : $L.$L("+ String.join(", ", list) +"))", objects);
 
             for (Config mechanic : mechs) {
-                writeCallMechanic(mechanic, builder);
+                writeCallMechanic(mechanic, builder, localVars);
             }
 
             builder.endControlFlow();
@@ -166,7 +167,7 @@ public class CustomSkillGenerator implements Opcodes {
     }
 
 
-    private void writeCallMechanic(Config config, CodeBlock.Builder builder) {
+    private void writeCallMechanic(Config config, CodeBlock.Builder builder, List<String> localVars) {
         List<String> params = config.get("Params");
         if (params == null) {
             params = new ArrayList<>();
@@ -186,13 +187,12 @@ public class CustomSkillGenerator implements Opcodes {
 
 
             MethodHandler methodHandler = MethodHandler.of(mechanic);
-            Object[] args = parseMethodArguments(params);
             Object[] objects = {methodHandler.fieldName, methodHandler.methodName};
 
             builder.beginControlFlow("if ($L.$L("+String.join(", ", params)+"))", objects);
 
             for (Config posB : then) {
-                writeCallMechanic(posB, builder);
+                writeCallMechanic(posB, builder, localVars);
             }
 
             builder.endControlFlow();
@@ -202,11 +202,9 @@ public class CustomSkillGenerator implements Opcodes {
             params = parseMethodCall(mechanic, params);
 
             MethodHandler methodHandler = MethodHandler.of(mechanic);
-            Object[] args = parseMethodArguments(params);
             Object[] objects = {methodHandler.fieldName, methodHandler.methodName};
-            objects = Stream.concat(Arrays.stream(objects), Arrays.stream(args)).toArray();
 
-            builder.add(CodeBlock.of("$L.$L("+String.join(", ", params)+")",objects));
+            builder.add(CodeBlock.of("$L.$L("+String.join(", ", params)+");",objects));
         }
 
     }
@@ -227,19 +225,40 @@ public class CustomSkillGenerator implements Opcodes {
 
                 List<Config> list = config.get("Mechanics");
                 for (Config config1 : list) {
-                    type = config1.get("Type");
-                    if (type == null) {
-                        type = config1.get("If");
-                    }
-                    if (mechanic.getClass().isAnnotationPresent(SkillMechanic.class) && mechanic.getClass().getAnnotation(SkillMechanic.class).value().equalsIgnoreCase(type)) {
-                        spellData.mechanics.add(mechanic);
-                        spellData.paramsM.add(config1.getOrElse("Params", new ArrayList<>()));
-                    }
+                    getRelevantMechanics(mechanics, spellData, config1);
                 }
             }
         }
         return spellData;
     }
+
+    private void getRelevantMechanics(Set<Object> mechanics, SpellData spellData, Config config1) {
+        String type = config1.get("Type");
+        if (type == null) {
+            type = config1.get("If");
+        }
+        for (Object mechanic : mechanics) {
+            if (mechanic.getClass().isAnnotationPresent(SkillMechanic.class) && mechanic.getClass().getAnnotation(SkillMechanic.class).value().equalsIgnoreCase(type)) {
+                spellData.mechanics.add(mechanic);
+                ArrayList<String> params = config1.getOrElse("Params", new ArrayList<>());
+                for (String param : params) {
+                    Matcher matcher = Pattern.compile("(settings\\.[0-9a-zA-Z_-]*)").matcher(param);
+                    if (matcher.find()) {
+                        String group = matcher.group(1);
+                        spellData.paramsOth.add(group);
+                    }
+                }
+                spellData.paramsM.add(params);
+            }
+        }
+        if (config1.contains("Then")) {
+            List<Config> then = config1.get("Then");
+            for (Config config : then) {
+                getRelevantMechanics(mechanics, spellData, config);
+            }
+        }
+    }
+
 
     private class SpellData {
         Object targetSelector;
@@ -247,6 +266,8 @@ public class CustomSkillGenerator implements Opcodes {
 
         List<Object> mechanics = new ArrayList<>();
         List<List<String>> paramsM = new ArrayList<>();
+
+        Set<String> paramsOth = new HashSet<>();
 
         private List<Object> getAll() {
             return new ArrayList<Object>() {{
@@ -274,6 +295,9 @@ public class CustomSkillGenerator implements Opcodes {
                 params.add("target");
             } else if (is(annotation, SkillArgument.class)) {
                 SkillArgument a = (SkillArgument) annotation;
+                if ("$this".equals(a.value())) {
+                    params.add("this");
+                }
                 if (isSkillSettingsSkillNode(a.value())) {
                     String skillSettingsNodeName = getSkillSettingsNodeName(a.value());
                     if (iterator.hasNext()) {
@@ -281,13 +305,37 @@ public class CustomSkillGenerator implements Opcodes {
                     }
                     params.add(skillSettingsNodeName);
                 }
+            } else if (is(annotation, EffectArgument.class)) {
+                if (iterator.hasNext()) {
+                    String next = iterator.next();
+                    if (next.startsWith("Effect")) {
+                        Matcher m = Pattern.compile("\\((.*?)\\)").matcher(next);
+                        if (m.find()) {
+                            String group = m.group(1);
+                            String[] split = group.split(",");
+                            String classNameFq = split[0].trim();
+
+                            List<String> prms = new ArrayList<>();
+                            if (split.length > 1) {
+                                for (int i = 1; i < split.length; i++) {
+                                    prms.add(getSkillSettingsNodeName(split[i]));
+                                }
+                            }
+                            String collect = String.join(", ", prms);
+                            params.add("new "+classNameFq+"("+collect+")");
+                        }
+                    }
+                }
             }
         }
-
 
         return params;
     }
 
+    private class MethodCallParam {
+        String singleRef;
+        CodeBlock macro;
+    }
 
     private boolean isSkillSettingsSkillNode(String value) {
         return value.startsWith("settings.");
@@ -297,46 +345,12 @@ public class CustomSkillGenerator implements Opcodes {
         return value.replace("settings.", "");
     }
 
-    private static class LocalVariableHelper {
-        final int fieldIndex;
-        final int opCodeLoadInst;
-        Label firstLabel;
-        Label lastLabel;
-        String path;
-        String descriptor;
-
-        private LocalVariableHelper(int fieldIndex, int opCodeLoadInst) {
-            this.fieldIndex = fieldIndex;
-            this.opCodeLoadInst = opCodeLoadInst;
-        }
-
-        public LocalVariableHelper(int localVariableId, int fload, String path, String descriptor) {
-            this(localVariableId, fload);
-            this.path = path;
-            this.descriptor = descriptor;
-        }
-
-
-    }
-
-    private String getInternalName(Class<?> c) {
-        return Type.getInternalName(c);
-    }
-
-    private String getMethodDescriptor(Method method) {
-        return Type.getMethodDescriptor(method);
-    }
-
-    private String getObjectTypeDescriptor(Class<?> c) {
-        return Type.getDescriptor(c);//"L" + getInternalName(c) + ";";
-    }
-
     private List<Annotation> getMethodParameterAnnotations(Method method) {
         List<Annotation> list = new ArrayList<>();
         outer:
         for (Annotation[] parameterAnnotation : method.getParameterAnnotations()) {
             for (Annotation annotation : parameterAnnotation) {
-                if (isOneOf(annotation, SkillArgument.class, Caster.class, Target.class)) {
+                if (isOneOf(annotation, SkillArgument.class, Caster.class, Target.class, EffectArgument.class)) {
                     list.add(annotation);
                     continue outer;
                 }
@@ -362,6 +376,7 @@ public class CustomSkillGenerator implements Opcodes {
                 }
             }
         }
+        data.paramsOth.stream().forEach(a->map.put(a,"float"));
         return map;
     }
 
