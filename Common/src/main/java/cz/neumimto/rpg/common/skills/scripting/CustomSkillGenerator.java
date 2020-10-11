@@ -5,6 +5,7 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.squareup.javapoet.*;
 import cz.neumimto.rpg.api.ResourceLoader;
+import cz.neumimto.rpg.api.effects.Generate;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
@@ -20,10 +21,7 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.Parameter;
-import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.*;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -124,11 +122,14 @@ public class CustomSkillGenerator {
         Map<String, String> requiredLocalVars = findRequiredLocalVars(data);
         CodeBlock.Builder builder = CodeBlock.builder()
                 .addStatement("$T<$T> map = context.getCachedComputedSkillSettings()", Object2FloatOpenHashMap.class, String.class);
+
+        List<Variable> variables = findLocalVars(scriptSkillModel.getSpell());
+
         for (Map.Entry<String, String> en : requiredLocalVars.entrySet()) {
             if ("$this".equals(en.getKey())) {
                 continue;
             }
-            builder.addStatement(en.getValue() +" $L = map.getFloat($S)", getSkillSettingsNodeName(en.getKey()), getSkillSettingsNodeName(en.getKey()));
+            builder.addStatement(en.getValue() + " $L = map.getFloat($S)", getSkillSettingsNodeName(en.getKey()), getSkillSettingsNodeName(en.getKey()));
         }
 
         List<String> localVars = requiredLocalVars.keySet().stream().map(this::getSkillSettingsNodeName).collect(Collectors.toList());
@@ -139,14 +140,13 @@ public class CustomSkillGenerator {
         List<Config> mechs = spell.get(0).get("Mechanics");
 
 
-
         if (Iterable.class.isAssignableFrom(methodHandler.returnType)) {
 
             List<String> list = parseMethodCall(data.targetSelector, data.paramsTs);
 
             java.lang.reflect.Type actualTypeArgument = ((ParameterizedType) methodHandler.relevantMethod.getGenericReturnType()).getActualTypeArguments()[0];
             Object[] objects = {actualTypeArgument, methodHandler.fieldName, methodHandler.methodName};
-            builder.beginControlFlow("for ($T target : $L.$L("+ String.join(", ", list) +"))", objects);
+            builder.beginControlFlow("for ($T target : $L.$L(" + String.join(", ", list) + "))", objects);
 
             for (Config mechanic : mechs) {
                 writeCallMechanic(mechanic, builder, localVars);
@@ -158,6 +158,11 @@ public class CustomSkillGenerator {
 
         builder.addStatement("return $T.OK", SkillResult.class);
         return builder.build();
+    }
+
+    private static class Variable {
+        String name;
+        String type;
     }
 
     private Object[] parseMethodArguments(List<String> list) {
@@ -174,7 +179,7 @@ public class CustomSkillGenerator {
         }
         if (config.contains("If")) {
 
-            Object mechanic = filterMechanicById((String)config.get("If"));
+            Object mechanic = filterMechanicById((String) config.get("If"));
             params = parseMethodCall(mechanic, params);
             Method relevantMethod = getRelevantMethod(mechanic.getClass()).get();
             if (relevantMethod.getReturnType() != boolean.class) {
@@ -189,7 +194,7 @@ public class CustomSkillGenerator {
             MethodHandler methodHandler = MethodHandler.of(mechanic);
             Object[] objects = {methodHandler.fieldName, methodHandler.methodName};
 
-            builder.beginControlFlow("if ($L.$L("+String.join(", ", params)+"))", objects);
+            builder.beginControlFlow("if ($L.$L(" + String.join(", ", params) + "))", objects);
 
             for (Config posB : then) {
                 writeCallMechanic(posB, builder, localVars);
@@ -204,13 +209,14 @@ public class CustomSkillGenerator {
             MethodHandler methodHandler = MethodHandler.of(mechanic);
             Object[] objects = {methodHandler.fieldName, methodHandler.methodName};
 
-            builder.add(CodeBlock.of("$L.$L("+String.join(", ", params)+");",objects));
+            builder.add(CodeBlock.of("$L.$L(" + String.join(", ", params) + ");", objects));
         }
 
     }
 
-    private SpellData getRelevantMechanics(Set<Object> mechanics, List<Config> spell) {
+    private SpellData getRelevantMechanics(List<Config> spell) {
         SpellData spellData = new SpellData();
+        Set<Object> mechanics = getMechanics();
         for (Object mechanic : mechanics) {
             for (Config config : spell) {
                 String type = config.get("Target-Selector");
@@ -259,24 +265,6 @@ public class CustomSkillGenerator {
         }
     }
 
-
-    private class SpellData {
-        Object targetSelector;
-        List<String> paramsTs = new ArrayList<>();
-
-        List<Object> mechanics = new ArrayList<>();
-        List<List<String>> paramsM = new ArrayList<>();
-
-        Set<String> paramsOth = new HashSet<>();
-
-        private List<Object> getAll() {
-            return new ArrayList<Object>() {{
-                addAll(mechanics);
-                add(targetSelector);
-            }};
-        }
-    }
-
     private static String fieldName(String string) {
         return Character.toLowerCase(string.charAt(0)) + string.substring(1);
     }
@@ -322,7 +310,7 @@ public class CustomSkillGenerator {
                                 }
                             }
                             String collect = String.join(", ", prms);
-                            params.add("new "+classNameFq+"("+collect+")");
+                            params.add("new " + classNameFq + "(" + collect + ")");
                         }
                     }
                 }
@@ -330,11 +318,6 @@ public class CustomSkillGenerator {
         }
 
         return params;
-    }
-
-    private class MethodCallParam {
-        String singleRef;
-        CodeBlock macro;
     }
 
     private boolean isSkillSettingsSkillNode(String value) {
@@ -359,25 +342,108 @@ public class CustomSkillGenerator {
         return list;
     }
 
-    private Map<String, String> findRequiredLocalVars(SpellData data) {
 
-        Map<String, String> map = new HashMap<>();
-        for (Object mechanic : data.getAll()) {
-            Method relevantMethod = getRelevantMethod(mechanic.getClass()).orElseThrow(() ->
-                    new IllegalArgumentException("Mechanic " + mechanic.getClass().getCanonicalName() + " has no handler method")
-            );
-            for (int i = 0; i < relevantMethod.getParameterCount(); i++) {
-                Parameter parameter = relevantMethod.getParameters()[i];
-                Annotation[] annotations = relevantMethod.getParameterAnnotations()[i];
-                for (Annotation a : annotations) {
-                    if (is(a, SkillArgument.class)) {
-                        map.put(((SkillArgument) a).value(), parameter.getType().toString());
-                    }
+    private List<Variable> findLocalVars(List<Config> configs) {
+        ArrayList<Variable> vars = new ArrayList<>();
+        for (Config config : configs) {
+            vars.addAll(findLocalVars(config));
+        }
+        return vars;
+    }
+
+    private List<Variable> findLocalVars(Config config) {
+        ArrayList<Variable> vars = new ArrayList<>();
+
+        if (config.contains("Then")) {
+            List<Config> list = config.get("Then");
+            for (Config config1 : list) {
+                vars.addAll(findLocalVars(config1));
+            }
+        }
+        if (config.contains("Else")) {
+            List<Config> list = config.get("Else");
+            for (Config config1 : list) {
+                vars.addAll(findLocalVars(config1));
+            }
+        }
+
+        Object o = filterMechanicById(config);
+        Method relevantMethod = getRelevantMethod(o).orElseThrow(() ->
+                new IllegalArgumentException("Mechanic " + o.getClass().getCanonicalName() + " has no handler method")
+        );
+
+        for (int i = 0; i < relevantMethod.getParameterCount(); i++) {
+            Parameter parameter = relevantMethod.getParameters()[i];
+            Annotation[] annotations = relevantMethod.getParameterAnnotations()[i];
+            for (Annotation a : annotations) {
+                if (is(a, SkillArgument.class)) {
+                    Variable variable = new Variable();
+                    variable.name = ((SkillArgument) a).value();
+                    variable.type = parameter.getType().toString();
+                    vars.add(variable);
                 }
             }
         }
-        data.paramsOth.stream().forEach(a->map.put(a,"float"));
-        return map;
+
+        if (config.contains("Params")) {
+            List<String> params = config.get("Params");
+            for (String param : params) {
+                if (param.startsWith("Effect")) {
+                    EffectMacro em = parseEffectMacro(param);
+                }
+            }
+        }
+
+
+        return vars;
+    }
+
+    private EffectMacro parseEffectMacro(String macro) {
+        EffectMacro effectMacro = new EffectMacro();
+        Matcher m = Pattern.compile("\\((.*?)\\)").matcher(macro);
+        if (m.find()) {
+            String group = m.group(1);
+            String[] split = group.split(",");
+            effectMacro.effectClass = split[0].trim();
+
+            try {
+                Class<?> c = Class.forName(effectMacro.effectClass);
+
+                Constructor<?>[] declaredConstructors = c.getDeclaredConstructors();
+                if (declaredConstructors.length == 1) {
+                    effectMacro.ctr = declaredConstructors[0];
+                } else {
+
+                }
+
+                Parameter[] parameters = effectMacro.ctr.getParameters();
+                for (Parameter parameter : parameters) {
+                    if (parameter.isAnnotationPresent(Generate.Model.class)) {
+                        
+                    } else {
+
+                    }
+                    String name = parameter.getName();
+                    Class<?> type = parameter.getType();
+                }
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            List<String> prms = new ArrayList<>();
+            if (split.length > 1) {
+                for (int i = 1; i < split.length; i++) {
+                    prms.add(getSkillSettingsNodeName(split[i]));
+                }
+            }
+      }
+        return effectMacro;
+    }
+
+    private static class EffectMacro {
+        Constructor<?> ctr;
+        String effectClass;
+        String modelType;
+        Map<String, Class<?>> args = new HashMap<>();
     }
 
     protected Set<Object> getMechanics() {
@@ -392,7 +458,7 @@ public class CustomSkillGenerator {
     }
 
     protected Object filterMechanicById(Config config) {
-        String type = config.get("Type");
+        String type = config.getOrElse("Type", config.get("Id"));
         return filterMechanicById(type);
     }
 
@@ -420,6 +486,10 @@ public class CustomSkillGenerator {
                 .filter(CustomSkillGenerator::isHandlerMethod)
                 .findFirst();
 
+    }
+
+    protected static Optional<Method> getRelevantMethod(Object rawType) {
+        return getRelevantMethod(rawType.getClass());
     }
 
     private static boolean isHandlerMethod(Method method) {
