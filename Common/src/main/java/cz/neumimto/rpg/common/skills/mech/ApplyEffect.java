@@ -17,7 +17,7 @@ public class ApplyEffect {
     private EffectService effectService;
 
     @Handler
-    public void apply(@Target IEntity entity, @EffectArgument IEffect effect, @SkillArgument("$this") ISkill source) {
+    public void apply(@EffectArgument IEffect effect, ISkill source) {
     //    effectService.addEffect(effect, entity, source);
     }
 
