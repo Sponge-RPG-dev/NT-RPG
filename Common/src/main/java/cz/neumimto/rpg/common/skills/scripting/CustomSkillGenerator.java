@@ -8,7 +8,6 @@ import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.effects.Generate;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
-import cz.neumimto.rpg.api.effects.model.mappers.SingleValueModelMapper;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
@@ -26,7 +25,6 @@ import javax.inject.Singleton;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.util.*;
-import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -35,8 +33,7 @@ import java.util.stream.Stream;
 import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
-@Singleton
-public class CustomSkillGenerator {
+public abstract class CustomSkillGenerator {
 
     private static Logger logger = LoggerFactory.getLogger(CustomSkillGenerator.class);
 
@@ -179,23 +176,38 @@ public class CustomSkillGenerator {
             params = new ArrayList<>();
         }
         if (config.contains("If")) {
+            String anIf = (String) config.get("If");
+            if (anIf.startsWith("#")) {
+                String[] s = anIf.split(" ");
+                StringBuilder sb = new StringBuilder();
+                for (int i = 1; i < s.length; i++) {
+                    String s1 = s[i];
+                    if (s1.contains(".") && !s1.startsWith("settings")) {
+                        //todo mechanic call within expr
+                    } else {
+                        //just trim "settings."
+                        sb.append(getSkillSettingsNodeName(s1) + " ");
+                    }
+                }
+                builder.beginControlFlow("if (" + sb.toString() + ")");
+            } else {
+                Object mechanic = filterMechanicById(anIf);
+                params = parseMethodCall(mechanic, params);
+                Method relevantMethod = getRelevantMethod(mechanic.getClass()).get();
+                if (relevantMethod.getReturnType() != boolean.class) {
+                    throw new IllegalArgumentException("Conditional requires return type boolean, got " + mechanic.getClass().getSimpleName());
+                }
 
-            Object mechanic = filterMechanicById((String) config.get("If"));
-            params = parseMethodCall(mechanic, params);
-            Method relevantMethod = getRelevantMethod(mechanic.getClass()).get();
-            if (relevantMethod.getReturnType() != boolean.class) {
-                throw new IllegalArgumentException("Conditional requires return type boolean, got " + mechanic.getClass().getSimpleName());
+                MethodHandler methodHandler = MethodHandler.of(mechanic);
+                Object[] objects = {methodHandler.fieldName, methodHandler.methodName};
+
+                builder.beginControlFlow("if ($L.$L(" + String.join(", ", params) + "))", objects);
             }
             if (!config.contains("Then")) {
                 throw new IllegalArgumentException("Conditional requires positive branch");
             }
             List<? extends Config> then = config.get("Then");
 
-
-            MethodHandler methodHandler = MethodHandler.of(mechanic);
-            Object[] objects = {methodHandler.fieldName, methodHandler.methodName};
-
-            builder.beginControlFlow("if ($L.$L(" + String.join(", ", params) + "))", objects);
 
             for (Config posB : then) {
                 writeCallMechanic(posB, builder);
@@ -320,6 +332,8 @@ public class CustomSkillGenerator {
 
     private void parseLocalVarsAndFields(Config config, ParsedScript parsedScript) {
         Object o = filterMechanicById(config);
+        if (o == null)
+            return;
         Method relevantMethod = getRelevantMethod(o).orElseThrow(() ->
                 new IllegalArgumentException("Mechanic " + o.getClass().getCanonicalName() + " has no handler method")
         );
@@ -361,7 +375,14 @@ public class CustomSkillGenerator {
         if (m.find()) {
             String group = m.group(1);
             String[] split = group.split(",");
-            effectMacro.effectClass = split[0].trim();
+
+            try {
+                effectMacro.effectClass = split[0].trim();
+                Class.forName(effectMacro.effectClass);
+            } catch (ClassNotFoundException e) {
+                effectMacro.effectClass = getDefaultEffectPackage() + effectMacro.effectClass;
+            }
+
             for (int i = 1; i < split.length; i++) {
                 effectMacro.params.add(split[i]);
             }
@@ -416,6 +437,8 @@ public class CustomSkillGenerator {
         return effectMacro;
     }
 
+    protected abstract String getDefaultEffectPackage();
+
     private static class EffectMacro {
         Constructor<?> ctr;
         String effectClass;
@@ -465,6 +488,9 @@ public class CustomSkillGenerator {
         }
         if (type == null) {
             type = config.get("Target-Selector");
+        }
+        if (type.startsWith("#")) {
+            return null;
         }
         return filterMechanicById(type);
     }

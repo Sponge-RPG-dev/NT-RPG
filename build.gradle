@@ -13,7 +13,9 @@ subprojects {
         maven {
             url 'https://jitpack.io'
         }
-        maven { url = "https://repo.aikar.co/content/groups/aikar/" }
+        maven {
+            url = "https://repo.aikar.co/content/groups/aikar/"
+        }
     }
 
     task sourcesJar(type: Jar, dependsOn: classes) {

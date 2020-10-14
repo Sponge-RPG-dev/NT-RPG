@@ -51,9 +51,11 @@ import cz.neumimto.rpg.common.persistance.dao.ICharacterClassDao;
 import cz.neumimto.rpg.common.persistance.dao.IPersistenceHandler;
 import cz.neumimto.rpg.common.persistance.dao.IPlayerDao;
 import cz.neumimto.rpg.common.scripting.NashornRpgScriptEngine;
+import cz.neumimto.rpg.common.scripting.TestCustomSkillGenerator;
 import cz.neumimto.rpg.common.skills.reagents.Cooldown;
 import cz.neumimto.rpg.common.skills.reagents.HPCast;
 import cz.neumimto.rpg.common.skills.reagents.ManaCast;
+import cz.neumimto.rpg.common.skills.scripting.CustomSkillGenerator;
 import cz.neumimto.rpg.effects.TestEffectService;
 import cz.neumimto.rpg.entity.TestEntityService;
 import cz.neumimto.rpg.model.TestPersistanceHandler;
@@ -89,6 +91,7 @@ public class TestGuiceModule extends AbstractModule {
         bind(ClassDefinitionDao.class);
         bind(IPlayerDao.class).to(InMemoryPlayerStorage.class);
         bind(ExperienceService.class).to(TestExperienceService.class);
+        bind(CustomSkillGenerator.class).to(TestCustomSkillGenerator.class);
         bind(ClassGenerator.class).toProvider(() -> new ClassGenerator() {
             @Override
             public void generateDynamicListener(List<JSObject> list) {}
