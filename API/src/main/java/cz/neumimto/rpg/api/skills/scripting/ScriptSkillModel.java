@@ -25,6 +25,10 @@ public class ScriptSkillModel {
     @Path("Spell")
     private List<Config> spell;
 
+    @Optional
+    @Path("Supertype")
+    private String superType;
+
     public String getHandlerId() {
         return handlerId;
     }
@@ -55,5 +59,13 @@ public class ScriptSkillModel {
 
     public void setSpell(List<Config> spell) {
         this.spell = spell;
+    }
+
+    public String getSuperType() {
+        return superType;
+    }
+
+    public void setSuperType(String superType) {
+        this.superType = superType;
     }
 }

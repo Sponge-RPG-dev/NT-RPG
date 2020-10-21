@@ -5,15 +5,19 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.squareup.javapoet.*;
 import cz.neumimto.rpg.api.ResourceLoader;
+import cz.neumimto.rpg.api.damage.DamageService;
 import cz.neumimto.rpg.api.effects.Generate;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
+import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.scripting.ScriptSkillModel;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
+import cz.neumimto.rpg.api.utils.DebugLevel;
 import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;
 import org.codehaus.commons.compiler.CompileException;
 import org.codehaus.janino.SimpleCompiler;
@@ -21,7 +25,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.util.*;
@@ -40,6 +43,9 @@ public abstract class CustomSkillGenerator {
     @Inject
     private Injector injector;
 
+    @Inject
+    private DamageService damageService;
+
     public Class<? extends ISkill> generate(ScriptSkillModel scriptSkillModel) {
         if (scriptSkillModel == null || scriptSkillModel.getSpell() == null) {
             return null;
@@ -49,30 +55,44 @@ public abstract class CustomSkillGenerator {
         String className = "Custom" + System.currentTimeMillis();
 
         ParsedScript ps = findLocalVarsAndFields(scriptSkillModel.getSpell());
-
         TypeSpec.Builder type = TypeSpec.classBuilder(className)
-                .addAnnotation(AnnotationSpec.builder(ResourceLoader.Skill.class).addMember("value", "$S", scriptSkillModel.getId()).build())
-                .superclass(ParameterizedTypeName.get(ClassName.get(ActiveSkill.class), TypeVariableName.get("T")))
-                .addTypeVariable(TypeVariableName.get("T", TypeName.get(IActiveCharacter.class)))
-                .addModifiers(PUBLIC);
+                .addAnnotation(AnnotationSpec.builder(ResourceLoader.Skill.class).addMember("value", "$S", scriptSkillModel.getId()).build());
+
+        if (scriptSkillModel.getSuperType() == null) {
+                    type.superclass(ParameterizedTypeName.get(ClassName.get(ActiveSkill.class), TypeVariableName.get("T")))
+                    .addTypeVariable(TypeVariableName.get("T", TypeName.get(IActiveCharacter.class)))
+                    .addModifiers(PUBLIC);
+
+            type.addMethod(MethodSpec.methodBuilder("cast").addModifiers(PUBLIC)
+                    .addParameter(IActiveCharacter.class, "caster", FINAL)
+                    .addParameter(PlayerSkillContext.class, "context", FINAL)
+                    .returns(SkillResult.class)
+                    .addCode(parseModel(scriptSkillModel))
+                    .build());
+
+        } else if ("Targeted".equalsIgnoreCase(scriptSkillModel.getSuperType())){
+            type.superclass(ParameterizedTypeName.get(ClassName.get(targeted()), TypeVariableName.get("T"))).addModifiers(PUBLIC);
+            type.addMethod(MethodSpec.methodBuilder("castOn").addModifiers(PUBLIC)
+                    .addParameter(IEntity.class, "target", FINAL)
+                    .addParameter(characterClassImpl(), "caster", FINAL)
+                    .addParameter(PlayerSkillContext.class, "context", FINAL)
+                    .returns(SkillResult.class)
+                    .addCode(parseModel(scriptSkillModel))
+                    .build());
+        }
 
         for (Object mechanic : ps.mechanics) {
             type.addField(FieldSpec.builder(mechanic.getClass(), fieldName(mechanic.getClass().getSimpleName())).addAnnotation(Inject.class).build());
         }
 
-        type.addMethod(MethodSpec.methodBuilder("cast").addModifiers(PUBLIC)
-                .addParameter(IActiveCharacter.class, "caster", FINAL)
-                .addParameter(PlayerSkillContext.class, "context", FINAL)
-                .returns(SkillResult.class)
-                .addCode(parseModel(scriptSkillModel))
-                .build());
+        type.addMethod(MethodSpec.methodBuilder("init").addModifiers(PUBLIC).addCode(parseSkillMeta(scriptSkillModel)).build());
 
         TypeSpec build = type.build();
         JavaFile jfile = JavaFile.builder(packagee, build).build();
 
 
         String code = jfile.toString();
-        System.out.println(code);
+        Log.info(code, DebugLevel.DEVELOP);
         SimpleCompiler sc = new SimpleCompiler();
         try {
             sc.cook(jfile.toString());
@@ -82,6 +102,19 @@ public abstract class CustomSkillGenerator {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private CodeBlock parseSkillMeta(ScriptSkillModel scriptSkillModel) {
+        CodeBlock.Builder builder = CodeBlock.builder();
+        if (scriptSkillModel.getDamageType() != null) {
+            builder.add("setDamageType($S)", scriptSkillModel.getDamageType());
+        }
+        if (scriptSkillModel.getSkillTypes() != null) {
+            for (String skillType : scriptSkillModel.getSkillTypes()) {
+                builder.add("addSkillType(SkillType.$L)", skillType.toUpperCase());
+            }
+        }
+        return builder.build();
     }
 
     private static class MethodHandler {
@@ -556,15 +589,7 @@ public abstract class CustomSkillGenerator {
         return a.annotationType() == c || a.getClass() == c;
     }
 
-    private class UnknownMechanicException extends RuntimeException {
-        public UnknownMechanicException(String id) {
-            super(id);
-        }
-    }
+    protected abstract Type characterClassImpl();
 
-    private class IllegalReturnTypeException extends RuntimeException {
-        public IllegalReturnTypeException(String message) {
-            super(message);
-        }
-    }
+    protected abstract Class<?> targeted();
 }
