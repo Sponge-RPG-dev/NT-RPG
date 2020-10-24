@@ -39,7 +39,6 @@ compileJava {
     options.forkOptions.executable = 'javac'
 }
 
-
 dependencies {
     annotationProcessor project(':Generator')
     compile project(':Common')
@@ -61,17 +60,27 @@ dependencies {
     compileOnly 'com.github.Slikey:EffectLib:d77f639038'
     compileOnly 'me.clip:placeholderapi:2.10.3'
     compileOnly 'com.gmail.filoghost.holographicdisplays:holographicdisplays-api:2.4.0'
-    compileOnly('net.Indyuce:MMOItems:5.4') {
+    compileOnly('net.Indyuce:MMOItems:6.2.4') {
         exclude group: 'com.mojang', module: 'authlib'
     }
+    compileOnly('net.Indyuce:MMOLib:1.4.0')
     compileOnly 'io.lumine.xikage:MythicMobs:4.9.1'
 
     jar {
         from {
             configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
         }
+
+        exclude("**/*.DSA", "**/*.SF", "**/*pom.xml", "**/*pom.properties")
+
         archiveName("NT-RPG-Spigot-16.x-" + version + ".jar")
     }
+
 }
 
-
+//task deploy {
+//    copy {
+//        from "${buildDir}/${jar.archiveName()}"
+//        into new File((String)System.getenv("RPG_DEPLOY_DIR"))
+//    }
+//}

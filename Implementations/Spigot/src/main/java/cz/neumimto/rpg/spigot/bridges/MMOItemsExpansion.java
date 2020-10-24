@@ -158,12 +158,12 @@ public class MMOItemsExpansion implements Listener {
         }
 
         @Override
-        public boolean canCast(AbilityData data, boolean message) {
+        public boolean canCast(AbilityData data) {
             //mmoitems start
             if (getPlayerData().hasCooldownInfo(data.getAbility())) {
                 CooldownInformation info = getPlayerData().getCooldownInfo(data.getAbility());
                 if (!info.hasCooledDown()) {
-                    if (message) {
+                    if (data.getCastingMode().displaysMessage()) {
                         String progressBar = ChatColor.YELLOW + "";
                         double progress = (info.getInitialCooldown() - info.getRemaining()) / info.getInitialCooldown() * 10.0D;
                         String barChar = MMOItems.plugin.getConfig().getString("cooldown-progress-bar-char");

@@ -1,7 +1,15 @@
 package cz.neumimto.rpg.common.scripting;
 
+import com.electronwill.nightconfig.core.CommentedConfig;
+import com.electronwill.nightconfig.core.Config;
+import com.electronwill.nightconfig.core.ConfigFormat;
+import com.electronwill.nightconfig.core.UnmodifiableConfig;
 import com.electronwill.nightconfig.core.conversion.ObjectConverter;
 import com.electronwill.nightconfig.core.file.FileConfig;
+import com.electronwill.nightconfig.core.io.ConfigParser;
+import com.electronwill.nightconfig.hocon.HoconFormat;
+import com.electronwill.nightconfig.json.FancyJsonWriter;
+import com.electronwill.nightconfig.json.JsonFormat;
 import com.google.inject.Injector;
 import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
@@ -131,17 +139,40 @@ public abstract class AbstractRpgScriptEngine implements IRpgScriptEngine {
     }
 
     @Override
-    public void loadSkillDefinitionFile(URLClassLoader urlClassLoader, File confFile) {
+    public void loadInternalSkills() {
+        String assetAsString = assetService.getAssetAsString("defaults/skills.conf");
+
+        HoconFormat instance = HoconFormat.instance();
+        ConfigParser<CommentedConfig> parser = instance.createParser();
+        CommentedConfig config = parser.parse(assetAsString);
+
+        //URLClassLoader urlClassLoader = new URLClassLoader(new URL[]{}, this.getClass().getClassLoader()) {
+        //    @Override
+        //    protected void finalize() throws Throwable {
+        //        super.finalize();
+        //        info("Removing URLClassloader used for defaults/skills.conf", DebugLevel.DEVELOP);
+        //    }
+        //};
+
+        loadSkillDefinitionFile(config, this.getClass().getClassLoader());
+    }
+
+    @Override
+    public void loadSkillDefinitionFile(ClassLoader urlClassLoader, File confFile) {
         info("Loading skills from file " + confFile.getName());
         try (FileConfig fc = FileConfig.of(confFile.getPath())) {
             fc.load();
-            SkillsDefinition definition = new ObjectConverter().toObject(fc, SkillsDefinition::new);
-            definition.getSkills().stream()
-                    .map(a -> skillService.skillDefinitionToSkill(a, urlClassLoader))
-                    .forEach(a -> skillService.registerAdditionalCatalog(a));
+            loadSkillDefinitionFile(fc, urlClassLoader);
         } catch (Exception e) {
             Log.error("Could not load file " + confFile, e);
         }
+    }
+
+    private void loadSkillDefinitionFile(Config config, ClassLoader urlClassLoader) {
+        SkillsDefinition definition = new ObjectConverter().toObject(config, SkillsDefinition::new);
+        definition.getSkills().stream()
+                .map(a -> skillService.skillDefinitionToSkill(a, urlClassLoader))
+                .forEach(a -> skillService.registerAdditionalCatalog(a));
     }
 
     protected void dumpDocumentedFunctions(List<SkillComponent> skillComponents) {
@@ -180,14 +211,9 @@ public abstract class AbstractRpgScriptEngine implements IRpgScriptEngine {
 
         URLClassLoader urlClassLoader = new URLClassLoader(new URL[]{}, this.getClass().getClassLoader()) {
             @Override
-            public String toString() {
-                return "Internal - " + System.currentTimeMillis();
-            }
-
-            @Override
             protected void finalize() throws Throwable {
                 super.finalize();
-                info("Removing URLClassloader " + toString(), DebugLevel.DEVELOP);
+                info("Removing URLClassloader used for " + addonDir, DebugLevel.DEVELOP);
             }
         };
 
@@ -199,6 +225,8 @@ public abstract class AbstractRpgScriptEngine implements IRpgScriptEngine {
                 loadSkillDefinitionFile(urlClassLoader, confFile);
             }
         }
+
+        loadInternalSkills();
     }
 
     @Override

@@ -19,6 +19,8 @@ import cz.neumimto.rpg.api.skills.types.ScriptSkill;
 import cz.neumimto.rpg.api.utils.ClassUtils;
 import cz.neumimto.rpg.api.utils.DebugLevel;
 import cz.neumimto.rpg.api.utils.annotations.CatalogId;
+import cz.neumimto.rpg.common.assets.AssetService;
+import cz.neumimto.rpg.common.skills.scripting.CustomSkillGenerator;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.description.annotation.AnnotationDescription;
 
@@ -48,6 +50,9 @@ public abstract class AbstractSkillService implements SkillService {
 
     @Inject
     private Injector injector;
+
+    @Inject
+    private CustomSkillGenerator customSkillGenerator;
 
     private Map<String, SkillScriptHandlers> skillHandlers = new HashMap<>();
 
@@ -170,51 +175,63 @@ public abstract class AbstractSkillService implements SkillService {
     @Override
     public ISkill skillDefinitionToSkill(ScriptSkillModel scriptSkillModel, ClassLoader classLoader) {
 
-        SkillScriptHandlers type = getSkillHandler(scriptSkillModel.getHandlerId());
-        if (type == null) {
-            warn("Could not load skill " + scriptSkillModel.getId() + " unknown handler " + scriptSkillModel.getHandlerId());
-            return null;
-        }
-
-        //todo
-        Class subClass = null;
-        if (type instanceof SkillScriptHandlers.Active) {
-            subClass = ActiveScriptSkill.class;
-        } else if (type instanceof SkillScriptHandlers.Passive) {
-            subClass = PassiveScriptSkill.class;
-        } else if (type instanceof SkillScriptHandlers.Targetted) {
-            //todo
-        }
-
-        String name = scriptSkillModel.getId();
-        name = name.replaceAll("[\\W]", "");
-        Class sk = new ByteBuddy()
-                .subclass(subClass)
-                .name("cz.neumimto.skills.scripts." + name)
-                .annotateType(AnnotationDescription.Builder.ofType(ResourceLoader.Skill.class)
-                        .define("value", scriptSkillModel.getId())
-                        .build())
-                .make()
-                .load(classLoader)
-                .getLoaded();
-        try {
-
-            ScriptSkill s = (ScriptSkill) injector.getInstance(sk);
-            s.setHandler(type);
-            SkillSettings settings = new SkillSettings();
-            ((ISkill) s).setSettings(settings);
-            injectCatalogId((ISkill) s, scriptSkillModel.getId());
-            s.setModel(scriptSkillModel);
-            if (Rpg.get().getPluginConfig().DEBUG.isDevelop()) {
-                info("-------- Created skill from skill def.");
-                info("+ ClassName " + s.getClass().getName());
-                info("+ ClassLoader " + s.getClass().getClassLoader());
-                info("+ Handler Id " + s.getModel().getHandlerId());
-                info("+ Type " + subClass.getSimpleName());
+        if (scriptSkillModel.getHandlerId().equalsIgnoreCase("custom")) {
+            Class<? extends ISkill> generate = customSkillGenerator.generate(scriptSkillModel, classLoader);
+            if (generate == null) {
+                Log.error("Unable to generate skill " + scriptSkillModel.getId());
             }
-            return (ISkill) s;
-        } catch (Exception e) {
-            e.printStackTrace();
+            try {
+                return generate.newInstance();
+            } catch (InstantiationException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        } else {
+            SkillScriptHandlers type = getSkillHandler(scriptSkillModel.getHandlerId());
+            if (type == null) {
+                warn("Could not load skill " + scriptSkillModel.getId() + " unknown handler " + scriptSkillModel.getHandlerId());
+                return null;
+            }
+
+            //todo
+            Class subClass = null;
+            if (type instanceof SkillScriptHandlers.Active) {
+                subClass = ActiveScriptSkill.class;
+            } else if (type instanceof SkillScriptHandlers.Passive) {
+                subClass = PassiveScriptSkill.class;
+            } else if (type instanceof SkillScriptHandlers.Targetted) {
+                //todo
+            }
+
+            String name = scriptSkillModel.getId();
+            name = name.replaceAll("[\\W]", "");
+            Class sk = new ByteBuddy()
+                    .subclass(subClass)
+                    .name("cz.neumimto.skills.scripts." + name)
+                    .annotateType(AnnotationDescription.Builder.ofType(ResourceLoader.Skill.class)
+                            .define("value", scriptSkillModel.getId())
+                            .build())
+                    .make()
+                    .load(classLoader)
+                    .getLoaded();
+            try {
+
+                ScriptSkill s = (ScriptSkill) injector.getInstance(sk);
+                s.setHandler(type);
+                SkillSettings settings = new SkillSettings();
+                ((ISkill) s).setSettings(settings);
+                injectCatalogId((ISkill) s, scriptSkillModel.getId());
+                s.setModel(scriptSkillModel);
+                if (Rpg.get().getPluginConfig().DEBUG.isDevelop()) {
+                    info("-------- Created skill from skill def.");
+                    info("+ ClassName " + s.getClass().getName());
+                    info("+ ClassLoader " + s.getClass().getClassLoader());
+                    info("+ Handler Id " + s.getModel().getHandlerId());
+                    info("+ Type " + subClass.getSimpleName());
+                }
+                return (ISkill) s;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return null;
     }

@@ -64,7 +64,7 @@ public class CustomSkillGeneratorTests {
             model = new ObjectConverter().toObject(fileConfig, ScriptSkillModel::new);
             injector.getInstance(DamageMechanic.class);
 
-            Class<ActiveSkill> i= (Class<ActiveSkill>) customSkillGenerator.generate(model);
+            Class<ActiveSkill> i= (Class<ActiveSkill>) customSkillGenerator.generate(model, ClassLoader.getSystemClassLoader());
 
             PlayerSkillContext context = new PlayerSkillContext(null, null, null);
 
@@ -83,7 +83,7 @@ public class CustomSkillGeneratorTests {
             model = new ObjectConverter().toObject(fileConfig, ScriptSkillModel::new);
             injector.getInstance(DamageMechanic.class);
 
-            Class<ActiveSkill> i= (Class<ActiveSkill>) customSkillGenerator.generate(model);
+            Class<ActiveSkill> i= (Class<ActiveSkill>) customSkillGenerator.generate(model, ClassLoader.getSystemClassLoader());
 
             PlayerSkillContext context = new PlayerSkillContext(null, null, null);
 

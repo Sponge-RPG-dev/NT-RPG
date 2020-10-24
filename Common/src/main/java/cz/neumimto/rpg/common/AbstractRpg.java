@@ -32,6 +32,7 @@ import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.api.utils.FileUtils;
 import cz.neumimto.rpg.api.utils.rng.PseudoRandomDistribution;
 import cz.neumimto.rpg.common.commands.ACFBootstrap;
+import cz.neumimto.rpg.common.skills.scripting.CustomSkillGenerator;
 
 import javax.inject.Inject;
 import java.io.File;
@@ -82,6 +83,8 @@ public abstract class AbstractRpg implements RpgApi {
     private Injector injector;
     @Inject
     private Gui gui;
+    @Inject
+    private CustomSkillGenerator skillGenerator;
 
     protected Executor currentThreadExecutor;
 
@@ -182,6 +185,10 @@ public abstract class AbstractRpg implements RpgApi {
     @Override
     public ExperienceService getExperienceService() {
         return experienceService;
+    }
+
+    public CustomSkillGenerator getCustomSkillGenerator() {
+        return skillGenerator;
     }
 
     @Override
@@ -304,6 +311,8 @@ public abstract class AbstractRpg implements RpgApi {
         for (RpgAddon rpgAddon : rpgAddons) {
             rpgAddon.processStageLate(injector);
         }
+
+
     }
 
     @Override

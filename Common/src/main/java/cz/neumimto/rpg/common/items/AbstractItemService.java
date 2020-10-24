@@ -13,6 +13,7 @@ import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.items.*;
 import cz.neumimto.rpg.api.items.sockets.SocketType;
 import cz.neumimto.rpg.api.items.subtypes.ItemSubtype;
+import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.common.utils.Wildcards;
@@ -164,31 +165,47 @@ public abstract class AbstractItemService implements ItemService {
     @Override
     public void loadItemGroups(Config config) {
         info("Loading Weapon configuration");
-        List<? extends Config> itemGroups = config.getConfigList("ItemGroups");
-        loadWeaponGroups(itemGroups, null);
+        if (config.hasPath("ItemGroups")) {
+            List<? extends Config> itemGroups = config.getConfigList("ItemGroups");
+            loadWeaponGroups(itemGroups, null);
+        } else {
+            Log.error("Missing ItemGroups section");
+        }
 
         info("Loading Armor configuration");
-        for (String armor : config.getStringList("Armor")) {
-            ItemString parse = ItemString.parse(armor);
-            for (ItemString itemString : parsePotentialItemStringWildcard(parse)) {
-                Optional<RpgItemType> rpgItemType = createRpgItemType(itemString, ItemClass.ARMOR);
-                rpgItemType.ifPresent(this::registerRpgItemType);
+        if (config.hasPath("Armor")) {
+            for (String armor : config.getStringList("Armor")) {
+                ItemString parse = ItemString.parse(armor);
+                for (ItemString itemString : parsePotentialItemStringWildcard(parse)) {
+                    Optional<RpgItemType> rpgItemType = createRpgItemType(itemString, ItemClass.ARMOR);
+                    rpgItemType.ifPresent(this::registerRpgItemType);
+                }
             }
+        } else {
+            Log.error("Missing Armor section");
         }
 
         info("Loading Shields configuration");
-        for (String shield : config.getStringList("Shields")) {
-            ItemString parse = ItemString.parse(shield);
+        if (config.hasPath("Shields")) {
+            for (String shield : config.getStringList("Shields")) {
+                ItemString parse = ItemString.parse(shield);
 
-            for (ItemString itemString : parsePotentialItemStringWildcard(parse)) {
-                Optional<RpgItemType> rpgItemType = createRpgItemType(itemString, ItemClass.SHIELD);
-                rpgItemType.ifPresent(this::registerRpgItemType);
+                for (ItemString itemString : parsePotentialItemStringWildcard(parse)) {
+                    Optional<RpgItemType> rpgItemType = createRpgItemType(itemString, ItemClass.SHIELD);
+                    rpgItemType.ifPresent(this::registerRpgItemType);
+                }
             }
+        } else {
+            Log.error("Missing Shields section");
         }
 
         info("Loading Projectiles configuration");
-        List<? extends Config> projectiles = config.getConfigList("Projectiles");
-        loadWeaponGroups(projectiles, ItemClass.PROJECTILES);
+        if (config.hasPath("Projectiles")) {
+            List<? extends Config> projectiles = config.getConfigList("Projectiles");
+            loadWeaponGroups(projectiles, ItemClass.PROJECTILES);
+        } else {
+            Log.error("Missing Projectiles section");
+        }
     }
 
     private void loadWeaponGroups(List<? extends Config> itemGroups, ItemClass parent) {

@@ -17,6 +17,7 @@ import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.scripting.ScriptSkillModel;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
+import cz.neumimto.rpg.api.skills.types.IActiveSkill;
 import cz.neumimto.rpg.api.utils.DebugLevel;
 import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;
 import org.codehaus.commons.compiler.CompileException;
@@ -33,7 +34,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
 public abstract class CustomSkillGenerator {
@@ -46,7 +46,7 @@ public abstract class CustomSkillGenerator {
     @Inject
     private DamageService damageService;
 
-    public Class<? extends ISkill> generate(ScriptSkillModel scriptSkillModel) {
+    public Class<? extends ISkill> generate(ScriptSkillModel scriptSkillModel, ClassLoader classLoader) {
         if (scriptSkillModel == null || scriptSkillModel.getSpell() == null) {
             return null;
         }
@@ -59,23 +59,22 @@ public abstract class CustomSkillGenerator {
                 .addAnnotation(AnnotationSpec.builder(ResourceLoader.Skill.class).addMember("value", "$S", scriptSkillModel.getId()).build());
 
         if (scriptSkillModel.getSuperType() == null) {
-                    type.superclass(ParameterizedTypeName.get(ClassName.get(ActiveSkill.class), TypeVariableName.get("T")))
-                    .addTypeVariable(TypeVariableName.get("T", TypeName.get(IActiveCharacter.class)))
+                    type.superclass(ParameterizedTypeName.get(ClassName.get(ActiveSkill.class),  ClassName.get(characterClassImpl())))
                     .addModifiers(PUBLIC);
 
             type.addMethod(MethodSpec.methodBuilder("cast").addModifiers(PUBLIC)
-                    .addParameter(IActiveCharacter.class, "caster", FINAL)
-                    .addParameter(PlayerSkillContext.class, "context", FINAL)
+                    .addParameter(IActiveCharacter.class, "caster0")
+                    .addParameter(PlayerSkillContext.class, "context")
                     .returns(SkillResult.class)
                     .addCode(parseModel(scriptSkillModel))
                     .build());
 
-        } else if ("Targeted".equalsIgnoreCase(scriptSkillModel.getSuperType())){
+        } else if ("Targeted".equalsIgnoreCase(scriptSkillModel.getSuperType())) {
             type.superclass(ParameterizedTypeName.get(ClassName.get(targeted()), TypeVariableName.get("T"))).addModifiers(PUBLIC);
             type.addMethod(MethodSpec.methodBuilder("castOn").addModifiers(PUBLIC)
-                    .addParameter(IEntity.class, "target", FINAL)
-                    .addParameter(characterClassImpl(), "caster", FINAL)
-                    .addParameter(PlayerSkillContext.class, "context", FINAL)
+                    .addParameter(IEntity.class, "target")
+                    .addParameter(characterClassImpl(), "caster")
+                    .addParameter(PlayerSkillContext.class, "context")
                     .returns(SkillResult.class)
                     .addCode(parseModel(scriptSkillModel))
                     .build());
@@ -95,6 +94,7 @@ public abstract class CustomSkillGenerator {
         Log.info(code, DebugLevel.DEVELOP);
         SimpleCompiler sc = new SimpleCompiler();
         try {
+            sc.setParentClassLoader(classLoader);
             sc.cook(jfile.toString());
             Class<? extends ISkill> x = (Class<? extends ISkill>) sc.getClassLoader().loadClass(packagee + "." + className);
             return x;
@@ -107,23 +107,23 @@ public abstract class CustomSkillGenerator {
     private CodeBlock parseSkillMeta(ScriptSkillModel scriptSkillModel) {
         CodeBlock.Builder builder = CodeBlock.builder();
         if (scriptSkillModel.getDamageType() != null) {
-            builder.add("setDamageType($S)", scriptSkillModel.getDamageType());
+            builder.addStatement("setDamageType($S)", translateDamageType(scriptSkillModel.getDamageType()).toString());
         }
         if (scriptSkillModel.getSkillTypes() != null) {
             for (String skillType : scriptSkillModel.getSkillTypes()) {
-                builder.add("addSkillType(SkillType.$L)", skillType.toUpperCase());
+                builder.addStatement("addSkillType(SkillType.$L)", skillType.toUpperCase());
             }
         }
         return builder.build();
     }
 
     private static class MethodHandler {
+
         final Class mechanic;
         final String fieldName;
         final Method relevantMethod;
         final Class returnType;
         final String methodName;
-
         private MethodHandler(Class mechanic, String fieldName, Method relevantMethod, Class returnType, String methodName) {
             this.mechanic = mechanic;
             this.fieldName = fieldName;
@@ -146,10 +146,11 @@ public abstract class CustomSkillGenerator {
                     method
             );
         }
-    }
 
+    }
     private CodeBlock parseModel(ScriptSkillModel scriptSkillModel) {
         CodeBlock.Builder builder = CodeBlock.builder()
+                .addStatement("$T caster = ($T) caster0", characterClassImpl(), characterClassImpl()) //janino cant handle generics
                 .addStatement("$T<$T> map = context.getCachedComputedSkillSettings()", Object2FloatOpenHashMap.class, String.class);
 
         ParsedScript ps = findLocalVarsAndFields(scriptSkillModel.getSpell());
@@ -194,15 +195,15 @@ public abstract class CustomSkillGenerator {
     }
 
     private static class Variable {
+
         String name;
         String type;
     }
-
     private static class ParsedScript {
+
         Set<Variable> variables = new HashSet<>();
         Set<Object> mechanics = new HashSet<>();
     }
-
     private void writeCallMechanic(Config config, CodeBlock.Builder builder) {
         List params = config.get("Params");
         if (params == null) {
@@ -255,7 +256,7 @@ public abstract class CustomSkillGenerator {
             MethodHandler methodHandler = MethodHandler.of(mechanic);
             Object[] objects = {methodHandler.fieldName, methodHandler.methodName};
 
-            builder.add(CodeBlock.of("$L.$L(" + String.join(", ", (List<String>) params.stream().map(a->a.toString()).collect(Collectors.toList())) + ");", objects));
+            builder.add(CodeBlock.of("$L.$L(" + String.join(", ", (List<String>) params.stream().map(a -> a.toString()).collect(Collectors.toList())) + ");", objects));
         }
 
     }
@@ -263,7 +264,6 @@ public abstract class CustomSkillGenerator {
     private static String fieldName(String string) {
         return Character.toLowerCase(string.charAt(0)) + string.substring(1);
     }
-
 
 
     public List parseMethodCall(Object call, List<String> configParams) {
@@ -283,7 +283,7 @@ public abstract class CustomSkillGenerator {
                 if (isSkillSettingsSkillNode(a.value())) {
                     String skillSettingsNodeName = getSkillSettingsNodeName(a.value());
                     if (iterator.hasNext()) {
-                        skillSettingsNodeName = iterator.next();
+                        skillSettingsNodeName = getSkillSettingsNodeName(iterator.next());
                     }
                     params.add(skillSettingsNodeName);
                 }
@@ -365,14 +365,17 @@ public abstract class CustomSkillGenerator {
 
     private void parseLocalVarsAndFields(Config config, ParsedScript parsedScript) {
         Object o = filterMechanicById(config);
-        if (o == null)
+        if (o == null) {
             return;
+        }
+
         Method relevantMethod = getRelevantMethod(o).orElseThrow(() ->
                 new IllegalArgumentException("Mechanic " + o.getClass().getCanonicalName() + " has no handler method")
         );
 
         parsedScript.mechanics.add(o);
 
+        int k = 0;
         for (int i = 0; i < relevantMethod.getParameterCount(); i++) {
             Parameter parameter = relevantMethod.getParameters()[i];
             Annotation[] annotations = relevantMethod.getParameterAnnotations()[i];
@@ -380,6 +383,20 @@ public abstract class CustomSkillGenerator {
                 if (is(a, SkillArgument.class)) {
                     Variable variable = new Variable();
                     variable.name = ((SkillArgument) a).value();
+
+                    if (config.contains("Params")) {
+                        List<String> s = config.get("Params");
+                        s = s.stream().filter(CustomSkillGenerator::isSkillSettingsSkillNode)
+                                .collect(Collectors.toList());
+
+                        if (s.size() > k) {
+                            String s1 = s.get(k);
+                            if (isSkillSettingsSkillNode(s1)) {
+                                variable.name = s1;
+                            }
+                        }
+                    }
+                    k++;
                     variable.type = parameter.getType().toString();
                     parsedScript.variables.add(variable);
                 }
@@ -397,6 +414,8 @@ public abstract class CustomSkillGenerator {
                         variable.type = e.getValue().getTypeName();
                         parsedScript.variables.add(variable);
                     }
+                } else {
+
                 }
             }
         }
@@ -410,7 +429,7 @@ public abstract class CustomSkillGenerator {
             String[] split = group.split(",");
 
             try {
-                effectMacro.effectClass = split[0].trim();
+                effectMacro.effectClass = "." + split[0].trim();
                 Class.forName(effectMacro.effectClass);
             } catch (ClassNotFoundException e) {
                 effectMacro.effectClass = getDefaultEffectPackage() + effectMacro.effectClass;
@@ -434,6 +453,9 @@ public abstract class CustomSkillGenerator {
                                 break outer;
                             }
                         }
+                    }
+                    if (effectMacro.ctr == null) {
+                        effectMacro.ctr = declaredConstructors[0];
                     }
                 }
 
@@ -472,7 +494,10 @@ public abstract class CustomSkillGenerator {
 
     protected abstract String getDefaultEffectPackage();
 
+    protected abstract Object translateDamageType(String damageType);
+
     private static class EffectMacro {
+
         Constructor<?> ctr;
         String effectClass;
         String modelType;

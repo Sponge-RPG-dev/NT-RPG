@@ -10,6 +10,11 @@ import java.lang.reflect.Type;
 @Singleton
 public class TestCustomSkillGenerator extends CustomSkillGenerator {
     @Override
+    protected Object translateDamageType(String damageType) {
+        return "null";
+    }
+
+    @Override
     protected String getDefaultEffectPackage() {
         return TestEffectFloat.class.getPackage().getName();
     }
@@ -23,4 +28,5 @@ public class TestCustomSkillGenerator extends CustomSkillGenerator {
     protected Class<?> targeted() {
         return Void.class;
     }
+
 }
