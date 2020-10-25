@@ -17,7 +17,7 @@ public class ApplyEffect {
     private EffectService effectService;
 
     @Handler
-    public void apply(@EffectArgument IEffect effect, ISkill source) {
+    public void apply(@SkillArgument("effect") IEffect effect, ISkill source) {
         effectService.addEffect(effect, source);
     }
 

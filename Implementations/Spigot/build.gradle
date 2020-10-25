@@ -66,6 +66,10 @@ dependencies {
     compileOnly('net.Indyuce:MMOLib:1.4.0')
     compileOnly 'io.lumine.xikage:MythicMobs:4.9.1'
 
+    // https://mvnrepository.com/artifact/de.unkrig.jdisasm/jdisasm
+    compile group: 'de.unkrig.jdisasm', name: 'jdisasm', version: '1.0.5'
+
+
     jar {
         from {
             configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
