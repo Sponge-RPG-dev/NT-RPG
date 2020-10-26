@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.util.*;
@@ -43,7 +44,7 @@ public abstract class CustomSkillGenerator {
     @Inject
     private DamageService damageService;
 
-    public Class<? extends ISkill> generate(ScriptSkillModel scriptSkillModel, ClassLoader classLoader) {
+    public Class<? extends ISkill> generate(ScriptSkillModel scriptSkillModel, ClassLoader classLoader) throws Exception {
         if (scriptSkillModel == null || scriptSkillModel.getSpell() == null) {
             return null;
         }
@@ -53,6 +54,7 @@ public abstract class CustomSkillGenerator {
 
         ParsedScript ps = findLocalVarsAndFields(scriptSkillModel.getSpell());
         TypeSpec.Builder type = TypeSpec.classBuilder(className)
+                .addAnnotation(AnnotationSpec.builder(Singleton.class).build())
                 .addAnnotation(AnnotationSpec.builder(ResourceLoader.Skill.class).addMember("value", "$S", scriptSkillModel.getId()).build());
 
         if (scriptSkillModel.getSuperType() == null) {
@@ -67,14 +69,16 @@ public abstract class CustomSkillGenerator {
                     .build());
 
         } else if ("Targeted".equalsIgnoreCase(scriptSkillModel.getSuperType())) {
-            type.superclass(ParameterizedTypeName.get(ClassName.get(targeted()), TypeVariableName.get("T"))).addModifiers(PUBLIC);
+            type.superclass(TypeName.get(targeted())).addModifiers(PUBLIC);
             type.addMethod(MethodSpec.methodBuilder("castOn").addModifiers(PUBLIC)
                     .addParameter(IEntity.class, "target")
-                    .addParameter(characterClassImpl(), "caster")
+                    .addParameter(IActiveCharacter.class, "caster0")
                     .addParameter(PlayerSkillContext.class, "context")
                     .returns(SkillResult.class)
                     .addCode(parseModel(scriptSkillModel))
                     .build());
+        } else {
+            throw new IllegalAccessException("Unknown SuperType " + scriptSkillModel.getSuperType());
         }
 
         for (Object mechanic : ps.mechanics) {
@@ -163,31 +167,35 @@ public abstract class CustomSkillGenerator {
 
 
         for (Config config : scriptSkillModel.getSpell()) {
-            MethodHandler methodHandler = MethodHandler.of(filterMechanicById(config));
+            List<Config> mechs = config.get("Mechanics");
+            try {
+                MethodHandler methodHandler = MethodHandler.of(filterMechanicById(config));
 
-            List<Config> spell = scriptSkillModel.getSpell();
-            List<Config> mechs = spell.get(0).get("Mechanics");
+                if (Iterable.class.isAssignableFrom(methodHandler.returnType)) {
 
-            Object mechanic1 = filterMechanicById(config);
+                    MechanicCallDescriptor mcd = getMechanicCallDescriptor(config);
+                    Set<String> strings = mcd.params.methodArgs.keySet();
 
-            if (Iterable.class.isAssignableFrom(methodHandler.returnType)) {
+                    java.lang.reflect.Type actualTypeArgument = ((ParameterizedType) methodHandler.relevantMethod.getGenericReturnType()).getActualTypeArguments()[0];
+                    Object[] objects = {actualTypeArgument, methodHandler.fieldName, methodHandler.methodName};
+                    builder.beginControlFlow("for ($T target : $L.$L(" +
+                            strings.stream().filter(a -> mcd.params.available(a)).map(CustomSkillGenerator::getSkillSettingsNodeName).collect(Collectors.joining(", ")) + "))", objects);
 
+                    for (Config mechanic : mechs) {
+                        writeCallMechanic(mechanic, builder);
+                    }
 
-                MechanicCallDescriptor mcd = getMechanicCallDescriptor(config);
-                Set<String> strings = mcd.params.keySet();
+                    builder.endControlFlow();
 
+                }
 
-                java.lang.reflect.Type actualTypeArgument = ((ParameterizedType) methodHandler.relevantMethod.getGenericReturnType()).getActualTypeArguments()[0];
-                Object[] objects = {actualTypeArgument, methodHandler.fieldName, methodHandler.methodName};
-                builder.beginControlFlow("for ($T target : $L.$L(" + strings.stream().map(CustomSkillGenerator::getSkillSettingsNodeName).collect(Collectors.joining(", ")) + "))", objects);
-
+            } catch (Exception e) {
+                //no target selector
                 for (Config mechanic : mechs) {
                     writeCallMechanic(mechanic, builder);
                 }
-
-                builder.endControlFlow();
-
             }
+
         }
 
         builder.addStatement("return $T.OK", SkillResult.class);
@@ -222,8 +230,8 @@ public abstract class CustomSkillGenerator {
                 builder.beginControlFlow("if (" + sb.toString() + ")");
             } else {
                 Object mechanic = filterMechanicById(anIf);
-                MechanicCallDescriptor mechanicCallDescriptor = getMechanicCallDescriptor(config);
-                Set<String> params = mechanicCallDescriptor.params.keySet();
+                MechanicCallDescriptor mcd = getMechanicCallDescriptor(config);
+                Set<String> params = mcd.params.methodArgs.keySet();
                 Method relevantMethod = getRelevantMethod(mechanic.getClass()).get();
                 if (relevantMethod.getReturnType() != boolean.class) {
                     throw new IllegalArgumentException("Conditional requires return type boolean, got " + mechanic.getClass().getSimpleName());
@@ -232,7 +240,7 @@ public abstract class CustomSkillGenerator {
                 MethodHandler methodHandler = MethodHandler.of(mechanic);
                 Object[] objects = {methodHandler.fieldName, methodHandler.methodName};
 
-                builder.beginControlFlow("if ($L.$L(" + params.stream().map(CustomSkillGenerator::getSkillSettingsNodeName).collect(Collectors.joining(", ")) + "))", objects);
+                builder.beginControlFlow("if ($L.$L(" + params.stream().filter(a -> mcd.params.available(a)).map(CustomSkillGenerator::getSkillSettingsNodeName).collect(Collectors.joining(", ")) + "))", objects);
             }
             if (!config.contains("Then")) {
                 throw new IllegalArgumentException("Conditional requires positive branch");
@@ -249,13 +257,16 @@ public abstract class CustomSkillGenerator {
             String type = config.get("Type");
             Object mechanic = filterMechanicById(type);
 
-            MechanicCallDescriptor mechanicCallDescriptor = getMechanicCallDescriptor(config);
-            Set<String> params = mechanicCallDescriptor.params.keySet();
+            MechanicCallDescriptor mcd = getMechanicCallDescriptor(config);
+
+            Set<String> params = mcd.params.methodArgs.keySet();
 
             MethodHandler methodHandler = MethodHandler.of(mechanic);
+
+
             Object[] objects = {methodHandler.fieldName, methodHandler.methodName};
 
-            builder.add(CodeBlock.of("$L.$L(" + params.stream().map(CustomSkillGenerator::getSkillSettingsNodeName).collect(Collectors.joining(", ")) + ");", objects));
+            builder.add(CodeBlock.of("$L.$L(" + params.stream().filter(a -> mcd.params.available(a)).map(CustomSkillGenerator::getSkillSettingsNodeName).collect(Collectors.joining(", ")) + ");", objects));
         }
 
     }
@@ -300,12 +311,14 @@ public abstract class CustomSkillGenerator {
             }
         }
 
-        parseLocalVarsAndFields(config, parsedScript);
+        try {
+            parseLocalVarsAndFields(config, parsedScript);
+        } catch (Exception ignored) {}
 
         if (config.contains("Mechanics")) {
             List<Config> list = config.get("Mechanics");
             for (Config config1 : list) {
-                ParsedScript ps = (findLocalVarsAndFields(config1));
+                ParsedScript ps = findLocalVarsAndFields(config1);
                 parsedScript.mechanics.addAll(ps.mechanics);
                 parsedScript.variables.addAll(ps.variables);
             }
@@ -335,7 +348,7 @@ public abstract class CustomSkillGenerator {
 
         MechanicCallDescriptor mechanicCallDescriptor = getMechanicCallDescriptor(config);
 
-        for (Map.Entry<String, Type> e : mechanicCallDescriptor.params.entrySet()) {
+        for (Map.Entry<String, Type> e : mechanicCallDescriptor.params.methodArgs.entrySet()) {
             if (isSkillSettingsSkillNode(e.getKey())) {
                 Variable variable = new Variable();
                 variable.name = e.getKey();
@@ -467,14 +480,22 @@ public abstract class CustomSkillGenerator {
         if (type == null) {
             type = config.get("Target-Selector");
         }
-        if (type.startsWith("#")) {
+        if (type!=null && type.startsWith("#")) {
             return null;
         }
+
         return filterMechanicById(type);
     }
 
+    protected static class MechanicParams {
+        public  Map<String, Type> methodArgs = new LinkedHashMap<>();
+        public  List<String> consumed = new ArrayList<>();
 
-    protected Map<String, Type> filterMechanicParams(Object mechanic, String str) {
+        public boolean available(String l) {
+            return !consumed.contains(l);
+        }
+    }
+    protected MechanicParams filterMechanicParams(Object mechanic, String str) {
         Pattern compile = Pattern.compile("(([a-zA-Y]*)=([a-zA-Y]*)?((\\([^)]+\\))|'(.*?)')|([a-zA-Z=.]*))");
         Matcher matcher = compile.matcher(str);
 
@@ -488,7 +509,7 @@ public abstract class CustomSkillGenerator {
 
         w.remove(0);
 
-        Map<String, Type> a = new LinkedHashMap<>();
+        MechanicParams params = new MechanicParams();
 
         Optional<Method> relevantMethod = getRelevantMethod(mechanic);
         Method method = relevantMethod.get();
@@ -496,9 +517,9 @@ public abstract class CustomSkillGenerator {
         for (Parameter parameter : method.getParameters()) {
 
             if (parameter.isAnnotationPresent(Caster.class)) {
-                a.put("caster", parameter.getType());
+                params.methodArgs.put("caster", parameter.getType());
             } else if (parameter.isAnnotationPresent(Target.class)) {
-                a.put("target", parameter.getType());
+                params.methodArgs.put("target", parameter.getType());
             } else if (parameter.isAnnotationPresent(SkillArgument.class)) {
                 SkillArgument sa = parameter.getAnnotation(SkillArgument.class);
 
@@ -509,38 +530,38 @@ public abstract class CustomSkillGenerator {
                 if (first.isPresent()) {
                     if (isSkillSettingsSkillNode(sa.value())) {
                         String s1 = first.get();
-                        a.put(s1.split("=")[1], parameter.getType());
+                        params.methodArgs.put(s1.split("=")[1], parameter.getType());
                     } else if (IEffect.class.isAssignableFrom(parameter.getType())) {
                         String s = first.get().split("=")[1];
                         EffectMacro em = parseEffectMacro(s);
 
-                        a.put(em.toString(), parameter.getType());
-
+                        params.methodArgs.put(em.toString(), parameter.getType());
+                        params.consumed.addAll(em.args.keySet());
                         for (Map.Entry<String, Class<?>> e : em.args.entrySet()) {
                             if (isSkillSettingsSkillNode(e.getKey())) {
-                                a.put(e.getKey(), e.getValue());
+                                params.methodArgs.put(e.getKey(), e.getValue());
                             }
                         }
                     }
                     continue;
                 }
-                a.put(sa.value(), parameter.getType());
+                params.methodArgs.put(sa.value(), parameter.getType());
             } else if (ISkill.class.isAssignableFrom(parameter.getType())) {
-                a.put("this", parameter.getType());
+                params.methodArgs.put("this", parameter.getType());
             } else if (parameter.isAnnotationPresent(StaticArgument.class)) {
                 StaticArgument sa = parameter.getAnnotation(StaticArgument.class);
                 Optional<String> first = w.stream()
                         .filter(q -> q.startsWith(sa.value() + "="))
                         .findFirst();
                 if (first.isPresent()) {
-                    a.put(first.get().split("=")[1], parameter.getType());
+                    params.methodArgs.put(first.get().split("=")[1], parameter.getType());
                 } else {
-                    a.put(sa.value(), parameter.getType());
+                    params.methodArgs.put(sa.value(), parameter.getType());
                 }
             }
         }
 
-        return a;
+        return params;
     }
 
     protected MechanicCallDescriptor getMechanicCallDescriptor(Config config) {
@@ -568,7 +589,7 @@ public abstract class CustomSkillGenerator {
     private static class MechanicCallDescriptor {
         String plain;
         Object mechanic;
-        Map<String, Type> params;
+        MechanicParams params;
     }
 
     protected Object filterMechanicById(String id) {

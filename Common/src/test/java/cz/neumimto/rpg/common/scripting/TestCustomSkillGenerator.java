@@ -11,9 +11,6 @@ import org.junit.jupiter.api.Test;
 import javax.inject.Singleton;
 import java.lang.reflect.Type;
 import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Singleton
 public class TestCustomSkillGenerator extends CustomSkillGenerator {
@@ -39,11 +36,11 @@ public class TestCustomSkillGenerator extends CustomSkillGenerator {
 
     @Test
     public void testParamParsing() {
-        Collection<String> values = super.filterMechanicParams(new TestM01(),
+       MechanicParams params = super.filterMechanicParams(new TestM01(),
                 "testm01 settings.test=settings.customNode effect=Effect(cz.neumimto.rpg.effects.TestEffectVoid, target, settings.effect_duration) name='Test Test'")
-                .keySet();
+                ;
 
-
+        Collection<String> values = params.methodArgs.keySet();
         Assert.assertEquals(7, values.size());
         Assert.assertTrue(values.contains("'Test Test'"));
         Assert.assertTrue(values.contains("caster"));
@@ -52,6 +49,7 @@ public class TestCustomSkillGenerator extends CustomSkillGenerator {
         Assert.assertTrue(values.contains("new cz.neumimto.rpg.effects.TestEffectVoid( target, effect_duration)"));
         Assert.assertTrue(values.contains("settings.damage"));
         Assert.assertTrue(values.contains("settings.customNode"));
+
     }
 
     public static class TestM01 {

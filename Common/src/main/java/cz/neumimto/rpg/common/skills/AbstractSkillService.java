@@ -176,14 +176,14 @@ public abstract class AbstractSkillService implements SkillService {
     public ISkill skillDefinitionToSkill(ScriptSkillModel scriptSkillModel, ClassLoader classLoader) {
 
         if (scriptSkillModel.getHandlerId().equalsIgnoreCase("custom")) {
-            Class<? extends ISkill> generate = customSkillGenerator.generate(scriptSkillModel, classLoader);
-            if (generate == null) {
-                Log.error("Unable to generate skill " + scriptSkillModel.getId());
-            }
             try {
+                Class<? extends ISkill> generate = customSkillGenerator.generate(scriptSkillModel, classLoader);
+                if (generate == null) {
+                    Log.error("Unable to generate skill " + scriptSkillModel.getId());
+                }
                 return generate.newInstance();
-            } catch (InstantiationException | IllegalAccessException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                Log.error("Unable to generate skill " + scriptSkillModel.getId(), e);
             }
         } else {
             SkillScriptHandlers type = getSkillHandler(scriptSkillModel.getHandlerId());

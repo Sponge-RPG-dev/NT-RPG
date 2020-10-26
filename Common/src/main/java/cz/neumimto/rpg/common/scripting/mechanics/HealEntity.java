@@ -16,7 +16,7 @@ public class HealEntity {
     private EntityService entityService;
 
     @Handler
-    public void removeEffect(@Target IEntity target, @SkillArgument("healed_amount") float amount, ISkill skill) {
+    public void heal(@Target IEntity target, @SkillArgument("settings.healed_amount") float amount, ISkill skill) {
         entityService.healEntity(target, amount, skill);
     }
 }

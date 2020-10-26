@@ -12,7 +12,7 @@ import javax.inject.Singleton;
 
 @Singleton
 @SkillMechanic("remove_effect")
-public class CheckForEffect {
+public class RemoveEffect {
 
     @Inject
     private EffectService effectService;
