@@ -554,9 +554,9 @@ public abstract class CustomSkillGenerator {
                         .filter(q -> q.startsWith(sa.value() + "="))
                         .findFirst();
                 if (first.isPresent()) {
-                    params.methodArgs.put(first.get().split("=")[1], parameter.getType());
+                    params.methodArgs.put("\"" + first.get().split("=")[1] + "\"", parameter.getType());
                 } else {
-                    params.methodArgs.put(sa.value(), parameter.getType());
+                    params.methodArgs.put("\"" + sa.value() + "\"", parameter.getType());
                 }
             }
         }

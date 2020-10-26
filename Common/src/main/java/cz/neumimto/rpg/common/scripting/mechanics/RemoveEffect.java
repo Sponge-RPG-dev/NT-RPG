@@ -18,7 +18,7 @@ public class RemoveEffect {
     private EffectService effectService;
 
     @Handler
-    public void removeEffect(@StaticArgument("effect") String effect, @Target IEntity target) {
+    public void removeEffect(@StaticArgument("effect.name") String effect, @Target IEntity target) {
         if (target.hasEffect(effect)) {
             effectService.removeEffectContainer(target.getEffect(effect), target);
         }
