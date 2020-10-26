@@ -157,6 +157,9 @@ public class ClassServiceImpl implements ClassService {
 
     private boolean isClassDirEmpty() {
         Path path = Paths.get(Rpg.get().getWorkingDirectory(), "classes");
+        if (Files.exists(path)) {
+            return false;
+        }
         try {
             Stream<Path> pathStream = Files.find(path, Integer.MAX_VALUE, (p, bfa) -> bfa.isRegularFile());
             if (pathStream.count() == 0) {

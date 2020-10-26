@@ -55,6 +55,7 @@ public class Harmtouch extends Targeted {
             Location<World> location = entity.getLocation();
             location.getExtent().spawnParticles(ParticleEffect.builder()
                             .option(ParticleOptions.COLOR, Color.ofRgb(207, 23, 255))
+
                             .option(ParticleOptions.QUANTITY, 3)
                             .velocity(dir.normalize())
                             .build(),
