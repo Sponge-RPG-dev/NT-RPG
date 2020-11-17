@@ -79,12 +79,12 @@ if (Rpg.getPlatform().equals("Spigot")) {
         onCast: function(character, context) {
             var beam = new IceShotBeam();
             beam.setData({
-                damage: param("damage")
+                damage: param("damage", context)
             });
             //
             beam.init(character, param("max-distance", context), 2);
             // delay, tick period period
-            beam.run(0, 1);
+            beam.start(0, 1);
             return SkillResult.OK;
         }
     });
