@@ -15,6 +15,7 @@ import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.scripting.ScriptSkillModel;
+import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.api.utils.DebugLevel;
 import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;
@@ -113,7 +114,9 @@ public abstract class CustomSkillGenerator {
         }
         if (scriptSkillModel.getSkillTypes() != null) {
             for (String skillType : scriptSkillModel.getSkillTypes()) {
-                builder.addStatement("addSkillType(SkillType.$L)", skillType.toUpperCase());
+                Stream.of(SkillType.values()).filter(a->a.getId().equalsIgnoreCase(skillType)).findFirst()
+                .ifPresent(a-> builder.addStatement("addSkillType($T.$L)",SkillType.class, a.name().toUpperCase()));
+
             }
         }
         return builder.build();

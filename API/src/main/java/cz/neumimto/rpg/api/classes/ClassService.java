@@ -46,4 +46,5 @@ public interface ClassService {
 
     Set<String> getPermissionsToRemove(IActiveCharacter character, ClassDefinition toBeReplaced);
 
+    boolean isClassDirEmpty();
 }

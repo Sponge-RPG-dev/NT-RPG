@@ -21,6 +21,7 @@ package cz.neumimto.rpg.common.scripting;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.scripting.SkillScriptHandlers;
+import cz.neumimto.rpg.api.utils.DebugLevel;
 import jdk.nashorn.api.scripting.JSObject;
 import net.bytebuddy.dynamic.loading.MultipleParentClassLoader;
 
@@ -120,12 +121,12 @@ public class NashornRpgScriptEngine extends AbstractRpgScriptEngine {
             });
 
             if (Rpg.get().getPluginConfig().DEBUG.isDevelop()) {
-                info("JSLOADER ====== Bindings");
+                info("JSLOADER ====== Bindings", DebugLevel.DEVELOP);
                 Map<String, Object> sorted = new TreeMap<>(bindings);
                 for (Map.Entry<String, Object> e : sorted.entrySet()) {
-                    info(e.getKey() + " -> " + e.getValue().toString());
+                    info(e.getKey() + " -> " + e.getValue().toString(), DebugLevel.DEVELOP);
                 }
-                info("===== Bindings END =====");
+                info("JSLOADER ====== Bindings", DebugLevel.DEVELOP);
             }
 
             this.scriptContext = engine.getContext();
@@ -133,7 +134,7 @@ public class NashornRpgScriptEngine extends AbstractRpgScriptEngine {
             lib = compilable.compile(rs);
             lib.eval();
         } catch (Throwable e) {
-            e.printStackTrace();
+            Log.error("Unable to load script " + path, e);
         }
     }
 

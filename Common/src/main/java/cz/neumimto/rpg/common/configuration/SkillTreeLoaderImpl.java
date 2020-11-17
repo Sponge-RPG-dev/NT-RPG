@@ -21,6 +21,7 @@ package cz.neumimto.rpg.common.configuration;
 import com.google.inject.Injector;
 import com.typesafe.config.*;
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.configuration.SkillTreeDao;
 import cz.neumimto.rpg.api.gui.ISkillTreeInterfaceModel;
@@ -35,6 +36,7 @@ import cz.neumimto.rpg.api.skills.utils.SkillLoadingErrors;
 import cz.neumimto.rpg.api.utils.FileUtils;
 import cz.neumimto.rpg.api.utils.MathUtils;
 import cz.neumimto.rpg.api.utils.Pair;
+import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.skills.SkillConfigLoader;
 import cz.neumimto.rpg.common.skills.SkillConfigLoaders;
 import cz.neumimto.rpg.common.skills.SkillExecutor;
@@ -67,11 +69,23 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
     @Inject
     private Injector injector;
 
+    @Inject
+    private ClassService classService;
+
+    @Inject
+    private AssetService assetService;
+
     @Override
     public Map<String, SkillTree> getAll() {
         Path dir = Paths.get(Rpg.get().getWorkingDirectory(), "Skilltrees");
         FileUtils.createDirectoryIfNotExists(dir);
+
         Map<String, SkillTree> map = new HashMap<>();
+        if (classService.isClassDirEmpty()) {
+            Log.info("No classes found in classes folder, loading skilltrees from within ntrpg.jar");
+            dir = prepareTempDir();
+        }
+
         try (DirectoryStream<Path> paths = Files.newDirectoryStream(dir, "*.conf")) {
             paths.forEach(path -> {
                 try {
@@ -79,13 +93,36 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
                     Config config = ConfigFactory.parseFile(path.toFile());
                     populateMap(map, config);
                 } catch (InvalidSkillTreeException e) {
-                    Log.error("Unable to load skilltree " + path,e);
+                    Log.error("Unable to load skilltree " + path, e);
                 }
             });
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         return map;
+    }
+
+    private Path prepareTempDir() {
+        try {
+            Path tempDirectory = Files.createTempDirectory("ntrpg");
+
+            copyDefaultFilesToClassDir(tempDirectory);
+            return tempDirectory;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private void copyDefaultFilesToClassDir(Path path) {
+        try {
+            Files.createDirectory(path.resolve("Skilltrees/"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        assetService.copyToFile("defaults/skilltrees/magetree.conf", path.resolve("Apprentice.conf"));
+
     }
 
     public void populateMap(Map<String, SkillTree> map, Config config) {

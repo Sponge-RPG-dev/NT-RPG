@@ -71,6 +71,12 @@ public abstract class AbstractRpgScriptEngine implements IRpgScriptEngine {
         final StringBuilder bigChunkOfCode = new StringBuilder();
         bigChunkOfCode.append(assetService.getAssetAsString("Main.js")).append(System.lineSeparator());
 
+        bigChunkOfCode.append("//classpath:assets.nt-rpg/defaults/skills.js")
+                .append(System.lineSeparator())
+                .append(assetService.getAssetAsString("defaults/skills.js"))
+                .append(System.lineSeparator());
+
+
         try {
             Queue<Path> directories = new PriorityQueue<>();
             directories.add(scripts_root);
@@ -204,10 +210,6 @@ public abstract class AbstractRpgScriptEngine implements IRpgScriptEngine {
 
     public void reloadSkills() {
         Path addonDir = Paths.get(Rpg.get().getWorkingDirectory() + File.separator + "addons");
-        File file = addonDir.resolve("Skills-Definition.conf").toFile();
-        if (!file.exists()) {
-            assetService.copyToFile("Skills-Definitions.conf", file.toPath());
-        }
 
         URLClassLoader urlClassLoader = new URLClassLoader(new URL[]{}, this.getClass().getClassLoader()) {
             @Override

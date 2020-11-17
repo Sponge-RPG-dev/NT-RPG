@@ -181,7 +181,7 @@ public abstract class AbstractSkillService implements SkillService {
                 if (generate == null) {
                     Log.error("Unable to generate skill " + scriptSkillModel.getId());
                 }
-                return generate.newInstance();
+                return injector.getInstance(generate);
             } catch (Exception e) {
                 Log.error("Unable to generate skill " + scriptSkillModel.getId(), e);
             }

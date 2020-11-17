@@ -66,6 +66,9 @@ dependencies {
     compileOnly('net.Indyuce:MMOLib:1.4.0')
     compileOnly 'io.lumine.xikage:MythicMobs:4.9.1'
 
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.1'
+    testCompile 'org.junit.jupiter:junit-jupiter-engine:5.4.1'
+    testCompile 'org.junit.jupiter:junit-jupiter-params:5.4.1'
 
     jar {
         from {

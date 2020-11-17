@@ -1,6 +1,7 @@
 package cz.neumimto.rpg.spigot.skills.scripting;
 
 import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.RpgApi;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.F;
@@ -8,6 +9,7 @@ import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.api.utils.TriConsumer;
 import cz.neumimto.rpg.common.skills.scripting.SkillComponent;
+import cz.neumimto.rpg.spigot.SpigotRpg;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
@@ -21,10 +23,12 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.util.Vector;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @JsBinding(JsBinding.Type.CONTAINER)
 public class SpigotScriptFunctions {
@@ -43,16 +47,33 @@ public class SpigotScriptFunctions {
                     @SkillComponent.Param("target - Entity to be damaged"),
                     @SkillComponent.Param("damage - damage value"),
                     @SkillComponent.Param("type - damage type"),
-                    @SkillComponent.Param("context - skill context"),
                     @SkillComponent.Param("@returns - true if the damage was dealt"),
             }
     )
-    public static F.PentaFunction<ISpigotCharacter, IEntity<LivingEntity>, Number, EntityDamageEvent.DamageCause, PlayerSkillContext, Boolean> DAMAGE = (caster, target, damage, DamageCause, context) -> {
+    public static F.QuadFunction<ISpigotCharacter, IEntity<LivingEntity>, Number, EntityDamageEvent.DamageCause, Boolean> DAMAGE = (caster, target, damage, DamageCause) -> {
         if (damageService.canDamage(caster, target.getEntity())) {
             damageService.damage(caster.getEntity(), target.getEntity(), DamageCause, damage.doubleValue(), false);
             return true;
         }
         return false;
+    };
+
+    @SkillComponent(
+            value = "Damaging an Entity with specific damage type",
+            usage = "damage(source, target, damage, type, context)",
+            params = {
+                    @SkillComponent.Param("source - Entity of damage origin"),
+                    @SkillComponent.Param("target - Entity to be damaged"),
+                    @SkillComponent.Param("damage - damage value"),
+                    @SkillComponent.Param("type - damage type"),
+                    @SkillComponent.Param("context - skill context"),
+                    @SkillComponent.Param("@returns - true if the damage was dealt"),
+            }
+    )
+    public static F.PentaFunction<IEntity<LivingEntity>, IEntity<LivingEntity>, Number, String, PlayerSkillContext, Boolean> DAMAGE_WITH_TYPE = (caster, target, damage, damageType, context) -> {
+        //todo that spigot pr
+        target.getEntity().damage(damage.doubleValue(), caster.getEntity());
+        return true;
     };
 
     @SkillComponent(

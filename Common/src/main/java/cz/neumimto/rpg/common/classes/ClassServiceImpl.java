@@ -115,6 +115,7 @@ public class ClassServiceImpl implements ClassService {
     public void load() {
         Path loadFrom = null;
         if (isClassDirEmpty()) {
+            Log.info("No classes found in classes folder, loading classes from within ntrpg.jar");
             loadFrom = prepareTempDir();
         } else {
             loadFrom = classDefinitionDao.getClassDirectory();
@@ -130,12 +131,14 @@ public class ClassServiceImpl implements ClassService {
 
     private void copyDefaultFilesToClassDir(Path path) {
         try {
+            path = path.resolve("Classes/");
+            Files.createDirectory(path);
             Files.createDirectory(path.resolve("primary/"));
             Files.createDirectory(path.resolve("races/"));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        assetService.copyToFile("defaults/classes/primary_classes/Mage.conf", path.resolve("primary/Mage.conf"));
+        assetService.copyToFile("defaults/classes/primary_classes/Apprentice.conf", path.resolve("primary/Apprentice.conf"));
         assetService.copyToFile("defaults/classes/primary_classes/Rogue.conf", path.resolve("primary/Rogue.conf"));
         assetService.copyToFile("defaults/classes/primary_classes/Warrior.conf", path.resolve("primary/Warrior.conf"));
         assetService.copyToFile("defaults/classes/races/Dwarf.conf", path.resolve("races/Mage.conf"));
@@ -155,10 +158,11 @@ public class ClassServiceImpl implements ClassService {
         return null;
     }
 
-    private boolean isClassDirEmpty() {
+    @Override
+    public boolean isClassDirEmpty() {
         Path path = Paths.get(Rpg.get().getWorkingDirectory(), "classes");
-        if (Files.exists(path)) {
-            return false;
+        if (!Files.exists(path)) {
+            return true;
         }
         try {
             Stream<Path> pathStream = Files.find(path, Integer.MAX_VALUE, (p, bfa) -> bfa.isRegularFile());

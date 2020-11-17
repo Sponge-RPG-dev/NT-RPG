@@ -72,7 +72,5 @@ registerSkillHandler('mynamespace:speed_boost',{
         var amount = getLevelNode(extendedSkillInfo, SkillNodes.AMOUNT);
         apply_effect(new SpeedBoost(character, duration, amount), context.getSkill());
         return SkillResult.OK;
-    },
-    test: function(a) {
-    return 0;}
+    }
 })

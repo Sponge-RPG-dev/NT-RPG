@@ -53,3 +53,43 @@ registerEventListener({
     order:"BEFORE_POST",
     beforeModifications: false
 });
+
+if (Rpg.getPlatform().equals("Spigot")) {
+
+    var AbstractBeam = Java.type("cz.neumimto.rpg.spigot.skills.utils.AbstractBeam");
+    var Decorator = Java.type("cz.neumimto.rpg.spigot.skills.utils.Decorator");
+    var Particle = Java.type("org.bukkit.Particle");
+    var Material = Java.type("org.bukkit.Material");
+
+    //https://www.spigotmc.org/threads/comprehensive-particle-spawning-guide-1-13.343001/
+
+    var IceShotBeam = Java.extend(AbstractBeam, {
+        onHit: function(caster, hitEntity, data) {
+            return damage(caster, hitEntity, data.damage)
+        },
+        onTick: function(location, data) {
+            Decorator.point1(location, Particle.BLOCK_BREAK, 2, Material.ICE)
+        },
+        onHitBlock: function(block, data) {
+            return true;
+        }
+    });
+
+    registerSkillHandler('ntrpg:iceshot', {
+        onCast: function(character, context) {
+            var beam = new IceShotBeam();
+            beam.setData({
+                damage: param("damage")
+            });
+            //
+            beam.init(character, param("max-distance", context), 2);
+            // delay, tick period period
+            beam.run(0, 1);
+            return SkillResult.OK;
+        }
+    });
+}
+
+if (Rpg.getPlatform().equals("Sponge")) {
+
+}

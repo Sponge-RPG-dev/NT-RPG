@@ -412,9 +412,8 @@ public class SpigotGuiHelper {
     private static Material getSkillIcon(SkillData skillData) {
         if (skillData.getIcon() != null) {
             return Material.matchMaterial(skillData.getIcon());
-        } else {
-            return Material.STONE;
         }
+        return Material.STONE;
     }
 
 

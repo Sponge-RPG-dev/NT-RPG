@@ -23,7 +23,7 @@ public class SpongeAssetService implements AssetService {
         try {
             return Sponge.getAssetManager().getAsset(plugin, path).get().readString();
         } catch (IOException e) {
-            Log.error("Could not copy file Skills-Definition.conf into the directory " + ResourceManagerImpl.addonDir, e);
+            Log.error("Could not copy file path into the directory " + ResourceManagerImpl.addonDir, e);
             throw new IllegalArgumentException(e);
         }
     }
