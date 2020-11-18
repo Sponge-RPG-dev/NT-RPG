@@ -28,6 +28,7 @@ public abstract class AbstractBeam<T> extends BukkitRunnable {
     private T data;
 
     public void init(IEntity<LivingEntity> entity, double maxDistance, int rayTraceTicks) {
+        this.iEntity = entity;
         this.entity = entity.getEntity();
         this.world = this.entity.getWorld();
         this.initialLoc = this.entity.getEyeLocation();
@@ -35,7 +36,6 @@ public abstract class AbstractBeam<T> extends BukkitRunnable {
         this.vector = this.entity.getEyeLocation().getDirection();
         this.maxDistance = maxDistance * maxDistance;
         this.rayTraceTicks = rayTraceTicks == 0 ? 1 : rayTraceTicks;
-
 //        this.lance = new Async(entity.getEyeLocation().getDirection(), world, initialLoc.clone(), particleDensty);
     }
 
@@ -56,18 +56,18 @@ public abstract class AbstractBeam<T> extends BukkitRunnable {
                             true,
                             1,
                             entity -> entity != this.entity && entity instanceof LivingEntity && !entity.isDead());
-            onTick(currentLoc, data);
+            onTick(currentLoc, data, tick);
             if (rayTraceResult != null) {
                 LivingEntity hitEntity = (LivingEntity) rayTraceResult.getHitEntity();
                 if (hitEntity != null) {
                     IEntity iEntity = Rpg.get().getEntityService().get(hitEntity);
-                    if (onEntityHit(this.iEntity, iEntity, data)) {
+                    if (onEntityHit(this.iEntity, iEntity, data, tick)) {
                         cancel();
                     }
                 }
                 Block hitBlock = rayTraceResult.getHitBlock();
                 if (hitBlock != null) {
-                    if (onBlockHit(hitBlock, data)) {
+                    if (onBlockHit(hitBlock, data, tick)) {
                         cancel();
                     }
                 }
@@ -80,11 +80,11 @@ public abstract class AbstractBeam<T> extends BukkitRunnable {
         }
     }
 
-    protected abstract void onTick(Location currentLoc, T data);
+    protected abstract void onTick(Location currentLoc, T data, int tick);
 
-    protected abstract boolean onBlockHit(Block hitEntity, T data);
+    protected abstract boolean onBlockHit(Block hitEntity, T data, int tick);
 
-    protected abstract boolean onEntityHit(IEntity<LivingEntity> caster, IEntity<LivingEntity> hitEntity, T data);
+    protected abstract boolean onEntityHit(IEntity<LivingEntity> caster, IEntity<LivingEntity> hitEntity, T data, int tick);
 
 //    public static class Async extends BukkitRunnable {
 //

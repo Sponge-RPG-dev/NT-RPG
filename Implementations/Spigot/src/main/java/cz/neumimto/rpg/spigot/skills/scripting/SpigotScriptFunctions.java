@@ -41,7 +41,7 @@ public class SpigotScriptFunctions {
 
     @SkillComponent(
             value = "Damaging an Entity with specific damage type",
-            usage = "damage(source, target, damage, type, context)",
+            usage = "damage(source, target, damage, type)",
             params = {
                     @SkillComponent.Param("source - Entity of damage origin"),
                     @SkillComponent.Param("target - Entity to be damaged"),

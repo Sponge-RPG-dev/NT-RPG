@@ -57,7 +57,7 @@ public class Cooldown extends SkillCastMechanic {
 
     @Override
     public void notifyFailure(IActiveCharacter character, PlayerSkillContext context) {
-        long l = System.currentTimeMillis() - (long) context.getSkillData().getSkillSettings().getNodeValue(SkillNodes.COOLDOWN);
+        long l = (character.getCooldown(context.getSkillData().getSkillId()) - System.currentTimeMillis()) / 1000;
         Gui.sendCooldownMessage(character, context.getSkillData().getSkillName(), l);
     }
 }

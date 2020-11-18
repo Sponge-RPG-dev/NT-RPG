@@ -58,36 +58,39 @@ if (Rpg.getPlatform().equals("Spigot")) {
 
     var AbstractBeam = Java.type("cz.neumimto.rpg.spigot.skills.utils.AbstractBeam");
     var Decorator = Java.type("cz.neumimto.rpg.spigot.skills.utils.Decorator");
-    var Particle = Java.type("org.bukkit.Particle");
     var Material = Java.type("org.bukkit.Material");
+    var Particle = Java.type("org.bukkit.Particle");
+    var DamageCause = Java.type("org.bukkit.event.entity.EntityDamageEvent.DamageCause")
 
     //https://www.spigotmc.org/threads/comprehensive-particle-spawning-guide-1-13.343001/
 
+
     var IceShotBeam = Java.extend(AbstractBeam, {
-        onHit: function(caster, hitEntity, data) {
-            return damage(caster, hitEntity, data.damage)
+        onEntityHit: function(caster, hitEntity, data, tick) {
+            return damage(caster, hitEntity, data.damage, DamageCause.MAGIC)
         },
-        onTick: function(location, data) {
-            Decorator.point1(location, Particle.BLOCK_BREAK, 2, Material.ICE)
+        onTick: function(location, data, tick) {
+            Decorator.point2(location, Particle.BLOCK_CRACK, 3, Material.ICE)
+            Decorator.point0(location, Particle.CLOUD, 2)
         },
-        onHitBlock: function(block, data) {
+        onBlockHit: function(block, data, tick) {
             return true;
         }
     });
 
-    registerSkillHandler('ntrpg:iceshot', {
-        onCast: function(character, context) {
-            var beam = new IceShotBeam();
-            beam.setData({
-                damage: param("damage", context)
-            });
-            //
-            beam.init(character, param("max-distance", context), 2);
-            // delay, tick period period
-            beam.start(0, 1);
-            return SkillResult.OK;
-        }
-    });
+registerSkillHandler('ntrpg:iceshot', {
+    onCast: function(character, context) {
+        var beam = new IceShotBeam();
+        beam.setData({
+            damage: param("damage", context),
+            ctx: context
+        });
+        beam.init(character, param("max-distance", context), 2);
+        // delay, tick period period
+        beam.start(0, 1);
+        return SkillResult.OK;
+    }
+});
 }
 
 if (Rpg.getPlatform().equals("Sponge")) {

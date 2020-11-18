@@ -3,7 +3,7 @@ var console = Java.type("java.lang.System").out;
 var ArrayList = Java.type('java.util.ArrayList');
 var HashMap = Java.type('java.util.HashMap');
 /* https://wiki.openjdk.java.net/display/Nashorn/Nashorn+extensions */
-
+var SkillResult = Java.type('cz.neumimto.rpg.api.skills.SkillResult');
 let events = new ArrayList();
 let globalEffects = new ArrayList();
 let skillHandlers = new HashMap();
@@ -18,10 +18,9 @@ let registerGlobalEffect = function(obj) {
 
 let registerSkillHandler = function(id,obj) {
     if (skillHandlers.containsKey(id)) {
-        log("Multiple scripts attempted to register skill handler id " + id + " will be skipped.")
-    } else {
-        skillHandlers.put(id,obj);
+        log("Multiple scripts attempted to register skill handler id " + id + "! Replacing previous one")
     }
+    skillHandlers.put(id,obj);
 }
 
 let defineCharacterProperty = function(name, def) {

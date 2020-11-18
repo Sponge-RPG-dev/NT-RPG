@@ -4,6 +4,7 @@ import de.slikey.effectlib.util.VectorUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.util.Vector;
 
 public class Decorator {
@@ -55,6 +56,10 @@ public class Decorator {
 
     public static void point1(Location location, Particle effect, int count, Material material) {
         location.getWorld().spawnParticle(effect, location, count, material.data);
+    }
+
+    public static void point2(Location location, Particle effect, int count, Material bd) {
+        location.getWorld().spawnParticle(effect, location, count, bd.createBlockData());
     }
 
 }
