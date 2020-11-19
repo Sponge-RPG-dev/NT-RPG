@@ -392,6 +392,8 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
                 skill.getDepending().add(info);
             }
         } catch (ConfigException ignored) {
+        } catch (NumberFormatException e) {
+            Log.error("Failed to load Skill HardDependencies", e);
         }
 
         try {

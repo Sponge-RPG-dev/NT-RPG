@@ -45,28 +45,28 @@ public class SkilltreeCommands extends BaseCommand {
     @Subcommand("north")
     public void skillTreeOptionNorth(IActiveCharacter character) {
         SkillTreeViewModel viewModel = character.getLastTimeInvokedSkillTreeView();
-        viewModel.getLocation().value -= 1;
+        viewModel.getLocation().key -= 1;
         Rpg.get().scheduleSyncLater(() -> Gui.moveSkillTreeMenu(character));
     }
 
     @Subcommand("south")
     public void skillTreeOptionSouth(IActiveCharacter character) {
         SkillTreeViewModel viewModel = character.getLastTimeInvokedSkillTreeView();
-        viewModel.getLocation().value += 1;
+        viewModel.getLocation().key += 1;
         Rpg.get().scheduleSyncLater(() -> Gui.moveSkillTreeMenu(character));
     }
 
     @Subcommand("west")
     public void skillTreeOptionWest(IActiveCharacter character) {
         SkillTreeViewModel viewModel = character.getLastTimeInvokedSkillTreeView();
-        viewModel.getLocation().key += 1;
+        viewModel.getLocation().value += 1;
         Rpg.get().scheduleSyncLater(() -> Gui.moveSkillTreeMenu(character));
     }
 
     @Subcommand("east")
     public void skillTreeOptionEast(IActiveCharacter character) {
         SkillTreeViewModel viewModel = character.getLastTimeInvokedSkillTreeView();
-        viewModel.getLocation().key -= 1;
+        viewModel.getLocation().value -= 1;
         Rpg.get().scheduleSyncLater(() -> Gui.moveSkillTreeMenu(character));
     }
 

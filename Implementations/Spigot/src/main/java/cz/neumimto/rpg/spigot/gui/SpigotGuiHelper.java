@@ -318,19 +318,19 @@ public class SpigotGuiHelper {
         int y = -4;
         int x = -3;
         for (int slotId : inventoryIds) {
-            i.setItem(slotId, new ItemStack(Material.RED_STAINED_GLASS_PANE));
+
             if (slotId % 9 == 0) {
                 y++;
                 x = -4;
             } else {
                 x++;
             }
-            int realX = centerX + x;
-            int realY = centerY + y;
+            int realX = centerX + y;
+            int realY = centerY + x;
 
-            if (isInRange(skillTreeMap, realX, realY) && realX < columns && realY < rows) {
+            if (isInRange(skillTreeMap, realX, realY) && realX < rows && realY < columns) {
 
-                short id = skillTreeMap[realY][realX];
+                short id = skillTreeMap[realX][realY];
                 if (id > 0) {
                     i.setItem(slotId, getIcon(character, skillTreeViewModel, skillTree, skillService, id));
                 } else {
@@ -411,7 +411,10 @@ public class SpigotGuiHelper {
 
     private static Material getSkillIcon(SkillData skillData) {
         if (skillData.getIcon() != null) {
-            return Material.matchMaterial(skillData.getIcon());
+            Material mat = Material.matchMaterial(skillData.getIcon());
+            if (mat != null) {
+                return mat;
+            }
         }
         return Material.STONE;
     }
@@ -687,7 +690,7 @@ public class SpigotGuiHelper {
                 }
             }
         }
-        SpellbookListener.addInventory(character, i,sorted);
+        SpellbookListener.addInventory(character, i, sorted);
         return i;
     }
 

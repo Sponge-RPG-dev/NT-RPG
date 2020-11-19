@@ -1,11 +1,11 @@
 package cz.neumimto.rpg.spigot.skills.utils;
 
 import de.slikey.effectlib.util.VectorUtils;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Particle;
+import org.bukkit.*;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
+import sun.awt.geom.Crossings;
 
 public class Decorator {
 
@@ -38,18 +38,7 @@ public class Decorator {
         }
     }
     /* JS cannot handler overloaded methods well, we would need to do "point["args array type"](actual call)",
-     therefore the indexes */
-    public static void point4(Location location,
-                      Particle effect,
-                      int count,
-                      double offsetx,
-                      double offsety,
-                      double offsetz,
-                      int data
-    ) {
-        location.getWorld().spawnParticle(effect, location, count, offsetx, offsety, offsetz, data);
-    }
-
+     therefore the indexes,  */
     public static void point0(Location location, Particle effect, int count) {
         location.getWorld().spawnParticle(effect, location, count);
     }
@@ -60,6 +49,17 @@ public class Decorator {
 
     public static void point2(Location location, Particle effect, int count, Material bd) {
         location.getWorld().spawnParticle(effect, location, count, bd.createBlockData());
+    }
+
+    public static void point3(Location location,
+                              Particle effect,
+                              int count,
+                              double offsetx,
+                              double offsety,
+                              double offsetz,
+                              int data
+    ) {
+        location.getWorld().spawnParticle(effect, location, count, offsetx, offsety, offsetz, data);
     }
 
 }
