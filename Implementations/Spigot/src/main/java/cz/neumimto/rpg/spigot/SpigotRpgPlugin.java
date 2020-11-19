@@ -28,10 +28,11 @@ import cz.neumimto.rpg.spigot.listeners.skillbinds.OnKeyPress;
 import cz.neumimto.rpg.spigot.resources.SpigotGuiceModule;
 import de.slikey.effectlib.EffectManager;
 import de.slikey.effectlib.effect.*;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Color;
+import org.bukkit.Particle;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Weather;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.java.annotation.dependency.Dependency;
@@ -49,7 +50,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
-@Plugin(name = "NT-RPG", version = "2.1.0-SNAPSHOT-9")
+@Plugin(name = "NT-RPG", version = "2.1.0-SNAPSHOT-13")
 @Description("Complete combat overhaul with classes and skills")
 @Author("NeumimTo")
 @Website("https://github.com/Sponge-RPG-dev/NT-RPG")

@@ -36,7 +36,7 @@ import cz.neumimto.rpg.common.skills.scripting.CustomSkillGenerator;
 
 import javax.inject.Inject;
 import java.io.File;
-import java.net.URL;
+import java.net.URI;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.Executor;
@@ -270,8 +270,7 @@ public abstract class AbstractRpg implements RpgApi {
         }
         injectorc.accept(injector);
 
-        URL pluginUrl = FileUtils.getPluginUrl();
-        File file = new File(pluginUrl.getFile());
+        File file = FileUtils.getPluginFile();
         getResourceLoader().loadJarFile(file, true);
 
         for (RpgAddon rpgAddon : rpgAddons) {
@@ -311,8 +310,6 @@ public abstract class AbstractRpg implements RpgApi {
         for (RpgAddon rpgAddon : rpgAddons) {
             rpgAddon.processStageLate(injector);
         }
-
-
     }
 
     @Override

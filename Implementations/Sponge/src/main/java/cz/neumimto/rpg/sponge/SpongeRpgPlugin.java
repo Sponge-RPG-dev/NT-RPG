@@ -62,8 +62,7 @@ import org.spongepowered.api.scheduler.SpongeExecutorService;
 import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -108,13 +107,9 @@ public class SpongeRpgPlugin extends Rpg {
         long start = System.nanoTime();
 
         Log.setLogger(logger);
-        try {
-            workingDir = config.toString();
-            URL url = FileUtils.getPluginUrl();
-            pluginjar = new File(url.toURI());
-        } catch (URISyntaxException us) {
-            us.printStackTrace();
-        }
+
+        workingDir = config.toString();
+        pluginjar = FileUtils.getPluginFile();
 
         instance = this;
         asyncExecutor = Sponge.getScheduler().createAsyncExecutor(this);

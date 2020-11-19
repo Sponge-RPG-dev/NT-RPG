@@ -26,9 +26,7 @@ import cz.neumimto.rpg.api.RpgApi;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.JarURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
+import java.net.*;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
@@ -38,17 +36,19 @@ import java.nio.file.Path;
  */
 public class FileUtils {
 
-    public static URL getPluginUrl() {
+    public static File getPluginFile() {
         URL clsUrl = RpgApi.class.getResource(RpgApi.class.getSimpleName() + ".class");
         if (clsUrl != null) {
             try {
                 URLConnection conn = clsUrl.openConnection();
                 if (conn instanceof JarURLConnection) {
                     JarURLConnection connection = (JarURLConnection) conn;
-                    return connection.getJarFileURL();
+                    return new File(connection.getJarFileURL().toURI().getSchemeSpecificPart());
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
             }
         }
         return null;
