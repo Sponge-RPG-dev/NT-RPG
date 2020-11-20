@@ -234,6 +234,8 @@ public abstract class AbstractEffectService implements EffectService {
         if (container != null) {
             removeEffectContainer(container, effect, consumer);
             stopEffect(effect);
+        } else {
+
         }
     }
 

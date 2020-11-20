@@ -67,7 +67,10 @@ if (Rpg.getPlatform().equals("Spigot")) {
 
     var IceShotBeam = Java.extend(AbstractBeam, {
         onEntityHit: function(caster, hitEntity, data, tick) {
-            return damage(caster, hitEntity, data.damage, DamageCause.MAGIC)
+            if (damage(caster, hitEntity, data.damage, DamageCause.MAGIC)) {
+                apply_effect(new SlowEffect(hitEntity, data.slowDuration, 1), data.skill);
+            }
+            return true;
         },
         onTick: function(location, data, tick) {
             Decorator.point2(location, Particle.BLOCK_CRACK, 3, Material.ICE)
@@ -83,7 +86,8 @@ registerSkillHandler('ntrpg:iceshot', {
         var beam = new IceShotBeam();
         beam.setData({
             damage: param("damage", context),
-            ctx: context
+            ctx: context.getSkill(),
+            slowDuration: param("slow-duration", context)
         });
         beam.init(character, param("max-distance", context), 2);
         // delay, tick period period

@@ -30,9 +30,9 @@ public class RepeatingSkill extends ActiveSkill<IActiveCharacter> {
     @Override
     public <T extends SkillData> void loadSkillData(T skillData, SkillTree context, SkillLoadingErrors errors, Config c) {
         RepeatingSkillData data = (RepeatingSkillData) skillData;
-        data.period = c.getLong("Repeat-period");
+        data.period = c.getLong("Repeat-Period");
         try {
-            data.countRemaining = c.getInt("Repeat-count");
+            data.countRemaining = c.getInt("Repeat-Count");
         } catch (ConfigException ignored) {
             data.countRemaining = 1;
         }
@@ -45,7 +45,7 @@ public class RepeatingSkill extends ActiveSkill<IActiveCharacter> {
     public SkillResult cast(IActiveCharacter character, PlayerSkillContext info) {
         RepeatingSkillData skillData = (RepeatingSkillData) info.getSkillData();
 
-        RepeatingSkillEffect repeatingSkillEffect = new RepeatingSkillEffect(skillData, character);
+        RepeatingSkillEffect repeatingSkillEffect = new RepeatingSkillEffect(skillData, character, info);
         effectService.addEffect(repeatingSkillEffect, this);
 
         return SkillResult.OK;
@@ -68,13 +68,12 @@ public class RepeatingSkill extends ActiveSkill<IActiveCharacter> {
         private PlayerSkillContext info;
         private int countRemaining;
 
-        public RepeatingSkillEffect(RepeatingSkillData skillData, IActiveCharacter character) {
+        public RepeatingSkillEffect(RepeatingSkillData skillData, IActiveCharacter character, PlayerSkillContext info) {
             super("repeating_" + skillData.getSkillId(), character);
             this.skillData = skillData;
             this.character = character;
-            this.info = character.getSkillInfo(skillData.getSkill());
-            info = new PlayerSkillContext(info.getClassDefinition(), skillData.getWrapped().getSkill(), character);
-            info.setSkillData(skillData);
+            this.info = new PlayerSkillContext(info.getClassDefinition(), skillData.getWrapped().getSkill(), character);
+            this.info.setSkillData(skillData.wrapped);
             countRemaining = skillData.countRemaining;
             setDuration(-1);
             setPeriod(skillData.period);

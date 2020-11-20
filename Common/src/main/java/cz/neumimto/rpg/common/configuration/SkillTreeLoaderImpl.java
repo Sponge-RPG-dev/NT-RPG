@@ -448,14 +448,14 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
 
 
                     String name = e.getKey();
-                    skillSettings.addNode(name, norm);
+                    skillSettings.addSingleNode(name, norm);
                     name = name + SkillSettings.BONUS_SUFFIX;
                     float bonus = 0f;
                     try {
                         bonus = Float.parseFloat(settings.getString(name));
                     } catch (ConfigException ignored) {
                     }
-                    skillSettings.addNode(name, bonus);
+                    skillSettings.addSingleNode(name, bonus);
                 } else {
                     skillSettings.addObjectNode(e.getKey(), val);
                 }
@@ -530,7 +530,7 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
 
     private SkillData createSkillInfo(SkillTree tree, String lowercased) {
 
-        ISkill skill = Rpg.get().getSkillService().getSkills().get(lowercased);
+        ISkill skill = Rpg.get().getSkillService().getSkills().get(lowercased.replaceAll("\"",""));
         if (skill == null) {
             throw new InvalidSkillTreeException("Could not find a skill " + lowercased + " referenced in the skilltree " + tree.getId());
         }

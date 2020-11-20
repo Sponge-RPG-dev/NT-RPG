@@ -49,8 +49,8 @@ public class SkillSettings {
     }
 
     public void addNode(String n, float val, float levelbonux) {
-        addNode(n, val);
-        addNode(n + BONUS_SUFFIX, levelbonux);
+        addSingleNode(n, val);
+        addSingleNode(n + BONUS_SUFFIX, levelbonux);
     }
 
     public void addAttributeNode(ISkillNode n, AttributeConfig attribute, float val) {
@@ -58,7 +58,7 @@ public class SkillSettings {
     }
 
     public void addAttributeNode(String n, AttributeConfig attribute, float val) {
-        addNode(n + "_per_" + attribute.getId(), val);
+        addSingleNode(n + "_per_" + attribute.getId(), val);
         attributeSettingsMap.put(attribute, new AttributeSettings(n, val));
     }
 
@@ -79,7 +79,7 @@ public class SkillSettings {
         return hasNode(node.value());
     }
 
-    public void addNode(String s, float val) {
+    public void addSingleNode(String s, float val) {
         skillSettings.put(s.toLowerCase(), val);
     }
 
