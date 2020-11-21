@@ -520,7 +520,7 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
 
     private SkillData getSkillInfo(String id, SkillTree tree) {
         final String lowercased = id.toLowerCase();
-        SkillData info = tree.getSkills().get(lowercased);
+        SkillData info = tree.getSkills().get(lowercased.replaceAll("\"", ""));
         if (info == null) {
             info = createSkillInfo(tree, lowercased);
             tree.addSkill(info);

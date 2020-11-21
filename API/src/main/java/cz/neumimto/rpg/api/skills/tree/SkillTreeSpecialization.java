@@ -115,7 +115,7 @@ public class SkillTreeSpecialization extends PassiveSkill {
             logger.log("Found SkillPath in the tree \"" + skillTree.getId() + "\" but no permissions defined, setting to 1");
             pdata.setSkillPointsRequired(1);
         }
-        pdata.setMaxSkillLevel(1);
+
         try {
             List<? extends Config> skillBonus = c.getConfigList("SkillBonus");
             for (Config s : skillBonus) {

@@ -11,6 +11,6 @@ public class SkillDependency {
 
     @Override
     public String toString() {
-        return skillData.getSkillName() + "(" + minSkillLevel + ")";
+        return skillData.getSkillId() + "(" + minSkillLevel + ")";
     }
 }

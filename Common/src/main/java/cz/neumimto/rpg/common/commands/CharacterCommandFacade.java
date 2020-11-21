@@ -9,6 +9,7 @@ import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.parties.PartyService;
 import cz.neumimto.rpg.api.gui.Gui;
 import cz.neumimto.rpg.api.gui.SkillTreeViewModel;
+import cz.neumimto.rpg.api.inventory.InventoryService;
 import cz.neumimto.rpg.api.localization.Arg;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
@@ -47,6 +48,9 @@ public class CharacterCommandFacade {
 
     @Inject
     private PropertyServiceImpl propertyService;
+
+    @Inject
+    private InventoryService inventoryService;
 
     public void commandCommitAttribute(IActiveCharacter character) {
         Map<String, Integer> attributesTransaction = character.getAttributesTransaction();
@@ -106,6 +110,7 @@ public class CharacterCommandFacade {
             current.sendMessage(localizationService.translate(LocalizationKeys.ALREADY_CURRENT_CHARACTER));
             return;
         }
+        inventoryService.invalidateGUICaches(current);
         CompletableFuture.runAsync(() -> {
             UUID uuid = current.getUUID();
             List<CharacterBase> playersCharacters = characterService.getPlayersCharacters(uuid);
@@ -154,7 +159,6 @@ public class CharacterCommandFacade {
     private static class CommandSyncCallback implements Runnable {
         private final IActiveCharacter character;
         private CharacterCommandFacade facade;
-
         private CommandSyncCallback(IActiveCharacter character, CharacterCommandFacade facade) {
             this.character = character;
             this.facade = facade;
