@@ -208,7 +208,7 @@ public class PluginConfig {
     public String PRIMARY_CLASS_TYPE = "Primary";
 
     @Path("RESPECT_CLASS_SELECTION_ORDER")
-    public boolean RESPECT_CLASS_SELECTION_ORDER = true;
+    public boolean RESPECT_CLASS_SELECTION_ORDER = false;
 
     @Path("CLASS_TYPES")
     @Conversion(ClassTypesDeserializer.class)

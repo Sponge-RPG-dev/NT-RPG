@@ -62,6 +62,7 @@ import cz.neumimto.rpg.common.utils.exceptions.MissingConfigurationException;
 import javax.inject.Inject;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static cz.neumimto.rpg.api.localization.Arg.arg;
@@ -623,39 +624,40 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
         PlayerSkillContext playerSkillContext = character.getSkillInfo(skill);
 
         if (playerSkillContext == null) {
-            String text = localizationService.translate(LocalizationKeys.NOT_LEARNED_SKILL, arg("skill", skill.getId()));
-            return ActionResult.withErrorMessage(text);
+            return ActionResult.withErrorMessage(() -> localizationService.translate(LocalizationKeys.NOT_LEARNED_SKILL, arg("skill", skill.getId())));
         }
 
         SkillData info = playerSkillContext.getSkillData();
         if (cc.getSkillPoints() < 1) {
-            String text = localizationService.translate(LocalizationKeys.NO_SKILLPOINTS, arg("skill", info.getSkillName()));
-            return ActionResult.withErrorMessage(text);
+            return ActionResult.withErrorMessage(() -> localizationService.translate(LocalizationKeys.NO_SKILLPOINTS, arg("skill", info.getSkillName())));
         }
 
         int minlevel = playerSkillContext.getLevel() + info.getMinPlayerLevel();
 
         if (minlevel > character.getLevel()) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("skill", info.getSkillName());
-            map.put("level", minlevel);
-            String text = localizationService.translate(LocalizationKeys.SKILL_REQUIRES_HIGHER_LEVEL, arg(map));
-            return ActionResult.withErrorMessage(text);
+            return ActionResult.withErrorMessage(() -> {
+                Map<String, Object> map = new HashMap<>();
+                map.put("skill", info.getSkillName());
+                map.put("level", minlevel);
+                return localizationService.translate(LocalizationKeys.SKILL_REQUIRES_HIGHER_LEVEL, arg(map));
+            });
         }
         if (playerSkillContext.getLevel() + 1 > info.getMaxSkillLevel()) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("skill", info.getSkillName());
-            map.put("level", playerSkillContext.getLevel());
-            String text = localizationService.translate(LocalizationKeys.SKILL_IS_ON_MAX_LEVEL, arg(map));
-            return ActionResult.withErrorMessage(text);
+            return ActionResult.withErrorMessage(() -> {
+                Map<String, Object> map = new HashMap<>();
+                map.put("skill", info.getSkillName());
+                map.put("level", playerSkillContext.getLevel());
+                return localizationService.translate(LocalizationKeys.SKILL_IS_ON_MAX_LEVEL, arg(map));
+            });
         }
 
         if (playerSkillContext.getLevel() * info.getLevelGap() > character.getLevel()) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("skill", info.getSkillName());
-            map.put("level", playerSkillContext.getLevel() * info.getLevelGap());
-            String text = localizationService.translate(LocalizationKeys.INSUFFICIENT_LEVEL_GAP, arg(map));
-            return ActionResult.withErrorMessage(text);
+            return ActionResult.withErrorMessage(() -> {
+                Map<String, Object> map = new HashMap<>();
+                map.put("skill", info.getSkillName());
+                map.put("level", playerSkillContext.getLevel() * info.getLevelGap());
+                return localizationService.translate(LocalizationKeys.INSUFFICIENT_LEVEL_GAP, arg(map));
+            });
         }
 
         CharacterSkillUpgradeEvent event = Rpg.get().getEventFactory().createEventInstance(CharacterSkillUpgradeEvent.class);
@@ -710,59 +712,62 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
         }
 
         if (character.hasSkill(skill.getId())) {
-            PlayerSkillContext info = character.getSkillInfo(skill.getId());
-            String text = localizationService.translate(LocalizationKeys.SKILL_ALREADY_LEARNED, arg("skill", info.getSkillData().getSkillName()));
-            return ActionResult.withErrorMessage(text);
+            return ActionResult.withErrorMessage(() -> {
+                PlayerSkillContext info = character.getSkillInfo(skill.getId());
+                return localizationService.translate(LocalizationKeys.SKILL_ALREADY_LEARNED, arg("skill", info.getSkillData().getSkillName()));
+            });
         }
         SkillData info = skillTree.getSkillById(skill.getId());
 
         //todo fetch from db
         int avalaibleSkillpoints = clazz.getSkillPoints();
         if (avalaibleSkillpoints < 1) {
-            String text = localizationService.translate(LocalizationKeys.NO_SKILLPOINTS, arg("skill", info.getSkillName()));
-            return ActionResult.withErrorMessage(text);
+            return ActionResult.withErrorMessage(() -> localizationService.translate(LocalizationKeys.NO_SKILLPOINTS, arg("skill", info.getSkillName())));
         }
 
 
         if (info == null) {
-            String text = localizationService.translate(LocalizationKeys.SKILL_NOT_IN_A_TREE, arg("skill", info.getSkillName()));
-            return ActionResult.withErrorMessage(text);
+            return ActionResult.withErrorMessage(() -> localizationService.translate(LocalizationKeys.SKILL_NOT_IN_A_TREE, arg("skill", skill.getId())));
         }
 
         if (clazz.getLevel() < info.getMinPlayerLevel()) {
-            Map<java.lang.String, Object> map = new HashMap<>();
-            map.put("skill", info.getSkillName());
-            map.put("level", info.getMinPlayerLevel());
-            String text = localizationService.translate(LocalizationKeys.SKILL_REQUIRES_HIGHER_LEVEL, arg(map));
-            return ActionResult.withErrorMessage(text);
+            return ActionResult.withErrorMessage(() -> {
+                Map<java.lang.String, Object> map = new HashMap<>();
+                map.put("skill", info.getSkillName());
+                map.put("level", info.getMinPlayerLevel());
+                return localizationService.translate(LocalizationKeys.SKILL_REQUIRES_HIGHER_LEVEL, arg(map));
+            });
 
         }
 
         if (!hasHardSkillDependencies(character, info)) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("skill", info.getSkillName());
-            map.put("hard", info.getHardDepends().stream().map(SkillDependency::toString).collect(Collectors.joining(", ")));
-            map.put("soft", info.getSoftDepends().stream().map(SkillDependency::toString).collect(Collectors.joining(", ")));
-            String text = localizationService.translate(LocalizationKeys.MISSING_SKILL_DEPENDENCIES, arg(map));
-            return ActionResult.withErrorMessage(text);
+            return ActionResult.withErrorMessage(() -> {
+                Map<String, Object> map = new HashMap<>();
+                map.put("skill", info.getSkillName());
+                map.put("hard", info.getHardDepends().stream().map(SkillDependency::toString).collect(Collectors.joining(", ")));
+                map.put("soft", info.getSoftDepends().stream().map(SkillDependency::toString).collect(Collectors.joining(", ")));
+                return localizationService.translate(LocalizationKeys.MISSING_SKILL_DEPENDENCIES, arg(map));
+            });
 
         }
 
         if (!hasSoftSkillDependencies(character, info)) {
-            Map<java.lang.String, Object> map = new HashMap<>();
-            map.put("skill", info.getSkillName());
-            map.put("hard", info.getHardDepends().stream().map(SkillDependency::toString).collect(Collectors.joining(", ")));
-            map.put("soft", info.getSoftDepends().stream().map(SkillDependency::toString).collect(Collectors.joining(", ")));
-            String text = localizationService.translate(LocalizationKeys.MISSING_SKILL_DEPENDENCIES, arg(map));
-            return ActionResult.withErrorMessage(text);
+            return ActionResult.withErrorMessage(() -> {
+                Map<java.lang.String, Object> map = new HashMap<>();
+                map.put("skill", info.getSkillName());
+                map.put("hard", info.getHardDepends().stream().map(SkillDependency::toString).collect(Collectors.joining(", ")));
+                map.put("soft", info.getSoftDepends().stream().map(SkillDependency::toString).collect(Collectors.joining(", ")));
+                return localizationService.translate(LocalizationKeys.MISSING_SKILL_DEPENDENCIES, arg(map));
+            });
         }
 
         if (hasConflictingSkillDepedencies(character, info)) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("skill", info.getSkillName());
-            map.put("conflict", skill.getId());
-            String text = localizationService.translate(LocalizationKeys.SKILL_CONFLICTS, arg(map));
-            return ActionResult.withErrorMessage(text);
+            return ActionResult.withErrorMessage(() -> {
+                Map<String, Object> map = new HashMap<>();
+                map.put("skill", info.getSkillName());
+                map.put("conflict", skill.getId());
+                return localizationService.translate(LocalizationKeys.SKILL_CONFLICTS, arg(map));
+            });
         }
 
         CharacterSkillLearnAttemptEvent event = Rpg.get().getEventFactory().createEventInstance(CharacterSkillLearnAttemptEvent.class);

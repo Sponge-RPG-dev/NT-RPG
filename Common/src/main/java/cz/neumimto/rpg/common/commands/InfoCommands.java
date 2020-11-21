@@ -25,7 +25,7 @@ public class InfoCommands extends BaseCommand {
     private CharacterCommandFacade characterCommandFacade;
 
     @CommandAlias("skilltree")
-    public void openSkillTreeMenuCommand(IActiveCharacter character, @Optional ClassDefinition classDefinition) {
+    public void openSkillTreeMenuCommand(IActiveCharacter character, ClassDefinition classDefinition) {
         characterCommandFacade.openSKillTreeMenu(character, classDefinition);
     }
 

@@ -145,6 +145,12 @@ public class SpigotInventoryListener implements Listener {
         if (player instanceof Player) {
             Player p = (Player) player;
             ISpigotCharacter character = spigotCharacterService.getCharacter(player.getUniqueId());
+
+            //player quits
+            if (character == null) {
+                return;
+            }
+
             if (character.requiresDamageRecalculation()) {
 
             }

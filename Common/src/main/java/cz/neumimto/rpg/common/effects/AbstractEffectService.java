@@ -233,10 +233,8 @@ public abstract class AbstractEffectService implements EffectService {
         }
         if (container != null) {
             removeEffectContainer(container, effect, consumer);
-            stopEffect(effect);
-        } else {
-
         }
+        stopEffect(effect);
     }
 
     @Override
@@ -259,8 +257,6 @@ public abstract class AbstractEffectService implements EffectService {
             } else {
                 container.updateStackedValue();
             }
-        } else {
-
         }
     }
 

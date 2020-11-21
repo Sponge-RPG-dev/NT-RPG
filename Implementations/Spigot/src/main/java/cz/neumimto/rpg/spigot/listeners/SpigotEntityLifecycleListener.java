@@ -17,6 +17,7 @@ import org.bukkit.World;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.*;
@@ -89,8 +90,8 @@ public class SpigotEntityLifecycleListener implements Listener {
             EntityDamageEvent lastDamageCause = targetEntity.getLastDamageCause();
             Entity entity = lastDamageCause.getEntity();
             Entity source = null;
-            if (entity instanceof LivingEntity) {
-                source = entity;
+            if (lastDamageCause instanceof EntityDamageByEntityEvent) {
+                source = ((EntityDamageByEntityEvent) lastDamageCause).getDamager();
             } else if (entity instanceof Projectile) {
                 Projectile projectile = (Projectile) entity;
                 ProjectileSource shooter = projectile.getShooter();
@@ -103,7 +104,7 @@ public class SpigotEntityLifecycleListener implements Listener {
                 ISpigotCharacter character = characterService.getCharacter(source.getUniqueId());
                 if (character != null) {
 
-                    double exp = entityService.getExperiences(targetEntity.getWorld().getName(), targetEntity.getType().getKey().getKey(), targetEntity.getUniqueId());
+                    double exp = entityService.getExperiences(targetEntity.getWorld().getName(), targetEntity.getType().name(), targetEntity.getUniqueId());
 
                     exp += character.getExperienceBonusFor(targetEntity.getLocation().getWorld().getName(), targetEntity.getType().getKey().getKey());
                     String experienceSource = targetEntity.getType() == EntityType.PLAYER ? ExperienceSources.PVP : ExperienceSources.PVE;
