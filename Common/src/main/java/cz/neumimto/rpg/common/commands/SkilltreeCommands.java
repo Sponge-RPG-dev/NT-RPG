@@ -81,9 +81,6 @@ public class SkilltreeCommands extends BaseCommand {
     public void skillTreeOptionSkill(IActiveCharacter character, ISkill skill) {
         SkillTreeViewModel viewModel = character.getLastTimeInvokedSkillTreeView();
 
-        viewModel.setInteractiveMode(viewModel.getInteractiveMode().opposite());
-        Rpg.get().scheduleSyncLater(() -> Gui.moveSkillTreeMenu(character));
-
         if (viewModel.getInteractiveMode() == SkillTreeViewModel.InteractiveMode.FAST) {
 
             ClassDefinition classDefinition = viewModel.getViewedClass();

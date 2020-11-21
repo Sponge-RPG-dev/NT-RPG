@@ -188,7 +188,8 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
 
     @Override
     public void displaySkillDetailsInventoryMenu(ISpigotCharacter character, SkillTree tree, String command) {
-
+        Inventory view = SpigotGuiHelper.createSkillDetailInventoryView(character, tree, tree.getSkillById(command));
+        character.getPlayer().openInventory(view);
     }
 
     @Override

@@ -13,9 +13,7 @@ import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterClass;
-import cz.neumimto.rpg.api.skills.ISkill;
-import cz.neumimto.rpg.api.skills.PlayerSkillContext;
-import cz.neumimto.rpg.api.skills.SkillData;
+import cz.neumimto.rpg.api.skills.*;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.common.gui.ConfigInventory;
 import cz.neumimto.rpg.common.gui.DynamicInventory;
@@ -27,10 +25,13 @@ import cz.neumimto.rpg.spigot.skills.SpigotSkillTreeInterfaceModel;
 import de.tr7zw.nbtapi.NBTItem;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.mmogroup.mmolib.api.DamageType;
+import net.mmogroup.mmolib.api.itemtype.ItemType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -39,6 +40,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
+
+import static org.bukkit.event.entity.EntityDamageEvent.DamageCause.*;
 
 public class SpigotGuiHelper {
 
@@ -49,6 +52,8 @@ public class SpigotGuiHelper {
 
     public static Map<String, Inventory> CACHED_MENUS = new HashMap<>();
     public static Map<String, ConfigInventory<ItemStack, Inventory>> CACHED_MENU_TEMPLATES = new HashMap<>();
+
+    public static Map<EntityDamageEvent.DamageCause, ItemStack> damageTypeToItemStack = new HashMap<>();
 
     static {
         itemLoreFactory = new ItemLoreFactory();
@@ -66,7 +71,24 @@ public class SpigotGuiHelper {
 
         attributButtonSlots = new int[]{10, 11, 12, 13, 14, 15, 16, 36, 37, 38, 39, 40, 41, 42, 43, 45};
 
+        damageTypeToItemStack.put(ENTITY_ATTACK, unclickableIcon(Material.STONE_SWORD, 354,"ENTITY_ATTACK"));
+        damageTypeToItemStack.put(ENTITY_SWEEP_ATTACK, unclickableIcon(Material.STONE_SWORD, 354,"ENTITY_SWEEP_ATTACK"));
+        damageTypeToItemStack.put(CONTACT, unclickableIcon(Material.CACTUS, 354,"CONTACT"));
+        damageTypeToItemStack.put(CUSTOM, unclickableIcon(Material.BARRIER, 354,"CUSTOM"));
+        damageTypeToItemStack.put(DROWNING, unclickableIcon(Material.WATER, 354,"DROWNING"));
+        damageTypeToItemStack.put(ENTITY_EXPLOSION, unclickableIcon(Material.TNT, 354,"ENTITY_EXPLOSION"));
+        damageTypeToItemStack.put(BLOCK_EXPLOSION, unclickableIcon(Material.TNT, 354,"BLOCK_EXPLOSION"));
+        damageTypeToItemStack.put(FALL, unclickableIcon(Material.IRON_BOOTS, 354,"FALL"));
+        damageTypeToItemStack.put(FIRE, unclickableIcon(Material.BLAZE_POWDER, 354,"FIRE"));
+        damageTypeToItemStack.put(STARVATION, unclickableIcon(Material.ROTTEN_FLESH, 354,"STARVATION"));
+        damageTypeToItemStack.put(LAVA, unclickableIcon(Material.LAVA, 354,"LAVA"));
+        damageTypeToItemStack.put(PROJECTILE, unclickableIcon(Material.TIPPED_ARROW, 354,"PROJECTILE"));
+        damageTypeToItemStack.put(VOID, unclickableIcon(Material.NETHER_PORTAL, 354,"VOID"));
+        damageTypeToItemStack.put(MAGIC, unclickableIcon(Material.ENCHANTED_BOOK, 354,"MAGIC"));
+        damageTypeToItemStack.put(LIGHTNING, unclickableIcon(Material.NETHER_STAR, 354,"LIGHTNING"));
     }
+
+
 
     public static void initInventories() {
         CACHED_MENU_TEMPLATES.clear();
@@ -188,6 +210,14 @@ public class SpigotGuiHelper {
         NBTItem nbti = new NBTItem(itemStack);
         nbti.setBoolean("ntrpg.item-iface", true);
         nbti.setBoolean(tag, true);
+        return nbti.getItem();
+    }
+
+    public static ItemStack unclickableIcon(Material itemStack, int model, String name) {
+        ItemStack itemStack1 = new ItemStack(itemStack);
+        NBTItem nbti = new NBTItem(itemStack1);
+        nbti.setBoolean("ntrpg.item-iface", true);
+        nbti.setString("display", name);
         return nbti.getItem();
     }
 
@@ -698,4 +728,98 @@ public class SpigotGuiHelper {
         return SpigotGuiHelper.unclickableInterface(Material.WHITE_STAINED_GLASS_PANE, 12345, "ntrpg.skillbook.emptyslot");
     }
 
+    public static Inventory createSkillDetailInventoryView(ISpigotCharacter character, SkillTree tree, SkillData skillData) {
+        Inventory build = createInventoryTemplate(skillData.getSkillName());
+
+        SpigotSkillTreeViewModel model = character.getLastTimeInvokedSkillTreeView();
+
+        build.setItem(0, button(Material.PAPER, Rpg.get().getLocalizationService().translate(LocalizationKeys.BACK), "ninfo class " + model.getViewedClass().getName()));
+
+        if (skillData instanceof SkillPathData) {
+            SkillPathData data = (SkillPathData) skillData;
+
+            ItemStack of = new ItemStack(Material.PAPER);
+            ItemMeta itemMeta = of.getItemMeta();
+            itemMeta.setDisplayName("Tier " + data.getTier());
+            of = unclickableIcon(of);
+
+            build.setItem(10, of);
+
+            SkillService skillService = Rpg.get().getSkillService();
+
+            int i = 27;
+            for (Map.Entry<String, Integer> entry : data.getSkillBonus().entrySet()) {
+                ISkill skill = skillService.getById(entry.getKey()).orElse(null);
+                if (skill != null) {
+                    ItemStack itemStack = skillToItemStack(character, character.getSkill(skill.getId()).getSkillData(), tree, model);
+                    ItemMeta itemMeta1 = itemStack.getItemMeta();
+                    itemMeta1.setDisplayName((entry.getValue() < 0 ? ChatColor.RED : ChatColor.DARK_GREEN)
+                            + String.format("%+d", entry.getValue()) + " | " + entry.getKey());
+                    itemStack.setItemMeta(itemMeta1);
+
+                    build.setItem(i, itemStack);
+                    i++;
+                }
+            }
+
+        } else {
+            String type = skillData.getSkill().getDamageType();
+            if (type != null) {
+                build.setItem(11, damageTypeToItemStack(EntityDamageEvent.DamageCause.valueOf(type)));
+            }
+
+            List<ItemStack> itemStacks = configurationToItemStacks(skillData);
+            int i = 27;
+
+            for (ItemStack itemStack : itemStacks) {
+                build.setItem(i, itemStack);
+                i++;
+            }
+
+        }
+        return build;
+
+    }
+
+    private static ItemStack damageTypeToItemStack(EntityDamageEvent.DamageCause type) {
+        if (type == null) {
+            return unclickableInterface(Material.STONE);
+        }
+        ItemStack a = damageTypeToItemStack.get(type);
+        if (a == null) {
+            a = unclickableInterface(Material.STONE);
+        }
+        return a;
+    }
+
+    private static List<ItemStack> configurationToItemStacks(SkillData skillData) {
+        List<ItemStack> a = new ArrayList<>();
+        LocalizationService ls = Rpg.get().getLocalizationService();
+        if (skillData.getSkillSettings() != null) {
+            Map<String, Float> nodes = skillData.getSkillSettings().getNodes();
+            for (Map.Entry<String, Float> s : nodes.entrySet()) {
+                if (!s.getKey().endsWith("_levelbonus")) {
+                    String s1 = configNodeToReadableString(s.getKey());
+                    Float init = s.getValue();
+                    Float lbonus = nodes.get(s.getKey() + "_levelbonus");
+                    ItemStack of = unclickableIcon(Material.PAPER, 12, s1);
+                    ItemMeta itemMeta = of.getItemMeta();
+                    List<String> strings = Arrays.asList(
+                            ls.translate(LocalizationKeys.SKILL_VALUE_STARTS_AT) + ChatColor.BOLD + ChatColor.GOLD + ": " + ChatColor.GREEN + ChatColor.BOLD + init,
+                            ls.translate(LocalizationKeys.SKILL_VALUE_PER_LEVEL) + ChatColor.BOLD + ChatColor.GOLD + ": " + ChatColor.GREEN + ChatColor.BOLD + lbonus
+                    );
+                    itemMeta.setLore(strings);
+                    of.setItemMeta(itemMeta);
+                    a.add(of);
+                }
+            }
+        }
+        return a;
+    }
+
+    private static String configNodeToReadableString(String t) {
+        String a = t.replaceAll("_", " ");
+        a = a.substring(0, 1).toUpperCase() + a.substring(1);
+        return a;
+    }
 }
