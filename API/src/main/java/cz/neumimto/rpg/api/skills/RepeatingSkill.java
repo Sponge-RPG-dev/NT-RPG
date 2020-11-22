@@ -47,7 +47,7 @@ public class RepeatingSkill extends ActiveSkill<IActiveCharacter> {
 
         RepeatingSkillEffect repeatingSkillEffect = new RepeatingSkillEffect(skillData, character, info);
         repeatingSkillEffect.onTick(repeatingSkillEffect);
-
+        repeatingSkillEffect.setLastTickTime(System.currentTimeMillis());
         effectService.addEffect(repeatingSkillEffect, this);
 
         return SkillResult.OK;
