@@ -46,6 +46,8 @@ public class RepeatingSkill extends ActiveSkill<IActiveCharacter> {
         RepeatingSkillData skillData = (RepeatingSkillData) info.getSkillData();
 
         RepeatingSkillEffect repeatingSkillEffect = new RepeatingSkillEffect(skillData, character, info);
+        repeatingSkillEffect.onTick(repeatingSkillEffect);
+
         effectService.addEffect(repeatingSkillEffect, this);
 
         return SkillResult.OK;
@@ -74,7 +76,7 @@ public class RepeatingSkill extends ActiveSkill<IActiveCharacter> {
             this.character = character;
             this.info = new PlayerSkillContext(info.getClassDefinition(), skillData.getWrapped().getSkill(), character);
             this.info.setSkillData(skillData.wrapped);
-            countRemaining = skillData.countRemaining;
+            countRemaining = skillData.countRemaining - 1;
             setDuration(-1);
             setPeriod(skillData.period);
         }

@@ -7,6 +7,7 @@ import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.RpgAddon;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.effects.EffectService;
+import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.api.effects.model.EffectModelFactory;
 import cz.neumimto.rpg.api.effects.model.EffectModelMapper;
@@ -29,9 +30,7 @@ import org.apache.commons.io.FileUtils;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.*;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Modifier;
+import java.lang.reflect.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -283,6 +282,16 @@ public class ResourceManagerImpl implements ResourceLoader {
         if (clazz.isAnnotationPresent(Singleton.class) && hasDefaultCtr(clazz)) {
             container = injector.getInstance(clazz);
         }
+        if (IEffect.class.isAssignableFrom(clazz)) {
+            jsEngine.getDataToBind().put(clazz, JsBinding.Type.CLASS);
+            Type genericSuperclass = clazz.getGenericSuperclass();
+            if (genericSuperclass instanceof ParameterizedType) {
+                Type actualTypeArgument = ((ParameterizedType) genericSuperclass).getActualTypeArguments()[0];
+                if (actualTypeArgument instanceof Class) {
+                    jsEngine.getDataToBind().put((Class<?>) actualTypeArgument, JsBinding.Type.CLASS);
+                }
+            }
+        }
         return container;
     }
 
@@ -323,6 +332,7 @@ public class ResourceManagerImpl implements ResourceLoader {
     protected void loadScriptBindingsClass(Class<?> clazz) {
         jsEngine.getDataToBind().put(clazz, clazz.getAnnotation(JsBinding.class).value());
     }
+
 
     protected void loadPropertyContainerClass(Class<?> clazz) {
         DebugLevel debugLevel = Rpg.get().getPluginConfig().DEBUG;

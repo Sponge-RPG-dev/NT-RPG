@@ -26,6 +26,7 @@ public abstract class AbstractBeam<T> extends BukkitRunnable {
     private IEntity<LivingEntity> iEntity;
 //    private Async lance;
     private T data;
+    private boolean stop;
 
     public void init(IEntity<LivingEntity> entity, double maxDistance, int rayTraceTicks) {
         this.iEntity = entity;
@@ -45,38 +46,43 @@ public abstract class AbstractBeam<T> extends BukkitRunnable {
 
     @Override
     public void run() {
-        currentLoc.add(vector);
-        if (tick % rayTraceTicks == 0) {
-            RayTraceResult rayTraceResult = world
-                    .rayTrace(
-                            currentLoc,
-                            vector,
-                            vector.lengthSquared(),
-                            FluidCollisionMode.NEVER,
-                            true,
-                            1,
-                            entity -> entity != this.entity && entity instanceof LivingEntity && !entity.isDead());
-            onTick(currentLoc, data, tick);
-            if (rayTraceResult != null) {
-                LivingEntity hitEntity = (LivingEntity) rayTraceResult.getHitEntity();
-                if (hitEntity != null) {
-                    IEntity iEntity = Rpg.get().getEntityService().get(hitEntity);
-                    if (onEntityHit(this.iEntity, iEntity, data, tick)) {
-                        cancel();
+        if (!stop) {
+            currentLoc.add(vector);
+            if (tick % rayTraceTicks == 0) {
+                RayTraceResult rayTraceResult = world
+                        .rayTrace(
+                                currentLoc,
+                                vector,
+                                vector.lengthSquared(),
+                                FluidCollisionMode.NEVER,
+                                true,
+                                1,
+                                entity -> entity != this.entity && entity instanceof LivingEntity && !entity.isDead());
+                onTick(currentLoc, data, tick);
+                if (rayTraceResult != null) {
+                    LivingEntity hitEntity = (LivingEntity) rayTraceResult.getHitEntity();
+                    if (hitEntity != null) {
+                        IEntity iEntity = Rpg.get().getEntityService().get(hitEntity);
+                        if (onEntityHit(this.iEntity, iEntity, data, tick)) {
+                            cancel();
+                            stop = true;
+                        }
                     }
-                }
-                Block hitBlock = rayTraceResult.getHitBlock();
-                if (hitBlock != null) {
-                    if (onBlockHit(hitBlock, data, tick)) {
-                        cancel();
+                    Block hitBlock = rayTraceResult.getHitBlock();
+                    if (hitBlock != null) {
+                        if (onBlockHit(hitBlock, data, tick)) {
+                            cancel();
+                            stop = true;
+                        }
                     }
                 }
             }
-        }
-        tick++;
+            tick++;
 
-        if (initialLoc.distanceSquared(currentLoc) > maxDistance) {
-            cancel();
+            if (initialLoc.distanceSquared(currentLoc) > maxDistance) {
+                cancel();
+                stop = true;
+            }
         }
     }
 

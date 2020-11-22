@@ -25,8 +25,6 @@ import cz.neumimto.rpg.spigot.skills.SpigotSkillTreeInterfaceModel;
 import de.tr7zw.nbtapi.NBTItem;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.mmogroup.mmolib.api.DamageType;
-import net.mmogroup.mmolib.api.itemtype.ItemType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -736,6 +734,7 @@ public class SpigotGuiHelper {
         build.setItem(0, button(Material.PAPER, Rpg.get().getLocalizationService().translate(LocalizationKeys.BACK), "ninfo class " + model.getViewedClass().getName()));
 
         if (skillData instanceof SkillPathData) {
+
             SkillPathData data = (SkillPathData) skillData;
 
             ItemStack of = new ItemStack(Material.PAPER);
@@ -747,7 +746,7 @@ public class SpigotGuiHelper {
 
             SkillService skillService = Rpg.get().getSkillService();
 
-            int i = 27;
+            int i = 17;
             for (Map.Entry<String, Integer> entry : data.getSkillBonus().entrySet()) {
                 ISkill skill = skillService.getById(entry.getKey()).orElse(null);
                 if (skill != null) {

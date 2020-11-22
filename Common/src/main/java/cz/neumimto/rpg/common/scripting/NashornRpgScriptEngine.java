@@ -111,7 +111,7 @@ public class NashornRpgScriptEngine extends AbstractRpgScriptEngine {
             prepareBindings((s, o) -> {
                 if (o instanceof Class) {
                     try {
-                        engine.eval("Java.type(\"" +((Class) o).getCanonicalName() + "\")");
+                        engine.eval(((Class) o).getSimpleName() + " = Java.type(\"" +((Class) o).getCanonicalName() + "\")");
                     } catch (ScriptException e) {
                         e.printStackTrace();
                     }
