@@ -64,14 +64,14 @@ import java.util.concurrent.Executors;
                 @SoftDependency("PlaceholderAPI"),
                 @SoftDependency("HolographicDisplays"),
                 @SoftDependency("MythicMobs"),
-                @SoftDependency("MMOItems")
+                @SoftDependency("MMOItems"),
+                @SoftDependency("ProtocolLib")
         }
 )
 @DependsOn(
         value = {
                 @Dependency("NBTAPI"),
                 @Dependency("EffectLib"),
-                @Dependency("ProtocolLib")
         }
 )
 public class SpigotRpgPlugin extends JavaPlugin {
