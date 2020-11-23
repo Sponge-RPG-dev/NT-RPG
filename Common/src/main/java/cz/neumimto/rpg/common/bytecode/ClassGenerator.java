@@ -3,7 +3,6 @@ package cz.neumimto.rpg.common.bytecode;
 import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.logging.Log;
-import jdk.internal.dynalink.beans.StaticClass;
 import jdk.nashorn.api.scripting.JSObject;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import net.bytebuddy.ByteBuddy;
@@ -53,10 +52,10 @@ public abstract class ClassGenerator {
                     continue;
                 }
                 Object type1 = object.getMember("type");
-                if (type1 instanceof StaticClass) {
-                    StaticClass staticClass = (StaticClass) type1;
-                    className = staticClass.getRepresentedClass().getName();
+
+                if (!(type1 instanceof CharSequence)) {
                     Log.warn("JS event listener for the event " + className + ", it's no longer needed to reference the class (Java.type(...)), use only the wrapped string");
+                    continue;
                 } else {
                     className = (String) type1;
                 }

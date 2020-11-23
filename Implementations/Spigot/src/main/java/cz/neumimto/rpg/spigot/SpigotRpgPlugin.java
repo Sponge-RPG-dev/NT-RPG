@@ -41,11 +41,14 @@ import org.bukkit.plugin.java.annotation.dependency.SoftDependency;
 import org.bukkit.plugin.java.annotation.dependency.SoftDependsOn;
 import org.bukkit.plugin.java.annotation.plugin.*;
 import org.bukkit.plugin.java.annotation.plugin.author.Author;
+import org.bukkit.scheduler.BukkitScheduler;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -83,7 +86,6 @@ public class SpigotRpgPlugin extends JavaPlugin {
     }
 
     public final ExecutorService executor = Executors.newFixedThreadPool(5);
-    ;
 
     @Override
     public void onEnable() {
@@ -98,7 +100,8 @@ public class SpigotRpgPlugin extends JavaPlugin {
 
         Path workingDirPath = getDataFolder().toPath();
 
-        SpigotRpg spigotRpg = new SpigotRpg(workingDirPath.toString(), BukkitExecutors.newSynchronous(this));
+        final BukkitScheduler scheduler = Bukkit.getScheduler();
+        SpigotRpg spigotRpg = new SpigotRpg(workingDirPath.toString(), command -> scheduler.runTask(SpigotRpgPlugin.getInstance(), command));
 
 
         CommandManager manager = new PaperCommandManager(this);

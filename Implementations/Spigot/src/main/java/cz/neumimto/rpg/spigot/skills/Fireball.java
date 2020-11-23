@@ -9,6 +9,7 @@ import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.spigot.entities.ProjectileCache;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -51,6 +52,8 @@ public class Fireball extends ActiveSkill<ISpigotCharacter> {
         projectileProperties.onHit((event, attacker, target) -> {
             event.setDamage(skillContext.getDoubleNodeValue(SkillNodes.DAMAGE));
         });
+
+        world.playSound(p.getLocation(), Sound.ENTITY_GHAST_SHOOT, 0.5f, 0.5f);
         return SkillResult.OK;
     }
 }

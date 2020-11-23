@@ -14,8 +14,7 @@ import de.slikey.effectlib.EffectManager;
 import de.slikey.effectlib.EffectType;
 import de.slikey.effectlib.effect.LineEffect;
 import de.slikey.effectlib.util.DynamicLocation;
-import org.bukkit.FluidCollisionMode;
-import org.bukkit.Particle;
+import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -48,12 +47,13 @@ public class FireBeam extends ActiveSkill<ISpigotCharacter> {
     public SkillResult cast(ISpigotCharacter character, PlayerSkillContext info) {
         Player player = character.getPlayer();
         int maxLength = info.getIntNodeValue("max-length");
+
         RayTraceResult rayTraceResult = player.getWorld().rayTrace(player.getEyeLocation(),
                 player.getEyeLocation().getDirection(),
                 maxLength,
                 FluidCollisionMode.ALWAYS,
                 true,
-                2,
+                1,
                 entity -> entity != player && entity instanceof LivingEntity && !entity.isDead()
         );
 
@@ -70,7 +70,7 @@ public class FireBeam extends ActiveSkill<ISpigotCharacter> {
             }
         }
 
-        LineEffect lineEffect = new LineEffect(SpigotRpgPlugin.getEffectManager());
+        LineEffect lineEffect = new ParticleEffect(SpigotRpgPlugin.getEffectManager());
         lineEffect.length = maxLength;
         lineEffect.isZigZag = false;
         lineEffect.type = EffectType.INSTANT;
@@ -82,9 +82,23 @@ public class FireBeam extends ActiveSkill<ISpigotCharacter> {
                 ThreadLocalRandom.current().nextDouble(-0.5, 0.5)
         ));
 
+        player.getLocation().getWorld().playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, SoundCategory.PLAYERS, 1,1 );
         SpigotRpgPlugin.getEffectManager().start(lineEffect);
         return SkillResult.OK;
     }
 
+    public static class ParticleEffect extends LineEffect {
 
+        public ParticleEffect(EffectManager effectManager) {
+            super(effectManager);
+        }
+
+        @Override
+        protected void display(Particle particle, Location location, Color color, float speed, int amount) {
+            effectManager.display(particle, location, particleOffsetX, particleOffsetY, particleOffsetZ, speed, amount,
+                    particleSize, color, material, materialData, visibleRange, targetPlayers);
+            effectManager.display(Particle.LAVA, location, particleOffsetX, particleOffsetY, particleOffsetZ, speed, amount,
+                    particleSize, color, material, materialData, visibleRange, targetPlayers);
+        }
+    }
 }

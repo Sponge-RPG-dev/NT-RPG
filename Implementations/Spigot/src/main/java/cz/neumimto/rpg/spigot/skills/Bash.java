@@ -44,6 +44,7 @@ public class Bash extends TargetedEntitySkill {
         long duration = skillContext.getLongNodeValue(SkillNodes.DURATION);
         StunEffect stunEffect = new StunEffect(target, duration);
         effectService.addEffect(stunEffect, this);
+
         return SkillResult.OK;
     }
 
