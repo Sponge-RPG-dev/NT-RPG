@@ -79,7 +79,7 @@ dependencies {
         }
 
         exclude("**/*.DSA", "**/*.SF", "**/*pom.xml", "**/*pom.properties")
-        libsDirName = '../../../server/plugins'
+        libsDirName = '../../../server-spigot/plugins'
         archiveName("NT-RPG-Spigot-16.x-" + version + ".jar")
     }
 

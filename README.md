@@ -8,3 +8,6 @@ Discord server - There are two discords you can contact me for support
 
 
 Check [wiki](https://github.com/NeumimTo/NT-RPG/wiki) for more informations
+
+### Building from source
+gradle jar -x test - the jar is then located within the server directory in project root

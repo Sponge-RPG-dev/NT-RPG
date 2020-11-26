@@ -24,4 +24,5 @@ eclipse
 run
 releases
 
-server/
+server-spigot/
+server-sponge/
