@@ -69,6 +69,8 @@ public class CustomSkillGeneratorTests {
             PlayerSkillContext context = new PlayerSkillContext(null, null, null);
 
             injector.getInstance(i).cast(null, context);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -88,6 +90,8 @@ public class CustomSkillGeneratorTests {
             PlayerSkillContext context = new PlayerSkillContext(null, null, null);
 
             injector.getInstance(i).cast(null, context);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

@@ -165,7 +165,7 @@ public class ClassServiceImpl implements ClassService {
             return true;
         }
         try {
-            Stream<Path> pathStream = Files.find(path, Integer.MAX_VALUE, (p, bfa) -> bfa.isRegularFile());
+            Stream<Path> pathStream = Files.find(path, Integer.MAX_VALUE, (p, bfa) -> bfa.isRegularFile() || bfa.isSymbolicLink());
             if (pathStream.count() == 0) {
                 return true;
             }

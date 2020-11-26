@@ -27,12 +27,11 @@ import cz.neumimto.rpg.api.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.api.configuration.adapters.ClassDependencyGraphAdapter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.leveling.EmptyLevelProgression;
+import cz.neumimto.rpg.api.logging.Log;
 
 import javax.inject.Singleton;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -53,7 +52,7 @@ public class ClassDefinitionDao {
         try {
             Files.createDirectories(path);
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.error("Could not create classes directory " + e.getLocalizedMessage());
         }
         return path;
     }
@@ -101,7 +100,7 @@ public class ClassDefinitionDao {
         Map<String, Path> map = new HashMap<>();
 
         Files.walk(path)
-                .filter(Files::isRegularFile)
+                .filter(f -> Files.isRegularFile(f) || (Files.isSymbolicLink(f) && ! Files.isDirectory(f)))
                 .forEach(p -> {
                     info("Preloading class definition file " + p.getFileName());
 

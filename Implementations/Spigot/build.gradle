@@ -51,6 +51,8 @@ dependencies {
     annotationProcessor "org.spigotmc:plugin-annotations:1.2.2-SNAPSHOT"
 
     compileOnly fileTree(dir: 'lib', include: '*.jar')
+    compile fileTree(dir: 'lib-cp', include: '*.jar')
+
     compileOnly 'it.unimi.dsi:fastutil:8.2.1'
 
     compileOnly "org.spigotmc:spigot-api:1.16.3-R0.1-SNAPSHOT"
@@ -77,7 +79,7 @@ dependencies {
         }
 
         exclude("**/*.DSA", "**/*.SF", "**/*pom.xml", "**/*pom.properties")
-
+        libsDirName = '../../../server/plugins'
         archiveName("NT-RPG-Spigot-16.x-" + version + ".jar")
     }
 
