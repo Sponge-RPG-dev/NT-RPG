@@ -35,5 +35,6 @@ public enum SkillResult {
     ON_COOLDOWN,
     WRONG_DATA,
     NEGATIVE_SKILL_LEVEL,
-    NOT_ACTIVE_SKILL
+    NOT_ACTIVE_SKILL,
+    OK_NO_COOLDOWN
 }

@@ -36,6 +36,10 @@ import javax.inject.Inject;
 @JsBinding(JsBinding.Type.CLASS)
 public abstract class PassiveSkill extends AbstractSkill<IActiveCharacter> {
 
+    public static enum Type {
+        PASSIVE, UPGRADE
+    }
+
     @Inject
     protected EffectService effectService;
 
@@ -43,6 +47,8 @@ public abstract class PassiveSkill extends AbstractSkill<IActiveCharacter> {
     protected InventoryService inventoryService;
 
     protected String relevantEffectName;
+
+    protected Type type = Type.PASSIVE;
 
     public PassiveSkill() {
     }

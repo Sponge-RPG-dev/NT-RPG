@@ -78,4 +78,5 @@ public interface IEffectConsumer extends PropertyContainer {
 
     boolean isDetached();
 
+    Object getEntity();
 }

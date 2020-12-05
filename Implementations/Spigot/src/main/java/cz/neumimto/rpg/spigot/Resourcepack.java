@@ -36,6 +36,7 @@ public class Resourcepack {
     public static RPItem RIGHT = new RPItem(Material.STICK, 12348);
     public static RPItem SKILLTREE = new RPItem(Material.OAK_SAPLING, 12345);
 
+    private static final int FIRE_REMNANT = 12344;
     private static final int ICE_SPIKE_LARGE = 12349;
 
     public static ArmorStand summonArmorStand(Location location) {
@@ -57,6 +58,20 @@ public class Resourcepack {
         itemMeta.setCustomModelData(ICE_SPIKE_LARGE);
         itemStack.setItemMeta(itemMeta);
         entity.setHelmet(itemStack);
+        world.playSound(location, Sound.BLOCK_GLASS_BREAK, 1F, 0.5F);
+
+        return entity;
+    }
+
+    public static ArmorStand fireRemnant(Location location) {
+        World world = location.getWorld();
+        ArmorStand entity = summonArmorStand(location);
+        entity.setInvisible(true);
+        ItemStack itemStack = new ItemStack(Material.STICK);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        itemMeta.setCustomModelData(FIRE_REMNANT);
+        itemStack.setItemMeta(itemMeta);
+        entity.getEquipment().setHelmet(itemStack);
         world.playSound(location, Sound.BLOCK_GLASS_BREAK, 1F, 0.5F);
 
         return entity;

@@ -62,7 +62,6 @@ import org.spongepowered.api.scheduler.SpongeExecutorService;
 import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
