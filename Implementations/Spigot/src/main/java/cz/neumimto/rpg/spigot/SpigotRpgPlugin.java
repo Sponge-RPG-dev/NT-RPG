@@ -10,6 +10,7 @@ import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.scripting.IRpgScriptEngine;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.common.commands.*;
+import cz.neumimto.rpg.common.skills.mech.DamageMechanic;
 import cz.neumimto.rpg.persistence.flatfiles.FlatFilesModule;
 import cz.neumimto.rpg.spigot.bridges.HolographicDisplaysExpansion;
 import cz.neumimto.rpg.spigot.bridges.MMOItemsExpansion;
@@ -34,7 +35,9 @@ import org.bukkit.Particle;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.java.JavaPluginLoader;
 import org.bukkit.plugin.java.annotation.dependency.Dependency;
 import org.bukkit.plugin.java.annotation.dependency.DependsOn;
 import org.bukkit.plugin.java.annotation.dependency.SoftDependency;
@@ -45,6 +48,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.concurrent.ExecutorService;
@@ -85,9 +89,22 @@ public class SpigotRpgPlugin extends JavaPlugin {
 
     public final ExecutorService executor = Executors.newFixedThreadPool(5);
 
+    //Disable inventories due to nbtapi
+    public boolean testEnv ;
+
+    protected SpigotRpgPlugin(){
+        super();
+    }
+
+    protected SpigotRpgPlugin(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file) {
+        super(loader, description, dataFolder, file);
+        if (dataFolder.getName().contains("Mock")) {
+            testEnv = true;
+        }
+    }
+
     @Override
     public void onEnable() {
-
         Log.setLogger(logger);
 
         if (!getDataFolder().exists()) {
@@ -101,8 +118,11 @@ public class SpigotRpgPlugin extends JavaPlugin {
         final BukkitScheduler scheduler = Bukkit.getScheduler();
         SpigotRpg spigotRpg = new SpigotRpg(workingDirPath.toString(), command -> scheduler.runTask(SpigotRpgPlugin.getInstance(), command));
 
-        FireworkHandler.load(getClassLoader());
-
+        try {
+            FireworkHandler.load(getClassLoader());
+        } catch (Throwable t) {
+            Log.warn("Unable to load Firework Handler");
+        }
         CommandManager manager = new PaperCommandManager(this);
 
         manager.getCommandContexts().registerContext(OnlineOtherPlayer.class, c -> {
@@ -218,10 +238,12 @@ public class SpigotRpgPlugin extends JavaPlugin {
             scriptEngine.getDataToBind().put(Color.class, JsBinding.Type.CLASS);
 
             Rpg.get().registerListeners(injector.getInstance(OnKeyPress.class));
-            SpellbookListener.initBtns();
+            if (!testEnv) {
+                SpellbookListener.initBtns();
+                SpigotGuiHelper.initInventories();
+            }
         });
 
-        SpigotGuiHelper.initInventories();
 
         effectManager = new EffectManager(this);
         Rpg.get().getSyncExecutor();

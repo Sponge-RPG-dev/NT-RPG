@@ -270,7 +270,7 @@ public abstract class AbstractRpg implements RpgApi {
         }
         injectorc.accept(injector);
 
-        File file = FileUtils.getPluginFile();
+        File file = FileUtils.getPluginFile(getPluginClass());
         getResourceLoader().loadJarFile(file, true);
 
         for (RpgAddon rpgAddon : rpgAddons) {
@@ -311,6 +311,8 @@ public abstract class AbstractRpg implements RpgApi {
             rpgAddon.processStageLate(injector);
         }
     }
+
+    protected abstract Class getPluginClass();
 
     @Override
     public Executor getSyncExecutor() {

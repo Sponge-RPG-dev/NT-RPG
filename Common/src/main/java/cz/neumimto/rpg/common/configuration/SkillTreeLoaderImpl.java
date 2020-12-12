@@ -484,6 +484,13 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
             }
         }
 
+        try {
+            List<? extends Config> upgrades = c.getConfigList("Upgrades");
+            for (Config upgrade : upgrades) {
+                int i = 0;
+            }
+        } catch (ConfigException ignored) {}
+
         SkillLoadingErrors errors = new SkillLoadingErrors(skillTree.getId());
         try {
             info.getSkill().loadSkillData(info, skillTree, errors, c);

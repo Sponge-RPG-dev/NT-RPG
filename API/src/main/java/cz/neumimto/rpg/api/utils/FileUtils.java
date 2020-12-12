@@ -23,9 +23,11 @@ import com.electronwill.nightconfig.core.conversion.ObjectConverter;
 import com.electronwill.nightconfig.core.io.WritingMode;
 import com.electronwill.nightconfig.hocon.HoconWriter;
 import cz.neumimto.rpg.api.RpgApi;
+import sun.net.www.protocol.file.FileURLConnection;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.net.*;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
@@ -36,8 +38,8 @@ import java.nio.file.Path;
  */
 public class FileUtils {
 
-    public static File getPluginFile() {
-        URL clsUrl = RpgApi.class.getResource(RpgApi.class.getSimpleName() + ".class");
+    public static File getPluginFile(Class c) {
+        URL clsUrl = c.getResource(c.getSimpleName() + ".class");
         if (clsUrl != null) {
             try {
                 URLConnection conn = clsUrl.openConnection();
@@ -45,9 +47,15 @@ public class FileUtils {
                     JarURLConnection connection = (JarURLConnection) conn;
                     return new File(connection.getJarFileURL().toURI().getSchemeSpecificPart());
                 }
+                if (conn instanceof FileURLConnection) {
+                    FileURLConnection connection = (FileURLConnection) conn;
+                    Field file = conn.getClass().getDeclaredField("file");
+                    file.setAccessible(true);
+                    return (File) file.get(conn);
+                }
             } catch (IOException e) {
                 throw new RuntimeException(e);
-            } catch (URISyntaxException e) {
+            } catch (URISyntaxException | NoSuchFieldException | IllegalAccessException e) {
                 e.printStackTrace();
             }
         }

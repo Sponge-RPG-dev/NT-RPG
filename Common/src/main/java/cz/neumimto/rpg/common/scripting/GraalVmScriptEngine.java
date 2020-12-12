@@ -81,6 +81,11 @@ public class GraalVmScriptEngine extends AbstractRpgScriptEngine {
         return bindings.execute(functionName).execute();
     }
 
+    @Override
+    public <T> T extract(Object o, String key, T def) {
+        return null;
+    }
+
     public Engine getEngine() {
         return engine;
     }

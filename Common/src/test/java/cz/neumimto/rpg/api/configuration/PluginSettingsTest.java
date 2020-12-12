@@ -88,5 +88,10 @@ public class PluginSettingsTest {
         public String getPlatform() {
             return "Test";
         }
+
+        @Override
+        protected Class getPluginClass() {
+            return TestRpg.class;
+        }
     }
 }

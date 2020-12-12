@@ -22,8 +22,15 @@ import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.scripting.SkillScriptHandlers;
 import cz.neumimto.rpg.api.utils.DebugLevel;
+import cz.neumimto.rpg.common.bytecode.ClassGenerator;
 import jdk.nashorn.api.scripting.JSObject;
+import jdk.nashorn.api.scripting.ScriptObjectMirror;
+import net.bytebuddy.ByteBuddy;
+import net.bytebuddy.description.modifier.Visibility;
+import net.bytebuddy.dynamic.DynamicType;
 import net.bytebuddy.dynamic.loading.MultipleParentClassLoader;
+import net.bytebuddy.implementation.MethodDelegation;
+import net.bytebuddy.implementation.bind.annotation.Argument;
 
 import javax.script.*;
 import java.io.FileInputStream;
@@ -33,6 +40,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.function.Consumer;
 
 import static cz.neumimto.rpg.api.logging.Log.error;
 import static cz.neumimto.rpg.api.logging.Log.info;
@@ -48,6 +56,7 @@ public class NashornRpgScriptEngine extends AbstractRpgScriptEngine {
     private CompiledScript lib;
 
     private ScriptContext scriptContext;
+
 
     @Override
     public void prepareEngine() {
@@ -83,7 +92,7 @@ public class NashornRpgScriptEngine extends AbstractRpgScriptEngine {
             }
 
             List<JSObject> eventListeners = scriptLib.getEventListeners();
-            classGenerator.generateDynamicListener(eventListeners);
+            generateDynamicListener(eventListeners);
 
             reloadSkills();
         } catch (Exception e) {
@@ -178,5 +187,83 @@ public class NashornRpgScriptEngine extends AbstractRpgScriptEngine {
         List<JSObject> getEventListeners();
     }
 
+    public void generateDynamicListener(List<JSObject> list) {
+        String name = "DynamicListener" + System.currentTimeMillis();
+
+        DynamicType.Builder classBuilder = new ByteBuddy()
+                .subclass(classGenerator.getListenerSubclass())
+                .name(name);
+
+        int i = 0;
+        try {
+            for (JSObject object : list) {
+                if (!object.hasMember("consumer") || !((JSObject)object.getMember("consumer")).isFunction()) {
+                    Log.warn("JS event listener missing function consumer, skipping");
+                    continue;
+                }
+                //todo Why binding wont work here?
+                //Consumer consumer = jsLoader.toInterface((JSObject) object.getMember("consumer"), Consumer.class);
+                //jsLoader.toInterface((JSObject) o, Consumer.class);
+
+                ScriptObjectMirror mirror = (ScriptObjectMirror) object.getMember("consumer");
+
+                Consumer consumer = o -> mirror.call(mirror, o);
+
+
+                String className = "";
+                if (!object.hasMember("type")) {
+                    Log.warn("Js event listener missing node type, skipping");
+                    continue;
+                }
+                Object type1 = object.getMember("type");
+
+                if (!(type1 instanceof CharSequence)) {
+                    Log.warn("JS event listener for the event " + className + ", it's no longer needed to reference the class (Java.type(...)), use only the wrapped string");
+                    continue;
+                } else {
+                    className = (String) type1;
+                }
+
+                Class<?> type = null;
+                try {
+                    type = Class.forName(className);
+                } catch (ClassNotFoundException e) {
+                    Log.warn("JS event listener - unknown event " + className);
+                    continue;
+                }
+                i++;
+                String methodName = extract(object, "methodName", "on" + type.getSimpleName() + "" + i);
+
+                DynamicType.Builder.MethodDefinition.ReceiverTypeDefinition intercept = classBuilder
+                        .defineMethod(methodName, void.class, Visibility.PUBLIC)
+                        .withParameter(type)
+                        .intercept(MethodDelegation.to(new EventHandlerInterceptor(consumer)));
+
+                classBuilder = classGenerator.visitImplSpecAnnListener(intercept, object);
+            }
+            Class<?> loaded = classBuilder.make().load(getClass().getClassLoader()).getLoaded();
+            Rpg.get().registerListeners(loaded.newInstance());
+        } catch (Throwable t) {
+            Log.error("Could not create a dynamic js listener", t);
+        }
+    }
+
+    @Override
+    public <T> T extract(Object o, String key, T def) {
+        JSObject obj = (JSObject) o;
+        return obj.hasMember(key) ? (T) obj.getMember(key) : def;
+    }
+
+    public static class EventHandlerInterceptor {
+        private final Consumer consumer;
+
+        public EventHandlerInterceptor(Consumer consumer) {
+            this.consumer = consumer;
+        }
+
+        public void intercept(@Argument(0) Object object) {
+            this.consumer.accept(object);
+        }
+    }
 }
 

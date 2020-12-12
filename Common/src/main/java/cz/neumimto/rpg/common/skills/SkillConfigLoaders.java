@@ -1,9 +1,6 @@
 package cz.neumimto.rpg.common.skills;
 
-import cz.neumimto.rpg.api.skills.CommandSkill;
-import cz.neumimto.rpg.api.skills.PropertySkill;
-import cz.neumimto.rpg.api.skills.RepeatingSkill;
-import cz.neumimto.rpg.api.skills.WrappedSkill;
+import cz.neumimto.rpg.api.skills.*;
 import cz.neumimto.rpg.api.skills.tree.SkillTreeSpecialization;
 import cz.neumimto.rpg.api.skills.types.CharacterAttributeSkill;
 import cz.neumimto.rpg.common.skills.types.ItemAccessSkill;
@@ -21,6 +18,7 @@ public class SkillConfigLoaders {
     static SkillConfigLoader EXECUTE_COMMAND = new SkillConfigLoader("command", CommandSkill.class);
     static SkillConfigLoader WRAPPER = new SkillConfigLoader("wrapper", WrappedSkill.class);
     static SkillConfigLoader REPEATING = new SkillConfigLoader("repeating", RepeatingSkill.class);
+    static SkillConfigLoader UPGRADE = new SkillConfigLoader("upgrade", SkillUpgrade.class);
 
     private static Map<String, SkillConfigLoader> internalCache = new HashMap<>();
 
@@ -33,6 +31,7 @@ public class SkillConfigLoaders {
         register(EXECUTE_COMMAND);
         register(WRAPPER);
         register(REPEATING);
+        register(UPGRADE);
     }
 
     public static Optional<SkillConfigLoader> getById(String id) {

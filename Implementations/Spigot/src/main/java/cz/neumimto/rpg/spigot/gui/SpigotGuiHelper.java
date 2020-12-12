@@ -44,7 +44,7 @@ import static org.bukkit.event.entity.EntityDamageEvent.DamageCause.*;
 public class SpigotGuiHelper {
 
     static int[] inventoryIds;
-    private static final int[] attributButtonSlots;
+    private static int[] attributButtonSlots;
 
     public static ItemLoreFactory itemLoreFactory;
 
@@ -53,7 +53,7 @@ public class SpigotGuiHelper {
 
     public static Map<EntityDamageEvent.DamageCause, ItemStack> damageTypeToItemStack = new HashMap<>();
 
-    static {
+    public static void initInventories() {
         itemLoreFactory = new ItemLoreFactory();
         List<Integer> ids = new ArrayList<>();
         ids.add(0);
@@ -84,11 +84,7 @@ public class SpigotGuiHelper {
         damageTypeToItemStack.put(VOID, unclickableIcon(Material.NETHER_PORTAL, 354,"VOID"));
         damageTypeToItemStack.put(MAGIC, unclickableIcon(Material.ENCHANTED_BOOK, 354,"MAGIC"));
         damageTypeToItemStack.put(LIGHTNING, unclickableIcon(Material.NETHER_STAR, 354,"LIGHTNING"));
-    }
 
-
-
-    public static void initInventories() {
         CACHED_MENU_TEMPLATES.clear();
         CACHED_MENUS.clear();
         Map<String, Object> stringObjectMap = new SpigotUIReader().initInventories();

@@ -236,6 +236,7 @@ public abstract class AbstractRpgScriptEngine implements IRpgScriptEngine {
         return dataToBind;
     }
 
+
     protected static class ScriptExecutionException extends RuntimeException {
 
         public ScriptExecutionException(String message, Throwable cause) {

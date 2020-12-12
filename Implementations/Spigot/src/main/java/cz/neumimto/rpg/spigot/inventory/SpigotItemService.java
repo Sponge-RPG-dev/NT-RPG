@@ -87,6 +87,7 @@ public class SpigotItemService extends AbstractItemService {
     @Override
     public Set<String> getAllItemIds() {
         return Stream.of(Material.values())
+                .filter(a->!a.isLegacy())
                 .map(Material::getKey)
                 .map(NamespacedKey::toString)
                 .collect(Collectors.toSet());

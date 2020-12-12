@@ -127,4 +127,9 @@ public final class SpigotRpg extends AbstractRpg {
     public String getPlatform() {
         return "Spigot";
     }
+
+    @Override
+    protected Class getPluginClass() {
+        return SpigotRpgPlugin.class;
+    }
 }

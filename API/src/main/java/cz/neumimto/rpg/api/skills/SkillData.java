@@ -21,10 +21,7 @@ package cz.neumimto.rpg.api.skills;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.scripting.ScriptedSkillNodeDescription;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by NeumimTo on 14.2.2015.
@@ -63,6 +60,8 @@ public class SkillData {
     private Integer modelId;
     private ISkillExecutor skillExecutor;
     private Map<String, SkillCastCondition> skillCastConditions;
+
+    private Map<String, Upgrade> skillUpgrades = new HashMap<>();
 
     public SkillData(String skill) {
         this.skill = skill;
@@ -227,5 +226,17 @@ public class SkillData {
 
     public void setSkillCastConditions(Map<String, SkillCastCondition> skillCastConditions) {
         this.skillCastConditions = skillCastConditions;
+    }
+
+    public Map<String, Upgrade> getSkillUpgrades() {
+        return skillUpgrades;
+    }
+
+    public void setSkillUpgrades(Map<String, Upgrade> skillUpgrades) {
+        this.skillUpgrades = skillUpgrades;
+    }
+
+    public static class Upgrade extends SkillSettings {
+
     }
 }

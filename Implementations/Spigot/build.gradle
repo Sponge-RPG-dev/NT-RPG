@@ -45,7 +45,7 @@ dependencies {
     compile project(':FlatFiles-Persistence')
 
     compile 'com.google.inject:guice:4.1.0'
-    compile 'org.slf4j:slf4j-api:1.7.28'
+    compile 'org.slf4j:slf4j-api:1.7.30'
     compile "co.aikar:acf-paper:0.5.0-SNAPSHOT"
 
     annotationProcessor "org.spigotmc:plugin-annotations:1.2.2-SNAPSHOT"
@@ -58,7 +58,9 @@ dependencies {
     compileOnly "org.spigotmc:spigot-api:1.16.3-R0.1-SNAPSHOT"
     compileOnly "org.spigotmc:plugin-annotations:1.2.2-SNAPSHOT"
 
-    compileOnly group: "com.comphenix.protocol", name: "ProtocolLib", version: "4.5.1";
+    compileOnly (group: "com.comphenix.protocol", name: "ProtocolLib", version: "4.5.1") {
+        exclude group: "com.comphenix.executors", module: "BukkitExecutors"
+    }
     compileOnly 'de.tr7zw:item-nbt-api-plugin:2.2.0'
     compileOnly 'com.github.Slikey:EffectLib:d77f639038'
     compileOnly 'me.clip:placeholderapi:2.10.3'
@@ -66,9 +68,14 @@ dependencies {
     compileOnly('net.Indyuce:MMOItems:6.2.4') {
         exclude group: 'com.mojang', module: 'authlib'
     }
-    compileOnly('net.Indyuce:MMOLib:1.4.0')
+    compileOnly('net.Indyuce:MMOLib:1.4.0') {
+        exclude group: "org.slf4j", module: "slf4j"
+    }
     compileOnly 'io.lumine.xikage:MythicMobs:4.9.1'
 
+    testCompile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.30'
+
+    testCompile 'com.github.NeumimTo:MockBukkit:5696a35d'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.1'
     testCompile 'org.junit.jupiter:junit-jupiter-engine:5.4.1'
     testCompile 'org.junit.jupiter:junit-jupiter-params:5.4.1'
@@ -83,7 +90,12 @@ dependencies {
         archiveName("NT-RPG-Spigot-16.x-" + version + ".jar")
     }
 
+    sourceSets {
+        test.compileClasspath += configurations.compileOnly
+        test.runtimeClasspath += configurations.compileOnly
+    }
 }
+
 
 //task deploy {
 //    copy {

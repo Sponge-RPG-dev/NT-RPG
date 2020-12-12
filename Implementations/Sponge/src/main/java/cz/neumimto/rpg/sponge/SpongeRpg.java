@@ -106,6 +106,11 @@ public final class SpongeRpg extends AbstractRpg {
     }
 
     @Override
+    protected Class getPluginClass() {
+        return SpongeRpgPlugin.class;
+    }
+
+    @Override
     public Set<UUID> getOnlinePlayers() {
         return Sponge.getServer().getOnlinePlayers().stream().map(Player::getUniqueId).collect(Collectors.toSet());
     }

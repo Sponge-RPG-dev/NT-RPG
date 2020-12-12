@@ -94,17 +94,15 @@ public class TestGuiceModule extends AbstractModule {
         bind(CustomSkillGenerator.class).to(TestCustomSkillGenerator.class);
         bind(ClassGenerator.class).toProvider(() -> new ClassGenerator() {
             @Override
-            public void generateDynamicListener(List<JSObject> list) {}
-
-            @Override
-            protected Type getListenerSubclass() {
+            public Type getListenerSubclass() {
                 return null;
             }
 
             @Override
-            protected DynamicType.Builder<Object> visitImplSpecAnnListener(DynamicType.Builder.MethodDefinition.ReceiverTypeDefinition<Object> classBuilder, JSObject object) {
+            public DynamicType.Builder<Object> visitImplSpecAnnListener(DynamicType.Builder.MethodDefinition.ReceiverTypeDefinition<Object> classBuilder, Object object) {
                 return null;
             }
+
         });
         bind(ClassService.class).to(ClassServiceImpl.class);
         bind(ResourceLoader.class).to(TestResourceLoader.class);

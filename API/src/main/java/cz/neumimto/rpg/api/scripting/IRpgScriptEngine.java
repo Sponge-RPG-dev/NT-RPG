@@ -19,4 +19,5 @@ public interface IRpgScriptEngine {
 
     Object executeScript(String functionName);
 
+    <T> T extract(Object o, String key, T def);
 }

@@ -108,7 +108,7 @@ public class SpongeRpgPlugin extends Rpg {
         Log.setLogger(logger);
 
         workingDir = config.toString();
-        pluginjar = FileUtils.getPluginFile();
+        pluginjar = FileUtils.getPluginFile(getClass());
 
         instance = this;
         asyncExecutor = Sponge.getScheduler().createAsyncExecutor(this);
