@@ -31,30 +31,25 @@ import org.bukkit.entity.EntityType;
 import java.util.UUID;
 
 public class WrapperPlayServerSpawnEntityLiving extends AbstractPacket {
-    public static final PacketType TYPE =
-            PacketType.Play.Server.SPAWN_ENTITY_LIVING;
 
     private static PacketConstructor entityConstructor;
 
     public WrapperPlayServerSpawnEntityLiving() {
-        super(new PacketContainer(TYPE), TYPE);
+        super(new PacketContainer(PacketType.Play.Server.SPAWN_ENTITY_LIVING), PacketType.Play.Server.SPAWN_ENTITY_LIVING);
         handle.getModifier().writeDefaults();
     }
 
     public WrapperPlayServerSpawnEntityLiving(PacketContainer packet) {
-        super(packet, TYPE);
+        super(packet, PacketType.Play.Server.SPAWN_ENTITY_LIVING);
     }
 
-    public WrapperPlayServerSpawnEntityLiving(Entity entity) {
-        super(fromEntity(entity), TYPE);
-    }
 
     // Useful constructor
     private static PacketContainer fromEntity(Entity entity) {
         if (entityConstructor == null)
             entityConstructor =
                     ProtocolLibrary.getProtocolManager()
-                            .createPacketConstructor(TYPE, entity);
+                            .createPacketConstructor(PacketType.Play.Server.SPAWN_ENTITY_LIVING, entity);
         return entityConstructor.createPacket(entity);
     }
 

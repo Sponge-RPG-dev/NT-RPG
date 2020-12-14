@@ -249,7 +249,7 @@ public class ResourceManagerImpl implements ResourceLoader {
     @Override
     public Object loadClass(Class<?> clazz) throws IllegalAccessException, InstantiationException, ConfigurationException {
         //Properties
-        if (clazz == IGlobalEffect.class) {
+        if (clazz == IGlobalEffect.class || clazz == null) {
             return null;
         }
         Object container = null;
@@ -296,8 +296,13 @@ public class ResourceManagerImpl implements ResourceLoader {
     }
 
     protected void loadModelMapperClass(Class<?> clazz) throws InstantiationException, IllegalAccessException {
-        EffectModelMapper o = (EffectModelMapper) clazz.newInstance();
-        EffectModelFactory.getTypeMappers().put(o.getType(), o);
+        EffectModelMapper o = null;
+        try {
+            o = (EffectModelMapper) clazz.getConstructor().newInstance();
+            EffectModelFactory.getTypeMappers().put(o.getType(), o);
+        } catch (InvocationTargetException | NoSuchMethodException e) {
+            e.printStackTrace();
+        }
     }
 
     protected Object loadIGlobalEffectClass(Class<?> clazz) {

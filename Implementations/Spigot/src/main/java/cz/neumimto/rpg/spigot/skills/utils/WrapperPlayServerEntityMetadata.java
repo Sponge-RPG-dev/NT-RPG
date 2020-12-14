@@ -28,16 +28,10 @@ import org.bukkit.entity.Entity;
 import java.util.List;
 
 public class WrapperPlayServerEntityMetadata extends AbstractPacket {
-    public static final PacketType TYPE =
-            PacketType.Play.Server.ENTITY_METADATA;
 
     public WrapperPlayServerEntityMetadata() {
-        super(new PacketContainer(TYPE), TYPE);
+        super(new PacketContainer(PacketType.Play.Server.ENTITY_METADATA), PacketType.Play.Server.ENTITY_METADATA);
         handle.getModifier().writeDefaults();
-    }
-
-    public WrapperPlayServerEntityMetadata(PacketContainer packet) {
-        super(packet, TYPE);
     }
 
     /**
