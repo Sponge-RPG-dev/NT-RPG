@@ -1,8 +1,15 @@
 package cz.neumimto.rpg.spigot.effects;
 
 import cz.neumimto.rpg.api.effects.IEffect;
+import cz.neumimto.rpg.api.effects.IEffectContainer;
+import cz.neumimto.rpg.api.effects.IEffectSourceProvider;
+import cz.neumimto.rpg.api.entity.IEffectConsumer;
+import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.common.effects.AbstractEffectService;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
+import cz.neumimto.rpg.spigot.events.character.SpigotEffectApplyEvent;
+import cz.neumimto.rpg.spigot.events.character.SpigotEffectRemoveEvent;
+import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import javax.inject.Singleton;
@@ -32,5 +39,26 @@ public class SpigotEffectService extends AbstractEffectService {
     @Override
     public void stopEffectScheduler() {
         bukkitRunnable.cancel();
+    }
+
+    @Override
+    protected void removeEffectContainer(IEffectContainer container, IEffect effect, IEffectConsumer consumer) {
+        SpigotEffectRemoveEvent event = new SpigotEffectRemoveEvent(effect);
+        Bukkit.getPluginManager().callEvent(event);
+        super.removeEffectContainer(container, effect, consumer);
+    }
+
+    @Override
+    public boolean addEffect(IEffect effect, IEffectSourceProvider effectSourceProvider, IEntity entitySource) {
+        effect.setEffectSourceProvider(effectSourceProvider);
+
+        SpigotEffectApplyEvent event = new SpigotEffectApplyEvent(effect, effectSourceProvider, entitySource);
+        Bukkit.getPluginManager().callEvent(event);
+
+        if (event.isCancelled()) {
+            return false;
+        }
+
+        return super.addEffect(effect, effectSourceProvider, entitySource);
     }
 }
