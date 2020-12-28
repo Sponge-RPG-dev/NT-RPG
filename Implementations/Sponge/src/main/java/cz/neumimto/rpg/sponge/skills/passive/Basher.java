@@ -10,6 +10,7 @@ import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.api.skills.types.PassiveSkill;
 import cz.neumimto.rpg.sponge.effects.positive.Bash;
 import cz.neumimto.rpg.sponge.model.BashModel;
+import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;
 import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 
 import javax.inject.Inject;

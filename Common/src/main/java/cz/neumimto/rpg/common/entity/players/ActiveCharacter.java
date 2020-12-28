@@ -24,6 +24,7 @@ import cz.neumimto.rpg.api.effects.*;
 import cz.neumimto.rpg.api.entity.EntityHand;
 import cz.neumimto.rpg.api.entity.IReservable;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.entity.players.SkillTreeChangeObserver;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.entity.players.party.IParty;
@@ -124,6 +125,7 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
 
     private Map<String, Integer> attrTransaction;
 
+    private SkillTreeChangeObserver skillUpgradeObserver;
 
     public ActiveCharacter(UUID uuid, CharacterBase base, int propertyCount) {
         this.pl = uuid;
@@ -136,6 +138,7 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
         this.inventory = new HashMap<>();
         this.requiresDamageRecalculation = true;
         this.attrTransaction = new HashMap<>();
+        this.skillUpgradeObserver = new SkillTreeChangeObserver(this);
     }
 
     @Override
@@ -757,6 +760,11 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
     @Override
     public String getPlayerAccountName() {
         return getCharacterBase().getLastKnownPlayerName();
+    }
+
+    @Override
+    public SkillTreeChangeObserver getSkillUpgradeObservers() {
+        return skillUpgradeObserver;
     }
 
     @Override

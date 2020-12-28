@@ -30,7 +30,7 @@ import org.bukkit.util.Vector;
 
 import javax.inject.Inject;
 
-@ResourceLoader.Skill("ntrpg:fireremnant")
+@ResourceLoader.Skill("ntrpg:fire_remnant")
 public class FireRemnant extends ActiveSkill<ISpigotCharacter> {
 
     @Inject

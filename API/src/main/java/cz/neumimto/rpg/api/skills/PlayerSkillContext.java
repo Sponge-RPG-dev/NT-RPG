@@ -24,10 +24,7 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by NeumimTo on 26.7.2015.
@@ -109,9 +106,20 @@ public class PlayerSkillContext {
             Set<String> complexKeySuffixes = SkillSettings.getComplexKeySuffixes();
 
             Collection<AttributeConfig> attributes = Rpg.get().getPropertyService().getAttributes().values();
-            populateCache(complexKeySuffixes, attributes);
+
+            populateCache(complexKeySuffixes, attributes, preSet);
             if (previousSize == 0) {
                 previousSize = cachedComputedSkillSettings.size();
+            }
+
+            Set<SkillData> upgradedBy = skillData.getUpgradedBy();
+            for (SkillData upgrade : upgradedBy) {
+                PlayerSkillContext upg = character.getSkillInfo(upgrade.getSkill());
+                if (upg == null) {
+                    continue;
+                }
+                SkillSettings ssUpgrade = upgrade.getUpgrades().get(skillData.getSkillId());
+                populateCache(complexKeySuffixes, attributes, ssUpgrade);
             }
         }
         return cachedComputedSkillSettings;
@@ -157,14 +165,9 @@ public class PlayerSkillContext {
         return getDoubleNodeValue(node.value());
     }
 
-    public void populateCache(Set<String> complexKeySuffixes, Collection<AttributeConfig> attributes) {
-        SkillSettings preSet = skillData.getSkillSettings();
+    public void populateCache(Set<String> complexKeySuffixes, Collection<AttributeConfig> attributes, SkillSettings settings) {
 
-        for (Map.Entry<String, Float> entry : preSet.getNodes().entrySet()) {
-            cacheNonComplexNodes(complexKeySuffixes, entry);
-        }
-
-        for (Map.Entry<String, Float> entry : preSet.getNodes().entrySet()) {
+        for (Map.Entry<String, Float> entry : settings.getNodes().entrySet()) {
             cacheComplexNodes(complexKeySuffixes, attributes, entry);
         }
     }
@@ -179,6 +182,9 @@ public class PlayerSkillContext {
                 cacheSettingsNodes(entry, s);
             }
             cacheAttributeNodes(attributes, entry, s);
+        } else {
+            float val = cachedComputedSkillSettings.getOrDefault(entry.getKey(), 0f);
+            cachedComputedSkillSettings.put(entry.getKey(), val + entry.getValue().floatValue());
         }
     }
 
@@ -200,12 +206,7 @@ public class PlayerSkillContext {
         }
     }
 
-    private void cacheNonComplexNodes(Set<String> complexKeySuffixes, Map.Entry<String, Float> entry) {
-        Optional<String> complexNode = isComplexNode(complexKeySuffixes, entry.getKey());
-        if (!complexNode.isPresent()) {
-            cachedComputedSkillSettings.put(entry.getKey(), entry.getValue().floatValue());
-        }
-    }
+
 
     public Optional<String> isComplexNode(Set<String> complexKeySuffixes, String key) {
         for (String complexKeySuffix : complexKeySuffixes) {

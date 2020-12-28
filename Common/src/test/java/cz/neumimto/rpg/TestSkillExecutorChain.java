@@ -76,7 +76,7 @@ public class TestSkillExecutorChain {
         HashMap<Object, Object> objectObjectHashMap = new HashMap<>();
         objectObjectHashMap.put(str.getId(), 0);
         objectObjectHashMap.put(agi.getId(), 0);
-        TestUtils.setField(characterBase, "cachedAttributes", objectObjectHashMap);
+        //TestUtils.setField(characterBase, "cachedAttributes", objectObjectHashMap);
 
         activeCharacter = new TestCharacter(UUID.randomUUID(), characterBase, 0);
 
@@ -90,7 +90,7 @@ public class TestSkillExecutorChain {
         context.setSkillData(skillData);
         TestUtils.setField(context, "cachedComputedSkillSettings", new Object2FloatOpenHashMap());
         context.setLevel(3);
-        context.populateCache(complexKeySuffixes, attributes);
+        context.populateCache(complexKeySuffixes, attributes, skillData.getSkillSettings());
 
 
         AbstractObject2FloatMap<String> cachedComputedSkillSettings = context.getCachedComputedSkillSettings();
@@ -128,7 +128,7 @@ public class TestSkillExecutorChain {
         activeCharacter.getTransientAttributes().put(str.getId(), 3);
         activeCharacter.getTransientAttributes().put(agi.getId(), 2);
 
-        context.populateCache(complexKeySuffixes, attributes);
+        context.populateCache(complexKeySuffixes, attributes, skillData.getSkillSettings());
 
 
         AbstractObject2FloatMap<String> cachedComputedSkillSettings = context.getCachedComputedSkillSettings();

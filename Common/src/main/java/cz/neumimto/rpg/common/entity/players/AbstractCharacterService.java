@@ -62,7 +62,6 @@ import cz.neumimto.rpg.common.utils.exceptions.MissingConfigurationException;
 import javax.inject.Inject;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static cz.neumimto.rpg.api.localization.Arg.arg;
@@ -679,11 +678,16 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
         playerSkillContext.setLevel(playerSkillContext.getLevel() + 1);
         cc.setSkillPoints(s - 1);
         cc.setUsedSkillPoints(s + 1);
+
         CharacterSkill characterSkill = character.getCharacterBase().getCharacterSkill(skill);
         characterSkill.setLevel(playerSkillContext.getLevel());
 
+        character.getSkillUpgradeObservers().processChange(skill);
+
         skill.skillUpgrade(character, playerSkillContext.getLevel(), playerSkillContext);
     }
+
+
 
     /**
      * @param character
@@ -1084,6 +1088,7 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
             if (!entry.getKey().getPropBonus().isEmpty()) {
                 assignAttribute(character, entry.getKey(), entry.getValue());
             }
+            character.getSkillUpgradeObservers().processChange(entry.getKey());
         }
 
         character.setRequiresDamageRecalculation(true);
@@ -1113,6 +1118,7 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
         if (!attribute.getPropBonus().isEmpty()) {
             assignAttribute(character, attribute, amount);
         }
+        character.getSkillUpgradeObservers().processChange(attribute);
     }
 
     /**
@@ -1320,6 +1326,8 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
     public void addSkill(T character, PlayerClassData origin, PlayerSkillContext skill) {
         character.addSkill(skill.getSkill().getId(), skill);
         character.addSkill(skill.getSkillData().getSkillName(), skill);
+
+        character.getSkillUpgradeObservers().processChange(skill.getSkill());
     }
 
     /**
@@ -1365,6 +1373,7 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
     private void removeTransientAttribute(T character, AttributeConfig key, Integer value) {
         Map<String, Integer> transientAttributes = character.getTransientAttributes();
         transientAttributes.merge(key.getId(), value, (b, a) -> a - b);
+        character.getSkillUpgradeObservers().processChange(key);
     }
 
     @Override

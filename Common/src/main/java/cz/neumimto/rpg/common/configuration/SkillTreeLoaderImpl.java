@@ -413,6 +413,33 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
             warn(" - No alternate name defined for skill " + id + " !!falling back to default!! > " + info.getSkillName());
         }
 
+
+        try {
+            List<? extends Config> upg = c.getConfigList("Upgrades");
+            for (Config config : upg) {
+                if (config.hasPath("SkillId")) {
+                    if (config.hasPath("SkillSettings")) {
+                        String skillId = config.getString("SkillId");
+                        Config cs = config.getConfig("SkillSettings");
+
+                        SkillData skillInfo = getSkillInfo(skillId, skillTree);
+
+                        info.getUpgradedBy().add(skillInfo);
+
+                        SkillSettings skillSettings = new SkillSettings();
+                        loadSkillSettings(skillSettings, cs);
+                        skillInfo.setUpgradeSkillSettings(skillSettings);
+                        skillInfo.getUpgrades().put(info.getSkillId(), skillSettings);
+
+                        continue;
+                    }
+                    Log.warn("Skill Upgrade for " + info.getSkillName() + " missing SkillSettings, skipping");
+                    continue;
+                }
+                Log.warn("Skill Upgrade for " + info.getSkillName() + " missing SkillId, skipping");
+            }
+        } catch (ConfigException missing) {}
+
         try {
             List<? extends ConfigObject> preprocessors = c.getObjectList("CastConditions");
 
@@ -428,38 +455,7 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
         SkillSettings skillSettings = new SkillSettings();
         try {
             Config settings = c.getConfig("SkillSettings");
-            Collection<AttributeConfig> attributes = Rpg.get().getPropertyService().getAttributes().values();
-            outer:
-            for (Map.Entry<String, ConfigValue> e : settings.entrySet()) {
-                if (e.getKey().endsWith(SkillSettings.BONUS_SUFFIX)) {
-                    continue;
-                }
-                String val = e.getValue().render();
-                if (MathUtils.isNumeric(val)) {
-                    float norm = Float.parseFloat(val);
-                    for (AttributeConfig attribute : attributes) {
-                        String s = "_per_" + attribute.getId();
-                        if (e.getKey().endsWith(s)) {
-                            String stripped = e.getKey().substring(0, e.getKey().length() - s.length());
-                            skillSettings.addAttributeNode(stripped, attribute, norm);
-                            continue outer;
-                        }
-                    }
-
-
-                    String name = e.getKey();
-                    skillSettings.addSingleNode(name, norm);
-                    name = name + SkillSettings.BONUS_SUFFIX;
-                    float bonus = 0f;
-                    try {
-                        bonus = Float.parseFloat(settings.getString(name));
-                    } catch (ConfigException ignored) {
-                    }
-                    skillSettings.addSingleNode(name, bonus);
-                } else {
-                    skillSettings.addObjectNode(e.getKey(), val);
-                }
-            }
+            loadSkillSettings(skillSettings, settings);
             addRequiredIfMissing(skillSettings);
         } catch (ConfigException ignored) {
             warn(" - missing SkillSettings section " + info.getSkillId());
@@ -484,12 +480,6 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
             }
         }
 
-        try {
-            List<? extends Config> upgrades = c.getConfigList("Upgrades");
-            for (Config upgrade : upgrades) {
-                int i = 0;
-            }
-        } catch (ConfigException ignored) {}
 
         SkillLoadingErrors errors = new SkillLoadingErrors(skillTree.getId());
         try {
@@ -502,6 +492,41 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
         }
 
 
+    }
+
+    private void loadSkillSettings(SkillSettings skillSettings, Config settings) {
+        Collection<AttributeConfig> attributes = Rpg.get().getPropertyService().getAttributes().values();
+        outer:
+        for (Map.Entry<String, ConfigValue> e : settings.entrySet()) {
+            if (e.getKey().endsWith(SkillSettings.BONUS_SUFFIX)) {
+                continue;
+            }
+            String val = e.getValue().render();
+            if (MathUtils.isNumeric(val)) {
+                float norm = Float.parseFloat(val);
+                for (AttributeConfig attribute : attributes) {
+                    String s = "_per_" + attribute.getId();
+                    if (e.getKey().endsWith(s)) {
+                        String stripped = e.getKey().substring(0, e.getKey().length() - s.length());
+                        skillSettings.addAttributeNode(stripped, attribute, norm);
+                        continue outer;
+                    }
+                }
+
+
+                String name = e.getKey();
+                skillSettings.addSingleNode(name, norm);
+                name = name + SkillSettings.BONUS_SUFFIX;
+                float bonus = 0f;
+                try {
+                    bonus = Float.parseFloat(settings.getString(name));
+                } catch (ConfigException ignored) {
+                }
+                skillSettings.addSingleNode(name, bonus);
+            } else {
+                skillSettings.addObjectNode(e.getKey(), val);
+            }
+        }
     }
 
     //todo

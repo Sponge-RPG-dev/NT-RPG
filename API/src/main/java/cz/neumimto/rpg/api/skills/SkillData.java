@@ -61,7 +61,9 @@ public class SkillData {
     private ISkillExecutor skillExecutor;
     private Map<String, SkillCastCondition> skillCastConditions;
 
-    private Map<String, Upgrade> skillUpgrades = new HashMap<>();
+    private Set<SkillData> upgradedBy = new HashSet<>();
+    private Map<String, SkillSettings> upgrades = new HashMap();
+    private SkillSettings upgradeSkillSettings;
 
     public SkillData(String skill) {
         this.skill = skill;
@@ -228,15 +230,19 @@ public class SkillData {
         this.skillCastConditions = skillCastConditions;
     }
 
-    public Map<String, Upgrade> getSkillUpgrades() {
-        return skillUpgrades;
+    public Set<SkillData> getUpgradedBy() {
+        return upgradedBy;
     }
 
-    public void setSkillUpgrades(Map<String, Upgrade> skillUpgrades) {
-        this.skillUpgrades = skillUpgrades;
+    public Map<String, SkillSettings> getUpgrades() {
+        return upgrades;
     }
 
-    public static class Upgrade extends SkillSettings {
+    public void setUpgradeSkillSettings(SkillSettings upgradeSkillSettings) {
+        this.upgradeSkillSettings = upgradeSkillSettings;
+    }
 
+    public SkillSettings getUpgradeSkillSettings() {
+        return upgradeSkillSettings;
     }
 }

@@ -66,7 +66,7 @@ public abstract class PassiveSkill extends AbstractSkill<IActiveCharacter> {
         return SkillResult.CANCELLED;
     }
 
-    private void update(IActiveCharacter IActiveCharacter) {
+    protected void update(IActiveCharacter IActiveCharacter) {
         inventoryService.initializeCharacterInventory(IActiveCharacter);
         PlayerSkillContext skill = IActiveCharacter.getSkill(getId());
         applyEffect(skill, IActiveCharacter);

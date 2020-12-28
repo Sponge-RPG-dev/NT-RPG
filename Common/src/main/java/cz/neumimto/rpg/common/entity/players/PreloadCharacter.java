@@ -24,6 +24,7 @@ import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.api.entity.EntityHand;
 import cz.neumimto.rpg.api.entity.IReservable;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.entity.players.SkillTreeChangeObserver;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.entity.players.party.IParty;
@@ -508,5 +509,10 @@ public abstract class PreloadCharacter<T, P extends IParty> implements IActiveCh
     @Override
     public Map<Class<?>, RpgInventory> getManagedInventory() {
         return Collections.emptyMap();
+    }
+
+    @Override
+    public SkillTreeChangeObserver getSkillUpgradeObservers() {
+        return new SkillTreeChangeObserver(this);
     }
 }
