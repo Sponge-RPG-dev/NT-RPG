@@ -22,6 +22,7 @@ public class SlowEffect extends EffectBase<SlowModel> {
         setDuration(duration);
         setPeriod(750L);
         addEffectType(CommonEffectTypes.SILENCE);
+        addEffectType(CommonEffectTypes.SLOW);
     }
 
     @Override

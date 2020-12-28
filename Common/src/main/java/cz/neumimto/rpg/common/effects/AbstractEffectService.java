@@ -238,6 +238,27 @@ public abstract class AbstractEffectService implements EffectService {
     }
 
     @Override
+    public int removeEffectsByType(IEffectConsumer consumer, Set<EffectType> type) {
+        Map<String, IEffectContainer<Object, IEffect<Object>>> map = consumer.getEffectMap();
+        int i = 0;
+        for (Map.Entry<String, IEffectContainer<Object, IEffect<Object>>> m : map.entrySet()) {
+            IEffectContainer<Object, IEffect<Object>> value = m.getValue();
+            Set<IEffect<Object>> effects = value.getEffects();
+            Set<EffectType> set = new HashSet<>();
+            for (IEffect<Object> effect : effects) {
+                set.addAll(type);
+                set.addAll(effect.getEffectTypes());
+                if (set.size() != effect.getEffectTypes().size()) {
+                    stopEffect(effect);
+                    i++;
+                }
+                set.clear();
+            }
+        }
+        return i;
+    }
+
+    @Override
     public <T, E extends IEffect<T>> void removeEffectContainer(IEffectContainer<T, E> container, IEffectConsumer consumer) {
         container.forEach(a -> removeEffect(a, consumer));
     }

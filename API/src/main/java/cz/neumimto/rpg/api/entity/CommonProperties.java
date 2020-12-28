@@ -74,6 +74,5 @@ public class CommonProperties {
     public static int projectile_damage_bonus;
 
     @Property(name = "arrow_damage_mult", default_ = 1)
-
     public static int arrow_damage_mult;
 }

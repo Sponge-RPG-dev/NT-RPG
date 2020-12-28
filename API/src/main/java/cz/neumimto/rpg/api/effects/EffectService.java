@@ -7,6 +7,7 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 public interface EffectService {
 
@@ -28,6 +29,8 @@ public interface EffectService {
     <T extends IEffect> boolean addEffect(T effect, IEffectSourceProvider effectSourceProvider, IEntity entitySource);
 
     void removeEffect(IEffect effect, IEffectConsumer consumer);
+
+    int removeEffectsByType(IEffectConsumer consumer, Set<EffectType> type);
 
     <T, E extends IEffect<T>> void removeEffectContainer(IEffectContainer<T, E> container, IEffectConsumer consumer);
 

@@ -3,6 +3,7 @@ package cz.neumimto.rpg.spigot;
 import be.seeseemelk.mockbukkit.MockBukkit;
 import be.seeseemelk.mockbukkit.ServerMock;
 import be.seeseemelk.mockbukkit.help.HelpMapMock;
+import cz.neumimto.rpg.api.Rpg;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
