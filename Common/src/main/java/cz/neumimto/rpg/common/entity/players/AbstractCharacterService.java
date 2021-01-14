@@ -168,7 +168,7 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
                 });
             }
         }, Rpg.get().getAsyncExecutor()).exceptionally(throwable -> {
-            Log.error("Could not load player data", throwable);
+            Log.error("Could not load/save player data", throwable);
             return null;
         });
     }
@@ -216,11 +216,6 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
         characterBase.setAttributePoints(pluginConfig.ATTRIBUTEPOINTS_ON_START);
         characterBase.setAttributePointsSpent(0);
         characterBase.setCanResetSkills(false);
-
-        characterBase.setCharacterSkills(new HashSet<>());
-        characterBase.setCharacterClasses(new HashSet<>());
-        characterBase.setBaseCharacterAttribute(new HashSet<>());
-        characterBase.setInventoryEquipSlotOrder(new ArrayList<>());
 
         characterBase.setMarkedForRemoval(false);
 

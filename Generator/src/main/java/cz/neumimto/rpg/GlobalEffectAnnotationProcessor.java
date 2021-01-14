@@ -251,7 +251,7 @@ public class GlobalEffectAnnotationProcessor extends AbstractProcessor {
                 writer.flush();
             }
         } catch (IOException ee) {
-            throw new RuntimeException(ee);
+            System.out.println("Unable to create " + modelSimpleName+"Mapper");
         }
     }
 

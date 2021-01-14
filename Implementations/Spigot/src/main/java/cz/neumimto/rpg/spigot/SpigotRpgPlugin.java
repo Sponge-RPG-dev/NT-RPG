@@ -10,6 +10,7 @@ import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.scripting.IRpgScriptEngine;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.common.commands.*;
+import cz.neumimto.rpg.common.entity.players.PreloadCharacter;
 import cz.neumimto.rpg.persistence.flatfiles.FlatFilesModule;
 import cz.neumimto.rpg.spigot.bridges.HolographicDisplaysExpansion;
 import cz.neumimto.rpg.spigot.bridges.MMOItemsExpansion;
@@ -267,6 +268,9 @@ public class SpigotRpgPlugin extends JavaPlugin {
         CharacterService characterService = Rpg.get().getCharacterService();
         Collection<IActiveCharacter> characters = characterService.getCharacters();
         for (IActiveCharacter character : characters) {
+            if (character instanceof PreloadCharacter) {
+                continue;
+            }
             characterService.save(character.getCharacterBase());
         }
         if (getEffectManager() != null) {

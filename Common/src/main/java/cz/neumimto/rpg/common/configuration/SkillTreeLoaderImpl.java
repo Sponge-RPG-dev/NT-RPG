@@ -77,7 +77,7 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
 
     @Override
     public Map<String, SkillTree> getAll() {
-        Path dir = Paths.get(Rpg.get().getWorkingDirectory(), "Skilltrees");
+        Path dir = Paths.get(Rpg.get().getWorkingDirectory());
         FileUtils.createDirectoryIfNotExists(dir);
 
         Map<String, SkillTree> map = new HashMap<>();
@@ -86,7 +86,7 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
             dir = prepareTempDir();
         }
 
-        try (DirectoryStream<Path> paths = Files.newDirectoryStream(dir, "*.conf")) {
+        try (DirectoryStream<Path> paths = Files.newDirectoryStream(dir.resolve("Skilltrees/"), "*.conf")) {
             paths.forEach(path -> {
                 try {
                     info("Loading skilltree from a file " + path.getFileName());
@@ -116,13 +116,14 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
     }
 
     private void copyDefaultFilesToClassDir(Path path) {
+        Path root = path.resolve("Skilltrees/");
         try {
-            Files.createDirectory(path.resolve("Skilltrees/"));
+            Files.createDirectory(root);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        assetService.copyToFile("defaults/skilltrees/magetree.conf", path.resolve("Apprentice.conf"));
-
+        assetService.copyToFile("defaults/skilltrees/magetree.conf", root.resolve("magetree.conf"));
+        assetService.copyToFile("defaults/skilltrees/warriortree.conf", root.resolve("warriortree.conf"));
     }
 
     public void populateMap(Map<String, SkillTree> map, Config config) {
