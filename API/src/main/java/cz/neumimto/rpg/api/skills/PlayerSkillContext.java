@@ -100,26 +100,26 @@ public class PlayerSkillContext {
         if (cachedComputedSkillSettings == null) {
             SkillSettings preSet = skillData.getSkillSettings();
 
-            int initial = previousSize == 0 ? preSet.getNodes().size() * 3 / 4 : previousSize;
+            int initial = previousSize;
             cachedComputedSkillSettings = new Object2FloatOpenHashMap<>(initial, 0.1f);
 
             Set<String> complexKeySuffixes = SkillSettings.getComplexKeySuffixes();
 
             Collection<AttributeConfig> attributes = Rpg.get().getPropertyService().getAttributes().values();
 
-            populateCache(complexKeySuffixes, attributes, preSet);
+            populateCache(complexKeySuffixes, attributes, preSet, getTotalLevel());
             if (previousSize == 0) {
                 previousSize = cachedComputedSkillSettings.size();
             }
 
             Set<SkillData> upgradedBy = skillData.getUpgradedBy();
             for (SkillData upgrade : upgradedBy) {
-                PlayerSkillContext upg = character.getSkillInfo(upgrade.getSkill());
+                PlayerSkillContext upg = character.getSkillInfo(upgrade.getSkillId());
                 if (upg == null) {
                     continue;
                 }
                 SkillSettings ssUpgrade = upgrade.getUpgrades().get(skillData.getSkillId());
-                populateCache(complexKeySuffixes, attributes, ssUpgrade);
+                populateCache(complexKeySuffixes, attributes, ssUpgrade, upg.getTotalLevel());
             }
         }
         return cachedComputedSkillSettings;
@@ -165,21 +165,21 @@ public class PlayerSkillContext {
         return getDoubleNodeValue(node.value());
     }
 
-    public void populateCache(Set<String> complexKeySuffixes, Collection<AttributeConfig> attributes, SkillSettings settings) {
+    public void populateCache(Set<String> complexKeySuffixes, Collection<AttributeConfig> attributes, SkillSettings settings, int level) {
 
         for (Map.Entry<String, Float> entry : settings.getNodes().entrySet()) {
-            cacheComplexNodes(complexKeySuffixes, attributes, entry);
+            cacheComplexNodes(complexKeySuffixes, attributes, entry, level);
         }
     }
 
-    private void cacheComplexNodes(Set<String> complexKeySuffixes, Collection<AttributeConfig> attributes, Map.Entry<String, Float> entry) {
+    private void cacheComplexNodes(Set<String> complexKeySuffixes, Collection<AttributeConfig> attributes, Map.Entry<String, Float> entry, int level) {
         String key = entry.getKey();
         Optional<String> first = isComplexNode(complexKeySuffixes, key);
 
         if (first.isPresent()) {
             String s = first.get();
             if (s.endsWith(SkillSettings.BONUS_SUFFIX)) {
-                cacheSettingsNodes(entry, s);
+                cacheSettingsNodes(entry, s, level);
             }
             cacheAttributeNodes(attributes, entry, s);
         } else {
@@ -188,10 +188,10 @@ public class PlayerSkillContext {
         }
     }
 
-    private void cacheSettingsNodes(Map.Entry<String, Float> entry, String s) {
+    private void cacheSettingsNodes(Map.Entry<String, Float> entry, String s, int level) {
         String stripped = s.substring(0, s.length() - SkillSettings.BONUS_SUFFIX.length());
         float aFloat1 = cachedComputedSkillSettings.getFloat(stripped);
-        cachedComputedSkillSettings.put(stripped, aFloat1 + entry.getValue() * getTotalLevel());
+        cachedComputedSkillSettings.put(stripped, aFloat1 + entry.getValue() * level);
     }
 
     private void cacheAttributeNodes(Collection<AttributeConfig> attributes, Map.Entry<String, Float> entry, String s) {
