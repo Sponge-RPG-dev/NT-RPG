@@ -939,9 +939,14 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
     public void characterAddAttributePoints(T character, int attributepoint) {
         String msg = localizationService.translate(LocalizationKeys.CHARACTER_GAINED_ATTRIBUTE_POINTS, arg("attributes", attributepoint));
         character.sendMessage(msg);
+        _characterAddAttributePoints(character, attributepoint);
         putInSaveQueue(character.getCharacterBase());
     }
 
+    private void _characterAddAttributePoints(T character, int attributepoints) {
+        int current = character.getAttributePoints();
+        character.setAttributePoints(current + attributepoints);
+    }
 
     public void updateSpellbook(IActiveCharacter character, SkillData[][] o) {
         CharacterBase characterBase = character.getCharacterBase();
@@ -1006,6 +1011,7 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
             }
             newcurrentexp = newcurrentexp - levellimit;
             levellimit = levels[level];
+            _characterAddAttributePoints(character, aClass.getClassDefinition().getAttributepointsPerLevel());
         }
         CharacterClass characterClass = aClass.getCharacterClass();
         characterClass.setExperiences(newcurrentexp);
@@ -1319,9 +1325,14 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
 
     @Override
     public void addSkill(T character, PlayerClassData origin, PlayerSkillContext skill) {
-        character.addSkill(skill.getSkill().getId(), skill);
-        character.addSkill(skill.getSkillData().getSkillName(), skill);
+        SkillData skillData = skill.getSkillData();
 
+        character.addSkill(skill.getSkill().getId(), skill);
+        character.addSkill(skillData.getSkillName(), skill);
+
+        for (SkillData upgradedBy : skillData.getUpgradedBy()) {
+            character.getSkillUpgradeObservers().addCandidate(upgradedBy.getSkillId(), skill);
+        }
         character.getSkillUpgradeObservers().processChange(skill.getSkill());
     }
 
@@ -1354,6 +1365,7 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
 
         addPersistantSkill(character, origin, skill1);
         addSkill(character, origin, einfo);
+
         skill.skillLearn(character, einfo);
         info("Character " + character.getCharacterBase().getUuid() + " learned skill " + skill.getId());
     }

@@ -65,7 +65,7 @@ public class AdminCommands extends BaseCommand {
 
     @Subcommand("attributepoints add")
     @Description("Permanently adds X skillpoints to a player")
-    public void addSkillPointsCommand(CommandIssuer commandSender, OnlineOtherPlayer player, @Default("1") int amount) {
+    public void addAttributePoints(CommandIssuer commandSender, OnlineOtherPlayer player, @Default("1") int amount) {
         characterService.characterAddAttributePoints(player.character, amount);
     }
 

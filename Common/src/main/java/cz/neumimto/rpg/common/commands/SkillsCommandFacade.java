@@ -69,7 +69,7 @@ public class SkillsCommandFacade {
     public void learnSkill(IActiveCharacter character, ISkill skill, ClassDefinition aClass) {
         if (aClass.getSkillTree() != null) {
             Map<String, PlayerClassData> classes = character.getClasses();
-            PlayerClassData playerClassData = classes.get(aClass.getName());
+            PlayerClassData playerClassData = classes.get(aClass.getName().toLowerCase());
             aClass.getSkillTreeType().processLearnSkill(character, playerClassData, skill);
         } else {
             String msg = localizationService.translate(LocalizationKeys.CLASS_HAS_NO_SKILLTREE, Arg.arg("class", aClass.getName()));

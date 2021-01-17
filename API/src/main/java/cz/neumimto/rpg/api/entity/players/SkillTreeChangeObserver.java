@@ -14,7 +14,7 @@ public class SkillTreeChangeObserver {
 
     private IActiveCharacter character;
 
-    private Map<String, Set<PlayerSkillContext>> candidates = new HashMap<>();
+    private Map<String, Set<String>> candidates = new HashMap<>();
 
     public SkillTreeChangeObserver(IActiveCharacter character) {
         this.character = character;
@@ -29,8 +29,8 @@ public class SkillTreeChangeObserver {
     }
 
     public void addCandidate(String action, PlayerSkillContext reloadCandidate) {
-        Set<PlayerSkillContext> playerSkillContexts = candidates.computeIfAbsent(action, s -> new HashSet<>());
-        playerSkillContexts.add(reloadCandidate);
+        Set<String> playerSkillContexts = candidates.computeIfAbsent(action, s -> new HashSet<>());
+        playerSkillContexts.add(reloadCandidate.getSkillData().getSkillId());
     }
 
     public void processChange(AttributeConfig changed) {
@@ -42,12 +42,15 @@ public class SkillTreeChangeObserver {
     }
 
     public void processChange(String action) {
-        Set<PlayerSkillContext> playerSkillContexts = candidates.get(action);
+        Set<String> playerSkillContexts = candidates.get(action);
         if (playerSkillContexts != null) {
-            for (PlayerSkillContext psc : playerSkillContexts) {
-                psc.invalidateSkillSettingsCache();
-                if (psc.getSkill() instanceof PassiveSkill) {
-                    psc.getSkill().skillUpgrade(character, psc.getLevel(), psc);
+            for (String skillId : playerSkillContexts) {
+                PlayerSkillContext psc = character.getSkill(skillId);
+                if (psc != null) {
+                    psc.invalidateSkillSettingsCache();
+                    if (psc.getSkill() instanceof PassiveSkill) {
+                        psc.getSkill().skillUpgrade(character, psc.getLevel(), psc);
+                    }
                 }
             }
         }

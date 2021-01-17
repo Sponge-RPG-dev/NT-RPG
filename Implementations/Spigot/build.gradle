@@ -81,7 +81,8 @@ dependencies {
     compileOnly 'io.lumine.xikage:MythicMobs:4.9.1'
 
     testCompile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.30'
-    testCompile ('com.github.NeumimTo:MockBukkit:5696a35d') {
+
+    testCompile ('com.github.NeumimTo:MockBukkit:e92bb7bbd1') {
         exclude group: "org.spigotmc", module: "spigot-api"
         exclude group: "org.jetbrains", module: "annotations"
     }

@@ -29,7 +29,6 @@ class SkillTreeDaoTest {
     @Inject
     private SkillService skillService;
 
-
     @Inject
     private RpgApi api;
 

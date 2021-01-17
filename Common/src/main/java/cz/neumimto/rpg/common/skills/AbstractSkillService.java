@@ -142,10 +142,8 @@ public abstract class AbstractSkillService implements SkillService {
 
     @Override
     public Optional<ISkill> getById(String id) {
+        id = id.toLowerCase();
         ISkill skill = skills.get(id);
-        if (skill == null) {
-            skill = getSkillByLocalizedName(id);
-        }
         return Optional.ofNullable(skill);
     }
 
@@ -162,13 +160,14 @@ public abstract class AbstractSkillService implements SkillService {
     @Override
     public void registerSkillAlternateName(String name, ISkill skill) {
         name = name.toLowerCase();
-        if (skillByNames.containsKey(name)) {
-            ISkill iSkill = skillByNames.get(name);
+        if (skills.containsKey(name)) {
+            ISkill iSkill = skills.get(name);
             if (iSkill != skill) {
                 Log.warn("Alternate name " + name + " for a skill " + skill.getId() + ". But the name is "
                         + "already taken by the skill " + iSkill.getId() + "! If you are reloading you can ignore this message");
             }
         }
+        skills.put(name, skill);
         skillByNames.put(name, skill);
     }
 
