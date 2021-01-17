@@ -852,6 +852,7 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
             return ActionResult.withErrorMessage(event.getFailedTranslationKey());
         }
 
+        character.getSkillUpgradeObservers().processChange(skill);
         return ActionResult.ok();
     }
 
