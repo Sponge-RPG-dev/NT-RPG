@@ -62,7 +62,7 @@ public abstract class AbstractEntityService<T, I extends IMob<T>> implements Ent
      * @see PropertyService#loadMaximalServerPropertyValues()
      */
     @Override
-    public float getEntityProperty(IEffectConsumer entity, int id) {
+    public double getEntityProperty(IEffectConsumer entity, int id) {
         return Math.min(entity.getProperty(id), propertyService.getMaxPropertyValue(id));
     }
 
@@ -95,7 +95,7 @@ public abstract class AbstractEntityService<T, I extends IMob<T>> implements Ent
      * @return difference
      */
     @Override
-    public double healEntity(IEntity entity, float amount, IRpgElement source) {
+    public double healEntity(IEntity entity, double amount, IRpgElement source) {
         if (entity.getHealth().getValue() == entity.getHealth().getMaxValue()) {
             return 0;
         }

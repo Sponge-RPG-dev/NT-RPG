@@ -20,14 +20,13 @@ public class Dodge extends PassiveSkill {
 
     public Dodge() {
         super(DodgeEffect.name);
-        settings.addNode(SkillNodes.CHANCE, 10, 20);
+        settings.addNode(SkillNodes.CHANCE, 10);
         addSkillType(SkillType.PHYSICAL);
     }
 
     @Override
     public void applyEffect(PlayerSkillContext info, IActiveCharacter character) {
-        int totalLevel = info.getTotalLevel();
-        float chance = info.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.CHANCE, totalLevel);
+        double chance = info.getFloatNodeValue(SkillNodes.CHANCE);
         DodgeEffect dodgeEffect = new DodgeEffect(character, -1, chance);
         effectService.addEffect(dodgeEffect, this);
     }
@@ -35,9 +34,8 @@ public class Dodge extends PassiveSkill {
     @Override
     public void skillUpgrade(IActiveCharacter character, int level, PlayerSkillContext context) {
         PlayerSkillContext info = character.getSkill(getId());
-        int totalLevel = info.getTotalLevel();
-        float chance = info.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.CHANCE, totalLevel);
-        IEffectContainer<Float, DodgeEffect> effect = character.getEffect(DodgeEffect.name);
+        double chance = info.getFloatNodeValue(SkillNodes.CHANCE);
+        IEffectContainer<Double, DodgeEffect> effect = character.getEffect(DodgeEffect.name);
         effect.updateValue(chance, this);
     }
 }

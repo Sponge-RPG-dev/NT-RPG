@@ -204,7 +204,7 @@ public class SkillListener {
             IEffectContainer<BashModel, Bash> effect = source.getEffect(Bash.name);
             BashModel stackedValue = effect.getStackedValue();
             long time = System.currentTimeMillis();
-            float reduced = entityService.getEntityProperty(target, CommonProperties.cooldown_reduce_mult);
+            double reduced = entityService.getEntityProperty(target, CommonProperties.cooldown_reduce_mult);
             long cooldown = (long) (reduced * (float) stackedValue.cooldown);
             if (stackedValue.lasttime + cooldown <= time) {
                 int rnd = random.nextInt(100);
@@ -245,7 +245,7 @@ public class SkillListener {
 
     @Listener
     public void onStunApply(SpongeEffectApplyEvent<StunEffect> event, @First IEntity source) {
-        float f = entityService.getEntityProperty(source, AdditionalProperties.stun_duration_mult);
+        double f = entityService.getEntityProperty(source, AdditionalProperties.stun_duration_mult);
         event.getEffect().setDuration((long) (f * event.getEffect().getDuration()));
     }
 

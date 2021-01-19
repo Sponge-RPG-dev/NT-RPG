@@ -27,9 +27,9 @@ import cz.neumimto.rpg.api.events.Cancellable;
  */
 public interface SkillHealEvent extends SkillEvent, Cancellable {
 
-    float getAmount();
+    double getAmount();
 
-    void setAmount(float amount);
+    void setAmount(double amount);
 
     IRpgElement getSource();
 

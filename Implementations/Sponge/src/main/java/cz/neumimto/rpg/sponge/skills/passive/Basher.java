@@ -31,10 +31,10 @@ public class Basher extends PassiveSkill {
 
     public Basher() {
         super(Bash.name);
-        settings.addNode(SkillNodes.DAMAGE, 10, 10);
-        settings.addNode(SkillNodes.CHANCE, 0.1f, 0.005f);
-        settings.addNode(SkillNodes.PERIOD, 2500, -100);
-        settings.addNode(SkillNodes.DURATION, 1000, 50f);
+        settings.addNode(SkillNodes.DAMAGE, 10);
+        settings.addNode(SkillNodes.CHANCE, 0.1f);
+        settings.addNode(SkillNodes.PERIOD, 2500);
+        settings.addNode(SkillNodes.DURATION, 1000);
         setDamageType(DamageTypes.ATTACK.getId());
         addSkillType(SkillType.PHYSICAL);
     }
@@ -56,11 +56,10 @@ public class Basher extends PassiveSkill {
 
     private BashModel getBashModel(PlayerSkillContext info, IActiveCharacter character) {
         BashModel model = new BashModel();
-        int level = info.getTotalLevel();
-        model.chance = (int) info.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.CHANCE, level);
-        model.cooldown = (long) info.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.COOLDOWN, level);
-        model.damage = info.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.DAMAGE, level);
-        model.stunDuration = (long) info.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.DURATION, level);
+        model.chance = info.getIntNodeValue(SkillNodes.CHANCE);
+        model.cooldown = info.getLongNodeValue(SkillNodes.COOLDOWN);
+        model.damage = info.getDoubleNodeValue(SkillNodes.DAMAGE);
+        model.stunDuration = info.getLongNodeValue(SkillNodes.DURATION);
         return model;
     }
 }

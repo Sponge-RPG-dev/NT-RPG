@@ -22,7 +22,14 @@ import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.api.logging.Log;
+import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;
+import parsii.eval.Expression;
+import parsii.eval.Parser;
+import parsii.eval.Scope;
+import parsii.eval.Variable;
+import parsii.tokenizer.ParseException;
 
 import java.util.*;
 
@@ -30,6 +37,8 @@ import java.util.*;
  * Created by NeumimTo on 26.7.2015.
  */
 public class PlayerSkillContext {
+
+    public static final String LEVEL_KEY = "level";
 
     public static final PlayerSkillContext EMPTY;
 
@@ -47,7 +56,7 @@ public class PlayerSkillContext {
     private final ClassDefinition classDefinition;
     private ISkill skill;
 
-    private Object2FloatOpenHashMap<String> cachedComputedSkillSettings;
+    private Object2DoubleOpenHashMap<String> cachedComputedSkillSettings;
     private int previousSize = 0;
 
     public PlayerSkillContext(ClassDefinition classDefinition, ISkill skill, IActiveCharacter character) {
@@ -96,18 +105,23 @@ public class PlayerSkillContext {
         this.skill = skill;
     }
 
-    public Object2FloatOpenHashMap<String> getCachedComputedSkillSettings() {
+    public Object2DoubleOpenHashMap<String> getCachedComputedSkillSettings() {
         if (cachedComputedSkillSettings == null) {
             SkillSettings preSet = skillData.getSkillSettings();
 
+            Scope scope = new Scope();
+            Variable level = scope.getVariable(LEVEL_KEY);
+            level.setValue(getTotalLevel());
+
+            for (String attId : Rpg.get().getPropertyService().getAttributes().keySet()) {
+                Variable variable = scope.getVariable(attId);
+                variable.setValue(character.getAttributeValue(attId));
+            }
+
             int initial = previousSize;
-            cachedComputedSkillSettings = new Object2FloatOpenHashMap<>(initial, 0.1f);
+            cachedComputedSkillSettings = new Object2DoubleOpenHashMap<>(initial, 0.1f);
 
-            Set<String> complexKeySuffixes = SkillSettings.getComplexKeySuffixes();
-
-            Collection<AttributeConfig> attributes = Rpg.get().getPropertyService().getAttributes().values();
-
-            populateCache(complexKeySuffixes, attributes, preSet, getTotalLevel());
+            populateCache(preSet, scope);
             if (previousSize == 0) {
                 previousSize = cachedComputedSkillSettings.size();
             }
@@ -119,21 +133,22 @@ public class PlayerSkillContext {
                     continue;
                 }
                 SkillSettings ssUpgrade = upgrade.getUpgrades().get(skillData.getSkillId());
-                populateCache(complexKeySuffixes, attributes, ssUpgrade, upg.getTotalLevel());
+                scope.getVariable(LEVEL_KEY).setValue(upg.getTotalLevel());
+                populateCache(ssUpgrade, scope);
             }
         }
         return cachedComputedSkillSettings;
     }
 
-    private float getLevelNodeValue(String s) {
-        return getCachedComputedSkillSettings().getFloat(s);
+    private double getLevelNodeValue(String s) {
+        return getCachedComputedSkillSettings().getDouble(s);
     }
 
-    public float getFloatNodeValue(ISkillNode node) {
+    public double getFloatNodeValue(ISkillNode node) {
         return getFloatNodeValue(node.value());
     }
 
-    public float getFloatNodeValue(String node) {
+    public double getFloatNodeValue(String node) {
         return getLevelNodeValue(node);
     }
 
@@ -165,56 +180,16 @@ public class PlayerSkillContext {
         return getDoubleNodeValue(node.value());
     }
 
-    public void populateCache(Set<String> complexKeySuffixes, Collection<AttributeConfig> attributes, SkillSettings settings, int level) {
-
-        for (Map.Entry<String, Float> entry : settings.getNodes().entrySet()) {
-            cacheComplexNodes(complexKeySuffixes, attributes, entry, level);
-        }
-    }
-
-    private void cacheComplexNodes(Set<String> complexKeySuffixes, Collection<AttributeConfig> attributes, Map.Entry<String, Float> entry, int level) {
-        String key = entry.getKey();
-        Optional<String> first = isComplexNode(complexKeySuffixes, key);
-
-        if (first.isPresent()) {
-            String s = first.get();
-            if (s.endsWith(SkillSettings.BONUS_SUFFIX)) {
-                cacheSettingsNodes(entry, s, level);
-            }
-            cacheAttributeNodes(attributes, entry, s);
-        } else {
-            float val = cachedComputedSkillSettings.getOrDefault(entry.getKey(), 0f);
-            cachedComputedSkillSettings.put(entry.getKey(), val + entry.getValue().floatValue());
-        }
-    }
-
-    private void cacheSettingsNodes(Map.Entry<String, Float> entry, String s, int level) {
-        String stripped = s.substring(0, s.length() - SkillSettings.BONUS_SUFFIX.length());
-        float aFloat1 = cachedComputedSkillSettings.getFloat(stripped);
-        cachedComputedSkillSettings.put(stripped, aFloat1 + entry.getValue() * level);
-    }
-
-    private void cacheAttributeNodes(Collection<AttributeConfig> attributes, Map.Entry<String, Float> entry, String s) {
-        for (AttributeConfig attribute : attributes) {
-            String id = "_per_" + attribute.getId();
-            if (s.endsWith(id)) {
-                String stripped = s.substring(0, s.length() - id.length());
-                float aFloat1 = cachedComputedSkillSettings.getFloat(stripped);
-                cachedComputedSkillSettings.put(stripped, aFloat1 + entry.getValue() * character.getAttributeValue(attribute));
-                break;
+    public void populateCache(SkillSettings settings, Scope scope) {
+        for (Map.Entry<String, String> entry : settings.getNodes().entrySet()) {
+            try {
+                Expression parse = Parser.parse(entry.getValue(), scope);
+                double evaluate = parse.evaluate();
+                cachedComputedSkillSettings.put(entry.getKey(), evaluate);
+            } catch (ParseException e) {
+                Log.error("Could not parse expression " + entry.getValue());
             }
         }
-    }
-
-
-
-    public Optional<String> isComplexNode(Set<String> complexKeySuffixes, String key) {
-        for (String complexKeySuffix : complexKeySuffixes) {
-            if (key.endsWith(complexKeySuffix)) {
-                return Optional.of(key);
-            }
-        }
-        return Optional.empty();
     }
 
     public void invalidateSkillSettingsCache() {

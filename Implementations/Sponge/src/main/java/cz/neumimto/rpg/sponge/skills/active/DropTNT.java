@@ -37,9 +37,9 @@ public class DropTNT extends ActiveSkill<ISpongeCharacter> {
     @Override
     public void init() {
         super.init();
-        settings.addNode(SkillNodes.AMOUNT, 1f, 0f);
-        settings.addNode(SkillNodes.DAMAGE, 100f, 10f);
-        settings.addNode("explosion-radius", 3, 0.1f);
+        settings.addNode(SkillNodes.AMOUNT, 1f);
+        settings.addNode(SkillNodes.DAMAGE, 100f);
+        settings.addNode("explosion-radius", 3);
         addSkillType(SkillType.PHYSICAL);
         addSkillType(SkillType.SUMMON);
     }

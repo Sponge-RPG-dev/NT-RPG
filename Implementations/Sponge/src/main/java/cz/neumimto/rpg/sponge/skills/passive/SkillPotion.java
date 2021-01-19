@@ -31,7 +31,7 @@ public class SkillPotion extends PassiveSkill {
         for (PotionEffectType type : allOf) {
             list.put(type, 19000L);
         }
-        settings.addNode("cooldown-reduced", 0, -125);
+        settings.addNode("cooldown-reduced", 0);
         settings.addObjectNode("potions", gson.toJson(list));
     }
 

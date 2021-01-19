@@ -41,9 +41,9 @@ public class Bash extends TargetedEntitySkill {
         super.init();
         setDamageType(EntityDamageEvent.DamageCause.CONTACT.name());
         addSkillType(SkillType.PHYSICAL);
-        settings.addNode(SkillNodes.DAMAGE, 15, 5);
-        settings.addNode(SkillNodes.DURATION, 5000, 500);
-        settings.addNode("knockback", 0.7f, 0.1f);
+        settings.addNode(SkillNodes.DAMAGE, 15);
+        settings.addNode(SkillNodes.DURATION, 5000);
+        settings.addNode("knockback", 0.7f);
 
     }
 

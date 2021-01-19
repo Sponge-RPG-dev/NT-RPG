@@ -37,10 +37,10 @@ public class BattleCharge extends TargetedEntitySkill {
         super.init();
 
         setDamageType(ENTITY_ATTACK.name());
-        settings.addNode(SkillNodes.DAMAGE, 10, 10);
-        settings.addNode(SkillNodes.RANGE, 10, 1);
-        settings.addNode("slow-duration-ticks", 10000, 150);
-        settings.addNode(SkillNodes.RADIUS, 3, 0);
+        settings.addNode(SkillNodes.DAMAGE, 10);
+        settings.addNode(SkillNodes.RANGE, 10);
+        settings.addNode("slow-duration-ticks", 10000);
+        settings.addNode(SkillNodes.RADIUS, 3);
         addSkillType(SkillType.MOVEMENT);
         addSkillType(SkillType.CANNOT_BE_SELF_CASTED);
     }

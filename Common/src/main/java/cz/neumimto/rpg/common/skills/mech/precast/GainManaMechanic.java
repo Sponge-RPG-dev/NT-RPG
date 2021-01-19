@@ -23,7 +23,7 @@ public class GainManaMechanic implements ISkillCastMechanic, ValidatedMechanic {
 
     @Override
     public void processAfterSuccess(IActiveCharacter character, PlayerSkillContext context) {
-        float f = context.getFloatNodeValue("gain_mana");
+        double f = context.getFloatNodeValue("gain_mana");
         characterService.gainMana(character, f, context.getSkill());
     }
 }

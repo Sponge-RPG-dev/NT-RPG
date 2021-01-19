@@ -41,9 +41,9 @@ public abstract class ActiveSkill<T extends IActiveCharacter> extends AbstractSk
     @Override
     public void init() {
         super.init();
-        settings.addNode(SkillNodes.COOLDOWN, 10000, 0);
-        settings.addNode(SkillNodes.HPCOST, 0, 0);
-        settings.addNode(SkillNodes.MANACOST, 0, 0);
+        settings.addNode(SkillNodes.COOLDOWN, 10000);
+        settings.addNode(SkillNodes.HPCOST, 0);
+        settings.addNode(SkillNodes.MANACOST, 0);
     }
 
     @Override

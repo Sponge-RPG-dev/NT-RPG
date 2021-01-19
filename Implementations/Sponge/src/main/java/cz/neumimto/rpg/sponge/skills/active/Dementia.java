@@ -31,8 +31,8 @@ public class Dementia extends Targeted {
     @Override
     public void init() {
         super.init();
-        settings.addNode(SkillNodes.DURATION, 30000, 1500);
-        settings.addNode("skill-level", 1, 2);
+        settings.addNode(SkillNodes.DURATION, 30000);
+        settings.addNode("skill-level", 1);
         addSkillType(SkillType.DISEASE);
     }
 

@@ -29,18 +29,18 @@ import org.bukkit.event.HandlerList;
  */
 public class SpigotHealEvent extends SpigotAbstractSkillEvent implements SkillHealEvent, Cancellable {
 
-    private float amount;
+    private double amount;
     private IRpgElement source;
     private IEntity entity;
     private boolean cancelled;
 
     @Override
-    public float getAmount() {
+    public double getAmount() {
         return amount;
     }
 
     @Override
-    public void setAmount(float amount) {
+    public void setAmount(double amount) {
         this.amount = amount;
     }
 

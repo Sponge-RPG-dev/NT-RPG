@@ -118,7 +118,7 @@ public class SpigotTests {
         PlayerSkillContext punchCtx = character.getSkill("Punch");
 
         // test skill before upgrade
-        float knockback = punchCtx.getCachedComputedSkillSettings().getFloat("knockback");
+        double knockback = punchCtx.getDoubleNodeValue("knockback");
         Assertions.assertEquals(0f, knockback, "knockback = 0 test");
 
         // add level
@@ -130,7 +130,7 @@ public class SpigotTests {
         playerMock.performCommand("skill Punch_Knockback_Upgrade LEARN warrior");
         Wait.mainThread(300);
         Assertions.assertTrue(character.hasSkill("Punch_Knockback_Upgrade"), "Player has skill Bash_Upgrade");
-        float newkb = punchCtx.getCachedComputedSkillSettings().getFloat("knockback");
+        double newkb = punchCtx.getDoubleNodeValue("knockback");
 
         // test skill after upgrade
         Assertions.assertTrue(knockback < newkb, "Skill upgraded test");
@@ -144,13 +144,13 @@ public class SpigotTests {
         playerMock.performCommand("skill Punch_Knockback_Upgrade UPGRADE warrior");
         Wait.mainThread(300);
         Assertions.assertTrue(character.hasSkill("Punch_Knockback_Upgrade"), "Player has skill Bash_Upgrade");
-        float newkb2 = punchCtx.getCachedComputedSkillSettings().getFloat("knockback");
+        double newkb2 = punchCtx.getDoubleNodeValue("knockback");
         Assertions.assertTrue(newkb < newkb2, "Skill Upgraded second time test");
     }
 
     @AfterAll
     public static void tearDown()
     {
-       // MockBukkit.unmock();
+        MockBukkit.unmock();
     }
 }

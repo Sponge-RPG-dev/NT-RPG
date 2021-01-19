@@ -26,8 +26,8 @@ public class Slow extends Targeted {
     @Override
     public void init() {
         super.init();
-        settings.addNode(SkillNodes.DURATION, 5000, 100);
-        settings.addNode(SkillNodes.AMPLIFIER, 1, 2);
+        settings.addNode(SkillNodes.DURATION, 5000);
+        settings.addNode(SkillNodes.AMPLIFIER, 1);
     }
 
     @Override

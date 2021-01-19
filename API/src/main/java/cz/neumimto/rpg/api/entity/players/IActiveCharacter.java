@@ -82,11 +82,11 @@ public interface IActiveCharacter<T, P extends IParty> extends IEntity<T> {
 
     boolean isStub();
 
-    float[] getPrimaryProperties();
+    double[] getPrimaryProperties();
 
-    void setCharacterLevelProperty(int index, float value);
+    void setCharacterLevelProperty(int index, double value);
 
-    float getCharacterPropertyWithoutLevel(int index);
+    double getCharacterPropertyWithoutLevel(int index);
 
     IReservable getMana();
 
@@ -205,9 +205,9 @@ public interface IActiveCharacter<T, P extends IParty> extends IEntity<T> {
 
     void sendMessage(String message);
 
-    float[] getSecondaryProperties();
+    double[] getSecondaryProperties();
 
-    void setSecondaryProperties(float[] arr);
+    void setSecondaryProperties(double[] arr);
 
     Map<String, Integer> getTransientAttributes();
 

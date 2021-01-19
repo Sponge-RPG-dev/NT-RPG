@@ -66,13 +66,13 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
     - AttributeConfig change
     - Player login
     * */
-    private transient float[] primaryProperties;
+    private transient double[] primaryProperties;
 
     /*
     - player respawn
     - effect apply/expire
     */
-    private transient float[] secondaryProperties;
+    private transient double[] secondaryProperties;
 
     private transient boolean invulnerable;
 
@@ -129,8 +129,8 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
 
     public ActiveCharacter(UUID uuid, CharacterBase base, int propertyCount) {
         this.pl = uuid;
-        this.primaryProperties = new float[propertyCount];
-        this.secondaryProperties = new float[propertyCount];
+        this.primaryProperties = new double[propertyCount];
+        this.secondaryProperties = new double[propertyCount];
         this.base = base;
         this.skills = new PlayerSkillHandlers.SHARED();
         this.slotsToReinitialize = new ArrayList<>();
@@ -213,27 +213,27 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
     }
 
     @Override
-    public float[] getPrimaryProperties() {
+    public double[] getPrimaryProperties() {
         return primaryProperties;
     }
 
     @Override
-    public float getProperty(int index) {
+    public double getProperty(int index) {
         return primaryProperties[index] + secondaryProperties[index];
     }
 
     @Override
-    public void setProperty(int index, float value) {
+    public void setProperty(int index, double value) {
         primaryProperties[index] = value;
     }
 
     @Override
-    public float[] getSecondaryProperties() {
+    public double[] getSecondaryProperties() {
         return secondaryProperties;
     }
 
     @Override
-    public void setSecondaryProperties(float[] arr) {
+    public void setSecondaryProperties(double[] arr) {
         this.secondaryProperties = arr;
     }
 
@@ -257,12 +257,12 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
 
 
     @Override
-    public void setCharacterLevelProperty(int index, float value) {
+    public void setCharacterLevelProperty(int index, double value) {
         secondaryProperties[index] = value;
     }
 
     @Override
-    public float getCharacterPropertyWithoutLevel(int index) {
+    public double getCharacterPropertyWithoutLevel(int index) {
         return primaryProperties[index];
     }
 

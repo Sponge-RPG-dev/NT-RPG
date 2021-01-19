@@ -25,16 +25,16 @@ public class BattleCharge extends ActiveSkill<ISpongeCharacter> {
     @Override
     public void init() {
         super.init();
-        settings.addNode(SkillNodes.DURATION, 7500, 100);
-        settings.addNode(SkillNodes.RADIUS, 7500, 100);
-        settings.addNode("speed-per-level", 0.9f, 0.01f);
+        settings.addNode(SkillNodes.DURATION, 7500);
+        settings.addNode(SkillNodes.RADIUS, 7500);
+        settings.addNode("speed-per-level", 0.9f);
     }
 
     @Override
     public SkillResult cast(ISpongeCharacter character, PlayerSkillContext skillContext) {
         double distSq = Math.pow(skillContext.getDoubleNodeValue(SkillNodes.RADIUS), 2);
         long duration = skillContext.getLongNodeValue(SkillNodes.DURATION);
-        float value = skillContext.getFloatNodeValue("speed-per-level");
+        double value = skillContext.getFloatNodeValue("speed-per-level");
         if (character.hasParty()) {
             for (ISpongeCharacter pmember : character.getParty().getPlayers()) {
                 if (pmember.getLocation().getPosition().distanceSquared(character.getLocation().getPosition()) <= distSq) {

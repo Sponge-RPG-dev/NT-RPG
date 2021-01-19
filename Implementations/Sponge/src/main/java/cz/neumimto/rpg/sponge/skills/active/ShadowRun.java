@@ -32,11 +32,11 @@ public class ShadowRun extends ActiveSkill<ISpongeCharacter> {
         addSkillType(SkillType.STEALTH);
         addSkillType(SkillType.MOVEMENT);
         addSkillType(SkillType.ESCAPE);
-        settings.addNode(SkillNodes.DURATION, 20000, 1750);
-        settings.addNode(SkillNodes.DAMAGE, 10, 5);
-        settings.addNode(SkillNodes.MULTIPLIER, 15, 8);
-        settings.addNode("max-light-level", 12, -2);
-        settings.addNode("walk-speed", 0.07f, 0.007f);
+        settings.addNode(SkillNodes.DURATION, 20000);
+        settings.addNode(SkillNodes.DAMAGE, 10);
+        settings.addNode(SkillNodes.MULTIPLIER, 15);
+        settings.addNode("max-light-level", 12);
+        settings.addNode("walk-speed", 0.07f);
     }
 
     @Override

@@ -27,8 +27,8 @@ public class SkillSpeed extends ActiveSkill {
     public void init() {
         super.init();
         setDamageType(null);
-        settings.addNode(SkillNodes.DURATION, 1000, 1500);
-        settings.addNode(SkillNodes.AMOUNT, 0.1f, 0.05f);
+        settings.addNode(SkillNodes.DURATION, 1000);
+        settings.addNode(SkillNodes.AMOUNT, 0.1f);
         addSkillType(SkillType.MOVEMENT);
     }
 

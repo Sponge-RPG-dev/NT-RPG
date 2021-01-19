@@ -4,6 +4,8 @@ import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
+import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2FloatMap;
 import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
@@ -29,7 +31,7 @@ public class MMOItemSkill extends ActiveSkill<ISpigotCharacter> {
     public void init() {
         Set<String> modifiers = ability.getModifiers();
         for (String modifier : modifiers) {
-            settings.addNode(modifier, 10, 1);
+            settings.addExpression(modifier, 10);
         }
     }
 
@@ -41,9 +43,9 @@ public class MMOItemSkill extends ActiveSkill<ISpigotCharacter> {
         PlayerStats playerStats = new PlayerStats(playerData);
         PlayerStats.CachedStats stats = playerStats.newTemporary();
 
-        Object2FloatOpenHashMap<String> compSettings = skillContext.getCachedComputedSkillSettings();
-        for (Object2FloatMap.Entry<String> e : compSettings.object2FloatEntrySet()) {
-            abilityData.setModifier(e.getKey(), e.getFloatValue());
+        Object2DoubleOpenHashMap<String> compSettings = skillContext.getCachedComputedSkillSettings();
+        for (Object2DoubleMap.Entry<String> e : compSettings.object2DoubleEntrySet()) {
+            abilityData.setModifier(e.getKey(), e.getDoubleValue());
         }
 
         boolean casted = this.cast(stats, new ItemAttackResult(true, DamageType.SKILL), abilityData);

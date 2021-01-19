@@ -11,8 +11,7 @@ import cz.neumimto.rpg.junit.NtRpgExtension;
 import cz.neumimto.rpg.junit.TestDictionary;
 import cz.neumimto.rpg.junit.TestGuiceModule;
 import cz.neumimto.rpg.model.CharacterBaseTest;
-import it.unimi.dsi.fastutil.objects.AbstractObject2FloatMap;
-import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import name.falgout.jeffrey.testing.junit.guice.GuiceExtension;
 import name.falgout.jeffrey.testing.junit.guice.IncludeModule;
 import org.junit.jupiter.api.Assertions;
@@ -20,6 +19,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import parsii.eval.Scope;
+import parsii.eval.Variable;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -34,31 +35,25 @@ public class TestSkillExecutorChain {
 
     private SkillData skillData;
 
-    private static Set<String> complexKeySuffixes;
-
     private static Set<AttributeConfig> attributes;
 
     static AttributeConfig str;
 
     static AttributeConfig agi;
 
+    static Scope scope;
+
     @BeforeAll
     public static void init() throws Exception {
         TestHelper.setupLog();
 
-        complexKeySuffixes = new HashSet<>();
-        complexKeySuffixes.add(SkillSettings.BONUS_SUFFIX);
-
-
         str = TestDictionary.STR;
         agi = TestDictionary.AGI;
-
-        complexKeySuffixes.add("_per_" + str.getId());
-        complexKeySuffixes.add("_per_" + agi.getId());
 
         attributes = new HashSet<>();
         attributes.add(str);
         attributes.add(agi);
+        scope = new Scope();
 
     }
 
@@ -66,9 +61,9 @@ public class TestSkillExecutorChain {
     public void before() {
         skillData = new SkillData("test");
         SkillSettings skillSettings = new SkillSettings();
-        skillSettings.addNode("damage", 100, 15);
-        skillSettings.addNode("range", 100, 10);
-        skillSettings.addNode("manacost", 100, -1);
+        skillSettings.addNode("damage", 100);
+        skillSettings.addNode("range", 100);
+        skillSettings.addNode("manacost", 100);
         skillData.setSkillSettings(skillSettings);
 
 
@@ -88,17 +83,14 @@ public class TestSkillExecutorChain {
     public void test_skill_settings_cache_leveled() {
         PlayerSkillContext context = new PlayerSkillContext(null, null, activeCharacter);
         context.setSkillData(skillData);
-        TestUtils.setField(context, "cachedComputedSkillSettings", new Object2FloatOpenHashMap());
+        TestUtils.setField(context, "cachedComputedSkillSettings", new Object2DoubleOpenHashMap<>());
         context.setLevel(3);
-        context.populateCache(complexKeySuffixes, attributes, skillData.getSkillSettings(), context.getTotalLevel());
+        Variable level = scope.getVariable("level");
+        level.setValue(3);
+        context.populateCache(skillData.getSkillSettings(), scope);
 
-
-        AbstractObject2FloatMap<String> cachedComputedSkillSettings = context.getCachedComputedSkillSettings();
+        Object2DoubleOpenHashMap<String> cachedComputedSkillSettings = context.getCachedComputedSkillSettings();
         Assertions.assertNotNull(cachedComputedSkillSettings);
-
-        for (String s : cachedComputedSkillSettings.keySet()) {
-            Assertions.assertTrue(!s.endsWith(SkillSettings.BONUS_SUFFIX));
-        }
 
         for (String s : cachedComputedSkillSettings.keySet()) {
             for (AttributeConfig a : attributes) {
@@ -107,47 +99,9 @@ public class TestSkillExecutorChain {
         }
 
         Assertions.assertSame(3, cachedComputedSkillSettings.size());
-        Assertions.assertTrue(100.0f + 15 * 3 == cachedComputedSkillSettings.getFloat("damage"));
-        Assertions.assertTrue(100.0f + 10 * 3 == cachedComputedSkillSettings.getFloat("range"));
-        Assertions.assertTrue(100.0f + -1 * 3 == cachedComputedSkillSettings.getFloat("manacost"));
-
-    }
-
-    @Test
-    public void test_skill_settings_cache_attribute() {
-
-
-        PlayerSkillContext context = new PlayerSkillContext(null, null, activeCharacter);
-        context.setSkillData(skillData);
-        TestUtils.setField(context, "cachedComputedSkillSettings", new Object2FloatOpenHashMap());
-        context.setLevel(0);
-
-        skillData.getSkillSettings().addAttributeNode("damage", agi, 10);
-        skillData.getSkillSettings().addAttributeNode("range", str, 10);
-
-        activeCharacter.getTransientAttributes().put(str.getId(), 3);
-        activeCharacter.getTransientAttributes().put(agi.getId(), 2);
-
-        context.populateCache(complexKeySuffixes, attributes, skillData.getSkillSettings(), context.getTotalLevel());
-
-
-        AbstractObject2FloatMap<String> cachedComputedSkillSettings = context.getCachedComputedSkillSettings();
-        Assertions.assertNotNull(cachedComputedSkillSettings);
-
-        for (String s : cachedComputedSkillSettings.keySet()) {
-            Assertions.assertTrue(!s.endsWith(SkillSettings.BONUS_SUFFIX));
-        }
-
-        for (String s : cachedComputedSkillSettings.keySet()) {
-            for (AttributeConfig a : attributes) {
-                Assertions.assertTrue(!s.contains(a.getId()));
-            }
-        }
-
-        Assertions.assertSame(3, cachedComputedSkillSettings.size());
-        Assertions.assertTrue(100.0f + 10 * 2 == cachedComputedSkillSettings.getFloat("damage"));
-        Assertions.assertTrue(100.0f + 10 * 3 == cachedComputedSkillSettings.getFloat("range"));
-        Assertions.assertTrue(100.0f == cachedComputedSkillSettings.getFloat("manacost"));
+        Assertions.assertTrue(100.0f + 15 * 3 == cachedComputedSkillSettings.getDouble("damage"));
+        Assertions.assertTrue(100.0f + 10 * 3 == cachedComputedSkillSettings.getDouble("range"));
+        Assertions.assertTrue(100.0f + -1 * 3 == cachedComputedSkillSettings.getDouble("manacost"));
 
     }
 

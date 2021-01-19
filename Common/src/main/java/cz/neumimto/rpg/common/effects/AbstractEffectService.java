@@ -487,7 +487,7 @@ public abstract class AbstractEffectService implements EffectService {
                 SkillSettings defaultSkillSettings = iSkill.getDefaultSkillSettings();
 
                 StringBuilder buffer = new StringBuilder();
-                for (Map.Entry<String, Float> stringFloatEntry : defaultSkillSettings.getNodes().entrySet()) {
+                for (Map.Entry<String, String> stringFloatEntry : defaultSkillSettings.getNodes().entrySet()) {
                     buffer.append("   * ").append(stringFloatEntry.getKey()).append("\n\n");
                 }
                 s = s.replaceAll("\\{\\{skill\\.parameters}}", buffer.toString());

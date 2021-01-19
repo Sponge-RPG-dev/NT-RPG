@@ -42,9 +42,9 @@ public class SkillSoulbind extends ActiveSkill<ISpongeCharacter> {
     @Override
     public void init() {
         super.init();
-        settings.addNode(SkillNodes.DURATION, 1000f, 10f);
-        settings.addNode(SkillNodes.COOLDOWN, 1000f, 10f);
-        settings.addNode(SkillNodes.RANGE, 10f, 1f);
+        settings.addNode(SkillNodes.DURATION, 1000f);
+        settings.addNode(SkillNodes.COOLDOWN, 1000f);
+        settings.addNode(SkillNodes.RANGE, 10f);
     }
 
     @Override

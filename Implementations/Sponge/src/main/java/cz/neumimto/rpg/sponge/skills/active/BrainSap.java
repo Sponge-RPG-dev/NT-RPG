@@ -38,9 +38,9 @@ public class BrainSap extends Targeted {
     @Override
     public void init() {
         super.init();
-        settings.addNode(SkillNodes.COOLDOWN, 1000f, 10f);
-        settings.addNode(SkillNodes.RANGE, 10f, 1f);
-        settings.addNode(SkillNodes.DAMAGE, 10f, 10f);
+        settings.addNode(SkillNodes.COOLDOWN, 1000f);
+        settings.addNode(SkillNodes.RANGE, 10f);
+        settings.addNode(SkillNodes.DAMAGE, 10f);
         setDamageType(DamageTypes.MAGIC.getId());
         addSkillType(SkillType.HEALTH_DRAIN);
     }
@@ -51,7 +51,7 @@ public class BrainSap extends Targeted {
                 .fromSkill(this)
                 .setSource(source)
                 .build();
-        float damage = skillContext.getFloatNodeValue(SkillNodes.DAMAGE);
+        double damage = skillContext.getDoubleNodeValue(SkillNodes.DAMAGE);
         ((ISpongeEntity) target).getEntity().damage(damage, s);
         return SkillResult.OK;
     }

@@ -12,9 +12,7 @@ import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.api.skills.types.ITargeted;
-import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
-import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -28,7 +26,7 @@ public abstract class TargetedEntitySkill extends ActiveSkill<ISpigotCharacter> 
     @Override
     public void init() {
         super.init();
-        settings.addNode(SkillNodes.RANGE, 10, 10);
+        settings.addNode(SkillNodes.RANGE, 10);
     }
 
     @Override

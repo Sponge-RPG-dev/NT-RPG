@@ -30,7 +30,7 @@ public class SkillTeleport extends ActiveSkill<ISpongeCharacter> {
     @Override
     public void init() {
         super.init();
-        settings.addNode(SkillNodes.RANGE, 20, 20);
+        settings.addNode(SkillNodes.RANGE, 20);
         addSkillType(SkillType.TELEPORT);
     }
 

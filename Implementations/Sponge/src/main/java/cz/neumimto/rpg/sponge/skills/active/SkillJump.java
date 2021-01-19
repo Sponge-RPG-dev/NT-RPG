@@ -24,7 +24,7 @@ public class SkillJump extends ActiveSkill<ISpongeCharacter> {
     public void init() {
         super.init();
         setDamageType(null);
-        settings.addNode(SkillNodes.VELOCITY, 2, 2);
+        settings.addNode(SkillNodes.VELOCITY, 2);
         addSkillType(SkillType.STEALTH);
         addSkillType(SkillType.MOVEMENT);
         addSkillType(SkillType.PHYSICAL);

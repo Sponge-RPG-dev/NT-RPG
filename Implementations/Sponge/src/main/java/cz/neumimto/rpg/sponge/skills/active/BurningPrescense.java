@@ -28,9 +28,9 @@ public class BurningPrescense extends ActiveSkill {
     @Override
     public void init() {
         super.init();
-        settings.addNode(SkillNodes.PERIOD, 1000, -10);
-        settings.addNode(SkillNodes.RADIUS, 3, 0);
-        settings.addNode(SkillNodes.DAMAGE, 5, 1);
+        settings.addNode(SkillNodes.PERIOD, 1000);
+        settings.addNode(SkillNodes.RADIUS, 3);
+        settings.addNode(SkillNodes.DAMAGE, 5);
         setDamageType(NDamageType.FIRE.getId());
         addSkillType(SkillType.AURA);
         addSkillType(SkillType.AOE);

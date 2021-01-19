@@ -26,7 +26,7 @@ public class Drain extends PassiveSkill {
 
     public Drain() {
         super(ManaDrainEffect.name);
-        settings.addNode(SkillNodes.AMOUNT, 1, 1);
+        settings.addNode(SkillNodes.AMOUNT, 1);
         setDamageType(DamageTypes.ATTACK.getId());
         addSkillType(SkillType.HEALTH_DRAIN);
         addSkillType(SkillType.DRAIN);
@@ -34,8 +34,7 @@ public class Drain extends PassiveSkill {
 
     @Override
     public void applyEffect(PlayerSkillContext info, IActiveCharacter character) {
-        int totalLevel = info.getTotalLevel();
-        float floatNodeValue = info.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.AMOUNT, totalLevel);
+        double floatNodeValue = info.getFloatNodeValue(SkillNodes.AMOUNT);
         ManaDrainEffect effect = new ManaDrainEffect(character, -1L, floatNodeValue);
         effectService.addEffect(effect, this);
     }
@@ -44,9 +43,8 @@ public class Drain extends PassiveSkill {
     public void skillUpgrade(IActiveCharacter IActiveCharacter, int level, PlayerSkillContext context) {
         super.skillUpgrade(IActiveCharacter, level, context);
         PlayerSkillContext info = IActiveCharacter.getSkill(getId());
-        int totalLevel = info.getTotalLevel();
-        float floatNodeValue = info.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.AMOUNT, totalLevel);
-        IEffectContainer<Float, ManaDrainEffect> container = IActiveCharacter.getEffect(ManaDrainEffect.name);
+        double floatNodeValue = info.getFloatNodeValue(SkillNodes.AMOUNT);
+        IEffectContainer<Double, ManaDrainEffect> container = IActiveCharacter.getEffect(ManaDrainEffect.name);
         container.updateValue(floatNodeValue, this);
     }
 }

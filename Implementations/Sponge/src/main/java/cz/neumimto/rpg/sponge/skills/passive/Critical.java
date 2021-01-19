@@ -27,8 +27,8 @@ public class Critical extends PassiveSkill {
 
     public Critical() {
         super(CriticalEffect.name);
-        settings.addNode(SkillNodes.CHANCE, 10, 20);
-        settings.addNode(SkillNodes.MULTIPLIER, 10, 20);
+        settings.addNode(SkillNodes.CHANCE, 10);
+        settings.addNode(SkillNodes.MULTIPLIER, 10);
         setDamageType(DamageTypes.ATTACK.getId());
         addSkillType(SkillType.PHYSICAL);
     }
@@ -49,9 +49,8 @@ public class Critical extends PassiveSkill {
     }
 
     private CriticalEffectModel getModel(PlayerSkillContext info) {
-        int totalLevel = info.getTotalLevel();
-        int chance = (int) info.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.CHANCE, totalLevel);
-        float mult = info.getSkillData().getSkillSettings().getLevelNodeValue(SkillNodes.MULTIPLIER, totalLevel);
+        int chance = info.getIntNodeValue(SkillNodes.CHANCE);
+        double mult = info.getFloatNodeValue(SkillNodes.MULTIPLIER);
         return new CriticalEffectModel(chance, mult);
     }
 }

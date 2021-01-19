@@ -28,7 +28,7 @@ public class SkillInvisibility extends ActiveSkill {
     public void init() {
         super.init();
         setDamageType(null);
-        settings.addNode(SkillNodes.DURATION, 10, 10);
+        settings.addNode(SkillNodes.DURATION, 10);
         addSkillType(SkillType.STEALTH);
         addSkillType(SkillType.MOVEMENT);
     }

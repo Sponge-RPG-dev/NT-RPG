@@ -25,9 +25,9 @@ public class ManaShield extends ActiveSkill {
     public void init() {
         super.init();
         setDamageType(null);
-        settings.addNode("reduction", 10f, 11f);
-        settings.addNode("reduction-manacost", 20f, -1f);
-        settings.addNode(SkillNodes.DURATION, 30000, 500);
+        settings.addNode("reduction", 10f);
+        settings.addNode("reduction-manacost", 20f);
+        settings.addNode(SkillNodes.DURATION, 30000);
         addSkillType(SkillType.UTILITY);
         addSkillType(SkillType.PROTECTION);
     }

@@ -36,7 +36,7 @@ public class Harmtouch extends Targeted {
     @Override
     public void init() {
         super.init();
-        settings.addNode(SkillNodes.DAMAGE, 5000, 100);
+        settings.addNode(SkillNodes.DAMAGE, 5000);
         setDamageType(DamageTypes.MAGIC.getId());
     }
 

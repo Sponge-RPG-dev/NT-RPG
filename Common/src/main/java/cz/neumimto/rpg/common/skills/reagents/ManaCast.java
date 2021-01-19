@@ -18,7 +18,7 @@ public class ManaCast extends SkillCastMechanic {
     @Inject
     private EntityService entityService;
 
-    private float getManaRequired(IActiveCharacter character, PlayerSkillContext context) {
+    private double getManaRequired(IActiveCharacter character, PlayerSkillContext context) {
         return context.getFloatNodeValue(SkillNodes.MANACOST)
                 * entityService.getEntityProperty(character, CommonProperties.mana_cost_reduce);
     }

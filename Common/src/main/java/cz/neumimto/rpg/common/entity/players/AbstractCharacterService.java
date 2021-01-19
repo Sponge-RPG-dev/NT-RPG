@@ -386,10 +386,10 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
      */
     @Override
     public void updateMaxMana(T character) {
-        float max_mana = entityService.getEntityProperty(character, CommonProperties.max_mana);
-        float reserved = entityService.getEntityProperty(character, CommonProperties.reserved_mana);
-        float reservedMult = entityService.getEntityProperty(character, CommonProperties.reserved_mana_multiplier);
-        float maxval = max_mana - (reserved * reservedMult);
+        double max_mana = entityService.getEntityProperty(character, CommonProperties.max_mana);
+        double reserved = entityService.getEntityProperty(character, CommonProperties.reserved_mana);
+        double reservedMult = entityService.getEntityProperty(character, CommonProperties.reserved_mana_multiplier);
+        double maxval = max_mana - (reserved * reservedMult);
         if (maxval <= 0) {
             maxval = 0;
         }
@@ -403,10 +403,10 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
      */
     @Override
     public void updateMaxHealth(T character) {
-        float max_health = entityService.getEntityProperty(character, CommonProperties.max_health);
-        float reserved = entityService.getEntityProperty(character, CommonProperties.reserved_health);
-        float reservedMult = entityService.getEntityProperty(character, CommonProperties.reserved_health_multiplier);
-        float maxval = max_health - (reserved * reservedMult);
+        double max_health = entityService.getEntityProperty(character, CommonProperties.max_health);
+        double reserved = entityService.getEntityProperty(character, CommonProperties.reserved_health);
+        double reservedMult = entityService.getEntityProperty(character, CommonProperties.reserved_health_multiplier);
+        double maxval = max_health - (reserved * reservedMult);
         if (maxval <= 0) {
             maxval = 1;
         }
@@ -472,8 +472,8 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
     @Override
     public void recalculateProperties(T character) {
         Map<Integer, Float> defaults = propertyService.getDefaults();
-        float[] primary = character.getPrimaryProperties();
-        float[] secondary = character.getSecondaryProperties();
+        double[] primary = character.getPrimaryProperties();
+        double[] secondary = character.getSecondaryProperties();
         float pval = 0;
         float sval = 0;
         for (int i = 0; i < primary.length; i++) {
@@ -503,7 +503,7 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
 
     @Override
     public void recalculateSecondaryPropertiesOnly(T character) {
-        float[] secondary = character.getSecondaryProperties();
+        double[] secondary = character.getSecondaryProperties();
         float sval = 0;
         for (int i = 0; i < secondary.length; i++) {
             Map<String, PlayerClassData> classes = character.getClasses();
@@ -1035,7 +1035,7 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
     @Override
     public void assignAttribute(T character, AttributeConfig attribute, int levels) {
         Map<Integer, Float> integerFloatMap = attribute.getPropBonus();
-        float[] primaryProperties = character.getPrimaryProperties();
+        double[] primaryProperties = character.getPrimaryProperties();
         for (Map.Entry<Integer, Float> entry : integerFloatMap.entrySet()) {
             primaryProperties[entry.getKey()] = primaryProperties[entry.getKey()] + entry.getValue() * levels;
         }

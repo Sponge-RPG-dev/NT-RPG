@@ -10,7 +10,6 @@ import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.spigot.effects.common.Maim;
 import cz.neumimto.rpg.spigot.effects.common.model.SlowModel;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageEvent;
 
@@ -28,8 +27,8 @@ public class Hamstring extends TargetedEntitySkill {
     public void init() {
         setDamageType(EntityDamageEvent.DamageCause.CONTACT.name());
         addSkillType(SkillType.PHYSICAL);
-        settings.addNode("weapon-damage-mult", 105, 5);
-        settings.addNode(SkillNodes.DURATION, 5000, 500);
+        settings.addNode("weapon-damage-mult", 105);
+        settings.addNode(SkillNodes.DURATION, 5000);
     }
 
     @Override

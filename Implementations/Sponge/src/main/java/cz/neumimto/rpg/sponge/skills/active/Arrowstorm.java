@@ -29,10 +29,10 @@ public class Arrowstorm extends ActiveSkill {
     public void init() {
         super.init();
         setDamageType(DamageTypes.PROJECTILE.getId());
-        settings.addNode(SkillNodes.DAMAGE, 10, 10);
-        settings.addNode("min-arrows", 35, 1);
-        settings.addNode("max-arrows", 45, 1);
-        settings.addNode(SkillNodes.PERIOD, 100, -10);
+        settings.addNode(SkillNodes.DAMAGE, 10);
+        settings.addExpression("min-arrows", 35);
+        settings.addExpression("max-arrows", 45);
+        settings.addNode(SkillNodes.PERIOD, 100);
         addSkillType(SkillType.PHYSICAL);
         addSkillType(SkillType.SUMMON);
         addSkillType(SkillType.PROJECTILE);

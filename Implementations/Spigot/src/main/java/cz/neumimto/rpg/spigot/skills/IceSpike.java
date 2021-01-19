@@ -41,11 +41,11 @@ public class IceSpike extends TargetedBlockSkill {
     public void init() {
         super.init();
         setDamageType(EntityDamageEvent.DamageCause.MAGIC.name());
-        settings.addNode(SkillNodes.DAMAGE, 10, 10);
-        settings.addNode(SkillNodes.RANGE, 10f, .5f);
-        settings.addNode(SkillNodes.DURATION, 10000, 1000);
-        settings.addNode("damage-initial", 30, 5);
-        settings.addNode(SkillNodes.RADIUS, 5, 0);
+        settings.addNode(SkillNodes.DAMAGE, 10);
+        settings.addNode(SkillNodes.RANGE, 10f);
+        settings.addNode(SkillNodes.DURATION, 10000);
+        settings.addNode("damage-initial", 30);
+        settings.addNode(SkillNodes.RADIUS, 5);
         addSkillType(SkillType.SUMMON);
         addSkillType(SkillType.ICE);
     }

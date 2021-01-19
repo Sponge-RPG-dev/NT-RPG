@@ -10,13 +10,13 @@ import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 public class CriticalEffectModel implements UnstackableEffectData<CriticalEffectModel> {
 
     public int chance;
-    public float mult;
+    public double mult;
 
     public CriticalEffectModel() {
 
     }
 
-    public CriticalEffectModel(int chance, float mult) {
+    public CriticalEffectModel(int chance, double mult) {
         this.chance = chance;
         this.mult = mult;
     }

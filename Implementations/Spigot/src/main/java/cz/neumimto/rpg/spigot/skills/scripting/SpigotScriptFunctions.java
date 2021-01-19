@@ -1,7 +1,6 @@
 package cz.neumimto.rpg.spigot.skills.scripting;
 
 import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.RpgApi;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.F;
@@ -9,11 +8,8 @@ import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.api.utils.TriConsumer;
 import cz.neumimto.rpg.common.skills.scripting.SkillComponent;
-import cz.neumimto.rpg.spigot.SpigotRpg;
-import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
-import de.slikey.effectlib.Effect;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -23,12 +19,10 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.util.Vector;
 
 import java.util.Collection;
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @JsBinding(JsBinding.Type.CONTAINER)
 public class SpigotScriptFunctions {
@@ -86,7 +80,7 @@ public class SpigotScriptFunctions {
                     @SkillComponent.Param("@returns - float value"),
             }
     )
-    public static BiFunction<String, PlayerSkillContext, Float> PARAM = (node, playerSkillContext) ->
+    public static BiFunction<String, PlayerSkillContext, Double> PARAM = (node, playerSkillContext) ->
             playerSkillContext.getFloatNodeValue(node);
 
     @SkillComponent(

@@ -18,6 +18,7 @@ import cz.neumimto.rpg.api.skills.scripting.ScriptSkillModel;
 import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.api.utils.DebugLevel;
+import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;
 import org.codehaus.janino.SimpleCompiler;
 import org.slf4j.Logger;
@@ -156,15 +157,15 @@ public abstract class CustomSkillGenerator {
     private CodeBlock parseModel(ScriptSkillModel scriptSkillModel) {
         CodeBlock.Builder builder = CodeBlock.builder()
                 .addStatement("$T caster = ($T) caster0", characterClassImpl(), characterClassImpl()) //janino cant handle generics
-                .addStatement("$T<$T> map = context.getCachedComputedSkillSettings()", Object2FloatOpenHashMap.class, String.class);
+                .addStatement("$T<$T> map = context.getCachedComputedSkillSettings()", Object2DoubleOpenHashMap.class, String.class);
 
         ParsedScript ps = findLocalVarsAndFields(scriptSkillModel.getSpell());
 
         for (Variable variable : ps.variables) {
-            if (!"float".equals(variable.type)) {
-                builder.addStatement(variable.type + " $L = ($L) map.getFloat($S)", getSkillSettingsNodeName(variable.name), variable.type, getSkillSettingsNodeName(variable.name));
+            if (!"double".equals(variable.type)) {
+                builder.addStatement(variable.type + " $L = ($L) map.getDouble($S)", getSkillSettingsNodeName(variable.name), variable.type, getSkillSettingsNodeName(variable.name));
             } else {
-                builder.addStatement(variable.type + " $L = map.getFloat($S)", getSkillSettingsNodeName(variable.name), getSkillSettingsNodeName(variable.name));
+                builder.addStatement(variable.type + " $L = map.getDouble($S)", getSkillSettingsNodeName(variable.name), getSkillSettingsNodeName(variable.name));
             }
         }
 

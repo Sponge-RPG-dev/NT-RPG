@@ -24,8 +24,8 @@ public class Blizzard extends ActiveSkill<ISpigotCharacter> {
     public void init() {
         super.init();
         setDamageType(EntityDamageEvent.DamageCause.FIRE.name());
-        settings.addNode(SkillNodes.DAMAGE, 10, 10);
-        settings.addNode(SkillNodes.DURATION, 1.5f, .5f);
+        settings.addNode(SkillNodes.DAMAGE, 10);
+        settings.addNode(SkillNodes.DURATION, 1.5f);
         addSkillType(SkillType.SUMMON);
         addSkillType(SkillType.PROJECTILE);
         addSkillType(SkillType.ELEMENTAL);

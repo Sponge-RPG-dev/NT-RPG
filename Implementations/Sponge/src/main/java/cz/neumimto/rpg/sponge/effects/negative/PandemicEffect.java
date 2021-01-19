@@ -19,10 +19,10 @@ public class PandemicEffect extends EffectBase {
     public static final String name = "Pandemic";
 
     private ISpongeCharacter caster;
-    private float damage;
+    private double damage;
     private SkillDamageSource damageSource;
 
-    public PandemicEffect(ISpongeCharacter caster, IEntity iEntity, float damage, long duration, long period) {
+    public PandemicEffect(ISpongeCharacter caster, IEntity iEntity, double damage, long duration, long period) {
         super(name, iEntity);
         this.caster = caster;
         this.damage = damage;
@@ -37,7 +37,7 @@ public class PandemicEffect extends EffectBase {
         if (entity.damage(damage, damageSource)) {
             ;
             //todo some particles
-            Rpg.get().getEntityService().healEntity(caster, damage, damageSource.getSkill());
+            Rpg.get().getEntityService().healEntity(caster, (float) damage, damageSource.getSkill());
         }
     }
 

@@ -99,29 +99,23 @@ public class ItemLoreFactory {
 
             String value = null;
             if (!skillSettings.getNodes().isEmpty()) {
-                for (Map.Entry<String, Float> entry : skillSettings.getNodes().entrySet()) {
-                    if (entry.getKey().endsWith(SkillSettings.BONUS_SUFFIX) || entry.getKey().contains("_per_")) {
-                        continue;
-                    }
+                for (Map.Entry<String, String> entry : skillSettings.getNodes().entrySet()) {
 
                     String translatedNode = locService.translate(entry.getKey());
-                    Float bonusNode = skillSettings.getNodes().get(translatedNode + SkillSettings.BONUS_SUFFIX);
+                    value = entry.getValue();
 
-                    if (SKILL_SETTINGS_DURATION_NODES.contains(translatedNode)) {
-                        value = String.format("%.2f", entry.getValue() * 0.001) + " ms";
-                        if (bonusNode != null && bonusNode != 0) {
-                            value += " (" + String.format("%.2f", bonusNode * 0.001) + " ms)";
-                        }
-                    } else {
-                        value = String.format("%.2f", entry.getValue());
-                        if (bonusNode != null && bonusNode != 0) {
-                            value += " (" + String.format("%.2f", bonusNode) + ")";
-                        }
-                    }
+                    //if (SKILL_SETTINGS_DURATION_NODES.contains(translatedNode)) {
+                    //    value = String.format("%.2f", entry.getValue() * 0.001) + " ms";
+                    //    if (bonusNode != null && bonusNode != 0) {
+                    //        value += " (" + String.format("%.2f", bonusNode * 0.001) + " ms)";
+                    //    }
+                    //} else {
+                    //    value = String.format("%.2f", entry.getValue());
+                    //    if (bonusNode != null && bonusNode != 0) {
+                    //        value += " (" + String.format("%.2f", bonusNode) + ")";
+                    //    }
+                    //}
 
-                    if (entry.getValue() == 0f && (bonusNode == null || bonusNode == 0f)) {
-                        continue;
-                    }
                     lore.add(node(translatedNode, value));
                 }
             }

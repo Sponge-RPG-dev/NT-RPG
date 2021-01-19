@@ -28,7 +28,7 @@ public class TestEntityService implements EntityService<TestCharacter> {
     }
 
     @Override
-    public float getEntityProperty(IEffectConsumer entity, int id) {
+    public double getEntityProperty(IEffectConsumer entity, int id) {
         return Math.min(entity.getProperty(id), propertyService.getMaxPropertyValue(id));
     }
 
@@ -48,7 +48,7 @@ public class TestEntityService implements EntityService<TestCharacter> {
     }
 
     @Override
-    public double healEntity(IEntity entity, float amount, IRpgElement source) {
+    public double healEntity(IEntity entity, double amount, IRpgElement source) {
         return 0;
     }
 

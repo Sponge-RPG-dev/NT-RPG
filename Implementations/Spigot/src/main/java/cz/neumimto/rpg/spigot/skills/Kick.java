@@ -31,7 +31,7 @@ public class Kick extends TargetedEntitySkill {
         super.init();
         setDamageType(EntityDamageEvent.DamageCause.CONTACT.name());
 
-        settings.addNode(SkillNodes.DAMAGE, 15, 5);
+        settings.addNode(SkillNodes.DAMAGE, 15);
     }
 
     @Override

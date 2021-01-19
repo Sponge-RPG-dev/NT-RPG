@@ -24,14 +24,13 @@ public class Dampen extends PassiveSkill {
 
     public Dampen() {
         super(DampenEffect.name);
-        settings.addNode("min-mana", 310, -5);
+        settings.addExpression("min-mana", 310);
         addSkillType(SkillType.UTILITY);
     }
 
     @Override
     public void applyEffect(PlayerSkillContext info, IActiveCharacter character) {
-        int totalLevel = info.getTotalLevel();
-        double val = info.getSkillData().getSkillSettings().getLevelNodeValue("min-mana", totalLevel);
+        double val = info.getDoubleNodeValue("min-mana");
         DampenEffect eff = new DampenEffect(character, -1, val);
         effectService.addEffect(eff, this);
     }
@@ -39,9 +38,9 @@ public class Dampen extends PassiveSkill {
     @Override
     public void skillUpgrade(IActiveCharacter IActiveCharacter, int level, PlayerSkillContext context) {
         super.skillUpgrade(IActiveCharacter, level, context);
+
         PlayerSkillContext info = IActiveCharacter.getSkill(getId());
-        int totalLevel = info.getTotalLevel();
-        double val = info.getSkillData().getSkillSettings().getLevelNodeValue("min-mana", totalLevel);
+        double val = info.getDoubleNodeValue("min-mana");
         IEffectContainer<Double, DampenEffect> effect = IActiveCharacter.getEffect(DampenEffect.name);
         effect.updateValue(val, this);
     }

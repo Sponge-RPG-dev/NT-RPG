@@ -49,9 +49,9 @@ public class Despair extends ActiveSkill<ISpongeCharacter> {
     public void init() {
         super.init();
         setDamageType(DamageTypes.MAGIC.getId());
-        settings.addNode(SkillNodes.DURATION, 1000L, 500);
-        settings.addNode(SkillNodes.DAMAGE, 10L, 1.5f);
-        settings.addNode(SkillNodes.RADIUS, 7L, 2);
+        settings.addNode(SkillNodes.DURATION, 1000L);
+        settings.addNode(SkillNodes.DAMAGE, 10L);
+        settings.addNode(SkillNodes.RADIUS, 7L);
         addSkillType(SkillType.AOE);
         addSkillType(SkillType.ESCAPE);
         addSkillType(SkillType.STEALTH);

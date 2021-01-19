@@ -41,7 +41,7 @@ public abstract class Targeted extends ActiveSkill<ISpongeCharacter> implements 
     @Override
     public void init() {
         super.init();
-        settings.addNode(SkillNodes.RANGE, 10, 10);
+        settings.addNode(SkillNodes.RANGE, 10);
     }
 
     @Override

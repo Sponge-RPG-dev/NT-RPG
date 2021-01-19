@@ -2,6 +2,7 @@ package cz.neumimto.rpg.sponge.gui;
 
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
+import cz.neumimto.rpg.api.effects.model.mappers.SingleValueModelMapper;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
@@ -299,10 +300,8 @@ public class GuiHelper {
             lore.add(header(locService.translate(LocalizationKeys.SKILL_SETTINGS)));
 
             String value = null;
-            for (Map.Entry<String, Float> entry : skillSettings.getNodes().entrySet()) {
-                if (entry.getKey().endsWith(SkillSettings.BONUS_SUFFIX) || entry.getKey().contains("_per_")) {
-                    continue;
-                }
+            for (Map.Entry<String, String> entry : skillSettings.getNodes().entrySet()) {
+
 
                 String translatedNode = locService.translate(entry.getKey());
                 Float bonusNode = skillSettings.getNodes().get(translatedNode + SkillSettings.BONUS_SUFFIX);
@@ -514,31 +513,24 @@ public class GuiHelper {
     private static List<ItemStack> configurationToItemStacks(SkillData skillData) {
         List<ItemStack> a = new ArrayList<>();
         if (skillData.getSkillSettings() != null) {
-            Map<String, Float> nodes = skillData.getSkillSettings().getNodes();
-            for (Map.Entry<String, Float> s : nodes.entrySet()) {
-                if (!s.getKey().endsWith("_levelbonus")) {
+            Map<String, String> nodes = skillData.getSkillSettings().getNodes();
+            for (Map.Entry<String, String> s : nodes.entrySet()) {
+
                     String s1 = Utils.configNodeToReadableString(s.getKey());
-                    Float init = s.getValue();
-                    Float lbonus = nodes.get(s.getKey() + "_levelbonus");
+                    String init = s.getValue();
+
                     ItemStack of = GuiHelper.itemStack(ItemTypes.PAPER);
                     of.offer(Keys.DISPLAY_NAME, Text.builder(s1).build());
                     of.offer(new MenuInventoryData(true));
                     of.offer(Keys.ITEM_LORE, Arrays.asList(
-                            Text.builder().append(translate(LocalizationKeys.SKILL_VALUE_STARTS_AT))
+                            Text.builder().append(translate(s1))
                                     .append(Text.builder(": " + init)
-                                            .color(TextColors.GREEN).style(TextStyles.BOLD)
-                                            .build())
-                                    .build()
-                            ,
-                            Text.builder().append(translate(LocalizationKeys.SKILL_VALUE_PER_LEVEL))
-                                    .style(TextStyles.BOLD).color(TextColors.GOLD)
-                                    .append(Text.builder(": " + lbonus)
                                             .color(TextColors.GREEN).style(TextStyles.BOLD)
                                             .build())
                                     .build()
                     ));
                     a.add(of);
-                }
+
             }
         }
         return a;

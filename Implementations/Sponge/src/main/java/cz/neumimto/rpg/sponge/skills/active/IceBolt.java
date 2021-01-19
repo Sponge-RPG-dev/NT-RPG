@@ -47,10 +47,10 @@ public class IceBolt extends ActiveSkill<ISpongeCharacter> {
     public void init() {
         super.init();
         setDamageType(NDamageType.ICE.getId());
-        settings.addNode(SkillNodes.DAMAGE, 10, 10);
-        settings.addNode(SkillNodes.VELOCITY, 0.5f, .5f);
-        settings.addNode(SkillNodes.DURATION, 750, 15);
-        settings.addNode(SkillNodes.AMPLIFIER, 1, 0f);
+        settings.addNode(SkillNodes.DAMAGE, 10);
+        settings.addNode(SkillNodes.VELOCITY, 0.5f);
+        settings.addNode(SkillNodes.DURATION, 750);
+        settings.addNode(SkillNodes.AMPLIFIER, 1);
         addSkillType(SkillType.SUMMON);
         addSkillType(SkillType.PROJECTILE);
         addSkillType(SkillType.ELEMENTAL);

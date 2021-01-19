@@ -1,26 +1,22 @@
 package cz.neumimto.rpg.spigot.skills;
 
 import cz.neumimto.rpg.api.ResourceLoader;
-import cz.neumimto.rpg.api.damage.DamageService;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
-import cz.neumimto.rpg.common.skills.mech.DamageMechanic;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import de.slikey.effectlib.EffectManager;
 import de.slikey.effectlib.EffectType;
 import de.slikey.effectlib.effect.LineEffect;
-import de.slikey.effectlib.util.DynamicLocation;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.util.RayTraceResult;
-import org.bukkit.util.Vector;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -38,9 +34,9 @@ public class FireBeam extends ActiveSkill<ISpigotCharacter> {
         setDamageType("FIRE");
         addSkillType(SkillType.ELEMENTAL);
         addSkillType(SkillType.FIRE);
-        settings.addNode("max-length", 50, 5);
-        settings.addNode("damage", 10, 5);
-        settings.addNode("fire-ticks", 40, 5);
+        settings.addNode("max-length", 50);
+        settings.addNode("damage", 10);
+        settings.addNode("fire-ticks", 40);
     }
 
     @Override

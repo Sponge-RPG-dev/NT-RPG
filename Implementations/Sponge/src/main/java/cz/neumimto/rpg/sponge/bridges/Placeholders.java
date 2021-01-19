@@ -68,7 +68,7 @@ public class Placeholders {
 
 
     @Placeholder(id = "ntrpg_character_property")
-    public Float getCharacterProperty(@Source Player src, @Token(fix = true) String property) {
+    public double getCharacterProperty(@Source Player src, @Token(fix = true) String property) {
         int idByName = propertyService.getIdByName(property);
         IActiveCharacter character = characterService.getCharacter(src);
         return character.getProperty(idByName);

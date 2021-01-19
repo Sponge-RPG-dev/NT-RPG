@@ -23,7 +23,7 @@ public class GainVanillaExpMechanic implements ISkillCastMechanic, ValidatedMech
 
     @Override
     public void processAfterSuccess(IActiveCharacter character, PlayerSkillContext context) {
-        float f = context.getFloatNodeValue("gain_exp");
+        double f = context.getFloatNodeValue("gain_exp");
         characterService.addExperiences(character, f, "VANILLA");
     }
 }

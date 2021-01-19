@@ -55,10 +55,10 @@ public class Soar extends ActiveSkill<ISpigotCharacter> {
         super.init();
 
         setDamageType(MAGIC.name());
-        settings.addNode(SkillNodes.DAMAGE, 10, 10);
-        settings.addNode("drop-damage", 10f, .5f);
-        settings.addNode("stun-duration", 10000, 1000);
-        settings.addNode(SkillNodes.RADIUS, 5, 0.5f);
+        settings.addNode(SkillNodes.DAMAGE, 10);
+        settings.addNode("drop-damage", 10f);
+        settings.addNode("stun-duration", 10000);
+        settings.addNode(SkillNodes.RADIUS, 5);
 
         addSkillType(SkillType.MOVEMENT);
         addSkillType(SkillType.AOE);

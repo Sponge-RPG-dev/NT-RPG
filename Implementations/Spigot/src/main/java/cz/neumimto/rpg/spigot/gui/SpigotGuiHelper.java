@@ -791,22 +791,17 @@ public class SpigotGuiHelper {
         List<ItemStack> a = new ArrayList<>();
         LocalizationService ls = Rpg.get().getLocalizationService();
         if (skillData.getSkillSettings() != null) {
-            Map<String, Float> nodes = skillData.getSkillSettings().getNodes();
-            for (Map.Entry<String, Float> s : nodes.entrySet()) {
-                if (!s.getKey().endsWith("_levelbonus")) {
+            Map<String, String> nodes = skillData.getSkillSettings().getNodes();
+            for (Map.Entry<String, String> s : nodes.entrySet()) {
+
                     String s1 = configNodeToReadableString(s.getKey());
-                    Float init = s.getValue();
-                    Float lbonus = nodes.get(s.getKey() + "_levelbonus");
+                    String init = s.getValue();
                     ItemStack of = unclickableIcon(Material.PAPER, 12, s1);
                     ItemMeta itemMeta = of.getItemMeta();
-                    List<String> strings = Arrays.asList(
-                            ls.translate(LocalizationKeys.SKILL_VALUE_STARTS_AT) + ChatColor.BOLD + ChatColor.GOLD + ": " + ChatColor.GREEN + ChatColor.BOLD + init,
-                            ls.translate(LocalizationKeys.SKILL_VALUE_PER_LEVEL) + ChatColor.BOLD + ChatColor.GOLD + ": " + ChatColor.GREEN + ChatColor.BOLD + lbonus
-                    );
-                    itemMeta.setLore(strings);
+                    itemMeta.setLore(Collections.singletonList(init));
                     of.setItemMeta(itemMeta);
                     a.add(of);
-                }
+
             }
         }
         return a;

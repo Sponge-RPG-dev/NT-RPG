@@ -52,7 +52,7 @@ public class GrapplingHook extends ActiveSkill<ISpongeCharacter> {
     @Override
     public void init() {
         super.init();
-        settings.addNode(SkillNodes.RANGE, 100, 10);
+        settings.addNode(SkillNodes.RANGE, 100);
         addSkillType(SkillType.PHYSICAL);
         addSkillType(SkillType.PROJECTILE);
         addSkillType(SkillType.SUMMON);

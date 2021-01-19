@@ -31,8 +31,8 @@ public class Empathy extends Targeted {
     @Override
     public void init() {
         super.init();
-        settings.addNode(SkillNodes.MULTIPLIER, 5, 10);
-        settings.addNode("max-damage", 100, 10);
+        settings.addNode(SkillNodes.MULTIPLIER, 5);
+        settings.addNode("max-damage", 100);
         setDamageType(DamageTypes.MAGIC.getId());
     }
 

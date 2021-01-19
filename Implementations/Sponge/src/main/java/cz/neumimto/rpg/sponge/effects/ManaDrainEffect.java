@@ -10,11 +10,11 @@ import cz.neumimto.rpg.api.skills.scripting.JsBinding;
  */
 @JsBinding(JsBinding.Type.CLASS)
 @Generate(id = "name", description = "An effect whichgives manadrain to the target")
-public class ManaDrainEffect extends EffectBase<Float> {
+public class ManaDrainEffect extends EffectBase<Double> {
 
     public static final String name = "CharacterMana Drain";
 
-    public ManaDrainEffect(IEffectConsumer character, long duration, float value) {
+    public ManaDrainEffect(IEffectConsumer character, long duration, double value) {
         super(name, character);
         setDuration(duration);
         setValue(value);

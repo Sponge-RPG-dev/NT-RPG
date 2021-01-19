@@ -42,10 +42,10 @@ public class Pandemic extends ActiveSkill<ISpongeCharacter> {
     @Override
     public void init() {
         super.init();
-        settings.addNode(SkillNodes.RADIUS, 10, 5);
-        settings.addNode(SkillNodes.DURATION, 3000, 500);
-        settings.addNode(SkillNodes.DAMAGE, 15, 3);
-        settings.addNode(SkillNodes.PERIOD, 1500, -10);
+        settings.addNode(SkillNodes.RADIUS, 10);
+        settings.addNode(SkillNodes.DURATION, 3000);
+        settings.addNode(SkillNodes.DAMAGE, 15);
+        settings.addNode(SkillNodes.PERIOD, 1500);
         setDamageType(DamageTypes.MAGIC.getId());
         addSkillType(SkillType.AOE);
         addSkillType(SkillType.DISEASE);
@@ -53,7 +53,8 @@ public class Pandemic extends ActiveSkill<ISpongeCharacter> {
 
     @Override
     public SkillResult cast(ISpongeCharacter character, PlayerSkillContext skillContext) {
-        float damage = skillContext.getFloatNodeValue(SkillNodes.DAMAGE);
+        double damage = skillContext.getFloatNodeValue(SkillNodes.DAMAGE);
+
         int radius = skillContext.getIntNodeValue(SkillNodes.RADIUS);
         long period = skillContext.getLongNodeValue(SkillNodes.PERIOD);
         long duration = skillContext.getLongNodeValue(SkillNodes.DURATION);

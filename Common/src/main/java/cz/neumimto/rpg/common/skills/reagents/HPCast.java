@@ -21,7 +21,7 @@ public class HPCast extends SkillCastMechanic {
     @Inject
     private DamageService damageService;
 
-    float getHPCost(IActiveCharacter character, PlayerSkillContext context) {
+    double getHPCost(IActiveCharacter character, PlayerSkillContext context) {
         return context.getFloatNodeValue(SkillNodes.HPCOST)
                 * entityService.getEntityProperty(character, CommonProperties.health_cost_reduce);
     }

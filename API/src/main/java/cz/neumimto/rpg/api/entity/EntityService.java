@@ -13,7 +13,7 @@ public interface EntityService<T> {
 
     IEntity get(T entity);
 
-    float getEntityProperty(IEffectConsumer entity, int id);
+    double getEntityProperty(IEffectConsumer entity, int id);
 
     void remove(T entity);
 
@@ -23,7 +23,7 @@ public interface EntityService<T> {
 
     double getExperiences(String dimension, String type, UUID uuid);
 
-    double healEntity(IEntity entity, float amount, IRpgElement source);
+    double healEntity(IEntity entity, double amount, IRpgElement source);
 
     void updateWalkSpeed(IEntity<? extends T> entity);
 

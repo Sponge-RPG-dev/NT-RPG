@@ -22,8 +22,8 @@ import com.google.inject.Injector;
 import com.typesafe.config.*;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.classes.ClassService;
-import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.configuration.SkillTreeDao;
+import cz.neumimto.rpg.api.effects.model.mappers.SingleValueModelMapper;
 import cz.neumimto.rpg.api.gui.ISkillTreeInterfaceModel;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.logging.Log;
@@ -34,7 +34,6 @@ import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.api.skills.utils.SkillLoadingErrors;
 import cz.neumimto.rpg.api.utils.FileUtils;
-import cz.neumimto.rpg.api.utils.MathUtils;
 import cz.neumimto.rpg.api.utils.Pair;
 import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.skills.SkillConfigLoader;
@@ -465,17 +464,14 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
 
         SkillSettings defaultSkillSettings = info.getSkill().getDefaultSkillSettings();
         if (defaultSkillSettings != null && defaultSkillSettings.getNodes() != null) {
-            Iterator<Map.Entry<String, Float>> iterator = defaultSkillSettings.getNodes().entrySet().iterator();
+            Iterator<Map.Entry<String, String>> iterator = defaultSkillSettings.getNodes().entrySet().iterator();
             while (iterator.hasNext()) {
-                Map.Entry<String, Float> next = iterator.next();
-                Float value = next.getValue();
+                Map.Entry<String, String> next = iterator.next();
+                String value = next.getValue();
                 String key = next.getKey();
-                if (key.endsWith(SkillSettings.BONUS_SUFFIX)) {
-                    continue;
-                }
-                if (!skillSettings.getNodes().containsKey(key)) {
-                    Float val2 = defaultSkillSettings.getNodes().get(key + SkillSettings.BONUS_SUFFIX);
-                    skillSettings.addNode(key, value, val2);
+                if (!skillSettings.hasNode(key)) {
+                    String val2 = defaultSkillSettings.getNodes().get(key);
+                    skillSettings.addExpression(key, value);
                     warn(" - Missing settings node " + key + " for a skill " + info.getSkillId() + " - inherited from default: " + value + " / " + val2);
                 }
             }
@@ -496,37 +492,10 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
     }
 
     private void loadSkillSettings(SkillSettings skillSettings, Config settings) {
-        Collection<AttributeConfig> attributes = Rpg.get().getPropertyService().getAttributes().values();
-        outer:
         for (Map.Entry<String, ConfigValue> e : settings.entrySet()) {
-            if (e.getKey().endsWith(SkillSettings.BONUS_SUFFIX)) {
-                continue;
-            }
-            String val = e.getValue().render();
-            if (MathUtils.isNumeric(val)) {
-                float norm = Float.parseFloat(val);
-                for (AttributeConfig attribute : attributes) {
-                    String s = "_per_" + attribute.getId();
-                    if (e.getKey().endsWith(s)) {
-                        String stripped = e.getKey().substring(0, e.getKey().length() - s.length());
-                        skillSettings.addAttributeNode(stripped, attribute, norm);
-                        continue outer;
-                    }
-                }
-
-
-                String name = e.getKey();
-                skillSettings.addSingleNode(name, norm);
-                name = name + SkillSettings.BONUS_SUFFIX;
-                float bonus = 0f;
-                try {
-                    bonus = Float.parseFloat(settings.getString(name));
-                } catch (ConfigException ignored) {
-                }
-                skillSettings.addSingleNode(name, bonus);
-            } else {
-                skillSettings.addObjectNode(e.getKey(), val);
-            }
+            ConfigValue value = e.getValue();
+            String val = value.unwrapped().toString();
+            skillSettings.addExpression(e.getKey(), val);
         }
     }
 
@@ -537,17 +506,15 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
 
 
     private void addRequiredIfMissing(SkillSettings skillSettings) {
-        Map.Entry<String, Float> q = skillSettings.getFloatNodeEntry(SkillNodes.HPCOST.name());
-        if (q == null) {
-            skillSettings.addNode(SkillNodes.HPCOST, 0, 0);
+
+        if (!skillSettings.hasNode(SkillNodes.HPCOST)) {
+            skillSettings.addNode(SkillNodes.HPCOST, 0);
         }
-        q = skillSettings.getFloatNodeEntry(SkillNodes.MANACOST.name());
-        if (q == null) {
-            skillSettings.addNode(SkillNodes.MANACOST, 0, 0);
+        if (!skillSettings.hasNode(SkillNodes.MANACOST)) {
+            skillSettings.addNode(SkillNodes.MANACOST, 0);
         }
-        q = skillSettings.getFloatNodeEntry(SkillNodes.COOLDOWN.name());
-        if (q == null) {
-            skillSettings.addNode(SkillNodes.COOLDOWN, 0, 0);
+        if (!skillSettings.hasNode(SkillNodes.COOLDOWN)) {
+            skillSettings.addNode(SkillNodes.COOLDOWN, 0);
         }
     }
 

@@ -27,11 +27,11 @@ public class Portal extends ActiveSkill {
     @Override
     public void init() {
         super.init();
-        settings.addNode(SkillNodes.COOLDOWN, 100000, -500);
-        settings.addNode("chance-to-fail", 80, -50);
-        settings.addNode("manacost-per-tick", 20, 5);
-        settings.addNode("portal-duration", 20, 20);
-        settings.addNode("manacost-per-teleported-entity", 5, 7);
+        settings.addNode(SkillNodes.COOLDOWN, 100000);
+        settings.addNode("chance-to-fail", 80);
+        settings.addNode("manacost-per-tick", 20);
+        settings.addNode("portal-duration", 20);
+        settings.addNode("manacost-per-teleported-entity", 5);
         addSkillType(SkillType.UTILITY);
         addSkillType(SkillType.TELEPORT);
     }

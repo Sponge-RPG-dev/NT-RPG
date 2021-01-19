@@ -6,10 +6,11 @@ import cz.neumimto.rpg.api.skills.SkillSettings;
 
 public interface ValidatedMechanic {
     default boolean isValid(SkillData context, ISkillNode node) {
-        return isValid(context, node.value()) || isValid(context, node.value() + SkillSettings.BONUS_SUFFIX);
+        return isValid(context, node.value());
     }
 
     default boolean isValid(SkillData context, String string) {
-        return context.getSkillSettings() != null && context.getSkillSettings().getNodes().containsKey(string) && context.getSkillSettings().getNodeValue(string) > 0f;
+        return context.getSkillSettings() != null
+                && context.getSkillSettings().hasNode(string);
     }
 }

@@ -23,8 +23,8 @@ public class Fissure extends ActiveSkill {
     public void init() {
         super.init();
         setDamageType(null);
-        settings.addNode(SkillNodes.DURATION, 8000, 2);
-        settings.addNode(SkillNodes.RANGE, 10, 1);
+        settings.addNode(SkillNodes.DURATION, 8000);
+        settings.addNode(SkillNodes.RANGE, 10);
     }
 
     @Override

@@ -26,8 +26,8 @@ public class GroupHeal extends ActiveSkill<ISpongeCharacter> {
     @Override
     public void init() {
         super.init();
-        settings.addNode(SkillNodes.RADIUS, 10, 10);
-        settings.addNode(SkillNodes.HEALED_AMOUNT, 10, 10);
+        settings.addNode(SkillNodes.RADIUS, 10);
+        settings.addNode(SkillNodes.HEALED_AMOUNT, 10);
         addSkillType(SkillType.HEALING);
         addSkillType(SkillType.AOE);
     }

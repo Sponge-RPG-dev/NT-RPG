@@ -14,7 +14,9 @@ dependencies {
     annotationProcessor project(':Generator')
     compileOnly 'it.unimi.dsi:fastutil:8.2.1'
 
-    // compile 'com.scireum:parsii:1.5'
+    // https://mvnrepository.com/artifact/com.scireum/parsii
+    compile group: 'com.scireum', name: 'parsii', version: '4.0'
+
     compileOnly 'com.google.inject:guice:4.2.2'
     compileOnly 'org.slf4j:slf4j-api:1.7.26'
     compileOnly 'com.google.code.gson:gson:2.8.5'

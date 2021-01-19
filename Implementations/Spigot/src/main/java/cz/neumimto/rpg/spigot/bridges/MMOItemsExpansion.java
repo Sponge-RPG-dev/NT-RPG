@@ -180,7 +180,7 @@ public class MMOItemsExpansion implements Listener {
             }
             //mmoitewms end
 
-            float manacostReduce = character.getProperty(CommonProperties.mana_cost_reduce);
+            double manacostReduce = character.getProperty(CommonProperties.mana_cost_reduce);
 
             if (MMOItems.plugin.getConfig().getBoolean("permissions.abilities") && !getPlayer().hasPermission("mmoitems.ability." + data.getAbility().getLowerCaseID()) && !getPlayer().hasPermission("mmoitems.bypass.ability")) {
                 return false;

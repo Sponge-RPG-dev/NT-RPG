@@ -98,7 +98,7 @@ public class SkillExecutionTests {
 
         SkillData skillData = new SkillData(testSkill.getId());
         skillData.setSkillSettings(new SkillSettings());
-        skillData.getSkillSettings().addNode(SkillNodes.MANACOST, 100, 100);
+        skillData.getSkillSettings().addNode(SkillNodes.MANACOST, 100);
         character.setProperty(CommonProperties.mana_cost_reduce, 1);
         skillData.setSkillExecutor(injector.getInstance(SkillExecutor.class));
         skillData.getSkillExecutor().init(skillData);
@@ -118,7 +118,7 @@ public class SkillExecutionTests {
 
         SkillData skillData = new SkillData(testSkill.getId());
         skillData.setSkillSettings(new SkillSettings());
-        skillData.getSkillSettings().addNode(SkillNodes.HPCOST, 100, 100);
+        skillData.getSkillSettings().addNode(SkillNodes.HPCOST, 100);
         character.setProperty(CommonProperties.health_cost_reduce, 1);
         skillData.setSkillExecutor(injector.getInstance(SkillExecutor.class));
         skillData.getSkillExecutor().init(skillData);
@@ -138,7 +138,7 @@ public class SkillExecutionTests {
 
         SkillData skillData = new SkillData(testSkill.getId());
         skillData.setSkillSettings(new SkillSettings());
-        skillData.getSkillSettings().addNode(SkillNodes.COOLDOWN, 100, 100);
+        skillData.getSkillSettings().addNode(SkillNodes.COOLDOWN, 100);
 
         character.getCooldowns().put(testSkill.getId(), Long.MAX_VALUE);
         character.setProperty(CommonProperties.health_cost_reduce, 1);

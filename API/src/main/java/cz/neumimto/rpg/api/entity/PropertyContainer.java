@@ -6,9 +6,9 @@ package cz.neumimto.rpg.api.entity;
  */
 public interface PropertyContainer {
 
-    float getProperty(int index);
+    double getProperty(int index);
 
-    void setProperty(int index, float value);
+    void setProperty(int index, double value);
 
     default void addProperty(int index, float value) {
         setProperty(index, getProperty(index) + value);

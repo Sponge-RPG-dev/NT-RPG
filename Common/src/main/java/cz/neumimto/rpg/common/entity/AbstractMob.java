@@ -13,11 +13,11 @@ public abstract class AbstractMob<T> implements IMob<T> {
 
     protected double experiences;
     protected Map<String, IEffectContainer<Object, IEffect<Object>>> effectSet;
-    protected Map<Integer, Float> properties;
+    protected Map<Integer, Double> properties;
     protected IEntityResource entityHealth;
 
     public AbstractMob() {
-        properties = new HashMap<>();
+        properties = new HashMap<Integer, Double>();
         effectSet = new HashMap<>();
     }
 
@@ -42,7 +42,7 @@ public abstract class AbstractMob<T> implements IMob<T> {
     }
 
     @Override
-    public float getProperty(int propertyName) {
+    public double getProperty(int propertyName) {
         if (properties.containsKey(propertyName)) {
             return properties.get(propertyName);
         }
@@ -51,7 +51,7 @@ public abstract class AbstractMob<T> implements IMob<T> {
 
 
     @Override
-    public void setProperty(int propertyName, float value) {
+    public void setProperty(int propertyName, double value) {
         properties.put(propertyName, value);
     }
 

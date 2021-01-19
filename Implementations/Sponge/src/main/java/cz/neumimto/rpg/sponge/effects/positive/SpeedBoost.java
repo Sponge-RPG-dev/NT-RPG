@@ -59,9 +59,9 @@ public class SpeedBoost extends EffectBase {
 
     public static IGlobalEffect<SpeedBoost> global;
 
-    private float speedbonus;
+    private double speedbonus;
 
-    public SpeedBoost(IEffectConsumer consumer, long duration, float speedbonus) {
+    public SpeedBoost(IEffectConsumer consumer, long duration, double speedbonus) {
         super(name, consumer);
         this.speedbonus = speedbonus;
         setDuration(duration);
@@ -75,7 +75,8 @@ public class SpeedBoost extends EffectBase {
     @Override
     public void onApply(IEffect self) {
         super.onApply(self);
-        getConsumer().setProperty(CommonProperties.walk_speed, getConsumer().getProperty(CommonProperties.walk_speed) + speedbonus);
+        getConsumer().setProperty(CommonProperties.walk_speed,
+                getConsumer().getProperty(CommonProperties.walk_speed) + (float) speedbonus);
         ISpongeEntity consumer = (ISpongeEntity) getConsumer();
         Rpg.get().getEntityService().updateWalkSpeed(consumer);
         Location<World> location = consumer.getLocation();
@@ -93,7 +94,7 @@ public class SpeedBoost extends EffectBase {
     public void onRemove(IEffect self) {
         super.onRemove(self);
         getConsumer().setProperty(CommonProperties.walk_speed,
-                Rpg.get().getEntityService().getEntityProperty(getConsumer(), CommonProperties.walk_speed) - speedbonus);
+                Rpg.get().getEntityService().getEntityProperty(getConsumer(), CommonProperties.walk_speed) - (float) speedbonus);
         Rpg.get().getEntityService().updateWalkSpeed((ISpongeEntity) getConsumer());
     }
 

@@ -23,7 +23,7 @@ public class GainHpMechanic implements ISkillCastMechanic, ValidatedMechanic {
 
     @Override
     public void processAfterSuccess(IActiveCharacter character, PlayerSkillContext context) {
-        float f = context.getFloatNodeValue("gain_hp");
+        double f = context.getFloatNodeValue("gain_hp");
         entityService.healEntity(character, f, context.getSkill());
     }
 

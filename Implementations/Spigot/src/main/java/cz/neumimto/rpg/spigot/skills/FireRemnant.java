@@ -2,8 +2,6 @@ package cz.neumimto.rpg.spigot.skills;
 
 import cz.neumimto.FireworkHandler;
 import cz.neumimto.rpg.api.ResourceLoader;
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.damage.DamageService;
 import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.effects.IEffect;
@@ -16,7 +14,6 @@ import cz.neumimto.rpg.common.skills.mech.DamageMechanic;
 import cz.neumimto.rpg.spigot.Resourcepack;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
-import de.slikey.effectlib.effect.CircleEffect;
 import de.slikey.effectlib.effect.SphereEffect;
 import de.slikey.effectlib.util.DynamicLocation;
 import org.bukkit.Color;
@@ -43,9 +40,9 @@ public class FireRemnant extends ActiveSkill<ISpigotCharacter> {
     @Override
     public void init() {
         super.init();
-        settings.addNode("velocity-vertical", 1, 0);
-        settings.addNode("velocity-horizontal", 1.5f, 1.5f);
-        settings.addNode(SkillNodes.DURATION, 8000, 2000);
+        settings.addNode("velocity-vertical", 1);
+        settings.addNode("velocity-horizontal", 1.5f);
+        settings.addNode(SkillNodes.DURATION, 8000);
     }
 
     @Override

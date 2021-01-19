@@ -32,7 +32,7 @@ public class ElementalResistanceEffect extends EffectBase<Float> {
     }
 
     private void apply(int i, PropertyContainer propertyContainer) {
-        float characterProperty = propertyContainer.getProperty(SpongeDefaultProperties.fire_damage_protection_mult);
+        double characterProperty = propertyContainer.getProperty(SpongeDefaultProperties.fire_damage_protection_mult);
         propertyContainer.setProperty(SpongeDefaultProperties.fire_damage_protection_mult, characterProperty + getValue() * i);
 
         characterProperty = propertyContainer.getProperty(SpongeDefaultProperties.ice_damage_protection_mult);

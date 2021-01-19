@@ -47,7 +47,7 @@ import java.util.*;
  */
 public abstract class PreloadCharacter<T, P extends IParty> implements IActiveCharacter<T, P> {
 
-    private static float[] characterProperties = new float[PropertyServiceImpl.LAST_ID];
+    private static double[] characterProperties = new double[PropertyServiceImpl.LAST_ID];
     protected UUID uuid;
 
     private boolean isusinggui;
@@ -73,17 +73,17 @@ public abstract class PreloadCharacter<T, P extends IParty> implements IActiveCh
     }
 
     @Override
-    public void setCharacterLevelProperty(int index, float value) {
+    public void setCharacterLevelProperty(int index, double value) {
 
     }
 
     @Override
-    public float[] getSecondaryProperties() {
+    public double[] getSecondaryProperties() {
         return characterProperties;
     }
 
     @Override
-    public void setSecondaryProperties(float[] arr) {
+    public void setSecondaryProperties(double[] arr) {
 
     }
 
@@ -103,7 +103,7 @@ public abstract class PreloadCharacter<T, P extends IParty> implements IActiveCh
     }
 
     @Override
-    public float getCharacterPropertyWithoutLevel(int index) {
+    public double getCharacterPropertyWithoutLevel(int index) {
         return 0;
     }
 
@@ -128,7 +128,7 @@ public abstract class PreloadCharacter<T, P extends IParty> implements IActiveCh
     }
 
     @Override
-    public float[] getPrimaryProperties() {
+    public double[] getPrimaryProperties() {
         return characterProperties;
     }
 
@@ -183,12 +183,12 @@ public abstract class PreloadCharacter<T, P extends IParty> implements IActiveCh
     }
 
     @Override
-    public float getProperty(int index) {
+    public double getProperty(int index) {
         return 0;
     }
 
     @Override
-    public void setProperty(int index, float value) {
+    public void setProperty(int index, double value) {
 
     }
 
