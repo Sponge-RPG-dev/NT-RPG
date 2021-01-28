@@ -59,6 +59,10 @@ public class SkillSettings {
         skillSettings.put(node.toLowerCase(), expr);
     }
 
+    public void addExpression(ISkillNode node, String expr) {
+        addExpression(node.toString(), expr);
+    }
+
     public void addExpression(String node, double expr) {
         addExpression(node, String.valueOf(expr));
     }

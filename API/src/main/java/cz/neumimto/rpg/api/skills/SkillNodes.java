@@ -22,8 +22,8 @@ public enum SkillNodes implements ISkillNode {
     CHANCE("chance"),
     MULTIPLIER("multiplier"),
     HEALED_AMOUNT("healed_amount"),
-    AMPLIFIER("amplifier");
-
+    AMPLIFIER("amplifier"),
+    MAX("max");
     private final String str;
 
     SkillNodes(String str) {

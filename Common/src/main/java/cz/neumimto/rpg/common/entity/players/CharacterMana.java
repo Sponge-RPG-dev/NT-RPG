@@ -51,7 +51,7 @@ public class CharacterMana implements IReservable {
 
     @Override
     public void setMaxValue(double f) {
-        character.setProperty(CommonProperties.max_mana, (float) f);
+        character.setProperty(CommonProperties.max_mana,  f);
     }
 
     @Override
@@ -74,7 +74,7 @@ public class CharacterMana implements IReservable {
         if (character.getMana().getMaxValue() < f) {
             f = character.getMana().getMaxValue();
         }
-        character.setProperty(CommonProperties.mana, (float) f);
+        character.setProperty(CommonProperties.mana, f);
     }
 
     @Override
