@@ -40,9 +40,10 @@ public class FireRemnant extends ActiveSkill<ISpigotCharacter> {
     @Override
     public void init() {
         super.init();
-        settings.addNode("velocity-vertical", 1);
-        settings.addNode("velocity-horizontal", 1.5f);
-        settings.addNode(SkillNodes.DURATION, 8000);
+        settings.addExpression("velocity-vertical", 1);
+        settings.addExpression("velocity-horizontal", 1.5f);
+        settings.addExpression(SkillNodes.DURATION, "8000");
+        settings.addExpression(SkillNodes.COOLDOWN, "0");
     }
 
     @Override

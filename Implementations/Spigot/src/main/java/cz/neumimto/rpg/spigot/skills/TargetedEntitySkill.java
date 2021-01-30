@@ -40,7 +40,7 @@ public abstract class TargetedEntitySkill extends ActiveSkill<ISpigotCharacter> 
                 return SkillResult.NO_TARGET;
             }
         }
-        if (getDamageType() != null && !damageService.canDamage(caster, l)) {
+        if ((getDamageType() != null || getSkillTypes().contains(SkillType.DAMAGE_CHECK_TARGET) ) && !damageService.canDamage(caster, l)) {
             return SkillResult.CANCELLED;
         }
         IEntity<LivingEntity> target = Rpg.get().getEntityService().get(l);

@@ -74,6 +74,7 @@ public class CharacterMana implements IReservable {
         if (character.getMana().getMaxValue() < f) {
             f = character.getMana().getMaxValue();
         }
+
         character.setProperty(CommonProperties.mana, f);
     }
 

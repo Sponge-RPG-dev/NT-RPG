@@ -54,6 +54,7 @@ public enum SkillType implements ISkillType {
     PROTECTION(TRUE, "ntrpg:protection", "Protection"),
     ILLUSION(FALSE, "ntrpg:illusion", "Illusion"),
     BUFF(FALSE,"ntrpg:buff", "Buff"),
+    DAMAGE_CHECK_TARGET(TRUE, "ntrpg:damage_check_target", "Negative"),
     /**
      * Do not use this one in custom skills
      */
