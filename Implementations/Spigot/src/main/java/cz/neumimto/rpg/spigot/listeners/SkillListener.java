@@ -12,6 +12,8 @@ import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.events.character.SpigotEffectApplyEvent;
 import cz.neumimto.rpg.spigot.events.damage.SpigotEntityProjectileDamageEarlyEvent;
 import cz.neumimto.rpg.spigot.events.damage.SpigotEntitySkillDamageEarlyEvent;
+import cz.neumimto.rpg.spigot.events.damage.SpigotEntityWeaponDamageEarlyEvent;
+import cz.neumimto.rpg.spigot.events.damage.SpigotEntityWeaponDamageLateEvent;
 import cz.neumimto.rpg.spigot.skills.ManaShield;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -50,7 +52,7 @@ public class SkillListener implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
-    public void onDamageWeaponEarly(IEntityWeaponDamageEarlyEvent event) {
+    public void onDamageWeaponEarly(SpigotEntityWeaponDamageEarlyEvent event) {
         processManaEffect(event);
     }
 
@@ -67,7 +69,7 @@ public class SkillListener implements Listener {
                 if (event.getTarget() instanceof ISpigotCharacter) {
                     ISpigotCharacter character = (ISpigotCharacter) event.getTarget();
                     IReservable mana = character.getMana();
-                    double newMana = character.getMana().getValue() - manaDamage;
+                    double newMana = mana.getValue() - manaDamage;
                     if (newMana <= 0) {
                         newMana = 0;
                         effectService.removeEffect(manaShieldEffect, event.getTarget());

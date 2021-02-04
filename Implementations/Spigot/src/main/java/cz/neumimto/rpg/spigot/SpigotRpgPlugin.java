@@ -66,14 +66,14 @@ import java.util.concurrent.Executors;
                 @SoftDependency("PlaceholderAPI"),
                 @SoftDependency("HolographicDisplays"),
                 @SoftDependency("MythicMobs"),
-                @SoftDependency("MMOItems"),
-                @SoftDependency("ProtocolLib")
+                @SoftDependency("MMOItems")
         }
 )
 @DependsOn(
         value = {
                 @Dependency("NBTAPI"),
                 @Dependency("EffectLib"),
+                @Dependency("ProtocolLib")
         }
 )
 public class SpigotRpgPlugin extends JavaPlugin {
@@ -92,7 +92,7 @@ public class SpigotRpgPlugin extends JavaPlugin {
     //Disable inventories due to nbtapi
     public boolean testEnv ;
 
-    protected SpigotRpgPlugin(){
+    public SpigotRpgPlugin(){
         super();
     }
 

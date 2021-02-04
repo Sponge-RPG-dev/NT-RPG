@@ -11,10 +11,6 @@ subprojects {
     repositories {
         mavenCentral()
         maven {
-            name = 'sponge'
-            url = 'http://repo.spongepowered.org/maven'
-        }
-        maven {
             url 'https://jitpack.io'
         }
         maven {

@@ -91,7 +91,9 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
                     info("Loading skilltree from a file " + path.getFileName());
                     Config config = ConfigFactory.parseFile(path.toFile());
                     populateMap(map, config);
-                } catch (InvalidSkillTreeException e) {
+                } catch (ConfigException e) {
+                    Log.error("Unable to load skilltree - Malformed file format" + path, e);
+                } catch (Throwable e) {
                     Log.error("Unable to load skilltree " + path, e);
                 }
             });

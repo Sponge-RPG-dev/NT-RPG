@@ -12,8 +12,7 @@ import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
-import cz.neumimto.rpg.spigot.skills.utils.WrapperPlayServerEntityMetadata;
-import cz.neumimto.rpg.spigot.skills.utils.WrapperPlayServerSpawnEntityLiving;
+import cz.neumimto.rpg.spigot.packetwrapper.WrapperPlayServerSpawnEntityLiving;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -86,14 +85,6 @@ public class MineralScan extends ActiveSkill<ISpigotCharacter> {
 
         WrapperPlayServerSpawnEntityLiving living = new WrapperPlayServerSpawnEntityLiving(entity);
 
-        WrapperPlayServerEntityMetadata metadata = new WrapperPlayServerEntityMetadata();
-        metadata.setEntityID(ID);
-        List<WrappedWatchableObject> list = new ArrayList<>();
-        //  list.add(new WrappedWatchableObject());
-        metadata.setMetadata(list);
-        ID--;
-        living.sendPacket(player);
-        metadata.sendPacket(player);
     }
 
 

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package cz.neumimto.rpg.spigot.skills.utils;
+package cz.neumimto.rpg.spigot.packetwrapper;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
@@ -24,6 +24,7 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.injector.PacketConstructor;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
+import cz.neumimto.rpg.spigot.skills.utils.AbstractPacket;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -31,25 +32,30 @@ import org.bukkit.entity.EntityType;
 import java.util.UUID;
 
 public class WrapperPlayServerSpawnEntityLiving extends AbstractPacket {
+    public static final PacketType TYPE =
+            PacketType.Play.Server.SPAWN_ENTITY_LIVING;
 
     private static PacketConstructor entityConstructor;
 
     public WrapperPlayServerSpawnEntityLiving() {
-        super(new PacketContainer(PacketType.Play.Server.SPAWN_ENTITY_LIVING), PacketType.Play.Server.SPAWN_ENTITY_LIVING);
+        super(new PacketContainer(TYPE), TYPE);
         handle.getModifier().writeDefaults();
     }
 
     public WrapperPlayServerSpawnEntityLiving(PacketContainer packet) {
-        super(packet, PacketType.Play.Server.SPAWN_ENTITY_LIVING);
+        super(packet, TYPE);
     }
 
+    public WrapperPlayServerSpawnEntityLiving(Entity entity) {
+        super(fromEntity(entity), TYPE);
+    }
 
     // Useful constructor
     private static PacketContainer fromEntity(Entity entity) {
         if (entityConstructor == null)
             entityConstructor =
                     ProtocolLibrary.getProtocolManager()
-                            .createPacketConstructor(PacketType.Play.Server.SPAWN_ENTITY_LIVING, entity);
+                            .createPacketConstructor(TYPE, entity);
         return entityConstructor.createPacket(entity);
     }
 

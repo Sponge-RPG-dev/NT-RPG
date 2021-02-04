@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'com.github.johnrengelman.shadow' version '4.0.4'
 }
 
 repositories {
@@ -65,9 +66,10 @@ dependencies {
         exclude group: "org.bukkit", module: "bukkit"
     }
 
-    compileOnly (group: "com.comphenix.protocol", name: "ProtocolLib", version: "4.5.1") {
+    compileOnly (group: "com.comphenix.protocol", name: "ProtocolLib", version: "4.6.0-SNAPSHOT") {
         exclude group: "com.comphenix.executors", module: "BukkitExecutors"
     }
+    //compileOnly 'com.github.dmulloy2:ProtocolLib:master'
     compileOnly 'de.tr7zw:item-nbt-api-plugin:2.2.0'
     compileOnly 'com.github.Slikey:EffectLib:d77f639038'
     compileOnly 'me.clip:placeholderapi:2.10.3'
@@ -116,6 +118,15 @@ test {
 
     useJUnitPlatform()
 }
+
+shadowJar {
+    classifier = null
+
+//    relocate 'co.aikar.commands', 'cz.neumimto.acf'
+    exclude '**/module-info.class'
+}
+
+build.dependsOn shadowJar
 
 //task deploy {
 //    copy {
