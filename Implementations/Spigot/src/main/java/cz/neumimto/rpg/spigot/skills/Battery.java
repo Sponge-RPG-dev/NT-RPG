@@ -1,24 +1,18 @@
 package cz.neumimto.rpg.spigot.skills;
 
 import cz.neumimto.rpg.api.ResourceLoader;
-import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.IEntityType;
 import cz.neumimto.rpg.api.entity.IReservable;
-import cz.neumimto.rpg.api.entity.players.CharacterService;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.tree.SkillType;
-import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.common.entity.players.CharacterMana;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
-import cz.neumimto.rpg.spigot.skills.TargetedEntitySkill;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
 import cz.neumimto.rpg.spigot.skills.particles.CircularYIncrementingEffect;
-import de.slikey.effectlib.EffectType;
-import de.slikey.effectlib.effect.CircleEffect;
 import org.bukkit.Color;
 import org.bukkit.Particle;
 
@@ -28,7 +22,7 @@ import javax.inject.Inject;
 public class Battery extends TargetedEntitySkill {
 
     @Inject
-    private CharacterService<IActiveCharacter> characterService;
+    private SpigotCharacterService characterService;
 
     @Override
     public void init() {

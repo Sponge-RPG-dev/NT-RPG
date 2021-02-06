@@ -61,7 +61,7 @@ public class FireBlast extends TargetedBlockSkill {
         double damage = skillContext.getDoubleNodeValue(SkillNodes.DAMAGE);
         if (HOT_BLOCKS.contains(block.getType())) {
             damage *= skillContext.getDoubleNodeValue("hot-blocks-multipler");
-            new Particles(location).runTaskTimer(SpigotRpgPlugin.getInstance(), 0, 3);
+            new Particles(location).runTaskTimer(SpigotRpgPlugin.getInstance(), 0, 1);
         }
 
         Player player = character.getPlayer();
@@ -112,7 +112,7 @@ public class FireBlast extends TargetedBlockSkill {
         @Override
         public void run() {
             c--;
-            location.getWorld().spawnParticle(Particle.FLAME, location, 2,0,1,0);
+            location.getWorld().spawnParticle(Particle.FLAME, location, 2,0,0.1,0);
             if (c == 0) {
                 cancel();
             }
