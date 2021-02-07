@@ -240,12 +240,13 @@ public class SpigotRpgPlugin extends JavaPlugin {
             }
 
             Rpg.get().registerListeners(injector.getInstance(OnKeyPress.class));
-            if (!testEnv) {
-                SpellbookListener.initBtns();
-                SpigotGuiHelper.initInventories();
-            }
+
         });
 
+        if (!testEnv) {
+            SpellbookListener.initBtns();
+            SpigotGuiHelper.initInventories();
+        }
 
         effectManager = new EffectManager(this);
         Rpg.get().getSyncExecutor();

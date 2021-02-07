@@ -4,10 +4,7 @@ import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
-import cz.neumimto.rpg.spigot.effects.common.NoNaturalHealingEffect;
-import cz.neumimto.rpg.spigot.effects.common.FeatherFall;
-import cz.neumimto.rpg.spigot.effects.common.NoAutohealEffect;
-import cz.neumimto.rpg.spigot.effects.common.UnhealEffect;
+import cz.neumimto.rpg.spigot.effects.common.*;
 import cz.neumimto.rpg.spigot.entities.SpigotEntityService;
 import org.bukkit.Particle;
 import org.bukkit.entity.Entity;
@@ -17,6 +14,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
+import org.spigotmc.event.entity.EntityDismountEvent;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -60,17 +58,33 @@ public class SkillpackListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onEntityDamage(EntityDamageEvent event) {
         Entity entity = event.getEntity();
         if (entity instanceof LivingEntity) {
             LivingEntity l = (LivingEntity) entity;
             IEntity iEntity = spigotEntityService.get(l);
 
-            if (iEntity.hasEffect(FeatherFall.name)) {
+            if (iEntity.hasEffect(FeatherFall.name) && event.getCause() == EntityDamageEvent.DamageCause.FALL) {
                 event.setCancelled(true);
+                return;
             }
+            if (PiggifyEffect.entities.contains(entity.getUniqueId())) {
+                event.setCancelled(true);
+                return;
+            }
+        }
+    }
 
+    @EventHandler(ignoreCancelled = true)
+    public void onDismountVehicle(EntityDismountEvent event) {
+        if (event instanceof LivingEntity) {
+            LivingEntity le = (LivingEntity) event;
+            IEntity iEntity = spigotEntityService.get(le);
+            if (iEntity.hasEffect(PiggifyEffect.name)) {
+                event.setCancelled(true);
+                return;
+            }
         }
     }
 

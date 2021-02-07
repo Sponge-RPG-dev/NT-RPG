@@ -305,6 +305,7 @@ public abstract class AbstractRpg implements RpgApi {
             commands.add((BaseCommand) instance);
         }
 
+
         ACFBootstrap.initializeACF(((CommandManager) commandManager), commands);
 
         for (RpgAddon rpgAddon : rpgAddons) {

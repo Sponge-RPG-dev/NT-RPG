@@ -9,7 +9,7 @@ include ':Common-Persistence'
 include ':Common-Persistence-Test'
 
 include ':Spigot'
-include ':Sponge'
+//include ':Sponge'
 
 
 project(':API').projectDir = file('API')
@@ -21,4 +21,4 @@ project(':Common-Persistence').projectDir = file('Peristence/Common')
 project(':Common-Persistence-Test').projectDir = file('Peristence/Common-Tests')
 
 project(':Spigot').projectDir = file('Implementations/Spigot')
-project(':Sponge').projectDir = file('Implementations/Sponge')
+//project(':Sponge').projectDir = file('Implementations/Sponge')
