@@ -82,10 +82,10 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
         Map<String, SkillTree> map = new HashMap<>();
         if (classService.isClassDirEmpty()) {
             Log.info("No classes found in classes folder, loading skilltrees from within ntrpg.jar");
-            dir = prepareTempDir();
+            dir = assetService.getTempWorkingDir();
         }
 
-        try (DirectoryStream<Path> paths = Files.newDirectoryStream(dir.resolve("Skilltrees/"), "*.conf")) {
+        try (DirectoryStream<Path> paths = Files.newDirectoryStream(dir.resolve("skilltrees/"), "*.conf")) {
             paths.forEach(path -> {
                 try {
                     info("Loading skilltree from a file " + path.getFileName());
@@ -102,29 +102,6 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
         }
 
         return map;
-    }
-
-    private Path prepareTempDir() {
-        try {
-            Path tempDirectory = Files.createTempDirectory("ntrpg");
-
-            copyDefaultFilesToClassDir(tempDirectory);
-            return tempDirectory;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    private void copyDefaultFilesToClassDir(Path path) {
-        Path root = path.resolve("Skilltrees/");
-        try {
-            Files.createDirectory(root);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        assetService.copyToFile("defaults/skilltrees/magetree.conf", root.resolve("magetree.conf"));
-        assetService.copyToFile("defaults/skilltrees/warriortree.conf", root.resolve("warriortree.conf"));
     }
 
     public void populateMap(Map<String, SkillTree> map, Config config) {

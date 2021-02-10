@@ -14,7 +14,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
 @Singleton
-public class SpigotAssetService implements AssetService {
+public class SpigotAssetService extends AssetService {
 
     @Override
     public String getAssetAsString(String path) {

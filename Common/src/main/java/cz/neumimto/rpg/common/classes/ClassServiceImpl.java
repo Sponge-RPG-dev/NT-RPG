@@ -116,46 +116,16 @@ public class ClassServiceImpl implements ClassService {
         Path loadFrom = null;
         if (isClassDirEmpty()) {
             Log.info("No classes found in classes folder, loading classes from within ntrpg.jar");
-            loadFrom = prepareTempDir();
+            loadFrom = assetService.getTempWorkingDir();
+            assetService.copyDefaults(loadFrom);
         } else {
             loadFrom = classDefinitionDao.getClassDirectory();
-
         }
         Set<ClassDefinition> classDefinitions = classDefinitionDao.parseClassFiles(loadFrom);
         classes.clear();
         classDefinitions.forEach(this::registerClassDefinition);
 
         Log.info("Successfully loaded " + classes.size() + " classes");
-    }
-
-
-    private void copyDefaultFilesToClassDir(Path path) {
-        try {
-            path = path.resolve("Classes/");
-            Files.createDirectory(path);
-            Files.createDirectory(path.resolve("primary/"));
-            Files.createDirectory(path.resolve("races/"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        assetService.copyToFile("defaults/classes/primary_classes/Apprentice.conf", path.resolve("primary/Apprentice.conf"));
-        assetService.copyToFile("defaults/classes/primary_classes/Rogue.conf", path.resolve("primary/Rogue.conf"));
-        assetService.copyToFile("defaults/classes/primary_classes/Warrior.conf", path.resolve("primary/Warrior.conf"));
-        assetService.copyToFile("defaults/classes/races/Dwarf.conf", path.resolve("races/Mage.conf"));
-        assetService.copyToFile("defaults/classes/races/Elf.conf", path.resolve("races/Rogue.conf"));
-        assetService.copyToFile("defaults/classes/races/Human.conf", path.resolve("races/Human.conf"));
-    }
-
-    private Path prepareTempDir() {
-        try {
-            Path tempDirectory = Files.createTempDirectory("ntrpg");
-
-            copyDefaultFilesToClassDir(tempDirectory);
-            return tempDirectory;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     @Override

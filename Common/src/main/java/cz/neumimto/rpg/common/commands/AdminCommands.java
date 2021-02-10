@@ -22,12 +22,15 @@ import cz.neumimto.rpg.api.scripting.IRpgScriptEngine;
 import cz.neumimto.rpg.api.skills.*;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.utils.ActionResult;
+import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.effects.InternalEffectSourceProvider;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -49,6 +52,9 @@ public class AdminCommands extends BaseCommand {
 
     @Inject
     private IRpgScriptEngine scriptEngine;
+
+    @Inject
+    private AssetService assetService;
 
     private Gson gson = new Gson();
 
@@ -138,6 +144,13 @@ public class AdminCommands extends BaseCommand {
             throw new IllegalStateException("Stub character");
         }
         commandAddUniqueSkillpoint(character, classType, sourceKey);
+    }
+
+    @Subcommand("install")
+    public void install(CommandIssuer executor) {
+        Path workingDir = Paths.get(Rpg.get().getWorkingDirectory());
+        assetService.copyDefaults(workingDir);
+        executor.sendMessage("Assets copies from jar to ntrpg/classes ntrpg/skilltrees folder, you can now edit files from disc and reload for immediate change");
     }
 
     @Subcommand("reload")

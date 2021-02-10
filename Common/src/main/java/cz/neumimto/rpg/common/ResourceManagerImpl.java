@@ -105,14 +105,13 @@ public class ResourceManagerImpl implements ResourceLoader {
         classDir = new File(workingDirectory + File.separator + "classes");
         addonDir = new File(workingDirectory + File.separator + "addons");
         addonLoadDir = new File(workingDirectory + File.separator + "deployed");
-        skilltreeDir = new File(workingDirectory + File.separator + "Skilltrees");
+        skilltreeDir = new File(workingDirectory + File.separator + "skilltrees");
         localizations = new File(workingDirectory + File.separator + "localizations");
+
         classDir.mkdirs();
         skilltreeDir.mkdirs();
         addonDir.mkdirs();
         localizations.mkdirs();
-
-
     }
 
     @Override
