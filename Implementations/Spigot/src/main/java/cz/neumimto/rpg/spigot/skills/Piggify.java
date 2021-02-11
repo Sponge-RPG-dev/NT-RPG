@@ -32,8 +32,8 @@ public class Piggify extends TargetedEntitySkill {
     @Override
     public SkillResult castOn(IEntity target, ISpigotCharacter source, PlayerSkillContext info) {
         long duration = info.getLongNodeValue(SkillNodes.DURATION);
-        new PiggifyEffect(target, duration);
-
+        PiggifyEffect piggifyEffect = new PiggifyEffect(target, duration);
+        effectService.addEffect(piggifyEffect);
         return SkillResult.OK;
     }
 }

@@ -143,15 +143,6 @@ public class PluginConfig {
     @Conversion(ItemDamageProcessorConverter.class)
     public ItemDamageProcessor ITEM_DAMAGE_PROCESSOR = new Sum();
 
-
-    @Path("SKILLTREE_RELATIONS")
-    public List<String> SKILLTREE_RELATIONS = new ArrayList<String>() {{
-        add("|,minecraft:stick,|,0");
-        add("/,minecraft:stick,/,0");
-        add("\\\\,minecraft:stick,\\\\,0");
-        add("-,minecraft:stick,-,0");
-    }};
-
     //spigot only and once sponge moves its ass to 15.x
     @Path("SKILLTREE_GUI")
     public List<String> SKILLTREE_GUI = new ArrayList<String>() {{
