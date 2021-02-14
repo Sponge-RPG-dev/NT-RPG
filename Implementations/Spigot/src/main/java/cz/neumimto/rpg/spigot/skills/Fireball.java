@@ -28,8 +28,9 @@ public class Fireball extends ActiveSkill<ISpigotCharacter> {
     public void init() {
         super.init();
         setDamageType(DamageCause.FIRE.name());
-        settings.addNode(SkillNodes.DAMAGE, 10);
-        settings.addNode(SkillNodes.VELOCITY, 1.5f);
+        settings.addExpression(SkillNodes.DAMAGE, "10 + level");
+        settings.addExpression(SkillNodes.VELOCITY, "1.5f");
+        settings.addExpression("fireticks", "120");
         addSkillType(SkillType.SUMMON);
         addSkillType(SkillType.PROJECTILE);
         addSkillType(SkillType.ELEMENTAL);
@@ -45,12 +46,13 @@ public class Fireball extends ActiveSkill<ISpigotCharacter> {
         fireball.setVelocity(p.getLocation().getDirection().multiply(skillContext.getFloatNodeValue(SkillNodes.VELOCITY)));
         fireball.setShooter(p);
         fireball.setFireTicks(99);
-
+        fireball.setIsIncendiary(false);
 
         ProjectileCache projectileProperties = ProjectileCache.putAndGet(fireball, character);
         projectileProperties.setSkill(skillContext);
         projectileProperties.onHit((event, attacker, target) -> {
             event.setDamage(skillContext.getDoubleNodeValue(SkillNodes.DAMAGE));
+            target.getEntity().setFireTicks(skillContext.getIntNodeValue("fireticks"));
         });
 
         world.playSound(p.getLocation(), Sound.ENTITY_GHAST_SHOOT, 0.5f, 0.5f);
