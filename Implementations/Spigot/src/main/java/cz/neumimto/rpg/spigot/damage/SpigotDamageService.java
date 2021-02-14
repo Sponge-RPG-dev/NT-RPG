@@ -118,7 +118,7 @@ public class SpigotDamageService extends AbstractDamageService<ISpigotCharacter,
 
         @Override
         public boolean canDamage(ISpigotCharacter damager, LivingEntity l) {
-            if (l.getHealth() <= 0 || l.isDead() || l.isInvulnerable()) {
+            if (damager.getEntity() == l || l.getHealth() <= 0 || l.isDead() || l.isInvulnerable()) {
                 return false;
             }
             EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(damager.getEntity(), l, DamageCause.CUSTOM, 0);
