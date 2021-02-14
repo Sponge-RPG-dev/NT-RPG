@@ -2,7 +2,9 @@ package cz.neumimto.rpg.spigot.skills;
 
 import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
+import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.skills.particles.StaticCircularBeamEffect;
@@ -11,6 +13,7 @@ import de.slikey.effectlib.effect.LineEffect;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageEvent;
 
 import javax.inject.Singleton;
 
@@ -21,6 +24,9 @@ public class FlameDash extends TargetedBlockSkill {
     @Override
     public void init() {
         super.init();
+        addSkillType(SkillType.TELEPORT);
+        addSkillType(SkillType.ELEMENTAL);
+        addSkillType(SkillType.FIRE);
     }
 
 
@@ -36,7 +42,7 @@ public class FlameDash extends TargetedBlockSkill {
         staticCircularBeamEffect.setLocation(location);
         staticCircularBeamEffect.vertVecMax = 3;
         staticCircularBeamEffect.vertVecMin = 1;
-        staticCircularBeamEffect.particleCount = 15;
+        staticCircularBeamEffect.particleCount = 10;
         staticCircularBeamEffect.radius = 1.3f;
         staticCircularBeamEffect.enableRotation = true;
         staticCircularBeamEffect.particle = Particle.FLAME;
@@ -56,7 +62,7 @@ public class FlameDash extends TargetedBlockSkill {
 
                     LineEffect lineEffect = new LineEffect(SpigotRpgPlugin.getEffectManager());
                     lineEffect.particle = Particle.LAVA;
-                    lineEffect.particleCount = 10 * (int) location.distance(player.getLocation());
+                    lineEffect.particleCount = 5 * (int) location.distance(player.getLocation());
                     lineEffect.setLocation(location);
                     lineEffect.setTargetLocation(player.getLocation());
                     lineEffect.type = EffectType.INSTANT;
