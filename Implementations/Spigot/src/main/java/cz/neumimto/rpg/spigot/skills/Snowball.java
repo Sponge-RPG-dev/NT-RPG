@@ -9,10 +9,10 @@ import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.entities.ProjectileCache;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
-import org.bukkit.Material;
-import org.bukkit.Particle;
-import org.bukkit.Sound;
-import org.bukkit.World;
+import org.bukkit.*;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -45,7 +45,7 @@ public class Snowball extends ActiveSkill<ISpigotCharacter> {
         Player p = character.getPlayer();
         World world = p.getWorld();
 
-        org.bukkit.entity.Snowball snowball = (org.bukkit.entity.Snowball) world.spawnEntity(p.getLocation().clone().add(0, 1, 0).add(p.getLocation().getDirection()), EntityType.SNOWBALL);
+        org.bukkit.entity.Snowball snowball = (org.bukkit.entity.Snowball) world.spawnEntity(p.getEyeLocation().clone().add(p.getLocation().getDirection()), EntityType.SNOWBALL);
         snowball.setVelocity(p.getLocation().getDirection().multiply(skillContext.getFloatNodeValue(SkillNodes.VELOCITY)));
         snowball.setShooter(p);
         snowball.setBounce(true);
@@ -60,25 +60,37 @@ public class Snowball extends ActiveSkill<ISpigotCharacter> {
             LivingEntity entity = target.getEntity();
             entity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 60, 1, true, true, true));
             entity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, 80, 1, true, true, true));
+            entity.setFireTicks(0);
             trail.cancel();
         });
-
+        projectileProperties.onHitBlock(block -> {
+            Block relative = block.getRelative(BlockFace.UP);
+            Location location = relative.getLocation();
+            if (relative.getType() == Material.AIR) {
+                for (Player onlinePlayer : Bukkit.getServer().getOnlinePlayers()) {
+                    onlinePlayer.sendBlockChange(location, Material.SNOW.createBlockData());
+                }
+            }
+            trail.cancel();
+        });
         world.playSound(p.getLocation(), Sound.ENTITY_GHAST_SHOOT, 0.5f, 0.5f);
         return SkillResult.OK;
     }
 
     static class Trail extends BukkitRunnable {
         private Projectile projectile;
-        private int max = 50;
+        private int max = 500;
+        BlockData data = null;
         public Trail(Projectile snowball) {
             this.projectile = snowball;
+            data = Material.BLUE_ICE.createBlockData();
         }
 
         @Override
         public void run() {
             max --;
             projectile.getWorld().spawnParticle(Particle.SNOWBALL, projectile.getLocation(), 2);
-            projectile.getWorld().spawnParticle(Particle.BLOCK_CRACK, projectile.getLocation(), 4, 0.0, 0.1, 0.0, Material.FROSTED_ICE);
+            projectile.getWorld().spawnParticle(Particle.BLOCK_CRACK, projectile.getLocation(), 4, 0.0, 0.1, 0.0, data);
             if (max == 0) {
                 cancel();
             }
