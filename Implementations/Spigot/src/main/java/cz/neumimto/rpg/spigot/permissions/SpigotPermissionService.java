@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import java.util.Collection;
 
 public class SpigotPermissionService implements PermissionService<ISpigotCharacter> {
+
     @Override
     public boolean hasPermission(ISpigotCharacter character, String value) {
         return character.getEntity().hasPermission(value);

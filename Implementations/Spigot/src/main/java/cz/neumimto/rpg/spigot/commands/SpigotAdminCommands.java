@@ -183,6 +183,6 @@ public class SpigotAdminCommands extends BaseCommand {
 
     @Subcommand("spawn-test-armorstand")
     public void sta(Player executor) {
-        FakeArmorStandFactory.spawn(executor.getLocation(), new ItemStack(Material.DIAMOND_HELMET), EquipmentSlot.HEAD, Bukkit.getServer().getOnlinePlayers());
+        FakeArmorStandFactory.spawn(executor.getLocation(), new ItemStack(Material.DIAMOND_HELMET), EquipmentSlot.HEAD, 10, Bukkit.getServer().getOnlinePlayers());
     }
 }

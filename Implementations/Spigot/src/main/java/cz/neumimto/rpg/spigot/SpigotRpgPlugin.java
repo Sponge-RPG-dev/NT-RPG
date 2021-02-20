@@ -244,6 +244,7 @@ public class SpigotRpgPlugin extends JavaPlugin {
         });
 
         if (!testEnv) {
+            Resourcepack.init();
             SpellbookListener.initBtns();
             SpigotGuiHelper.initInventories();
         }

@@ -2,11 +2,14 @@ package cz.neumimto.rpg.spigot.entities;
 
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.utils.TriConsumer;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 import java.util.Map;
 import java.util.WeakHashMap;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public class ProjectileCache {
 
@@ -16,6 +19,7 @@ public class ProjectileCache {
     // private long lifetime;
     private ISpigotEntity caster;
     private PlayerSkillContext skill;
+    private Consumer<Block> blockHit;
 
     private ProjectileCache(Projectile t, ISpigotEntity caster) {
         cache.put(t, this);
@@ -30,8 +34,16 @@ public class ProjectileCache {
         this.consumer = consumer;
     }
 
+    public void onHitBlock(Consumer<Block> consumer) {
+        this.blockHit = consumer;
+    }
+
     public void process(EntityDamageByEntityEvent event, ISpigotEntity target) {
-        consumer.accept(event, caster, target);
+        if (consumer != null) consumer.accept(event, caster, target);
+    }
+
+    public void process(Block block) {
+        if (consumer != null) blockHit.accept(block);
     }
 
     public void setSkill(PlayerSkillContext info) {

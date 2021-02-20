@@ -27,16 +27,16 @@ public class FakeArmorStandFactory {
 
     }
 
-    public static void spawn(Location location, ItemStack itemStack, EquipmentSlot slot, Collection<? extends Player> players) {
-        factory._spawn(location, itemStack, slot, players);
+    public static void spawn(Location location, ItemStack itemStack, EquipmentSlot slot, float yaw, Collection<? extends Player> players) {
+        factory._spawn(location, itemStack, slot, yaw, players);
     }
 
-    public static void spawnWithLifespan(Location location, ItemStack itemStack, EquipmentSlot slot, Collection<? extends Player> players, long millis) {
-        int i = factory._spawn(location, itemStack, slot, players);
+    public static void spawnWithLifespan(Location location, ItemStack itemStack, EquipmentSlot slot, float yaw, Collection<? extends Player> players, long millis) {
+        int i = factory._spawn(location, itemStack, slot, yaw, players);
         entityDescriptionTime.put(i, System.currentTimeMillis() + millis);
     }
 
-    private int _spawn(Location location, ItemStack itemStack, EquipmentSlot slot, Collection<? extends Player> players) {
+    private int _spawn(Location location, ItemStack itemStack, EquipmentSlot slot, float yaw, Collection<? extends Player> players) {
         WrapperPlayServerSpawnEntityLiving spawn = new WrapperPlayServerSpawnEntityLiving();
         spawn.setEntityID(ThreadLocalRandom.current().nextInt(Integer.MAX_VALUE));
         spawn.setX(location.getX());
@@ -49,6 +49,10 @@ public class FakeArmorStandFactory {
         metadata.setEntityID(spawn.getEntityID());
         metadata.setMetadata(fillMetadata(metadata));;
 
+        WrapperPlayServerEntityLook rotation = new WrapperPlayServerEntityLook();
+        rotation.setEntityID(spawn.getEntityID());
+        rotation.setYaw(yaw);
+        rotation.setPitch(0);
 
         WrapperPlayServerEntityEquipment equipment = new WrapperPlayServerEntityEquipment();
         equipment.setEntityID(spawn.getEntityID());
@@ -59,6 +63,7 @@ public class FakeArmorStandFactory {
 
         for (Player player : players) {
             spawn.sendPacket(player);
+            rotation.sendPacket(player);
             equipment.sendPacket(player);
             metadata.sendPacket(player);
         }
@@ -74,9 +79,11 @@ public class FakeArmorStandFactory {
         return dataWatcher.getWatchableObjects();
     }
 
-   // public void destroy(Player p) {
-   //     WrapperPlayServerEntityDestroy destroy = new WrapperPlayServerEntityDestroy();
-   //     destroy.setEntityIds(new int[]{ENTITY_ID});
-   //     destroy.sendPacket(p);
-   // }
+
+
+   //public void destroy(Player p) {
+   //    WrapperPlayServerEntityDestroy destroy = new WrapperPlayServerEntityDestroy();
+   //    destroy.setEntityIds(new int[]{ENTITY_ID});
+   //    destroy.sendPacket(p);
+   //}
 }

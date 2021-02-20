@@ -12,7 +12,7 @@ import cz.neumimto.rpg.api.items.RpgItemType;
 
 import javax.inject.Inject;
 
-public abstract class AbstractDamageService<W extends IActiveCharacter, T> implements DamageService<W, T> {
+public abstract class AbstractDamageService<W extends IActiveCharacter, T, E extends IEntity<T>> implements DamageService<W, T, E> {
 
     @Inject
     protected EntityService entityService;

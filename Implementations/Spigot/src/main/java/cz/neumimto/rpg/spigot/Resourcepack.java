@@ -39,6 +39,20 @@ public class Resourcepack {
     private static final int FIRE_REMNANT = 12344;
     private static final int ICE_SPIKE_LARGE = 12349;
 
+    public static ItemStack SLASH_01;
+
+    public static void init() {
+        SLASH_01 = tag(Material.LAPIS_LAZULI, 2457);
+    }
+
+    private static ItemStack tag(Material material, int tag) {
+        ItemStack itemStack = new ItemStack(material);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        itemMeta.setCustomModelData(tag);
+        itemStack.setItemMeta(itemMeta);
+        return itemStack;
+    }
+
     public static ArmorStand summonArmorStand(Location location) {
         World world = location.getWorld();
         ArmorStand entity = (ArmorStand) world.spawnEntity(location, EntityType.ARMOR_STAND);

@@ -5,7 +5,7 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.items.RpgItemStack;
 import cz.neumimto.rpg.api.items.RpgItemType;
 
-public interface DamageService<W extends IActiveCharacter, T> {
+public interface DamageService<W extends IActiveCharacter, T, E extends IEntity<T>> {
     double getCharacterItemDamage(IActiveCharacter character, RpgItemType type);
 
     void recalculateCharacterWeaponDamage(IActiveCharacter character);
@@ -14,7 +14,7 @@ public interface DamageService<W extends IActiveCharacter, T> {
 
     void recalculateCharacterWeaponDamage(IActiveCharacter character, RpgItemType type);
 
-    void damageEntity(IEntity<T> character, double value);
+    void damageEntity(E entity, double value);
 
     void init();
 

@@ -1,6 +1,5 @@
 package cz.neumimto.rpg.spigot.skills;
 
-import co.aikar.commands.annotation.Single;
 import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillResult;
@@ -12,6 +11,7 @@ import javax.inject.Singleton;
 @Singleton
 @ResourceLoader.Skill("ntrpg:iceaura")
 public class IceAura extends ActiveSkill<ISpigotCharacter> {
+
     @Override
     public SkillResult cast(ISpigotCharacter character, PlayerSkillContext info) {
         return null;

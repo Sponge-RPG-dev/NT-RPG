@@ -9,6 +9,7 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.items.ClassItem;
 import cz.neumimto.rpg.common.damage.AbstractDamageService;
+import cz.neumimto.rpg.spigot.entities.ISpigotEntity;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -20,7 +21,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Singleton
-public class SpigotDamageService extends AbstractDamageService<ISpigotCharacter, LivingEntity> {
+public class SpigotDamageService extends AbstractDamageService<ISpigotCharacter, LivingEntity, ISpigotEntity<LivingEntity>> {
 
     private Map<Double, String> doubleColorMap = new TreeMap<>();
 
@@ -40,8 +41,9 @@ public class SpigotDamageService extends AbstractDamageService<ISpigotCharacter,
     }
 
     @Override
-    public void damageEntity(IEntity<LivingEntity> character, double value) {
-        character.getEntity().damage(value);
+    public void damageEntity(ISpigotEntity<LivingEntity> entity, double value) {
+        entity.getEntity().damage(value);
+       //todo workaround bukkit stupidity entity.setLastDamageCause
     }
 
     @Override

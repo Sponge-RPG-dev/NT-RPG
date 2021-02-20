@@ -7,20 +7,37 @@ import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
+import cz.neumimto.rpg.api.skills.tree.SkillType;
+import cz.neumimto.rpg.spigot.Resourcepack;
 import cz.neumimto.rpg.spigot.effects.common.BleedingEffect;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.packetwrapper.FakeArmorStandFactory;
+import net.mmogroup.mmolib.api.DamageType;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.EquipmentSlot;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.concurrent.ThreadLocalRandom;
 
-@ResourceLoader.Skill("ntrpg:strike")
-public class Strike extends TargetedEntitySkill {
+@Singleton
+@ResourceLoader.Skill("ntrpg:slash")
+public class Slash extends TargetedEntitySkill {
 
     @Inject
     private DamageService damageService;
 
     @Inject
     private EffectService effectService;
+
+    @Override
+    public void init() {
+        super.init();
+        addSkillType(SkillType.PHYSICAL);
+        setDamageType("PHYSICAL");
+    }
 
     @Override
     public SkillResult castOn(IEntity target, ISpigotCharacter source, PlayerSkillContext info) {
@@ -32,6 +49,15 @@ public class Strike extends TargetedEntitySkill {
         if (damage > 0) {
             damageService.damageEntity(target, damage);
         }
+
+        Player entity = source.getEntity();
+        FakeArmorStandFactory.spawnWithLifespan(entity.getLocation(), Resourcepack.SLASH_01, EquipmentSlot.HEAD, entity.getEyeLocation().getYaw(), Bukkit.getOnlinePlayers(), 1000);
+
+       // WrapperPlayClientArmAnimation animation = new WrapperPlayClientArmAnimation();
+       // for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+       //     animation.sendPacket(onlinePlayer);
+       // }
+
 
         double bleedingDamage = info.getDoubleNodeValue("bleed-damage");
         int bleedingChance = info.getIntNodeValue("bleed-chance");

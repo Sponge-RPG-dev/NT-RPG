@@ -14,7 +14,8 @@ out
 lib/
 .idea/
 !.idea/codeStyleSettings.xml
-!Implementations/lib/
+Implementations/lib/
+!Implementations/lib/API-RPGRegions-1.0.8.jar
 # gradle
 build
 .gradle

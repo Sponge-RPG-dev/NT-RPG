@@ -23,11 +23,13 @@ import cz.neumimto.rpg.spigot.events.damage.SpigotEntityProjectileDamageEarlyEve
 import cz.neumimto.rpg.spigot.events.damage.SpigotEntitySkillDamageEarlyEvent;
 import cz.neumimto.rpg.spigot.events.damage.SpigotEntityWeaponDamageEarlyEvent;
 import cz.neumimto.rpg.spigot.inventory.SpigotItemService;
+import org.bukkit.block.Block;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.projectiles.ProjectileSource;
@@ -57,6 +59,17 @@ public class SpigotDamageListener extends AbstractDamageListener implements List
     @Inject
     private InventoryHandler inventoryHandler;
 
+    @EventHandler
+    public void projectileHitBlockEvent(ProjectileHitEvent event) {
+        Block hitBlock = event.getHitBlock();
+        if (hitBlock != null) {
+            ProjectileCache projectileCache = ProjectileCache.cache.get(event.getEntity());
+            if (projectileCache != null) {
+                ProjectileCache.cache.remove(event.getEntity());
+                projectileCache.process(hitBlock);
+            }
+        }
+    }
 
     @EventHandler
     public void onEntityDamageEarly(EntityDamageByEntityEvent event) {
