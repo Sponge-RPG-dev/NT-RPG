@@ -11,15 +11,15 @@ import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.spigot.Resourcepack;
 import cz.neumimto.rpg.spigot.effects.common.BleedingEffect;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
-import cz.neumimto.rpg.spigot.packetwrapper.FakeArmorStandFactory;
-import net.mmogroup.mmolib.api.DamageType;
+import cz.neumimto.rpg.spigot.packetwrapper.PacketHandler;
+import cz.neumimto.rpg.spigot.skills.utils.AbstractPacket;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Singleton
@@ -51,12 +51,21 @@ public class Slash extends TargetedEntitySkill {
         }
 
         Player entity = source.getEntity();
-        FakeArmorStandFactory.spawnWithLifespan(entity.getLocation(), Resourcepack.SLASH_01, EquipmentSlot.HEAD, entity.getEyeLocation().getYaw(), Bukkit.getOnlinePlayers(), 1000);
 
-       // WrapperPlayClientArmAnimation animation = new WrapperPlayClientArmAnimation();
-       // for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-       //     animation.sendPacket(onlinePlayer);
-       // }
+        List<AbstractPacket> packets = PacketHandler.amorStand(entity.getLocation(),
+                Resourcepack.SLASH_01,
+                EquipmentSlot.HEAD,
+                entity.getEyeLocation().getYaw(), 750L);
+
+        packets.add(PacketHandler.animateMainHand(entity));
+
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            if (onlinePlayer.getLocation().distanceSquared(entity.getLocation()) <= 500) {
+                for (AbstractPacket packet : packets) {
+                    packet.sendPacket(onlinePlayer);
+                }
+            }
+        }
 
 
         double bleedingDamage = info.getDoubleNodeValue("bleed-damage");

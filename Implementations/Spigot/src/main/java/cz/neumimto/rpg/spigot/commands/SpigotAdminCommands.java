@@ -20,13 +20,9 @@ import cz.neumimto.rpg.api.items.RpgItemType;
 import cz.neumimto.rpg.common.commands.CharacterCommands;
 import cz.neumimto.rpg.common.commands.OnlineOtherPlayer;
 import cz.neumimto.rpg.spigot.inventory.SpigotItemService;
-import cz.neumimto.rpg.spigot.packetwrapper.FakeArmorStandFactory;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 import javax.inject.Inject;
@@ -181,8 +177,4 @@ public class SpigotAdminCommands extends BaseCommand {
         return list;
     };
 
-    @Subcommand("spawn-test-armorstand")
-    public void sta(Player executor) {
-        FakeArmorStandFactory.spawn(executor.getLocation(), new ItemStack(Material.DIAMOND_HELMET), EquipmentSlot.HEAD, 10, Bukkit.getServer().getOnlinePlayers());
-    }
 }

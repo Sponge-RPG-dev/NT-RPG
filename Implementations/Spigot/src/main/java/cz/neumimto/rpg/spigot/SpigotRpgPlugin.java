@@ -26,6 +26,7 @@ import cz.neumimto.rpg.spigot.gui.SpellbookListener;
 import cz.neumimto.rpg.spigot.gui.SpigotGui;
 import cz.neumimto.rpg.spigot.gui.SpigotGuiHelper;
 import cz.neumimto.rpg.spigot.listeners.skillbinds.OnKeyPress;
+import cz.neumimto.rpg.spigot.packetwrapper.PacketHandler;
 import cz.neumimto.rpg.spigot.resources.SpigotGuiceModule;
 import de.slikey.effectlib.EffectManager;
 import de.slikey.effectlib.effect.*;
@@ -240,7 +241,7 @@ public class SpigotRpgPlugin extends JavaPlugin {
             }
 
             Rpg.get().registerListeners(injector.getInstance(OnKeyPress.class));
-
+            PacketHandler.init();
         });
 
         if (!testEnv) {
