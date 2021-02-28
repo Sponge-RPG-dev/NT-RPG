@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.spigot.skills;
 
+import com.comphenix.protocol.wrappers.EnumWrappers;
 import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.damage.DamageService;
 import cz.neumimto.rpg.api.effects.EffectService;
@@ -54,7 +55,7 @@ public class Slash extends TargetedEntitySkill {
 
         List<AbstractPacket> packets = PacketHandler.amorStand(entity.getLocation(),
                 Resourcepack.SLASH_01,
-                EquipmentSlot.HEAD,
+                EnumWrappers.ItemSlot.HEAD,
                 entity.getEyeLocation().getYaw(), 750L);
 
         packets.add(PacketHandler.animateMainHand(entity));

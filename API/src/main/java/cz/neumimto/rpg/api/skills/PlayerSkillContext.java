@@ -22,6 +22,7 @@ import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.logging.Log;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;
@@ -39,7 +40,7 @@ import java.util.*;
 public class PlayerSkillContext {
 
     public static final String LEVEL_KEY = "level";
-
+    public static final String CLASS_LEVEL_KEY = "classLevel";
     public static final PlayerSkillContext EMPTY;
 
     static {
@@ -112,6 +113,16 @@ public class PlayerSkillContext {
             Scope scope = new Scope();
             Variable level = scope.getVariable(LEVEL_KEY);
             level.setValue(getTotalLevel());
+
+            Variable classLevel = scope.getVariable(CLASS_LEVEL_KEY);
+            if (classDefinition != null) {
+                PlayerClassData classByName = character.getClassByName(classDefinition.getName());
+                if (classByName != null) {
+                    classLevel.setValue(classByName.getLevel());
+                } else {
+                    classLevel.setValue(0);
+                }
+            }
 
             for (String attId : Rpg.get().getPropertyService().getAttributes().keySet()) {
                 Variable variable = scope.getVariable(attId);
