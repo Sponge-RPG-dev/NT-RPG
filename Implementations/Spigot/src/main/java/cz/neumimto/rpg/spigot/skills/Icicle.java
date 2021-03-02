@@ -18,6 +18,8 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -25,8 +27,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import javax.inject.Singleton;
 
 @Singleton
-@ResourceLoader.Skill("ntrpg:Snowball")
-public class Snowball extends ActiveSkill<ISpigotCharacter> {
+@ResourceLoader.Skill("ntrpg:icicle")
+public class Icicle extends ActiveSkill<ISpigotCharacter> {
 
     @Override
     public void init() {
@@ -49,6 +51,13 @@ public class Snowball extends ActiveSkill<ISpigotCharacter> {
         snowball.setVelocity(p.getLocation().getDirection().multiply(skillContext.getFloatNodeValue(SkillNodes.VELOCITY)));
         snowball.setShooter(p);
         snowball.setBounce(true);
+
+        ItemStack itemStack = new ItemStack(Material.STICK);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        itemMeta.setCustomModelData(12349);
+        itemStack.setItemMeta(itemMeta);
+        snowball.setItem(itemStack);
+
 
         Trail trail = new Trail(snowball);
         trail.runTaskTimer(SpigotRpgPlugin.getInstance(), 0, 1);

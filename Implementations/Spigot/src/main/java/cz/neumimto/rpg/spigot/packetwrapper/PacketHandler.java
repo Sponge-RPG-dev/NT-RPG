@@ -10,6 +10,7 @@ import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.skills.utils.AbstractPacket;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
@@ -49,6 +50,28 @@ public class PacketHandler {
         return animation;
     }
 
+    public static AbstractPacket riptide(LivingEntity entity) {
+        WrapperPlayServerEntityMetadata metadata = new WrapperPlayServerEntityMetadata();
+        metadata.setEntityId(entity.getEntityId());
+
+        WrappedDataWatcher dataWatcher = new WrappedDataWatcher(metadata.getEntityMetadata());
+        dataWatcher.setObject(new WrappedDataWatcher.WrappedDataWatcherObject(7, WrappedDataWatcher.Registry.get(Byte.class)), (byte) (0x04 ));
+        metadata.setEntityMetadata(dataWatcher.getWatchableObjects());
+
+        return metadata;
+    }
+
+    public static AbstractPacket riptideEnd/* ? */(LivingEntity entity) {
+        WrapperPlayServerEntityMetadata metadata = new WrapperPlayServerEntityMetadata();
+        metadata.setEntityId(entity.getEntityId());
+
+        WrappedDataWatcher dataWatcher = new WrappedDataWatcher(metadata.getEntityMetadata());
+        dataWatcher.setObject(new WrappedDataWatcher.WrappedDataWatcherObject(7, WrappedDataWatcher.Registry.get(Byte.class)), (byte) (0x01 ));
+        metadata.setEntityMetadata(dataWatcher.getWatchableObjects());
+
+        return metadata;
+    }
+
     private LinkedList<AbstractPacket> _spawn(Location location, ItemStack itemStack, EnumWrappers.ItemSlot slot, float yaw, long duration) {
         WrapperPlayServerSpawnEntityLiving spawn = new WrapperPlayServerSpawnEntityLiving();
         spawn.setEntityID(ThreadLocalRandom.current().nextInt(Integer.MAX_VALUE));
@@ -62,8 +85,8 @@ public class PacketHandler {
         spawn.getHandle().getIntegers().write(1, 1);
 
         WrapperPlayServerEntityMetadata metadata = new WrapperPlayServerEntityMetadata();
-        metadata.setEntityID(spawn.getEntityID());
-        metadata.setMetadata(fillMetadata(metadata));;
+        metadata.setEntityId(spawn.getEntityID());
+        metadata.setEntityMetadata(fillMetadata(metadata));;
 
         WrapperPlayServerEntityLook rotation = new WrapperPlayServerEntityLook();
         rotation.setEntityID(spawn.getEntityID());
@@ -85,7 +108,7 @@ public class PacketHandler {
 
     private List<WrappedWatchableObject> fillMetadata(WrapperPlayServerEntityMetadata metadata) {
 
-        WrappedDataWatcher dataWatcher = new WrappedDataWatcher(metadata.getMetadata());
+        WrappedDataWatcher dataWatcher = new WrappedDataWatcher(metadata.getEntityMetadata());
         dataWatcher.setObject(new WrappedDataWatcher.WrappedDataWatcherObject(0, WrappedDataWatcher.Registry.get(Byte.class)), (byte) (0x20 )); //invis
 
         return dataWatcher.getWatchableObjects();
@@ -136,13 +159,13 @@ public class PacketHandler {
         packets.add(spawn);
 
         WrapperPlayServerEntityMetadata metadata = new WrapperPlayServerEntityMetadata();
-        metadata.setEntityID(spawn.getEntityID());
+        metadata.setEntityId(spawn.getEntityID());
 
-        WrappedDataWatcher dataWatcher = new WrappedDataWatcher(metadata.getMetadata());
+        WrappedDataWatcher dataWatcher = new WrappedDataWatcher(metadata.getEntityMetadata());
         dataWatcher.setObject(new WrappedDataWatcher.WrappedDataWatcherObject(0, WrappedDataWatcher.Registry.get(Byte.class)), (byte) (0x20 )); //invis
         dataWatcher.setObject(new WrappedDataWatcher.WrappedDataWatcherObject(14, WrappedDataWatcher.Registry.get(Byte.class)), (byte) (0x01 | 0x08 | 0x10)); //isSmall, noBasePlate, set Marker
 
-        metadata.setMetadata(dataWatcher.getWatchableObjects());
+        metadata.setEntityMetadata(dataWatcher.getWatchableObjects());
         packets.add(metadata);
 
         WrapperPlayServerEntityLook rotation = new WrapperPlayServerEntityLook();

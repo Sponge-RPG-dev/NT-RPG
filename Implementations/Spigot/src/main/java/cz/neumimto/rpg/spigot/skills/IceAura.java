@@ -4,6 +4,7 @@ import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
+import cz.neumimto.rpg.spigot.effects.common.IceAuraEffect;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 
 import javax.inject.Singleton;
@@ -14,6 +15,7 @@ public class IceAura extends ActiveSkill<ISpigotCharacter> {
 
     @Override
     public SkillResult cast(ISpigotCharacter character, PlayerSkillContext info) {
+       // new IceAuraEffect(character,)
         return null;
     }
 }

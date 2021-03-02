@@ -5,8 +5,9 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.types.PassiveSkill;
 
-@ResourceLoader.Skill("ntrpg:li_mastery")
+@ResourceLoader.Skill("ntrpg:lightningmastery")
 public class LightningMastery extends PassiveSkill {
+
     @Override
     public void applyEffect(PlayerSkillContext info, IActiveCharacter character) {
 

@@ -26,7 +26,9 @@ public class Jump extends ActiveSkill<ISpigotCharacter> {
     @Override
     public void init() {
         super.init();
-        settings.addNode(SkillNodes.DAMAGE, 10);
+        settings.addExpression("velocity-vertical", 2);
+        settings.addExpression("velocity-horizontal", 2);
+
         addSkillType(SkillType.MOVEMENT);
     }
 

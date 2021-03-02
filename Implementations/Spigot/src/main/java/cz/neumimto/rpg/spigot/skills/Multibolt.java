@@ -44,6 +44,7 @@ public class Multibolt extends TargetedEntitySkill {
 
         int period = info.getIntNodeValue(SkillNodes.PERIOD);
         double damage = info.getDoubleNodeValue(SkillNodes.DAMAGE);
+
         new MultiboltRunnable(maxStrikes,
                 (LivingEntity) target.getEntity(),
                 source.getEntity(),
@@ -76,10 +77,9 @@ public class Multibolt extends TargetedEntitySkill {
             }
             remainingStrikes = remainingStrikes -1;
 
-            spigotDamageService.damage(attacker, target, EntityDamageEvent.DamageCause.LIGHTNING, damage, false);
-
-            target.getLocation().getWorld().strikeLightningEffect(target.getLocation());
-
+            if (spigotDamageService.damage(attacker, target, EntityDamageEvent.DamageCause.LIGHTNING, damage, false)) {
+                target.getLocation().getWorld().strikeLightningEffect(target.getLocation());
+            }
         }
     }
 }
