@@ -26,6 +26,7 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.HumanEntity;
@@ -42,6 +43,7 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
@@ -142,6 +144,7 @@ public class SpigotInventoryListener implements Listener {
             return;
         }
         HumanEntity player = event.getPlayer();
+
         if (player instanceof Player) {
             Player p = (Player) player;
             ISpigotCharacter character = spigotCharacterService.getCharacter(player.getUniqueId());
@@ -161,6 +164,9 @@ public class SpigotInventoryListener implements Listener {
     @EventHandler
     public void onItemDrop(PlayerDropItemEvent event) {
         if (spigotRpg.isDisabledInWorld(event.getPlayer())) {
+            return;
+        }
+        if (event.getPlayer().getGameMode() == GameMode.CREATIVE) {
             return;
         }
         Player player = event.getPlayer();
@@ -197,6 +203,9 @@ public class SpigotInventoryListener implements Listener {
     @EventHandler(ignoreCancelled = false)
     public void onSwapHands(PlayerSwapHandItemsEvent event) {
         if (spigotRpg.isDisabledInWorld(event.getPlayer())) {
+            return;
+        }
+        if (event.getPlayer().getGameMode() == GameMode.CREATIVE) {
             return;
         }
         ItemStack futureMainHand = event.getMainHandItem();
@@ -265,6 +274,9 @@ public class SpigotInventoryListener implements Listener {
             return;
         }
         Player player = event.getPlayer();
+        if (player.getGameMode() == GameMode.CREATIVE) {
+            return;
+        }
         ISpigotCharacter character = spigotCharacterService.getCharacter(player);
         if (character.isStub()) {
             return;
@@ -293,7 +305,8 @@ public class SpigotInventoryListener implements Listener {
 
             if (last != selectedSlotIndex) {
 
-                boolean b = prepareItemInHand(player, character, itemStack, selectedSlotIndex, rpgItemType, itemService, inventoryHandler);
+                boolean b = prepareItemInHand(player, character, itemStack, selectedSlotIndex, rpgItemType,
+                        event.getHand(), itemService, inventoryHandler);
                 event.setCancelled(b);
             }
         }
@@ -302,7 +315,9 @@ public class SpigotInventoryListener implements Listener {
 
     public static boolean prepareItemInHand(Player player, ISpigotCharacter character, ItemStack itemStack,
                                             int selectedSlotIndex, RpgItemType rpgItemType,
-                                            SpigotItemService itemService, InventoryHandler inventoryHandler) {
+                                            EquipmentSlot hand,
+                                            SpigotItemService itemService,
+                                            InventoryHandler inventoryHandler) {
         Map<Class<?>, RpgInventory> managedInventory = character.getManagedInventory();
         Map<Integer, ManagedSlot> managedSlots = managedInventory.get(PlayerInventory.class).getManagedSlots();
 
@@ -326,15 +341,29 @@ public class SpigotInventoryListener implements Listener {
             if (inventoryHandler.handleCharacterEquipActionPre(character, managedSlot, rpgItemStack)) {
                 inventoryHandler.handleInventoryInitializationPost(character);
                 character.setLastHotbarSlotInteraction(selectedSlotIndex);
-                character.setMainHand(rpgItemStack, selectedSlotIndex);
+                if (hand == EquipmentSlot.HAND) {
+                    character.setMainHand(rpgItemStack, selectedSlotIndex);
+                } else if (hand == EquipmentSlot.OFF_HAND) {
+                    character.setOffHand(rpgItemStack);
+                }
                 character.setRequiresDamageRecalculation(true);
                 return false;
             } else {
-                player.getWorld().dropItemNaturally(player.getLocation(), itemStack);
-                String message = Rpg.get().getLocalizationService().translate(LocalizationKeys.CANNOT_USE_ITEM_CONFIGURATION_REASON);
-                BaseComponent c = TextComponent.fromLegacyText(ChatColor.RED + message)[0];
-                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, c);
-                player.getInventory().setItemInMainHand(null);
+                if (player.getGameMode() != GameMode.CREATIVE) {
+
+                    if (hand == EquipmentSlot.HAND) {
+                        player.getInventory().setItemInMainHand(null);
+                    } else if (hand == EquipmentSlot.OFF_HAND) {
+                        player.getInventory().setItemInOffHand(null);
+                    }
+
+                    String message = Rpg.get().getLocalizationService().translate(LocalizationKeys.CANNOT_USE_ITEM_CONFIGURATION_REASON);
+                    BaseComponent c = TextComponent.fromLegacyText(ChatColor.RED + message)[0];
+                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, c);
+
+                    player.getWorld().dropItemNaturally(player.getLocation(), itemStack);
+
+                }
                 character.setLastHotbarSlotInteraction(-1);
                 character.setRequiresDamageRecalculation(true);
                 return true;
@@ -348,6 +377,7 @@ public class SpigotInventoryListener implements Listener {
         if (spigotRpg.isDisabledInWorld(event.getWhoClicked())) {
             return;
         }
+
         for (Integer slotId : event.getInventorySlots()) {
             if (inventoryService.isManagedInventory(PlayerInventory.class, slotId) || slotId == OFFHAND_SLOT_ID || (slotId >= 0 && slotId <= 8)) {
                 event.setResult(Event.Result.DENY);
@@ -362,10 +392,16 @@ public class SpigotInventoryListener implements Listener {
         }
         HumanEntity whoClicked = event.getWhoClicked();
         if (whoClicked instanceof Player) {
+            Player player = (Player) whoClicked;
+            if (player.getGameMode() == GameMode.CREATIVE) {
+                return;
+            }
             int slotId = event.getSlot();
             if (!inventoryService.isManagedInventory(PlayerInventory.class, slotId)) {
                 return;
             }
+
+
             IActiveCharacter character = spigotCharacterService.getCharacter(whoClicked.getUniqueId());
             Map<Class<?>, RpgInventory> managedInventory = character.getManagedInventory();
             RpgInventory rpgInventory = managedInventory.get(PlayerInventory.class);

@@ -55,9 +55,11 @@ public abstract class AbstractInventoryService<T extends IActiveCharacter> imple
             for (SlotEffectSource value : mi.getSlots().values()) {
                 ManagedSlot slot;
                 if (value.getSlotId() == offhandId) {
-                    slot = new FilteredManagedSlotImpl(value.getSlotId(), item -> activeCharacter.canUse(item.getItemType(), EntityHand.OFF));
+                    slot = new FilteredManagedSlotImpl(value.getSlotId(),
+                            item -> activeCharacter.canUse(item.getItemType(), EntityHand.OFF));
                 } else if (armorIds.contains(value.getSlotId())) {
-                    slot = new FilteredManagedSlotImpl(value.getSlotId(), item -> activeCharacter.canWear(item.getItemType()));
+                    slot = new FilteredManagedSlotImpl(value.getSlotId(),
+                            item -> activeCharacter.canWear(item.getItemType()));
                 } else if (value.getSlotId() >= 0 && value.getSlotId() < 9) {
                     slot = new FilteredManagedSlotImpl(value.getSlotId(), item
                             -> activeCharacter.canUse(item.getItemType(), EntityHand.MAIN));

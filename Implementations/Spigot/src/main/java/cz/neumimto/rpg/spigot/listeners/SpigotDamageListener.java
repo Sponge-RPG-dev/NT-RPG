@@ -30,6 +30,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.projectiles.ProjectileSource;
@@ -136,7 +137,7 @@ public class SpigotDamageListener extends AbstractDamageListener implements List
             int selectedSlotIndex = inventory.getHeldItemSlot();
             if (last != selectedSlotIndex) {
                 SpigotInventoryListener.prepareItemInHand(player, character, player.getItemInHand(),
-                        selectedSlotIndex, null, itemService, inventoryHandler);
+                        selectedSlotIndex, null, EquipmentSlot.HAND, itemService, inventoryHandler);
             }
 
             if (character.requiresDamageRecalculation()) {

@@ -1,22 +1,17 @@
 package cz.neumimto.rpg.spigot.skills;
 
 import cz.neumimto.rpg.api.ResourceLoader;
-import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
 import cz.neumimto.rpg.spigot.effects.SpigotEffectService;
-import cz.neumimto.rpg.spigot.entities.ISpigotEntity;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.packetwrapper.PacketHandler;
-import cz.neumimto.rpg.spigot.skills.scripting.SpigotScriptFunctions;
 import cz.neumimto.rpg.spigot.skills.utils.AbstractPacket;
-import cz.neumimto.rpg.spigot.skills.utils.Decorator;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;

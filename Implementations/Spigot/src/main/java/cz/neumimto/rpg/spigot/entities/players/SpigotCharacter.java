@@ -21,7 +21,7 @@ public class SpigotCharacter extends ActiveCharacter<Player, SpigotParty> implem
 
     private ISkill soedc;
     private Map<String, SpigotSkillTreeViewModel> skillTreeviewLocation = new HashMap<>();
-    private boolean spellbookRotationActive = true;
+    private boolean spellbookRotationActive = false;
     private ItemStack[][] spellbook;
     private int spellbookPage;
 
