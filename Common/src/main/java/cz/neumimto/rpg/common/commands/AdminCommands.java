@@ -113,7 +113,17 @@ public class AdminCommands extends BaseCommand {
     @Subcommand("skill")
     @CommandCompletion("@skilltree @nothing @skillskctx")
     public void adminExecuteSkillCommand(IActiveCharacter character, SkillTree tree, int level,  ISkill skill) {
+        long e = System.nanoTime();
         commandExecuteSkill(character, tree, skill, level);
+        if (Rpg.get().getPluginConfig().DEBUG.isBalance()) {
+            character.sendMessage("Exec Time: " + TimeUnit.MILLISECONDS.convert(e - System.currentTimeMillis(), TimeUnit.NANOSECONDS));
+        }
+    }
+
+    @Subcommand("cast-skill-as")
+    @CommandCompletion("@skilltree @nothing @skillskctx")
+    public void adminExecuteSkillCommandAs(OnlineOtherPlayer executor, SkillTree tree, int level,  ISkill skill) {
+        commandExecuteSkill(executor.character, tree, skill, level);
     }
 
     @Subcommand("classes")
@@ -353,17 +363,12 @@ public class AdminCommands extends BaseCommand {
 
         SkillResult result = Rpg.get().getSkillService().executeSkill(character, playerSkillContext);
 
-        long e = System.nanoTime();
         if (result == SkillResult.OK) {
             SkillPostUsageEvent eventPost = Rpg.get().getEventFactory().createEventInstance(SkillPostUsageEvent.class);
             eventPost.setSkill(skill);
             eventPost.setCaster(character);
             Rpg.get().postEvent(eventPost);
         }
-        if (Rpg.get().getPluginConfig().DEBUG.isBalance()) {
-            character.sendMessage("Exec Time: " + TimeUnit.MILLISECONDS.convert(e - l, TimeUnit.NANOSECONDS));
-        }
-
     }
 
     public void commandAddUniqueSkillpoint(IActiveCharacter character, String classType, String sourceKey) {
