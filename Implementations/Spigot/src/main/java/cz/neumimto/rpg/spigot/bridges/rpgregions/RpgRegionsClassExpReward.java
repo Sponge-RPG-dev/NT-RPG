@@ -36,4 +36,9 @@ public class RpgRegionsClassExpReward extends DiscoveryReward {
     public String getName() {
         return "ClassExpReward";
     }
+
+    @Override
+    public String getPluginRequirement() {
+        return "NT-RPG";
+    }
 }
