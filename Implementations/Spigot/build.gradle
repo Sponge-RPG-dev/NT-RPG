@@ -55,7 +55,7 @@ dependencies {
     compileOnly group: 'com.google.guava', name: 'guava', version: '21.0'
 
 
-    compileOnly fileTree(dir: 'lib', include: '*.jar')
+    // compileOnly fileTree(dir: 'lib', include: '*.jar')
     compile fileTree(dir: 'lib-cp', include: '*.jar')
 
     compileOnly 'it.unimi.dsi:fastutil:8.2.1'
@@ -82,6 +82,7 @@ dependencies {
         exclude group: "org.slf4j", module: "slf4j"
     }
     compileOnly 'io.lumine.xikage:MythicMobs:4.9.1'
+    compileOnly 'com.gitlab.SamB440:RPGRegions-2:011fa42402' // 1.3.5
 
     testCompile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.30'
 

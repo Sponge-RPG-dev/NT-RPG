@@ -16,6 +16,8 @@ import cz.neumimto.rpg.spigot.bridges.HolographicDisplaysExpansion;
 import cz.neumimto.rpg.spigot.bridges.MMOItemsExpansion;
 import cz.neumimto.rpg.spigot.bridges.MythicalMobsExpansion;
 import cz.neumimto.rpg.spigot.bridges.NtRpgPlaceholderExpansion;
+import cz.neumimto.rpg.spigot.bridges.RPGRegionsExpansion;
+import cz.neumimto.rpg.spigot.bridges.rpgregions.RpgRegionsClassExpReward;
 import cz.neumimto.rpg.spigot.commands.SpigotAdminCommands;
 import cz.neumimto.rpg.spigot.commands.SpigotCharacterCommands;
 import cz.neumimto.rpg.spigot.commands.SpigotSkillBindCommands;
@@ -30,6 +32,11 @@ import cz.neumimto.rpg.spigot.packetwrapper.PacketHandler;
 import cz.neumimto.rpg.spigot.resources.SpigotGuiceModule;
 import de.slikey.effectlib.EffectManager;
 import de.slikey.effectlib.effect.*;
+import net.islandearth.rpgregions.api.IRPGRegionsAPI;
+import net.islandearth.rpgregions.api.RPGRegionsAPI;
+import net.islandearth.rpgregions.managers.registry.RPGRegionsRegistry;
+import net.islandearth.rpgregions.rewards.DiscoveryReward;
+import net.islandearth.rpgregions.rewards.RegionRewardRegistry;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Particle;
@@ -185,6 +192,11 @@ public class SpigotRpgPlugin extends JavaPlugin {
                 MythicalMobsExpansion mme = injector.getInstance(MythicalMobsExpansion.class);
                 mme.init(injector.getInstance(SpigotEntityService.class));
                 Bukkit.getPluginManager().registerEvents(mme, this);
+            }
+            
+            if (Bukkit.getPluginManager().isPluginEnabled("RPGRegions")) {
+                Log.info("RPGRegions installed - registering experience extension");
+                injector.getInstance(RPGRegionsExpansion.class);
             }
 
             IRpgScriptEngine scriptEngine = Rpg.get().getScriptEngine();
