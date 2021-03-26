@@ -16,6 +16,7 @@ import cz.neumimto.rpg.spigot.bridges.HolographicDisplaysExpansion;
 import cz.neumimto.rpg.spigot.bridges.MMOItemsExpansion;
 import cz.neumimto.rpg.spigot.bridges.MythicalMobsExpansion;
 import cz.neumimto.rpg.spigot.bridges.NtRpgPlaceholderExpansion;
+import cz.neumimto.rpg.spigot.bridges.RPGRegionsExpansion;
 import cz.neumimto.rpg.spigot.commands.SpigotAdminCommands;
 import cz.neumimto.rpg.spigot.commands.SpigotCharacterCommands;
 import cz.neumimto.rpg.spigot.commands.SpigotSkillBindCommands;
@@ -67,7 +68,8 @@ import java.util.concurrent.Executors;
                 @SoftDependency("PlaceholderAPI"),
                 @SoftDependency("HolographicDisplays"),
                 @SoftDependency("MythicMobs"),
-                @SoftDependency("MMOItems")
+                @SoftDependency("MMOItems"),
+                @SoftDependency("RPGRegions")
         }
 )
 @DependsOn(
@@ -185,6 +187,11 @@ public class SpigotRpgPlugin extends JavaPlugin {
                 MythicalMobsExpansion mme = injector.getInstance(MythicalMobsExpansion.class);
                 mme.init(injector.getInstance(SpigotEntityService.class));
                 Bukkit.getPluginManager().registerEvents(mme, this);
+            }
+            
+            if (Bukkit.getPluginManager().isPluginEnabled("RPGRegions")) {
+                Log.info("RPGRegions installed - registering experience extension");
+                injector.getInstance(RPGRegionsExpansion.class);
             }
 
             IRpgScriptEngine scriptEngine = Rpg.get().getScriptEngine();
