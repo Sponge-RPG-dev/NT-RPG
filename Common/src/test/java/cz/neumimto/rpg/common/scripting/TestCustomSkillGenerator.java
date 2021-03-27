@@ -41,7 +41,7 @@ public class TestCustomSkillGenerator extends CustomSkillGenerator {
                 ;
 
         Collection<String> values = params.methodArgs.keySet();
-        Assert.assertEquals(7, values.size());
+        Assert.assertEquals(8, values.size());
         Assert.assertTrue(values.contains("'Test Test'"));
         Assert.assertTrue(values.contains("caster"));
         Assert.assertTrue(values.contains("target"));

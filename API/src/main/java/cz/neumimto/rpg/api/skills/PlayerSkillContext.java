@@ -124,7 +124,7 @@ public class PlayerSkillContext {
                 }
             }
 
-            for (String attId : Rpg.get().getPropertyService().getAttributes().keySet()) {
+            for (String attId : getAttributeIds()) {
                 Variable variable = scope.getVariable(attId);
                 variable.setValue(character.getAttributeValue(attId));
             }
@@ -149,6 +149,10 @@ public class PlayerSkillContext {
             }
         }
         return cachedComputedSkillSettings;
+    }
+
+    protected Set<String> getAttributeIds() {
+        return Rpg.get().getPropertyService().getAttributes().keySet();
     }
 
     private double getLevelNodeValue(String s) {

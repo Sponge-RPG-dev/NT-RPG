@@ -78,12 +78,13 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
     public Map<String, SkillTree> getAll() {
         Path dir = Paths.get(Rpg.get().getWorkingDirectory());
         FileUtils.createDirectoryIfNotExists(dir);
-        Path skillTreeDir = dir.resolve("skilltrees/");
         Map<String, SkillTree> map = new HashMap<>();
         if (classService.isClassDirEmpty()) {
             Log.info("No classes found in classes folder, loading skilltrees from within ntrpg.jar");
             dir = assetService.getTempWorkingDir();
+            assetService.copyDefaults(dir);
         }
+        Path skillTreeDir = dir.resolve("skilltrees/");
         FileUtils.createDirectoryIfNotExists(skillTreeDir);
         try (DirectoryStream<Path> paths = Files.newDirectoryStream(skillTreeDir, "*.conf")) {
             paths.forEach(path -> {

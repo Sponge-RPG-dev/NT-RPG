@@ -3,6 +3,7 @@ package cz.neumimto.rpg;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.RpgApi;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
+import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.gui.Gui;
@@ -93,6 +94,7 @@ public class CharacterCommandTests {
         iterator.next();
         String i = iterator.next();
         ClassDefinition classDefinition = new ClassDefinition("test", i);
+        Rpg.get().getPluginConfig().RESPECT_CLASS_SELECTION_ORDER = true;
         characterCommands.chooseCharacterClass(iActiveCharacter, classDefinition);
         Assertions.assertFalse(iActiveCharacter.getClasses().containsKey("test"));
     }

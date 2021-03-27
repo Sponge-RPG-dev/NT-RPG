@@ -19,6 +19,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import javax.inject.Inject;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Set;
 
 @ExtendWith({GuiceExtension.class, NtRpgExtension.class, CharactersExtension.class})
@@ -51,8 +52,9 @@ public class ClassDefinitionDaoTest {
     @Test
     public void test_class_def_ependencies_loading() {
         Rpg.get().getPluginConfig().CLASS_TYPES.put("primary", new ClassTypeDefinition());
-
-        Set<ClassDefinition> classDefinitions = classDefinitionDao.parseClassFiles(null);
+        Path path = Paths.get(getClass().getClassLoader().getResource("assets/nt-rpg/class-dependency-graph-test").getPath()
+                .replaceFirst("/",""));
+        Set<ClassDefinition> classDefinitions = classDefinitionDao.parseClassFiles(path);
 
         boolean run = false;
         for (ClassDefinition classDefinition : classDefinitions) {

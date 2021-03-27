@@ -105,7 +105,7 @@ public class CustomSkillGeneratorTests {
     }
 
 
-    @Singleton
+
     @SkillMechanic("damage_check")
     public class DamageCheck {
 
@@ -115,7 +115,7 @@ public class CustomSkillGeneratorTests {
         }
 
     }
-    @Singleton
+
     @TargetSelector("nearby_enemies")
     public class NearbyEnemies {
 

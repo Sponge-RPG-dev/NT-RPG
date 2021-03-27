@@ -17,6 +17,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import javax.inject.Inject;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Set;
 
 @ExtendWith({GuiceExtension.class, NtRpgExtension.class})
@@ -48,7 +50,9 @@ public class ClassDefinitionDaoTest {
 
     @Test
     void testClassConfigLoading() {
-        Set<ClassDefinition> classDefinitions = classDefinitionDao.parseClassFiles(null);
+        Path path = Paths.get(getClass().getClassLoader().getResource("classes/group1").getPath()
+                .replaceFirst("/",""));
+        Set<ClassDefinition> classDefinitions = classDefinitionDao.parseClassFiles(path);
         Assertions.assertSame(classDefinitions.size(), 1);
         ClassDefinition c = classDefinitions.iterator().next();
         Assertions.assertEquals(c.getName(), "ClassExample1");
