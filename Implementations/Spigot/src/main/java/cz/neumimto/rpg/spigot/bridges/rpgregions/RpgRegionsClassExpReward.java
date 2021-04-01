@@ -5,7 +5,9 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import net.islandearth.rpgregions.api.IRPGRegionsAPI;
 import net.islandearth.rpgregions.api.RPGRegionsAPI;
 import net.islandearth.rpgregions.gui.GuiEditable;
+import net.islandearth.rpgregions.managers.registry.RPGRegionsRegistry;
 import net.islandearth.rpgregions.rewards.DiscoveryReward;
+import net.islandearth.rpgregions.rewards.RegionRewardRegistry;
 import org.bukkit.entity.Player;
 
 public class RpgRegionsClassExpReward extends DiscoveryReward {
@@ -40,5 +42,13 @@ public class RpgRegionsClassExpReward extends DiscoveryReward {
     @Override
     public String getPluginRequirement() {
         return "NT-RPG";
+    }
+
+    public static void init() {
+        IRPGRegionsAPI api = RPGRegionsAPI.getAPI();
+        RPGRegionsRegistry<DiscoveryReward> registry = (RegionRewardRegistry) api.getManagers().getRegistry(RegionRewardRegistry.class);
+        if (registry != null) {
+            registry.register(RpgRegionsClassExpReward.class);
+        }
     }
 }

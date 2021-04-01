@@ -14,3 +14,5 @@ dl $PLUGINS https://github.com/tr7zw/Item-NBT-API/releases/download/2.6.0/item-n
 dl $PLUGINS https://media.forgecdn.net/files/3108/83/EffectLib-6.4.jar
 dl $PLUGINS https://ci.dmulloy2.net/job/ProtocolLib/lastSuccessfulBuild/artifact/target/ProtocolLib.jar
 [ -f $SPATH/server-spigot/eula.txt ] || echo "eula=true" >> $SPATH/server-spigot/eula.txt
+
+

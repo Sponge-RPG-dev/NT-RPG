@@ -16,7 +16,7 @@ import cz.neumimto.rpg.spigot.bridges.HolographicDisplaysExpansion;
 import cz.neumimto.rpg.spigot.bridges.MMOItemsExpansion;
 import cz.neumimto.rpg.spigot.bridges.MythicalMobsExpansion;
 import cz.neumimto.rpg.spigot.bridges.NtRpgPlaceholderExpansion;
-import cz.neumimto.rpg.spigot.bridges.RPGRegionsExpansion;
+import cz.neumimto.rpg.spigot.bridges.rpgregions.RpgRegionsClassExpReward;
 import cz.neumimto.rpg.spigot.commands.SpigotAdminCommands;
 import cz.neumimto.rpg.spigot.commands.SpigotCharacterCommands;
 import cz.neumimto.rpg.spigot.commands.SpigotSkillBindCommands;
@@ -191,7 +191,7 @@ public class SpigotRpgPlugin extends JavaPlugin {
             
             if (Bukkit.getPluginManager().isPluginEnabled("RPGRegions")) {
                 Log.info("RPGRegions installed - registering experience extension");
-                injector.getInstance(RPGRegionsExpansion.class);
+                RpgRegionsClassExpReward.init();
             }
 
             IRpgScriptEngine scriptEngine = Rpg.get().getScriptEngine();

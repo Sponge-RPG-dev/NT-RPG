@@ -104,6 +104,8 @@ dependencies {
         archiveName("NT-RPG-Spigot-16.x-" + version + ".jar")
     }
 
+
+
     configurations {
         testCompile.extendsFrom compileOnly
     }
