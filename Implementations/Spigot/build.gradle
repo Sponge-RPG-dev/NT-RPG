@@ -75,13 +75,18 @@ dependencies {
     compileOnly 'com.github.Slikey:EffectLib:d77f639038'
     compileOnly 'me.clip:placeholderapi:2.10.3'
     compileOnly 'com.gmail.filoghost.holographicdisplays:holographicdisplays-api:2.4.0'
-    compileOnly('net.Indyuce:MMOItems:6.2.4') {
+
+    compileOnly('net.Indyuce:MMOItems:6.5.5') {
         exclude group: 'com.mojang', module: 'authlib'
+        exclude group: 'org.jetbrains', module: 'annotations'
     }
-    compileOnly('net.Indyuce:MMOLib:1.4.0') {
+
+    compileOnly('io.lumine:MythicLib:1.0.17') {
         exclude group: "org.slf4j", module: "slf4j"
     }
-    compileOnly 'io.lumine.xikage:MythicMobs:4.9.1'
+    
+    compileOnly 'io.lumine.xikage:MythicMobs:4.11.2'
+
     compileOnly 'com.gitlab.SamB440:RPGRegions-2:9e46ca8d' // 1.3.5
 
     testCompile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.30'

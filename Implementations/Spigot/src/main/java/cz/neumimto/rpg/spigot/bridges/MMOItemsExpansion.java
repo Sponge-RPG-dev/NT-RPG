@@ -70,7 +70,7 @@ public class MMOItemsExpansion implements Listener {
 
     @EventHandler
     public void onLevelUp(SpigotCharacterGainedLevelEvent event) {
-        PlayerData.get(event.getTarget().getUUID()).scheduleDelayedInventoryUpdate();
+        PlayerData.get(event.getTarget().getUUID()).updateInventory();
     }
 
     //@EventHandler
