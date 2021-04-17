@@ -30,4 +30,12 @@ public interface PermissionService<T extends IActiveCharacter> {
             }
         }
     }
+
+    default void removePermissions(T character, PlayerClassData classDefinition) {
+        for (PlayerClassPermission playerClassPermission : classDefinition.getClassDefinition().getPermissions()) {
+            if (playerClassPermission.getLevel() <= classDefinition.getLevel()) {
+                removePermissions(character, playerClassPermission.getPermissions());
+            }
+        }
+    }
 }

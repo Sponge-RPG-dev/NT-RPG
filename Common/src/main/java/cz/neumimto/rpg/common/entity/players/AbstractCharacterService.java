@@ -1262,6 +1262,36 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
         characterBase.getCharacterClasses().removeIf(next -> next.getName().equals(klass.getName()));
     }
 
+    @Override
+    public ActionResult removeClassFromSlot(T character, String slot) {
+        CharacterBase characterBase = character.getCharacterBase();
+        PlayerClassData playerClassData = character.getClassByType(slot);
+        if (playerClassData == null) {
+            return ActionResult.ok();
+        }
+        removeBaseClass(characterBase, playerClassData.getClassDefinition());
+        character.removeClass(playerClassData.getClassDefinition());
+
+        invalidateCaches(character);
+
+        recalculateProperties(character);
+        permissionService.removePermissions(character, playerClassData);
+
+        recalculateSecondaryPropertiesOnly(character);
+        removeGlobalEffects(character, playerClassData.getClassDefinition());
+
+        character.updateItemRestrictions();
+
+        List<String> exitCommands = playerClassData.getClassDefinition().getExitCommands();
+        if (exitCommands != null) {
+            Map<String, String> args = new HashMap<>();
+            args.put("player", character.getPlayerAccountName());
+            Rpg.get().executeCommandBatch(args, exitCommands);
+        }
+        inventoryService.invalidateGUICaches(character);
+
+        return ActionResult.ok();
+    }
 
     @Override
     public ActionResult addNewClass(T character, ClassDefinition klass) {
@@ -1303,9 +1333,9 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
                             Map<String, String> args = new HashMap<>();
                             args.put("player", character.getPlayerAccountName());
                             Rpg.get().executeCommandBatch(args, enterCommands);
-
-                            inventoryService.invalidateGUICaches(character);
                         }
+                        inventoryService.invalidateGUICaches(character);
+
                     });
                 });
             });
@@ -1488,6 +1518,5 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
         Log.info("Character " + character.getUUID() + " gained " + sourceKey + " skillpoint");
         return ActionResult.ok();
     }
-
 }
 

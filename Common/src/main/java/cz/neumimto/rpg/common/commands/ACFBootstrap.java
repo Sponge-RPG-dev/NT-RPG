@@ -25,7 +25,7 @@ public class ACFBootstrap {
 
     public static void initializeACF(CommandManager manager, List<BaseCommand> commandClasses) {
 
-        manager.getCommandCompletions().registerAsyncCompletion("effect", c ->
+        manager.getCommandCompletions().registerAsyncCompletion("geffect", c ->
                 Rpg.get().getEffectService().getGlobalEffects().keySet()
         );
 
@@ -98,13 +98,11 @@ public class ACFBootstrap {
 
         manager.getCommandContexts().registerContext(ClassDefinition.class, c -> {
             String firstArg = "";
-            while (c.getIndex() <= c.getArgs().size()) {
-                firstArg += c.popFirstArg();
-                ClassDefinition cw = Rpg.get().getClassService().getClassDefinitionByName(firstArg);
-                if (cw != null) {
-                    return cw;
-                }
-                firstArg += " ";
+
+            String s = c.popFirstArg();
+            ClassDefinition cw = Rpg.get().getClassService().getClassDefinitionByName(s);
+            if (cw != null) {
+                return cw;
             }
             throw new InvalidCommandArgument("Unknown class " + firstArg);
         });
@@ -118,7 +116,7 @@ public class ACFBootstrap {
             return Rpg.get().getPropertyService().getAttributeById(firstArg).get();
         });
 
-        manager.getCommandCompletions().registerAsyncCompletion("classtype", c ->
+        manager.getCommandCompletions().registerAsyncCompletion("classtypes", c ->
                 Rpg.get().getPluginConfig().CLASS_TYPES.keySet()
         );
 

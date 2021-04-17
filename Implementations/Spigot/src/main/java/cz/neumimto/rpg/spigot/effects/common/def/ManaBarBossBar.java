@@ -12,7 +12,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
-import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 
 import java.util.Collections;
@@ -22,14 +21,13 @@ import java.util.Set;
 /**
  * Created by NeumimTo on 9.7.2017.
  */
-public class ManaBarNotifier extends EffectBase<Object> implements IEffectContainer<Object, ManaBarNotifier> {
+public class ManaBarBossBar extends EffectBase<Object> implements IEffectContainer<Object, ManaBarBossBar>, ManaBar {
 
-    public static final String name = "ManaBar";
-    private IActiveCharacter character;
-    private Player player;
-    private BossBar bossBar;
+    protected IActiveCharacter character;
+    protected Player player;
+    protected org.bukkit.boss.BossBar bossBar;
 
-    public ManaBarNotifier(ISpigotCharacter consumer) {
+    public ManaBarBossBar(ISpigotCharacter consumer) {
         super(name, consumer);
         this.character = consumer;
         this.player = consumer.getPlayer();
@@ -38,6 +36,7 @@ public class ManaBarNotifier extends EffectBase<Object> implements IEffectContai
         setDuration(-1);
     }
 
+    @Override
     public void notifyManaChange() {
         double maxValue = character.getMana().getMaxValue();
         double value = character.getMana().getValue();
@@ -83,12 +82,12 @@ public class ManaBarNotifier extends EffectBase<Object> implements IEffectContai
     }
 
     @Override
-    public Set<ManaBarNotifier> getEffects() {
+    public Set<ManaBarBossBar> getEffects() {
         return new HashSet<>(Collections.singletonList(this));
     }
 
     @Override
-    public ManaBarNotifier getStackedValue() {
+    public ManaBarBossBar getStackedValue() {
         return this;
     }
 
@@ -98,12 +97,17 @@ public class ManaBarNotifier extends EffectBase<Object> implements IEffectContai
     }
 
     @Override
-    public ManaBarNotifier constructEffectContainer() {
+    public ManaBarBossBar constructEffectContainer() {
         return this;
     }
 
     @Override
-    public void stackEffect(ManaBarNotifier v, IEffectSourceProvider effectSourceProvider) {
+    public void stackEffect(ManaBarBossBar v, IEffectSourceProvider effectSourceProvider) {
 
+    }
+
+    @Override
+    public IEffect asEffect() {
+        return this;
     }
 }

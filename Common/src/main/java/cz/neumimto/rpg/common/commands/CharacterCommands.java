@@ -3,6 +3,7 @@ package cz.neumimto.rpg.common.commands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Subcommand;
 import cz.neumimto.rpg.api.classes.ClassService;
@@ -18,6 +19,7 @@ import javax.inject.Singleton;
 
 @Singleton
 @CommandAlias("char|c")
+@CommandPermission("ntrpg.player.char")
 public class CharacterCommands extends BaseCommand {
 
     @Inject

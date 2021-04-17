@@ -12,5 +12,4 @@ public abstract class ClassGenerator {
 
     public abstract DynamicType.Builder<Object> visitImplSpecAnnListener(ReceiverTypeDefinition<Object> classBuilder, Object object);
 
-
 }

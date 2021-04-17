@@ -130,6 +130,8 @@ public interface CharacterService<T extends IActiveCharacter> {
 
     CharacterClass addNewBaseClass(CharacterBase characterBase, ClassDefinition klass);
 
+    ActionResult removeClassFromSlot(T character, String slot);
+
     ActionResult addNewClass(T character, ClassDefinition klass);
 
     void addSkillPoint(T character, PlayerClassData playerClassData, int skillpointsPerLevel);

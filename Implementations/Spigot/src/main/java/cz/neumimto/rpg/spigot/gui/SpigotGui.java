@@ -1,11 +1,11 @@
 package cz.neumimto.rpg.spigot.gui;
 
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.effects.EffectStatusType;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.gui.IPlayerMessage;
@@ -18,12 +18,15 @@ import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.common.effects.InternalEffectSourceProvider;
 import cz.neumimto.rpg.spigot.effects.common.def.BossBarExpNotifier;
-import cz.neumimto.rpg.spigot.effects.common.def.ManaBarNotifier;
+import cz.neumimto.rpg.spigot.effects.common.def.ManaBar;
+import cz.neumimto.rpg.spigot.effects.common.def.ManaBarBossBar;
+import cz.neumimto.rpg.spigot.effects.common.def.ManaBarText;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
@@ -31,7 +34,6 @@ import org.bukkit.inventory.InventoryView;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.text.NumberFormat;
 
 @Singleton
 public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
@@ -133,11 +135,11 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
 
     @Override
     public void displayMana(ISpigotCharacter character) {
-        IEffectContainer<Object, ManaBarNotifier> barExpNotifier = character.getEffect(ManaBarNotifier.name);
-        ManaBarNotifier effect = (ManaBarNotifier) barExpNotifier;
+        IEffectContainer<Object, ManaBarBossBar> barExpNotifier = character.getEffect(ManaBarBossBar.name);
+        ManaBar effect = (ManaBar) barExpNotifier;
         if (effect == null) {
-            effect = new ManaBarNotifier(character);
-            effectService.addEffect(effect, InternalEffectSourceProvider.INSTANCE);
+            effect = Rpg.get().getPluginConfig().MANABAR_VERSION.equals("BOSSBAR") ? new ManaBarBossBar(character) : new ManaBarText(character);
+            effectService.addEffect(effect.asEffect(), InternalEffectSourceProvider.INSTANCE);
         }
         effect.notifyManaChange();
     }

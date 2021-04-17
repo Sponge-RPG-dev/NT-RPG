@@ -58,17 +58,17 @@ public class AdminCommands extends BaseCommand {
 
     private Gson gson = new Gson();
 
-    @Subcommand("class add")
-    public void addCharacterClass(CommandIssuer commandSender, OnlineOtherPlayer player, ClassDefinition classDefinition) {
-        IActiveCharacter character = player.character;
-        ActionResult actionResult = addCharacterClass(character, classDefinition);
-        if (!actionResult.isOk()) {
-            Log.error("Attempt to add player class safely failed, - class slot already occupied, player is lacking permission, missing prerequirements...");
-        } else {
-            Log.info("Player gained class via console " + character.getPlayerAccountName() + " class " + classDefinition.getName());
+    @CommandCompletion("@players @class-any")
+    @Subcommand("set-class")
+    public void hardResetPlayer(CommandIssuer commandIssuer, OnlineOtherPlayer player, ClassDefinition classDefinition) {
+        PlayerClassData classByType = player.character.getClassByType(classDefinition.getClassType());
+        if (classByType != null) {
+            characterService.removeClassFromSlot(player.character, classDefinition.getClassType());
         }
+        characterService.addNewClass(player.character, classDefinition);
     }
 
+    @CommandCompletion("@players")
     @Subcommand("attributepoints add")
     @Description("Permanently adds X skillpoints to a player")
     public void addAttributePoints(CommandIssuer commandSender, OnlineOtherPlayer player, @Default("1") int amount) {
@@ -76,6 +76,7 @@ public class AdminCommands extends BaseCommand {
     }
 
 
+    @CommandCompletion("@players @class-any")
     @Subcommand("skillpoints add")
     @Description("Permanently adds X skillpoints to a player")
     public void addSkillPointsCommand(CommandIssuer commandSender, OnlineOtherPlayer player, ClassDefinition characterClass, @Default("1") int amount) {
@@ -88,6 +89,7 @@ public class AdminCommands extends BaseCommand {
 
     }
 
+    @CommandCompletion("@players @geffect")
     @Subcommand("effect add")
     @Description("Adds effect, managed by rpg plugin, to the player")
     public void effectAddCommand(CommandIssuer commandSender, OnlineOtherPlayer player, IGlobalEffect effect, long duration, String[] args) {
@@ -100,6 +102,7 @@ public class AdminCommands extends BaseCommand {
         }
     }
 
+    @CommandCompletion("@players @nothing @nothing")
     @Subcommand("exp")
     @Description("Adds N experiences of given source type to a character")
     public void addExperiencesCommand(CommandIssuer executor, OnlineOtherPlayer target, double amount, String classOrSource) {
@@ -126,6 +129,7 @@ public class AdminCommands extends BaseCommand {
         commandExecuteSkill(executor.character, tree, skill, level);
     }
 
+    @CommandCompletion("@players @classtypes")
     @Subcommand("classes")
     public void showClassesCommandAdmin(CommandIssuer console, OnlineOtherPlayer executor, @Optional String type) {
         infoCommands.showClassesCommand(executor.character, type);
@@ -136,7 +140,7 @@ public class AdminCommands extends BaseCommand {
         infoCommands.showClassCommand(executor.character, classDefinition, back);
     }
 
-
+    @CommandCompletion("@players @class-any")
     @Subcommand("add-class")
     public void addClassToCharacterCommand(CommandIssuer executor, OnlineOtherPlayer target, ClassDefinition klass) {
         ActionResult actionResult = addCharacterClass(target.character, klass);
@@ -147,6 +151,7 @@ public class AdminCommands extends BaseCommand {
         }
     }
 
+    @CommandCompletion("@players @classtypes @nothing")
     @Subcommand("add-unique-skillpoint")
     public void addUniqueSkillpoint(CommandIssuer executor, OnlineOtherPlayer target, String classType, String sourceKey) {
         IActiveCharacter character = target.character;

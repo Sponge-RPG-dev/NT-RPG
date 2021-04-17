@@ -75,15 +75,6 @@ public class PluginConfig {
     @Path("ALLOW_COMBAT_FOR_CHARACTERLESS_PLAYERS")
     public boolean ALLOW_COMBAT_FOR_CHARACTERLESS_PLAYERS = true;
 
-    @Path("ALLOWED_RUNES_ITEMTYPES")
-    @Conversion(SetToListConverter.class)
-    public Set<String> ALLOWED_RUNES_ITEMTYPES = new HashSet<String>() {{
-        add("minecraft:nether_star");
-    }};
-
-    @Path("AUTOREMOVE_NONEXISTING_RUNEWORDS")
-    public boolean AUTOREMOVE_NONEXISTING_RUNEWORDS = false;
-
     @Path("PARTY_EXPERIENCE_MULTIPLIER")
     public double PARTY_EXPERIENCE_MULTIPLIER = 2;
 
@@ -111,28 +102,6 @@ public class PluginConfig {
 
     @Path("CLICK_COMBO_MAX_INVERVAL_BETWEEN_ACTIONS")
     public long CLICK_COMBO_MAX_INVERVAL_BETWEEN_ACTIONS = 1250;
-
-    @Path("ITEM_LORE_EFFECT_NAME_COLOR")
-    public String ITEM_LORE_EFFECT_NAME_COLOR = "BLUE";
-
-    @Path("ITEM_LORE_EFFECT_COLON_COLOR")
-    public String ITEM_LORE_EFFECT_COLON_COLOR = "DARK_GRAY";
-
-    @Path("ITEM_LORE_EFFECT_VALUE_COLOR")
-    public String ITEM_LORE_EFFECT_VALUE_COLOR = "LIGHT_PURPLE";
-
-    @Path("ITEM_LORE_EFFECT_SECTION_COLOR")
-    public String ITEM_LORE_EFFECT_SECTION_COLOR = "BLUE";
-
-    @Path("ITEM_LORE_GROUP_MIN_LEVEL_COLOR")
-    public String ITEM_LORE_GROUP_MIN_LEVEL_COLOR = "DARK_PURPLE";
-
-    @Path("ITEM_LORE_ORDER")
-    public List<String> ITEM_LORE_ORDER = Arrays.asList("META",
-            "EFFECTS",
-            "ATTRIBUTES",
-            "SOCKETS",
-            "REQUIREMENTS");
 
     @Path("CLASS_ITEM_DAMAGE_PROCESSOR")
     @Conversion(ItemDamageProcessorConverter.class)
@@ -165,26 +134,6 @@ public class PluginConfig {
 
         //    add("0,minecraft:gray_stained_glass_pane,19");//empty
     }};
-
-    @Path("SKILLTREE_BUTTON_CONTROLLS")
-    public List<String> SKILLTREE_BUTTON_CONTROLLS = new ArrayList<String>() {{
-        add("North,minecraft:diamond_hoe,Up,1");
-        add("West,minecraft:diamond_hoe,Right,2");
-        add("East,minecraft:diamond_hoe,Left,3");
-        add("South,minecraft:diamond_hoe,Down,4");
-    }};
-
-    @Path("ITEM_RARITY")
-    public List<String> ITEM_RARITY = new ArrayList<String>() {{
-        add("0,Common");
-        add("1,&9Rare");
-        add("2,&eUnique");
-        add("3,&5Legendary");
-    }};
-
-    @Path("AUTODISCOVER_ITEMS")
-    public boolean AUTODISCOVER_ITEMS = true;
-
 
     @Path("CREATE_FIRST_CHAR_AFTER_LOGIN")
     public boolean CREATE_FIRST_CHAR_AFTER_LOGIN = true;
@@ -222,6 +171,9 @@ public class PluginConfig {
     @PreserveNotNull
     @Path("SPELLBOOK_ROTATION_COOLDOWN")
     public long SPELLBOOK_COOLDOWN = 1000L;
+
+    @Path("MANABAR_VERSION")
+    public String MANABAR_VERSION = "BOSSBAR";
 
     private static class ItemDamageProcessorConverter implements Converter<ItemDamageProcessor, String> {
 

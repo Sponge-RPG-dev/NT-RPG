@@ -12,7 +12,7 @@ import javax.inject.Singleton;
 
 @Singleton
 @CommandAlias("classes")
-@CommandPermission("ntrpg.info.classes")
+@CommandPermission("ntrpg.player.info.classes")
 public class ClassesComand extends BaseCommand {
 
     @Inject

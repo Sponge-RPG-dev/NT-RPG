@@ -10,6 +10,7 @@ import cz.neumimto.rpg.api.entity.players.parties.PartyService;
 import javax.inject.Inject;
 
 @Subcommand("nparty|np")
+@CommandPermission("ntrpg.player.party")
 public class PartyCommands extends BaseCommand {
 
     @Inject

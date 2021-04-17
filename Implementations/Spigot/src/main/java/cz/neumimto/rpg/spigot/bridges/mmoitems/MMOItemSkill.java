@@ -37,11 +37,13 @@ public class MMOItemSkill extends ActiveSkill<ISpigotCharacter> {
     public SkillResult cast(ISpigotCharacter character, PlayerSkillContext skillContext) {
         Player player = character.getPlayer();
         AbilityData abilityData = new AbilityData(getAbility(), Ability.CastingMode.LEFT_CLICK);
+
+        Object2DoubleOpenHashMap<String> compSettings = skillContext.getCachedComputedSkillSettings();
+
         PlayerData playerData = PlayerData.get(player);
         PlayerStats playerStats = new PlayerStats(playerData);
         PlayerStats.CachedStats stats = playerStats.newTemporary();
 
-        Object2DoubleOpenHashMap<String> compSettings = skillContext.getCachedComputedSkillSettings();
         for (Object2DoubleMap.Entry<String> e : compSettings.object2DoubleEntrySet()) {
             abilityData.setModifier(e.getKey(), e.getDoubleValue());
         }

@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.spigot.bridges;
+package cz.neumimto.rpg.spigot.bridges.mmoitems;
 
 import com.google.inject.Injector;
 import cz.neumimto.rpg.api.Rpg;
