@@ -2,6 +2,7 @@ package cz.neumimto.rpg.spigot.gui;
 
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
+import cz.neumimto.rpg.api.configuration.ItemString;
 import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
@@ -727,7 +728,10 @@ public class SpigotGuiHelper {
 
         SpigotSkillTreeViewModel model = character.getLastTimeInvokedSkillTreeView();
 
-        build.setItem(0, button(Material.PAPER, Rpg.get().getLocalizationService().translate(LocalizationKeys.BACK), "ninfo class " + model.getViewedClass().getName()));
+        build.setItem(0,
+                button(Material.PAPER,
+                Rpg.get().getLocalizationService().translate(LocalizationKeys.BACK),
+        "skilltree view " + character.getLastTimeInvokedSkillTreeView().getViewedClass().getName(),12345));
 
         if (skillData instanceof SkillPathData) {
 
@@ -759,15 +763,24 @@ public class SpigotGuiHelper {
 
         } else {
             String type = skillData.getSkill().getDamageType();
+            int i = 1;
+            while (i < 26) {
+                build.setItem(i, blank());
+                i++;
+            }
             if (type != null) {
                 build.setItem(11, damageTypeToItemStack(EntityDamageEvent.DamageCause.valueOf(type)));
             }
 
             List<ItemStack> itemStacks = configurationToItemStacks(skillData);
-            int i = 27;
+            i = 28;
 
             for (ItemStack itemStack : itemStacks) {
                 build.setItem(i, itemStack);
+                i++;
+            }
+            while (i < 54) {
+                build.setItem(i, blank());
                 i++;
             }
 
@@ -789,19 +802,26 @@ public class SpigotGuiHelper {
 
     private static List<ItemStack> configurationToItemStacks(SkillData skillData) {
         List<ItemStack> a = new ArrayList<>();
-        LocalizationService ls = Rpg.get().getLocalizationService();
+        Map<String, ItemString> skill_settings_icons = Rpg.get().getPluginConfig().SKILL_SETTINGS_ICONS;
+
         if (skillData.getSkillSettings() != null) {
             Map<String, String> nodes = skillData.getSkillSettings().getNodes();
             for (Map.Entry<String, String> s : nodes.entrySet()) {
+                String s1 = configNodeToReadableString(s.getKey());
+                String init = s.getValue();
 
-                    String s1 = configNodeToReadableString(s.getKey());
-                    String init = s.getValue();
-                    ItemStack of = unclickableIcon(Material.PAPER, 12, s1);
-                    ItemMeta itemMeta = of.getItemMeta();
-                    itemMeta.setLore(Collections.singletonList(init));
-                    of.setItemMeta(itemMeta);
-                    a.add(of);
+                ItemString itemString = skill_settings_icons.get(s.getKey());
+                ItemStack of = null;
+                if (itemString != null) {
+                    of = unclickableIcon(Material.matchMaterial(itemString.itemId), Integer.parseInt(itemString.variant), s1);
+                } else {
+                    of = unclickableIcon(Material.PAPER, 99, s1);
+                }
+                ItemMeta itemMeta = of.getItemMeta();
+                itemMeta.setLore(Collections.singletonList(init));
 
+                of.setItemMeta(itemMeta);
+                a.add(of);
             }
         }
         return a;

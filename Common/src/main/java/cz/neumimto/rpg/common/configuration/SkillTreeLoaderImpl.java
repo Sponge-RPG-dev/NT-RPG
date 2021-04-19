@@ -34,11 +34,13 @@ import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.api.skills.utils.SkillLoadingErrors;
 import cz.neumimto.rpg.api.utils.FileUtils;
+import cz.neumimto.rpg.api.utils.MathUtils;
 import cz.neumimto.rpg.api.utils.Pair;
 import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.skills.SkillConfigLoader;
 import cz.neumimto.rpg.common.skills.SkillConfigLoaders;
 import cz.neumimto.rpg.common.skills.SkillExecutor;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -116,46 +118,38 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
 
     public void loadAsciiMaps(Config config, SkillTree skillTree) {
         try {
-            List<String> asciiMap = config.getStringList("AsciiMap");
-            Optional<String> max = asciiMap.stream().max(Comparator.comparingInt(String::length));
-            if (max.isPresent()) {
-                int length = max.get().length();
-                int rows = asciiMap.size();
+            ConfigList asciiMap = config.getList("AsciiMap");
 
-                short[][] array = new short[rows][length];
-
-                int i = 0;
+            int length = ((ConfigList)asciiMap.get(0)).size();
+            int rows = asciiMap.size();
+            short[][] array = new short[rows][length];
+            int i = 0;
+            for (ConfigValue data : asciiMap) {
+                ConfigList row = (ConfigList) data;
                 int j = 0;
-                StringBuilder num = new StringBuilder();
-                for (String s : asciiMap) {
-                    for (char c1 : s.toCharArray()) {
-                        if (Character.isDigit(c1)) {
-                            num.append(c1);
-                            continue;
-                        } else if (c1 == 'X') {
-                            skillTree.setCenter(new Pair<>(i, j));
-                            j++;
-                            continue;
-                        }
-                        if (!num.toString().equals("")) {
-                            array[i][j] = Short.parseShort(num.toString());
-                            j++;
-                        }
-                        ISkillTreeInterfaceModel guiModelByCharacter = skillService.getGuiModelByCharacter(c1);
-                        if (guiModelByCharacter != null) {
-                            array[i][j] = guiModelByCharacter.getId();
-                        }
-                        num = new StringBuilder();
+                for (ConfigValue configValue : row) {
+
+                    String c1 = configValue.unwrapped().toString();
+                    if (c1.equals("X")) {
+                        skillTree.setCenter(new Pair<>(i, j));
                         j++;
+                        continue;
                     }
-                    j = 0;
-                    i++;
+                    ISkillTreeInterfaceModel guiModelByCharacter = skillService.getGuiModelByCharacter(c1.charAt(0));
+                    if (guiModelByCharacter != null) {
+                        array[i][j] = guiModelByCharacter.getId();
+                    } if (MathUtils.isNumeric(c1)) {
+                        array[i][j] = Short.parseShort(c1);
+                    }
+                    j++;
                 }
-                skillTree.setSkillTreeMap(array);
+                i++;
             }
+            skillTree.setSkillTreeMap(array);
         } catch (ConfigException | ArrayIndexOutOfBoundsException ignored) {
             error("Could not read ascii map in the skilltree " + skillTree.getId(), ignored);
             skillTree.setSkillTreeMap(new short[][]{});
+            Log.info("You should not attempt to make the skilltree manually, use the web gui at https://sponge-rpg-dev.github.io/");
         }
     }
 

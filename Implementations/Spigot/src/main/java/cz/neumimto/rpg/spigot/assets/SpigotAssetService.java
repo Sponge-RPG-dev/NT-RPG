@@ -36,7 +36,7 @@ public class SpigotAssetService extends AssetService {
     public void copyToFile(String s, Path toPath) {
         String assetAsString = getAssetAsString(s);
         try {
-            Files.write(toPath, assetAsString.getBytes(), StandardOpenOption.CREATE_NEW);
+            Files.write(toPath, assetAsString.getBytes(), StandardOpenOption.CREATE);
         } catch (IOException e) {
             Log.error("Could not create file " + toPath, e);
         }

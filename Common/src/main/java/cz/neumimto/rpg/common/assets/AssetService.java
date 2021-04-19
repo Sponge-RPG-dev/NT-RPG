@@ -13,28 +13,32 @@ public abstract class AssetService {
     public void copyDefaults(Path path) {
         Path root = path.resolve("skilltrees/");
         try {
-            Files.createDirectory(root);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        copyToFile("defaults/skilltrees/magetree.conf", root.resolve("magetree.conf"));
-        copyToFile("defaults/skilltrees/warriortree.conf", root.resolve("warriortree.conf"));
-
-        try {
+            if (!root.toFile().exists()) {
+                Files.createDirectory(root);
+            }
             path = path.resolve("classes/");
-            Files.createDirectory(path);
-            Files.createDirectory(path.resolve("primary/"));
-            Files.createDirectory(path.resolve("races/"));
+            if (!path.toFile().exists()) {
+                Files.createDirectory(path);
+            }
+            Path sub = path.resolve("primary/");
+            if (!sub.toFile().exists()) {
+                Files.createDirectory(sub);
+            }
+            sub = path.resolve("races/");
+            if (!sub.toFile().exists()) {
+                Files.createDirectory(sub);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        copyToFile("defaults/classes/primary_classes/Apprentice.conf", path.resolve("primary/Apprentice.conf"));
-        copyToFile("defaults/classes/primary_classes/Rogue.conf", path.resolve("primary/Rogue.conf"));
-        copyToFile("defaults/classes/primary_classes/Warrior.conf", path.resolve("primary/Warrior.conf"));
-        copyToFile("defaults/classes/races/Dwarf.conf", path.resolve("races/Mage.conf"));
-        copyToFile("defaults/classes/races/Elf.conf", path.resolve("races/Rogue.conf"));
-        copyToFile("defaults/classes/races/Human.conf", path.resolve("races/Human.conf"));
+        copyToFileIfMissing("defaults/skilltrees/magetree.conf", root.resolve("magetree.conf"));
+        copyToFileIfMissing("defaults/skilltrees/warriortree.conf", root.resolve("warriortree.conf"));
+        copyToFileIfMissing("defaults/classes/primary_classes/Apprentice.conf", path.resolve("primary/Apprentice.conf"));
+        copyToFileIfMissing("defaults/classes/primary_classes/Rogue.conf", path.resolve("primary/Rogue.conf"));
+        copyToFileIfMissing("defaults/classes/primary_classes/Warrior.conf", path.resolve("primary/Warrior.conf"));
+        copyToFileIfMissing("defaults/classes/races/Dwarf.conf", path.resolve("races/Mage.conf"));
+        copyToFileIfMissing("defaults/classes/races/Elf.conf", path.resolve("races/Rogue.conf"));
+        copyToFileIfMissing("defaults/classes/races/Human.conf", path.resolve("races/Human.conf"));
     }
     private Path tempDirectory;
 
@@ -47,5 +51,11 @@ public abstract class AssetService {
             }
         }
         return tempDirectory;
+    }
+
+    private void copyToFileIfMissing(String internal, Path path) {
+        if (!path.toFile().exists()) {
+            copyToFile(internal, path);
+        }
     }
 }

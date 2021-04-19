@@ -4,13 +4,9 @@ import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import io.lumine.mythic.lib.api.DamageType;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.skills.Skill;
-import net.Indyuce.mmoitems.api.ItemAttackResult;
-import net.Indyuce.mmoitems.api.ability.AbilityResult;
-import net.Indyuce.mmoitems.api.player.PlayerStats;
-import net.Indyuce.mmoitems.stat.data.AbilityData;
-import net.mmogroup.mmolib.api.DamageType;
 import org.bukkit.entity.Player;
 
 public class MythicalMobsSkill extends ActiveSkill<ISpigotCharacter> {

@@ -165,7 +165,8 @@ public class AdminCommands extends BaseCommand {
     public void install(CommandIssuer executor) {
         Path workingDir = Paths.get(Rpg.get().getWorkingDirectory());
         assetService.copyDefaults(workingDir);
-        executor.sendMessage("Assets copies from jar to ntrpg/classes ntrpg/skilltrees folder, you can now edit files from disc and reload for immediate change");
+        executor.sendMessage("Internal assets were copied to ntrpg/classes ntrpg/skilltrees folder." +
+                " You can now edit files and reload /ntrpg reload for immediate change");
     }
 
     @Subcommand("reload")

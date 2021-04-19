@@ -18,15 +18,15 @@
 
 package cz.neumimto.rpg.api.configuration;
 
-import com.electronwill.nightconfig.core.conversion.Conversion;
-import com.electronwill.nightconfig.core.conversion.Converter;
-import com.electronwill.nightconfig.core.conversion.Path;
-import com.electronwill.nightconfig.core.conversion.PreserveNotNull;
+import com.electronwill.nightconfig.core.CommentedConfig;
+import com.electronwill.nightconfig.core.conversion.*;
+import com.typesafe.config.Config;
 import com.typesafe.config.Optional;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.utils.DebugLevel;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 /**
  * Created by NeumimTo on 26.12.2014.
@@ -175,6 +175,16 @@ public class PluginConfig {
     @Path("MANABAR_VERSION")
     public String MANABAR_VERSION = "BOSSBAR";
 
+    @Path("SKILL_SETTINGS_ICONS")
+    @Conversion(SSIConverter.class)
+    public Map<String, ItemString> SKILL_SETTINGS_ICONS = new HashMap<String, ItemString>() {{
+        put("cooldown", ItemString.parse("minecraft:paper;model=10"));
+        put("mana", ItemString.parse("minecraft:paper;model=11"));
+        put("damage", ItemString.parse("minecraft:paper;model=12"));
+        put("duration", ItemString.parse("minecraft:paper;model=13"));
+        put("period", ItemString.parse("minecraft:paper;model=14"));
+    }};
+
     private static class ItemDamageProcessorConverter implements Converter<ItemDamageProcessor, String> {
 
         @Override
@@ -212,6 +222,34 @@ public class PluginConfig {
             List list = new ArrayList();
             if (value != null) {
                 list.addAll(value);
+            }
+            return list;
+        }
+    }
+
+    private static class SSIConverter implements Converter<Map<String, ItemString>, List<String>> {
+
+        @Override
+        public Map<String, ItemString> convertToField(List<String> value) {
+            Map<String, ItemString> map = new HashMap<>();
+
+            for (String s : value) {
+                String[] split = s.split(";");
+
+                String k = split[1] + ";" + split[2];
+
+                map.put(split[0], ItemString.parse(k));
+            }
+
+
+            return map;
+        }
+
+        @Override
+        public List<String> convertFromField(Map<String, ItemString> value) {
+            List<String> list = new ArrayList<>();
+            for (Map.Entry<String, ItemString> entry : value.entrySet()) {
+                list.add(entry.getKey() + ";" + entry.getValue().itemId + ";model=" + entry.getValue().variant);
             }
             return list;
         }
