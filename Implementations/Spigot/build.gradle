@@ -51,6 +51,8 @@ dependencies {
     }
     compile 'org.slf4j:slf4j-api:1.7.30'
     compile "co.aikar:acf-paper:0.5.0-SNAPSHOT"
+    implementation 'com.github.stefvanschie.inventoryframework:IF:0.9.4'
+
 // https://mvnrepository.com/artifact/com.google.guava/guava
     compileOnly group: 'com.google.guava', name: 'guava', version: '21.0'
 

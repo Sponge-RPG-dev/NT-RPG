@@ -36,7 +36,7 @@ public class FlameDash extends TargetedBlockSkill {
         long delay = skillContext.getLongNodeValue("delay");
 
         Location location = player.getLocation();
-
+/*
         StaticCircularBeamEffect staticCircularBeamEffect = new StaticCircularBeamEffect(SpigotRpgPlugin.getEffectManager());
         staticCircularBeamEffect.vertStep = 0.1;
         staticCircularBeamEffect.setLocation(location);
@@ -48,8 +48,9 @@ public class FlameDash extends TargetedBlockSkill {
         staticCircularBeamEffect.particle = Particle.FLAME;
         staticCircularBeamEffect.type = EffectType.REPEATING;
 
-        SpigotRpgPlugin.getEffectManager().start(staticCircularBeamEffect);
 
+        SpigotRpgPlugin.getEffectManager().start(staticCircularBeamEffect);
+*/
         Bukkit.getScheduler().scheduleSyncDelayedTask(SpigotRpgPlugin.getInstance(),
                 () -> {
                     player.teleport(block.getLocation().add(0,1,0));
@@ -62,7 +63,7 @@ public class FlameDash extends TargetedBlockSkill {
 
                     LineEffect lineEffect = new LineEffect(SpigotRpgPlugin.getEffectManager());
                     lineEffect.particle = Particle.LAVA;
-                    lineEffect.particleCount = 5 * (int) location.distance(player.getLocation());
+                    lineEffect.particleCount = (int) location.distance(player.getLocation());
                     lineEffect.setLocation(location);
                     lineEffect.setTargetLocation(player.getLocation());
                     lineEffect.type = EffectType.INSTANT;

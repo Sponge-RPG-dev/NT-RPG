@@ -1,5 +1,9 @@
 package cz.neumimto.rpg.spigot.gui;
 
+import com.github.stefvanschie.inventoryframework.gui.GuiItem;
+import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
+import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
+import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.configuration.ItemString;
@@ -20,7 +24,11 @@ import cz.neumimto.rpg.common.gui.ConfigInventory;
 import cz.neumimto.rpg.common.gui.DynamicInventory;
 import cz.neumimto.rpg.common.gui.TemplateInventory;
 import cz.neumimto.rpg.spigot.Resourcepack;
+import cz.neumimto.rpg.spigot.SpigotRpg;
+import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.gui.elements.GuiCommand;
+import cz.neumimto.rpg.spigot.gui.elements.Icon;
 import cz.neumimto.rpg.spigot.skills.SpigotSkillService;
 import cz.neumimto.rpg.spigot.skills.SpigotSkillTreeInterfaceModel;
 import de.tr7zw.nbtapi.NBTItem;
@@ -29,6 +37,7 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.Inventory;
@@ -180,6 +189,18 @@ public class SpigotGuiHelper {
         NBTItem nbti = new NBTItem(itemStack);
         nbti.setString("ntrpg.item-command", command);
         return nbti.getItem();
+    }
+
+    public static ItemStack item(Material material, String nameKey, Integer data) {
+        ItemStack itemStack = new ItemStack(material);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        itemMeta.setDisplayName(Rpg.get().getLocalizationService().translate(nameKey));
+        if (data != null) {
+            itemMeta.setCustomModelData(data);
+        }
+        itemStack.setItemMeta(itemMeta);
+        return itemStack;
     }
 
     private static ItemStack unclickableInterface(Material material) {
@@ -417,6 +438,7 @@ public class SpigotGuiHelper {
         Material material = getSkillIcon(skillData);
         ItemStack itemStack = createSkillIconItemStack(material, skillData, lore);
         NBTItem nbtItem = new NBTItem(itemStack);
+
         nbtItem.setString("ntrpg.item-command", "skilltree skill " + skillData.getSkillName());
         return nbtItem.getItem();
     }
@@ -723,15 +745,20 @@ public class SpigotGuiHelper {
         return SpigotGuiHelper.unclickableInterface(Material.WHITE_STAINED_GLASS_PANE, 12345, "ntrpg.skillbook.emptyslot");
     }
 
-    public static Inventory createSkillDetailInventoryView(ISpigotCharacter character, SkillTree tree, SkillData skillData) {
-        Inventory build = createInventoryTemplate(skillData.getSkillName());
+    public static void createSkillDetailInventoryView(ISpigotCharacter character, SkillTree tree, SkillData skillData) {
+        String back = Rpg.get().getLocalizationService().translate(LocalizationKeys.BACK);
+        ChestGui gui = new ChestGui(6, skillData.getSkillName());
+        StaticPane background = new StaticPane(0, 0, 9, 6);
+        gui.addPane(background);
 
+        Player player = character.getPlayer();
+
+        ItemStack backButton = item(Material.PAPER, back,12345);
         SpigotSkillTreeViewModel model = character.getLastTimeInvokedSkillTreeView();
-
-        build.setItem(0,
-                button(Material.PAPER,
-                Rpg.get().getLocalizationService().translate(LocalizationKeys.BACK),
-        "skilltree view " + character.getLastTimeInvokedSkillTreeView().getViewedClass().getName(),12345));
+        background.addItem(new GuiCommand(
+                backButton,
+                "skilltree view " + model.getViewedClass().getName(),
+                player),0,0);
 
         if (skillData instanceof SkillPathData) {
 
@@ -740,13 +767,12 @@ public class SpigotGuiHelper {
             ItemStack of = new ItemStack(Material.PAPER);
             ItemMeta itemMeta = of.getItemMeta();
             itemMeta.setDisplayName("Tier " + data.getTier());
-            of = unclickableIcon(of);
-
-            build.setItem(10, of);
+            background.addItem(new Icon(of), 1,1);
 
             SkillService skillService = Rpg.get().getSkillService();
 
-            int i = 17;
+            int x = 1;
+            int y = 1;
             for (Map.Entry<String, Integer> entry : data.getSkillBonus().entrySet()) {
                 ISkill skill = skillService.getById(entry.getKey()).orElse(null);
                 if (skill != null) {
@@ -756,48 +782,45 @@ public class SpigotGuiHelper {
                             + String.format("%+d", entry.getValue()) + " | " + entry.getKey());
                     itemStack.setItemMeta(itemMeta1);
 
-                    build.setItem(i, itemStack);
-                    i++;
+                    background.addItem(new Icon(itemStack),x,y);
+                    x++;
+                    if (x % 8 == 0) {
+                        x = 1;
+                        y++;
+                    }
                 }
             }
 
         } else {
             String type = skillData.getSkill().getDamageType();
-            int i = 1;
-            while (i < 26) {
-                build.setItem(i, blank());
-                i++;
-            }
             if (type != null) {
-                build.setItem(11, damageTypeToItemStack(EntityDamageEvent.DamageCause.valueOf(type)));
+                background.addItem(new Icon(damageTypeToItemStack(EntityDamageEvent.DamageCause.valueOf(type))),1,1);
             }
+
+            int x = 1;
+            int y = 3;
 
             List<ItemStack> itemStacks = configurationToItemStacks(skillData);
-            i = 28;
-
             for (ItemStack itemStack : itemStacks) {
-                build.setItem(i, itemStack);
-                i++;
-            }
-            while (i < 54) {
-                build.setItem(i, blank());
-                i++;
+                background.addItem(new Icon(itemStack),x,y);
+                x++;
+                if (x % 8 == 0) {
+                    x = 1;
+                    y++;
+                }
             }
 
         }
-        return build;
 
+        background.fillWith(blank(), e -> e.setCancelled(true));
+        gui.show(player);
     }
 
     private static ItemStack damageTypeToItemStack(EntityDamageEvent.DamageCause type) {
         if (type == null) {
             return unclickableInterface(Material.STONE);
         }
-        ItemStack a = damageTypeToItemStack.get(type);
-        if (a == null) {
-            a = unclickableInterface(Material.STONE);
-        }
-        return a;
+        return damageTypeToItemStack.get(type);
     }
 
     private static List<ItemStack> configurationToItemStacks(SkillData skillData) {
@@ -812,12 +835,20 @@ public class SpigotGuiHelper {
 
                 ItemString itemString = skill_settings_icons.get(s.getKey());
                 ItemStack of = null;
+                Material material;
+                int variant = 0;
+                String displayName = s1;
                 if (itemString != null) {
-                    of = unclickableIcon(Material.matchMaterial(itemString.itemId), Integer.parseInt(itemString.variant), s1);
+                    material = Material.matchMaterial(itemString.itemId);
+                    variant = Integer.parseInt(itemString.variant);
                 } else {
-                    of = unclickableIcon(Material.PAPER, 99, s1);
+                    material = Material.PAPER;
+                    variant = 99;
                 }
+                of = new ItemStack(material);
                 ItemMeta itemMeta = of.getItemMeta();
+                itemMeta.setDisplayName(displayName);
+                itemMeta.setCustomModelData(variant);
                 itemMeta.setLore(Collections.singletonList(init));
 
                 of.setItemMeta(itemMeta);

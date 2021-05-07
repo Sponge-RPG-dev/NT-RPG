@@ -433,7 +433,7 @@ public class ResourceManagerImpl implements ResourceLoader {
                                 + Console.GREEN_BOLD + clazz.getClassLoader() +
                                 Console.RESET + " loaded class " +
                                 Console.GREEN + clazz.getSimpleName() + Console.RESET,
-                        Rpg.get().getPluginConfig().DEBUG);
+                        DebugLevel.DEVELOP);
             }
         } catch (IllegalAccessException | InstantiationException | ConfigurationException e) {
             e.printStackTrace();
