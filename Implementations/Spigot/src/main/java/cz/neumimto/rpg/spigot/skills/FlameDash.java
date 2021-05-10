@@ -59,7 +59,7 @@ public class FlameDash extends TargetedBlockSkill {
                     player.getWorld().spawnParticle(Particle.EXPLOSION_NORMAL, player.getLocation(), 2);
                     player.getWorld().spawnParticle(Particle.EXPLOSION_HUGE, player.getLocation(), 1);
 
-                    staticCircularBeamEffect.cancel();
+                  //  staticCircularBeamEffect.cancel();
 
                     LineEffect lineEffect = new LineEffect(SpigotRpgPlugin.getEffectManager());
                     lineEffect.particle = Particle.LAVA;

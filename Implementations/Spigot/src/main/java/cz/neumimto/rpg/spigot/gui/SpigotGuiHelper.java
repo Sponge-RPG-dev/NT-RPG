@@ -1,8 +1,6 @@
 package cz.neumimto.rpg.spigot.gui;
 
-import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
-import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
@@ -24,8 +22,6 @@ import cz.neumimto.rpg.common.gui.ConfigInventory;
 import cz.neumimto.rpg.common.gui.DynamicInventory;
 import cz.neumimto.rpg.common.gui.TemplateInventory;
 import cz.neumimto.rpg.spigot.Resourcepack;
-import cz.neumimto.rpg.spigot.SpigotRpg;
-import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.gui.elements.GuiCommand;
 import cz.neumimto.rpg.spigot.gui.elements.Icon;
@@ -35,9 +31,8 @@ import de.tr7zw.nbtapi.NBTItem;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.Inventory;
@@ -332,11 +327,11 @@ public class SpigotGuiHelper {
     }
 
     private static void fillSkillTreeViewInterface(Inventory i) {
-
+        i.setItem(17, blank());
         i.setItem(26, button(Resourcepack.UP, "Up", "skilltree north"));
         i.setItem(35, button(Resourcepack.DOWN, "Down", "skilltree south"));
-        i.setItem(53, button(Resourcepack.LEFT, "Left", "skilltree east"));
         i.setItem(44, button(Resourcepack.RIGHT, "Right", "skilltree west"));
+        i.setItem(53, button(Resourcepack.LEFT, "Left", "skilltree east"));
     }
 
     public static Inventory drawSkillTreeViewData(Inventory i, ISpigotCharacter character) {
@@ -532,7 +527,7 @@ public class SpigotGuiHelper {
         String id = a.getId();
         int transientVal = character.getTransientAttributes().get(id);
         int real = character.getCharacterBase().getAttributes().get(id);
-        int tx = character.getTransientAttributes().get(id);
+        int tx = character.getAttributesTransaction().get(id);
         ItemStack atris = charAttributeToItemStack(a, real, transientVal, tx);
         i.setItem(slotMod, atris);
     }
@@ -591,43 +586,18 @@ public class SpigotGuiHelper {
         ItemStack itemStack = new ItemStack(Material.matchMaterial(a.getItemType()));
 
         ItemMeta itemMeta = itemStack.getItemMeta();
-
-        String name = a.getName();
-        itemMeta.setDisplayName(ChatColor.GREEN + name);
-
-        List<String> lore = new ArrayList<>();
-        if (a.getDescription() != null) {
-            lore.add(a.getDescription());
-        }
-
-        lore.add(ChatColor.GRAY + "-------------------");
-        lore.add("");
-        lore.add(ChatColor.WHITE + "Effective Value: " + base + tr);
-        lore.add(ChatColor.ITALIC.toString() + ChatColor.YELLOW + "Char. Value: " + base);
-        lore.add(ChatColor.GRAY + "-------------------");
-        lore.add("");
-
-        Map<Integer, Float> propBonus = a.getPropBonus();
-        if (!propBonus.isEmpty()) {
-            lore.add("");
-            PropertyService propertyService = Rpg.get().getPropertyService();
-            for (Map.Entry<Integer, Float> e : propBonus.entrySet()) {
-                String nameById = propertyService.getNameById(e.getKey());
-                Float value = e.getValue();
-                lore.add(" " + ChatColor.WHITE + nameById.replaceAll("_", " ") + " " + formatPropertyValue(value));
-            }
-        }
-
+        List<String> lore = itemLoreFactory.toLore(a, base, tr);
 
         itemMeta.setLore(lore);
-        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ATTRIBUTES);
+        itemMeta.addItemFlags(ItemFlag.values());
+        itemMeta.setDisplayName(" ");
         itemMeta.setCustomModelData(1002);
         itemStack.setItemMeta(itemMeta);
 
         return itemStack;
     }
 
-    private static String formatPropertyValue(Float value) {
+    public static String formatPropertyValue(Float value) {
         float v = value.floatValue();
         if (v > 0) {
             return ChatColor.GREEN + "+" + v;

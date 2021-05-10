@@ -3,16 +3,18 @@ package cz.neumimto.rpg.spigot.gui;
 
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
+import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.localization.Arg;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.skills.*;
-import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
-import org.bukkit.ChatColor;
+import net.md_5.bungee.api.ChatColor;
 
 import java.util.*;
+
+import static cz.neumimto.rpg.spigot.gui.SpigotGuiHelper.formatPropertyValue;
 
 public class ItemLoreFactory {
 
@@ -70,6 +72,27 @@ public class ItemLoreFactory {
         return lore;
     }
 
+    public List<String> toLore(AttributeConfig attributeConfig, int base, int currentTx) {
+        List<String> list = new ArrayList<>();
+        list.add(header(ChatColor.of(attributeConfig.getHexColor()) + attributeConfig.getName()));
+        list.add(line(ChatColor.GOLD.toString() + ChatColor.ITALIC + attributeConfig.getDescription()));
+        list.add(line(""));
+        list.add(line("Effective Value: " + (base + currentTx)));
+        list.add(line("Actual Value: " + base + "/" + attributeConfig.getMaxValue()));
+
+        Map<Integer, Float> propBonus = attributeConfig.getPropBonus();
+        if (!propBonus.isEmpty()) {
+            list.add(line(""));
+            PropertyService propertyService = Rpg.get().getPropertyService();
+            for (Map.Entry<Integer, Float> e : propBonus.entrySet()) {
+                String nameById = propertyService.getNameById(e.getKey());
+                Float value = e.getValue();
+                list.add(line(" " + ChatColor.WHITE + nameById.replaceAll("_", " ") + " " + formatPropertyValue(value)));;
+            }
+        }
+
+        return list;
+    }
 
     public List<String> toLore(ISpigotCharacter character, SkillData skillData, ChatColor nameColor) {
         ISkill skill = skillData.getSkill();
@@ -167,7 +190,7 @@ public class ItemLoreFactory {
                         if (firstLine) {
                             lore.add(node(locService.translate(LocalizationKeys.SKILL_TYPES), builder.toString()));
                         } else {
-                            lore.add(line(" - " + builder.toString()));
+                            lore.add(line(" - " + builder));
                         }
 
                         builder = new StringBuilder();
@@ -175,7 +198,7 @@ public class ItemLoreFactory {
                     }
                 }
                 if (!builder.toString().isEmpty()) {
-                    lore.add(line(" - " + builder.toString()));
+                    lore.add(line(" - " + builder));
                 }
             }
 
