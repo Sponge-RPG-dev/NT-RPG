@@ -1,10 +1,7 @@
 package cz.neumimto.rpg.common.commands;
 
 import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.CommandCompletion;
-import co.aikar.commands.annotation.Private;
-import co.aikar.commands.annotation.Subcommand;
+import co.aikar.commands.annotation.*;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.players.CharacterService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
@@ -36,6 +33,12 @@ public class SkilltreeCommands extends BaseCommand {
 
     @Inject
     private SkillService skillService;
+
+    @Default
+    @CommandCompletion("@issuerclasses")
+    public void _openSkillTreeCommand(IActiveCharacter character, ClassDefinition classDefinition) {
+        openSkillTreeCommand(character, classDefinition);
+    }
 
     @Subcommand("view")
     @CommandCompletion("@issuerclasses")

@@ -59,6 +59,7 @@ dependencies {
 
     // compileOnly fileTree(dir: 'lib', include: '*.jar')
     compile fileTree(dir: 'lib-cp', include: '*.jar')
+    compileOnly fileTree(dir: 'lib', include: '*.jar')
 
     compileOnly 'it.unimi.dsi:fastutil:8.2.1'
 

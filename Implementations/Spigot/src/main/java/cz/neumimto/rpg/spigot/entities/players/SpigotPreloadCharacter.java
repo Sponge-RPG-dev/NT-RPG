@@ -20,8 +20,11 @@ import java.util.UUID;
 
 public class SpigotPreloadCharacter extends PreloadCharacter<Player, SpigotParty> implements ISpigotCharacter {
 
+    private Map<String, SpigotSkillTreeViewModel> skillTreeViewModelMap;
+
     public SpigotPreloadCharacter(UUID uuid) {
         super(uuid);
+        skillTreeViewModelMap = new HashMap<>();
     }
 
     @Override
@@ -47,7 +50,7 @@ public class SpigotPreloadCharacter extends PreloadCharacter<Player, SpigotParty
 
     @Override
     public Map<String, SpigotSkillTreeViewModel> getSkillTreeViewLocation() {
-        return Collections.emptyMap();
+        return skillTreeViewModelMap;
     }
 
     @Override
@@ -124,5 +127,7 @@ public class SpigotPreloadCharacter extends PreloadCharacter<Player, SpigotParty
     public String getPlayerAccountName() {
         return getPlayer().getName();
     }
+
+
 
 }
