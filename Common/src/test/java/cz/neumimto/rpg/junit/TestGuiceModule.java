@@ -151,6 +151,7 @@ public class TestGuiceModule extends AbstractModule {
         bind(Cooldown.class).to(CooldownTest.class);
         bind(HPCast.class);
         bind(ManaCast.class);
+        bind(IRpgScriptEngine.class).to(GraalVmScriptEngine.class);
 
     }
 

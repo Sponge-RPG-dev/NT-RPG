@@ -15,9 +15,11 @@ public interface IRpgScriptEngine {
 
     Map<Class<?>, JsBinding.Type> getDataToBind();
 
-    Object executeScript(String functionName, Object... args);
+    Object fn(String functionName, Object... args);
 
-    Object executeScript(String functionName);
+    Object fn(String functionName);
+
+    <T> T eval(String expr, Class<T> t);
 
     <T> T extract(Object o, String key, T def);
 }

@@ -1,10 +1,8 @@
-var EffectBase = Java.type("cz.neumimto.rpg.effects.EffectBase")
+var EffectBase = Java.type("cz.neumimto.rpg.api.effects.EffectBase")
 
-var SuperNiceEffect = Java.extend(EffectBase, {
+var EffectBase =  Java.extend(EffectBase, {
     onApply: function(self) {
-
     },
     onRemove: function(self) {
-
     }
 });

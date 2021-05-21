@@ -97,7 +97,7 @@ public class CustomSkillGeneratorTests {
 
     @Singleton
     @SkillMechanic("ntrpg:test_mechanic")
-    private static class TestMechanic {
+    public static class TestMechanic {
 
         public void doAction(@Caster IActiveCharacter character, @SkillArgument("settings.node") float value) {
 
@@ -107,7 +107,7 @@ public class CustomSkillGeneratorTests {
 
 
     @SkillMechanic("damage_check")
-    public class DamageCheck {
+    public static class DamageCheck {
 
         @Handler
         public boolean check(@Caster IActiveCharacter caster, @Target IEntity entity) {
@@ -117,7 +117,7 @@ public class CustomSkillGeneratorTests {
     }
 
     @TargetSelector("nearby_enemies")
-    public class NearbyEnemies {
+    public static class NearbyEnemies {
 
         @Handler
         public List<IEntity> getTargets(@Caster IActiveCharacter character, @SkillArgument("settings.range") float range) {

@@ -33,27 +33,22 @@ public class ClassDefinitionDaoTest {
     private AssetService assetService;
 
     @Inject
-    private RpgApi rpgApi;
-
-    @Inject
     private ClassService classService;
 
     @BeforeEach
     public void before() {
-        new RpgTest(rpgApi);
         Path classDirectory = classDefinitionDao.getClassDirectory();
         classDirectory.resolve("class1.conf").toFile().delete();
         classDirectory.resolve("class2.conf").toFile().delete();
-        assetService.copyToFile("class-dependency-graph-test/class1.conf",classDirectory.resolve("class1.conf"));
-        assetService.copyToFile("class-dependency-graph-test/class2.conf",classDirectory.resolve("class2.conf"));
+        assetService.copyToFile("classDependencyGraphTest/class1.conf",classDirectory.resolve("class1.conf"));
+        assetService.copyToFile("classDependencyGraphTest/class2.conf",classDirectory.resolve("class2.conf"));
 
     }
 
     @Test
     public void test_class_def_ependencies_loading() {
         Rpg.get().getPluginConfig().CLASS_TYPES.put("primary", new ClassTypeDefinition());
-        Path path = Paths.get(getClass().getClassLoader().getResource("assets/nt-rpg/class-dependency-graph-test").getPath()
-                .replaceFirst("/",""));
+        Path path = Paths.get(getClass().getClassLoader().getResource("assets/nt-rpg/classDependencyGraphTest").getPath());
         Set<ClassDefinition> classDefinitions = classDefinitionDao.parseClassFiles(path);
 
         boolean run = false;

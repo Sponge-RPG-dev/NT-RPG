@@ -72,13 +72,18 @@ public class GraalVmScriptEngine extends AbstractRpgScriptEngine {
     }
 
     @Override
-    public Object executeScript(String functionName, Object... args) {
+    public Object fn(String functionName, Object... args) {
         return bindings.execute(functionName).execute(args);
     }
 
     @Override
-    public Object executeScript(String functionName) {
+    public Object fn(String functionName) {
         return bindings.execute(functionName).execute();
+    }
+
+    @Override
+    public <T> T eval(String expr, Class<T> t) {
+        return context.eval(Source.create("js", expr)).as(t);
     }
 
     @Override

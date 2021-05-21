@@ -42,14 +42,13 @@ public class TestCustomSkillGenerator extends CustomSkillGenerator {
 
         Collection<String> values = params.methodArgs.keySet();
         Assert.assertEquals(8, values.size());
-        Assert.assertTrue(values.contains("'Test Test'"));
+        Assert.assertTrue(values.contains("\"'Test Test'\""));
         Assert.assertTrue(values.contains("caster"));
         Assert.assertTrue(values.contains("target"));
         Assert.assertTrue(values.contains("this"));
         Assert.assertTrue(values.contains("new cz.neumimto.rpg.effects.TestEffectVoid( target, effect_duration)"));
         Assert.assertTrue(values.contains("settings.damage"));
-        Assert.assertTrue(values.contains("settings.customNode"));
-
+        Assert.assertTrue(values.contains("settings.customNode"));;
     }
 
     public static class TestM01 {

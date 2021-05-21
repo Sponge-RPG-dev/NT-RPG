@@ -3,18 +3,23 @@ package cz.neumimto.rpg;
 import cz.neumimto.rpg.api.effects.EffectStackingStrategy;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
+import cz.neumimto.rpg.api.scripting.IRpgScriptEngine;
 import cz.neumimto.rpg.common.effects.InternalEffectSourceProvider;
 import cz.neumimto.rpg.common.entity.TestCharacter;
 import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.effects.TestEffectService;
+import cz.neumimto.rpg.junit.NtRpgExtension;
+import cz.neumimto.rpg.junit.TestGuiceModule;
 import cz.neumimto.rpg.model.CharacterBaseTest;
+import name.falgout.jeffrey.testing.junit.guice.GuiceExtension;
+import name.falgout.jeffrey.testing.junit.guice.IncludeModule;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
+import javax.inject.Inject;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.Set;
@@ -22,6 +27,9 @@ import java.util.UUID;
 
 import static org.mockito.Matchers.any;
 
+
+@ExtendWith({GuiceExtension.class, NtRpgExtension.class})
+@IncludeModule(TestGuiceModule.class)
 public class EffectTests {
 
     private static TestEffectService effectService = new TestEffectService();
@@ -33,6 +41,9 @@ public class EffectTests {
 
     private static Set<IEffect> processedEffects;
 
+    @Inject
+    private IRpgScriptEngine scriptEngine;
+
     @BeforeEach
     public void before() {
         processedEffects = effectService.getEffects();
@@ -40,6 +51,8 @@ public class EffectTests {
         character = new TestCharacter(UUID.randomUUID(), characterBase, 1);
 
         effect = createEffectMock("test");
+
+        scriptEngine.prepareEngine();
     }
 
     private static TickableEffect createEffectMock(String name) {
@@ -140,20 +153,16 @@ public class EffectTests {
 
     @Test
     public void test_Effect_Expirable_stackable_2_js() throws Exception {
-        ScriptEngineManager mgr = new ScriptEngineManager();
-        ScriptEngine scriptEngine = mgr.getEngineByExtension("js");
-
-        IEffect effect = createEffectJsMock("test", scriptEngine);
-        IEffect test = createEffectJsMock("test", scriptEngine);
+        IEffect effect = createEffectJsMock();
+        IEffect test = createEffectJsMock();
         processEffectStacking(effect, test);
     }
 
-    private IEffect createEffectJsMock(String test, ScriptEngine scriptEngine) throws Exception {
+    private IEffect createEffectJsMock() throws Exception {
         File file = new File(getClass().getClassLoader().getResource("effects/effect01.js").getFile());
         byte[] bytes = Files.readAllBytes(file.toPath());
-        scriptEngine.eval(new String(bytes));
-        Object eval = new ScriptEngineManager().getEngineByName("js").eval("SuperNiceEffect");
-        return (IEffect) eval;
+        scriptEngine.eval(new String(bytes), Void.class);
+        return scriptEngine.eval("EffectBase", IEffect.class);
     }
 
     private void processEffectStacking(IEffect first, IEffect test) {
