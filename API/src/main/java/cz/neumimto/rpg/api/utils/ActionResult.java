@@ -1,6 +1,5 @@
 package cz.neumimto.rpg.api.utils;
 
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class ActionResult {

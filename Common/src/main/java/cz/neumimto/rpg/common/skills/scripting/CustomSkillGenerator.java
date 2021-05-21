@@ -19,7 +19,6 @@ import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.api.utils.DebugLevel;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
-import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;
 import org.codehaus.janino.SimpleCompiler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

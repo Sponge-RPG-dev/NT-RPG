@@ -1,6 +1,5 @@
 package cz.neumimto.rpg;
 
-import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
@@ -21,8 +20,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import parsii.eval.Scope;
-import parsii.eval.Variable;
 
 import javax.inject.Inject;
 import java.util.HashMap;

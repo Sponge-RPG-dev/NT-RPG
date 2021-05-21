@@ -1,8 +1,6 @@
 package cz.neumimto.rpg.persistence.jdbc.migrations;
 
-
-import com.google.common.io.CharStreams;
-
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -36,7 +34,7 @@ public class DbMigrationsService {
     public void startMigration() throws SQLException, IOException {
         Statement statement = connection.createStatement();
         InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream("sql/create-migration-table.sql");
-        String s = CharStreams.toString(new InputStreamReader(resourceAsStream, Charset.forName("UTF-8")));
+        String s = toString(new InputStreamReader(resourceAsStream, Charset.forName("UTF-8")));
         statement.execute(s);
         Collections.sort(migrations);
         connection.setAutoCommit(false);
@@ -70,7 +68,7 @@ public class DbMigrationsService {
         PreparedStatement preparedStatement = null;
         try {
             InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream("sql/check.sql");
-            String s = CharStreams.toString(new InputStreamReader(resourceAsStream, Charset.forName("UTF-8")));
+            String s = toString(new InputStreamReader(resourceAsStream, Charset.forName("UTF-8")));
             preparedStatement = connection.prepareStatement(s.replaceAll("%s", migration.getId()));
             resultSet = preparedStatement.executeQuery();
             if (!resultSet.next()) {
@@ -104,7 +102,7 @@ public class DbMigrationsService {
                 connection.commit();
             }
             InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream("sql/insert.sql");
-            String s = CharStreams.toString(new InputStreamReader(resourceAsStream, Charset.forName("UTF-8")));
+            String s = toString(new InputStreamReader(resourceAsStream, Charset.forName("UTF-8")));
 
             preparedStatement2 = connection.prepareStatement(String.format(s, migration.getAuthor(), migration.getId(), migration.getNote()));
             preparedStatement2.execute();
@@ -129,8 +127,26 @@ public class DbMigrationsService {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-
-
         }
+    }
+
+    private String toString(InputStreamReader inputStreamReader) {
+        BufferedReader reader = new BufferedReader(inputStreamReader);
+        StringBuffer sb = new StringBuffer();
+        String str;
+        try {
+            while((str = reader.readLine())!= null){
+                sb.append(str);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            inputStreamReader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return sb.toString();
     }
 }

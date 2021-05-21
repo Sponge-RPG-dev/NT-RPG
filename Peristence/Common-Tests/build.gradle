@@ -10,7 +10,6 @@ group = 'cz.neumimto.rpg'
 version = '2.1.0-SNAPSHOT'
 
 dependencies {
-    compileOnly 'com.google.inject:guice:4.2.2'
     compileOnly project(':API')
     compileOnly project(':Common')
     compileOnly project(':Common-Persistence')

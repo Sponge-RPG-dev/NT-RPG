@@ -2,14 +2,10 @@ package cz.neumimto.rpg.common.scripting;
 
 import com.electronwill.nightconfig.core.CommentedConfig;
 import com.electronwill.nightconfig.core.Config;
-import com.electronwill.nightconfig.core.ConfigFormat;
-import com.electronwill.nightconfig.core.UnmodifiableConfig;
 import com.electronwill.nightconfig.core.conversion.ObjectConverter;
 import com.electronwill.nightconfig.core.file.FileConfig;
 import com.electronwill.nightconfig.core.io.ConfigParser;
 import com.electronwill.nightconfig.hocon.HoconFormat;
-import com.electronwill.nightconfig.json.FancyJsonWriter;
-import com.electronwill.nightconfig.json.JsonFormat;
 import com.google.inject.Injector;
 import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;

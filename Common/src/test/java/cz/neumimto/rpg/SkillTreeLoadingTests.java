@@ -4,7 +4,6 @@ import cz.neumimto.rpg.api.RpgApi;
 import cz.neumimto.rpg.api.configuration.SkillTreeDao;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.localization.LocalizationService;
-import cz.neumimto.rpg.api.scripting.IRpgScriptEngine;
 import cz.neumimto.rpg.api.skills.*;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;

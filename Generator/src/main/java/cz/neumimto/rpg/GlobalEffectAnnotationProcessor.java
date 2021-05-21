@@ -12,7 +12,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.*;
 
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
+@SupportedSourceVersion(SourceVersion.RELEASE_16)
 @SupportedAnnotationTypes({"cz.neumimto.rpg.effects.Generate"})
 public class GlobalEffectAnnotationProcessor extends AbstractProcessor {
 

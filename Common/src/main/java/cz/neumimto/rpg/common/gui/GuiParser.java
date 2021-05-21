@@ -9,10 +9,10 @@ import cz.neumimto.rpg.api.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.items.ClassItem;
 import cz.neumimto.rpg.api.logging.Log;
-import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import java.util.*;
 import java.util.function.Supplier;
@@ -25,7 +25,7 @@ public abstract class GuiParser<T, I> {
         Config config = ConfigFactory.load(classLoader, confName);
         RpgApi api = Rpg.get();
 
-        NashornScriptEngineFactory sFactorz = new NashornScriptEngineFactory();
+        ScriptEngine sFactorz = new ScriptEngineManager().getEngineByName("js");
 
         for (Config gui : config.getConfigList("gui")) {
             String guiName = gui.getString("type");
@@ -132,7 +132,7 @@ public abstract class GuiParser<T, I> {
         return CACHED_MENUS;
     }
 
-    private ConfigInventory createCachedMenu(NashornScriptEngineFactory factory,
+    private ConfigInventory createCachedMenu(ScriptEngine scriptEngine,
                                              String guiName,
                                              Config gui,
                                              Object context) {
@@ -150,7 +150,6 @@ public abstract class GuiParser<T, I> {
         } catch (ConfigException ignored) {
         }
 
-        ScriptEngine scriptEngine = factory.getScriptEngine();
         try {
             scriptEngine.eval(commandFn.replaceAll("%cmd%", command));
             scriptEngine.eval(condFn.replaceAll("%cond%", conditions));

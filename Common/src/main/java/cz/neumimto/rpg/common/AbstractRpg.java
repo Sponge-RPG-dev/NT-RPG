@@ -36,7 +36,6 @@ import cz.neumimto.rpg.common.skills.scripting.CustomSkillGenerator;
 
 import javax.inject.Inject;
 import java.io.File;
-import java.net.URI;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.Executor;

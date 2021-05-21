@@ -3,10 +3,8 @@ package cz.neumimto.rpg.api.skills.scripting;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.localization.Arg;
-import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.skills.ISkillNodeDescription;
 
-import javax.script.ScriptException;
 import javax.script.SimpleBindings;
 import java.util.ArrayList;
 import java.util.List;

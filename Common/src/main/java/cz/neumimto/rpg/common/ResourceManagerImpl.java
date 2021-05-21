@@ -21,11 +21,11 @@ import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.api.utils.Console;
 import cz.neumimto.rpg.api.utils.DebugLevel;
+import cz.neumimto.rpg.api.utils.FileUtils;
 import cz.neumimto.rpg.api.utils.Pair;
 import cz.neumimto.rpg.common.bytecode.ClassGenerator;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.common.utils.ResourceClassLoader;
-import org.apache.commons.io.FileUtils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -35,6 +35,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -406,13 +407,10 @@ public class ResourceManagerImpl implements ResourceLoader {
 
     @Override
     public void loadExternalJars() {
-        try {
-            FileUtils.deleteDirectory(addonLoadDir);
-            addonLoadDir.mkdir();
-            FileUtils.copyDirectory(addonDir, addonLoadDir, pathname -> pathname.isDirectory() || pathname.getName().endsWith(".jar"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        FileUtils.deleteDirectory(addonLoadDir);
+        addonLoadDir.mkdir();
+        FileUtils.copyDirectory(addonDir, addonLoadDir, path -> path.endsWith(".jar"));
+
         for (File file : addonLoadDir.listFiles()) {
             loadJarFile(file, false);
         }

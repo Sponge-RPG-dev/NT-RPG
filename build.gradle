@@ -2,8 +2,8 @@ subprojects {
     apply plugin: 'java-library'
 
     tasks.withType(JavaCompile) {
-        sourceCompatibility = "1.8"
-        targetCompatibility = "1.8"
+        sourceCompatibility = "16"
+        targetCompatibility = "16"
     }
 
     compileJava.options.encoding = compileTestJava.options.encoding = 'UTF-8'
@@ -34,5 +34,18 @@ subprojects {
         }
     }
 
+    configurations {
+        compile.extendsFrom api
+    }
 
+    jar {
+        from {
+            configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
+        }
+        exclude("**/*.DSA", "**/*.SF", "**/*pom.xml", "**/*pom.properties")
+    }
+
+    tasks.named("jar") {
+        duplicatesStrategy(DuplicatesStrategy.WARN)
+    }
 }

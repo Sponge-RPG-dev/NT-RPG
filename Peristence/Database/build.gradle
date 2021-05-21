@@ -10,40 +10,34 @@ group = 'cz.neumimto.rpg'
 version = '2.1.0-SNAPSHOT'
 
 dependencies {
-    compile project(':Common-Persistence')
-    compileOnly project(':API')
-    compileOnly project(':Common')
+    implementation project(':Common-Persistence')
+    implementation project(':API')
+    implementation project(':Common')
 
-    compile group: 'com.zaxxer', name: 'HikariCP', version: '3.3.1'
+    implementation group: 'com.zaxxer', name: 'HikariCP', version: '3.3.1'
 
-    compileOnly 'com.google.inject:guice:4.2.2'
-    compileOnly 'com.google.inject:guice:4.2.2'
-    compileOnly 'org.slf4j:slf4j-api:1.7.26'
-    compileOnly 'com.google.code.gson:gson:2.8.5'
+    implementation 'org.slf4j:slf4j-api:1.7.26'
+    implementation 'com.google.code.gson:gson:2.8.5'
 
-    testCompile project(':Common')
-    testCompile project(':API')
-    testCompile project(':Common-Persistence')
-    testCompile project(':Common-Persistence-Test')
-    testCompile group: 'com.google.code.gson', name: 'gson', version: '2.8.5'
-    testCompile 'com.google.guava:guava:28.1-jre'
-    testCompile group: 'com.zaxxer', name: 'HikariCP', version: '3.3.1'
-    testCompile group: 'mysql', name: 'mysql-connector-java', version: '8.0.17'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.4.1'
-    testCompile 'org.junit.jupiter:junit-jupiter-params:5.4.1'
-    testCompile 'com.h2database:h2:1.4.199'
-    testCompile group: 'org.junit.platform', name: 'junit-platform-runner', version: '1.5.1'
+
+    testImplementation project(':Common')
+    testImplementation project(':API')
+    testImplementation project(':Common-Persistence')
+    testImplementation project(':Common-Persistence-Test')
+    testImplementation group: 'com.google.code.gson', name: 'gson', version: '2.8.5'
+    testImplementation 'com.google.guava:guava:28.1-jre'
+    testImplementation group: 'com.zaxxer', name: 'HikariCP', version: '3.3.1'
+    testImplementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.17'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.4.1'
+    testImplementation 'com.h2database:h2:1.4.199'
+    testImplementation group: 'org.junit.platform', name: 'junit-platform-runner', version: '1.5.1'
 
     jar {
-        manifest {
-            attributes(
-                    'Build-Timestamp': new Date()
-            )
-        }
-        from {
-            configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
-        }
+       // from {
+       //     configurations.implementation.collect { it.isDirectory() ? it : zipTree(it) }
+       // }
     }
 
 

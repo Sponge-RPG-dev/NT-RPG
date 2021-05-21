@@ -1,8 +1,6 @@
 package cz.neumimto.rpg;
 
 import cz.neumimto.rpg.api.gui.ISkillTreeInterfaceModel;
-import cz.neumimto.rpg.api.skills.scripting.ActiveScriptSkill;
-import cz.neumimto.rpg.api.skills.types.PassiveScriptSkill;
 import cz.neumimto.rpg.common.skills.AbstractSkillService;
 
 import javax.inject.Singleton;

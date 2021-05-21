@@ -50,7 +50,7 @@ import cz.neumimto.rpg.common.persistance.dao.ClassDefinitionDao;
 import cz.neumimto.rpg.common.persistance.dao.ICharacterClassDao;
 import cz.neumimto.rpg.common.persistance.dao.IPersistenceHandler;
 import cz.neumimto.rpg.common.persistance.dao.IPlayerDao;
-import cz.neumimto.rpg.common.scripting.NashornRpgScriptEngine;
+import cz.neumimto.rpg.common.scripting.GraalVmScriptEngine;
 import cz.neumimto.rpg.common.scripting.TestCustomSkillGenerator;
 import cz.neumimto.rpg.common.skills.reagents.Cooldown;
 import cz.neumimto.rpg.common.skills.reagents.HPCast;
@@ -62,7 +62,6 @@ import cz.neumimto.rpg.model.TestPersistanceHandler;
 import cz.neumimto.rpg.persistence.InMemoryPlayerStorage;
 import cz.neumimto.rpg.skills.reagents.CooldownTest;
 import cz.neumimto.rpg.sponge.permission.TestPermissionService;
-import jdk.nashorn.api.scripting.JSObject;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.dynamic.DynamicType;
 import net.bytebuddy.dynamic.loading.ClassLoadingStrategy;
@@ -72,7 +71,6 @@ import net.bytebuddy.matcher.ElementMatchers;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.util.List;
 
 
 public class TestGuiceModule extends AbstractModule {
@@ -134,7 +132,7 @@ public class TestGuiceModule extends AbstractModule {
         bind(RWDao.class);
         bind(RpgApi.class).to(TestApiImpl.class);
 
-        bind(IRpgScriptEngine.class).to(NashornRpgScriptEngine.class);
+        bind(IRpgScriptEngine.class).to(GraalVmScriptEngine.class);
 
         bind(PermissionService.class).to(TestPermissionService.class);
         bind(EventFactoryService.class).to(TestEventFactory.class);

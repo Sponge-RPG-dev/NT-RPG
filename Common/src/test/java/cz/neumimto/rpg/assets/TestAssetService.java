@@ -5,7 +5,6 @@ import com.google.common.io.CharStreams;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.common.assets.AssetService;
 
-
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.io.InputStream;

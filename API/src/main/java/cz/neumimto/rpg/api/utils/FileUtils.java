@@ -1,20 +1,4 @@
-/*
- *     Copyright (c) 2015, NeumimTo https://github.com/NeumimTo
- *
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
- *
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
- *
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- */
+
 
 package cz.neumimto.rpg.api.utils;
 
@@ -29,9 +13,10 @@ import java.net.JarURLConnection;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.file.Files;
-import java.nio.file.LinkOption;
-import java.nio.file.Path;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * Created by NeumimTo on 31.1.2015.
@@ -84,6 +69,44 @@ public class FileUtils {
         new ObjectConverter().toConfig(data, c);
         HoconWriter hoconWriter = new HoconWriter();
         hoconWriter.write(c, file, WritingMode.REPLACE);
+    }
+
+    public static void deleteDirectory(File dir) {
+        if (dir == null || !dir.exists()) {
+            return;
+        }
+        File[] allContents = dir.listFiles();
+        if (allContents != null) {
+            for (File file : allContents) {
+                deleteDirectory(file);
+            }
+        }
+        dir.delete();
+    }
+
+    public static void copyDirectory(File from, File to, Function<Path, Boolean> copyFn) {
+        Path source =  from.toPath();
+        Path target = to.toPath();
+        try {
+            Files.walkFileTree(source, new SimpleFileVisitor<>() {
+                @Override
+                public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                    Files.createDirectories(target.resolve(source.relativize(dir)));
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    if (copyFn.apply(file)) {
+                        Files.copy(file, target.resolve(source.relativize(file)));
+                    }
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }
 

@@ -8,7 +8,6 @@ import cz.neumimto.rpg.common.entity.TestCharacter;
 import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.effects.TestEffectService;
 import cz.neumimto.rpg.model.CharacterBaseTest;
-import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -153,8 +152,8 @@ public class EffectTests {
         File file = new File(getClass().getClassLoader().getResource("effects/effect01.js").getFile());
         byte[] bytes = Files.readAllBytes(file.toPath());
         scriptEngine.eval(new String(bytes));
-        ScriptObjectMirror mirror = (ScriptObjectMirror) scriptEngine.eval("SuperNiceEffect");
-        return (IEffect) (Object) mirror;
+        Object eval = new ScriptEngineManager().getEngineByName("js").eval("SuperNiceEffect");
+        return (IEffect) eval;
     }
 
     private void processEffectStacking(IEffect first, IEffect test) {

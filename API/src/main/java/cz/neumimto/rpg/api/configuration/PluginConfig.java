@@ -18,15 +18,15 @@
 
 package cz.neumimto.rpg.api.configuration;
 
-import com.electronwill.nightconfig.core.CommentedConfig;
-import com.electronwill.nightconfig.core.conversion.*;
-import com.typesafe.config.Config;
+import com.electronwill.nightconfig.core.conversion.Conversion;
+import com.electronwill.nightconfig.core.conversion.Converter;
+import com.electronwill.nightconfig.core.conversion.Path;
+import com.electronwill.nightconfig.core.conversion.PreserveNotNull;
 import com.typesafe.config.Optional;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.utils.DebugLevel;
 
 import java.util.*;
-import java.util.stream.Stream;
 
 /**
  * Created by NeumimTo on 26.12.2014.

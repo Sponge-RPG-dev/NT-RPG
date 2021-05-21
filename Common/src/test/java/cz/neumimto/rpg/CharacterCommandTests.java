@@ -3,7 +3,6 @@ package cz.neumimto.rpg;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.RpgApi;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
-import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.gui.Gui;
