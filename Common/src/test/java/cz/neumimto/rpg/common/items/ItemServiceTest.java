@@ -81,23 +81,21 @@ public class ItemServiceTest {
         for (ItemClass subClass : itemClass.getSubClass()) {
 
             if (subClass.getName().equalsIgnoreCase("Cleaving")) {
-                Assertions.assertEquals(5, subClass.getItems().size());
+                Assertions.assertEquals(6, subClass.getItems().size());
                 Assertions.assertEquals(1, subClass.getProperties().size());
                 Assertions.assertEquals(1, subClass.getPropertiesMults().size());
                 for (RpgItemType item : subClass.getItems()) {
-                    Assertions.assertEquals(0, item.getDamage());
-                    Assertions.assertNull(item.getModelId());
+                    Assertions.assertTrue(item.getDamage() > 0);
                     cFound = true;
                 }
             }
 
             if (subClass.getName().equalsIgnoreCase("Swords")) {
-                Assertions.assertEquals(5, subClass.getItems().size());
+                Assertions.assertEquals(11, subClass.getItems().size());
                 Assertions.assertEquals(1, subClass.getProperties().size());
                 Assertions.assertEquals(1, subClass.getPropertiesMults().size());
                 for (RpgItemType item : subClass.getItems()) {
-                    Assertions.assertEquals(10, item.getDamage());
-                    Assertions.assertEquals("variant", item.getModelId());
+                    Assertions.assertTrue(item.getDamage() > 0);
                     bFound = true;
                 }
             }

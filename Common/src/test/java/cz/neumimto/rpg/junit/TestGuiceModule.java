@@ -72,9 +72,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
-
 public class TestGuiceModule extends AbstractModule {
-
 
     @Override
     protected void configure() {
@@ -153,6 +151,7 @@ public class TestGuiceModule extends AbstractModule {
         bind(Cooldown.class).to(CooldownTest.class);
         bind(HPCast.class);
         bind(ManaCast.class);
+
     }
 
     private static TestCharacterService scs;

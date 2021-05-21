@@ -26,7 +26,7 @@ dependencies {
     testImplementation project(':Common-Persistence')
     testImplementation 'org.graalvm.sdk:graal-sdk:20.0.0'
     testImplementation 'org.graalvm.js:js:20.0.0'
-    testImplementation 'com.github.JeffreyFalgout:junit5-extensions:89fa6cb1e7'
+    testImplementation 'com.github.JeffreyFalgout:junit5-extensions:junit5-extensions-1.2.1'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.1'
     testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.4.1'
     testImplementation 'org.junit.jupiter:junit-jupiter-params:5.4.1'

@@ -1,6 +1,5 @@
 package cz.neumimto.rpg;
 
-import cz.neumimto.rpg.api.RpgApi;
 import cz.neumimto.rpg.api.configuration.SkillTreeDao;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.localization.LocalizationService;
@@ -22,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-@ExtendWith({NtRpgExtension.class, GuiceExtension.class})
+@ExtendWith({GuiceExtension.class, NtRpgExtension.class})
 @IncludeModule(TestGuiceModule.class)
 public class SkillTreeLoadingTests {
 
@@ -35,12 +34,8 @@ public class SkillTreeLoadingTests {
     @Inject
     private LocalizationService localizationService;
 
-    @Inject
-    private RpgApi rpgApi;
-
     @BeforeEach
     public void before() throws Exception {
-        new RpgTest(rpgApi);
         skillService.getSkills().put("test", new TestSkill("test"));
         skillService.getSkills().put("test2", new TestSkill("test2"));
     }

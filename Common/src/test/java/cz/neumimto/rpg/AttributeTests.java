@@ -34,12 +34,6 @@ public class AttributeTests {
     @Inject
     private EventFactoryService eventFactoryService;
 
-
-    @BeforeEach
-    public void before() {
-        new TestDictionary().reset();
-    }
-
     @Test
     public void testAttributeAdd(@Stage(READY) IActiveCharacter iActiveCharacter) {
         iActiveCharacter.setAttributePoints(0);
