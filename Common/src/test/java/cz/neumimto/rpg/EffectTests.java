@@ -2,6 +2,7 @@ package cz.neumimto.rpg;
 
 import cz.neumimto.rpg.api.effects.EffectStackingStrategy;
 import cz.neumimto.rpg.api.effects.IEffect;
+import cz.neumimto.rpg.api.effects.stacking.DoubleEffectStackingStrategy;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.scripting.IRpgScriptEngine;
 import cz.neumimto.rpg.common.effects.InternalEffectSourceProvider;
@@ -50,7 +51,7 @@ public class EffectTests {
         characterBase = new CharacterBaseTest();
         character = new TestCharacter(UUID.randomUUID(), characterBase, 1);
 
-        effect = createEffectMock("test");
+        effect = createEffectMock("testEffect");
 
         scriptEngine.prepareEngine();
     }
@@ -123,7 +124,7 @@ public class EffectTests {
 
     @Test
     public void test_Effect_Expirable_stackable_single_instance() {
-        makeEffectStackable(effect);
+        effect = (TickableEffect) makeEffectStackable(effect);
         effect.setPeriod(0);
         effectService.addEffect(effect, InternalEffectSourceProvider.INSTANCE);
         effectService.schedule();
@@ -147,7 +148,7 @@ public class EffectTests {
     @Test
     public void test_Effect_Expirable_stackable() {
         IEffect effect = this.effect;
-        TickableEffect test = createEffectMock("test");
+        TickableEffect test = createEffectMock("testEffect");
         processEffectStacking(effect, test);
     }
 
@@ -166,12 +167,12 @@ public class EffectTests {
     }
 
     private void processEffectStacking(IEffect first, IEffect test) {
-        makeEffectStackable(first);
+        first = makeEffectStackable(first);
 
         effectService.addEffect(first, InternalEffectSourceProvider.INSTANCE);
         Assertions.assertNotNull(character.getEffect(first.getName()));
         Assertions.assertNotSame(first, character.getEffect(first.getName()));
-        Assertions.assertTrue(character.getEffect("test").getStackedValue().equals(1L));
+        Assertions.assertTrue(character.getEffect("testEffect").getStackedValue().equals(1D));
         effectService.schedule();
 
         Mockito.verify(first, Mockito.times(1)).onApply(any());
@@ -179,17 +180,17 @@ public class EffectTests {
         Mockito.verify(first, Mockito.times(0)).onRemove(any());
 
 
-        makeEffectStackable(test);
+        test = makeEffectStackable(test);
 
         effectService.addEffect(test, InternalEffectSourceProvider.INSTANCE);
         Mockito.verify(test, Mockito.times(1)).onApply(any());
         Mockito.verify(first, Mockito.times(1)).onApply(any());
         effectService.schedule();
 
-        Assertions.assertTrue(character.getEffect("test").getStackedValue().equals(2L));
-        Assertions.assertSame(processedEffects.size(), 2);
-        Assertions.assertSame(character.getEffectMap().size(), 1);
-        Assertions.assertSame(character.getEffect("test").getEffects().size(), 2);
+        Assertions.assertEquals(2D, character.getEffect("testEffect").getStackedValue());
+        Assertions.assertEquals(2, processedEffects.size());
+        Assertions.assertEquals(1, character.getEffectMap().size());
+        Assertions.assertEquals(2, character.getEffect("testEffect").getEffects().size());
 
         //expire
         Mockito.when(test.getExpireTime()).thenReturn(0L);
@@ -200,7 +201,7 @@ public class EffectTests {
 
         Assertions.assertSame(processedEffects.size(), 1);
         Assertions.assertSame(character.getEffectMap().size(), 1);
-        Assertions.assertTrue(character.getEffect("test").getStackedValue().equals(1L));
+        Assertions.assertTrue(character.getEffect("testEffect").getStackedValue().equals(1D));
 
         Mockito.when(first.getExpireTime()).thenReturn(0L);
         effectService.schedule();
@@ -209,12 +210,14 @@ public class EffectTests {
 
         Assertions.assertSame(processedEffects.size(), 0);
         Assertions.assertSame(character.getEffectMap().size(), 0);
-        Assertions.assertNull(character.getEffect("test"));
+        Assertions.assertNull(character.getEffect("testEffect"));
     }
 
-    private void makeEffectStackable(IEffect effect) {
-        Mockito.when(effect.isStackable()).thenReturn(true);
-        Mockito.when(effect.getEffectStackingStrategy()).thenReturn((EffectStackingStrategy<Long>) (current, toAdd) -> current == null ? 1 : toAdd + current);
-        Mockito.when(effect.getValue()).thenReturn(1L);
+    private IEffect makeEffectStackable(IEffect effect) {
+        effect.setStackable(true, DoubleEffectStackingStrategy.INSTANCE);
+        effect.setValue(1D);
+        effect = Mockito.spy(effect);
+        Mockito.when(effect.getConsumer()).thenReturn(character);
+        return effect;
     }
 }

@@ -5,14 +5,15 @@ import cz.neumimto.rpg.api.effects.EffectContainer;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
 
-public class TickableEffect extends EffectBase<Long> {
+public class TickableEffect extends EffectBase<Double> {
 
     public static String name = "Test";
 
-    public TickableEffect(String name, IEffectConsumer character, long duration, long model) {
+    public TickableEffect(String name, IEffectConsumer character, long duration, double model) {
         super(name, character);
         setDuration(duration);
-        setPeriod(model);
+        setPeriod((long) model);
+        setValue(model);
     }
 
     @Override

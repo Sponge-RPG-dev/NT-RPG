@@ -167,7 +167,7 @@ public abstract class AbstractEffectService implements EffectService {
     @Override
     public <T extends IEffect> boolean addEffect(T effect, IEffectSourceProvider effectSourceProvider, IEntity entitySource) {
         IEffectContainer eff = effect.getConsumer().getEffect(effect.getName());
-        if (Rpg.get().getPluginConfig().DEBUG.isDevelop()) {
+         if (Rpg.get().getPluginConfig().DEBUG.isDevelop()) {
             IEffectConsumer consumer1 = effect.getConsumer();
             if (consumer1 instanceof IActiveCharacter) {
                 IActiveCharacter chara = (IActiveCharacter) consumer1;
