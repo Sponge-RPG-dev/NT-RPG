@@ -1,9 +1,3 @@
-plugins {
-    id 'com.adarshr.test-logger' version '1.7.0'
-}
-
-apply plugin: 'java'
-
 group = 'cz.neumimto.rpg'
 version = '2.1.0-SNAPSHOT'
 
