@@ -36,14 +36,10 @@ dependencies {
     }
     compileOnly 'me.lucko.luckperms:luckperms-api:4.2'
     compileOnly 'com.github.rojo8399:PlaceholderAPI:4.5.1'
-    compileOnly 'it.unimi.dsi:fastutil:8.2.1'
     compileOnly 'com.github.randombyte-developer:holograms:v3.2.0'
     compileOnly 'com.github.OnapleRPG:CrowdBinding:v0.4.1'
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.1'
-    testCompile 'org.junit.jupiter:junit-jupiter-engine:5.4.1'
-    testCompile 'org.junit.jupiter:junit-jupiter-params:5.4.1'
-    testCompile 'com.github.JeffreyFalgout:junit5-extensions:89fa6cb1e7'
+
 
     // https://mvnrepository.com/artifact/org.mockito/mockito-core
     testCompile group: 'org.mockito', name: 'mockito-core', version: '2.25.0'

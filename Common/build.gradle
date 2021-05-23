@@ -10,36 +10,23 @@ dependencies {
     annotationProcessor project(':Generator')
 
     api project(':API')
-    api 'net.bytebuddy:byte-buddy:1.11.0'
-
-    api "co.aikar:acf-core:0.5.0-SNAPSHOT"
-    api 'com.squareup:javapoet:1.13.0'
-    api 'org.codehaus.janino:janino:3.1.2'
+    api 'net.bytebuddy:byte-buddy:' + project.bytebuddy
+    api "co.aikar:acf-core:" + project.acf
+    api 'com.squareup:javapoet:' + project.javapoet
+    api 'org.codehaus.janino:janino:' + project.janino
     
-    compileOnly 'it.unimi.dsi:fastutil:8.2.1'
-    compileOnly 'com.google.code.gson:gson:2.8.5'
-    compileOnly 'org.apache.commons:commons-lang3:3.9'
-    compileOnly 'org.graalvm.sdk:graal-sdk:21.1.0'
-    compileOnly 'org.graalvm.js:js:21.1.0'
-    compileOnly 'org.graalvm.js:js-scriptengine:21.1.0'
+    compileOnly 'org.graalvm.sdk:graal-sdk:' + project.graal
+    compileOnly 'org.graalvm.js:js:' + project.graal
+    compileOnly 'org.graalvm.js:js-scriptengine:' + project.graal
 
     testImplementation project(':Database-Persistence')
     testImplementation project(':Common-Persistence')
-    testImplementation 'org.graalvm.sdk:graal-sdk:20.0.0'
-    testImplementation 'org.graalvm.js:js:20.0.0'
-    testImplementation 'com.github.JeffreyFalgout:junit5-extensions:junit5-extensions-1.2.1'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.1'
-    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.4.1'
-    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.4.1'
-    testImplementation 'org.graalvm.sdk:graal-sdk:21.1.0'
-    testImplementation 'org.graalvm.js:js:21.1.0'
-    testImplementation 'org.graalvm.js:js-scriptengine:21.1.0'
-
-    testImplementation 'it.unimi.dsi:fastutil:8.2.1'
-    testImplementation 'org.slf4j:slf4j-simple:1.7.26'
-    //// https://mvnrepository.com/artifact/com.google.code.gson/gson
-    testImplementation 'com.google.code.gson:gson:2.8.5'
-
+    testImplementation 'org.graalvm.sdk:graal-sdk:' + project.graal
+    testImplementation 'org.graalvm.js:js:' + project.graal
+    testImplementation 'org.graalvm.sdk:graal-sdk:' + project.graal
+    testImplementation 'org.graalvm.js:js:' + project.graal
+    testImplementation 'org.graalvm.js:js-scriptengine:' + project.graal
+    
 }
 
 compileJava {

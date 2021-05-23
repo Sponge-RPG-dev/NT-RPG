@@ -29,20 +29,29 @@ subprojects {
 
     test {
         useJUnitPlatform()
-        testLogging {
-            events "passed", "skipped", "failed"
-        }
     }
 
-    configurations {
-        compile.extendsFrom api
-    }
 
     jar {
         from {
             configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
         }
-        exclude("**/*.DSA", "**/*.SF", "**/*pom.xml", "**/*pom.properties")
+        exclude("**/*.DSA", "**/*.SF", "**/*pom.xml", "**/*pom.properties",'**/module-info.class')
+    }
+
+    dependencies {
+        compileOnly 'it.unimi.dsi:fastutil:' + project.fastutil
+        compileOnly 'com.google.code.gson:gson:' + project.gson
+
+        testImplementation 'org.junit.jupiter:junit-jupiter-api:' + project.junit5
+        testImplementation 'org.junit.jupiter:junit-jupiter-engine:' + project.junit5
+        testImplementation 'org.junit.jupiter:junit-jupiter-params:' + project.junit5
+        testImplementation 'com.github.JeffreyFalgout:junit5-extensions:junit5-extensions-1.2.1'
+        testImplementation 'it.unimi.dsi:fastutil:' + project.fastutil
+        testImplementation 'org.slf4j:slf4j-simple:' + project.slf4j
+        //// https://mvnrepository.com/artifact/com.google.code.gson/gson
+        testImplementation 'com.google.code.gson:gson:' + project.gson
+
     }
 
     tasks.named("jar") {

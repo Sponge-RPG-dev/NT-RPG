@@ -1,15 +1,26 @@
 package cz.neumimto.rpg.junit;
 
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.items.ItemClass;
 import cz.neumimto.rpg.api.items.RpgItemType;
+import cz.neumimto.rpg.api.skills.ISkill;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.SkillResult;
+import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.common.items.RpgItemTypeImpl;
 
 import java.util.HashMap;
 
 public class TestDictionary {
 
+    public static final ISkill DUMMY_SKILL = new ActiveSkill() {
+        @Override
+        public SkillResult cast(IActiveCharacter character, PlayerSkillContext info) {
+            return SkillResult.OK;
+        }
+    };
     public static ItemClass WEAPON_CLASS_1;
     public static RpgItemType ITEM_TYPE_WEAPON_1;
     public static ItemClass WEAPON_CLASS_2;

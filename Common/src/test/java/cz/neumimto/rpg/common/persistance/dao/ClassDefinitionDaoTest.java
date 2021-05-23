@@ -50,8 +50,7 @@ public class ClassDefinitionDaoTest {
 
     @Test
     void testClassConfigLoading() {
-        Path path = Paths.get(getClass().getClassLoader().getResource("classes/group1").getPath()
-                .replaceFirst("/",""));
+        Path path = Paths.get(getClass().getClassLoader().getResource("classes/group1").getPath());
         Set<ClassDefinition> classDefinitions = classDefinitionDao.parseClassFiles(path);
         Assertions.assertSame(classDefinitions.size(), 1);
         ClassDefinition c = classDefinitions.iterator().next();

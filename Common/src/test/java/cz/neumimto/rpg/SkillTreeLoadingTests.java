@@ -1,11 +1,13 @@
 package cz.neumimto.rpg;
 
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.SkillTreeDao;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.skills.*;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
+import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.entity.TestCharacter;
 import cz.neumimto.rpg.junit.NtRpgExtension;
 import cz.neumimto.rpg.junit.TestGuiceModule;
@@ -17,6 +19,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import javax.inject.Inject;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -34,10 +38,15 @@ public class SkillTreeLoadingTests {
     @Inject
     private LocalizationService localizationService;
 
+    @Inject
+    private AssetService assetService;
+
     @BeforeEach
     public void before() throws Exception {
         skillService.getSkills().put("test", new TestSkill("test"));
         skillService.getSkills().put("test2", new TestSkill("test2"));
+        Path workingDirectory = Paths.get(Rpg.get().getWorkingDirectory());
+        assetService.copyToFile("skilltrees/SkillTree01.conf", workingDirectory.resolve("skilltrees/"));
     }
 
     @Test
@@ -45,7 +54,7 @@ public class SkillTreeLoadingTests {
 
         Map<String, SkillTree> all = skillTreeDao.getAll();
 
-        Assertions.assertSame(all.size(), 1);
+        Assertions.assertSame(1, all.size());
 
         SkillTree tree = all.values().iterator().next();
 

@@ -485,7 +485,7 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
 
     private SkillData createSkillInfo(SkillTree tree, String lowercased) {
 
-        ISkill skill = Rpg.get().getSkillService().getSkills().get(lowercased.replaceAll("\"",""));
+        ISkill skill = Rpg.get().getSkillService().getSkillById(lowercased.replaceAll("\"",""));
         if (skill == null) {
             throw new InvalidSkillTreeException("Could not find a skill " + lowercased + " referenced in the skilltree " + tree.getId());
         }

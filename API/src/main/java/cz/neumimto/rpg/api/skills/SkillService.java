@@ -47,4 +47,8 @@ public interface SkillService {
     Collection<String> getSkillNames();
 
     void registerSkillHandler(String key, SkillScriptHandlers toInterface);
+
+    default ISkill getSkillById(String id) {
+        return getSkills().get(id);
+    }
 }

@@ -1,6 +1,10 @@
 package cz.neumimto.rpg;
 
 import com.google.inject.Injector;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.scripting.SkillScriptHandlers;
+import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.api.skills.scripting.ScriptExecutorSkill;
 import cz.neumimto.rpg.common.scripting.GraalVmScriptEngine;
@@ -29,29 +33,22 @@ public class AssetsLoadingTest {
     @Inject
     private SkillService skillService;
 
+    @Inject
     private GraalVmScriptEngine jsLoader;
 
     @Inject
     private Injector injector;
 
-    @Inject
-    private TestApiImpl api;
-
     @BeforeEach
     public void beforeEach() throws Exception {
         jsLoader = injector.getInstance(GraalVmScriptEngine.class);
-        new RpgTest(api);
         jsLoader.prepareEngine();
-     //   Bindings bindings = jsLoader.getCompiledLib().getEngine().getBindings(ScriptContext.GLOBAL_SCOPE);
-     //   bindings = bindings == null ? new SimpleBindings() : bindings;
-    //    bindings.put("ScriptExecutorSkill", ScriptExecutorSkill.class);
-     //   jsLoader.getCompiledLib().getEngine().eval("var ScriptExecutorSkill = Java.type(\"" + ScriptExecutorSkill.class.getCanonicalName() + "\")");
-     //   jsLoader.getCompiledLib().getEngine().setBindings(bindings, ScriptContext.GLOBAL_SCOPE);
         skillService.load();
+        skillService.registerSkillHandler("ntrpg:test", (SkillScriptHandlers.Active) (caster, context) -> SkillResult.OK);
     }
 
     @Test
-    public void testJSSkillLoading() throws URISyntaxException {
+    public void testJSSkillLoading() {
         File file = new File(getClass().getClassLoader().getResource("testconfig/Skills-Definition.conf").getFile());
         jsLoader.loadSkillDefinitionFile(new URLClassLoader(new URL[]{}, this.getClass().getClassLoader()), file);
         Assertions.assertTrue(skillService.getById("ntrpg:jstest").isPresent());

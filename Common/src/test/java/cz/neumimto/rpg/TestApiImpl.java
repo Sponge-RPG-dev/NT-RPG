@@ -25,8 +25,11 @@ import cz.neumimto.rpg.entity.TestEntityService;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -205,8 +208,15 @@ public class TestApiImpl implements RpgApi {
 
     @Override
     public String getWorkingDirectory() {
-        String string = this.getClass().getClassLoader().getResource("classes").toString();
-        return new File(string).getParent().substring(6);
+        Path path = Paths.get("./build/tmp/tests/");
+        if (!Files.exists(path)) {
+            try {
+                Files.createDirectory(path);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return path.toString();
     }
 
 

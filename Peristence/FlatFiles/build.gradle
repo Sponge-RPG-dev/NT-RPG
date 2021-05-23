@@ -1,8 +1,7 @@
 plugins {
-    id "org.sonarqube" version "2.7"
+    id 'java-library'
 }
 
-apply plugin: 'java'
 
 group = 'cz.neumimto.rpg'
 version = '2.1.0-SNAPSHOT'
@@ -12,19 +11,12 @@ dependencies {
     runtimeOnly project(':API')
     runtimeOnly project(':Common')
 
-    runtimeOnly 'com.google.inject:guice:4.2.2'
-    runtimeOnly 'org.slf4j:slf4j-api:1.7.26'
+    //compileOnly 'com.google.inject:guice:4.2.2'
+    //compileOnly 'org.slf4j:slf4j-api:1.7.26'
 
-    testImplementation project(':Common-Persistence')
     testImplementation project(':Common-Persistence-Test')
-    testImplementation project(':Common')
-    testImplementation project(':API')
-    testImplementation("junit:junit:4.12")
+  //  testImplementation("junit:junit:4.12")
 
-
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.4.1'
-    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.4.1'
 
     jar {
        // from {

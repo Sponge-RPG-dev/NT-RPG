@@ -1,7 +1,6 @@
 plugins {
     id 'java-library'
     id 'com.github.johnrengelman.shadow' version '4.0.4'
-    id "de.undercouch.download" version "4.1.1"
 }
 
 repositories {
@@ -42,51 +41,48 @@ compileJava {
 }
 
 dependencies {
+    annotationProcessor("org.spigotmc:plugin-annotations:" + project.pluginannotations)
     annotationProcessor project(':Generator')
+
+    api project(':API')
     api project(':Common')
     api project(':FlatFiles-Persistence')
 
-    implementation "co.aikar:acf-paper:0.5.0-SNAPSHOT"
-    implementation 'com.github.stefvanschie.inventoryframework:IF:0.9.4'
-
-// https://mvnrepository.com/artifact/com.google.guava/guava
-    runtimeOnly group: 'com.google.guava', name: 'guava', version: '21.0'
-
+    implementation "co.aikar:acf-paper:" + project.acf
+    implementation 'com.github.stefvanschie.inventoryframework:IF:' + project.if
 
     // runtimeOnly fileTree(dir: 'lib', include: '*.jar')
     implementation fileTree(dir: 'lib-cp', include: '*.jar')
-    runtimeOnly fileTree(dir: 'lib', include: '*.jar')
+    compileOnly fileTree(dir: 'lib', include: '*.jar')
 
-    runtimeOnly 'it.unimi.dsi:fastutil:8.2.1'
+    compileOnly "org.spigotmc:spigot-api:" + project.spigotapi
 
-    runtimeOnly "org.spigotmc:spigot-api:1.16.4-R0.1-SNAPSHOT"
-    annotationProcessor("org.spigotmc:plugin-annotations:1.2.2-SNAPSHOT")
-
-    runtimeOnly ("org.spigotmc:plugin-annotations:1.2.2-SNAPSHOT"){
+    compileOnly ("org.spigotmc:plugin-annotations:" + project.pluginannotations){
         exclude group: "org.bukkit", module: "bukkit"
     }
 
-    runtimeOnly (group: "com.comphenix.protocol", name: "ProtocolLib", version: "4.6.0-SNAPSHOT") {
+    compileOnly ("com.comphenix.protocol:ProtocolLib:" + project.protocollib) {
         exclude group: "com.comphenix.executors", module: "BukkitExecutors"
     }
-    //runtimeOnly 'com.github.dmulloy2:ProtocolLib:master'
-    runtimeOnly 'de.tr7zw:item-nbt-api-plugin:2.2.0'
-    runtimeOnly 'com.github.Slikey:EffectLib:d77f639038'
-    runtimeOnly 'me.clip:placeholderapi:2.10.3'
-    runtimeOnly 'com.gmail.filoghost.holographicdisplays:holographicdisplays-api:2.4.0'
 
-    runtimeOnly('net.Indyuce:MMOItems:6.5.5') {
+    //runtimeOnly 'com.github.dmulloy2:ProtocolLib:master'
+    compileOnly 'de.tr7zw:item-nbt-api-plugin:2.2.0'
+    compileOnly 'com.github.Slikey:EffectLib:d77f639038'
+    compileOnly 'me.clip:placeholderapi:2.10.3'
+    compileOnly 'com.gmail.filoghost.holographicdisplays:holographicdisplays-api:2.4.0'
+
+    compileOnly('net.Indyuce:MMOItems:6.5.5') {
         exclude group: 'com.mojang', module: 'authlib'
         exclude group: 'org.jetbrains', module: 'annotations'
     }
 
-    runtimeOnly('io.lumine:MythicLib:1.0.17') {
+    compileOnly('io.lumine:MythicLib:1.0.17') {
         exclude group: "org.slf4j", module: "slf4j"
     }
-    
-    runtimeOnly 'io.lumine.xikage:MythicMobs:4.11.2'
 
-    runtimeOnly 'com.gitlab.SamB440:RPGRegions-2:9e46ca8d' // 1.3.5
+    compileOnly 'io.lumine.xikage:MythicMobs:4.11.2'
+
+    compileOnly 'com.gitlab.SamB440:RPGRegions-2:9e46ca8d' // 1.3.5
 
     testImplementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.30'
 
@@ -94,30 +90,17 @@ dependencies {
         exclude group: "org.spigotmc", module: "spigot-api"
         exclude group: "org.jetbrains", module: "annotations"
     }
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.1'
-    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.4.1'
-    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.4.1'
 
     jar {
-     //   from {
-     //       configurations.implementation.collect { it.isDirectory() ? it : zipTree(it) }
-     //   }
-
-        exclude("**/*.DSA", "**/*.SF", "**/*pom.xml", "**/*pom.properties")
         libsDirName = '../../../server-spigot/plugins'
         archiveFileName="NT-RPG-Spigot-16.x-" + archiveVersion + ".jar"
     }
 
-    //sourceSets {
-    //    test.compileClasspath += configurations.runtimeOnly
-    //    test.runtimeClasspath += configurations.runtimeOnly
-    //}
+
 }
 
 test {
     dependsOn jar
-    classpath = project.sourceSets.test.output + configurations.testRuntimeClasspath + files(jar.archiveFile) + configurations.runtimeOnly
-
     useJUnitPlatform()
 }
 
@@ -125,14 +108,6 @@ shadowJar {
     classifier = null
 
 //    relocate 'co.aikar.commands', 'cz.neumimto.acf'
-    exclude '**/module-info.class'
 }
 
 build.dependsOn shadowJar
-
-//task deploy {
-//    copy {
-//        from "${buildDir}/${jar.archiveName()}"
-//        into new File((String)System.getenv("RPG_DEPLOY_DIR"))
-//    }
-//}

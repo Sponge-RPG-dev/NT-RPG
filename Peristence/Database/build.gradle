@@ -29,8 +29,6 @@ dependencies {
     testImplementation 'com.google.guava:guava:28.1-jre'
     testImplementation group: 'com.zaxxer', name: 'HikariCP', version: '3.3.1'
     testImplementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.17'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.1'
-    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.4.1'
     testImplementation 'com.h2database:h2:1.4.199'
     testImplementation group: 'org.junit.platform', name: 'junit-platform-runner', version: '1.5.1'
 
