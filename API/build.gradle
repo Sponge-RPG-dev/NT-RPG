@@ -3,7 +3,7 @@ plugins {
 }
 
 group = 'cz.neumimto.rpg'
-version = '2.2.0-SNAPSHOT'
+version = project.subp_version
 
 dependencies {
     annotationProcessor project(':Generator')

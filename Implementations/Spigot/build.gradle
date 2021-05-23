@@ -32,13 +32,8 @@ repositories {
 }
 
 group = 'cz.neumimto.rpg'
-version = '2.1.0-SNAPSHOT-13'
+version = project.p_spigot_version
 
-compileJava {
-    options.compilerArgs += ["-parameters"]
-    options.fork = true
-    options.forkOptions.executable = 'javac'
-}
 
 dependencies {
     annotationProcessor("org.spigotmc:plugin-annotations:" + project.pluginannotations)
@@ -66,25 +61,23 @@ dependencies {
     }
 
     //runtimeOnly 'com.github.dmulloy2:ProtocolLib:master'
-    compileOnly 'de.tr7zw:item-nbt-api-plugin:2.2.0'
-    compileOnly 'com.github.Slikey:EffectLib:d77f639038'
-    compileOnly 'me.clip:placeholderapi:2.10.3'
-    compileOnly 'com.gmail.filoghost.holographicdisplays:holographicdisplays-api:2.4.0'
+    compileOnly 'de.tr7zw:item-nbt-api-plugin:' + project.nbtapi
+    compileOnly 'com.github.Slikey:EffectLib:' + project.effectlib
+    compileOnly 'me.clip:placeholderapi:' + project.papi
+    compileOnly 'com.gmail.filoghost.holographicdisplays:holographicdisplays-api:' + project.hdisplays
 
-    compileOnly('net.Indyuce:MMOItems:6.5.5') {
+    compileOnly('net.Indyuce:MMOItems:' + project.mmoitems) {
         exclude group: 'com.mojang', module: 'authlib'
         exclude group: 'org.jetbrains', module: 'annotations'
     }
 
-    compileOnly('io.lumine:MythicLib:1.0.17') {
+    compileOnly('io.lumine:MythicLib:' + project.mythiclib) {
         exclude group: "org.slf4j", module: "slf4j"
     }
 
-    compileOnly 'io.lumine.xikage:MythicMobs:4.11.2'
+    compileOnly 'io.lumine.xikage:MythicMobs:' + project.mythicmobs
 
-    compileOnly 'com.gitlab.SamB440:RPGRegions-2:9e46ca8d' // 1.3.5
-
-    testImplementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.30'
+    compileOnly 'com.gitlab.SamB440:RPGRegions-2:' + project.rpgregions
 
     testImplementation ('com.github.NeumimTo:MockBukkit:e92bb7bbd1') {
         exclude group: "org.spigotmc", module: "spigot-api"
@@ -96,12 +89,6 @@ dependencies {
         archiveFileName="NT-RPG-Spigot-16.x-" + archiveVersion + ".jar"
     }
 
-
-}
-
-test {
-    dependsOn jar
-    useJUnitPlatform()
 }
 
 shadowJar {

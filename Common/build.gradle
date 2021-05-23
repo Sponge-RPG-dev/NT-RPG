@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'cz.neumimto.rpg'
-version = '2.1.0-SNAPSHOT'
+version = project.subp_version
 
 dependencies {
     annotationProcessor project(':Generator')
@@ -27,19 +27,6 @@ dependencies {
     testImplementation 'org.graalvm.js:js:' + project.graal
     testImplementation 'org.graalvm.js:js-scriptengine:' + project.graal
     
-}
-
-compileJava {
-    options.compilerArgs += ["-parameters"]
-    options.fork = true
-    options.forkOptions.executable = 'javac'
-}
-
-
-compileTestJava {
-    options.compilerArgs += ["-parameters"]
-    options.fork = true
-    options.forkOptions.executable = 'javac'
 }
 
 shadowJar {

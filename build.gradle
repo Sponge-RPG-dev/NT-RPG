@@ -28,9 +28,21 @@ subprojects {
     }
 
     test {
+        dependsOn jar
         useJUnitPlatform()
     }
 
+    compileJava {
+        options.compilerArgs += ["-parameters"]
+        options.fork = true
+        options.forkOptions.executable = 'javac'
+    }
+
+    compileTestJava {
+        options.compilerArgs += ["-parameters"]
+        options.fork = true
+        options.forkOptions.executable = 'javac'
+    }
 
     jar {
         from {

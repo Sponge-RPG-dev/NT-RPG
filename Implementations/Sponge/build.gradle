@@ -15,11 +15,6 @@ repositories {
     }
 }
 
-compileJava {
-    options.compilerArgs += ["-parameters"]
-    options.fork = true
-    options.forkOptions.executable = 'javac'
-}
 
 dependencies {
     annotationProcessor project(':Generator')
