@@ -20,27 +20,27 @@ import java.util.Set;
 public class ManaBarText extends EffectBase<Object> implements IEffectContainer<Object, ManaBarText>, ManaBar {
 
     public static BaseComponent[][] ROWS = {
-            TextComponent.fromLegacyText("\uE000                         \uE004\uE004\uE004\uE004\uE004\uE004\uE004\uE004\uE004\uE004"),
-            TextComponent.fromLegacyText("\uE000                         \uE003\uE004\uE004\uE004\uE004\uE004\uE004\uE004\uE004\uE004"),
-            TextComponent.fromLegacyText("\uE000                         \uE002\uE004\uE004\uE004\uE004\uE004\uE004\uE004\uE004\uE004"),
-            TextComponent.fromLegacyText("\uE000                         \uE002\uE003\uE004\uE004\uE004\uE004\uE004\uE004\uE004\uE004"),
-            TextComponent.fromLegacyText("\uE000                         \uE002\uE002\uE004\uE004\uE004\uE004\uE004\uE004\uE004\uE004"),
-            TextComponent.fromLegacyText("\uE000                         \uE002\uE002\uE003\uE004\uE004\uE004\uE004\uE004\uE004\uE004"),
-            TextComponent.fromLegacyText("\uE000                         \uE002\uE002\uE002\uE004\uE004\uE004\uE004\uE004\uE004\uE004"),
-            TextComponent.fromLegacyText("\uE000                         \uE002\uE002\uE002\uE003\uE004\uE004\uE004\uE004\uE004\uE004"),
-            TextComponent.fromLegacyText("\uE000                         \uE002\uE002\uE002\uE002\uE004\uE004\uE004\uE004\uE004\uE004"),
-            TextComponent.fromLegacyText("\uE000                         \uE002\uE002\uE002\uE002\uE003\uE004\uE004\uE004\uE004\uE004"),
-            TextComponent.fromLegacyText("\uE000                         \uE002\uE002\uE002\uE002\uE002\uE004\uE004\uE004\uE004\uE004"),
-            TextComponent.fromLegacyText("\uE000                         \uE002\uE002\uE002\uE002\uE002\uE003\uE004\uE004\uE004\uE004"),
-            TextComponent.fromLegacyText("\uE000                         \uE002\uE002\uE002\uE002\uE002\uE002\uE004\uE004\uE004\uE004"),
-            TextComponent.fromLegacyText("\uE000                         \uE002\uE002\uE002\uE002\uE002\uE002\uE003\uE004\uE004\uE004"),
-            TextComponent.fromLegacyText("\uE000                         \uE002\uE002\uE002\uE002\uE002\uE002\uE002\uE004\uE004\uE004"),
-            TextComponent.fromLegacyText("\uE000                         \uE002\uE002\uE002\uE002\uE002\uE002\uE002\uE003\uE004\uE004"),
-            TextComponent.fromLegacyText("\uE000                         \uE002\uE002\uE002\uE002\uE002\uE002\uE002\uE002\uE004\uE004"),
-            TextComponent.fromLegacyText("\uE000                         \uE002\uE002\uE002\uE002\uE002\uE002\uE002\uE002\uE003\uE004"),
-            TextComponent.fromLegacyText("\uE000                         \uE002\uE002\uE002\uE002\uE002\uE002\uE002\uE002\uE002\uE004"),
+            TextComponent.fromLegacyText("\uE000                         \uE002\uE002\uE002\uE002\uE002\uE002\uE002\uE002\uE002\uE002"),
             TextComponent.fromLegacyText("\uE000                         \uE002\uE002\uE002\uE002\uE002\uE002\uE002\uE002\uE002\uE003"),
-            TextComponent.fromLegacyText("\uE000                         \uE002\uE002\uE002\uE002\uE002\uE002\uE002\uE002\uE002\uE002")
+            TextComponent.fromLegacyText("\uE000                         \uE002\uE002\uE002\uE002\uE002\uE002\uE002\uE002\uE002\uE004"),
+            TextComponent.fromLegacyText("\uE000                         \uE002\uE002\uE002\uE002\uE002\uE002\uE002\uE002\uE003\uE004"),
+            TextComponent.fromLegacyText("\uE000                         \uE002\uE002\uE002\uE002\uE002\uE002\uE002\uE002\uE004\uE004"),
+            TextComponent.fromLegacyText("\uE000                         \uE002\uE002\uE002\uE002\uE002\uE002\uE002\uE003\uE004\uE004"),
+            TextComponent.fromLegacyText("\uE000                         \uE002\uE002\uE002\uE002\uE002\uE002\uE002\uE004\uE004\uE004"),
+            TextComponent.fromLegacyText("\uE000                         \uE002\uE002\uE002\uE002\uE002\uE002\uE003\uE004\uE004\uE004"),
+            TextComponent.fromLegacyText("\uE000                         \uE002\uE002\uE002\uE002\uE002\uE002\uE004\uE004\uE004\uE004"),
+            TextComponent.fromLegacyText("\uE000                         \uE002\uE002\uE002\uE002\uE002\uE003\uE004\uE004\uE004\uE004"),
+            TextComponent.fromLegacyText("\uE000                         \uE002\uE002\uE002\uE002\uE002\uE004\uE004\uE004\uE004\uE004"),
+            TextComponent.fromLegacyText("\uE000                         \uE002\uE002\uE002\uE002\uE003\uE004\uE004\uE004\uE004\uE004"),
+            TextComponent.fromLegacyText("\uE000                         \uE002\uE002\uE002\uE002\uE004\uE004\uE004\uE004\uE004\uE004"),
+            TextComponent.fromLegacyText("\uE000                         \uE002\uE002\uE002\uE003\uE004\uE004\uE004\uE004\uE004\uE004"),
+            TextComponent.fromLegacyText("\uE000                         \uE002\uE002\uE002\uE004\uE004\uE004\uE004\uE004\uE004\uE004"),
+            TextComponent.fromLegacyText("\uE000                         \uE002\uE002\uE003\uE004\uE004\uE004\uE004\uE004\uE004\uE004"),
+            TextComponent.fromLegacyText("\uE000                         \uE002\uE002\uE004\uE004\uE004\uE004\uE004\uE004\uE004\uE004"),
+            TextComponent.fromLegacyText("\uE000                         \uE002\uE003\uE004\uE004\uE004\uE004\uE004\uE004\uE004\uE004"),
+            TextComponent.fromLegacyText("\uE000                         \uE002\uE004\uE004\uE004\uE004\uE004\uE004\uE004\uE004\uE004"),
+            TextComponent.fromLegacyText("\uE000                         \uE003\uE004\uE004\uE004\uE004\uE004\uE004\uE004\uE004\uE004"),
+            TextComponent.fromLegacyText("\uE000                         \uE004\uE004\uE004\uE004\uE004\uE004\uE004\uE004\uE004\uE004")
     };
 
     protected IActiveCharacter character;
