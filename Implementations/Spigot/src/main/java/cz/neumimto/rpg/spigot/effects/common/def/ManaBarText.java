@@ -58,7 +58,7 @@ public class ManaBarText extends EffectBase<Object> implements IEffectContainer<
     @Override
     public void onTick(IEffect self) {
         double percentage = MathUtils.getPercentage(character.getMana().getValue(), character.getMana().getMaxValue());
-        BaseComponent[] stringg = ROWS[5 * (int)Math.round(percentage / 5)];
+        BaseComponent[] stringg = ROWS[(int)Math.round(percentage / 5)];
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, stringg);
     }
 
