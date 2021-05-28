@@ -48,6 +48,9 @@ dependencies {
 
 }
 
+def currentJvm = org.gradle.internal.jvm.Jvm.current()
+println currentJvm
+
 compileJava {
     options.compilerArgs += ["-parameters"]
     options.fork = true

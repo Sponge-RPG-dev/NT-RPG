@@ -10,6 +10,7 @@ import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
 import cz.neumimto.rpg.spigot.inventory.SpigotInventoryService;
 import de.tr7zw.nbtapi.NBTItem;
+import io.lumine.xikage.mythicmobs.skills.mechanics.SendToastMechanic;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,6 +18,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 import javax.inject.Inject;
 
@@ -37,10 +39,11 @@ public class OnKeyPress implements Listener {
     @EventHandler
     public void onCharacterHeldItemChange(PlayerItemHeldEvent event) {
         Player player = event.getPlayer();
-        if (player.getOpenInventory().getType() == InventoryType.CRAFTING) {
+        if (player.getOpenInventory().getType() != InventoryType.CRAFTING) {
             return;
         }
-        ItemStack item = player.getInventory().getItem(event.getNewSlot());
+        PlayerInventory inventory = player.getInventory();
+        ItemStack item = inventory.getItem(event.getNewSlot());
         if (item == null || item.getType() == Material.AIR) {
             return;
         }
@@ -49,7 +52,16 @@ public class OnKeyPress implements Listener {
             String skillName = nbtItem.getString(SpigotInventoryService.SKILLBIND);
             ISpigotCharacter character = characterService.getCharacter(player);
             commandFacade.executeSkill(character, skillName);
-            player.getInventory().setHeldItemSlot(event.getPreviousSlot());
+            int previousSlot = event.getPreviousSlot();
+            ItemStack prevItem = inventory.getItem(previousSlot);
+            if (prevItem != null) {
+                NBTItem nbtItem1 = new NBTItem(prevItem);
+                if (!nbtItem1.hasKey(SpigotInventoryService.SKILLBIND)) {
+                    inventory.setHeldItemSlot(event.getPreviousSlot());
+                }
+            } else {
+                inventory.setHeldItemSlot(event.getPreviousSlot());
+            }
         }
     }
 }
