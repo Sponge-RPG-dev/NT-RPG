@@ -14,7 +14,7 @@ dependencies {
     api "co.aikar:acf-core:" + project.acf
     api 'com.squareup:javapoet:' + project.javapoet
     api 'org.codehaus.janino:janino:' + project.janino
-    
+
     compileOnly 'org.graalvm.sdk:graal-sdk:' + project.graal
     compileOnly 'org.graalvm.js:js:' + project.graal
     compileOnly 'org.graalvm.js:js-scriptengine:' + project.graal
@@ -26,7 +26,7 @@ dependencies {
     testImplementation 'org.graalvm.sdk:graal-sdk:' + project.graal
     testImplementation 'org.graalvm.js:js:' + project.graal
     testImplementation 'org.graalvm.js:js-scriptengine:' + project.graal
-    
+
 }
 
 shadowJar {

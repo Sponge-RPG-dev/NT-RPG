@@ -43,7 +43,7 @@ public class ProjectileCache {
     }
 
     public void process(Block block) {
-        if (consumer != null) blockHit.accept(block);
+        if (blockHit != null) blockHit.accept(block);
     }
 
     public void setSkill(PlayerSkillContext info) {
