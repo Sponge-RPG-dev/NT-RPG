@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import cz.neumimto.rpg.api.RpgApi;
 import cz.neumimto.rpg.common.skills.scripting.Handler;
 import cz.neumimto.rpg.common.skills.scripting.Target;
+import cz.neumimto.rpg.spigot.SpigotRpg;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import org.bukkit.Bukkit;
@@ -27,7 +28,7 @@ public class ToastMechanic {
     public static final String frame = "frame";
 
     @Inject
-    private RpgApi rpgApi;
+    private SpigotRpg rpgApi;
 
     @Handler
     public void sendToPlayer(@Target ISpigotCharacter character,

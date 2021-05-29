@@ -27,6 +27,7 @@ import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.utils.ActionResult;
 import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.effects.InternalEffectSourceProvider;
+import cz.neumimto.rpg.common.utils.GraalInstaller;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -170,6 +171,25 @@ public class AdminCommands extends BaseCommand {
         assetService.copyDefaults(workingDir);
         executor.sendMessage("Internal assets were copied to ntrpg/classes ntrpg/skilltrees folder." +
                 " You can now edit files and reload /ntrpg reload for immediate change");
+    }
+
+    //https://medium.com/graalvm/graalvms-javascript-engine-on-jdk11-with-high-performance-3e79f968a819
+    @Subcommand("graal?")
+    public void checkGraalPresent(CommandIssuer executor) {
+        if (!GraalInstaller.check()) {
+            executor.sendMessage("To enable js scripting you additional action is required.");
+            executor.sendMessage(">Run your server on GraalVM https://www.graalvm.org/downloads/, instead of standard JRE");
+            executor.sendMessage(">Run command /nadmin install-graal ; this action will download several Graal binaries from https://mvnrepository.com/artifact/org.graalvm.js/ !");
+            executor.sendMessage("> ! If you choose the second option you will also want to add additional server startup flags -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCI !");
+        } else {
+            executor.sendMessage("- OK");
+        }
+    }
+
+    @Private
+    @Subcommand("install-graal")
+    public void installGraal(CommandIssuer commandIssuer) {
+        GraalInstaller.downloadTo(Paths.get(Rpg.get().getWorkingDirectory() + "/addons"), commandIssuer::sendMessage);
     }
 
     @Subcommand("reload")

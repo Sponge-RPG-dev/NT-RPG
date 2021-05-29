@@ -1,6 +1,5 @@
 plugins {
     id 'java-library'
-    id 'com.github.johnrengelman.shadow' version '4.0.4'
 }
 
 repositories {
@@ -15,13 +14,7 @@ repositories {
         url "https://repo.codemc.org/repository/maven-public/"
     }
     maven {
-        url = "https://repo.aikar.co/content/groups/aikar/"
-    }
-    maven {
-        url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/'
-    }
-    maven {
-        url 'https://jitpack.io'
+        url = 'https://repo.extendedclip.com/content/repositories'
     }
     maven {
         url "https://repo.dmulloy2.net/nexus/repository/public/"
@@ -63,7 +56,7 @@ dependencies {
     //runtimeOnly 'com.github.dmulloy2:ProtocolLib:master'
     compileOnly 'de.tr7zw:item-nbt-api-plugin:' + project.nbtapi
     compileOnly 'com.github.Slikey:EffectLib:' + project.effectlib
-    compileOnly 'me.clip:placeholderapi:' + project.papi
+  //  compileOnly 'placeholderapi.me.clip:placeholderapi:' + project.papi
     compileOnly 'com.gmail.filoghost.holographicdisplays:holographicdisplays-api:' + project.hdisplays
 
     compileOnly('net.Indyuce:MMOItems:' + project.mmoitems) {
@@ -91,10 +84,8 @@ dependencies {
 
 }
 
-shadowJar {
-    classifier = null
-
+//shadowJar {
 //    relocate 'co.aikar.commands', 'cz.neumimto.acf'
-}
+//}
 
-build.dependsOn shadowJar
+//build.dependsOn shadowJar

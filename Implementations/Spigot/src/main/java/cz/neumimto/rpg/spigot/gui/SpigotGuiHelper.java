@@ -25,6 +25,7 @@ import cz.neumimto.rpg.spigot.Resourcepack;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.gui.elements.GuiCommand;
 import cz.neumimto.rpg.spigot.gui.elements.Icon;
+import cz.neumimto.rpg.spigot.gui.inventoryviews.ClassTypesGuiView;
 import cz.neumimto.rpg.spigot.skills.SpigotSkillService;
 import cz.neumimto.rpg.spigot.skills.SpigotSkillTreeInterfaceModel;
 import de.tr7zw.nbtapi.NBTItem;
@@ -103,7 +104,12 @@ public class SpigotGuiHelper {
     }
 
     public static Inventory createMenuInventoryClassTypesView(Player player) {
-        return CACHED_MENUS.get("class_types");
+        Inventory inventory = CACHED_MENUS.get("class_types");
+        if (inventory == null) {
+            inventory = ClassTypesGuiView.create();
+            CACHED_MENUS.put("class_types", inventory);
+        }
+        return inventory;
     }
 
     public static Inventory createMenuInventoryClassesByTypeView(Player player, String classType) {

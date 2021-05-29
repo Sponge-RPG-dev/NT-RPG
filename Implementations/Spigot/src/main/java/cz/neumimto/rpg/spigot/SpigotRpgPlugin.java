@@ -1,6 +1,7 @@
 package cz.neumimto.rpg.spigot;
 
 import co.aikar.commands.*;
+import com.google.inject.Injector;
 import cz.neumimto.FireworkHandler;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.players.CharacterService;
@@ -156,6 +157,7 @@ public class SpigotRpgPlugin extends JavaPlugin {
                 SpigotSkillBindCommands.class
 
         }, new FlatFilesModule(), (bindings, providers) -> new SpigotGuiceModule(this, spigotRpg, bindings, providers), injector -> {
+
 
             injector.injectMembers(spigotRpg);
             new RpgImpl(spigotRpg);
