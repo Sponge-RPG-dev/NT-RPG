@@ -93,7 +93,7 @@ public final class SpigotRpg extends AbstractRpg {
 
     @Override
     public Executor getAsyncExecutor() {
-        return SpigotRpgPlugin.getInstance().executor;
+        return SpigotRpgPlugin.executor;
     }
 
     @Override

@@ -14,6 +14,7 @@ dependencies {
     api "co.aikar:acf-core:" + project.acf
     api 'com.squareup:javapoet:' + project.javapoet
     api 'org.codehaus.janino:janino:' + project.janino
+    api 'com.github.xxDark:deencapsulation:462873c7b3'
 
     compileOnly 'org.graalvm.sdk:graal-sdk:' + project.graal
     compileOnly 'org.graalvm.js:js:' + project.graal

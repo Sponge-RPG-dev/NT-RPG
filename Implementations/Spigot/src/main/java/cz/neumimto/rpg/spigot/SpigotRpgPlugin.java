@@ -1,8 +1,10 @@
 package cz.neumimto.rpg.spigot;
 
 import co.aikar.commands.*;
+import com.google.auto.service.AutoService;
 import com.google.inject.Injector;
 import cz.neumimto.FireworkHandler;
+import cz.neumimto.rpg.NtRpgBootstrap;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.players.CharacterService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
@@ -48,6 +50,7 @@ import org.bukkit.plugin.java.annotation.dependency.SoftDependsOn;
 import org.bukkit.plugin.java.annotation.plugin.*;
 import org.bukkit.plugin.java.annotation.plugin.author.Author;
 import org.bukkit.scheduler.BukkitScheduler;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,7 +66,7 @@ import java.util.concurrent.Executors;
 @Author("NeumimTo")
 @Website("https://github.com/Sponge-RPG-dev/NT-RPG")
 @LogPrefix("NTRPG")
-@ApiVersion(ApiVersion.Target.v1_13)
+@ApiVersion(ApiVersion.Target.v1_14)
 @SoftDependsOn(
         value = {
                 @SoftDependency("PlaceholderAPI"),
@@ -80,21 +83,23 @@ import java.util.concurrent.Executors;
                 @Dependency("ProtocolLib")
         }
 )
-public class SpigotRpgPlugin extends JavaPlugin {
+@AutoService(NtRpgBootstrap.class)
+public class SpigotRpgPlugin extends JavaPlugin implements NtRpgBootstrap {
 
-    private static SpigotRpgPlugin plugin;
+    private static JavaPlugin plugin;
 
     private static Logger logger = LoggerFactory.getLogger("NTRPG");
     private static EffectManager effectManager;
 
-    public static SpigotRpgPlugin getInstance() {
+    public static JavaPlugin getInstance() {
         return plugin;
     }
 
-    public final ExecutorService executor = Executors.newFixedThreadPool(5);
+    public static final ExecutorService executor = Executors.newFixedThreadPool(5);
 
     //Disable inventories due to nbtapi
     public boolean testEnv ;
+    private File dataFolder;
 
     public SpigotRpgPlugin(){
         super();
@@ -105,6 +110,24 @@ public class SpigotRpgPlugin extends JavaPlugin {
         if (dataFolder.getName().contains("Mock")) {
             testEnv = true;
         }
+    }
+
+    @NotNull
+    @Override
+    public File getDataFolder() {
+        return dataFolder;
+    }
+
+    @Override
+    public void enable(Data data) {
+        plugin = (JavaPlugin) data.plugin();
+        dataFolder = data.workingDir();
+        onEnable();
+    }
+
+    @Override
+    public void disable() {
+        onDisable();
     }
 
     @Override
@@ -123,7 +146,7 @@ public class SpigotRpgPlugin extends JavaPlugin {
         SpigotRpg spigotRpg = new SpigotRpg(workingDirPath.toString(), command -> scheduler.runTask(SpigotRpgPlugin.getInstance(), command));
 
         try {
-            FireworkHandler.load(getClassLoader());
+            FireworkHandler.load(getClass().getClassLoader());
         } catch (Throwable t) {
             Log.warn("Unable to load Firework Handler");
         }

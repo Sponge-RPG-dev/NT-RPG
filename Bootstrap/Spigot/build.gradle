@@ -1,0 +1,23 @@
+plugins {
+    id 'java-library'
+    id 'com.github.johnrengelman.shadow' version '7.0.0'
+}
+
+group = 'cz.neumimto.rpg'
+version = project.subp_version
+
+dependencies {
+    api project(':Bootstrap-Common')
+
+    compileOnly ("org.spigotmc:plugin-annotations:" + project.pluginannotations){
+        exclude group: "org.bukkit", module: "bukkit"
+    }
+    compileOnly "org.spigotmc:spigot-api:" + project.spigotapi
+}
+
+shadowJar {
+    // relocate 'co.aikar.commands', 'cz.neumimto.acf'
+}
+
+
+build.dependsOn shadowJar

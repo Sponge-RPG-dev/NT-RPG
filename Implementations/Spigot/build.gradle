@@ -29,15 +29,19 @@ version = project.p_spigot_version
 
 
 dependencies {
+    annotationProcessor 'com.google.auto.service:auto-service-annotations:' + project.autoservice
     annotationProcessor("org.spigotmc:plugin-annotations:" + project.pluginannotations)
     annotationProcessor project(':Generator')
 
     api project(':API')
     api project(':Common')
     api project(':FlatFiles-Persistence')
+    compileOnly project(':Bootstrap-Common')
 
     implementation "co.aikar:acf-paper:" + project.acf
     implementation 'com.github.stefvanschie.inventoryframework:IF:' + project.if
+
+    api 'com.google.auto.service:auto-service-annotations:' + project.autoservice
 
     // runtimeOnly fileTree(dir: 'lib', include: '*.jar')
     implementation fileTree(dir: 'lib-cp', include: '*.jar')

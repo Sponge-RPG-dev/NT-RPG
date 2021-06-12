@@ -231,21 +231,7 @@ public abstract class AbstractRpg implements RpgApi {
             PseudoRandomDistribution.C[a] = p.c(i);
         }
 
-        AddonScanner.setDeployedDir(workingDirPath.resolve(".deployed"));
         AddonScanner.setAddonDir(workingDirPath.resolve("addons"));
-
-        //load graal, if installed
-        //if (!GraalInstaller.check()) {
-        //    Path path = Paths.get(workingDirPath.toAbsolutePath() + "/scripts");
-        //    File[] files = path.toFile().listFiles((dir, name) -> name.endsWith(".jar"));
-//
-        //    if (files != null) {
-        //        for (File file : files) {
-        //            getResourceLoader().loadJarFile(file, false);
-        //        }
-        //    }
-        //}
-
         AddonScanner.prepareAddons();
 
         Set<RpgAddon> rpgAddons = ResourceManagerImpl.discoverGuiceModules();
@@ -255,9 +241,6 @@ public abstract class AbstractRpg implements RpgApi {
         for (RpgAddon rpgAddon : rpgAddons) {
             bindings.putAll(rpgAddon.getBindings());
         }
-
-
-
 
         Set<Class<?>> classesToLoad = AddonScanner.getClassesToLoad();
 

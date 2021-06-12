@@ -10,7 +10,8 @@ include ':Common-Persistence-Test'
 
 include ':Spigot'
 //include ':Sponge'
-
+include ':Bootstrap-Common'
+include ':Bootstrap-Spigot'
 
 project(':API').projectDir = file('API')
 project(':Common').projectDir = file('Common')
@@ -22,3 +23,6 @@ project(':Common-Persistence-Test').projectDir = file('Peristence/Common-Tests')
 
 project(':Spigot').projectDir = file('Implementations/Spigot')
 //project(':Sponge').projectDir = file('Implementations/Sponge')
+
+project(':Bootstrap-Common').projectDir = file('Bootstrap/Common')
+project(':Bootstrap-Spigot').projectDir = file('Bootstrap/Spigot')

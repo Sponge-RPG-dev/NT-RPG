@@ -2,20 +2,19 @@ package cz.neumimto.rpg.common;
 
 import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.RpgAddon;
-import cz.neumimto.rpg.api.logging.Log;
+import dev.xdark.deencapsulation.Deencapsulation;
 
-import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
-import java.lang.module.Configuration;
-import java.lang.module.ModuleFinder;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -30,26 +29,29 @@ public class AddonScanner {
     private static Set<Class<?>> annotations = new HashSet<>();
     private static Set<Class<?>> classesToLoad = new HashSet<>();
     private static Set<String> exclusions = new HashSet<>();
-    private static Path deployedDir;
 
-    private ClassLoader classLoader;
+    private static ClassLoader classLoader;
+    private static ModuleLayer moduleLayer;
 
+    private static Method addUrl;
     static {
+        Deencapsulation.deencapsulate(ClassLoader.class);
+        URLClassLoader loader = (URLClassLoader) AddonScanner.class.getClassLoader();
+        try {
+            addUrl = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
+            addUrl.setAccessible(true);
+
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+
+        exclusions.add("com.ibm.icu");
+        exclusions.add("com.oracle");
+
         annotations.add(ResourceLoader.Skill.class);
         annotations.add(ResourceLoader.Command.class);
         annotations.add(ResourceLoader.ModelMapper.class);
         annotations.add(ResourceLoader.ListenerClass.class);
-    }
-
-    public static void setDeployedDir(Path deployedDir) {
-        AddonScanner.deployedDir = deployedDir;
-        if (!Files.exists(deployedDir)) {
-            try {
-                Files.createDirectory(deployedDir);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     public static void setAddonDir(Path addonDir) {
@@ -74,19 +76,18 @@ public class AddonScanner {
     }
 
     public static void prepareAddons() {
-        Map<Boolean, Set<Path>> map = discoverJarCandidates();
-
         if (!stage) {
-            findRelevantClassCandidatesInPath(map.get(false));
+            findRelevantClassCandidatesInPath();
         }
-        findRelevantClassCandidatesInPath(map.get(true));
     }
 
-    private static void findRelevantClassCandidatesInPath(Set<Path> paths) {
-        addToClassPath(addonDir);
+    private static void findRelevantClassCandidatesInPath() {
+        moduleLayer = addToClassPath(addonDir);
 
-        for (Path path : paths) {
-            visitJarFile(path);
+        try (DirectoryStream<Path> paths = Files.newDirectoryStream(addonDir, "*.jar")) {
+            paths.forEach(AddonScanner::visitJarFile);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -94,6 +95,7 @@ public class AddonScanner {
         try {
             JarFile jarFile = new JarFile(path.toFile());
             Enumeration<JarEntry> entries = jarFile.entries();
+
             while (entries.hasMoreElements()) {
                 JarEntry jarEntry = entries.nextElement();
                 String s = getValidClassName(jarEntry);
@@ -108,11 +110,12 @@ public class AddonScanner {
                 }
 
                 try {
-                    Class<?> aClass = Class.forName(s);
+                    moduleLayer.modules().forEach(m->Class.forName(m,s));
+                    Class<?> aClass = loadClass(s, Object.class);
                     if (hasComponentAnnotation(aClass) || RpgAddon.class.isAssignableFrom(aClass)) {
                         classesToLoad.add(aClass);
                     }
-                } catch (NoClassDefFoundError ignored) {
+                } catch (Throwable ignored) {
 
                 }
 
@@ -122,11 +125,31 @@ public class AddonScanner {
         }
     }
 
+    public static <T> Class<T> loadClass(String className, T as) {
+        if (moduleLayer == null) {
+            return null;
+        }
+        for (Module module : moduleLayer.modules()) {
+            try {
+                Class<T> t = (Class<T>) module.getClassLoader().loadClass(className);
+                if (t != null) {
+                    return t;
+                }
+            } catch (Throwable t) {
+                t.printStackTrace(); //remove
+            }
+        }
+        return null;
+    }
+
     private static boolean skip(String s) {
         return exclusions.stream().anyMatch(s::startsWith);
     }
 
     private static boolean hasComponentAnnotation(Class aClass) {
+        if (aClass == null) {
+            return false;
+        }
         Annotation[] annotations = aClass.getAnnotations();
         for (Annotation annotation : annotations) {
             Class<? extends Annotation> annotationType = annotation.annotationType();
@@ -147,96 +170,37 @@ public class AddonScanner {
         return false;
     }
 
-    private static void addToClassPath(Path path) {
-        try {
-            File file = path.toFile();
-            Log.info("Adding " + file.getParentFile().getCanonicalPath() + "/ to classpath");
+    private static ModuleLayer addToClassPath(Path pluginsDir) {
 
-            addPath(file.toPath());
-        } catch (Exception e) {
-            throw new CannotAddToClassPath(e.getMessage(), e);
-        }
-    }
-
-    private static void addPath(Path pluginsDir) throws Exception {
-
-// Search for plugins in the plugins directory
-//
-//        ModuleFinder pluginsFinder = ModuleFinder.of(pluginsDir);
-//
-//// Find all names of all found plugin modules
-//        List<String> plugins = pluginsFinder
-//                .findAll()
-//                .stream()
-//                .map(ModuleReference::descriptor)
-//                .map(ModuleDescriptor::name)
-//                .collect(Collectors.toList());
-//
-//// Create configuration that will resolve plugin modules
-//// (verify that the graph of modules is correct)
-//        Configuration pluginsConfiguration = ModuleLayer
-//                .boot()
-//                .configuration()
-//                .resolve(pluginsFinder, ModuleFinder.of(), plugins);
-//
-//// Create a module layer for plugins
-//        ModuleLayer layer = ModuleLayer
-//                .boot()
-//                .defineModulesWithOneLoader(pluginsConfiguration, ClassLoader.getSystemClassLoader());
-//
-//// Now you can use the new module layer to find service implementations in it
-//        List<Your Service Interface> services = ServiceLoader
-//                .load(layer, <Your Service Interface>.class)
-//        .stream()
-//                .map(Provider::get)
-//                .collect(Collectors.toList());
-//
-//
-        ModuleFinder finder = ModuleFinder.of(pluginsDir);
-        ModuleLayer parent = ModuleLayer.boot();
-        Configuration cf = parent.configuration().resolve(finder, ModuleFinder.of(), Set.of("ntrpg"));
-        ClassLoader scl = ClassLoader.getSystemClassLoader();
-        ModuleLayer layer = parent.defineModulesWithOneLoader(cf, scl);
-
-        Class<?> c = layer.findLoader("ntrpg").loadClass("org.graalvm.polyglot.Engine");
-    }
-
-    private static void copyReloadableJarModulesToDeployedDir(Map<Boolean, Set<Path>> map) {
-        try {
-            DirectoryStream<Path> paths = Files.newDirectoryStream(deployedDir, "*.jar");
-            paths.forEach(p -> p.toFile().delete());
-            for (Path path : map.get(true)) {
-                Files.copy(path, deployedDir.resolve(path.getFileName()));
-            }
+        try (DirectoryStream<Path> paths = Files.newDirectoryStream(pluginsDir, "*.jar")) {
+            paths.forEach(p-> {
+                try {
+                    URL url = p.toUri().toURL();
+                    addUrl.invoke(AddonScanner.class.getClassLoader(), url);
+                } catch (Throwable e) {
+                    e.printStackTrace();
+                }
+            });
         } catch (IOException e) {
-            throw new CannotReadOrWriteFS(e.getMessage());
+            e.printStackTrace();
         }
-    }
-
-    private static Map<Boolean, Set<Path>> discoverJarCandidates() {
-        Map<Boolean, Set<Path>> map = new HashMap<>();
-        map.put(true, new HashSet<>());
-        map.put(false, new HashSet<>());
-        try (DirectoryStream<Path> paths = Files.newDirectoryStream(addonDir, "*.jar")) {
-            for (Path path : paths) {
-                JarFile jarFile = new JarFile(path.toFile());
-                map.get(isModuleUnreloadable(jarFile)).add(path);
-            }
-        } catch (IOException e) {
-            throw new CannotReadOrWriteFS(e.getMessage());
-        }
-        return map;
-    }
-
-    private static boolean isModuleUnreloadable(JarFile jarFile) {
-        Enumeration<JarEntry> entries = jarFile.entries();
-        while (entries.hasMoreElements()) {
-            JarEntry jarEntry = entries.nextElement();
-            if (jarEntry.getName().startsWith("META-INF/rpg-addon")) {
-                return true;
-            }
-        }
-        return false;
+        //ModuleFinder pluginsFinder = ModuleFinder.of(pluginsDir);
+        //List<String> plugins = pluginsFinder
+        //        .findAll()
+        //        .stream()
+        //        .map(ModuleReference::descriptor)
+        //        .map(ModuleDescriptor::name)
+        //        .collect(Collectors.toList());
+//
+        //Configuration pluginsConfiguration = ModuleLayer
+        //        .boot()
+        //        .configuration()
+        //        .resolve(pluginsFinder, ModuleFinder.of(), plugins);
+//
+        //return ModuleLayer
+        //        .boot()
+        //        .defineModulesWithOneLoader(pluginsConfiguration, AddonScanner.class.getClassLoader());
+        return null;
     }
 
     private static String getValidClassName(JarEntry jarEntry) {
@@ -252,17 +216,10 @@ public class AddonScanner {
         return s;
     }
 
-    private static class CannotReadOrWriteFS extends RuntimeException {
-        private CannotReadOrWriteFS(String message) {
-            super(message);
-        }
-    }
-
     private static class CannotAddToClassPath extends RuntimeException {
         private CannotAddToClassPath(String message, Throwable t) {
             super(message, t);
         }
     }
-
 
 }

@@ -1,17 +1,26 @@
 package cz.neumimto.rpg.common.scripting;
 
+import com.oracle.truffle.js.runtime.JSRealm;
+import com.oracle.truffle.polyglot.PolyglotImpl;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.scripting.SkillScriptHandlers;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillResult;
+import cz.neumimto.rpg.common.utils.Java12FieldUtils;
+import dev.xdark.deencapsulation.Deencapsulation;
 import org.graalvm.polyglot.*;
+import org.graalvm.polyglot.impl.AbstractPolyglotImpl;
+import sun.misc.Unsafe;
 
+import javax.script.ScriptEngineManager;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.nio.file.Path;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 public class GraalVmScriptEngine extends AbstractRpgScriptEngine {
@@ -26,7 +35,39 @@ public class GraalVmScriptEngine extends AbstractRpgScriptEngine {
     //I could use even tsc
     @Override
     public void prepareEngine() {
-        engine = Engine.create();
+        Iterator<AbstractPolyglotImpl> iterator = ServiceLoader.load(AbstractPolyglotImpl.class).iterator();
+        if (!iterator.hasNext()) {
+            try {
+                Constructor<PolyglotImpl> constructor = PolyglotImpl.class.getConstructor();
+                constructor.setAccessible(true);
+                PolyglotImpl polyglot = constructor.newInstance();
+                Class<?> aClass = Class.forName("org.graalvm.polyglot.Engine$APIAccessImpl");
+                Constructor<?> constructor1 = aClass.getDeclaredConstructor();
+                constructor1.setAccessible(true);
+                Object o = constructor1.newInstance();
+                polyglot.setConstructors((AbstractPolyglotImpl.APIAccess) o);
+                Map<String, String> options = new HashMap<>();
+                options.put("js.nashorn-compat", "true");
+                try {
+                    Field creating_child_realm = JSRealm.class.getDeclaredField("CREATING_CHILD_REALM");
+                    creating_child_realm.setAccessible(true);
+                    Java12FieldUtils.removeFinalMod(creating_child_realm);
+                    creating_child_realm.set(null, new ThreadLocal<>());
+                    new JSRealm(null, null);
+                } catch (Throwable t) {
+                    t.printStackTrace();
+                }
+
+                engine = polyglot.buildEngine(null, null, null,
+                        options, true, true, false, null, null, HostAccess.ALL);
+
+            } catch (Throwable t) {
+                t.printStackTrace();
+                return;
+            }
+        } else {
+            engine = Engine.create();
+        }
         Context.Builder contextBuilder = Context.newBuilder()
                 .allowExperimentalOptions(true)
                 .allowHostClassLookup(s -> true)

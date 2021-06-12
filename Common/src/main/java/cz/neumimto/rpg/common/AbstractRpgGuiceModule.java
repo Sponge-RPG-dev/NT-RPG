@@ -33,7 +33,7 @@ public class AbstractRpgGuiceModule extends AbstractModule {
         map.put(LocalizationService.class, LocalizationServiceImpl.class);
 
 
-        map.put(IRpgScriptEngine.class, GraalInstaller.check() ? GraalVmScriptEngine.class : DummyScriptEngine.class);
+        map.put(IRpgScriptEngine.class, GraalInstaller.check() != null ? GraalVmScriptEngine.class : DummyScriptEngine.class);
 
         return map;
     }

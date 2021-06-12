@@ -4,7 +4,7 @@
     <option name="PROGRAM_PARAMETERS" value="nogui" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/server-spigot" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
-    <option name="ALTERNATIVE_JRE_PATH" value="1.8" />
+    <option name="ALTERNATIVE_JRE_PATH" value="16" />
     <method v="2">
       <option name="RunConfigurationTask" enabled="true" run_configuration_name="NT-RPG [build]" run_configuration_type="GradleRunConfiguration" />
     </method>

@@ -176,10 +176,10 @@ public class AdminCommands extends BaseCommand {
     //https://medium.com/graalvm/graalvms-javascript-engine-on-jdk11-with-high-performance-3e79f968a819
     @Subcommand("graal?")
     public void checkGraalPresent(CommandIssuer executor) {
-        if (!GraalInstaller.check()) {
+        if (GraalInstaller.check() == null) {
             executor.sendMessage("To enable js scripting you additional action is required.");
-            executor.sendMessage(">Run your server on GraalVM https://www.graalvm.org/downloads/, instead of standard JRE");
-            executor.sendMessage(">Run command /nadmin install-graal ; this action will download several Graal binaries from https://mvnrepository.com/artifact/org.graalvm.js/ !");
+            executor.sendMessage(">1) Run your server on GraalVM https://www.graalvm.org/downloads/, instead of standard JRE");
+            executor.sendMessage(">2) Run command /nadmin install-graal ; this action will download several Graal binaries from https://mvnrepository.com/artifact/org.graalvm/ !");
             executor.sendMessage("> ! If you choose the second option you will also want to add additional server startup flags -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCI !");
         } else {
             executor.sendMessage("- OK");

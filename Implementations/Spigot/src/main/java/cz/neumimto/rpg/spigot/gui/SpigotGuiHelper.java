@@ -103,14 +103,6 @@ public class SpigotGuiHelper {
         }
     }
 
-    public static Inventory createMenuInventoryClassTypesView(Player player) {
-        Inventory inventory = CACHED_MENUS.get("class_types");
-        if (inventory == null) {
-            inventory = ClassTypesGuiView.create();
-            CACHED_MENUS.put("class_types", inventory);
-        }
-        return inventory;
-    }
 
     public static Inventory createMenuInventoryClassesByTypeView(Player player, String classType) {
         return CACHED_MENUS.get("classes_by_type" + classType);

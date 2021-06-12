@@ -4,6 +4,7 @@ import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,6 +15,15 @@ public class GuiCommand extends GuiItem {
             e.setCancelled(true);
             Bukkit.getScheduler().scheduleSyncDelayedTask(SpigotRpgPlugin.getInstance(),
                     () -> Bukkit.dispatchCommand(viewer, command), 1);
+        });
+    }
+
+    public GuiCommand(@NotNull ItemStack item, @NotNull String command) {
+        super(item, e -> {
+            e.setCancelled(true);
+            HumanEntity whoClicked = e.getWhoClicked();
+            Bukkit.getScheduler().scheduleSyncDelayedTask(SpigotRpgPlugin.getInstance(),
+                    () -> Bukkit.dispatchCommand(whoClicked, command), 1);
         });
     }
 }

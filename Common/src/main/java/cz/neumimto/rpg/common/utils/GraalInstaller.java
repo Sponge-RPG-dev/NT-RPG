@@ -1,13 +1,10 @@
 package cz.neumimto.rpg.common.utils;
 
-import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.common.AddonScanner;
 
-import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.function.Consumer;
 
@@ -33,6 +30,7 @@ public class GraalInstaller {
                     callback.accept("Downloading " + download + " to " + target);
 
                     Files.copy(new URL(download).openStream(), target, StandardCopyOption.REPLACE_EXISTING);
+
                     callback.accept(" Done");
 
                 }
@@ -46,12 +44,12 @@ public class GraalInstaller {
         new Thread(r).start();
     }
 
-    public static boolean check() {
+    public static Class check() {
         try {
-            Class.forName("org.graalvm.polyglot.Engine");
-            return true;
+            Class<?> aClass = Class.forName("org.graalvm.polyglot.Engine");//we are running on graal sdk
+            return aClass;
         } catch (Throwable e) {
-            return false;
+            return AddonScanner.loadClass("org.graalvm.polyglot.Engine", Object.class);
         }
     }
 }
