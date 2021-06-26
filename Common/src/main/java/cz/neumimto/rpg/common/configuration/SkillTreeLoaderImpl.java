@@ -23,7 +23,6 @@ import com.typesafe.config.*;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.configuration.SkillTreeDao;
-import cz.neumimto.rpg.api.effects.model.mappers.SingleValueModelMapper;
 import cz.neumimto.rpg.api.gui.ISkillTreeInterfaceModel;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.logging.Log;
@@ -40,7 +39,6 @@ import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.skills.SkillConfigLoader;
 import cz.neumimto.rpg.common.skills.SkillConfigLoaders;
 import cz.neumimto.rpg.common.skills.SkillExecutor;
-import org.apache.commons.lang3.math.NumberUtils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -49,7 +47,6 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Optional;
 import java.util.*;
 
 import static cz.neumimto.rpg.api.logging.Log.*;

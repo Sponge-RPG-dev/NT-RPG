@@ -3,6 +3,7 @@ package cz.neumimto.rpg.common.skills;
 import cz.neumimto.rpg.api.skills.*;
 import cz.neumimto.rpg.api.skills.tree.SkillTreeSpecialization;
 import cz.neumimto.rpg.api.skills.types.CharacterAttributeSkill;
+import cz.neumimto.rpg.api.skills.types.PermissionSkill;
 import cz.neumimto.rpg.common.skills.types.ItemAccessSkill;
 
 import java.util.HashMap;
@@ -19,6 +20,7 @@ public class SkillConfigLoaders {
     static SkillConfigLoader WRAPPER = new SkillConfigLoader("wrapper", WrappedSkill.class);
     static SkillConfigLoader REPEATING = new SkillConfigLoader("repeating", RepeatingSkill.class);
     static SkillConfigLoader UPGRADE = new SkillConfigLoader("upgrade", SkillUpgrade.class);
+    static SkillConfigLoader PERMISSION = new SkillConfigLoader("permission", PermissionSkill.class);
 
     private static Map<String, SkillConfigLoader> internalCache = new HashMap<>();
 
@@ -32,6 +34,7 @@ public class SkillConfigLoaders {
         register(WRAPPER);
         register(REPEATING);
         register(UPGRADE);
+        register(PERMISSION);
     }
 
     public static Optional<SkillConfigLoader> getById(String id) {
