@@ -1,5 +1,6 @@
 plugins {
     id 'java-library'
+    id 'com.github.johnrengelman.shadow' version '7.0.0'
 }
 
 repositories {
@@ -27,13 +28,16 @@ repositories {
 group = 'cz.neumimto.rpg'
 version = project.p_spigot_version
 
-
 dependencies {
-    annotationProcessor 'com.google.auto.service:auto-service-annotations:' + project.autoservice
+    compileOnly 'com.google.auto.service:auto-service:1.0'
+    annotationProcessor 'com.google.auto.service:auto-service:1.0'
+    api 'com.google.auto.service:auto-service-annotations:1.0'
+    //annotationProcessor 'com.google.auto.service:auto-service-annotations:1.0' + project.autoservice
+    //compileOnly 'com.google.auto.service:auto-service-annotations:1.0'// + project.autoservice
+
     annotationProcessor("org.spigotmc:plugin-annotations:" + project.pluginannotations)
     annotationProcessor project(':Generator')
 
-    api project(':API')
     api project(':Common')
     api project(':FlatFiles-Persistence')
     compileOnly project(':Bootstrap-Common')
@@ -41,7 +45,6 @@ dependencies {
     implementation "co.aikar:acf-paper:" + project.acf
     implementation 'com.github.stefvanschie.inventoryframework:IF:' + project.if
 
-    api 'com.google.auto.service:auto-service-annotations:' + project.autoservice
 
     // runtimeOnly fileTree(dir: 'lib', include: '*.jar')
     implementation fileTree(dir: 'lib-cp', include: '*.jar')
@@ -81,15 +84,16 @@ dependencies {
         exclude group: "org.jetbrains", module: "annotations"
     }
 
-    jar {
-        libsDirName = '../../../server-spigot/plugins'
-        archiveFileName="NT-RPG-Spigot-16.x-" + archiveVersion + ".jar"
-    }
-
 }
 
-//shadowJar {
-//    relocate 'co.aikar.commands', 'cz.neumimto.acf'
-//}
+jar {
+    //libsDirName = '../../../server-spigot/plugins'
+    //archiveFileName="NT-RPG-Spigot-16.x-" + archiveVersion + ".jar"
+}
 
-//build.dependsOn shadowJar
+shadowJar {
+    // relocate 'co.aikar.commands', 'cz.neumimto.acf'
+    archiveFileName = "NT-RPG-Spigot-16.x-${p_spigot_version}.jar"
+}
+
+build.dependsOn shadowJar

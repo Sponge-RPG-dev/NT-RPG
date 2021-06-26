@@ -96,7 +96,7 @@ public class Bash extends TargetedEntitySkill {
                     i++;
                 }
             }
-        }.runTaskTimer(plugin, 0, 2);
+        }.runTaskTimer(SpigotRpgPlugin.getInstance(), 0, 2);
     }
 
 }

@@ -15,9 +15,20 @@ dependencies {
     compileOnly "org.spigotmc:spigot-api:" + project.spigotapi
 }
 
+var outputs = tasks.getByPath(':Spigot:jar').outputs
+var path = outputs.getFiles().getSingleFile();
+
 shadowJar {
-    // relocate 'co.aikar.commands', 'cz.neumimto.acf'
+    archiveFileName = "NT-RPG-17.x-" + p_spigot_version + ".jar"
 }
 
+build.dependsOn processResources
 
-build.dependsOn shadowJar
+processResources {
+    from (path) {
+       into ''
+       rename {
+           "ntrpg-embed.jar"
+       }
+    }
+}

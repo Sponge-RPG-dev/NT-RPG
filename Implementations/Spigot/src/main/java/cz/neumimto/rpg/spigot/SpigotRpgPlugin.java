@@ -2,7 +2,6 @@ package cz.neumimto.rpg.spigot;
 
 import co.aikar.commands.*;
 import com.google.auto.service.AutoService;
-import com.google.inject.Injector;
 import cz.neumimto.FireworkHandler;
 import cz.neumimto.rpg.NtRpgBootstrap;
 import cz.neumimto.rpg.api.Rpg;
@@ -16,9 +15,9 @@ import cz.neumimto.rpg.common.commands.*;
 import cz.neumimto.rpg.common.entity.players.PreloadCharacter;
 import cz.neumimto.rpg.persistence.flatfiles.FlatFilesModule;
 import cz.neumimto.rpg.spigot.bridges.HolographicDisplaysExpansion;
+import cz.neumimto.rpg.spigot.bridges.NtRpgPlaceholderExpansion;
 import cz.neumimto.rpg.spigot.bridges.mmoitems.MMOItemsExpansion;
 import cz.neumimto.rpg.spigot.bridges.mythicalmobs.MythicalMobsExpansion;
-import cz.neumimto.rpg.spigot.bridges.NtRpgPlaceholderExpansion;
 import cz.neumimto.rpg.spigot.bridges.rpgregions.RpgRegionsClassExpReward;
 import cz.neumimto.rpg.spigot.commands.SpigotAdminCommands;
 import cz.neumimto.rpg.spigot.commands.SpigotCharacterCommands;
@@ -40,15 +39,7 @@ import org.bukkit.Particle;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.plugin.java.JavaPluginLoader;
-import org.bukkit.plugin.java.annotation.dependency.Dependency;
-import org.bukkit.plugin.java.annotation.dependency.DependsOn;
-import org.bukkit.plugin.java.annotation.dependency.SoftDependency;
-import org.bukkit.plugin.java.annotation.dependency.SoftDependsOn;
-import org.bukkit.plugin.java.annotation.plugin.*;
-import org.bukkit.plugin.java.annotation.plugin.author.Author;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -60,31 +51,9 @@ import java.util.Collection;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-
-@Plugin(name = "NT-RPG", version = "2.1.0-SNAPSHOT-13")
-@Description("Complete combat overhaul with classes and skills")
-@Author("NeumimTo")
-@Website("https://github.com/Sponge-RPG-dev/NT-RPG")
-@LogPrefix("NTRPG")
-@ApiVersion(ApiVersion.Target.v1_14)
-@SoftDependsOn(
-        value = {
-                @SoftDependency("PlaceholderAPI"),
-                @SoftDependency("HolographicDisplays"),
-                @SoftDependency("MythicMobs"),
-                @SoftDependency("MMOItems"),
-                @SoftDependency("RPGRegions")
-        }
-)
-@DependsOn(
-        value = {
-                @Dependency("NBTAPI"),
-                @Dependency("EffectLib"),
-                @Dependency("ProtocolLib")
-        }
-)
+//@ServiceLoader
 @AutoService(NtRpgBootstrap.class)
-public class SpigotRpgPlugin extends JavaPlugin implements NtRpgBootstrap {
+public class SpigotRpgPlugin implements NtRpgBootstrap {
 
     private static JavaPlugin plugin;
 
@@ -98,47 +67,24 @@ public class SpigotRpgPlugin extends JavaPlugin implements NtRpgBootstrap {
     public static final ExecutorService executor = Executors.newFixedThreadPool(5);
 
     //Disable inventories due to nbtapi
-    public boolean testEnv ;
+    public static boolean testEnv ;
     private File dataFolder;
 
-    public SpigotRpgPlugin(){
-        super();
-    }
-
-    protected SpigotRpgPlugin(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file) {
-        super(loader, description, dataFolder, file);
-        if (dataFolder.getName().contains("Mock")) {
-            testEnv = true;
-        }
-    }
-
-    @NotNull
-    @Override
-    public File getDataFolder() {
-        return dataFolder;
-    }
+   @NotNull
+   public File getDataFolder() {
+       return dataFolder;
+   }
 
     @Override
     public void enable(Data data) {
         plugin = (JavaPlugin) data.plugin();
         dataFolder = data.workingDir();
-        onEnable();
-    }
 
-    @Override
-    public void disable() {
-        onDisable();
-    }
-
-    @Override
-    public void onEnable() {
         Log.setLogger(logger);
 
         if (!getDataFolder().exists()) {
             getDataFolder().mkdir();
         }
-
-        plugin = this;
 
         Path workingDirPath = getDataFolder().toPath();
 
@@ -150,7 +96,7 @@ public class SpigotRpgPlugin extends JavaPlugin implements NtRpgBootstrap {
         } catch (Throwable t) {
             Log.warn("Unable to load Firework Handler");
         }
-        CommandManager manager = new PaperCommandManager(this);
+        CommandManager manager = new PaperCommandManager(getInstance());
 
         manager.getCommandContexts().registerContext(OnlineOtherPlayer.class, c -> {
             CommandIssuer issuer = c.getIssuer();
@@ -197,21 +143,21 @@ public class SpigotRpgPlugin extends JavaPlugin implements NtRpgBootstrap {
                 Log.info("HolographicDisplays installed - NTRPG will use it for some extra guis");
                 HolographicDisplaysExpansion hde = injector.getInstance(HolographicDisplaysExpansion.class);
                 hde.init();
-                Bukkit.getPluginManager().registerEvents(hde, this);
+                Bukkit.getPluginManager().registerEvents(hde, getInstance());
             }
 
             if (Bukkit.getPluginManager().isPluginEnabled("MMOItems")) {
                 Log.info("MMOItems installed - Provided hook for Power system and some stuff");
                 MMOItemsExpansion mmie = injector.getInstance(MMOItemsExpansion.class);
                 mmie.init(injector.getInstance(SpigotCharacterService.class));
-                Bukkit.getPluginManager().registerEvents(mmie, this);
+                Bukkit.getPluginManager().registerEvents(mmie, getInstance());
             }
 
             if (Bukkit.getPluginManager().isPluginEnabled("MythicMobs")) {
                 Log.info("MMOItems installed - Provided hook for Power system and some stuff");
                 MythicalMobsExpansion mme = injector.getInstance(MythicalMobsExpansion.class);
                 mme.init(injector.getInstance(SpigotEntityService.class));
-                Bukkit.getPluginManager().registerEvents(mme, this);
+                Bukkit.getPluginManager().registerEvents(mme, getInstance());
             }
             
             if (Bukkit.getPluginManager().isPluginEnabled("RPGRegions")) {
@@ -282,7 +228,7 @@ public class SpigotRpgPlugin extends JavaPlugin implements NtRpgBootstrap {
             SpigotGuiHelper.initInventories();
         }
 
-        effectManager = new EffectManager(this);
+        effectManager = new EffectManager(getInstance());
         Rpg.get().getSyncExecutor();
 
         Collection<? extends Player> onlinePlayers = Bukkit.getServer().getOnlinePlayers();
@@ -297,8 +243,8 @@ public class SpigotRpgPlugin extends JavaPlugin implements NtRpgBootstrap {
     }
 
 
-    @Override
-    public void onDisable() {
+
+    public void disable() {
         executor.shutdown();
         CharacterService characterService = Rpg.get().getCharacterService();
         Collection<IActiveCharacter> characters = characterService.getCharacters();

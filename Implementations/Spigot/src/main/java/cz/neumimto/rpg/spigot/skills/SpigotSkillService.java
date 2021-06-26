@@ -27,7 +27,7 @@ public class SpigotSkillService extends AbstractSkillService {
     @Override
     public void load() {
         int i = 0;
-        if (!SpigotRpgPlugin.getInstance().testEnv) {
+        if (!SpigotRpgPlugin.testEnv) {
             for (String str : Rpg.get().getPluginConfig().SKILLTREE_GUI) {
                 String[] split = str.split(",");
 

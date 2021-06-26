@@ -67,6 +67,6 @@ subprojects {
     }
 
     tasks.named("jar") {
-        duplicatesStrategy(DuplicatesStrategy.WARN)
+        duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
     }
 }
