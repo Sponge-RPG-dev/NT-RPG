@@ -1,9 +1,11 @@
 package cz.neumimto.rpg.spigot.skills;
 
+import com.google.auto.service.AutoService;
 import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.IEntityType;
 import cz.neumimto.rpg.api.entity.IReservable;
+import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
@@ -18,6 +20,7 @@ import org.bukkit.Particle;
 
 import javax.inject.Inject;
 
+@AutoService(ISkill.class)
 @ResourceLoader.Skill("ntrpg:battery")
 public class Battery extends TargetedEntitySkill {
 

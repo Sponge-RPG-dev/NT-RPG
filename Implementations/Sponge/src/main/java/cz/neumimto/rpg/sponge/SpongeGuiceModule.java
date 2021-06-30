@@ -47,7 +47,6 @@ import cz.neumimto.rpg.sponge.permission.SpongePermissionService;
 import cz.neumimto.rpg.sponge.scripting.SpongeClassGenerator;
 import cz.neumimto.rpg.sponge.scripting.SpongeCustomSkillGenerator;
 import cz.neumimto.rpg.sponge.skills.SpongeSkillService;
-import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.event.CauseStackManager;
 

@@ -1,11 +1,13 @@
 package cz.neumimto.rpg.spigot.skills;
 
+import com.google.auto.service.AutoService;
 import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.effects.CommonEffectTypes;
 import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.effects.UnstackableEffectBase;
 import cz.neumimto.rpg.api.entity.IEntity;
+import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
@@ -34,6 +36,7 @@ import java.util.Set;
 import static org.bukkit.event.entity.EntityDamageEvent.DamageCause.*;
 
 @Singleton
+@AutoService(ISkill.class)
 @ResourceLoader.Skill("ntrpg:soar")
 public class Soar extends ActiveSkill<ISpigotCharacter> {
     static private int tickDelay = 15;

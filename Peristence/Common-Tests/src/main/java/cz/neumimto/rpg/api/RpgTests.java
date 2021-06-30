@@ -17,6 +17,7 @@ import cz.neumimto.rpg.api.inventory.InventoryService;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.localization.Arg;
 import cz.neumimto.rpg.api.localization.LocalizationService;
+import cz.neumimto.rpg.api.permissions.PermissionService;
 import cz.neumimto.rpg.api.persistance.model.EquipedSlot;
 import cz.neumimto.rpg.api.scripting.IRpgScriptEngine;
 import cz.neumimto.rpg.api.skills.SkillService;
@@ -205,6 +206,11 @@ public class RpgTests implements RpgApi {
 
     @Override
     public ExperienceService getExperienceService() {
+        return null;
+    }
+
+    @Override
+    public PermissionService getPermissionService() {
         return null;
     }
 

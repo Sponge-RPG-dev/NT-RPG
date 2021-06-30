@@ -2,8 +2,10 @@ package cz.neumimto.rpg.spigot;
 
 import cz.neumimto.rpg.api.utils.Console;
 import cz.neumimto.rpg.common.AbstractRpg;
+import cz.neumimto.rpg.common.AbstractRpgGuiceModule;
 import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.spigot.gui.SpigotGuiHelper;
+import cz.neumimto.rpg.spigot.gui.inventoryviews.ConfigurableInventoryGui;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -16,10 +18,7 @@ import org.bukkit.event.Listener;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
 
@@ -107,8 +106,17 @@ public final class SpigotRpg extends AbstractRpg {
     }
 
     @Override
+    public void reloadMainPluginConfig() {
+        super.reloadMainPluginConfig();
+    }
+
+    @Override
     public void doImplSpecificreload() {
         SpigotGuiHelper.initInventories();
+        ServiceLoader.load(ConfigurableInventoryGui.class, getClass().getClassLoader())
+                .stream()
+                .map(ServiceLoader.Provider::get)
+                .forEach(ConfigurableInventoryGui::clearCache);
     }
 
     public boolean isDisabledInWorld(Entity entity) {

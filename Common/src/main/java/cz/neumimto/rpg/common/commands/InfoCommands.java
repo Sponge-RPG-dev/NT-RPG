@@ -1,10 +1,7 @@
 package cz.neumimto.rpg.common.commands;
 
 import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.CommandPermission;
-import co.aikar.commands.annotation.Optional;
-import co.aikar.commands.annotation.Subcommand;
+import co.aikar.commands.annotation.*;
 import cz.neumimto.rpg.api.entity.players.CharacterService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
@@ -30,6 +27,7 @@ public class InfoCommands extends BaseCommand {
     }
 
     @Subcommand("classes")
+    @CommandCompletion("@classtypes")
     @CommandPermission("ntrpg.info.classes")
     public void showClassesCommand(IActiveCharacter character, @Optional String type) {
         if (type == null) {
@@ -40,6 +38,7 @@ public class InfoCommands extends BaseCommand {
     }
 
     @Subcommand("class")
+    @CommandCompletion("@players @class-any")
     @CommandPermission("ntrpg.info.class")
     public void showClassCommand(IActiveCharacter character, ClassDefinition classDefinition, @Optional String back) {
         Gui.showClassInfo(character, classDefinition);

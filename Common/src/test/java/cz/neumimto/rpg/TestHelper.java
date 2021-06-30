@@ -6,7 +6,6 @@ import cz.neumimto.rpg.api.persistance.model.CharacterClass;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.model.CharacterClassTest;
 import org.mockito.Mockito;
-import org.slf4j.LoggerFactory;
 import sun.misc.Unsafe;
 
 import java.lang.reflect.Field;

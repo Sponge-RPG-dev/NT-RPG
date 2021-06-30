@@ -21,9 +21,9 @@ class RpgModuleLayer {
         URL resource = parent.getResource(embedJar);
         Path tempDirectory = Files.createTempDirectory("ntrpg-loader");
         tempDirectory.toFile().deleteOnExit();
-
+        Path jarUrl = tempDirectory.resolve("ntrpg-temp.jar");
         try (InputStream in = resource.openStream()) {
-            Files.copy(in, tempDirectory.resolve("ntrpg.jar.temp"), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(in, jarUrl, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             throw new RuntimeException("Could not copy ntrpg jar to " + tempDirectory);
         }
@@ -41,18 +41,13 @@ class RpgModuleLayer {
                 .configuration()
                 .resolve(pluginsFinder, ModuleFinder.of(), plugins);
 
-
         ModuleLayer layer = ModuleLayer
                 .boot()
                 .defineModulesWithOneLoader(pluginsConfiguration, new EmbededJarClassLoader(parent));
 
-
         ServiceLoader<NtRpgBootstrap> load = ServiceLoader.load(layer, NtRpgBootstrap.class);
-        load.reload();
-        return load.findFirst().get();
-        //Class<NtRpgBootstrap> c = (Class<NtRpgBootstrap>) layer.findLoader("cz.neumimto.rog").loadClass("cz.neumimto.rpg.NtRpgBootstrap");
-        //return c.getDeclaredConstructor().newInstance();
-
-
+        return load.findFirst().orElseThrow(() -> {
+            throw new RuntimeException("Unable to load ntrpg embed jar. Wrong build?");
+        });
     }
 }

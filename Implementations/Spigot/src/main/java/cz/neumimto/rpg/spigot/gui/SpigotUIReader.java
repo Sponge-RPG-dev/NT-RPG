@@ -9,6 +9,7 @@ import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.common.gui.GuiParser;
 import cz.neumimto.rpg.common.gui.InventorySlotProcessor;
+import cz.neumimto.rpg.spigot.gui.inventoryviews.CharacterGuiView;
 import cz.neumimto.rpg.spigot.items.SpigotRpgItemType;
 import de.tr7zw.nbtapi.NBTItem;
 import org.bukkit.Bukkit;
@@ -44,7 +45,7 @@ public class SpigotUIReader extends GuiParser<ItemStack, Inventory> {
 
     @Override
     protected ItemStack toItemStack(ClassDefinition a) {
-        return SpigotGuiHelper.toSpellbookItemStack(a, "");
+        return CharacterGuiView.classDefinitionToItemStack(a);
     }
 
     @Override

@@ -1,6 +1,8 @@
 package cz.neumimto.rpg.spigot.skills;
 
+import com.google.auto.service.AutoService;
 import cz.neumimto.rpg.api.ResourceLoader;
+import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.tree.SkillType;
@@ -23,6 +25,7 @@ import javax.inject.Singleton;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Singleton
+@AutoService(ISkill.class)
 @ResourceLoader.Skill("ntrpg:firebeam")
 public class FireBeam extends ActiveSkill<ISpigotCharacter> {
 

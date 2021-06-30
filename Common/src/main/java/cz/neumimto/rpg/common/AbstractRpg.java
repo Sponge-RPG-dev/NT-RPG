@@ -27,6 +27,7 @@ import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.localization.Arg;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.logging.Log;
+import cz.neumimto.rpg.api.permissions.PermissionService;
 import cz.neumimto.rpg.api.scripting.IRpgScriptEngine;
 import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.api.utils.FileUtils;
@@ -41,6 +42,7 @@ import java.util.*;
 import java.util.concurrent.Executor;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public abstract class AbstractRpg implements RpgApi {
 
@@ -78,6 +80,8 @@ public abstract class AbstractRpg implements RpgApi {
     private CharacterService characterService;
     @Inject
     private ExperienceService experienceService;
+    @Inject
+    private PermissionService permissionService;
     @Inject
     private Injector injector;
     @Inject
@@ -186,6 +190,11 @@ public abstract class AbstractRpg implements RpgApi {
         return experienceService;
     }
 
+    @Override
+    public PermissionService getPermissionService() {
+        return permissionService;
+    }
+
     public CustomSkillGenerator getCustomSkillGenerator() {
         return skillGenerator;
     }
@@ -234,7 +243,9 @@ public abstract class AbstractRpg implements RpgApi {
         AddonScanner.setAddonDir(workingDirPath.resolve("addons"));
         AddonScanner.prepareAddons();
 
-        Set<RpgAddon> rpgAddons = ResourceManagerImpl.discoverGuiceModules();
+        List<RpgAddon> rpgAddons = ServiceLoader.load(RpgAddon.class, this.getClass().getClassLoader())
+                .stream().map(ServiceLoader.Provider::get)
+                .collect(Collectors.toList());
         AddonScanner.onlyReloads();
 
         Map<Class<?>, Class<?>> bindings = new HashMap<>(defaultStorageImpl.getBindings());
@@ -242,42 +253,28 @@ public abstract class AbstractRpg implements RpgApi {
             bindings.putAll(rpgAddon.getBindings());
         }
 
-        Set<Class<?>> classesToLoad = AddonScanner.getClassesToLoad();
-
-        Iterator<Class<?>> iterator = classesToLoad.iterator();
         Map<Class<?>, ?> providers = new HashMap<>();
 
         try {
-            while (iterator.hasNext()) {
-                Class<?> next = iterator.next();
-                if (RpgAddon.class.isAssignableFrom(next)) {
-                    try {
-                        RpgAddon addon = (RpgAddon) next.getConstructor().newInstance();
-                        bindings.putAll(addon.getBindings());
-                        Map<String, Object> map = new HashMap<>();
-                        map.put("WORKINGDIR", workingDirPath.toAbsolutePath().toString());
-                        providers = addon.getProviders(map); //TODO something definitely wrong with this
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
+            for (RpgAddon addon : rpgAddons) {
+                 bindings.putAll(addon.getBindings());
+                 Map<String, Object> map = new HashMap<>();
+                 map.put("WORKINGDIR", workingDirPath.toAbsolutePath().toString());
+                 providers = addon.getProviders(map); //TODO something definitely wrong with this
             }
-
             injector = Guice.createInjector(fnInjProv.apply(bindings, providers));
         } catch (Exception e) {
             Log.error("Could not create Guice Injector", e);
             return;
         }
         injectorc.accept(injector);
-
         File file = FileUtils.getPluginFile(getPluginClass());
-        getResourceLoader().loadJarFile(file, true);
 
         for (RpgAddon rpgAddon : rpgAddons) {
             rpgAddon.processStageEarly(injector);
         }
 
-        getResourceLoader().initializeComponents();
+        getResourceLoader().loadServices();
         Locale locale = Locale.forLanguageTag(pluginConfig.LOCALE);
         try {
             getResourceLoader().reloadLocalizations(locale);
@@ -311,6 +308,8 @@ public abstract class AbstractRpg implements RpgApi {
         for (RpgAddon rpgAddon : rpgAddons) {
             rpgAddon.processStageLate(injector);
         }
+
+        doImplSpecificreload();
     }
 
     protected abstract Class getPluginClass();

@@ -40,7 +40,8 @@ public class InventoryHandler implements CharacterInventoryInteractionHandler {
         return isValidItemForSlot(managedSlot, rpgItemStack) &&
                 itemService.checkItemType(character, rpgItemStack) &&
                 itemService.checkItemAttributeRequirements(character, rpgItemStack) &&
-                itemService.checkItemClassRequirements(character, rpgItemStack);
+                itemService.checkItemClassRequirements(character, rpgItemStack) &&
+                itemService.checkItemPermission(character, rpgItemStack);
     }
 
     @Override

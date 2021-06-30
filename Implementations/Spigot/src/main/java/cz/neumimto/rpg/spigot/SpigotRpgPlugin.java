@@ -2,6 +2,7 @@ package cz.neumimto.rpg.spigot;
 
 import co.aikar.commands.*;
 import com.google.auto.service.AutoService;
+import com.google.inject.Injector;
 import cz.neumimto.FireworkHandler;
 import cz.neumimto.rpg.NtRpgBootstrap;
 import cz.neumimto.rpg.api.Rpg;
@@ -42,8 +43,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 import java.io.File;
 import java.nio.file.Path;
@@ -57,7 +57,6 @@ public class SpigotRpgPlugin implements NtRpgBootstrap {
 
     private static JavaPlugin plugin;
 
-    private static Logger logger = LoggerFactory.getLogger("NTRPG");
     private static EffectManager effectManager;
 
     public static JavaPlugin getInstance() {
@@ -69,9 +68,14 @@ public class SpigotRpgPlugin implements NtRpgBootstrap {
     //Disable inventories due to nbtapi
     public static boolean testEnv ;
     private File dataFolder;
+    private static Injector injector;
 
-   @NotNull
-   public File getDataFolder() {
+    public static Injector getInjector() {
+        return injector;
+    }
+
+    @NotNull
+    public File getDataFolder() {
        return dataFolder;
    }
 
@@ -80,7 +84,7 @@ public class SpigotRpgPlugin implements NtRpgBootstrap {
         plugin = (JavaPlugin) data.plugin();
         dataFolder = data.workingDir();
 
-        Log.setLogger(logger);
+        Log.setLogger(data.logger());
 
         if (!getDataFolder().exists()) {
             getDataFolder().mkdir();
@@ -96,7 +100,7 @@ public class SpigotRpgPlugin implements NtRpgBootstrap {
         } catch (Throwable t) {
             Log.warn("Unable to load Firework Handler");
         }
-        CommandManager manager = new PaperCommandManager(getInstance());
+        CommandManager manager = data.commandManager();
 
         manager.getCommandContexts().registerContext(OnlineOtherPlayer.class, c -> {
             CommandIssuer issuer = c.getIssuer();
@@ -127,7 +131,7 @@ public class SpigotRpgPlugin implements NtRpgBootstrap {
 
         }, new FlatFilesModule(), (bindings, providers) -> new SpigotGuiceModule(this, spigotRpg, bindings, providers), injector -> {
 
-
+            SpigotRpgPlugin.injector = injector;
             injector.injectMembers(spigotRpg);
             new RpgImpl(spigotRpg);
 

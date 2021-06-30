@@ -10,7 +10,6 @@ import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.junit.jupiter.engine.execution.NamespaceAwareStore;
-import org.slf4j.impl.SimpleLoggerFactory;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
@@ -22,8 +21,6 @@ public class NtRpgExtension implements BeforeAllCallback, TestInstancePostProces
     @Override
     public void beforeAll(ExtensionContext context) throws Exception {
         new TestDictionary().reset();
-        org.slf4j.Logger logger = new SimpleLoggerFactory().getLogger("Testing");
-        Log.setLogger(logger);
     }
 
     @Override

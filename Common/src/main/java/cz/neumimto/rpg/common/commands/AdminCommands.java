@@ -140,6 +140,7 @@ public class AdminCommands extends BaseCommand {
     }
 
     @Subcommand("class")
+    @CommandCompletion("@players @class-any")
     public void showClassCommandAdmin(CommandIssuer console, OnlineOtherPlayer executor, ClassDefinition classDefinition, @Optional String back) {
         infoCommands.showClassCommand(executor.character, classDefinition, back);
     }
@@ -199,6 +200,7 @@ public class AdminCommands extends BaseCommand {
         boolean reloadLocalizations = reloadAll || arg.equalsIgnoreCase("l");
         boolean reloadItems = reloadAll || arg.equalsIgnoreCase("i");
         boolean reloadSkills = reloadAll || arg.equalsIgnoreCase("s");
+        boolean reloadGuis = reloadAll || arg.equalsIgnoreCase("g");
         boolean reloadClasses = reloadAll || reloadItems || reloadSkills || arg.equalsIgnoreCase("c");
 
         info("[RELOAD] Saving current state of players");

@@ -1,15 +1,16 @@
 package cz.neumimto.rpg.spigot.gui;
 
+import com.google.auto.service.AutoService;
 import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.players.CharacterService;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.services.IRpgListener;
 import de.tr7zw.nbtapi.NBTItem;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -22,8 +23,9 @@ import java.util.Map;
 import java.util.Set;
 
 @Singleton
+@AutoService(IRpgListener.class)
 @ResourceLoader.ListenerClass
-public class SpellbookListener implements Listener {
+public class SpellbookListener implements IRpgListener {
 
     @Inject
     private CharacterService characterService;
@@ -63,7 +65,7 @@ public class SpellbookListener implements Listener {
             Map.Entry<String, PlayerSkillContext> next = iterator.next();
             ItemStack itemStack = state.icons.get(next.getKey());
             if (itemStack == null) {
-                itemStack = SpigotGuiHelper.toSpellbookItemStack(character, next.getValue());
+                itemStack = SpigotGuiHelper.toItemStack(character, next.getValue());
                 state.icons.put(next.getKey(), itemStack);
             }
             inv.setItem(i, itemStack);

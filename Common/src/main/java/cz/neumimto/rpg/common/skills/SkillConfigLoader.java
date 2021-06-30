@@ -7,8 +7,6 @@ import cz.neumimto.rpg.api.utils.DebugLevel;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.description.annotation.AnnotationDescription;
 
-import javax.naming.ConfigurationException;
-
 import static cz.neumimto.rpg.api.logging.Log.info;
 
 public class SkillConfigLoader {
@@ -40,8 +38,8 @@ public class SkillConfigLoader {
 
         Object o = null;
         try {
-            o = rl.loadClass(generateClass(id));
-        } catch (IllegalAccessException | InstantiationException | ConfigurationException e) {
+            o = rl.loadSkillClass(generateClass(id));
+        } catch (Exception e) {
             e.printStackTrace();
         }
         ISkill o1 = (ISkill) o;

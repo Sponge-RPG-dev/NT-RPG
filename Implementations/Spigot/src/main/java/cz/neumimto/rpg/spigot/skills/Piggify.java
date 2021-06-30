@@ -1,8 +1,10 @@
 package cz.neumimto.rpg.spigot.skills;
 
+import com.google.auto.service.AutoService;
 import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.entity.IEntity;
+import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
@@ -17,6 +19,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
+@AutoService(ISkill.class)
 @ResourceLoader.Skill("ntrpg:piggify")
 public class Piggify extends TargetedEntitySkill {
 

@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.spigot.listeners;
 
+import com.google.auto.service.AutoService;
 import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.effects.EffectType;
 import cz.neumimto.rpg.api.entity.IReservable;
@@ -14,6 +15,7 @@ import cz.neumimto.rpg.spigot.events.damage.SpigotEntityProjectileDamageEarlyEve
 import cz.neumimto.rpg.spigot.events.damage.SpigotEntitySkillDamageEarlyEvent;
 import cz.neumimto.rpg.spigot.events.damage.SpigotEntityWeaponDamageEarlyEvent;
 import cz.neumimto.rpg.spigot.events.damage.SpigotEntityWeaponDamageLateEvent;
+import cz.neumimto.rpg.spigot.services.IRpgListener;
 import cz.neumimto.rpg.spigot.skills.ManaShield;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -22,9 +24,10 @@ import org.bukkit.event.Listener;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-@ResourceLoader.ListenerClass
 @Singleton
-public class SkillListener implements Listener {
+@AutoService(IRpgListener.class)
+@ResourceLoader.ListenerClass
+public class SkillListener implements IRpgListener {
 
     @Inject
     private SpigotEffectService effectService;

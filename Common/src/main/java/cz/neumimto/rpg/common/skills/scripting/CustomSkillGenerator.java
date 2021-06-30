@@ -20,8 +20,7 @@ import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.api.utils.DebugLevel;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import org.codehaus.janino.SimpleCompiler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -36,8 +35,6 @@ import java.util.stream.Stream;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
 public abstract class CustomSkillGenerator {
-
-    private static Logger logger = LoggerFactory.getLogger(CustomSkillGenerator.class);
 
     @Inject
     private Injector injector;

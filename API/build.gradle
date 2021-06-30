@@ -1,5 +1,7 @@
 plugins {
     id 'java-library'
+    id 'com.github.johnrengelman.shadow' version '7.0.0'
+
 }
 
 group = 'cz.neumimto.rpg'
@@ -11,7 +13,6 @@ dependencies {
     api 'com.electronwill.night-config:hocon:' + project.nightconfig
     api 'com.electronwill.night-config:json:' + project.nightconfig
     api 'com.scireum:parsii:' + project.parsii
-    api 'org.slf4j:slf4j-api:' + project.slf4j
     api('com.google.inject:guice:' + project.guice) {
         exclude group: "com.google.guava", module: "guava"
     }

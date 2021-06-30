@@ -41,7 +41,7 @@ public class SpigotCharacterService extends AbstractCharacterService<ISpigotChar
 
     @Override
     protected void initSpellbook(ISpigotCharacter activeCharacter, int i, int j, PlayerSkillContext skill) {
-        activeCharacter.getSpellbook()[i][j] = SpigotGuiHelper.toSpellbookItemStack(activeCharacter, skill);
+        activeCharacter.getSpellbook()[i][j] = SpigotGuiHelper.toItemStack(activeCharacter, skill);
     }
 
     @Override

@@ -14,6 +14,7 @@ import cz.neumimto.rpg.api.items.*;
 import cz.neumimto.rpg.api.items.sockets.SocketType;
 import cz.neumimto.rpg.api.items.subtypes.ItemSubtype;
 import cz.neumimto.rpg.api.logging.Log;
+import cz.neumimto.rpg.api.permissions.PermissionService;
 import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.common.utils.Wildcards;
@@ -39,6 +40,8 @@ public abstract class AbstractItemService implements ItemService {
     protected PropertyService propertyService;
     @Inject
     private AssetService assetService;
+    @Inject
+    private PermissionService permissionService;
 
     @Override
     public Optional<ItemClass> getWeaponClassByName(String clazz) {
@@ -323,7 +326,7 @@ public abstract class AbstractItemService implements ItemService {
         }
         return Wildcards.substract(itemId, getAllItemIds())
                 .stream()
-                .map(a -> new ItemString(a, i.damage, i.armor, i.variant))
+                .map(a -> new ItemString(a, i.damage, i.armor, i.variant, i.permission))
                 .collect(Collectors.toList());
     }
 
@@ -337,6 +340,15 @@ public abstract class AbstractItemService implements ItemService {
         itemAttributesPlaceholder.clear();
 
         load();
+    }
+
+    @Override
+    public boolean checkItemPermission(IActiveCharacter character, RpgItemStack rpgItemStack) {
+        String permission = rpgItemStack.getItemType().getPermission();
+        if (permission == null) {
+            return true;
+        }
+        return permissionService.hasPermission(character, permission);
     }
 }
 

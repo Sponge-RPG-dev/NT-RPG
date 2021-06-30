@@ -7,12 +7,14 @@ public final class ItemString {
     public final double damage;
     public final double armor;
     public final String variant;
+    public final String permission;
 
-    public ItemString(String itemId, double damage, double armor, String variant) {
+    public ItemString(String itemId, double damage, double armor, String variant, String permission) {
         this.itemId = itemId;
         this.damage = damage;
         this.armor = armor;
         this.variant = variant;
+        this.permission = permission;
     }
 
     public static ItemString parse(String string) {
@@ -21,6 +23,7 @@ public final class ItemString {
         String model = null;
         double damage = 0;
         double armor = 0;
+        String permission = null;
         id = data[0];
         if (data.length > 1) {
             for (int i = 1; i < data.length; i++) {
@@ -31,12 +34,14 @@ public final class ItemString {
                     model = k.substring(6);
                 } else if (k.startsWith("armor=")) {
                     armor = Double.parseDouble(k.substring(6));
+                } else if (k.startsWith("permission=")) {
+                    permission = k.substring(11);
                 } else {
                     Log.warn("Could not parse item " + string);
                 }
             }
         }
-        return new ItemString(id.toLowerCase(), damage, armor, model);
+        return new ItemString(id.toLowerCase(), damage, armor, model, permission);
     }
 
     public static class InvalidItemStringException extends RuntimeException {

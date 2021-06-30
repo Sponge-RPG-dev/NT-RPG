@@ -1,11 +1,15 @@
 package cz.neumimto.rpg.api.localization;
 
+import com.google.auto.service.AutoService;
+import cz.neumimto.rpg.api.services.ILocalization;
+
+@AutoService(ILocalization.class)
 @Localization({
         "localizations/core_localization_en.properties",
         "localizations/core_localization_cs.properties",
         "localizations/core_localization_pl.properties"
 })
-public class LocalizationKeys {
+public class LocalizationKeys implements ILocalization {
     public static final String PLAYER_LEARNED_SKILL_GLOBAL_MESSAGE = "player.skill.learned.global.message";
     public static final String PLAYER_UPGRADED_SKILL_GLOBAL_MESSAGE = "player.skill.upgraded.global.message";
     public static final String PLAYER_REFUNDED_SKILL_GLOBAL_MESSAGE = "player.skill.refunded.global.message";
@@ -163,7 +167,4 @@ public class LocalizationKeys {
     public static final String SPELLBOOK_ADDPAGE = "label.item.spellbook.addpage";
     public static final String SPELLBOOK_ROTATION = "spellbook.cooldown.text";
 
-
-    private LocalizationKeys() {
-    }
 }

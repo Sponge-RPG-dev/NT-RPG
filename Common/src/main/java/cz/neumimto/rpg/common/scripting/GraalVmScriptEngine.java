@@ -9,7 +9,6 @@ import cz.neumimto.rpg.api.scripting.SkillScriptHandlers;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.common.utils.Java12FieldUtils;
-import dev.xdark.deencapsulation.Deencapsulation;
 import org.graalvm.polyglot.*;
 import org.graalvm.polyglot.impl.AbstractPolyglotImpl;
 import sun.misc.Unsafe;

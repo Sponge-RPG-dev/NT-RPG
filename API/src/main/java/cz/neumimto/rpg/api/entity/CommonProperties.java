@@ -1,11 +1,13 @@
 package cz.neumimto.rpg.api.entity;
 
+import com.google.auto.service.AutoService;
+import cz.neumimto.rpg.api.services.IPropertyContainer;
 import cz.neumimto.rpg.api.properties.Property;
 import cz.neumimto.rpg.api.properties.PropertyContainer;
 
 @PropertyContainer
-public class CommonProperties {
-
+@AutoService(IPropertyContainer.class)
+public class CommonProperties implements IPropertyContainer {
 
     @Property(name = "mana")
     public static int mana;

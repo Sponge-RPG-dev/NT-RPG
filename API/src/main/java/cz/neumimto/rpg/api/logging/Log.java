@@ -3,7 +3,9 @@ package cz.neumimto.rpg.api.logging;
 
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.utils.DebugLevel;
-import org.slf4j.Logger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 /**
  * Created by NeumimTo on 19.8.2018.
@@ -26,15 +28,15 @@ public class Log {
     }
 
     public static void warn(String message) {
-        logger.warn(message);
+        logger.log(Level.WARNING, message);
     }
 
     public static void error(String message, Throwable t) {
-        logger.error(message, t);
+        logger.log(Level.SEVERE, message, t);
     }
 
     public static void error(String message) {
-        logger.error(message);
+        logger.log(Level.SEVERE, message);
     }
 
     public static void setLogger(Logger logger) {

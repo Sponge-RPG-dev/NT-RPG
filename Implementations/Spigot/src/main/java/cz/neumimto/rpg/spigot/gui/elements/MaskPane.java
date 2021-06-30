@@ -20,10 +20,8 @@ public class MaskPane extends StaticPane {
     private Iterator<GuiItem> dynamicContent;
 
     public MaskPane(int x, int y, ItemMask mask) {
-        super(x, y);
+        super(x, y, mask.mask[0].length(), mask.mask.length);
         this.mask = mask;
-        this.length = mask.mask[0].length();
-        this.height = mask.mask.length;
     }
 
     public void bindItem(char mask, GuiItem guiItem) {

@@ -1,58 +1,57 @@
 package cz.neumimto.rpg.spigot.gui.inventoryviews;
 
-import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
+import com.google.auto.service.AutoService;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.spigot.gui.elements.GuiCommand;
-import cz.neumimto.rpg.spigot.gui.elements.Icon;
-import cz.neumimto.rpg.spigot.gui.elements.MaskPane;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import javax.inject.Singleton;
+import java.util.*;
 
-public class ClassTypesGuiView extends GuiHelper {
+@Singleton
+@AutoService(ConfigurableInventoryGui.class)
+public class ClassTypesGuiView extends ConfigurableInventoryGui {
 
     private static ChestGui cachedGui;
 
-    public static ChestGui create() {
+    public ClassTypesGuiView() {
+        super("ClassTypes.conf");
+    }
 
-        if (cachedGui == null) {
+    @Override
+    public void clearCache() {
+        initialize();
+    }
 
-            Map<String, ClassTypeDefinition> cTypes = Rpg.get().getPluginConfig().CLASS_TYPES;
+    @Override
+    public void initialize() {
+        cachedGui = loadGui();
+    }
 
-            ChestGui gui = new ChestGui(6, t("gui.label.class-types"));
+    @Override
+    public Map<String, List<GuiCommand>> getPaneData(CommandSender commandSender) {
+        Map<String, List<GuiCommand>> map = new HashMap<>();
+        List<GuiCommand> guiCommands = new ArrayList<>();
 
-            MaskPane maskPane = new MaskPane(0,0,
-                    new MaskPane.ItemMask(
-                            "UUUUUUUUU",
-                            "U-------U",
-                            "U-------U",
-                            "U-------U",
-                            "U-------U",
-                            "UUUUUUUUU"
-                    ));
+        Map<String, ClassTypeDefinition> cTypes = Rpg.get().getPluginConfig().CLASS_TYPES;
 
-            maskPane.bindItem('U', new Icon(i(Material.WHITE_STAINED_GLASS_PANE, 12345)));
-            maskPane.bindItem('-', new GuiItem(i(Material.GRAY_STAINED_GLASS_PANE, 12345)));
-            maskPane.setDynamicContentMask('-');
-
-
-            List<GuiItem> list = new ArrayList<>();
-            for (Map.Entry<String, ClassTypeDefinition> e : cTypes.entrySet()) {
-                String primaryColor = e.getValue().getPrimaryColor();
-                ChatColor c = ChatColor.valueOf(primaryColor.toUpperCase());
-                list.add(new GuiCommand(i(Material.CRAFTING_TABLE, e.getValue().getModelId(),c,e.getKey()), "ninfo classes " + e.getKey()));
-            }
-
-            maskPane.setDynamicContent(list);
-            gui.addPane(maskPane);
-            cachedGui = gui;
+        for (Map.Entry<String, ClassTypeDefinition> e : cTypes.entrySet()) {
+            String primaryColor = e.getValue().getPrimaryColor();
+            ChatColor c = ChatColor.valueOf(primaryColor.toUpperCase());
+            guiCommands.add(new GuiCommand(i(Material.CRAFTING_TABLE, e.getValue().getModelId(),c,e.getKey()), "ninfo classes " + e.getKey()));
         }
-        return cachedGui;
+
+        map.put("ClassType", guiCommands);
+        return map;
+    }
+
+    public static ChestGui get(Player player) {
+       return cachedGui;
     }
 
 }

@@ -8,8 +8,8 @@ public class SpigotRpgItemType extends RpgItemTypeImpl {
 
     private final Material material;
 
-    public SpigotRpgItemType(String id, String modelName, ItemClass itemClass, double damage, double armor, Material material) {
-        super(id, modelName, itemClass, damage, armor);
+    public SpigotRpgItemType(String id, String modelName, ItemClass itemClass, double damage, double armor, Material material, String permission) {
+        super(id, modelName, itemClass, damage, armor, permission);
         this.material = material;
     }
 

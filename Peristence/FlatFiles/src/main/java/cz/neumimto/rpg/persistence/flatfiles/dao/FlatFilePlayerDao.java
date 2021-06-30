@@ -1,6 +1,7 @@
 package cz.neumimto.rpg.persistence.flatfiles.dao;
 
 import com.electronwill.nightconfig.core.file.FileConfig;
+import com.google.auto.service.AutoService;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
@@ -17,6 +18,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@AutoService(IPlayerDao.class)
 public class FlatFilePlayerDao implements IPlayerDao {
 
     private static final String DATA_FORMAT = ".json";

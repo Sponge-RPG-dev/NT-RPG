@@ -23,12 +23,12 @@ import cz.neumimto.rpg.spigot.effects.common.def.ManaBar;
 import cz.neumimto.rpg.spigot.effects.common.def.ManaBarBossBar;
 import cz.neumimto.rpg.spigot.effects.common.def.ManaBarText;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.gui.inventoryviews.CharacterGuiView;
 import cz.neumimto.rpg.spigot.gui.inventoryviews.ClassTypesGuiView;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
@@ -210,15 +210,15 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
     @Override
     public void sendClassTypes(ISpigotCharacter character) {
         Player player = character.getPlayer();
-        ChestGui chestGui = ClassTypesGuiView.create();
+        ChestGui chestGui = ClassTypesGuiView.get(null);
         chestGui.show(player);
     }
 
     @Override
     public void displayCharacterMenu(ISpigotCharacter character) {
         Player player = character.getPlayer();
-        Inventory inventory = SpigotGuiHelper.createCharacterMenu(character);
-        player.openInventory(inventory);
+        ChestGui inventory = CharacterGuiView.get(player);
+        inventory.show(player);
     }
 
     @Override

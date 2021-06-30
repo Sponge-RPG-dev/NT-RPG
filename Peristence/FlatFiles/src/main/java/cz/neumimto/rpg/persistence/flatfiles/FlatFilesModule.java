@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.persistence.flatfiles;
 
+import com.google.auto.service.AutoService;
 import cz.neumimto.rpg.api.RpgAddon;
 import cz.neumimto.rpg.common.persistance.dao.ICharacterClassDao;
 import cz.neumimto.rpg.common.persistance.dao.IPersistenceHandler;
@@ -12,7 +13,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-
+@AutoService(RpgAddon.class)
 public class FlatFilesModule implements RpgAddon {
 
     @Override

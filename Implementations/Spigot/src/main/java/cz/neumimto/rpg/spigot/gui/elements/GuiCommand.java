@@ -26,4 +26,10 @@ public class GuiCommand extends GuiItem {
                     () -> Bukkit.dispatchCommand(whoClicked, command), 1);
         });
     }
+
+    public GuiCommand(@NotNull ItemStack item) {
+        super(item, e -> {
+            e.setCancelled(true);
+        });
+    }
 }

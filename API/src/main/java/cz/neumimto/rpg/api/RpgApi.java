@@ -16,6 +16,7 @@ import cz.neumimto.rpg.api.inventory.InventoryService;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.localization.Arg;
 import cz.neumimto.rpg.api.localization.LocalizationService;
+import cz.neumimto.rpg.api.permissions.PermissionService;
 import cz.neumimto.rpg.api.scripting.IRpgScriptEngine;
 import cz.neumimto.rpg.api.skills.SkillService;
 
@@ -87,6 +88,8 @@ public interface RpgApi {
     InventoryService getInventoryService();
 
     ExperienceService getExperienceService();
+
+    PermissionService getPermissionService();
 
     void reloadMainPluginConfig();
 

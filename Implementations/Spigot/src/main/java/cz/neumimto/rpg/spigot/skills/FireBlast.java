@@ -1,7 +1,9 @@
 package cz.neumimto.rpg.spigot.skills;
 
+import com.google.auto.service.AutoService;
 import cz.neumimto.FireworkHandler;
 import cz.neumimto.rpg.api.ResourceLoader;
+import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
@@ -25,6 +27,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Singleton
+@AutoService(ISkill.class)
 @ResourceLoader.Skill("ntrpg:fireblast")
 public class FireBlast extends TargetedBlockSkill {
 

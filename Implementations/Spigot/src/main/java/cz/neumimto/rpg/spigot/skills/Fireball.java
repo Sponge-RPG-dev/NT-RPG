@@ -1,7 +1,9 @@
 package cz.neumimto.rpg.spigot.skills;
 
 
+import com.google.auto.service.AutoService;
 import cz.neumimto.rpg.api.ResourceLoader;
+import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
@@ -21,6 +23,7 @@ import static org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 
 @Singleton
+@AutoService(ISkill.class)
 @ResourceLoader.Skill("ntrpg:fireball")
 public class Fireball extends ActiveSkill<ISpigotCharacter> {
 

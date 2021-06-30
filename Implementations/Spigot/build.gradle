@@ -31,19 +31,20 @@ version = project.p_spigot_version
 dependencies {
     compileOnly 'com.google.auto.service:auto-service:1.0'
     annotationProcessor 'com.google.auto.service:auto-service:1.0'
-    api 'com.google.auto.service:auto-service-annotations:1.0'
+    compileOnly 'com.google.auto.service:auto-service-annotations:1.0'
     //annotationProcessor 'com.google.auto.service:auto-service-annotations:1.0' + project.autoservice
     //compileOnly 'com.google.auto.service:auto-service-annotations:1.0'// + project.autoservice
 
-    annotationProcessor("org.spigotmc:plugin-annotations:" + project.pluginannotations)
+    //annotationProcessor("org.spigotmc:plugin-annotations:" + project.pluginannotations)
     annotationProcessor project(':Generator')
 
     api project(':Common')
     api project(':FlatFiles-Persistence')
+    api 'de.tr7zw:item-nbt-api-plugin:' + project.nbtapi
+
     compileOnly project(':Bootstrap-Common')
 
-    implementation "co.aikar:acf-paper:" + project.acf
-    implementation 'com.github.stefvanschie.inventoryframework:IF:' + project.if
+   // api 'com.github.stefvanschie.inventoryframework:IF:' + project.if
 
 
     // runtimeOnly fileTree(dir: 'lib', include: '*.jar')
@@ -61,19 +62,17 @@ dependencies {
     }
 
     //runtimeOnly 'com.github.dmulloy2:ProtocolLib:master'
-    compileOnly 'de.tr7zw:item-nbt-api-plugin:' + project.nbtapi
     compileOnly 'com.github.Slikey:EffectLib:' + project.effectlib
   //  compileOnly 'placeholderapi.me.clip:placeholderapi:' + project.papi
     compileOnly 'com.gmail.filoghost.holographicdisplays:holographicdisplays-api:' + project.hdisplays
+    compileOnly "co.aikar:acf-paper:" + project.acf
 
     compileOnly('net.Indyuce:MMOItems:' + project.mmoitems) {
         exclude group: 'com.mojang', module: 'authlib'
         exclude group: 'org.jetbrains', module: 'annotations'
     }
 
-    compileOnly('io.lumine:MythicLib:' + project.mythiclib) {
-        exclude group: "org.slf4j", module: "slf4j"
-    }
+    compileOnly('io.lumine:MythicLib:' + project.mythiclib)
 
     compileOnly 'io.lumine.xikage:MythicMobs:' + project.mythicmobs
 
@@ -86,14 +85,25 @@ dependencies {
 
 }
 
-jar {
-    //libsDirName = '../../../server-spigot/plugins'
-    //archiveFileName="NT-RPG-Spigot-16.x-" + archiveVersion + ".jar"
-}
 
 shadowJar {
-    // relocate 'co.aikar.commands', 'cz.neumimto.acf'
     archiveFileName = "NT-RPG-Spigot-16.x-${p_spigot_version}.jar"
+
+    relocate 'com.electronwill', 'rpgshaded.com.electronwill'
+  //todo  relocate 'com.github.stefvanschie', 'rpgshaded.com.github.stefvanschie'
+    relocate 'com.google.inject', 'rpgshaded.com.google.inject'
+    relocate 'com.squareup.javapoet', 'rpgshaded.com.squareup.javapoet'
+    relocate 'com.typesafe.config', 'rpgshaded.com.typesafe.config'
+    relocate 'javax.inject', 'rpgshaded.javax.inject'
+    relocate 'net.bytebuddy', 'rpgshaded.net.bytebuddy'
+    relocate 'org.aopalliance', 'rpgshaded.org.aopalliance'
+    relocate 'org.codehaus', 'rpgshaded.org.codehaus'
+
+    relocate 'de.tr7zw', 'rpgshaded.de.tr7zw'
+
+
 }
+
+
 
 build.dependsOn shadowJar

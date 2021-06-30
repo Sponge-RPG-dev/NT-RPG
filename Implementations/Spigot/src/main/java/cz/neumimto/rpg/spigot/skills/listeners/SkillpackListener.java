@@ -1,11 +1,13 @@
 package cz.neumimto.rpg.spigot.skills.listeners;
 
+import com.google.auto.service.AutoService;
 import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
 import cz.neumimto.rpg.spigot.effects.common.*;
 import cz.neumimto.rpg.spigot.entities.SpigotEntityService;
+import cz.neumimto.rpg.spigot.services.IRpgListener;
 import org.bukkit.Particle;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -18,10 +20,11 @@ import org.spigotmc.event.entity.EntityDismountEvent;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.EventListener;
 
 @Singleton
-@ResourceLoader.ListenerClass
-public class SkillpackListener implements Listener {
+@AutoService(IRpgListener.class)
+public class SkillpackListener implements IRpgListener {
 
     @Inject
     private SpigotEntityService spigotEntityService;

@@ -1,11 +1,13 @@
 package cz.neumimto.rpg.spigot.listeners;
 
+import com.google.auto.service.AutoService;
 import com.google.inject.Singleton;
 import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.entity.UserActionType;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.spigot.SpigotRpg;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
+import cz.neumimto.rpg.spigot.services.IRpgListener;
 import org.bukkit.GameMode;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -17,8 +19,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import javax.inject.Inject;
 
 @Singleton
+@AutoService(IRpgListener.class)
 @ResourceLoader.ListenerClass
-public class SpigotComboListener implements Listener {
+public class SpigotComboListener implements IRpgListener {
 
     @Inject
     private SpigotCharacterService characterService;

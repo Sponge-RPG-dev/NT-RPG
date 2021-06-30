@@ -24,12 +24,33 @@ abstract class GuiHelper {
         return Rpg.get().getLocalizationService().translate(key);
     }
 
-    static ItemStack i(Material material, int model) {
-        ItemStack itemStack = new ItemStack(material);
+    static ItemStack i(GuiConfig.MaskConfig maskConfig) {
+        ItemStack itemStack = new ItemStack(Material.matchMaterial(maskConfig.id));
         ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.setCustomModelData(model);
+        if (maskConfig.model != null) {
+            itemMeta.setCustomModelData(maskConfig.model);
+        }
+        if (maskConfig.translationKey != null) {
+            itemMeta.setDisplayName(Rpg.get().getLocalizationService().translate(maskConfig.translationKey));
+        } else {
+            itemMeta.setDisplayName("");
+        }
         itemStack.setItemMeta(itemMeta);
         return itemStack;
+    }
+
+    static ItemStack i(Material material, Integer model) {
+        ItemStack itemStack = new ItemStack(material);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        if (model != null) {
+            itemMeta.setCustomModelData(model);
+        }
+        itemStack.setItemMeta(itemMeta);
+        return itemStack;
+    }
+
+    static ItemStack i(String material, String model) {
+       return i(Material.matchMaterial(material), model == null ? null : Integer.parseInt(model));
     }
 
     static ItemStack i(Material material, int model, ChatColor nameColor, String itemName) {

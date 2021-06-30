@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.spigot.listeners;
 
+import com.google.auto.service.AutoService;
 import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
@@ -20,6 +21,7 @@ import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
 import cz.neumimto.rpg.spigot.gui.SpellbookListener;
 import cz.neumimto.rpg.spigot.inventory.SpigotInventoryService;
 import cz.neumimto.rpg.spigot.inventory.SpigotItemService;
+import cz.neumimto.rpg.spigot.services.IRpgListener;
 import de.tr7zw.nbtapi.NBTItem;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -53,8 +55,9 @@ import java.util.Map;
 import java.util.Optional;
 
 @Singleton
+@AutoService(IRpgListener.class)
 @ResourceLoader.ListenerClass
-public class SpigotInventoryListener implements Listener {
+public class SpigotInventoryListener implements IRpgListener {
 
     @Inject
     private LocalizationService localizationService;
@@ -475,7 +478,8 @@ public class SpigotInventoryListener implements Listener {
 
             boolean canUse = itemService.checkItemType(character, rpgItemStack) &&
                     itemService.checkItemAttributeRequirements(character, rpgItemStack) &&
-                    itemService.checkItemClassRequirements(character, rpgItemStack);
+                    itemService.checkItemClassRequirements(character, rpgItemStack) &&
+                    itemService.checkItemPermission(character, rpgItemStack);
 
             if (!canUse) {
                 int size = inventory.getSize();

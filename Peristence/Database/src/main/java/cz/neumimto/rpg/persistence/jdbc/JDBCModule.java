@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.persistence.jdbc;
 
+import com.google.auto.service.AutoService;
 import com.google.inject.Injector;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -29,7 +30,7 @@ import java.util.Properties;
 import static cz.neumimto.rpg.api.logging.Log.error;
 import static cz.neumimto.rpg.api.logging.Log.info;
 
-
+@AutoService(RpgAddon.class)
 public class JDBCModule implements RpgAddon {
 
     @Override

@@ -12,15 +12,20 @@ dependencies {
     compileOnly ("org.spigotmc:plugin-annotations:" + project.pluginannotations){
         exclude group: "org.bukkit", module: "bukkit"
     }
+    annotationProcessor("org.spigotmc:plugin-annotations:" + project.pluginannotations)
+
     compileOnly "org.spigotmc:spigot-api:" + project.spigotapi
+    api "co.aikar:acf-paper:" + project.acf
 }
 
-var outputs = tasks.getByPath(':Spigot:jar').outputs
+var spigotJarTask = tasks.getByPath(':Spigot:shadowJar');
+var outputs = spigotJarTask.outputs
 var path = outputs.getFiles().getSingleFile();
-
 shadowJar {
+    libsDirName = '../../../server-spigot/plugins'
     archiveFileName = "NT-RPG-17.x-" + p_spigot_version + ".jar"
 }
+
 
 build.dependsOn processResources
 

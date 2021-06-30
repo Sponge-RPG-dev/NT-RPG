@@ -10,6 +10,7 @@ import cz.neumimto.rpg.common.inventory.AbstractInventoryService;
 import cz.neumimto.rpg.common.inventory.InventoryHandler;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.gui.SpigotGuiHelper;
+import cz.neumimto.rpg.spigot.gui.inventoryviews.ConfigurableInventoryGui;
 import cz.neumimto.rpg.spigot.persistance.SpigotEquipedSlot;
 import de.tr7zw.nbtapi.NBTItem;
 import org.bukkit.ChatColor;
@@ -23,6 +24,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Map;
 import java.util.Optional;
+import java.util.ServiceLoader;
+import java.util.UUID;
 
 @Singleton
 public class SpigotInventoryService extends AbstractInventoryService<ISpigotCharacter> {
@@ -148,7 +151,11 @@ public class SpigotInventoryService extends AbstractInventoryService<ISpigotChar
     }
 
     @Override
-    public void invalidateGUICaches(IActiveCharacter cc) {
+    public void invalidateGUICaches(ISpigotCharacter cc) {
+        UUID uniqueId = cc.getEntity().getUniqueId();
+        ServiceLoader.load(ConfigurableInventoryGui.class, getClass().getClassLoader()).stream()
+                .map(ServiceLoader.Provider::get).forEach(a->a.clearCache(uniqueId));
+
         SpigotGuiHelper.CACHED_MENUS.remove("char_view" + cc.getName());
         SpigotGuiHelper.CACHED_MENUS.remove("char_allowed_items_armor" + cc.getName());
         SpigotGuiHelper.CACHED_MENUS.remove("char_allowed_items_weapons" + cc.getName());

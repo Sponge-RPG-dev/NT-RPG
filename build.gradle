@@ -52,6 +52,9 @@ subprojects {
     }
 
     dependencies {
+        compileOnly 'com.google.auto.service:auto-service:1.0'
+        annotationProcessor 'com.google.auto.service:auto-service:1.0'
+
         compileOnly 'it.unimi.dsi:fastutil:' + project.fastutil
         compileOnly 'com.google.code.gson:gson:' + project.gson
 
@@ -60,7 +63,6 @@ subprojects {
         testImplementation 'org.junit.jupiter:junit-jupiter-params:' + project.junit5
         testImplementation 'com.github.JeffreyFalgout:junit5-extensions:junit5-extensions-1.2.1'
         testImplementation 'it.unimi.dsi:fastutil:' + project.fastutil
-        testImplementation 'org.slf4j:slf4j-simple:' + project.slf4j
         //// https://mvnrepository.com/artifact/com.google.code.gson/gson
         testImplementation 'com.google.code.gson:gson:' + project.gson
 

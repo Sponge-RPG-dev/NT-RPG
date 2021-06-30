@@ -1,58 +1,44 @@
 package cz.neumimto.rpg.common;
 
-import com.google.inject.ConfigurationException;
 import com.google.inject.Injector;
 import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.RpgAddon;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.effects.EffectService;
-import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.effects.IGlobalEffect;
 import cz.neumimto.rpg.api.effects.model.EffectModelFactory;
 import cz.neumimto.rpg.api.effects.model.EffectModelMapper;
 import cz.neumimto.rpg.api.localization.Localization;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.logging.Log;
-import cz.neumimto.rpg.api.properties.PropertyContainer;
 import cz.neumimto.rpg.api.scripting.IRpgScriptEngine;
+import cz.neumimto.rpg.api.services.ILocalization;
+import cz.neumimto.rpg.api.services.IPropertyContainer;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
-import cz.neumimto.rpg.api.utils.Console;
 import cz.neumimto.rpg.api.utils.DebugLevel;
 import cz.neumimto.rpg.api.utils.FileUtils;
 import cz.neumimto.rpg.api.utils.Pair;
 import cz.neumimto.rpg.common.bytecode.ClassGenerator;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
-import cz.neumimto.rpg.common.utils.ResourceClassLoader;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.io.*;
-import java.lang.reflect.*;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.stream.Stream;
 
-import static cz.neumimto.rpg.api.logging.Log.error;
 import static cz.neumimto.rpg.api.logging.Log.info;
 
-@Singleton
 public class ResourceManagerImpl implements ResourceLoader {
 
     private final static String INNERCLASS_SEPARATOR = "$";
 
     public static File classDir, addonDir, skilltreeDir, addonLoadDir, localizations;
     private static boolean reload = false;
-    private static Set<Class> classesToLoad = new HashSet<>();
 
     @Inject
     protected IRpgScriptEngine jsEngine;
@@ -70,37 +56,6 @@ public class ResourceManagerImpl implements ResourceLoader {
     private ClassGenerator classGenerator;
     @Inject
     private LocalizationService localizationService;
-    private Map<String, URLClassLoader> classLoaderMap = new HashMap<>();
-    private URLClassLoader configClassLaoder;
-
-    private static <T> T newInstance(Class<T> excepted, Class<?> clazz) {
-        T t = null;
-        try {
-            t = (T) clazz.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        return t;
-    }
-
-    public static Set<RpgAddon> discoverGuiceModules() {
-        Set<RpgAddon> addons = new HashSet<>();
-
-        for (Class aClass : AddonScanner.getClassesToLoad()) {
-            if (RpgAddon.class.isAssignableFrom(aClass)
-                    && !aClass.isInterface()
-                    && !Modifier.isAbstract(aClass.getModifiers())) {
-                try {
-                    addons.add((RpgAddon) aClass.getConstructor().newInstance());
-                } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                    Log.error("Could not call a default constructor on a class " + aClass.getName());
-                }
-            }
-            classesToLoad.add(aClass);
-        }
-
-        return addons;
-    }
 
     @Override
     public void init() {
@@ -118,108 +73,16 @@ public class ResourceManagerImpl implements ResourceLoader {
     }
 
     @Override
-    public void loadJarFile(File f, boolean main) {
-        if (f == null) {
-            return;
-        }
-        JarFile file;
-        try {
-            file = new JarFile(f);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
-        }
-        info("Loading jarfile " + file.getName());
-
-        if (!main) {
-            prepareClassLoader(f);
-        }
-
-        ClassLoader classLoader;
-        if (main) {
-            classLoader = Rpg.get().getClass().getClassLoader();
-        } else {
-            classLoader = getClassLoaderMap().get(f.getName());
-        }
-
-        Set<Pair<File, String>> localizationsToLoad = new HashSet<>();
-        Set<String> classesToLoad = new HashSet<>();
-
-        JarEntry next;
-        Enumeration<JarEntry> entries = file.entries();
-        while (entries.hasMoreElements()) {
-            next = entries.nextElement();
-            if (next.isDirectory() || !next.getName().endsWith(".class")) {
-                if (next.getName().contains("localizations") && next.getName().endsWith(".properties")) {
-                    String name = next.getName();
-                    int i = name.lastIndexOf("/");
-                    String substring = name.substring(i);
-                    File file1 = new File(Rpg.get().getWorkingDirectory(), substring);
-                    localizationsToLoad.add(new Pair<>(file1, name));
-                }
-                if (reload && next.getName().contains("ntrpg-unreloadable")) {
-                    return;
-                }
-                continue;
-            }
-            if (main && !next.getName().startsWith("cz/neumimto")) {
-                continue;
-            }
-            //todo place this into each modules
-            if (next.getName().startsWith("org") || next.getName().startsWith("javax")) {
-                continue;
-            }
-            if (next.getName().lastIndexOf(INNERCLASS_SEPARATOR) > 1) {
-                continue;
-            }
-            classesToLoad.add(next.getName());
-        }
-
-        for (Pair<File, String> pair : localizationsToLoad) {
-            loadLocalizationPropertiesFiles(classLoader, pair.value, pair.key);
-        }
-
-        for (String classToLoad : classesToLoad) {
-            if (classToLoad.startsWith("cz/neumimto/rpg/spigot/bridges")) {
-                continue;
-            }
-            Class<?> clazz = loadClass(main, classLoader, classToLoad);
-            ResourceManagerImpl.classesToLoad.add(clazz);
-        }
-
-        info("Finished parsing of jarfile " + file.getName());
+    public void loadServices() {
+        load(ISkill.class, getClass().getClassLoader()).forEach(a -> skillService.registerAdditionalCatalog(a));
+        load(IPropertyContainer.class, getClass().getClassLoader()).forEach(a -> loadPropertyContainerClass(a.getClass()));
+        load(IGlobalEffect.class, getClass().getClassLoader()).forEach(a -> effectService.registerGlobalEffect(a));
+        load(EffectModelMapper.class, getClass().getClassLoader()).forEach(a -> EffectModelFactory.getTypeMappers().put(a.getType(), a));
+        load(ILocalization.class, getClass().getClassLoader()).forEach(a -> loadLocalizationBindingsClass(a.getClass()));
     }
 
-    protected Class<?> loadClass(boolean main, ClassLoader classLoader, String classToLoad) {
-        String className = classToLoad.substring(0, classToLoad.length() - 6);
-        className = className.replace('/', '.');
-        Class<?> clazz = null;
-        try {
-            if (!main) {
-                clazz = classLoader.loadClass(className);
-            } else {
-                clazz = Class.forName(className);
-            }
-        } catch (Throwable e) {
-            error("Could not load the class [" + className + "]" + e.getMessage(), e);
-        }
-        return clazz;
-    }
-
-    protected void prepareClassLoader(File f) {
-        URLClassLoader classLoader = getClassLoaderMap().get(f.getName());
-        if (classLoader == null) {
-
-            try {
-                classLoader = new ResourceClassLoader(f.toPath().getFileName().toString().trim(),
-                        new URL[]{f.toURI().toURL()},
-                        Rpg.get().getClass().getClassLoader());
-
-                getClassLoaderMap().put(f.getName(), classLoader);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-        }
+    protected <R> Stream<R> load(Class<R> r, ClassLoader cl) {
+        return ServiceLoader.load(r, cl).stream().map(ServiceLoader.Provider::get);
     }
 
     protected void loadLocalizationPropertiesFiles(ClassLoader classLoader, String name, File file) {
@@ -248,72 +111,6 @@ public class ResourceManagerImpl implements ResourceLoader {
         }
     }
 
-    @Override
-    public Object loadClass(Class<?> clazz) throws IllegalAccessException, InstantiationException, ConfigurationException {
-        //Properties
-        if (clazz == IGlobalEffect.class || clazz == null) {
-            return null;
-        }
-        Object container = null;
-        if (clazz.isInterface() && clazz.getAnnotations().length == 0) {
-            return null;
-        }
-        if (clazz.isAnnotationPresent(Skill.class)) {
-            container = loadSkillClass(clazz);
-        }
-        if (clazz.isAnnotationPresent(PropertyContainer.class)) {
-            loadPropertyContainerClass(clazz);
-        }
-        if (clazz.isAnnotationPresent(JsBinding.class)) {
-            loadScriptBindingsClass(clazz);
-        }
-        if (clazz.isAnnotationPresent(Localization.class)) {
-            loadLocalizationBindingsClass(clazz);
-        }
-        if (IGlobalEffect.class.isAssignableFrom(clazz)) {
-            container = loadIGlobalEffectClass(clazz);
-        }
-        if (clazz.isAnnotationPresent(ModelMapper.class)) {
-            loadModelMapperClass(clazz);
-        }
-        if (clazz.isAnnotationPresent(ListenerClass.class)) {
-            info("Registering listener class" + clazz.getName(), Rpg.get().getPluginConfig().DEBUG);
-            container = injector.getInstance(clazz);
-            Rpg.get().registerListeners(container);
-        }
-        if (clazz.isAnnotationPresent(Singleton.class) && hasDefaultCtr(clazz)) {
-            container = injector.getInstance(clazz);
-        }
-        if (IEffect.class.isAssignableFrom(clazz)) {
-            jsEngine.getDataToBind().put(clazz, JsBinding.Type.CLASS);
-            Type genericSuperclass = clazz.getGenericSuperclass();
-            if (genericSuperclass instanceof ParameterizedType) {
-                Type actualTypeArgument = ((ParameterizedType) genericSuperclass).getActualTypeArguments()[0];
-                if (actualTypeArgument instanceof Class) {
-                    jsEngine.getDataToBind().put((Class<?>) actualTypeArgument, JsBinding.Type.CLASS);
-                }
-            }
-        }
-        return container;
-    }
-
-    protected void loadModelMapperClass(Class<?> clazz) throws InstantiationException, IllegalAccessException {
-        EffectModelMapper o = null;
-        try {
-            o = (EffectModelMapper) clazz.getConstructor().newInstance();
-            EffectModelFactory.getTypeMappers().put(o.getType(), o);
-        } catch (InvocationTargetException | NoSuchMethodException e) {
-            e.printStackTrace();
-        }
-    }
-
-    protected Object loadIGlobalEffectClass(Class<?> clazz) {
-        Object container;
-        container = newInstance(IGlobalEffect.class, clazz);
-        effectService.registerGlobalEffect((IGlobalEffect) container);
-        return container;
-    }
-
     protected void loadLocalizationBindingsClass(Class<?> clazz) {
         Localization annotation = clazz.getAnnotation(Localization.class);
         File localizations = new File(Rpg.get().getWorkingDirectory() + "/localizations");
@@ -336,36 +133,17 @@ public class ResourceManagerImpl implements ResourceLoader {
         }
     }
 
-    protected void loadScriptBindingsClass(Class<?> clazz) {
-        jsEngine.getDataToBind().put(clazz, clazz.getAnnotation(JsBinding.class).value());
-    }
-
-
     protected void loadPropertyContainerClass(Class<?> clazz) {
         DebugLevel debugLevel = Rpg.get().getPluginConfig().DEBUG;
         info("Found Property container class" + clazz.getName(), debugLevel);
         propertyService.processContainer(clazz);
     }
 
-    protected Object loadSkillClass(Class<?> clazz) {
-        DebugLevel debugLevel = Rpg.get().getPluginConfig().DEBUG;
-        Object container;
-        container = injector.getInstance(clazz);
-        info("registering skill " + clazz.getName(), debugLevel);
-        ISkill skill = (ISkill) container;
-        Skill sk = clazz.getAnnotation(Skill.class);
-        skillService.registerAdditionalCatalog(skill);
+    @Override
+    public ISkill loadSkillClass(Class<? extends ISkill> clazz) {
+        ISkill container = injector.getInstance(clazz);
+        skillService.registerAdditionalCatalog(container);
         return container;
-    }
-
-    @Override
-    public URLClassLoader getConfigClassLoader() {
-        return configClassLaoder;
-    }
-
-    @Override
-    public Map<String, URLClassLoader> getClassLoaderMap() {
-        return classLoaderMap;
     }
 
     @Override
@@ -412,40 +190,6 @@ public class ResourceManagerImpl implements ResourceLoader {
         FileUtils.deleteDirectory(addonLoadDir);
         addonLoadDir.mkdir();
         FileUtils.copyDirectory(addonDir, addonLoadDir, path -> path.endsWith(".jar"));
-
-        for (File file : addonLoadDir.listFiles()) {
-            loadJarFile(file, false);
-        }
     }
 
-    @Override
-    public void initializeComponents() {
-        for (Class aClass : classesToLoad) {
-            initializeComponent(aClass);
-        }
-        classesToLoad.clear();
-    }
-
-    public void initializeComponent(Class<?> clazz) {
-        try {
-            if (loadClass(clazz) != null) {
-                info("ClassLoader for "
-                                + Console.GREEN_BOLD + clazz.getClassLoader() +
-                                Console.RESET + " loaded class " +
-                                Console.GREEN + clazz.getSimpleName() + Console.RESET,
-                        DebugLevel.DEVELOP);
-            }
-        } catch (IllegalAccessException | InstantiationException | ConfigurationException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private boolean hasDefaultCtr(Class<?> clazz) {
-        for (Constructor<?> constructor : clazz.getConstructors()) {
-            if (constructor.getParameterCount() == 0) {
-                return true;
-            }
-        }
-        return false;
-    }
 }

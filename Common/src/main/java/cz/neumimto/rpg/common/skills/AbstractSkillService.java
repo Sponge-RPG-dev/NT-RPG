@@ -133,6 +133,7 @@ public abstract class AbstractSkillService implements SkillService {
                     + " null");
             return;
         }
+        info("registering skill " + extraCatalog.getId());
         extraCatalog.init();
 
         skills.put(extraCatalog.getId().toLowerCase(), extraCatalog);

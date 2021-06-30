@@ -57,4 +57,5 @@ public interface ItemService {
 
     Map<String, SocketType> getSocketTypes();
 
+    boolean checkItemPermission(IActiveCharacter character, RpgItemStack rpgItemStack);
 }

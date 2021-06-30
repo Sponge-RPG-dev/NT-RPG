@@ -5,9 +5,7 @@ import cz.neumimto.rpg.api.gui.ISkillTreeInterfaceModel;
 import cz.neumimto.rpg.common.skills.AbstractSkillService;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.HashMap;
 import java.util.Map;

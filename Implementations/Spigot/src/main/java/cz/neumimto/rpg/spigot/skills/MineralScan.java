@@ -6,7 +6,9 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.WrappedWatchableObject;
+import com.google.auto.service.AutoService;
 import cz.neumimto.rpg.api.ResourceLoader;
+import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.tree.SkillType;
@@ -27,6 +29,7 @@ import java.util.UUID;
 
 
 @Singleton
+@AutoService(ISkill.class)
 @ResourceLoader.Skill("ntrpg:mineralscan")
 public class MineralScan extends ActiveSkill<ISpigotCharacter> {
 

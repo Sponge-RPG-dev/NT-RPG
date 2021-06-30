@@ -1,10 +1,7 @@
 package cz.neumimto.rpg.common.commands;
 
 import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.CommandPermission;
-import co.aikar.commands.annotation.Default;
-import co.aikar.commands.annotation.Optional;
+import co.aikar.commands.annotation.*;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 
 import javax.inject.Inject;
@@ -19,6 +16,7 @@ public class ClassesComand extends BaseCommand {
     private InfoCommands infoCommands;
 
     @Default
+    @CommandCompletion("@classtypes")
     public void classes(IActiveCharacter issuer, @Optional String type) {
         infoCommands.showClassesCommand(issuer, type);
     }

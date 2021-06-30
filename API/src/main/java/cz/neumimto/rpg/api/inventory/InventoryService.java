@@ -17,6 +17,6 @@ public interface InventoryService<T extends IActiveCharacter> {
 
     EquipedSlot createEquipedSlot(String className, int slotId);
 
-    void invalidateGUICaches(IActiveCharacter cc);
+    void invalidateGUICaches(T cc);
 
 }

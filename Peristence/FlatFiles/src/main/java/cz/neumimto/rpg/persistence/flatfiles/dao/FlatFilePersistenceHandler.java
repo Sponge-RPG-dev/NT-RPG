@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.persistence.flatfiles.dao;
 
+import com.google.auto.service.AutoService;
 import com.google.inject.Singleton;
 import cz.neumimto.rpg.api.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
@@ -11,6 +12,7 @@ import cz.neumimto.rpg.persistence.model.CharacterBaseImpl;
 import cz.neumimto.rpg.persistence.model.CharacterClassImpl;
 import cz.neumimto.rpg.persistence.model.CharacterSkillImpl;
 
+@AutoService(IPersistenceHandler.class)
 @Singleton
 public class FlatFilePersistenceHandler implements IPersistenceHandler {
 

@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.spigot.listeners;
 
+import com.google.auto.service.AutoService;
 import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.PluginConfig;
@@ -12,6 +13,7 @@ import cz.neumimto.rpg.spigot.entities.SpigotEntityService;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
 import cz.neumimto.rpg.spigot.inventory.SpigotInventoryService;
+import cz.neumimto.rpg.spigot.services.IRpgListener;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.*;
@@ -30,8 +32,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Singleton
+@AutoService(IRpgListener.class)
 @ResourceLoader.ListenerClass
-public class SpigotEntityLifecycleListener implements Listener {
+public class SpigotEntityLifecycleListener implements IRpgListener {
 
     @Inject
     private SpigotCharacterService characterService;

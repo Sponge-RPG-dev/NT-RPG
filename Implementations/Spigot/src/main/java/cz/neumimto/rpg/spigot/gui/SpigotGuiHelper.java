@@ -25,7 +25,6 @@ import cz.neumimto.rpg.spigot.Resourcepack;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.gui.elements.GuiCommand;
 import cz.neumimto.rpg.spigot.gui.elements.Icon;
-import cz.neumimto.rpg.spigot.gui.inventoryviews.ClassTypesGuiView;
 import cz.neumimto.rpg.spigot.skills.SpigotSkillService;
 import cz.neumimto.rpg.spigot.skills.SpigotSkillTreeInterfaceModel;
 import de.tr7zw.nbtapi.NBTItem;
@@ -93,56 +92,11 @@ public class SpigotGuiHelper {
 
         CACHED_MENU_TEMPLATES.clear();
         CACHED_MENUS.clear();
-        Map<String, Object> stringObjectMap = new SpigotUIReader().initInventories();
-        for (Map.Entry<String, Object> next : stringObjectMap.entrySet()) {
-            if (next.getValue() instanceof Inventory) {
-                CACHED_MENUS.put(next.getKey(), (Inventory) next.getValue());
-            } else {
-                CACHED_MENU_TEMPLATES.put(next.getKey(), (ConfigInventory<ItemStack, Inventory>) next.getValue());
-            }
-        }
-    }
 
+    }
 
     public static Inventory createMenuInventoryClassesByTypeView(Player player, String classType) {
         return CACHED_MENUS.get("classes_by_type" + classType);
-    }
-
-    public static Inventory createCharacterMenu(ISpigotCharacter cc) {
-        String name = "char_view" + cc.getName();
-        Inventory dynamicInventory = CACHED_MENUS.get(name);
-        if (dynamicInventory == null) {
-            TemplateInventory<ItemStack, Inventory> dView = (TemplateInventory<ItemStack, Inventory>) CACHED_MENU_TEMPLATES.get("char_view");
-            ItemStack[] chars = cc.getClasses().values()
-                    .stream()
-                    .map(PlayerClassData::getClassDefinition)
-                    .map(a -> toSpellbookItemStack(a, "char"))
-                    .collect(Collectors.toList())
-                    .toArray(new ItemStack[cc.getClasses().size() == 0 ? 0 : cc.getClasses().size() - 1]);
-            DynamicInventory inv = dView.setActualContent(chars);
-            dynamicInventory = createInventoryTemplate(cc.getName());
-            inv.fill(dynamicInventory);
-            CACHED_MENUS.put(name, dynamicInventory);
-        }
-        return dynamicInventory;
-    }
-
-    public static ItemStack toSpellbookItemStack(ClassDefinition a, String backCommand) {
-        String sItemType = a.getItemType();
-        Material material = Material.matchMaterial(sItemType);
-        ItemStack itemStack = button(material, ChatColor.valueOf(a.getPreferedColor()) + a.getName(), "ninfo class " + a.getName() + " " + backCommand);
-
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.setLore(itemLoreFactory.toLore(a));
-
-        if (a.getItemModel() != null) {
-            itemMeta.setCustomModelData(a.getItemModel());
-        }
-
-        itemStack.setItemMeta(itemMeta);
-        itemStack = unclickableInterface(itemStack);
-
-        return itemStack;
     }
 
     public static Inventory createInventoryTemplate(Player player, String title) {
@@ -166,7 +120,6 @@ public class SpigotGuiHelper {
         itemMeta.setDisplayName(name);
         itemStack.setItemMeta(itemMeta);
         NBTItem nbti = new NBTItem(itemStack);
-        nbti.setString("ntrpg.item-command", command);
         return nbti.getItem();
     }
 
@@ -460,7 +413,7 @@ public class SpigotGuiHelper {
     }
 
 
-    public static ItemStack toSpellbookItemStack(ISpigotCharacter character, PlayerSkillContext skillContext) {
+    public static ItemStack toItemStack(ISpigotCharacter character, PlayerSkillContext skillContext) {
         SkillData skillData = skillContext.getSkillData();
         List<String> lore = itemLoreFactory.toLore(character, skillData, ChatColor.GREEN);
 
@@ -612,7 +565,7 @@ public class SpigotGuiHelper {
             Set<RpgItemType> allowedWeapons = character.getAllowedArmor();
             List<ItemStack> content = new ArrayList<>();
             for (RpgItemType ent : allowedWeapons) {
-                ItemStack is = toSpellbookItemStack(ent, 0);
+                ItemStack is = toItemStack(ent, 0);
                 content.add(is);
             }
             DynamicInventory inv = dView.setActualContent(content.toArray(new ItemStack[content.size() == 0 ? 0 : content.size() - 1]));
@@ -634,7 +587,7 @@ public class SpigotGuiHelper {
             for (Map.Entry<RpgItemType, Double> ent : allowedWeapons.entrySet()) {
                 RpgItemType key = ent.getKey();
                 Double value = ent.getValue();
-                ItemStack is = toSpellbookItemStack(key, value);
+                ItemStack is = toItemStack(key, value);
                 content.add(is);
             }
             DynamicInventory inv = dView.setActualContent(content.toArray(new ItemStack[content.size() == 0 ? 0 : content.size() - 1]));
@@ -646,7 +599,7 @@ public class SpigotGuiHelper {
         return inventory;
     }
 
-    private static ItemStack toSpellbookItemStack(RpgItemType key, double damage) {
+    private static ItemStack toItemStack(RpgItemType key, double damage) {
         Material material = Material.matchMaterial(key.getId());
         List<String> lore = new ArrayList<>();
         ItemStack is = new ItemStack(material);
@@ -669,7 +622,6 @@ public class SpigotGuiHelper {
         itemMeta.setLore(lore);
         is.setItemMeta(itemMeta);
         return unclickableInterface(is);
-
     }
 
     public static Inventory createSpellbookInventory(ISpigotCharacter character) {
@@ -698,7 +650,7 @@ public class SpigotGuiHelper {
                         if (skill == null) {
                             i.setItem(q, createEmptySlot());
                         } else {
-                            i.setItem(q, toSpellbookItemStack(character, skill));
+                            i.setItem(q, toItemStack(character, skill));
                         }
                     }
                     q++;

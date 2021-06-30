@@ -11,6 +11,7 @@ import cz.neumimto.rpg.api.inventory.RpgInventory;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.items.subtypes.ItemSubtype;
 import cz.neumimto.rpg.api.items.subtypes.ItemSubtypes;
+import cz.neumimto.rpg.api.permissions.PermissionService;
 import cz.neumimto.rpg.api.utils.Console;
 import cz.neumimto.rpg.common.assets.AssetService;
 
@@ -25,6 +26,9 @@ import static cz.neumimto.rpg.api.logging.Log.error;
 
 
 public abstract class AbstractInventoryService<T extends IActiveCharacter> implements InventoryService<T> {
+
+    @Inject
+    private PermissionService permissionService;
 
     @Inject
     private AssetService assetService;
@@ -56,13 +60,13 @@ public abstract class AbstractInventoryService<T extends IActiveCharacter> imple
                 ManagedSlot slot;
                 if (value.getSlotId() == offhandId) {
                     slot = new FilteredManagedSlotImpl(value.getSlotId(),
-                            item -> activeCharacter.canUse(item.getItemType(), EntityHand.OFF));
+                            item -> itemService.checkItemPermission(activeCharacter, item) && activeCharacter.canUse(item.getItemType(), EntityHand.OFF));
                 } else if (armorIds.contains(value.getSlotId())) {
                     slot = new FilteredManagedSlotImpl(value.getSlotId(),
-                            item -> activeCharacter.canWear(item.getItemType()));
+                            item -> itemService.checkItemPermission(activeCharacter, item) && activeCharacter.canWear(item.getItemType()));
                 } else if (value.getSlotId() >= 0 && value.getSlotId() < 9) {
                     slot = new FilteredManagedSlotImpl(value.getSlotId(), item
-                            -> activeCharacter.canUse(item.getItemType(), EntityHand.MAIN));
+                            -> itemService.checkItemPermission(activeCharacter, item) && activeCharacter.canUse(item.getItemType(), EntityHand.MAIN));
                     //                           || item.getItemType().getItemClass() == ItemClass.ARMOR
                     //                         || item.getItemType().getItemClass() == ItemClass.SHIELD);
                 } else {

@@ -20,4 +20,5 @@ public interface RpgItemType {
         return KEY_BUILDER.apply(getId(), getModelId());
     }
 
+    String getPermission();
 }
