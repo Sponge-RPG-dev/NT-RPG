@@ -111,6 +111,8 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
 
     private SkillTreeChangeObserver skillUpgradeObserver;
 
+    private transient Stack<String> guiCommands = new Stack<>();
+
     public ActiveCharacter(UUID uuid, CharacterBase base, int propertyCount) {
         this.pl = uuid;
         this.primaryProperties = new double[propertyCount];
@@ -749,6 +751,11 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
     @Override
     public SkillTreeChangeObserver getSkillUpgradeObservers() {
         return skillUpgradeObserver;
+    }
+
+    @Override
+    public Stack<String> getGuiCommandHistory() {
+        return guiCommands;
     }
 
     @Override

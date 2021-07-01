@@ -11,6 +11,7 @@ import cz.neumimto.rpg.spigot.gui.elements.GuiCommand;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -54,6 +55,10 @@ public class CharacterGuiView extends ConfigurableInventoryGui {
         }
     }
 
+    @Override
+    protected String getTitle(CommandSender commandSender, GuiConfig guiConfig, String param) {
+        return characterService.getCharacter((Player) commandSender).getName();
+    }
 
     @Override
     public Map<String, List<GuiCommand>> getPaneData(CommandSender commandSender) {
@@ -66,7 +71,7 @@ public class CharacterGuiView extends ConfigurableInventoryGui {
             ClassDefinition classDefinition = classData.getClassDefinition();
 
             GuiCommand guiCommand = new GuiCommand(classDefinitionToItemStack(classDefinition),
-                    "ninfo class " + classDefinition.getName() + " back",
+                    "ninfo class " + classDefinition.getName(),
                     commandSender);
             list.add(guiCommand);
         }
@@ -86,7 +91,7 @@ public class CharacterGuiView extends ConfigurableInventoryGui {
         if (a.getItemModel() != null) {
             itemMeta.setCustomModelData(a.getItemModel());
         }
-
+        itemMeta.addItemFlags(ItemFlag.values());
         itemStack.setItemMeta(itemMeta);
 
         return itemStack;

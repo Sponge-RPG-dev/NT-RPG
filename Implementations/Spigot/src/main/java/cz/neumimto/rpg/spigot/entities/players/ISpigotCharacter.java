@@ -8,7 +8,9 @@ import cz.neumimto.rpg.spigot.gui.SpigotSkillTreeViewModel;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 public interface ISpigotCharacter extends IActiveCharacter<Player, SpigotParty>, ISpigotEntity<Player>, IEntity<Player> {
 
@@ -29,4 +31,6 @@ public interface ISpigotCharacter extends IActiveCharacter<Player, SpigotParty>,
     int getSpellbookPage();
 
     void setSpellbookPage(int page);
+
+    Stack<String> getGuiCommandHistory();
 }

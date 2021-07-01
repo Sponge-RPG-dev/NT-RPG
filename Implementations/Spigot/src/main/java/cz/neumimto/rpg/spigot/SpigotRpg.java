@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.spigot;
 
+import com.google.inject.Injector;
 import cz.neumimto.rpg.api.utils.Console;
 import cz.neumimto.rpg.common.AbstractRpg;
 import cz.neumimto.rpg.common.AbstractRpgGuiceModule;
@@ -29,6 +30,9 @@ public final class SpigotRpg extends AbstractRpg {
 
     @Inject
     private AssetService assetService;
+
+    @Inject
+    private Injector injector;
 
     protected SpigotRpg(String workingDirectory, Executor syncExecutor) {
         super(workingDirectory);
@@ -116,7 +120,15 @@ public final class SpigotRpg extends AbstractRpg {
         ServiceLoader.load(ConfigurableInventoryGui.class, getClass().getClassLoader())
                 .stream()
                 .map(ServiceLoader.Provider::get)
-                .forEach(ConfigurableInventoryGui::clearCache);
+                .forEach(a-> {
+                    try {
+                        injector.injectMembers(a);
+                        a.clearCache();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                });
     }
 
     public boolean isDisabledInWorld(Entity entity) {

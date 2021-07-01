@@ -2,10 +2,12 @@ package cz.neumimto.rpg.spigot.commands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
+import co.aikar.commands.annotation.Optional;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.commands.CharacterCommandFacade;
+import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
 import cz.neumimto.rpg.spigot.gui.SpigotGui;
@@ -19,9 +21,7 @@ import org.bukkit.inventory.ItemStack;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Collections;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Singleton
 @CommandAlias("char|c")
@@ -109,5 +109,17 @@ public class SpigotCharacterCommands extends BaseCommand {
     public void toggleSpellRotation(Player executor, boolean state) {
         ISpigotCharacter character = characterService.getCharacter(executor);
         character.setSpellRotation(state);
+    }
+
+    @Private
+    @Subcommand("back")
+    public void back(Player executor) {
+        ISpigotCharacter character = characterService.getCharacter(executor);
+        Stack<String> list = character.getGuiCommandHistory();
+        if (!list.empty()) {
+            Bukkit.getScheduler().scheduleSyncDelayedTask(SpigotRpgPlugin.getInstance(),
+                    () -> Bukkit.dispatchCommand(executor, list.pop()),
+                    1L) ;
+        }
     }
 }

@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -33,8 +34,9 @@ abstract class GuiHelper {
         if (maskConfig.translationKey != null) {
             itemMeta.setDisplayName(Rpg.get().getLocalizationService().translate(maskConfig.translationKey));
         } else {
-            itemMeta.setDisplayName("");
+            itemMeta.setDisplayName(" ");
         }
+        itemMeta.addItemFlags(ItemFlag.values());
         itemStack.setItemMeta(itemMeta);
         return itemStack;
     }
@@ -45,6 +47,7 @@ abstract class GuiHelper {
         if (model != null) {
             itemMeta.setCustomModelData(model);
         }
+        itemMeta.setDisplayName(" ");
         itemStack.setItemMeta(itemMeta);
         return itemStack;
     }

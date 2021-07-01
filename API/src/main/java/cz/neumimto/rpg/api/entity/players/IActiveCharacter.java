@@ -265,4 +265,6 @@ public interface IActiveCharacter<T, P extends IParty> extends IEntity<T> {
     SkillTreeViewModel getLastTimeInvokedSkillTreeView();
 
     SkillTreeChangeObserver getSkillUpgradeObservers();
+
+    Stack<String> getGuiCommandHistory();
 }

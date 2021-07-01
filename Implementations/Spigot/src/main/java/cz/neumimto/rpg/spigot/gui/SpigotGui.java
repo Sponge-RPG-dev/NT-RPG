@@ -23,8 +23,7 @@ import cz.neumimto.rpg.spigot.effects.common.def.ManaBar;
 import cz.neumimto.rpg.spigot.effects.common.def.ManaBarBossBar;
 import cz.neumimto.rpg.spigot.effects.common.def.ManaBarText;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
-import cz.neumimto.rpg.spigot.gui.inventoryviews.CharacterGuiView;
-import cz.neumimto.rpg.spigot.gui.inventoryviews.ClassTypesGuiView;
+import cz.neumimto.rpg.spigot.gui.inventoryviews.*;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -103,8 +102,8 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
 
     public void showClassInfo(ISpigotCharacter character, ClassDefinition cc, String back) {
         Player player = character.getPlayer();
-        Inventory i = SpigotGuiHelper.CACHED_MENUS.get("class_template" + cc.getName());
-        player.openInventory(i);
+        ChestGui chestGui = ClassViewGui.get(cc.getName());
+        chestGui.show(player);
     }
 
     @Override
@@ -114,18 +113,16 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
 
     @Override
     public void displayGroupArmor(ClassDefinition cc, ISpigotCharacter target) {
-        String key = "class_allowed_items_armor_" + cc.getName();
-        Inventory i = SpigotGuiHelper.CACHED_MENUS.get(key);
         Player player = target.getPlayer();
-        player.openInventory(i);
+        ChestGui chestGui = ClassArmorGuiView.get(cc.getName());
+        chestGui.show(player);
     }
 
     @Override
     public void displayGroupWeapon(ClassDefinition cc, ISpigotCharacter target) {
-        String key = "class_allowed_items_weapons_" + cc.getName();
-        Inventory i = SpigotGuiHelper.CACHED_MENUS.get(key);
         Player player = target.getPlayer();
-        player.openInventory(i);
+        ChestGui chestGui = ClassWeaponsGuiView.get(cc.getName());
+        chestGui.show(player);
     }
 
     @Override
@@ -203,14 +200,14 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
     @Override
     public void sendClassesByType(ISpigotCharacter character, String def) {
         Player player = character.getPlayer();
-        Inventory inventory = SpigotGuiHelper.createMenuInventoryClassesByTypeView(player, def);
-        player.openInventory(inventory);
+        ChestGui chestGui = ClassesByTypeGuiView.get(def);
+        chestGui.show(player);
     }
 
     @Override
     public void sendClassTypes(ISpigotCharacter character) {
         Player player = character.getPlayer();
-        ChestGui chestGui = ClassTypesGuiView.get(null);
+        ChestGui chestGui = ClassTypesGuiView.get();
         chestGui.show(player);
     }
 

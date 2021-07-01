@@ -14,6 +14,7 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -26,6 +27,7 @@ import java.util.*;
 public class WeaponGuiView extends ConfigurableInventoryGui {
 
     private static WeaponGuiView instance;
+
     @Inject
     private SpigotCharacterService characterService;
 
@@ -77,11 +79,12 @@ public class WeaponGuiView extends ConfigurableInventoryGui {
         return map;
     }
 
-    private ItemStack toItemStack(RpgItemType key, double damage) {
+    public static ItemStack toItemStack(RpgItemType key, double damage) {
         Material material = Material.matchMaterial(key.getId());
         List<String> lore = new ArrayList<>();
         ItemStack is = new ItemStack(material);
 
+        LocalizationService localizationService = Rpg.get().getLocalizationService();
         String translate = localizationService.translate(LocalizationKeys.ITEM_CLASS);
         lore.add(ChatColor.GRAY + translate + ": " + ChatColor.GREEN + key.getItemClass().getName());
         if (damage != 0) {
@@ -95,6 +98,7 @@ public class WeaponGuiView extends ConfigurableInventoryGui {
         if (key.getModelId() != null) {
             itemMeta.setCustomModelData(Integer.valueOf(key.getModelId()));
         }
+        itemMeta.addItemFlags(ItemFlag.values());
         itemMeta.setLore(lore);
         is.setItemMeta(itemMeta);
         return is;

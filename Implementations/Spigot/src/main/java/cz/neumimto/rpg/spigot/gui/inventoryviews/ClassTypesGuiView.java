@@ -50,7 +50,7 @@ public class ClassTypesGuiView extends ConfigurableInventoryGui {
         return map;
     }
 
-    public static ChestGui get(Player player) {
+    public static ChestGui get() {
        return cachedGui;
     }
 

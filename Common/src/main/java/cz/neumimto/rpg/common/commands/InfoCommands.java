@@ -24,6 +24,7 @@ public class InfoCommands extends BaseCommand {
     @CommandAlias("skilltree")
     public void openSkillTreeMenuCommand(IActiveCharacter character, ClassDefinition classDefinition) {
         characterCommandFacade.openSKillTreeMenu(character, classDefinition);
+        character.getGuiCommandHistory().add("ntrpg:ninfo skilltree " + classDefinition.getName());
     }
 
     @Subcommand("classes")
@@ -32,8 +33,10 @@ public class InfoCommands extends BaseCommand {
     public void showClassesCommand(IActiveCharacter character, @Optional String type) {
         if (type == null) {
             Gui.sendClassTypes(character);
+            character.getGuiCommandHistory().add("ntrpg:ninfo classes");
         } else {
             Gui.sendClassesByType(character, type);
+            character.getGuiCommandHistory().add("ntrpg:ninfo classes " + type);
         }
     }
 
@@ -42,12 +45,14 @@ public class InfoCommands extends BaseCommand {
     @CommandPermission("ntrpg.info.class")
     public void showClassCommand(IActiveCharacter character, ClassDefinition classDefinition, @Optional String back) {
         Gui.showClassInfo(character, classDefinition);
+        character.getGuiCommandHistory().add("ntrpg:ninfo class " + classDefinition.getName());
     }
 
     @Subcommand("character")
     @CommandPermission("ntrpg.info.player.characters.other")
     public void showOtherPlayerCharacterCommand(IActiveCharacter character, OnlineOtherPlayer target) {
         Gui.showCharacterInfo(character, target.character);
+        character.getGuiCommandHistory().add("ntrpg:ninfo character ");
     }
 
     @Subcommand("character")
@@ -65,6 +70,7 @@ public class InfoCommands extends BaseCommand {
     @Subcommand("class-weapons")
     public void showClassWeapons(IActiveCharacter character, ClassDefinition cc) {
         Gui.displayClassWeapons(cc, character);
+        character.getGuiCommandHistory().add("ntrpg:class-weapons " + cc.getName());
     }
 
     @Subcommand("class-armor")
