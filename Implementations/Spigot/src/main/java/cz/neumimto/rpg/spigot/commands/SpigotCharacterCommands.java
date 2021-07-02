@@ -117,9 +117,12 @@ public class SpigotCharacterCommands extends BaseCommand {
         ISpigotCharacter character = characterService.getCharacter(executor);
         Stack<String> list = character.getGuiCommandHistory();
         if (!list.empty()) {
-            Bukkit.getScheduler().scheduleSyncDelayedTask(SpigotRpgPlugin.getInstance(),
-                    () -> Bukkit.dispatchCommand(executor, list.pop()),
-                    1L) ;
+            list.pop();
+            if (!list.empty()) {
+                Bukkit.getScheduler().scheduleSyncDelayedTask(SpigotRpgPlugin.getInstance(),
+                        () -> Bukkit.dispatchCommand(executor, list.pop()),
+                        1L);
+            }
         }
-    }
+     }
 }

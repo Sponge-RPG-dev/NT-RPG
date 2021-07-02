@@ -79,6 +79,11 @@ public class WeaponGuiView extends ConfigurableInventoryGui {
         return map;
     }
 
+    @Override
+    protected String getTitle(CommandSender commandSender, GuiConfig guiConfig, String param) {
+        return characterService.getCharacter((Player) commandSender).getName();
+    }
+
     public static ItemStack toItemStack(RpgItemType key, double damage) {
         Material material = Material.matchMaterial(key.getId());
         List<String> lore = new ArrayList<>();

@@ -80,4 +80,6 @@ public interface IPlayerMessage<T extends IActiveCharacter> {
     void displayCharacterWeapons(T character, int page);
 
     void displaySpellbook(T character);
+
+    void displayClassDependencies(T character, ClassDefinition classDefinition);
 }

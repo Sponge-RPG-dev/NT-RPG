@@ -167,4 +167,5 @@ public class LocalizationKeys implements ILocalization {
     public static final String SPELLBOOK_ADDPAGE = "label.item.spellbook.addpage";
     public static final String SPELLBOOK_ROTATION = "spellbook.cooldown.text";
 
+    public static final String CLASS_DEPENDENCIES = "label.item.class.depedenciesd";
 }

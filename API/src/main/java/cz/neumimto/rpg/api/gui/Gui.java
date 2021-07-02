@@ -143,6 +143,10 @@ public class Gui {
         getMessageTypeOf(character).displaySpellbook(character);
     }
 
+    public static void displayClassDependencies(IActiveCharacter character, ClassDefinition classDefinition) {
+        getMessageTypeOf(character).displayClassDependencies(character, classDefinition);
+    }
+
     public void setVanillaMessaging(IPlayerMessage instance) {
         vanilla = instance;
     }

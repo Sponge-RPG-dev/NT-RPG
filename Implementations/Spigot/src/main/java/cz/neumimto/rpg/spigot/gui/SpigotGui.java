@@ -7,6 +7,7 @@ import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.effects.EffectStatusType;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.gui.IPlayerMessage;
@@ -24,6 +25,7 @@ import cz.neumimto.rpg.spigot.effects.common.def.ManaBarBossBar;
 import cz.neumimto.rpg.spigot.effects.common.def.ManaBarText;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.gui.inventoryviews.*;
+import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -232,14 +234,16 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
 
     @Override
     public void displayCharacterArmor(ISpigotCharacter character, int page) {
-        Inventory i = SpigotGuiHelper.getCharacterAllowedArmor(character, page);
-        character.getPlayer().openInventory(i);
+        Player player = character.getPlayer();
+        ChestGui chestGui = WeaponGuiView.get(player);
+        chestGui.show(player);
     }
 
     @Override
     public void displayCharacterWeapons(ISpigotCharacter character, int page) {
-        Inventory i = SpigotGuiHelper.getCharacterAllowedWeapons(character, page);
-        character.getPlayer().openInventory(i);
+        Player player = character.getPlayer();
+        ChestGui chestGui = ArmorGuiView.get(player);
+        chestGui.show(player);
     }
 
 
@@ -251,5 +255,12 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
     public void displaySpellbook(ISpigotCharacter character) {
         Inventory i = SpigotGuiHelper.createSpellbookInventory(character);
         character.getPlayer().openInventory(i);
+    }
+
+    @Override
+    public void displayClassDependencies(ISpigotCharacter character, ClassDefinition classDefinition) {
+        Player player = character.getPlayer();
+        ChestGui chestGui = ClassDepedenciesGuiView.get(classDefinition.getName());
+        chestGui.show(player);
     }
 }

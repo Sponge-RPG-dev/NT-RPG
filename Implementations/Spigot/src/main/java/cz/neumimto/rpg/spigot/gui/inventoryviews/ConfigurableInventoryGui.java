@@ -107,6 +107,7 @@ public abstract class ConfigurableInventoryGui extends GuiHelper {
                     }
                     stringBuilder.append(slot);
                 }
+
                 actualContent.add(stringBuilder.toString());
             }
         }

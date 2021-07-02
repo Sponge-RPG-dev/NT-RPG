@@ -16,6 +16,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -64,6 +65,11 @@ public class ArmorGuiView extends ConfigurableInventoryGui {
     }
 
     @Override
+    protected String getTitle(CommandSender commandSender, GuiConfig guiConfig, String param) {
+        return characterService.getCharacter((Player) commandSender).getName();
+    }
+
+    @Override
     public Map<String, List<GuiCommand>> getPaneData(CommandSender commandSender) {
         Map<String, List<GuiCommand>> map = new HashMap<>();
         List<GuiCommand> list = new ArrayList<>();
@@ -95,6 +101,7 @@ public class ArmorGuiView extends ConfigurableInventoryGui {
         if (key.getModelId() != null) {
             itemMeta.setCustomModelData(Integer.valueOf(key.getModelId()));
         }
+        itemMeta.addItemFlags(ItemFlag.values());
         itemMeta.setLore(lore);
         is.setItemMeta(itemMeta);
         return is;
