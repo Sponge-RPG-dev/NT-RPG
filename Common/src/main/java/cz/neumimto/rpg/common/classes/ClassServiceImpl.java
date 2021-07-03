@@ -117,7 +117,7 @@ public class ClassServiceImpl implements ClassService {
         if (isClassDirEmpty()) {
             Log.info("No classes found in classes folder, loading classes from within ntrpg.jar");
             loadFrom = assetService.getTempWorkingDir();
-            assetService.copyDefaults(loadFrom);
+            assetService.copyDefaultClasses(loadFrom);
         } else {
             loadFrom = classDefinitionDao.getClassDirectory();
         }

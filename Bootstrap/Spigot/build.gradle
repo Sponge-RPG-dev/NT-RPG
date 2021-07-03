@@ -21,13 +21,14 @@ dependencies {
 var spigotJarTask = tasks.getByPath(':Spigot:shadowJar');
 var outputs = spigotJarTask.outputs
 var path = outputs.getFiles().getSingleFile();
+
 shadowJar {
     libsDirName = '../../../server-spigot/plugins'
     archiveFileName = "NT-RPG-17.x-" + p_spigot_version + ".jar"
 }
 
-
 build.dependsOn processResources
+build.mustRunAfter tasks.getByPath(':Spigot:build');
 
 processResources {
     from (path) {

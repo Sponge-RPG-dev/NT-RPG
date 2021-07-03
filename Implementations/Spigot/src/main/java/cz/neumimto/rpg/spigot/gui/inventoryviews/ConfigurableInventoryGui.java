@@ -179,4 +179,7 @@ public abstract class ConfigurableInventoryGui extends GuiHelper {
 
     }
 
+    public String getFileName() {
+        return fileName;
+    }
 }

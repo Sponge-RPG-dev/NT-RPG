@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.spigot.inventory;
 
+import com.google.inject.Injector;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.inventory.RpgInventory;
@@ -37,6 +38,9 @@ public class SpigotInventoryService extends AbstractInventoryService<ISpigotChar
 
     @Inject
     private SpigotItemService itemService;
+
+    @Inject
+    private Injector injector;
 
     /*
     @Override
@@ -153,11 +157,8 @@ public class SpigotInventoryService extends AbstractInventoryService<ISpigotChar
     @Override
     public void invalidateGUICaches(ISpigotCharacter cc) {
         UUID uniqueId = cc.getEntity().getUniqueId();
-        ServiceLoader.load(ConfigurableInventoryGui.class, getClass().getClassLoader()).stream()
-                .map(ServiceLoader.Provider::get).forEach(a->a.clearCache(uniqueId));
 
-        SpigotGuiHelper.CACHED_MENUS.remove("char_view" + cc.getName());
-        SpigotGuiHelper.CACHED_MENUS.remove("char_allowed_items_armor" + cc.getName());
-        SpigotGuiHelper.CACHED_MENUS.remove("char_allowed_items_weapons" + cc.getName());
+        ServiceLoader.load(ConfigurableInventoryGui.class, getClass().getClassLoader()).stream()
+                .map(ServiceLoader.Provider::get).forEach(a->{injector.injectMembers(a);a.clearCache(uniqueId);});
     }
 }

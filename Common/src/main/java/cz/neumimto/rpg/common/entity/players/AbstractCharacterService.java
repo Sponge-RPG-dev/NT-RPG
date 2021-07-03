@@ -1281,13 +1281,10 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
     public ActionResult addNewClass(T character, ClassDefinition klass) {
         CharacterBase characterBase = character.getCharacterBase();
 
-        if (character.getClassByName(klass.getName()) != null) {
-            return ActionResult.withErrorMessage(() -> localizationService.translate(LocalizationKeys.ALREADY_HAS_THIS_CLASS));
-        }
-
         PlayerClassData classByType = character.getClassByType(klass.getClassType());
         if (classByType != null) {
-            character.removeClass(classByType.getClassDefinition());
+            character.removeClass(klass);
+            removeBaseClass(characterBase, klass);
         }
         removeBaseClass(characterBase, klass);
 

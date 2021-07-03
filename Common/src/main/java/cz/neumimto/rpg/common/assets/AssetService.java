@@ -3,6 +3,7 @@ package cz.neumimto.rpg.common.assets;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public abstract class AssetService {
 
@@ -10,7 +11,7 @@ public abstract class AssetService {
 
     public abstract void copyToFile(String s, Path toPath);
 
-    public void copyDefaults(Path path) {
+    public void copyDefaultClasses(Path path) {
         Path root = path.resolve("skilltrees/");
         try {
             if (!root.toFile().exists()) {
@@ -53,9 +54,25 @@ public abstract class AssetService {
         return tempDirectory;
     }
 
-    private void copyToFileIfMissing(String internal, Path path) {
-        if (!path.toFile().exists()) {
+    protected void copyToFileIfMissing(String internal, Path path) {
+        if (!Files.exists(path)) {
             copyToFile(internal, path);
         }
+    }
+
+    public abstract void copyDefaultGuis(Path workingDir);
+
+    public void copyDefaultLocalizations(Path workingDir) {
+        Path root = workingDir.resolve("localizations/");
+        if (!Files.isDirectory(root)) {
+            try {
+                Files.createDirectory(root);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        copyToFileIfMissing("localizations/core_localization_cs.properties", root.resolve("core_localization_cs.properties"));
+        copyToFileIfMissing("localizations/core_localization_en.properties", root.resolve("core_localization_en.properties"));
+        copyToFileIfMissing("localizations/core_localization_pl.properties", root.resolve("core_localization_pl.properties"));
     }
 }

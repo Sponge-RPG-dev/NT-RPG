@@ -263,4 +263,11 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
         ChestGui chestGui = ClassDepedenciesGuiView.get(classDefinition.getName());
         chestGui.show(player);
     }
+
+    @Override
+    public void displayClassAttributes(ISpigotCharacter character, ClassDefinition classDefinition) {
+        Player player = character.getPlayer();
+        ChestGui chestGui = ClassAttributesGuiView.get(classDefinition.getName());
+        chestGui.show(player);
+    }
 }

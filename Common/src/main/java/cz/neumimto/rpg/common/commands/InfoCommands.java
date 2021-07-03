@@ -122,5 +122,13 @@ public class InfoCommands extends BaseCommand {
     @Subcommand("class-dependencies")
     public void displayClassDependencies(IActiveCharacter character, ClassDefinition classDefinition) {
         Gui.displayClassDependencies(character, classDefinition);
+        character.getGuiCommandHistory().add("nt-rpg:ninfo class-dependencies " + classDefinition.getName());
+    }
+
+    @Subcommand("class-attributes")
+    @CommandCompletion("@class-any")
+    public void classAttributes(IActiveCharacter character, ClassDefinition classDefinition) {
+        Gui.displayClassAttributes(character, classDefinition);
+        character.getGuiCommandHistory().add("nt-rpg:ninfo class-attributes " + classDefinition.getName());
     }
 }

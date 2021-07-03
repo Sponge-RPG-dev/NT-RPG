@@ -28,6 +28,7 @@ import cz.neumimto.rpg.api.utils.ActionResult;
 import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.effects.InternalEffectSourceProvider;
 import cz.neumimto.rpg.common.utils.GraalInstaller;
+import cz.neumimto.rpg.common.utils.model.InstallOptions;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -166,12 +167,26 @@ public class AdminCommands extends BaseCommand {
         commandAddUniqueSkillpoint(character, classType, sourceKey);
     }
 
+    @Description("Copies default configurations from within the ntrpg.jar to filesystem for editing")
     @Subcommand("install")
-    public void install(CommandIssuer executor) {
+    public void install(CommandIssuer executor, InstallOptions installOption) {
         Path workingDir = Paths.get(Rpg.get().getWorkingDirectory());
-        assetService.copyDefaults(workingDir);
-        executor.sendMessage("Internal assets were copied to ntrpg/classes ntrpg/skilltrees folder." +
-                " You can now edit files and reload /ntrpg reload for immediate change");
+        if (installOption.installClasses()) {
+            assetService.copyDefaultClasses(workingDir);
+            executor.sendMessage("Internal assets were copied to ntrpg/classes ntrpg/skilltrees folder." +
+                    " You can now edit files and reload /ntrpg reload for immediate change");
+        }
+        if (installOption.installGuis()) {
+            assetService.copyDefaultGuis(workingDir);
+            executor.sendMessage("Internal assets were copied to ntrpg/guis folder." +
+                    " You can now edit files and reload /ntrpg reload for immediate change");
+        }
+
+        if (installOption.installLocalizations()) {
+            assetService.copyDefaultLocalizations(workingDir);
+            executor.sendMessage("Internal assets were copied to ntrpg/localizations folder." +
+                    " You can now edit files and reload /ntrpg reload for immediate change");
+        }
     }
 
     //https://medium.com/graalvm/graalvms-javascript-engine-on-jdk11-with-high-performance-3e79f968a819

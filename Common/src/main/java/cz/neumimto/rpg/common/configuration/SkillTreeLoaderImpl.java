@@ -65,7 +65,7 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
         if (classService.isClassDirEmpty()) {
             Log.info("No classes found in classes folder, loading skilltrees from within ntrpg.jar");
             dir = assetService.getTempWorkingDir();
-            assetService.copyDefaults(dir);
+            assetService.copyDefaultClasses(dir);
         }
         Path skillTreeDir = dir.resolve("skilltrees/");
         FileUtils.createDirectoryIfNotExists(skillTreeDir);

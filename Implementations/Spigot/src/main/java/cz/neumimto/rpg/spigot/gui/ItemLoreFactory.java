@@ -31,15 +31,15 @@ public class ItemLoreFactory {
     }
 
 
-    public String header(String header) {
+    public static String header(String header) {
         return JOINT + HEADER_START + header + HEADER_END;
     }
 
-    public String line(String line) {
+    public static String line(String line) {
         return VERTICAL_LINE + line;
     }
 
-    public String node(String key, String value) {
+    public static String node(String key, String value) {
         return VERTICAL_LINE + ChatColor.GRAY + Rpg.get().getLocalizationService().translate(key) + ChatColor.DARK_GRAY + ": " + value;
     }
 

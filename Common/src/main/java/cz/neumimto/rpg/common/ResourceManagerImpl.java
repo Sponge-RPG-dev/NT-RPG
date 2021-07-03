@@ -16,28 +16,26 @@ import cz.neumimto.rpg.api.services.ILocalization;
 import cz.neumimto.rpg.api.services.IPropertyContainer;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.SkillService;
-import cz.neumimto.rpg.api.skills.scripting.JsBinding;
 import cz.neumimto.rpg.api.utils.DebugLevel;
 import cz.neumimto.rpg.api.utils.FileUtils;
-import cz.neumimto.rpg.api.utils.Pair;
 import cz.neumimto.rpg.common.bytecode.ClassGenerator;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 
 import javax.inject.Inject;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 import java.util.stream.Stream;
 
 import static cz.neumimto.rpg.api.logging.Log.info;
 
 public class ResourceManagerImpl implements ResourceLoader {
 
-    private final static String INNERCLASS_SEPARATOR = "$";
+    public static File classDir, addonDir, skilltreeDir, addonLoadDir;
 
-    public static File classDir, addonDir, skilltreeDir, addonLoadDir, localizations;
     private static boolean reload = false;
 
     @Inject
@@ -64,12 +62,10 @@ public class ResourceManagerImpl implements ResourceLoader {
         addonDir = new File(workingDirectory + File.separator + "addons");
         addonLoadDir = new File(workingDirectory + File.separator + "deployed");
         skilltreeDir = new File(workingDirectory + File.separator + "skilltrees");
-        localizations = new File(workingDirectory + File.separator + "localizations");
 
         classDir.mkdirs();
         skilltreeDir.mkdirs();
         addonDir.mkdirs();
-        localizations.mkdirs();
     }
 
     @Override
@@ -78,59 +74,10 @@ public class ResourceManagerImpl implements ResourceLoader {
         load(IPropertyContainer.class, getClass().getClassLoader()).forEach(a -> loadPropertyContainerClass(a.getClass()));
         load(IGlobalEffect.class, getClass().getClassLoader()).forEach(a -> effectService.registerGlobalEffect(a));
         load(EffectModelMapper.class, getClass().getClassLoader()).forEach(a -> EffectModelFactory.getTypeMappers().put(a.getType(), a));
-        load(ILocalization.class, getClass().getClassLoader()).forEach(a -> loadLocalizationBindingsClass(a.getClass()));
     }
 
     protected <R> Stream<R> load(Class<R> r, ClassLoader cl) {
         return ServiceLoader.load(r, cl).stream().map(ServiceLoader.Provider::get);
-    }
-
-    protected void loadLocalizationPropertiesFiles(ClassLoader classLoader, String name, File file) {
-        try (InputStream resourceAsStream = classLoader.getResourceAsStream(name)) {
-            Properties properties = new Properties();
-            properties.load(resourceAsStream);
-
-            if (!file.exists()) {
-                try (OutputStream outputStream = new FileOutputStream(file)) {
-                    properties.store(outputStream, null);
-                }
-            } else {
-                Properties local = new Properties();
-                try (FileInputStream fileInputStream = new FileInputStream(file)) {
-                    properties.load(fileInputStream);
-                }
-                properties.putAll(local);
-                file.delete();
-                try (OutputStream outputStream = new FileOutputStream(file)) {
-                    properties.store(outputStream, null);
-                }
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    protected void loadLocalizationBindingsClass(Class<?> clazz) {
-        Localization annotation = clazz.getAnnotation(Localization.class);
-        File localizations = new File(Rpg.get().getWorkingDirectory() + "/localizations");
-        if (!localizations.exists()) {
-            localizations.mkdir();
-        }
-
-        for (String localizationFile : annotation.value()) {
-            try (InputStream resourceAsStream = clazz.getClassLoader().getResourceAsStream(localizationFile)) {
-                byte[] buffer = new byte[resourceAsStream.available()];
-                resourceAsStream.read(buffer);
-                String[] split = localizationFile.split("/");
-                File targetFile = new File(localizations, split[split.length - 1]);
-                OutputStream outStream = new FileOutputStream(targetFile);
-                outStream.write(buffer);
-                outStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     protected void loadPropertyContainerClass(Class<?> clazz) {
@@ -148,13 +95,16 @@ public class ResourceManagerImpl implements ResourceLoader {
 
     @Override
     public void reloadLocalizations(Locale locale) {
-        loadLocalizationsFromClasspath("localizations/core_localization_en.properties");
-        loadLocalizationsFromClasspath("localizations/core_localization_" + locale.getLanguage() + ".properties");
+        loadLocalizationsFromClasspath("assets/nt-rpg/localizations/core_localization_en.properties");
+        loadLocalizationsFromClasspath("assets/nt-rpg/localizations/core_localization_" + locale.getLanguage() + ".properties");
 
         File localizations = new File(Rpg.get().getWorkingDirectory() + "/localizations");
         String language = locale.getLanguage();
         Log.info("Loading localization from language " + language);
         File[] files = localizations.listFiles();
+        if (files == null) {
+            return;
+        }
         for (File file : files) {
             if (file.getName().endsWith(language + ".properties")) {
                 Log.info("Loading localization from file " + file.getName());

@@ -82,4 +82,6 @@ public interface IPlayerMessage<T extends IActiveCharacter> {
     void displaySpellbook(T character);
 
     void displayClassDependencies(T character, ClassDefinition classDefinition);
+
+    void displayClassAttributes(T character, ClassDefinition classDefinition);
 }
