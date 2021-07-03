@@ -24,6 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.IntStream;
 
 public abstract class ConfigurableInventoryGui extends GuiHelper {
 
@@ -51,7 +52,7 @@ public abstract class ConfigurableInventoryGui extends GuiHelper {
             String assetAsString = assetService.getAssetAsString("gui/" + fileName);
 
             HoconParser hoconParser = new HoconParser();
-            try (StringReader stringReader = new StringReader(assetAsString)){
+            try (StringReader stringReader = new StringReader(assetAsString)) {
                 CommentedConfig parsed = hoconParser.parse(stringReader);
                 GuiConfig guiConfig = new ObjectConverter().toObject(parsed, GuiConfig::new);
                 return createPane(guiConfig, commandSender, getPaneData(commandSender, param), param);
@@ -78,23 +79,21 @@ public abstract class ConfigurableInventoryGui extends GuiHelper {
         ChestGui chestGui = new ChestGui(6, title);
 
 
+
         char[] alphabet = "abcdefghijklmnopqrstuvwxyz".toCharArray();
         int alphabetidx = 0;
         List<String> actualContent = new ArrayList<>();
-        if (data.isEmpty()) {
-            actualContent = guiConfig.inventory;
-        }
+
         Map<Character, GuiCommand> mask = new HashMap<>();
 
-        for (Map.Entry<String, List<GuiCommand>> content : data.entrySet()) {
-            String replaceKey = content.getKey(); //classType
-            Iterator<GuiCommand> value = content.getValue().iterator();
+        Map<String, Iterator<GuiCommand>> dataIt = toIterator(data);
+        for (String row : guiConfig.inventory) {
+            StringBuilder stringBuilder = new StringBuilder();
+            for (char slot : row.toCharArray()) {
 
-
-            for (String row : guiConfig.inventory) {
-                StringBuilder stringBuilder = new StringBuilder();
-                for (char slot : row.toCharArray()) {
-
+                a: for (Map.Entry<String, Iterator<GuiCommand>> content : dataIt.entrySet()) {
+                    String replaceKey = content.getKey(); //classType
+                    Iterator<GuiCommand> value = content.getValue();
                     for (GuiConfig.MaskConfig maskConfig : guiConfig.mask) {
                         if (maskConfig.C.toCharArray()[0] == slot && replaceKey.equalsIgnoreCase(maskConfig.supplier) && value.hasNext()) {
                             GuiCommand next = value.next();
@@ -102,17 +101,18 @@ public abstract class ConfigurableInventoryGui extends GuiHelper {
                             mask.put(c, next);
                             alphabetidx++;
                             slot = c;
-                            break;
+                            break a;
                         }
                     }
-                    stringBuilder.append(slot);
                 }
-
-                actualContent.add(stringBuilder.toString());
+                stringBuilder.append(slot);
             }
+
+            actualContent.add(stringBuilder.toString());
         }
 
-        PatternPane pane = new PatternPane(9,6, new Pattern(
+
+        PatternPane pane = new PatternPane(9, 6, new Pattern(
                 actualContent.toArray(new String[0])
         ));
 
@@ -137,7 +137,8 @@ public abstract class ConfigurableInventoryGui extends GuiHelper {
         return chestGui;
     }
 
-    public void initialize() {}
+    public void initialize() {
+    }
 
     public Map<String, List<GuiCommand>> getPaneData(CommandSender commandSender, String param) {
         return getPaneData(commandSender);
@@ -145,6 +146,14 @@ public abstract class ConfigurableInventoryGui extends GuiHelper {
 
     public Map<String, List<GuiCommand>> getPaneData(CommandSender commandSender) {
         return Collections.emptyMap();
+    }
+
+    private Map<String, Iterator<GuiCommand>> toIterator(Map<String, List<GuiCommand>> b) {
+        Map<String, Iterator<GuiCommand>> a = new HashMap<>();
+        for (Map.Entry<String, List<GuiCommand>> c : b.entrySet()) {
+            a.put(c.getKey(), c.getValue().iterator());
+        }
+        return a;
     }
 
     public void install() {

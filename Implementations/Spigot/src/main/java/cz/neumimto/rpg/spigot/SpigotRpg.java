@@ -3,7 +3,6 @@ package cz.neumimto.rpg.spigot;
 import com.google.inject.Injector;
 import cz.neumimto.rpg.api.utils.Console;
 import cz.neumimto.rpg.common.AbstractRpg;
-import cz.neumimto.rpg.common.AbstractRpgGuiceModule;
 import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.spigot.gui.SpigotGuiHelper;
 import cz.neumimto.rpg.spigot.gui.inventoryviews.ConfigurableInventoryGui;
@@ -127,7 +126,6 @@ public final class SpigotRpg extends AbstractRpg {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-
                 });
     }
 
