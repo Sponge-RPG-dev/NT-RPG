@@ -11,6 +11,7 @@ import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
 import cz.neumimto.rpg.spigot.gui.SpigotGui;
+import cz.neumimto.rpg.spigot.gui.inventoryviews.CharacterAttributesGuiView;
 import de.tr7zw.nbtapi.NBTItem;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -55,14 +56,11 @@ public class SpigotCharacterCommands extends BaseCommand {
     }
 
     @Subcommand("attribute-add")
-    public void attributesAdd(Player executor, AttributeConfig a, @Default("false") @Optional boolean ui, @Optional Integer slotMod) {
+    public void attributesAdd(Player executor, AttributeConfig a) {
         ISpigotCharacter character = characterService.getCharacter(executor);
         Map<String, Integer> attributesTransaction = character.getAttributesTransaction();
         Integer integer = attributesTransaction.get(a.getId());
         attributesTransaction.put(a.getId(), integer + 1);
-        if (ui) {
-            spigotGui.refreshAttributeView(executor, character, slotMod, a);
-        }
     }
 
     @Subcommand("spellbook-commit")
@@ -113,16 +111,27 @@ public class SpigotCharacterCommands extends BaseCommand {
 
     @Private
     @Subcommand("back")
-    public void back(Player executor) {
+    public void back(Player executor, @Optional String arg) {
         ISpigotCharacter character = characterService.getCharacter(executor);
         Stack<String> list = character.getGuiCommandHistory();
         if (!list.empty()) {
             list.pop();
             if (!list.empty()) {
                 Bukkit.getScheduler().scheduleSyncDelayedTask(SpigotRpgPlugin.getInstance(),
-                        () -> Bukkit.dispatchCommand(executor, list.pop()),
+                        () ->  Bukkit.dispatchCommand(executor, list.pop()),
                         1L);
             }
         }
-     }
+        if ("--reset-attributes".equalsIgnoreCase(arg)) {
+            characterService.getCharacter(executor).getAttributesTransaction().clear();
+        }
+        if ("--apply-attribute-tx".equalsIgnoreCase(arg)) {
+            characterCommandFacade.commandCommitAttribute(character);
+            CharacterAttributesGuiView.clearCache(executor);
+        }
+        if ("--close-inv".equalsIgnoreCase(arg)) {
+            InventoryView openInventory = executor.getOpenInventory();
+            openInventory.close();
+        }
+    }
 }

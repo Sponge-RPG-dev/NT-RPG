@@ -29,6 +29,7 @@ public class ClassesByTypeGuiView extends ConfigurableInventoryGui {
 
     @Override
     public void clearCache() {
+        super.clearCache();
         types.clear();
         for (String ct : Rpg.get().getPluginConfig().CLASS_TYPES.keySet()) {
             types.put(ct, instance.loadGui(null, ct));

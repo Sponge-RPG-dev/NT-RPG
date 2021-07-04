@@ -58,6 +58,7 @@ public class ClassAttributesGuiView extends ConfigurableInventoryGui {
 
     @Override
     public void clearCache() {
+        super.clearCache();
         cache.clear();
     }
 

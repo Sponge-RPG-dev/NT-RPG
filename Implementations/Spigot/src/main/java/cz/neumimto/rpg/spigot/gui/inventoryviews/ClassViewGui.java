@@ -29,6 +29,7 @@ public class ClassViewGui extends ConfigurableInventoryGui {
 
     @Override
     public void clearCache() {
+        super.clearCache();
         classes.clear();
         classService.getClassDefinitions()
                 .forEach(a -> {

@@ -25,6 +25,7 @@ public class ClassTypesGuiView extends ConfigurableInventoryGui {
 
     @Override
     public void clearCache() {
+        super.clearCache();
         initialize();
     }
 

@@ -128,13 +128,6 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
     }
 
     @Override
-    public void displayAttributes(ISpigotCharacter target, ClassDefinition group) {
-        Player player = target.getPlayer();
-        Inventory i = SpigotGuiHelper.createClassAttributesView(player, group);
-        player.openInventory(i);
-    }
-
-    @Override
     public void displayMana(ISpigotCharacter character) {
         IEffectContainer<Object, ManaBarBossBar> barExpNotifier = character.getEffect(ManaBarBossBar.name);
         ManaBar effect = (ManaBar) barExpNotifier;
@@ -223,8 +216,8 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
     @Override
     public void displayCharacterAttributes(ISpigotCharacter character) {
         Player player = character.getPlayer();
-        Inventory inventory = SpigotGuiHelper.createCharacterAttributeView(player, character);
-        player.openInventory(inventory);
+        ChestGui chestGui = CharacterAttributesGuiView.get(player);
+        chestGui.show(player);
     }
 
     @Override
@@ -244,11 +237,6 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
         Player player = character.getPlayer();
         ChestGui chestGui = ArmorGuiView.get(player);
         chestGui.show(player);
-    }
-
-
-    public void refreshAttributeView(Player player, ISpigotCharacter character, int slotMod, AttributeConfig a) {
-        SpigotGuiHelper.refreshCharacterAttributeView(player, character, player.getOpenInventory().getTopInventory(), slotMod, a);
     }
 
     @Override

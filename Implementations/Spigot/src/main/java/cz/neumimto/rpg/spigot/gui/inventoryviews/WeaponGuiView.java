@@ -55,6 +55,7 @@ public class WeaponGuiView extends ConfigurableInventoryGui {
 
     @Override
     public void clearCache() {
+        super.clearCache();
         cache.clear();
     }
 

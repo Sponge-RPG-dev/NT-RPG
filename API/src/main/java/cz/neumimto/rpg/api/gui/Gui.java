@@ -87,10 +87,6 @@ public class Gui {
         getMessageTypeOf(target).displayGroupWeapon(g, target);
     }
 
-    public static void displayInitialAttributes(ClassDefinition g, IActiveCharacter target) {
-        getMessageTypeOf(target).displayAttributes(target, g);
-    }
-
     public static void displayMana(IActiveCharacter character) {
         getMessageTypeOf(character).displayMana(character);
     }

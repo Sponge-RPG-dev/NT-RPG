@@ -37,6 +37,7 @@ public class CharacterGuiView extends ConfigurableInventoryGui {
 
     @Override
     public void clearCache() {
+        super.clearCache();
         cached.clear();
     }
 

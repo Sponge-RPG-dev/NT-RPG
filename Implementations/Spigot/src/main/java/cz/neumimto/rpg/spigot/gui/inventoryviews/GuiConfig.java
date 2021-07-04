@@ -35,6 +35,8 @@ public class GuiConfig {
         public String supplier;
         @Path("OnClick")
         public OnClick onClick;
+        @Path("Tags")
+        public List<String> tags;
     }
 
     public static class OnClick {

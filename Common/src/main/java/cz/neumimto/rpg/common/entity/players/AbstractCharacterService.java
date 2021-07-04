@@ -1283,8 +1283,8 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
 
         PlayerClassData classByType = character.getClassByType(klass.getClassType());
         if (classByType != null) {
-            character.removeClass(klass);
-            removeBaseClass(characterBase, klass);
+            character.removeClass(classByType.getClassDefinition());
+            removeBaseClass(characterBase, classByType.getClassDefinition());
         }
         removeBaseClass(characterBase, klass);
 

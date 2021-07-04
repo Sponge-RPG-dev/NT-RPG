@@ -5,12 +5,10 @@ import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.configuration.ItemString;
-import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.gui.SkillTreeViewModel;
-import cz.neumimto.rpg.api.items.RpgItemType;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.logging.Log;
@@ -19,8 +17,6 @@ import cz.neumimto.rpg.api.persistance.model.CharacterClass;
 import cz.neumimto.rpg.api.skills.*;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.common.gui.ConfigInventory;
-import cz.neumimto.rpg.common.gui.DynamicInventory;
-import cz.neumimto.rpg.common.gui.TemplateInventory;
 import cz.neumimto.rpg.spigot.Resourcepack;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.gui.elements.GuiCommand;
@@ -28,10 +24,10 @@ import cz.neumimto.rpg.spigot.gui.elements.Icon;
 import cz.neumimto.rpg.spigot.skills.SpigotSkillService;
 import cz.neumimto.rpg.spigot.skills.SpigotSkillTreeInterfaceModel;
 import de.tr7zw.nbtapi.NBTItem;
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.Bukkit;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -240,36 +236,6 @@ public class SpigotGuiHelper {
         });
     }
 
-    public static Inventory createClassAttributesView(Player player, ClassDefinition cc) {
-        String translate = Rpg.get().getLocalizationService().translate(LocalizationKeys.ATTRIBUTES);
-        Map<AttributeConfig, Integer> attrs = cc.getStartingAttributes();
-        Inventory i = createInventoryTemplate(player, ChatColor.valueOf(cc.getPreferedColor()) + cc.getName() + ChatColor.RESET + translate);
-
-        i.setItem(0, button(Material.PAPER, Rpg.get().getLocalizationService().translate(LocalizationKeys.BACK), "ninfo class " + cc.getName()));
-
-        int w = 9;
-
-
-        for (Map.Entry<AttributeConfig, Integer> attr : attrs.entrySet()) {
-            AttributeConfig att = attr.getKey();
-            ItemStack itemStack = new ItemStack(Material.matchMaterial(att.getItemType()));
-            ItemMeta itemMeta = itemStack.getItemMeta();
-            List<String> lore = new ArrayList<>();
-
-            lore.add(ChatColor.GREEN.toString() + ChatColor.BOLD + att.getName() + ChatColor.RESET + " - " + ChatColor.GREEN + attr.getValue());
-            lore.add(" ");
-            if (att.getDescription() != null || !att.getDescription().isEmpty()) {
-                lore.add(ChatColor.ITALIC.toString() + ChatColor.GOLD + att.getDescription());
-            }
-            itemMeta.setLore(lore);
-            itemStack.setItemMeta(itemMeta);
-            i.setItem(w, unclickableInterface(itemStack));
-            w++;
-        }
-
-        return i;
-    }
-
     public static Inventory createSkillTreeView(ISpigotCharacter character, SkillTree skillTree) {
         Player player = character.getPlayer();
         Inventory i = createInventoryTemplate(player, Rpg.get().getLocalizationService().translate(LocalizationKeys.SKILLTREE));
@@ -472,80 +438,6 @@ public class SpigotGuiHelper {
         Collection<PlayerClassData> values = character.getClasses().values();
         Optional<PlayerClassData> first = values.stream().filter(a -> a.getClassDefinition().getSkillTree() == skillTree).findFirst();
         return first.filter(playerClassData -> Rpg.get().getCharacterService().canLearnSkill(character, playerClassData.getClassDefinition(), skill).isOk()).map(playerClassData -> ChatColor.GRAY).orElse(ChatColor.RED);
-    }
-
-    public static void refreshCharacterAttributeView(Player player, ISpigotCharacter character, Inventory i, int slotMod, AttributeConfig a) {
-        String id = a.getId();
-        int transientVal = character.getTransientAttributes().get(id);
-        int real = character.getCharacterBase().getAttributes().get(id);
-        int tx = character.getAttributesTransaction().get(id);
-        ItemStack atris = charAttributeToItemStack(a, real, transientVal, tx);
-        i.setItem(slotMod, atris);
-    }
-
-
-    public static Inventory createCharacterAttributeView(Player player, ISpigotCharacter character) {
-        Inventory i = createInventoryTemplate(player, Rpg.get().getLocalizationService().translate(LocalizationKeys.ATTRIBUTES));
-        i.setItem(0, button(Material.PAPER, Rpg.get().getLocalizationService().translate(LocalizationKeys.BACK), "char"));
-        createAttributePointsButton(i, character);
-        i.setItem(8, button(Material.GLOWSTONE_DUST, Rpg.get().getLocalizationService().translate(LocalizationKeys.CONFIRM), "char attributes tx-commit"));
-        Map<String, Integer> transientAttributes = character.getTransientAttributes();
-        Map<String, Integer> attributes = character.getCharacterBase().getAttributes();
-        Map<String, Integer> attributesTransaction = character.getAttributesTransaction();
-
-        PropertyService propertyService = Rpg.get().getPropertyService();
-
-        Map<String, AttributeConfig> ac = propertyService.getAttributes();
-        int k = 0;
-        for (Map.Entry<String, AttributeConfig> a : ac.entrySet()) {
-
-            AttributeConfig aconf = a.getValue();
-            int transientVal = transientAttributes.get(a.getKey());
-            int real = attributes.get(a.getKey());
-            int tx = attributesTransaction.get(a.getKey());
-
-            int slot = attributButtonSlots[k];
-            if (character.getAttributePoints() > 0) {
-                ItemStack attrInc = button(Resourcepack.PLUS, ChatColor.GREEN + "+",
-                        "char attribute-add " + aconf.getId() + " true " + slot);
-
-                i.setItem(slot - 9, attrInc);
-            }
-            ItemStack atris = unclickableIcon(charAttributeToItemStack(aconf, real, transientVal, tx));
-
-
-            i.setItem(slot, atris);
-            k++;
-        }
-        return i;
-    }
-
-    private static void createAttributePointsButton(Inventory inventory, IActiveCharacter character) {
-        if (character.getAttributePoints() > 0) {
-            ItemStack itemStack = unclickableInterface(Material.BOOK);
-            ItemMeta itemMeta = itemStack.getItemMeta();
-            String translate = Rpg.get().getLocalizationService().translate(LocalizationKeys.ATTRIBUTE_POINTS);
-            itemMeta.setDisplayName(ChatColor.GREEN + translate + ChatColor.RESET + " " + character.getAttributePoints());
-            itemStack.setItemMeta(itemMeta);
-            inventory.setItem(1, itemStack);
-        }
-    }
-
-    private static ItemStack charAttributeToItemStack(AttributeConfig a, int base, int tr, int inTx) {
-        base += inTx;
-
-        ItemStack itemStack = new ItemStack(Material.matchMaterial(a.getItemType()));
-
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        List<String> lore = itemLoreFactory.toLore(a, base, tr);
-
-        itemMeta.setLore(lore);
-        itemMeta.addItemFlags(ItemFlag.values());
-        itemMeta.setDisplayName(" ");
-        itemMeta.setCustomModelData(1002);
-        itemStack.setItemMeta(itemMeta);
-
-        return itemStack;
     }
 
     public static String formatPropertyValue(Float value) {

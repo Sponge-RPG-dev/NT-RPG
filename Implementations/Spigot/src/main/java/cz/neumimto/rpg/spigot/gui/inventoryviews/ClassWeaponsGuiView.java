@@ -48,6 +48,7 @@ public class ClassWeaponsGuiView extends ConfigurableInventoryGui {
 
     @Override
     public void clearCache() {
+        super.clearCache();
         cache.clear();
         for (ClassDefinition cd : classService.getClasses().values()) {
             cache.put(cd.getName(), instance.loadGui(null, cd.getName()));

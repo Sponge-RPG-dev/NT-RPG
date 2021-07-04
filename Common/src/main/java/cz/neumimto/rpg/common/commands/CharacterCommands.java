@@ -54,7 +54,7 @@ public class CharacterCommands extends BaseCommand {
         }
     }
 
-    //@Subcommand("attributes")
+    @Subcommand("attributes")
     public void attributes(IActiveCharacter character) {
         Gui.displayCharacterAttributes(character);
         character.getGuiCommandHistory().add("nt-rpg:attributes");

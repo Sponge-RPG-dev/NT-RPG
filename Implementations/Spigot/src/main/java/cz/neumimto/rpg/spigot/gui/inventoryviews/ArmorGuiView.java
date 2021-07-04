@@ -56,6 +56,7 @@ public class ArmorGuiView extends ConfigurableInventoryGui {
 
     @Override
     public void clearCache() {
+        super.clearCache();
         cache.clear();
     }
 

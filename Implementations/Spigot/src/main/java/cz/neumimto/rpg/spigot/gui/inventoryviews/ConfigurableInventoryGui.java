@@ -5,7 +5,6 @@ import com.electronwill.nightconfig.core.conversion.ObjectConverter;
 import com.electronwill.nightconfig.core.file.FileConfig;
 import com.electronwill.nightconfig.hocon.HoconParser;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
-import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
 import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import cz.neumimto.rpg.api.Rpg;
@@ -15,6 +14,7 @@ import cz.neumimto.rpg.spigot.gui.elements.Icon;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
@@ -24,7 +24,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.stream.IntStream;
 
 public abstract class ConfigurableInventoryGui extends GuiHelper {
 
@@ -32,6 +31,8 @@ public abstract class ConfigurableInventoryGui extends GuiHelper {
     private AssetService assetService;
 
     private final String fileName;
+
+    private GuiConfig guiConfig;
 
     public ConfigurableInventoryGui(String fileName) {
         this.fileName = fileName;
@@ -48,22 +49,24 @@ public abstract class ConfigurableInventoryGui extends GuiHelper {
     public ChestGui loadGui(Player commandSender, String param) {
         Path path = getPath();
 
-        if (!Files.exists(path)) {
-            String assetAsString = assetService.getAssetAsString("gui/" + fileName);
+        if (guiConfig == null) {
+            if (!Files.exists(path)) {
+                String assetAsString = assetService.getAssetAsString("gui/" + fileName);
 
-            HoconParser hoconParser = new HoconParser();
-            try (StringReader stringReader = new StringReader(assetAsString)) {
-                CommentedConfig parsed = hoconParser.parse(stringReader);
-                GuiConfig guiConfig = new ObjectConverter().toObject(parsed, GuiConfig::new);
-                return createPane(guiConfig, commandSender, getPaneData(commandSender, param), param);
-            }
-        } else {
-            try (FileConfig fileConfig = FileConfig.of(path)) {
-                fileConfig.load();
-                GuiConfig guiConfig = new ObjectConverter().toObject(fileConfig, GuiConfig::new);
-                return createPane(guiConfig, commandSender, getPaneData(commandSender, param), param);
+                HoconParser hoconParser = new HoconParser();
+                try (StringReader stringReader = new StringReader(assetAsString)) {
+                    CommentedConfig parsed = hoconParser.parse(stringReader);
+                    guiConfig = new ObjectConverter().toObject(parsed, GuiConfig::new);
+
+                }
+            } else {
+                try (FileConfig fileConfig = FileConfig.of(path)) {
+                    fileConfig.load();
+                    guiConfig = new ObjectConverter().toObject(fileConfig, GuiConfig::new);
+                }
             }
         }
+        return createPane(guiConfig, commandSender, getPaneData(commandSender, param, guiConfig), param);
     }
 
     protected String getTitle(CommandSender commandSender, GuiConfig guiConfig, String param) {
@@ -124,6 +127,13 @@ public abstract class ConfigurableInventoryGui extends GuiHelper {
             GuiConfig.OnClick onClick = maskConfig.onClick;
             char maskKez = maskConfig.C.toCharArray()[0];
             if (onClick != null && onClick.command != null) {
+                ItemStack item = i(maskConfig);
+                if (maskConfig.tags != null) {
+                    for (String tag : maskConfig.tags) {
+                        handleTag(tag, commandSender, item);
+                    }
+                }
+
                 if (commandSender == null) {
                     pane.bindItem(maskKez, new GuiCommand(i(maskConfig), onClick.command.replaceAll("%title%", ChatColor.stripColor(title))));
                 } else {
@@ -137,7 +147,15 @@ public abstract class ConfigurableInventoryGui extends GuiHelper {
         return chestGui;
     }
 
+    protected void handleTag(String tag, CommandSender commandSender, ItemStack item) {
+
+    }
+
     public void initialize() {
+    }
+
+    public Map<String, List<GuiCommand>> getPaneData(CommandSender commandSender, String param, GuiConfig guiConfig) {
+        return getPaneData(commandSender, param);
     }
 
     public Map<String, List<GuiCommand>> getPaneData(CommandSender commandSender, String param) {
@@ -172,7 +190,7 @@ public abstract class ConfigurableInventoryGui extends GuiHelper {
     }
 
     public void clearCache() {
-
+        guiConfig = null;
     }
 
     public void clearCache(UUID uuid) {

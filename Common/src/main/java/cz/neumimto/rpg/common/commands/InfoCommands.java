@@ -103,11 +103,6 @@ public class InfoCommands extends BaseCommand {
 //        messaging.displayRunewordBlockedGroups(character, runeWord);
 //    }
 
-    @Subcommand("attributes-initial")
-    public void displayInitialClassAttributesCommand(IActiveCharacter character, ClassDefinition classDefinition) {
-        Gui.displayInitialAttributes(classDefinition, character);
-    }
-
     @Subcommand("properties-initial")
     public void displayInitialClassPropertiesCommand(IActiveCharacter character, ClassDefinition classDefinition) {
         Gui.displayInitialProperties(classDefinition, character);
