@@ -200,7 +200,7 @@ public class SpigotScriptFunctions {
             }
     )
     public static F.QuadConsumer<Entity, Double, Double, Double> SET_VELOCITY = (entity, x, y, z) -> {
-        entity.setVelocity(new Vector(x,y,z));
+        entity.setVelocity(new Vector(x, y, z));
     };
 
 }

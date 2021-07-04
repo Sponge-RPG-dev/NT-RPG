@@ -93,6 +93,7 @@ public class Icicle extends ActiveSkill<ISpigotCharacter> {
         private Projectile projectile;
         private int max = 500;
         BlockData data = null;
+
         public Trail(Projectile snowball) {
             this.projectile = snowball;
             data = Material.BLUE_ICE.createBlockData();
@@ -100,7 +101,7 @@ public class Icicle extends ActiveSkill<ISpigotCharacter> {
 
         @Override
         public void run() {
-            max --;
+            max--;
             projectile.getWorld().spawnParticle(Particle.SNOWBALL, projectile.getLocation(), 2);
             projectile.getWorld().spawnParticle(Particle.BLOCK_CRACK, projectile.getLocation(), 4, 0.0, 0.1, 0.0, data);
             if (max == 0) {

@@ -87,7 +87,8 @@ public class ItemLoreFactory {
             for (Map.Entry<Integer, Float> e : propBonus.entrySet()) {
                 String nameById = propertyService.getNameById(e.getKey());
                 Float value = e.getValue();
-                list.add(line(" " + ChatColor.WHITE + nameById.replaceAll("_", " ") + " " + formatPropertyValue(value)));;
+                list.add(line(" " + ChatColor.WHITE + nameById.replaceAll("_", " ") + " " + formatPropertyValue(value)));
+                ;
             }
         }
 

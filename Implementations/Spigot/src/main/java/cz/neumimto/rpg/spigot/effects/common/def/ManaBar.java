@@ -4,6 +4,8 @@ import cz.neumimto.rpg.api.effects.IEffect;
 
 public interface ManaBar {
     String name = "ManaBar";
+
     void notifyManaChange();
+
     IEffect asEffect();
 }

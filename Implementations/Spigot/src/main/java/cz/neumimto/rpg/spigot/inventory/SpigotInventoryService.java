@@ -1,7 +1,6 @@
 package cz.neumimto.rpg.spigot.inventory;
 
 import com.google.inject.Injector;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.inventory.ManagedSlot;
 import cz.neumimto.rpg.api.inventory.RpgInventory;
 import cz.neumimto.rpg.api.items.RpgItemStack;
@@ -10,7 +9,6 @@ import cz.neumimto.rpg.api.skills.SkillData;
 import cz.neumimto.rpg.common.inventory.AbstractInventoryService;
 import cz.neumimto.rpg.common.inventory.InventoryHandler;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
-import cz.neumimto.rpg.spigot.gui.SpigotGuiHelper;
 import cz.neumimto.rpg.spigot.gui.inventoryviews.ConfigurableInventoryGui;
 import cz.neumimto.rpg.spigot.persistance.SpigotEquipedSlot;
 import de.tr7zw.nbtapi.NBTItem;
@@ -139,7 +137,7 @@ public class SpigotInventoryService extends AbstractInventoryService<ISpigotChar
             page = 0;
         }
         ItemStack[] itemStacks = character.getSpellbook()[page];
-        for (int i = 0; i < itemStacks.length -1; i++) {
+        for (int i = 0; i < itemStacks.length - 1; i++) {
             ItemStack item = player.getInventory().getItem(i);
             if (item == null || item.getType() == Material.AIR) {
                 player.getInventory().setItem(i, itemStacks[i]);
@@ -159,6 +157,9 @@ public class SpigotInventoryService extends AbstractInventoryService<ISpigotChar
         UUID uniqueId = cc.getEntity().getUniqueId();
 
         ServiceLoader.load(ConfigurableInventoryGui.class, getClass().getClassLoader()).stream()
-                .map(ServiceLoader.Provider::get).forEach(a->{injector.injectMembers(a);a.clearCache(uniqueId);});
+                .map(ServiceLoader.Provider::get).forEach(a -> {
+            injector.injectMembers(a);
+            a.clearCache(uniqueId);
+        });
     }
 }

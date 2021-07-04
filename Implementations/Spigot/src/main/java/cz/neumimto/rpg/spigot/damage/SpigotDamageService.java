@@ -43,7 +43,7 @@ public class SpigotDamageService extends AbstractDamageService<ISpigotCharacter,
     @Override
     public void damageEntity(ISpigotEntity<LivingEntity> entity, double value) {
         entity.getEntity().damage(value);
-       //todo workaround bukkit stupidity entity.setLastDamageCause
+        //todo workaround bukkit stupidity entity.setLastDamageCause
     }
 
     @Override

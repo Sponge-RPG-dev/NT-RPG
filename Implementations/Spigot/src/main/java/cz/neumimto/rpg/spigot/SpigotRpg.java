@@ -119,7 +119,7 @@ public final class SpigotRpg extends AbstractRpg {
         ServiceLoader.load(ConfigurableInventoryGui.class, getClass().getClassLoader())
                 .stream()
                 .map(ServiceLoader.Provider::get)
-                .forEach(a-> {
+                .forEach(a -> {
                     try {
                         injector.injectMembers(a);
                         a.clearCache();

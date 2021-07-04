@@ -1,5 +1,3 @@
-
-
 package cz.neumimto.rpg.common.entity.players;
 
 import cz.neumimto.rpg.api.Rpg;

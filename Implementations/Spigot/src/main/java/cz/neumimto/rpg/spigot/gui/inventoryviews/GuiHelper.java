@@ -53,7 +53,7 @@ abstract class GuiHelper {
     }
 
     static ItemStack i(String material, String model) {
-       return i(Material.matchMaterial(material), model == null ? null : Integer.parseInt(model));
+        return i(Material.matchMaterial(material), model == null ? null : Integer.parseInt(model));
     }
 
     static ItemStack i(Material material, int model, ChatColor nameColor, String itemName) {

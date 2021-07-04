@@ -28,7 +28,6 @@ import cz.neumimto.rpg.spigot.services.IRpgListener;
 import org.bukkit.block.Block;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
@@ -116,6 +115,9 @@ public class SpigotDamageListener extends AbstractDamageListener implements IRpg
                 processProjectileDamageEarly(event, attacker, target, projectile);
             }
         } else {
+            if (!(attackerEntity instanceof LivingEntity)) {
+                return;
+            }
             attacker = entityService.get((LivingEntity) attackerEntity);
         }
 

@@ -60,7 +60,7 @@ public class ManaBarText extends EffectBase<Object> implements IEffectContainer<
         double percentage = MathUtils.getPercentage(character.getMana().getValue(), character.getMana().getMaxValue());
         percentage = percentage > 100 ? 100 : percentage;
         percentage = percentage < 0 ? 0 : percentage;
-        BaseComponent[] stringg = ROWS[(int)Math.round(percentage / 5)];
+        BaseComponent[] stringg = ROWS[(int) Math.round(percentage / 5)];
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, stringg);
     }
 

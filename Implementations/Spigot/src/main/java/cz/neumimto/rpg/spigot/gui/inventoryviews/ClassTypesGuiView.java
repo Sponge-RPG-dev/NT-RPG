@@ -8,10 +8,12 @@ import cz.neumimto.rpg.spigot.gui.elements.GuiCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import javax.inject.Singleton;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Singleton
 @AutoService(ConfigurableInventoryGui.class)
@@ -44,7 +46,7 @@ public class ClassTypesGuiView extends ConfigurableInventoryGui {
         for (Map.Entry<String, ClassTypeDefinition> e : cTypes.entrySet()) {
             String primaryColor = e.getValue().getPrimaryColor();
             ChatColor c = ChatColor.valueOf(primaryColor.toUpperCase());
-            guiCommands.add(new GuiCommand(i(Material.CRAFTING_TABLE, e.getValue().getModelId(),c,e.getKey()), "ninfo classes " + e.getKey()));
+            guiCommands.add(new GuiCommand(i(Material.CRAFTING_TABLE, e.getValue().getModelId(), c, e.getKey()), "ninfo classes " + e.getKey()));
         }
 
         map.put("ClassType", guiCommands);
@@ -52,7 +54,7 @@ public class ClassTypesGuiView extends ConfigurableInventoryGui {
     }
 
     public static ChestGui get() {
-       return cachedGui;
+        return cachedGui;
     }
 
 }

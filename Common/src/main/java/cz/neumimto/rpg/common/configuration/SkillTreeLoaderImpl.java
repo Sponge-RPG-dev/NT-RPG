@@ -1,5 +1,3 @@
-
-
 package cz.neumimto.rpg.common.configuration;
 
 import com.google.inject.Injector;
@@ -101,7 +99,7 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
         try {
             ConfigList asciiMap = config.getList("AsciiMap");
 
-            int length = ((ConfigList)asciiMap.get(0)).size();
+            int length = ((ConfigList) asciiMap.get(0)).size();
             int rows = asciiMap.size();
             short[][] array = new short[rows][length];
             int i = 0;
@@ -119,7 +117,8 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
                     ISkillTreeInterfaceModel guiModelByCharacter = skillService.getGuiModelByCharacter(c1.charAt(0));
                     if (guiModelByCharacter != null) {
                         array[i][j] = guiModelByCharacter.getId();
-                    } if (MathUtils.isNumeric(c1)) {
+                    }
+                    if (MathUtils.isNumeric(c1)) {
                         array[i][j] = Short.parseShort(c1);
                     }
                     j++;
@@ -393,7 +392,8 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
                 }
                 Log.warn("Skill Upgrade for " + info.getSkillName() + " missing SkillId, skipping");
             }
-        } catch (ConfigException missing) {}
+        } catch (ConfigException missing) {
+        }
 
         try {
             List<? extends ConfigObject> preprocessors = c.getObjectList("CastConditions");
@@ -485,7 +485,7 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
 
     private SkillData createSkillInfo(SkillTree tree, String lowercased) {
 
-        ISkill skill = Rpg.get().getSkillService().getSkillById(lowercased.replaceAll("\"",""));
+        ISkill skill = Rpg.get().getSkillService().getSkillById(lowercased.replaceAll("\"", ""));
         if (skill == null) {
             throw new InvalidSkillTreeException("Could not find a skill " + lowercased + " referenced in the skilltree " + tree.getId());
         }

@@ -7,7 +7,6 @@ import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.entity.PropertyService;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
-import cz.neumimto.rpg.api.entity.players.classes.DependencyGraph;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.spigot.gui.elements.GuiCommand;
@@ -20,13 +19,15 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static cz.neumimto.rpg.spigot.gui.ItemLoreFactory.header;
 import static cz.neumimto.rpg.spigot.gui.ItemLoreFactory.line;
 import static cz.neumimto.rpg.spigot.gui.SpigotGuiHelper.formatPropertyValue;
-import static cz.neumimto.rpg.spigot.gui.SpigotGuiHelper.itemLoreFactory;
 
 @Singleton
 @AutoService(ConfigurableInventoryGui.class)
@@ -83,9 +84,9 @@ public class ClassAttributesGuiView extends ConfigurableInventoryGui {
 
     private List<GuiCommand> toList(Map<AttributeConfig, Integer> a) {
         return a.entrySet().stream()
-                .filter(w->!w.getKey().isHidden())
+                .filter(w -> !w.getKey().isHidden())
                 .sorted((o1, o2) -> o1.getKey().getName().compareToIgnoreCase(o2.getKey().getName()))
-                .map(w-> attributeConfigToItemStack(w.getKey(), w.getValue()))
+                .map(w -> attributeConfigToItemStack(w.getKey(), w.getValue()))
                 .map(GuiCommand::new)
                 .collect(Collectors.toList());
     }

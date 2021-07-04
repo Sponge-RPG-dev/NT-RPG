@@ -69,7 +69,7 @@ public class FireBlast extends TargetedBlockSkill {
 
         Player player = character.getPlayer();
         World world = block.getWorld();
-        Location loc = block.getLocation().add(0,1,0);
+        Location loc = block.getLocation().add(0, 1, 0);
         world.playSound(loc, Sound.ENTITY_GENERIC_EXPLODE, 0.5f, 0.5f);
 
         Collection<Entity> nearbyEntities = world.getNearbyEntities(loc, blastradius, blastradius, blastradius,
@@ -96,10 +96,10 @@ public class FireBlast extends TargetedBlockSkill {
         entity.setVelocity(vector);
     }
 
-    private void spawnFireworks(Location location){
+    private void spawnFireworks(Location location) {
         FireworkHandler.spawn(location, FireworkEffect.builder()
-                .withColor(Color.fromRGB( 229, 55, 28 ))
-                .withFade(Color.fromRGB( 229, 125, 28 ))
+                .withColor(Color.fromRGB(229, 55, 28))
+                .withFade(Color.fromRGB(229, 125, 28))
                 .with(FireworkEffect.Type.BALL)
                 .build(), 40);
     }
@@ -108,6 +108,7 @@ public class FireBlast extends TargetedBlockSkill {
 
         private Location location;
         private int c = 200;
+
         public Particles(Location location) {
             this.location = location;
         }
@@ -115,7 +116,7 @@ public class FireBlast extends TargetedBlockSkill {
         @Override
         public void run() {
             c--;
-            location.getWorld().spawnParticle(Particle.FLAME, location, 2,0,0.1,0);
+            location.getWorld().spawnParticle(Particle.FLAME, location, 2, 0, 0.1, 0);
             if (c == 0) {
                 cancel();
             }

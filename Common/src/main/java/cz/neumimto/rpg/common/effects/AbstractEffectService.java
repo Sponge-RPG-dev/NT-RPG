@@ -1,5 +1,3 @@
-
-
 package cz.neumimto.rpg.common.effects;
 
 import cz.neumimto.rpg.api.Rpg;
@@ -167,7 +165,7 @@ public abstract class AbstractEffectService implements EffectService {
     @Override
     public <T extends IEffect> boolean addEffect(T effect, IEffectSourceProvider effectSourceProvider, IEntity entitySource) {
         IEffectContainer eff = effect.getConsumer().getEffect(effect.getName());
-         if (Rpg.get().getPluginConfig().DEBUG.isDevelop()) {
+        if (Rpg.get().getPluginConfig().DEBUG.isDevelop()) {
             IEffectConsumer consumer1 = effect.getConsumer();
             if (consumer1 instanceof IActiveCharacter) {
                 IActiveCharacter chara = (IActiveCharacter) consumer1;
@@ -393,7 +391,8 @@ public abstract class AbstractEffectService implements EffectService {
         for (IEffect iEffect : effectSet) {
             try {
                 iEffect.onRemove(iEffect);
-            } catch (Throwable t){}
+            } catch (Throwable t) {
+            }
         }
         effectSet.clear();
         pendingAdditions.clear();

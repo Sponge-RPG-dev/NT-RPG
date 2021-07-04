@@ -2,7 +2,6 @@ package cz.neumimto.rpg.spigot.effects.common;
 
 import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.api.entity.CommonProperties;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
 
 public class FireResistanceEffect extends EffectBase<Long> {
@@ -18,7 +17,6 @@ public class FireResistanceEffect extends EffectBase<Long> {
     public void onApply(IEffect self) {
 
     }
-
 
 
     @Override

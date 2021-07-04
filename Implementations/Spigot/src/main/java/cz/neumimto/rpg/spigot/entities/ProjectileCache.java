@@ -8,7 +8,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 import java.util.Map;
 import java.util.WeakHashMap;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class ProjectileCache {

@@ -12,7 +12,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.function.Function;
 
 public class Resourcepack {
 
@@ -52,18 +51,19 @@ public class Resourcepack {
     public static ItemStack ICICLE_06;
     public static ItemStack ICICLE_07;
     private static ItemStack[] icicles;
+
     public static void init() {
         SLASH_01 = tag(Material.LAPIS_LAZULI, 2457);
 
-        ICICLE_01 = tag(Material.STICK,12350);
-        ICICLE_02 = tag(Material.STICK,12351);
-        ICICLE_03 = tag(Material.STICK,12352);
-        ICICLE_04 = tag(Material.STICK,12353);
-        ICICLE_05 = tag(Material.STICK,12354);
-        ICICLE_06 = tag(Material.STICK,12355);
-        ICICLE_07 = tag(Material.STICK,12356);
+        ICICLE_01 = tag(Material.STICK, 12350);
+        ICICLE_02 = tag(Material.STICK, 12351);
+        ICICLE_03 = tag(Material.STICK, 12352);
+        ICICLE_04 = tag(Material.STICK, 12353);
+        ICICLE_05 = tag(Material.STICK, 12354);
+        ICICLE_06 = tag(Material.STICK, 12355);
+        ICICLE_07 = tag(Material.STICK, 12356);
 
-        icicles = new ItemStack[] {ICICLE_01, ICICLE_02, ICICLE_03, ICICLE_04, ICICLE_05, ICICLE_06, ICICLE_07};
+        icicles = new ItemStack[]{ICICLE_01, ICICLE_02, ICICLE_03, ICICLE_04, ICICLE_05, ICICLE_06, ICICLE_07};
     }
 
     public static ItemStack randomIcicle() {
@@ -78,7 +78,6 @@ public class Resourcepack {
         itemStack.setItemMeta(itemMeta);
         return itemStack;
     }
-
 
 
     public static ArmorStand summonArmorStand(Location location) {

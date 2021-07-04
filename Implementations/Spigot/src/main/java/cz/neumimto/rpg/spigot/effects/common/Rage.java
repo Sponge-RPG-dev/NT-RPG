@@ -22,6 +22,7 @@ public class Rage extends EffectBase {
 
     public static Set<EffectType> removeTypes;
     RageEffect rageEffect;
+
     static {
         removeTypes = new HashSet<>();
         removeTypes.add(CommonEffectTypes.SLOW);
@@ -63,11 +64,11 @@ public class Rage extends EffectBase {
             loc = getTarget();
 
             display(Particle.CLOUD,
-                    loc.clone().add(Math.cos(it), Math.sin(it) +1, Math.sin(it)),
+                    loc.clone().add(Math.cos(it), Math.sin(it) + 1, Math.sin(it)),
                     Color.RED);
 
             display(Particle.REDSTONE,
-                    loc.clone().add(Math.cos(it + Math.PI), Math.sin(it) +1, Math.sin(it + Math.PI)),
+                    loc.clone().add(Math.cos(it + Math.PI), Math.sin(it) + 1, Math.sin(it + Math.PI)),
                     Color.BLACK);
         }
     }

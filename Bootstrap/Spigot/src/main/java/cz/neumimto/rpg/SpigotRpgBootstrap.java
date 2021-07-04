@@ -28,7 +28,6 @@ import java.util.logging.Logger;
 )
 @DependsOn(
         value = {
-                @Dependency("EffectLib"),
                 @Dependency("ProtocolLib")
         }
 )

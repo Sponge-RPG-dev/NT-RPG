@@ -10,7 +10,10 @@ import org.bukkit.inventory.ItemStack;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Singleton
 @AutoService(ConfigurableInventoryGui.class)
@@ -56,8 +59,8 @@ public class ClassesByTypeGuiView extends ConfigurableInventoryGui {
         Map<String, List<GuiCommand>> map = new HashMap<>();
         List<GuiCommand> list = new ArrayList<>();
         classService.getClassDefinitions().stream()
-                .filter(a->a.getClassType().equalsIgnoreCase(type))
-                .forEach(a->{
+                .filter(a -> a.getClassType().equalsIgnoreCase(type))
+                .forEach(a -> {
                     ItemStack is = CharacterGuiView.classDefinitionToItemStack(a);
                     list.add(new GuiCommand(is, "ninfo class " + a.getName()));
                 });

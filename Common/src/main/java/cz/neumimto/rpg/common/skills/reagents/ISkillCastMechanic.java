@@ -7,13 +7,15 @@ import cz.neumimto.rpg.api.skills.SkillResult;
 
 public interface ISkillCastMechanic {
 
-    default SkillResult processBefore(IActiveCharacter character, PlayerSkillContext context){
+    default SkillResult processBefore(IActiveCharacter character, PlayerSkillContext context) {
         return SkillResult.OK;
     }
 
-    default void processAfterSuccess(IActiveCharacter character, PlayerSkillContext context){}
+    default void processAfterSuccess(IActiveCharacter character, PlayerSkillContext context) {
+    }
 
     boolean isValidForContext(SkillData skillData);
 
-    default void notifyFailure(IActiveCharacter character, PlayerSkillContext context) {}
+    default void notifyFailure(IActiveCharacter character, PlayerSkillContext context) {
+    }
 }

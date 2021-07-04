@@ -1,7 +1,6 @@
 package cz.neumimto.rpg.spigot.skills.listeners;
 
 import com.google.auto.service.AutoService;
-import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
@@ -13,14 +12,12 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.spigotmc.event.entity.EntityDismountEvent;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.EventListener;
 
 @Singleton
 @AutoService(IRpgListener.class)

@@ -1,4 +1,3 @@
-
 package cz.neumimto.rpg.common.entity.players;
 
 import cz.neumimto.rpg.api.IRpgElement;
@@ -665,7 +664,6 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
 
         skill.skillUpgrade(character, playerSkillContext.getLevel(), playerSkillContext);
     }
-
 
 
     /**

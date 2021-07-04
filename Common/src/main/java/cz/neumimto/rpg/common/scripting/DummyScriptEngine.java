@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.common.scripting;
 
-public class DummyScriptEngine extends AbstractRpgScriptEngine{
+public class DummyScriptEngine extends AbstractRpgScriptEngine {
     @Override
     public void prepareEngine() {
 

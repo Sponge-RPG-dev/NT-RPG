@@ -11,13 +11,10 @@ import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.common.utils.Java12FieldUtils;
 import org.graalvm.polyglot.*;
 import org.graalvm.polyglot.impl.AbstractPolyglotImpl;
-import sun.misc.Unsafe;
 
-import javax.script.ScriptEngineManager;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.function.Function;
@@ -179,7 +176,9 @@ public class GraalVmScriptEngine extends AbstractRpgScriptEngine {
 
     public interface ScriptLib {
         Map<String, Value> getSkillHandlers();
+
         List<Value> getGlobalEffects();
+
         List<Value> getEventListeners();
     }
 

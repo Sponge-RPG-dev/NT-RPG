@@ -48,7 +48,7 @@ subprojects {
         from {
             configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
         }
-        exclude("**/*.DSA", "**/*.SF", "**/*pom.xml", "**/*pom.properties",'**/module-info.class')
+        exclude("**/*.DSA", "**/*.SF", "**/*pom.xml", "**/*pom.properties",'**/module-info.class', "**/*.php",)
     }
 
     dependencies {

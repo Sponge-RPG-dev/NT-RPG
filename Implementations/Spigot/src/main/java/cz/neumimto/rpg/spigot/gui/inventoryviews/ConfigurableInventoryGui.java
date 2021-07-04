@@ -82,7 +82,6 @@ public abstract class ConfigurableInventoryGui extends GuiHelper {
         ChestGui chestGui = new ChestGui(6, title);
 
 
-
         char[] alphabet = "abcdefghijklmnopqrstuvwxyz".toCharArray();
         int alphabetidx = 0;
         List<String> actualContent = new ArrayList<>();
@@ -94,7 +93,8 @@ public abstract class ConfigurableInventoryGui extends GuiHelper {
             StringBuilder stringBuilder = new StringBuilder();
             for (char slot : row.toCharArray()) {
 
-                a: for (Map.Entry<String, Iterator<GuiCommand>> content : dataIt.entrySet()) {
+                a:
+                for (Map.Entry<String, Iterator<GuiCommand>> content : dataIt.entrySet()) {
                     String replaceKey = content.getKey(); //classType
                     Iterator<GuiCommand> value = content.getValue();
                     for (GuiConfig.MaskConfig maskConfig : guiConfig.mask) {

@@ -1,5 +1,3 @@
-
-
 package cz.neumimto.rpg.spigot.events.character;
 
 import cz.neumimto.rpg.api.events.character.EventCharacterArmorPostUpdate;

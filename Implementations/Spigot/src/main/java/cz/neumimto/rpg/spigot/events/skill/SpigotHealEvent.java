@@ -1,5 +1,3 @@
-
-
 package cz.neumimto.rpg.spigot.events.skill;
 
 import cz.neumimto.rpg.api.IRpgElement;

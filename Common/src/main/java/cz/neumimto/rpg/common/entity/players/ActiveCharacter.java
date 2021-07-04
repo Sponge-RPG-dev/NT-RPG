@@ -1,5 +1,3 @@
-
-
 package cz.neumimto.rpg.common.entity.players;
 
 import cz.neumimto.rpg.api.Rpg;
@@ -308,7 +306,7 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
 
     @Override
     public boolean hasCooldown(String thing) {
-        return cooldowns.getOrDefault(thing,0L) > System.currentTimeMillis();
+        return cooldowns.getOrDefault(thing, 0L) > System.currentTimeMillis();
     }
 
     private void mergeWeapons(ClassDefinition g) {

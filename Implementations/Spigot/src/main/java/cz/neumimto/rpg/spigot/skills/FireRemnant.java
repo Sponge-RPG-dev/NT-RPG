@@ -77,7 +77,7 @@ public class FireRemnant extends ActiveSkill<ISpigotCharacter> {
 
             double damage = ctx.getDoubleNodeValue(SkillNodes.DAMAGE);
             long duration = ctx.getLongNodeValue(SkillNodes.DURATION);
-            effectService.addEffect(new FireRemnantEffect(character,armorStand,duration, damage));
+            effectService.addEffect(new FireRemnantEffect(character, armorStand, duration, damage));
             return SkillResult.OK_NO_COOLDOWN;
         } else {
 
@@ -96,6 +96,7 @@ public class FireRemnant extends ActiveSkill<ISpigotCharacter> {
         private double damage;
 
         private SphereEffect particles;
+
         public FireRemnantEffect(IEffectConsumer consumer, ArmorStand remnant, long duration,
                                  double damage) {
             super(name, consumer);

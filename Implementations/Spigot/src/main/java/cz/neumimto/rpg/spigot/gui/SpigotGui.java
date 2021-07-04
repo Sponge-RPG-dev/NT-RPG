@@ -2,12 +2,10 @@ package cz.neumimto.rpg.spigot.gui;
 
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.effects.EffectStatusType;
 import cz.neumimto.rpg.api.effects.IEffect;
 import cz.neumimto.rpg.api.effects.IEffectContainer;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.gui.IPlayerMessage;
@@ -25,7 +23,6 @@ import cz.neumimto.rpg.spigot.effects.common.def.ManaBarBossBar;
 import cz.neumimto.rpg.spigot.effects.common.def.ManaBarText;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.gui.inventoryviews.*;
-import net.Indyuce.mmoitems.api.interaction.weapon.Weapon;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -55,7 +52,7 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
     @Override
     public void sendCooldownMessage(ISpigotCharacter player, String message, double cooldown) {
         player.sendMessage(localizationService.translate(LocalizationKeys.ON_COOLDOWN,
-                Arg.arg("skill", message).with("time", String.format("%.2f",cooldown))));
+                Arg.arg("skill", message).with("time", String.format("%.2f", cooldown))));
     }
 
     @Override
@@ -184,7 +181,7 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
 
     @Override
     public void displaySkillDetailsInventoryMenu(ISpigotCharacter character, SkillTree tree, String command) {
-       SpigotGuiHelper.createSkillDetailInventoryView(character, tree, tree.getSkillById(command));
+        SpigotGuiHelper.createSkillDetailInventoryView(character, tree, tree.getSkillById(command));
     }
 
     @Override

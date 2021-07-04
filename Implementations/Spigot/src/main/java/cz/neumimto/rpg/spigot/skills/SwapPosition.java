@@ -50,7 +50,6 @@ public class SwapPosition extends TargetedEntitySkill {
         lT.teleport(casterLoc);
 
 
-
         return SkillResult.OK;
     }
 

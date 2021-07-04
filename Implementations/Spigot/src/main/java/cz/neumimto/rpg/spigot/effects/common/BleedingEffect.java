@@ -3,15 +3,11 @@ package cz.neumimto.rpg.spigot.effects.common;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.entity.IEntity;
-import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import de.slikey.effectlib.effect.BleedEffect;
-import de.slikey.effectlib.util.DynamicLocation;
 import de.slikey.effectlib.util.RandomUtils;
 import org.bukkit.Effect;
 import org.bukkit.Location;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 
 public class BleedingEffect extends EffectBase {
@@ -21,6 +17,7 @@ public class BleedingEffect extends EffectBase {
     private double damage;
     private BleedEffect effect;
     private LivingEntity livingEntity;
+
     public BleedingEffect(IEntity consumer, long duration, long period, double damage) {
         super(name, consumer);
         setDuration(duration);

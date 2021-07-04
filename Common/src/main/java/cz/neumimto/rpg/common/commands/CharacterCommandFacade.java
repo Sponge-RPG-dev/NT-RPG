@@ -159,6 +159,7 @@ public class CharacterCommandFacade {
     private static class CommandSyncCallback implements Runnable {
         private final IActiveCharacter character;
         private CharacterCommandFacade facade;
+
         private CommandSyncCallback(IActiveCharacter character, CharacterCommandFacade facade) {
             this.character = character;
             this.facade = facade;

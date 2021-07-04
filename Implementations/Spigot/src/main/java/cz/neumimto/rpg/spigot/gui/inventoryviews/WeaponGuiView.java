@@ -3,7 +3,6 @@ package cz.neumimto.rpg.spigot.gui.inventoryviews;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.google.auto.service.AutoService;
 import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.entity.players.CharacterService;
 import cz.neumimto.rpg.api.items.RpgItemType;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;

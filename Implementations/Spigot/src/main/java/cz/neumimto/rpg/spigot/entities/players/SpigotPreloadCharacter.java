@@ -131,5 +131,4 @@ public class SpigotPreloadCharacter extends PreloadCharacter<Player, SpigotParty
     }
 
 
-
 }

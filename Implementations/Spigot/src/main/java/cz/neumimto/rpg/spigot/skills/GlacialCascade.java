@@ -2,7 +2,6 @@ package cz.neumimto.rpg.spigot.skills;
 
 import com.google.auto.service.AutoService;
 import cz.neumimto.rpg.api.ResourceLoader;
-import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.effects.EffectBase;
 import cz.neumimto.rpg.api.effects.EffectService;
 import cz.neumimto.rpg.api.effects.IEffect;
@@ -19,8 +18,6 @@ import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.packetwrapper.PacketHandler;
 import cz.neumimto.rpg.spigot.skills.utils.AbstractPacket;
 import org.bukkit.*;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -102,7 +99,7 @@ public class GlacialCascade extends TargetedEntitySkill {
                 setDuration(0);
                 return;
             }
-            location.add(0,0.2,0);
+            location.add(0, 0.2, 0);
 
             spawnEntity(location);
 
@@ -121,12 +118,12 @@ public class GlacialCascade extends TargetedEntitySkill {
         }
 
         public Location getBlockBelowLoc(Location loc, int it) {
-            it -=1;
+            it -= 1;
             if (it == 0) {
                 return null;
             }
             Location locBelow = loc.subtract(0, 1, 0);
-            if(locBelow.getBlock().isPassable()) {
+            if (locBelow.getBlock().isPassable()) {
                 locBelow = getBlockBelowLoc(locBelow, it);
             }
 
@@ -149,7 +146,7 @@ public class GlacialCascade extends TargetedEntitySkill {
                 }
             }
 
-            location.getWorld().playSound(location, Sound.BLOCK_GLASS_BREAK, 0.75f,0.5f);
+            location.getWorld().playSound(location, Sound.BLOCK_GLASS_BREAK, 0.75f, 0.5f);
 
             location.getWorld().spawnParticle(Particle.BLOCK_CRACK, location, 10, 0.0, 0.1, 0.0, Material.ICE.createBlockData());
             location.getWorld().spawnParticle(Particle.SNOWBALL, location, 8);

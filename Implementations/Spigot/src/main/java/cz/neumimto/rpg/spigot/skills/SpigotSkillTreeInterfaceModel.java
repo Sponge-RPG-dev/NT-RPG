@@ -1,8 +1,6 @@
 package cz.neumimto.rpg.spigot.skills;
 
-import com.google.auto.service.AutoService;
 import cz.neumimto.rpg.api.gui.ISkillTreeInterfaceModel;
-import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.spigot.gui.SpigotGuiHelper;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;

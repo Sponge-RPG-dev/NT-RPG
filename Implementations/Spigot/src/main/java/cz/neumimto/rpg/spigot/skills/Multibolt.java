@@ -78,7 +78,7 @@ public class Multibolt extends TargetedEntitySkill {
                 cancel();
                 return;
             }
-            remainingStrikes = remainingStrikes -1;
+            remainingStrikes = remainingStrikes - 1;
 
             if (spigotDamageService.damage(attacker, target, EntityDamageEvent.DamageCause.LIGHTNING, damage, false)) {
                 target.getLocation().getWorld().strikeLightningEffect(target.getLocation());

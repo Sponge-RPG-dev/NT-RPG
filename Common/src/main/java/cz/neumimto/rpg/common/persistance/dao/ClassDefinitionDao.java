@@ -1,5 +1,3 @@
-
-
 package cz.neumimto.rpg.common.persistance.dao;
 
 import com.electronwill.nightconfig.core.Config;
@@ -44,7 +42,6 @@ public class ClassDefinitionDao {
     }
 
 
-
     public Set<ClassDefinition> parseClassFiles(Path path) {
         Set<ClassDefinition> set = new HashSet<>();
         try {
@@ -86,7 +83,7 @@ public class ClassDefinitionDao {
         Map<String, Path> map = new HashMap<>();
 
         Files.walk(path)
-                .filter(f -> Files.isRegularFile(f) || (Files.isSymbolicLink(f) && ! Files.isDirectory(f)))
+                .filter(f -> Files.isRegularFile(f) || (Files.isSymbolicLink(f) && !Files.isDirectory(f)))
                 .forEach(p -> {
                     info("Preloading class definition file " + p.getFileName());
 

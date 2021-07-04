@@ -2,7 +2,6 @@ package cz.neumimto.rpg.spigot.scripting.mechanics;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import cz.neumimto.rpg.api.RpgApi;
 import cz.neumimto.rpg.common.skills.scripting.Handler;
 import cz.neumimto.rpg.common.skills.scripting.Target;
 import cz.neumimto.rpg.spigot.SpigotRpg;
@@ -76,7 +75,6 @@ public class ToastMechanic {
         root.add("icon", icon);
 
         JsonObject display = new JsonObject();
-
 
 
         display.addProperty("title", message);

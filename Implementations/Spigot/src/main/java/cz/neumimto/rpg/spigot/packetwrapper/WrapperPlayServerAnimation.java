@@ -8,7 +8,6 @@ import com.comphenix.protocol.reflect.IntEnum;
 import cz.neumimto.rpg.spigot.skills.utils.AbstractPacket;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
 
 public class WrapperPlayServerAnimation extends AbstractPacket {
     public static final PacketType TYPE = PacketType.Play.Server.ANIMATION;
@@ -31,6 +30,7 @@ public class WrapperPlayServerAnimation extends AbstractPacket {
 
         /**
          * Retrieve an instance of the Animation enum.
+         *
          * @return Animation enum.
          */
         public static Animations getInstance() {
@@ -45,6 +45,7 @@ public class WrapperPlayServerAnimation extends AbstractPacket {
 
     /**
      * Retrieve the player ID.
+     *
      * @return The current EID
      */
     public int getEntityID() {
@@ -53,6 +54,7 @@ public class WrapperPlayServerAnimation extends AbstractPacket {
 
     /**
      * Set the player ID.
+     *
      * @param value - new value.
      */
     public void setEntityID(int value) {
@@ -61,6 +63,7 @@ public class WrapperPlayServerAnimation extends AbstractPacket {
 
     /**
      * Retrieve the player's entity object.
+     *
      * @param world - the word the player has joined.
      * @return The player's entity.
      */
@@ -70,6 +73,7 @@ public class WrapperPlayServerAnimation extends AbstractPacket {
 
     /**
      * Retrieve the player's entity object.
+     *
      * @param event - the packet event.
      * @return The player's entity.
      */
@@ -79,8 +83,9 @@ public class WrapperPlayServerAnimation extends AbstractPacket {
 
     /**
      * Retrieve animation ID.
-     * @see {@link WrapperPlayServerAnimation.Animations}.
+     *
      * @return The current Animation
+     * @see {@link WrapperPlayServerAnimation.Animations}.
      */
     public int getAnimation() {
         return handle.getIntegers().read(1);
@@ -88,8 +93,9 @@ public class WrapperPlayServerAnimation extends AbstractPacket {
 
     /**
      * Set animation ID.
-     * @see {@link WrapperPlayServerAnimation.Animations}.
+     *
      * @param value - new value.
+     * @see {@link WrapperPlayServerAnimation.Animations}.
      */
     public void setAnimation(int value) {
         handle.getIntegers().write(1, value);

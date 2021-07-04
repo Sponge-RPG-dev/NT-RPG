@@ -1,6 +1,5 @@
 package cz.neumimto.rpg.spigot.packetwrapper;
 
-import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.Pair;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
@@ -12,7 +11,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -55,7 +53,7 @@ public class PacketHandler {
         metadata.setEntityId(entity.getEntityId());
 
         WrappedDataWatcher dataWatcher = new WrappedDataWatcher(metadata.getEntityMetadata());
-        dataWatcher.setObject(new WrappedDataWatcher.WrappedDataWatcherObject(7, WrappedDataWatcher.Registry.get(Byte.class)), (byte) (0x04 ));
+        dataWatcher.setObject(new WrappedDataWatcher.WrappedDataWatcherObject(7, WrappedDataWatcher.Registry.get(Byte.class)), (byte) (0x04));
         metadata.setEntityMetadata(dataWatcher.getWatchableObjects());
 
         return metadata;
@@ -66,7 +64,7 @@ public class PacketHandler {
         metadata.setEntityId(entity.getEntityId());
 
         WrappedDataWatcher dataWatcher = new WrappedDataWatcher(metadata.getEntityMetadata());
-        dataWatcher.setObject(new WrappedDataWatcher.WrappedDataWatcherObject(7, WrappedDataWatcher.Registry.get(Byte.class)), (byte) (0x01 ));
+        dataWatcher.setObject(new WrappedDataWatcher.WrappedDataWatcherObject(7, WrappedDataWatcher.Registry.get(Byte.class)), (byte) (0x01));
         metadata.setEntityMetadata(dataWatcher.getWatchableObjects());
 
         return metadata;
@@ -86,7 +84,8 @@ public class PacketHandler {
 
         WrapperPlayServerEntityMetadata metadata = new WrapperPlayServerEntityMetadata();
         metadata.setEntityId(spawn.getEntityID());
-        metadata.setEntityMetadata(fillMetadata(metadata));;
+        metadata.setEntityMetadata(fillMetadata(metadata));
+        ;
 
         WrapperPlayServerEntityLook rotation = new WrapperPlayServerEntityLook();
         rotation.setEntityID(spawn.getEntityID());
@@ -109,7 +108,7 @@ public class PacketHandler {
     private List<WrappedWatchableObject> fillMetadata(WrapperPlayServerEntityMetadata metadata) {
 
         WrappedDataWatcher dataWatcher = new WrappedDataWatcher(metadata.getEntityMetadata());
-        dataWatcher.setObject(new WrappedDataWatcher.WrappedDataWatcherObject(0, WrappedDataWatcher.Registry.get(Byte.class)), (byte) (0x20 )); //invis
+        dataWatcher.setObject(new WrappedDataWatcher.WrappedDataWatcherObject(0, WrappedDataWatcher.Registry.get(Byte.class)), (byte) (0x20)); //invis
 
         return dataWatcher.getWatchableObjects();
     }
@@ -152,9 +151,9 @@ public class PacketHandler {
     public static int randomGroundIcicle(Location location, List<AbstractPacket> packets) {
         WrapperPlayServerSpawnEntityLiving spawn = new WrapperPlayServerSpawnEntityLiving();
         spawn.setEntityID(ThreadLocalRandom.current().nextInt(Integer.MAX_VALUE));
-        spawn.setX(location.getX() + ThreadLocalRandom.current().nextInt(100)/100);
+        spawn.setX(location.getX() + ThreadLocalRandom.current().nextInt(100) / 100);
         spawn.setY(location.getY());
-        spawn.setZ(location.getZ() + ThreadLocalRandom.current().nextInt(100)/100);
+        spawn.setZ(location.getZ() + ThreadLocalRandom.current().nextInt(100) / 100);
         spawn.getHandle().getIntegers().write(1, 1);
         packets.add(spawn);
 
@@ -162,7 +161,7 @@ public class PacketHandler {
         metadata.setEntityId(spawn.getEntityID());
 
         WrappedDataWatcher dataWatcher = new WrappedDataWatcher(metadata.getEntityMetadata());
-        dataWatcher.setObject(new WrappedDataWatcher.WrappedDataWatcherObject(0, WrappedDataWatcher.Registry.get(Byte.class)), (byte) (0x20 )); //invis
+        dataWatcher.setObject(new WrappedDataWatcher.WrappedDataWatcherObject(0, WrappedDataWatcher.Registry.get(Byte.class)), (byte) (0x20)); //invis
         dataWatcher.setObject(new WrappedDataWatcher.WrappedDataWatcherObject(14, WrappedDataWatcher.Registry.get(Byte.class)), (byte) (0x01 | 0x08 | 0x10)); //isSmall, noBasePlate, set Marker
 
         metadata.setEntityMetadata(dataWatcher.getWatchableObjects());

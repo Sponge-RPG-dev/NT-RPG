@@ -24,7 +24,7 @@ public abstract class AbstractBeam<T> extends BukkitRunnable {
     private Vector vector;
     private Location initialLoc;
     private IEntity<LivingEntity> iEntity;
-//    private Async lance;
+    //    private Async lance;
     private T data;
     private boolean stop;
 

@@ -2,23 +2,21 @@
  * PacketWrapper - ProtocolLib wrappers for Minecraft packets
  * Copyright (C) dmulloy2 <http://dmulloy2.net>
  * Copyright (C) Kristian S. Strangeland
- *
+ * <p>
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package cz.neumimto.rpg.spigot.packetwrapper;
-
-import cz.neumimto.rpg.spigot.skills.utils.AbstractPacket;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
@@ -26,6 +24,7 @@ import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.EnumWrappers.ItemSlot;
 import com.comphenix.protocol.wrappers.Pair;
+import cz.neumimto.rpg.spigot.skills.utils.AbstractPacket;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
@@ -115,9 +114,12 @@ public class WrapperPlayServerEntityEquipment extends AbstractPacket {
         if (MINOR_VERSION >= 16) {
             final List<Pair<ItemSlot, ItemStack>> slots = handle.getSlotStackPairLists().read(0);
             switch (slots.size()) {
-                case 0: return null;
-                case 1: return slots.get(0).getFirst();
-                default: throw new UnsupportedOperationException("This packet has multiple slots specified");
+                case 0:
+                    return null;
+                case 1:
+                    return slots.get(0).getFirst();
+                default:
+                    throw new UnsupportedOperationException("This packet has multiple slots specified");
             }
         }
 
@@ -142,7 +144,8 @@ public class WrapperPlayServerEntityEquipment extends AbstractPacket {
                     modifier.write(0, slots);
                     return;
                 }
-                default: throw new UnsupportedOperationException("This packet has multiple slots specified");
+                default:
+                    throw new UnsupportedOperationException("This packet has multiple slots specified");
             }
         }
 
@@ -168,7 +171,8 @@ public class WrapperPlayServerEntityEquipment extends AbstractPacket {
                 handle.getIntegers().write(1, 4);
                 break;
             }
-            case OFFHAND: throw new IllegalArgumentException("Offhand is not available on 1.8 or less");
+            case OFFHAND:
+                throw new IllegalArgumentException("Offhand is not available on 1.8 or less");
         }
     }
 
@@ -183,9 +187,12 @@ public class WrapperPlayServerEntityEquipment extends AbstractPacket {
         if (MINOR_VERSION >= 16) {
             final List<Pair<ItemSlot, ItemStack>> slots = handle.getSlotStackPairLists().read(0);
             switch (slots.size()) {
-                case 0: return null;
-                case 1: return slots.get(0).getSecond();
-                default: throw new UnsupportedOperationException("This packet has multiple slots specified");
+                case 0:
+                    return null;
+                case 1:
+                    return slots.get(0).getSecond();
+                default:
+                    throw new UnsupportedOperationException("This packet has multiple slots specified");
             }
         }
 
@@ -212,7 +219,8 @@ public class WrapperPlayServerEntityEquipment extends AbstractPacket {
                     modifier.write(0, slots);
                     return;
                 }
-                default: throw new UnsupportedOperationException("This packet has multiple slots specified");
+                default:
+                    throw new UnsupportedOperationException("This packet has multiple slots specified");
             }
         }
 

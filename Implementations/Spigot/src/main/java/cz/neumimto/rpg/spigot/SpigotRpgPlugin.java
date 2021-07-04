@@ -1,6 +1,9 @@
 package cz.neumimto.rpg.spigot;
 
-import co.aikar.commands.*;
+import co.aikar.commands.ACFBukkitUtil;
+import co.aikar.commands.CommandIssuer;
+import co.aikar.commands.CommandManager;
+import co.aikar.commands.InvalidCommandArgument;
 import com.google.auto.service.AutoService;
 import com.google.inject.Injector;
 import cz.neumimto.FireworkHandler;
@@ -29,6 +32,7 @@ import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
 import cz.neumimto.rpg.spigot.gui.SpellbookListener;
 import cz.neumimto.rpg.spigot.gui.SpigotGui;
 import cz.neumimto.rpg.spigot.gui.SpigotGuiHelper;
+import cz.neumimto.rpg.spigot.gui.SpigotSkillTreeViewModel;
 import cz.neumimto.rpg.spigot.listeners.skillbinds.OnKeyPress;
 import cz.neumimto.rpg.spigot.packetwrapper.PacketHandler;
 import cz.neumimto.rpg.spigot.resources.SpigotGuiceModule;
@@ -43,7 +47,6 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.jetbrains.annotations.NotNull;
-
 
 import java.io.File;
 import java.nio.file.Path;
@@ -66,7 +69,7 @@ public class SpigotRpgPlugin implements NtRpgBootstrap {
     public static final ExecutorService executor = Executors.newFixedThreadPool(5);
 
     //Disable inventories due to nbtapi
-    public static boolean testEnv ;
+    public static boolean testEnv;
     private File dataFolder;
     private static Injector injector;
 
@@ -76,8 +79,8 @@ public class SpigotRpgPlugin implements NtRpgBootstrap {
 
     @NotNull
     public File getDataFolder() {
-       return dataFolder;
-   }
+        return dataFolder;
+    }
 
     @Override
     public void enable(Data data) {
@@ -163,7 +166,7 @@ public class SpigotRpgPlugin implements NtRpgBootstrap {
                 mme.init(injector.getInstance(SpigotEntityService.class));
                 Bukkit.getPluginManager().registerEvents(mme, getInstance());
             }
-            
+
             if (Bukkit.getPluginManager().isPluginEnabled("RPGRegions")) {
                 Log.info("RPGRegions installed - registering experience extension");
                 RpgRegionsClassExpReward.init();
@@ -224,6 +227,7 @@ public class SpigotRpgPlugin implements NtRpgBootstrap {
 
             Rpg.get().registerListeners(injector.getInstance(OnKeyPress.class));
             PacketHandler.init();
+            new SpigotSkillTreeViewModel(); //just to call static block
         });
 
         if (!testEnv) {
@@ -245,7 +249,6 @@ public class SpigotRpgPlugin implements NtRpgBootstrap {
     public static EffectManager getEffectManager() {
         return effectManager;
     }
-
 
 
     public void disable() {

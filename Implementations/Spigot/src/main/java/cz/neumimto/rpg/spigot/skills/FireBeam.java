@@ -81,7 +81,7 @@ public class FireBeam extends ActiveSkill<ISpigotCharacter> {
                 ThreadLocalRandom.current().nextDouble(-0.5, 0.5)
         ));
 
-        player.getLocation().getWorld().playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, SoundCategory.PLAYERS, 1,1 );
+        player.getLocation().getWorld().playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, SoundCategory.PLAYERS, 1, 1);
         SpigotRpgPlugin.getEffectManager().start(lineEffect);
         return SkillResult.OK;
     }

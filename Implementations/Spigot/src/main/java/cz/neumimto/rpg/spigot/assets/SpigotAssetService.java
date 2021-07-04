@@ -60,9 +60,9 @@ public class SpigotAssetService extends AssetService {
         ServiceLoader.load(ConfigurableInventoryGui.class, getClass().getClassLoader())
                 .stream()
                 .map(ServiceLoader.Provider::get)
-                .forEach(a->{
+                .forEach(a -> {
                     String fileName = a.getFileName();
-                    copyToFileIfMissing("gui/"+fileName, root.resolve(fileName));
+                    copyToFileIfMissing("gui/" + fileName, root.resolve(fileName));
                 });
     }
 

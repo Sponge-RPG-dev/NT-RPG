@@ -41,7 +41,7 @@ dependencies {
 
     compileOnly project(':Bootstrap-Common')
 
-   // api 'com.github.stefvanschie.inventoryframework:IF:' + project.if
+    // api 'com.github.stefvanschie.inventoryframework:IF:' + project.if
 
 
     // runtimeOnly fileTree(dir: 'lib', include: '*.jar')
@@ -50,17 +50,17 @@ dependencies {
 
     compileOnly "org.spigotmc:spigot-api:" + project.spigotapi
 
-    compileOnly ("org.spigotmc:plugin-annotations:" + project.pluginannotations){
+    compileOnly("org.spigotmc:plugin-annotations:" + project.pluginannotations) {
         exclude group: "org.bukkit", module: "bukkit"
     }
 
-    compileOnly ("com.comphenix.protocol:ProtocolLib:" + project.protocollib) {
+    compileOnly("com.comphenix.protocol:ProtocolLib:" + project.protocollib) {
         exclude group: "com.comphenix.executors", module: "BukkitExecutors"
     }
 
     //runtimeOnly 'com.github.dmulloy2:ProtocolLib:master'
-    compileOnly 'com.github.Slikey:EffectLib:' + project.effectlib
-  //  compileOnly 'placeholderapi.me.clip:placeholderapi:' + project.papi
+    api 'com.elmakers.mine.bukkit:EffectLib:' + project.effectlib
+    //  compileOnly 'placeholderapi.me.clip:placeholderapi:' + project.papi
     compileOnly 'com.gmail.filoghost.holographicdisplays:holographicdisplays-api:' + project.hdisplays
     compileOnly "co.aikar:acf-paper:" + project.acf
 
@@ -75,7 +75,7 @@ dependencies {
 
     compileOnly 'com.gitlab.SamB440:RPGRegions-2:' + project.rpgregions
 
-    testImplementation ('com.github.NeumimTo:MockBukkit:e92bb7bbd1') {
+    testImplementation('com.github.NeumimTo:MockBukkit:e92bb7bbd1') {
         exclude group: "org.spigotmc", module: "spigot-api"
         exclude group: "org.jetbrains", module: "annotations"
     }
@@ -86,7 +86,7 @@ shadowJar {
     archiveFileName = "NT-RPG-Spigot-16.x-${p_spigot_version}.jar"
 
     relocate 'com.electronwill', 'rpgshaded.com.electronwill'
-  //todo  relocate 'com.github.stefvanschie', 'rpgshaded.com.github.stefvanschie'
+    //todo  relocate 'com.github.stefvanschie', 'rpgshaded.com.github.stefvanschie'
     relocate 'com.google.inject', 'rpgshaded.com.google.inject'
     relocate 'com.squareup.javapoet', 'rpgshaded.com.squareup.javapoet'
     relocate 'com.typesafe.config', 'rpgshaded.com.typesafe.config'
@@ -94,7 +94,7 @@ shadowJar {
     relocate 'net.bytebuddy', 'rpgshaded.net.bytebuddy'
     relocate 'org.aopalliance', 'rpgshaded.org.aopalliance'
     relocate 'org.codehaus', 'rpgshaded.org.codehaus'
-
+    relocate 'de.slikey.effectlib', 'rpgshaded.de.slikey.effectlib'
     relocate 'de.tr7zw', 'rpgshaded.de.tr7zw'
 
 

@@ -7,7 +7,6 @@ import cz.neumimto.rpg.api.entity.CommonProperties;
 import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.skills.ISkill;
-import cz.neumimto.rpg.spigot.bridges.mmoitems.MMOItemWrapperFactory;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
 import cz.neumimto.rpg.spigot.events.character.SpigotCharacterGainedLevelEvent;

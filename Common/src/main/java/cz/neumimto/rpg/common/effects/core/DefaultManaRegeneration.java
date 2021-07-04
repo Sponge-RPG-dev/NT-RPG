@@ -1,5 +1,3 @@
-
-
 package cz.neumimto.rpg.common.effects.core;
 
 import cz.neumimto.rpg.api.Rpg;

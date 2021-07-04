@@ -1,8 +1,10 @@
 package cz.neumimto.rpg.spigot.commands;
 
 import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.*;
+import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Optional;
+import co.aikar.commands.annotation.Private;
+import co.aikar.commands.annotation.Subcommand;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
@@ -22,7 +24,9 @@ import org.bukkit.inventory.ItemStack;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.*;
+import java.util.Map;
+import java.util.Stack;
+import java.util.UUID;
 
 @Singleton
 @CommandAlias("char|c")
@@ -72,7 +76,7 @@ public class SpigotCharacterCommands extends BaseCommand {
         ISpigotCharacter character = characterService.getCharacter(executor);
         int i = 27;
 
-        String[][] persisted = new String[character.getSpellbook().length -1][character.getSpellbook()[0].length -1];
+        String[][] persisted = new String[character.getSpellbook().length - 1][character.getSpellbook()[0].length - 1];
         for (int w = 0; w < character.getSpellbook().length; w++) {
 
             ItemStack[] page = character.getSpellbook()[w];
@@ -118,7 +122,7 @@ public class SpigotCharacterCommands extends BaseCommand {
             list.pop();
             if (!list.empty()) {
                 Bukkit.getScheduler().scheduleSyncDelayedTask(SpigotRpgPlugin.getInstance(),
-                        () ->  Bukkit.dispatchCommand(executor, list.pop()),
+                        () -> Bukkit.dispatchCommand(executor, list.pop()),
                         1L);
             }
         }

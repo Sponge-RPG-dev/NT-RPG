@@ -159,12 +159,12 @@ public class SpellbookListener implements IRpgListener {
 
         private Map<String, PlayerSkillContext> sorted;
         private Map<String, ItemStack> icons;
+
         public State(Map<String, PlayerSkillContext> sorted) {
             icons = new HashMap<>();
             this.sorted = sorted;
         }
     }
-
 
 
     @EventHandler

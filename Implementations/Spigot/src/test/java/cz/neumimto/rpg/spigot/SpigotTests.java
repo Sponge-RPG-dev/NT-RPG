@@ -13,16 +13,18 @@ import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.api.persistance.model.CharacterClass;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillData;
-import cz.neumimto.rpg.api.skills.SkillSettings;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.common.entity.players.PreloadCharacter;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import org.bukkit.Bukkit;
-import org.bukkit.permissions.Permission;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
-import java.util.concurrent.*;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class SpigotTests {
 
@@ -35,8 +37,7 @@ public class SpigotTests {
     static Executor executor;
 
     @BeforeAll
-    public static void setUp()
-    {
+    public static void setUp() {
         server = MockBukkit.mock();
         plugin = (SpigotRpgPlugin) MockBukkit.load(SpigotRpgPlugin.class);
         classService = Rpg.get().getClassService();
@@ -107,7 +108,7 @@ public class SpigotTests {
 
         // check level changes
         CharacterClass characterClass = playerClass.getCharacterClass();
-        Assertions.assertSame(characterClass.getSkillPoints(), warriorClass.getSkillpointsPerLevel() , "Player receive a skill-point");
+        Assertions.assertSame(characterClass.getSkillPoints(), warriorClass.getSkillpointsPerLevel(), "Player receive a skill-point");
         Assertions.assertSame(character.getAttributePoints(),
                 warriorClass.getAttributepointsPerLevel() + pluginConfig.ATTRIBUTEPOINTS_ON_START, "Player receive an attribute-point");
 
@@ -149,8 +150,7 @@ public class SpigotTests {
     }
 
     @AfterAll
-    public static void tearDown()
-    {
+    public static void tearDown() {
         MockBukkit.unmock();
     }
 }

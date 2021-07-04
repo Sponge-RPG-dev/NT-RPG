@@ -18,7 +18,6 @@ import cz.neumimto.rpg.spigot.packetwrapper.PacketHandler;
 import cz.neumimto.rpg.spigot.skills.utils.AbstractPacket;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.EquipmentSlot;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

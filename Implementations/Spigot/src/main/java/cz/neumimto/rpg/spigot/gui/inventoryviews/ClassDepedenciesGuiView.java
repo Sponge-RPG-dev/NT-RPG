@@ -5,21 +5,16 @@ import com.google.auto.service.AutoService;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.api.entity.players.classes.DependencyGraph;
-import cz.neumimto.rpg.api.gui.Gui;
-import cz.neumimto.rpg.api.items.ClassItem;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.spigot.gui.elements.GuiCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.inventory.ItemStack;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static cz.neumimto.rpg.spigot.gui.inventoryviews.WeaponGuiView.toItemStack;
 
 @Singleton
 @AutoService(ConfigurableInventoryGui.class)

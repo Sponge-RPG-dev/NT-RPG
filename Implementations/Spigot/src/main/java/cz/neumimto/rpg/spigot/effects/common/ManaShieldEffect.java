@@ -1,6 +1,5 @@
 package cz.neumimto.rpg.spigot.effects.common;
 
-import com.google.common.collect.ImmutableSet;
 import cz.neumimto.rpg.api.effects.*;
 import cz.neumimto.rpg.api.entity.IEffectConsumer;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
@@ -26,6 +25,7 @@ public class ManaShieldEffect extends EffectBase<Double> implements IEffectConta
 
     public static Vector[] circle;
     public static Particle.DustOptions dustOptions;
+
     static {
         circle = VectorUtils.circle(new Vector[30], 2);
         dustOptions = new Particle.DustOptions(Color.fromRGB(66, 120, 245), 1);
@@ -45,7 +45,7 @@ public class ManaShieldEffect extends EffectBase<Double> implements IEffectConta
 
     @Override
     public void onTick(IEffect self) {
-        tickCount ++;
+        tickCount++;
         display(tickCount);
     }
 

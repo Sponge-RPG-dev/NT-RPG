@@ -33,7 +33,7 @@ public class CharacterMana implements IReservable {
 
     @Override
     public void setMaxValue(double f) {
-        character.setProperty(CommonProperties.max_mana,  f);
+        character.setProperty(CommonProperties.max_mana, f);
     }
 
     @Override

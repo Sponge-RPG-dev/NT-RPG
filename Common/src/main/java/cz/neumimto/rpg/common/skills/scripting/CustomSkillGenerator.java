@@ -21,7 +21,6 @@ import cz.neumimto.rpg.api.utils.DebugLevel;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import org.codehaus.janino.SimpleCompiler;
 
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.lang.annotation.Annotation;
@@ -56,7 +55,7 @@ public abstract class CustomSkillGenerator {
                 .addAnnotation(AnnotationSpec.builder(ResourceLoader.Skill.class).addMember("value", "$S", scriptSkillModel.getId()).build());
 
         if (scriptSkillModel.getSuperType() == null) {
-                    type.superclass(ParameterizedTypeName.get(ClassName.get(ActiveSkill.class),  ClassName.get(characterClassImpl())))
+            type.superclass(ParameterizedTypeName.get(ClassName.get(ActiveSkill.class), ClassName.get(characterClassImpl())))
                     .addModifiers(PUBLIC);
 
             type.addMethod(MethodSpec.methodBuilder("cast").addModifiers(PUBLIC)
@@ -98,7 +97,7 @@ public abstract class CustomSkillGenerator {
 
             Class<? extends ISkill> x = (Class<? extends ISkill>) sc.getClassLoader().loadClass(packagee + "." + className);
             return x;
-        } catch (Exception  e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -111,8 +110,8 @@ public abstract class CustomSkillGenerator {
         }
         if (scriptSkillModel.getSkillTypes() != null) {
             for (String skillType : scriptSkillModel.getSkillTypes()) {
-                Stream.of(SkillType.values()).filter(a->a.getId().equalsIgnoreCase(skillType)).findFirst()
-                .ifPresent(a-> builder.addStatement("addSkillType($T.$L)",SkillType.class, a.name().toUpperCase()));
+                Stream.of(SkillType.values()).filter(a -> a.getId().equalsIgnoreCase(skillType)).findFirst()
+                        .ifPresent(a -> builder.addStatement("addSkillType($T.$L)", SkillType.class, a.name().toUpperCase()));
 
             }
         }
@@ -126,6 +125,7 @@ public abstract class CustomSkillGenerator {
         final Method relevantMethod;
         final Class returnType;
         final String methodName;
+
         private MethodHandler(Class mechanic, String fieldName, Method relevantMethod, Class returnType, String methodName) {
             this.mechanic = mechanic;
             this.fieldName = fieldName;
@@ -150,6 +150,7 @@ public abstract class CustomSkillGenerator {
         }
 
     }
+
     private CodeBlock parseModel(ScriptSkillModel scriptSkillModel) {
         CodeBlock.Builder builder = CodeBlock.builder()
                 .addStatement("$T caster = ($T) caster0", characterClassImpl(), characterClassImpl()) //janino cant handle generics
@@ -313,7 +314,8 @@ public abstract class CustomSkillGenerator {
 
         try {
             parseLocalVarsAndFields(config, parsedScript);
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
 
         if (config.contains("Mechanics")) {
             List<Config> list = config.get("Mechanics");
@@ -480,7 +482,7 @@ public abstract class CustomSkillGenerator {
         if (type == null) {
             type = config.get("Target-Selector");
         }
-        if (type!=null && type.startsWith("#")) {
+        if (type != null && type.startsWith("#")) {
             return null;
         }
 
@@ -488,13 +490,14 @@ public abstract class CustomSkillGenerator {
     }
 
     protected static class MechanicParams {
-        public  Map<String, Type> methodArgs = new LinkedHashMap<>();
-        public  List<String> consumed = new ArrayList<>();
+        public Map<String, Type> methodArgs = new LinkedHashMap<>();
+        public List<String> consumed = new ArrayList<>();
 
         public boolean available(String l) {
             return !consumed.contains(l);
         }
     }
+
     protected MechanicParams filterMechanicParams(Object mechanic, String str) {
         Pattern compile = Pattern.compile("(([a-zA-Y]*)=([a-zA-Y]*)?((\\([^)]+\\))|'(.*?)')|([a-zA-Z=.]*))");
         Matcher matcher = compile.matcher(str);

@@ -20,7 +20,6 @@ import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.permissions.PermissionService;
 import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.common.AbstractRpgGuiceModule;
-import cz.neumimto.rpg.common.ResourceManagerImpl;
 import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.bytecode.ClassGenerator;
 import cz.neumimto.rpg.common.entity.configuration.MobSettingsDao;

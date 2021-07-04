@@ -3,7 +3,6 @@ package cz.neumimto.rpg.common.assets;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public abstract class AssetService {
 
@@ -41,6 +40,7 @@ public abstract class AssetService {
         copyToFileIfMissing("defaults/classes/races/Elf.conf", path.resolve("races/Rogue.conf"));
         copyToFileIfMissing("defaults/classes/races/Human.conf", path.resolve("races/Human.conf"));
     }
+
     private Path tempDirectory;
 
     public Path getTempWorkingDir() {

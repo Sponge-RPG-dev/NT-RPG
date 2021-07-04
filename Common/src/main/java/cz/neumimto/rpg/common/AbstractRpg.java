@@ -257,10 +257,10 @@ public abstract class AbstractRpg implements RpgApi {
 
         try {
             for (RpgAddon addon : rpgAddons) {
-                 bindings.putAll(addon.getBindings());
-                 Map<String, Object> map = new HashMap<>();
-                 map.put("WORKINGDIR", workingDirPath.toAbsolutePath().toString());
-                 providers = addon.getProviders(map); //TODO something definitely wrong with this
+                bindings.putAll(addon.getBindings());
+                Map<String, Object> map = new HashMap<>();
+                map.put("WORKINGDIR", workingDirPath.toAbsolutePath().toString());
+                providers = addon.getProviders(map); //TODO something definitely wrong with this
             }
             injector = Guice.createInjector(fnInjProv.apply(bindings, providers));
         } catch (Exception e) {

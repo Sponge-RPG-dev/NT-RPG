@@ -4,7 +4,6 @@ import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.google.auto.service.AutoService;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.configuration.AttributeConfig;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.localization.Arg;
 import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
@@ -134,7 +133,7 @@ public class CharacterAttributesGuiView extends ConfigurableInventoryGui {
             List<String> lore = itemLoreFactory.toLore(aConfig, attributeValue + 1, transientVal);
             itemMeta.setLore(lore);
             event.getClickedInventory().setItem(slot, item);
-            attributesTransaction.compute(aConfig.getId(), (s, integer) -> integer == null ? 1 : integer +1);
+            attributesTransaction.compute(aConfig.getId(), (s, integer) -> integer == null ? 1 : integer + 1);
         } else if (click.isRightClick() && (baseValue == null || baseValue > 1)
                 && (attributesTransaction.get(aConfig.getId()) == null || attributesTransaction.get(aConfig.getId()) > 0)) {
             List<String> lore = itemLoreFactory.toLore(aConfig, attributeValue - 1, transientVal);

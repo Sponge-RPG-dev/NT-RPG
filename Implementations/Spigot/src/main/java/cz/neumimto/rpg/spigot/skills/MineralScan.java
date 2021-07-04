@@ -5,7 +5,6 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.wrappers.WrappedWatchableObject;
 import com.google.auto.service.AutoService;
 import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.skills.ISkill;
@@ -23,8 +22,6 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 import javax.inject.Singleton;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 

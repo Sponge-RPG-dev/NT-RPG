@@ -2,7 +2,6 @@ package cz.neumimto.rpg.spigot.skills;
 
 import com.google.auto.service.AutoService;
 import cz.neumimto.rpg.api.ResourceLoader;
-import cz.neumimto.rpg.api.damage.DamageService;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillNodes;

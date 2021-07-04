@@ -1,8 +1,5 @@
 package cz.neumimto.rpg.spigot.listeners.skillbinds;
 
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.gui.Gui;
-import cz.neumimto.rpg.api.localization.LocalizationKeys;
 import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.common.commands.SkillsCommandFacade;
@@ -10,7 +7,6 @@ import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
 import cz.neumimto.rpg.spigot.inventory.SpigotInventoryService;
 import de.tr7zw.nbtapi.NBTItem;
-import io.lumine.xikage.mythicmobs.skills.mechanics.SendToastMechanic;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

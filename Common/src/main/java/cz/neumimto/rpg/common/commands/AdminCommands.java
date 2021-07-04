@@ -120,7 +120,7 @@ public class AdminCommands extends BaseCommand {
 
     @Subcommand("skill")
     @CommandCompletion("@skilltree @nothing @skillskctx")
-    public void adminExecuteSkillCommand(IActiveCharacter character, SkillTree tree, int level,  ISkill skill) {
+    public void adminExecuteSkillCommand(IActiveCharacter character, SkillTree tree, int level, ISkill skill) {
         long e = System.nanoTime();
         commandExecuteSkill(character, tree, skill, level);
         if (Rpg.get().getPluginConfig().DEBUG.isBalance()) {
@@ -130,7 +130,7 @@ public class AdminCommands extends BaseCommand {
 
     @Subcommand("cast-skill-as")
     @CommandCompletion("@skilltree @nothing @skillskctx")
-    public void adminExecuteSkillCommandAs(OnlineOtherPlayer executor, SkillTree tree, int level,  ISkill skill) {
+    public void adminExecuteSkillCommandAs(OnlineOtherPlayer executor, SkillTree tree, int level, ISkill skill) {
         commandExecuteSkill(executor.character, tree, skill, level);
     }
 
@@ -424,7 +424,7 @@ public class AdminCommands extends BaseCommand {
             if (result.isOk()) {
                 characterService.putInSaveQueue(character.getCharacterBase());
             } else {
-                Log.warn("Character " + character.getUUID() + " could not gain unique sp ClassType: " + classType + " " +result.getMessage());
+                Log.warn("Character " + character.getUUID() + " could not gain unique sp ClassType: " + classType + " " + result.getMessage());
             }
         }
     }

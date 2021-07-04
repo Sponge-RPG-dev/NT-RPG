@@ -18,13 +18,12 @@ package cz.neumimto.rpg.spigot.packetwrapper;
  *  02111-1307 USA
  */
 
-import cz.neumimto.rpg.spigot.skills.utils.AbstractPacket;
-import org.bukkit.World;
-import org.bukkit.entity.Entity;
-
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
+import cz.neumimto.rpg.spigot.skills.utils.AbstractPacket;
+import org.bukkit.World;
+import org.bukkit.entity.Entity;
 
 public class WrapperPlayServerEntityLook extends AbstractPacket {
     public static final PacketType TYPE = PacketType.Play.Server.ENTITY_LOOK;

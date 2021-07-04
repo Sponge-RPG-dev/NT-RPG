@@ -4,18 +4,18 @@ import com.google.auto.service.AutoService;
 import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
-import cz.neumimto.rpg.api.skills.SkillNodes;
 import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
-import cz.neumimto.rpg.spigot.skills.particles.StaticCircularBeamEffect;
 import de.slikey.effectlib.EffectType;
 import de.slikey.effectlib.effect.LineEffect;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityDamageEvent;
 
 import javax.inject.Singleton;
 
@@ -56,13 +56,13 @@ public class FlameDash extends TargetedBlockSkill {
 */
         Bukkit.getScheduler().scheduleSyncDelayedTask(SpigotRpgPlugin.getInstance(),
                 () -> {
-                    player.teleport(block.getLocation().add(0,1,0));
+                    player.teleport(block.getLocation().add(0, 1, 0));
 
                     player.getWorld().playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 0.75f, 0.75f);
                     player.getWorld().spawnParticle(Particle.EXPLOSION_NORMAL, player.getLocation(), 2);
                     player.getWorld().spawnParticle(Particle.EXPLOSION_HUGE, player.getLocation(), 1);
 
-                  //  staticCircularBeamEffect.cancel();
+                    //  staticCircularBeamEffect.cancel();
 
                     LineEffect lineEffect = new LineEffect(SpigotRpgPlugin.getEffectManager());
                     lineEffect.particle = Particle.LAVA;

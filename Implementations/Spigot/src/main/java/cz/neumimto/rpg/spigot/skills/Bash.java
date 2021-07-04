@@ -18,7 +18,6 @@ import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
@@ -62,7 +61,7 @@ public class Bash extends TargetedEntitySkill {
 
         Location location = entity.getLocation();
         location.getWorld().playSound(location, Sound.ENTITY_PLAYER_ATTACK_KNOCKBACK, 1, 1);
-        location.getWorld().spawnParticle(Particle.REDSTONE, location.add(0,1,0), 8);
+        location.getWorld().spawnParticle(Particle.REDSTONE, location.add(0, 1, 0), 8);
 
         double knockback = skillContext.getDoubleNodeValue("knockback");
         if (knockback > 0) {
@@ -90,13 +89,14 @@ public class Bash extends TargetedEntitySkill {
     private void makeTrajectory(LivingEntity entity) {
         new BukkitRunnable() {
             private int i = 0;
+
             @Override
             public void run() {
                 if (entity.isDead() || i == 10) {
                     cancel();
                 } else {
-                    entity.getWorld().spawnParticle(Particle.SPELL_MOB, entity.getLocation().add(0,.5,0),
-                            3,238, 63, 55);
+                    entity.getWorld().spawnParticle(Particle.SPELL_MOB, entity.getLocation().add(0, .5, 0),
+                            3, 238, 63, 55);
                     i++;
                 }
             }

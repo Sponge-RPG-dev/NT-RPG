@@ -17,12 +17,12 @@ package cz.neumimto.rpg.spigot.packetwrapper;
  *  02111-1307 USA
  */
 
-import java.util.List;
-
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.google.common.primitives.Ints;
 import cz.neumimto.rpg.spigot.skills.utils.AbstractPacket;
+
+import java.util.List;
 
 public class WrapperPlayServerEntityDestroy extends AbstractPacket {
     public static final PacketType TYPE = PacketType.Play.Server.ENTITY_DESTROY;
@@ -38,6 +38,7 @@ public class WrapperPlayServerEntityDestroy extends AbstractPacket {
 
     /**
      * Retrieve the IDs of the entities that will be destroyed.
+     *
      * @return The current entities.
      */
     public List<Integer> getEntities() {
@@ -46,6 +47,7 @@ public class WrapperPlayServerEntityDestroy extends AbstractPacket {
 
     /**
      * Set the entities that will be destroyed.
+     *
      * @param value - new value.
      */
     public void setEntities(int[] entities) {
@@ -54,6 +56,7 @@ public class WrapperPlayServerEntityDestroy extends AbstractPacket {
 
     /**
      * Set the entities that will be destroyed.
+     *
      * @param value - new value.
      */
     public void setEntities(List<Integer> entities) {

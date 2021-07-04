@@ -14,13 +14,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 import javax.inject.Singleton;
-import java.util.ArrayList;
-import java.util.List;
 
 @Singleton
 @AutoService(ISkill.class)
 @ResourceLoader.Skill("ntrpg:icewall")
-public class IceWall extends TargetedBlockSkill{
+public class IceWall extends TargetedBlockSkill {
 
     @Override
     public void init() {
@@ -38,13 +36,13 @@ public class IceWall extends TargetedBlockSkill{
     protected SkillResult castOn(Block block, ISpigotCharacter character, PlayerSkillContext skillContext) {
         Player player = character.getPlayer();
         Location eyeLocation = player.getEyeLocation();
-        Location centerLocation = block.getLocation().clone().add(new Vector(0,1,0));
+        Location centerLocation = block.getLocation().clone().add(new Vector(0, 1, 0));
 
         Location rotated = eyeLocation.clone();
         rotated.setPitch(0);
         rotated.setYaw(eyeLocation.getYaw() - 90);
         Vector rotation = rotated.getDirection();
-       // Location blockLocation = center.clone().add(rotation).subtract(0, amount / 2, 0);
+        // Location blockLocation = center.clone().add(rotation).subtract(0, amount / 2, 0);
         return SkillResult.OK;
     }
 

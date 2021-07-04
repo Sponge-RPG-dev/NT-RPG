@@ -3,7 +3,6 @@ package cz.neumimto.rpg.spigot.gui;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.configuration.AttributeConfig;
 import cz.neumimto.rpg.api.configuration.ItemString;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
@@ -70,21 +69,21 @@ public class SpigotGuiHelper {
 
         attributButtonSlots = new int[]{10, 11, 12, 13, 14, 15, 16, 36, 37, 38, 39, 40, 41, 42, 43, 45};
 
-        damageTypeToItemStack.put(ENTITY_ATTACK, unclickableIcon(Material.STONE_SWORD, 354,"ENTITY_ATTACK"));
-        damageTypeToItemStack.put(ENTITY_SWEEP_ATTACK, unclickableIcon(Material.STONE_SWORD, 354,"ENTITY_SWEEP_ATTACK"));
-        damageTypeToItemStack.put(CONTACT, unclickableIcon(Material.CACTUS, 354,"CONTACT"));
-        damageTypeToItemStack.put(CUSTOM, unclickableIcon(Material.BARRIER, 354,"CUSTOM"));
-        damageTypeToItemStack.put(DROWNING, unclickableIcon(Material.WATER, 354,"DROWNING"));
-        damageTypeToItemStack.put(ENTITY_EXPLOSION, unclickableIcon(Material.TNT, 354,"ENTITY_EXPLOSION"));
-        damageTypeToItemStack.put(BLOCK_EXPLOSION, unclickableIcon(Material.TNT, 354,"BLOCK_EXPLOSION"));
-        damageTypeToItemStack.put(FALL, unclickableIcon(Material.IRON_BOOTS, 354,"FALL"));
-        damageTypeToItemStack.put(FIRE, unclickableIcon(Material.BLAZE_POWDER, 354,"FIRE"));
-        damageTypeToItemStack.put(STARVATION, unclickableIcon(Material.ROTTEN_FLESH, 354,"STARVATION"));
-        damageTypeToItemStack.put(LAVA, unclickableIcon(Material.LAVA, 354,"LAVA"));
-        damageTypeToItemStack.put(PROJECTILE, unclickableIcon(Material.TIPPED_ARROW, 354,"PROJECTILE"));
-        damageTypeToItemStack.put(VOID, unclickableIcon(Material.NETHER_PORTAL, 354,"VOID"));
-        damageTypeToItemStack.put(MAGIC, unclickableIcon(Material.ENCHANTED_BOOK, 354,"MAGIC"));
-        damageTypeToItemStack.put(LIGHTNING, unclickableIcon(Material.NETHER_STAR, 354,"LIGHTNING"));
+        damageTypeToItemStack.put(ENTITY_ATTACK, unclickableIcon(Material.STONE_SWORD, 354, "ENTITY_ATTACK"));
+        damageTypeToItemStack.put(ENTITY_SWEEP_ATTACK, unclickableIcon(Material.STONE_SWORD, 354, "ENTITY_SWEEP_ATTACK"));
+        damageTypeToItemStack.put(CONTACT, unclickableIcon(Material.CACTUS, 354, "CONTACT"));
+        damageTypeToItemStack.put(CUSTOM, unclickableIcon(Material.BARRIER, 354, "CUSTOM"));
+        damageTypeToItemStack.put(DROWNING, unclickableIcon(Material.WATER, 354, "DROWNING"));
+        damageTypeToItemStack.put(ENTITY_EXPLOSION, unclickableIcon(Material.TNT, 354, "ENTITY_EXPLOSION"));
+        damageTypeToItemStack.put(BLOCK_EXPLOSION, unclickableIcon(Material.TNT, 354, "BLOCK_EXPLOSION"));
+        damageTypeToItemStack.put(FALL, unclickableIcon(Material.IRON_BOOTS, 354, "FALL"));
+        damageTypeToItemStack.put(FIRE, unclickableIcon(Material.BLAZE_POWDER, 354, "FIRE"));
+        damageTypeToItemStack.put(STARVATION, unclickableIcon(Material.ROTTEN_FLESH, 354, "STARVATION"));
+        damageTypeToItemStack.put(LAVA, unclickableIcon(Material.LAVA, 354, "LAVA"));
+        damageTypeToItemStack.put(PROJECTILE, unclickableIcon(Material.TIPPED_ARROW, 354, "PROJECTILE"));
+        damageTypeToItemStack.put(VOID, unclickableIcon(Material.NETHER_PORTAL, 354, "VOID"));
+        damageTypeToItemStack.put(MAGIC, unclickableIcon(Material.ENCHANTED_BOOK, 354, "MAGIC"));
+        damageTypeToItemStack.put(LIGHTNING, unclickableIcon(Material.NETHER_STAR, 354, "LIGHTNING"));
 
         CACHED_MENU_TEMPLATES.clear();
         CACHED_MENUS.clear();
@@ -497,12 +496,12 @@ public class SpigotGuiHelper {
 
         Player player = character.getPlayer();
 
-        ItemStack backButton = item(Material.PAPER, back,12345);
+        ItemStack backButton = item(Material.PAPER, back, 12345);
         SpigotSkillTreeViewModel model = character.getLastTimeInvokedSkillTreeView();
         background.addItem(new GuiCommand(
                 backButton,
                 "skilltree view " + model.getViewedClass().getName(),
-                player),0,0);
+                player), 0, 0);
 
         if (skillData instanceof SkillPathData) {
 
@@ -511,7 +510,7 @@ public class SpigotGuiHelper {
             ItemStack of = new ItemStack(Material.PAPER);
             ItemMeta itemMeta = of.getItemMeta();
             itemMeta.setDisplayName("Tier " + data.getTier());
-            background.addItem(new Icon(of), 1,1);
+            background.addItem(new Icon(of), 1, 1);
 
             SkillService skillService = Rpg.get().getSkillService();
 
@@ -526,7 +525,7 @@ public class SpigotGuiHelper {
                             + String.format("%+d", entry.getValue()) + " | " + entry.getKey());
                     itemStack.setItemMeta(itemMeta1);
 
-                    background.addItem(new Icon(itemStack),x,y);
+                    background.addItem(new Icon(itemStack), x, y);
                     x++;
                     if (x % 8 == 0) {
                         x = 1;
@@ -538,7 +537,7 @@ public class SpigotGuiHelper {
         } else {
             String type = skillData.getSkill().getDamageType();
             if (type != null) {
-                background.addItem(new Icon(damageTypeToItemStack(EntityDamageEvent.DamageCause.valueOf(type))),1,1);
+                background.addItem(new Icon(damageTypeToItemStack(EntityDamageEvent.DamageCause.valueOf(type))), 1, 1);
             }
 
             int x = 1;
@@ -546,7 +545,7 @@ public class SpigotGuiHelper {
 
             List<ItemStack> itemStacks = configurationToItemStacks(skillData);
             for (ItemStack itemStack : itemStacks) {
-                background.addItem(new Icon(itemStack),x,y);
+                background.addItem(new Icon(itemStack), x, y);
                 x++;
                 if (x % 8 == 0) {
                     x = 1;

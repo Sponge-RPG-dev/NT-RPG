@@ -11,12 +11,12 @@ import java.util.function.Consumer;
 public class GraalInstaller {
 
 
-//https://medium.com/graalvm/graalvms-javascript-engine-on-jdk11-with-high-performance-3e79f968a819
+    //https://medium.com/graalvm/graalvms-javascript-engine-on-jdk11-with-high-performance-3e79f968a819
     public static void downloadTo(Path root, Consumer<String> callback) {
         var r = (Runnable) () -> {
             String version = "21.1.0";
-            String[][] files = new String[][] {
-                    {"https://repo1.maven.org/maven2/org/graalvm/sdk/graal-sdk/%s/graal-sdk-%s.jar","graal-sdk-%s.jar"},
+            String[][] files = new String[][]{
+                    {"https://repo1.maven.org/maven2/org/graalvm/sdk/graal-sdk/%s/graal-sdk-%s.jar", "graal-sdk-%s.jar"},
                     {"https://repo1.maven.org/maven2/org/graalvm/js/js/%s/js-%s.jar", "graal-js-%s.jar"},
                     {"https://repo1.maven.org/maven2/org/graalvm/truffle/truffle-api/%s/truffle-api-%s.jar", "graal-truffle-api-%s.jar"},
                     {"https://repo1.maven.org/maven2/org/graalvm/regex/regex/%s/regex-%s.jar", "graal-regex-%s.jar"},
@@ -24,7 +24,8 @@ public class GraalInstaller {
             };
 
             try {
-                for (String[] file : files) {;
+                for (String[] file : files) {
+                    ;
                     String download = file[0].replaceAll("%s", version);
                     Path target = root.resolve(file[1].replaceAll("%s", version));
                     callback.accept("Downloading " + download + " to " + target);
