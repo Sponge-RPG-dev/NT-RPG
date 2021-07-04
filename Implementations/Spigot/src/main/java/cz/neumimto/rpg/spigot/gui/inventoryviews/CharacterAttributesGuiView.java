@@ -100,7 +100,7 @@ public class CharacterAttributesGuiView extends ConfigurableInventoryGui {
                     CharacterAttributesGuiView::handleEvent);
             attributes.add(item);
         }
-
+        map.put("Attributes", attributes);
         return map;
     }
 
@@ -124,27 +124,25 @@ public class CharacterAttributesGuiView extends ConfigurableInventoryGui {
         AttributeConfig aConfig = Rpg.get().getPropertyService().getAttributeById(attrId).get();
         Integer attributeValue = character.getAttributeValue(aConfig);
 
-        if (click.isLeftClick() && attributePoints > 0) {
-            Map<String, Integer> transientAttributes = character.getTransientAttributes();
-            int transientVal = transientAttributes.get(aConfig.getId());
+        Map<String, Integer> transientAttributes = character.getTransientAttributes();
+        int transientVal = transientAttributes.get(aConfig.getId());
+
+        ItemStack item = event.getClickedInventory().getItem(slot);
+        ItemMeta itemMeta = item.getItemMeta();
+        Integer baseValue = character.getCharacterBase().getAttributes().get(aConfig.getId());
+        if (click.isLeftClick() && attributePoints > 0 && (baseValue == null || baseValue < aConfig.getMaxValue())) {
             List<String> lore = itemLoreFactory.toLore(aConfig, attributeValue + 1, transientVal);
-            ItemStack item = event.getClickedInventory().getItem(slot);
-            ItemMeta itemMeta = item.getItemMeta();
             itemMeta.setLore(lore);
-            item.setItemMeta(itemMeta);
             event.getClickedInventory().setItem(slot, item);
             attributesTransaction.compute(aConfig.getId(), (s, integer) -> integer == null ? 1 : integer +1);
-        } else if (click.isRightClick() && attributeValue > 1) {
-            Map<String, Integer> transientAttributes = character.getTransientAttributes();
-            int transientVal = transientAttributes.get(aConfig.getId());
+        } else if (click.isRightClick() && (baseValue == null || baseValue > 1)
+                && (attributesTransaction.get(aConfig.getId()) == null || attributesTransaction.get(aConfig.getId()) > 0)) {
             List<String> lore = itemLoreFactory.toLore(aConfig, attributeValue - 1, transientVal);
-            ItemStack item = event.getClickedInventory().getItem(slot);
-            ItemMeta itemMeta = item.getItemMeta();
             itemMeta.setLore(lore);
-            item.setItemMeta(itemMeta);
-            event.getClickedInventory().setItem(slot, item);
             attributesTransaction.compute(aConfig.getId(), (s, integer) -> integer == null ? 0 : integer - 1);
         }
+        item.setItemMeta(itemMeta);
+        event.getClickedInventory().setItem(slot, item);
         event.setCancelled(true);
         event.setResult(Event.Result.DENY);
     }
@@ -194,6 +192,8 @@ public class CharacterAttributesGuiView extends ConfigurableInventoryGui {
             String line = Rpg.get().getLocalizationService().translate(LocalizationKeys.ATTRIBUTE_POINTS, Arg.arg("points", points));
 
             lore.add(line);
+            itemMeta.setLore(lore);
+            item.setItemMeta(itemMeta);
         }
     }
 }
