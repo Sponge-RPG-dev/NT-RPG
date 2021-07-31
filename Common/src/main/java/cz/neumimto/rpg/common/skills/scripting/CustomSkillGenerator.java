@@ -19,6 +19,36 @@ import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.api.utils.DebugLevel;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
+import net.bytebuddy.ByteBuddy;
+import net.bytebuddy.asm.AsmVisitorWrapper;
+import net.bytebuddy.description.ModifierReviewable;
+import net.bytebuddy.description.NamedElement;
+import net.bytebuddy.description.annotation.AnnotationDescription;
+import net.bytebuddy.description.field.FieldDescription;
+import net.bytebuddy.description.field.FieldList;
+import net.bytebuddy.description.method.MethodDescription;
+import net.bytebuddy.description.method.MethodList;
+import net.bytebuddy.description.method.ParameterDescription;
+import net.bytebuddy.description.modifier.Visibility;
+import net.bytebuddy.description.type.TypeDescription;
+import net.bytebuddy.dynamic.scaffold.InstrumentedType;
+import net.bytebuddy.implementation.Implementation;
+import net.bytebuddy.implementation.MethodCall;
+import net.bytebuddy.implementation.bytecode.ByteCodeAppender;
+import net.bytebuddy.implementation.bytecode.StackManipulation;
+import net.bytebuddy.implementation.bytecode.collection.ArrayAccess;
+import net.bytebuddy.implementation.bytecode.constant.IntegerConstant;
+import net.bytebuddy.implementation.bytecode.constant.TextConstant;
+import net.bytebuddy.implementation.bytecode.member.FieldAccess;
+import net.bytebuddy.implementation.bytecode.member.MethodInvocation;
+import net.bytebuddy.implementation.bytecode.member.MethodReturn;
+import net.bytebuddy.implementation.bytecode.member.MethodVariableAccess;
+import net.bytebuddy.jar.asm.ClassWriter;
+import net.bytebuddy.jar.asm.Label;
+import net.bytebuddy.jar.asm.MethodVisitor;
+import net.bytebuddy.jar.asm.Opcodes;
+import net.bytebuddy.matcher.ElementMatchers;
+import net.bytebuddy.pool.TypePool;
 import org.codehaus.janino.SimpleCompiler;
 
 import javax.inject.Inject;
@@ -659,4 +689,165 @@ public abstract class CustomSkillGenerator {
     protected abstract Type characterClassImpl();
 
     protected abstract Class<?> targeted();
+
+
+    public Class<? extends ISkill> generateBytecodeFromMechanics(List<String> mechanics, String skillId, ClassLoader classLoader) throws Exception {
+        if (mechanics == null || mechanics.isEmpty()) {
+            return null;
+        }
+
+        String packagee = "cz.neumimto.skills.scripts";
+        String className = "Custom" + System.currentTimeMillis();
+
+        Class sk = new ByteBuddy()
+                .subclass(ActiveSkill.class)
+                .name("cz.neumimto.skills.scripts." + className)
+                .visit(new EnableFramesComputing())
+                .annotateType(AnnotationDescription.Builder.ofType(ResourceLoader.Skill.class)
+                        .define("value", skillId)
+                        .build())
+                .annotateType(AnnotationDescription.Builder.ofType(Singleton.class).build())
+
+                .defineMethod("cast", SkillResult.class, Visibility.PUBLIC)
+                    .withParameter(characterClassImpl(), "caster")
+                    .withParameter(PlayerSkillContext.class, "context")
+                .intercept(new Implementation.Simple() {
+                    @Override
+                    public ByteCodeAppender appender(Target implementationTarget) {
+
+                        final TypeDescription thisType = implementationTarget.getInstrumentedType();
+                        Method GET_FLOAT = null;
+
+
+                        try {
+                            GET_FLOAT = PlayerSkillContext.class.getMethod("getDoubleNodeValue", String.class);
+                        } catch (NoSuchMethodException e) {
+                            e.printStackTrace();
+                        }
+
+                        return new ByteCodeAppender() {
+
+                            @Override
+                            public ByteCodeAppender.Size apply(MethodVisitor mv, Implementation.Context ctx, MethodDescription md) {
+                                Label ifLabel = new Label();
+                                Label elseLabel = new Label();
+
+                                StackManipulation.Size size = new StackManipulation.Compound(
+                                        MethodVariableAccess.loadThis(),
+                                        getField(thisType, "someField"),
+
+                                        new TextConstant("damage"),
+                                        MethodInvocation.invoke(new MethodDescription.ForLoadedMethod(GET_FLOAT)),
+
+                                        MethodVariableAccess.REFERENCE.loadFrom(1),
+                                        IntegerConstant.ZERO,
+                                        ArrayAccess.REFERENCE.load(),
+                                        new TextConstant(""),
+                                        MethodInvocation.invoke(new MethodDescription.ForLoadedMethod(EQUALS)),
+                                        new IfEq(ifLabel),
+                                        FieldAccess.forField(new FieldDescription.ForLoadedField(SYSTEM_OUT)).read(),
+                                        new TextConstant("a"),
+                                        MethodInvocation.invoke(new MethodDescription.ForLoadedMethod(PRINTLN)),
+                                        new GoTo(elseLabel),
+                                        new Mark(ifLabel),
+                                        FieldAccess.forField(new FieldDescription.ForLoadedField(SYSTEM_OUT)).read(),
+                                        new TextConstant("b"),
+                                        MethodInvocation.invoke(new MethodDescription.ForLoadedMethod(PRINTLN)),
+                                        new Mark(elseLabel),
+                                        MethodReturn.VOID
+                                ).apply(mv, ctx);
+                                return new Size(size.getMaximalSize(), md.getStackSize());
+                            }
+                        };
+                    }
+                })
+                .make()
+                .load(classLoader)
+                .getLoaded();
+
+        return sk;
+    }
+
+    static class EnableFramesComputing implements AsmVisitorWrapper {
+        @Override
+        public final int mergeWriter(int flags) {
+            return flags | ClassWriter.COMPUTE_FRAMES;
+        }
+
+        @Override
+        public final int mergeReader(int flags) {
+            return flags | ClassWriter.COMPUTE_FRAMES;
+        }
+
+        @Override
+        public net.bytebuddy.jar.asm.ClassVisitor wrap(TypeDescription instrumentedType, net.bytebuddy.jar.asm.ClassVisitor classVisitor, Implementation.Context implementationContext, TypePool typePool, FieldList<FieldDescription.InDefinedShape> fields, MethodList<?> methods, int writerFlags, int readerFlags) {
+            return classVisitor;
+        }
+    }
+
+
+    static class IfEq implements StackManipulation {
+        private final Label label;
+
+        public IfEq(Label label) {
+            this.label = label;
+        }
+
+        @Override
+        public boolean isValid() {
+            return true;
+        }
+
+        @Override
+        public StackManipulation.Size apply(MethodVisitor mv, Implementation.Context ctx) {
+            mv.visitJumpInsn(Opcodes.IFEQ, label);
+            return new StackManipulation.Size(-1, 0);
+        }
+    }
+
+    static class GoTo implements StackManipulation {
+        private final Label label;
+
+        public GoTo(Label label) {
+            this.label = label;
+        }
+
+        @Override
+        public boolean isValid() {
+            return true;
+        }
+
+        @Override
+        public StackManipulation.Size apply(MethodVisitor mv, Implementation.Context ctx) {
+            mv.visitJumpInsn(Opcodes.GOTO, label);
+            return new StackManipulation.Size(0, 0);
+        }
+    }
+
+    static class Mark implements StackManipulation {
+        private final Label label;
+
+        public Mark(Label label) {
+            this.label = label;
+        }
+
+        @Override
+        public boolean isValid() {
+            return true;
+        }
+
+        @Override
+        public StackManipulation.Size apply(MethodVisitor mv, Implementation.Context ctx) {
+            mv.visitLabel(label);
+            return new StackManipulation.Size(0, 0);
+        }
+    }
+
+    private StackManipulation getField(final TypeDescription thisType, final String name) {
+        return FieldAccess.forField(thisType.getDeclaredFields()
+                .filter(ElementMatchers.named(name))
+                .getOnly()
+        ).read();
+    }
+
 }
