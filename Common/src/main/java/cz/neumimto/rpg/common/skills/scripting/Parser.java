@@ -3,9 +3,12 @@ package cz.neumimto.rpg.common.skills.scripting;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.utils.Pair;
+import net.bytebuddy.description.ModifierReviewable;
 import net.bytebuddy.description.enumeration.EnumerationDescription;
 import net.bytebuddy.description.field.FieldDescription;
 import net.bytebuddy.description.method.MethodDescription;
+import net.bytebuddy.description.type.TypeDefinition;
+import net.bytebuddy.description.type.TypeDescription;
 import net.bytebuddy.implementation.Implementation;
 import net.bytebuddy.implementation.bytecode.StackManipulation;
 import net.bytebuddy.implementation.bytecode.constant.DoubleConstant;
@@ -46,20 +49,13 @@ public class Parser {
         List<Operation> list = new ArrayList<>();
 
         Set<String> mechanics = new HashSet<>();
-        Map<String, MethodVariableAccess> settingsVar = new HashMap<>();
-
-
-        Matcher matcher = SETTINGS_VAR.matcher(input);
-        while (matcher.find()) {
-            settingsVar.put(matcher.group(), null);
-        }
 
         while (iterator.hasNext()) {
             list.addAll(parse(iterator.next(), iterator, mechanics));
         }
 
 
-        return new ParserOutput(list, mechanics, settingsVar);
+        return new ParserOutput(list, mechanics);
     }
 
     private List<Operation> parse(String input, Iterator<String> iterator, Set<String> mechanics) {
@@ -139,7 +135,13 @@ public class Parser {
     public interface Operation {
 
         List<StackManipulation> getStack(TokenizerContext context);
+
+        default Map<String, MethodVariableAccess> skillSettingsVarsRequired(TokenizerContext context) {
+            return Collections.emptyMap();
+        }
     }
+
+
 
     private record AssignValue(String variableName) implements Operation {
 
@@ -152,7 +154,30 @@ public class Parser {
         }
     }
 
+    //damage=$settings.damage
     private record CallMechanic(String mechanic, List<Pair<String, String>> variables) implements Operation {
+
+        @Override
+        public Map<String, MethodVariableAccess> skillSettingsVarsRequired(TokenizerContext context) {
+            Map<String, MethodVariableAccess> map = new HashMap<>();
+            Object mechObj = context.mechanics()
+                    .stream()
+                    .filter(a -> a.getClass().getAnnotation(SkillMechanic.class).value().equalsIgnoreCase(mechanic))
+                    .findFirst().get();
+            Method method = Stream.of(mechObj.getClass().getDeclaredMethods())
+                    .filter(a->a.isAnnotationPresent(Handler.class))
+                    .findFirst()
+                    .get();
+
+            for (Pair<String, String> var : variables) {
+                Optional<Parameter> first = Stream.of(method.getParameters())
+                        .filter(a -> a.isAnnotationPresent(SkillArgument.class)
+                                && a.getAnnotation(SkillArgument.class).value().equals(var.key)).findFirst();
+                first.ifPresent(parameter -> map.put(parameter.getType().getName(), MethodVariableAccess.of(new TypeDescription.ForLoadedType(parameter.getType()))));
+            }
+
+            return map;
+        }
 
         @Override
         public List<StackManipulation> getStack(TokenizerContext context) {
@@ -263,7 +288,7 @@ public class Parser {
         }
     }
 
-    public static record ParserOutput(List<Operation> operations, Collection<String> requiredMechanics, Map<String, MethodVariableAccess> settingsVar) {}
+    public static record ParserOutput(List<Operation> operations, Collection<String> requiredMechanics) {}
 
 
     static class IfEq implements StackManipulation {

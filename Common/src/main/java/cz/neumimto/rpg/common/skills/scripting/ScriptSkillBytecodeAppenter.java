@@ -60,8 +60,6 @@ public class ScriptSkillBytecodeAppenter implements ByteCodeAppender {
         localVariables.put("@context", new RefData(MethodVariableAccess.REFERENCE, 2));
         createTargetVariable();
 
-        Collection<String> strings = parserOutput.settingsVar();
-
         List<StackManipulation> stackManipulations = new ArrayList<>();
 
       // for (String mechanic : mechanics) {
@@ -70,12 +68,18 @@ public class ScriptSkillBytecodeAppenter implements ByteCodeAppender {
       //         break;
       //     }
       // }
-        for (Map.Entry<String, MethodVariableAccess> e : parserOutput.settingsVar().entrySet()) {
+        var tokenizerctx = new TokenizerContext(localVariables, thisType, mechanics);
+
+        Map<String, MethodVariableAccess> localVars = new HashMap<>();
+        for (Parser.Operation operation : parserOutput.operations()) {
+            localVars.putAll(operation.skillSettingsVarsRequired(tokenizerctx));
+        }
+
+        for (Map.Entry<String, MethodVariableAccess> e : localVars.entrySet()) {
             stackManipulations.addAll(skillSettingsIntoLocalVar(e.getKey(), e.getValue()));
         }
 
 
-        var tokenizerctx = new TokenizerContext(localVariables, thisType, mechanics);
         List<Parser.Operation> operations = parserOutput.operations();
         for (Parser.Operation operation : operations) {
             operation.getStack(tokenizerctx);
