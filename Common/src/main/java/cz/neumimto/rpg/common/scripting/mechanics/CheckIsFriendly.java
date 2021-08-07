@@ -5,7 +5,6 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.skills.scripting.Caster;
 import cz.neumimto.rpg.common.skills.scripting.Handler;
 import cz.neumimto.rpg.common.skills.scripting.SkillMechanic;
-import cz.neumimto.rpg.common.skills.scripting.Target;
 
 import javax.inject.Singleton;
 
@@ -14,7 +13,7 @@ import javax.inject.Singleton;
 public class CheckIsFriendly {
 
     @Handler
-    public boolean removeEffect(@Target IEntity target, @Caster IActiveCharacter caster) {
+    public boolean removeEffect(IEntity target, @Caster IActiveCharacter caster) {
         return target.isFriendlyTo(caster);
     }
 }

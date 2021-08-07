@@ -5,7 +5,6 @@ import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.skills.scripting.Caster;
 import cz.neumimto.rpg.common.skills.scripting.Handler;
-import cz.neumimto.rpg.common.skills.scripting.Target;
 import cz.neumimto.rpg.common.skills.scripting.TargetSelector;
 
 import javax.inject.Inject;
@@ -19,7 +18,7 @@ public class DamageCheck {
     private DamageService damageService;
 
     @Handler
-    public boolean canDamage(@Caster IActiveCharacter character, @Target IEntity target) {
+    public boolean canDamage(@Caster IActiveCharacter character, IEntity target) {
         return damageService.canDamage(character, target);
     }
 }

@@ -9,6 +9,7 @@ import org.mockito.Mockito;
 import sun.misc.Unsafe;
 
 import java.lang.reflect.Field;
+import java.util.logging.Logger;
 
 public class TestHelper {
 
@@ -51,6 +52,6 @@ public class TestHelper {
 
 
     public static void setupLog() {
-        Log.setLogger(LoggerFactory.getLogger("test"));
+        Log.setLogger(Logger.getLogger("test"));
     }
 }

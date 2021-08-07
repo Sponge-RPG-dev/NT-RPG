@@ -110,7 +110,7 @@ public class CustomSkillGeneratorTests {
     public static class DamageCheck {
 
         @Handler
-        public boolean check(@Caster IActiveCharacter caster, @Target IEntity entity) {
+        public boolean check(@Caster IActiveCharacter caster, IEntity entity) {
             return true;
         }
 

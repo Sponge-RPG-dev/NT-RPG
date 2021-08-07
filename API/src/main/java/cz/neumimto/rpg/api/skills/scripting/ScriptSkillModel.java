@@ -22,8 +22,8 @@ public class ScriptSkillModel {
     private String handlerId;
 
     @Optional
-    @Path("Spell")
-    private List<Config> spell;
+    @Path("Script")
+    private String script;
 
     @Optional
     @Path("Supertype")
@@ -53,19 +53,19 @@ public class ScriptSkillModel {
         return damageType;
     }
 
-    public List<Config> getSpell() {
-        return spell;
-    }
-
-    public void setSpell(List<Config> spell) {
-        this.spell = spell;
-    }
-
     public String getSuperType() {
         return superType;
     }
 
     public void setSuperType(String superType) {
         this.superType = superType;
+    }
+
+    public void setScript(String script) {
+        this.script = script;
+    }
+
+    public String getScript() {
+        return script;
     }
 }

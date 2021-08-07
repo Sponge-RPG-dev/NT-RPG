@@ -5,7 +5,6 @@ import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.common.skills.scripting.Handler;
 import cz.neumimto.rpg.common.skills.scripting.SkillMechanic;
 import cz.neumimto.rpg.common.skills.scripting.StaticArgument;
-import cz.neumimto.rpg.common.skills.scripting.Target;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -18,7 +17,7 @@ public class RemoveEffect {
     private EffectService effectService;
 
     @Handler
-    public void removeEffect(@StaticArgument("effect.name") String effect, @Target IEntity target) {
+    public void removeEffect(@StaticArgument("effect.name") String effect, IEntity target) {
         if (target.hasEffect(effect)) {
             effectService.removeEffectContainer(target.getEffect(effect), target);
         }

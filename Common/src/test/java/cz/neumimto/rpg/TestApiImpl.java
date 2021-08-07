@@ -16,6 +16,7 @@ import cz.neumimto.rpg.api.exp.ExperienceService;
 import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.localization.Arg;
 import cz.neumimto.rpg.api.localization.LocalizationService;
+import cz.neumimto.rpg.api.permissions.PermissionService;
 import cz.neumimto.rpg.api.scripting.IRpgScriptEngine;
 import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.common.impl.TestCharacterService;
@@ -228,6 +229,11 @@ public class TestApiImpl implements RpgApi {
     @Override
     public ExperienceService getExperienceService() {
         return experienceService;
+    }
+
+    @Override
+    public PermissionService getPermissionService() {
+        return null;
     }
 
     @Override

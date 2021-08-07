@@ -26,8 +26,9 @@ public class TestInventoryService extends AbstractInventoryService<TestCharacter
     }
 
     @Override
-    public void invalidateGUICaches(IActiveCharacter cc) {
+    public void invalidateGUICaches(TestCharacter cc) {
 
     }
+
 
 }

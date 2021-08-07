@@ -3,7 +3,6 @@ package cz.neumimto.rpg.junit;
 import com.google.inject.*;
 import cz.neumimto.rpg.TestApiImpl;
 import cz.neumimto.rpg.TestDamageService;
-import cz.neumimto.rpg.TestResourceLoader;
 import cz.neumimto.rpg.TestSkillService;
 import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.RpgApi;
@@ -28,6 +27,7 @@ import cz.neumimto.rpg.api.permissions.PermissionService;
 import cz.neumimto.rpg.api.scripting.IRpgScriptEngine;
 import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.assets.TestAssetService;
+import cz.neumimto.rpg.common.ResourceManagerImpl;
 import cz.neumimto.rpg.common.TestPartyService;
 import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.bytecode.ClassGenerator;
@@ -101,7 +101,7 @@ public class TestGuiceModule extends AbstractModule {
 
         });
         bind(ClassService.class).to(ClassServiceImpl.class);
-        bind(ResourceLoader.class).to(TestResourceLoader.class);
+        bind(ResourceLoader.class).to(ResourceManagerImpl.class);
         bind(DamageService.class).to(TestDamageService.class);
         bind(AbstractEffectService.class).to(TestEffectService.class);
         bind(EntityService.class).to(TestEntityService.class);

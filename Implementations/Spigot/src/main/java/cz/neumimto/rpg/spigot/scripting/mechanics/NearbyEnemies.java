@@ -28,7 +28,7 @@ public class NearbyEnemies {
     private SpigotEntityService spigotEntityService;
 
 
-    @Handler
+
     public Set<IEntity> getTargets(@Caster ISpigotCharacter character, @SkillArgument("settings.radius") float radius) {
         Set<IEntity> entities = new HashSet<>();
         Player player = character.getPlayer();

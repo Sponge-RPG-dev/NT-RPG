@@ -11,8 +11,6 @@ dependencies {
 
     api project(':API')
     api 'net.bytebuddy:byte-buddy:' + project.bytebuddy
-    api 'com.squareup:javapoet:' + project.javapoet
-    api 'org.codehaus.janino:janino:' + project.janino
 
     compileOnly "co.aikar:acf-core:" + project.acf
     compileOnly 'org.graalvm.sdk:graal-sdk:' + project.graal

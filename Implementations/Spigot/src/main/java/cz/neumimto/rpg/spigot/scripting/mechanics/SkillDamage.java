@@ -18,7 +18,7 @@ public class SkillDamage {
     private DamageService damageService;
 
     @Handler
-    public void getTargets(@Caster ISpigotCharacter character, @Target IEntity target, @SkillArgument("settings.damage") float damage, ISkill skill) {
+    public void getTargets(@Caster ISpigotCharacter character, IEntity target, @SkillArgument("settings.damage") float damage, ISkill skill) {
         ((ISpigotEntity) target).getEntity().damage(damage, character.getPlayer());
     }
 }

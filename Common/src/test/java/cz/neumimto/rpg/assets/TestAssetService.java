@@ -38,4 +38,9 @@ public class TestAssetService extends AssetService {
             Log.error("Could not create file " + toPath, e);
         }
     }
+
+    @Override
+    public void copyDefaultGuis(Path workingDir) {
+
+    }
 }

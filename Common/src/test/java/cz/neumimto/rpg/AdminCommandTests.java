@@ -58,7 +58,7 @@ public class AdminCommandTests {
         effectService.registerGlobalEffect(new TestEffectFloatGlobal());
 
         IGlobalEffect globalEffect = effectService.getGlobalEffect(TestEffectFloat.name);
-        abstractAdminCommand.commandAddEffectToPlayer("10", globalEffect, 2000, iActiveCharacter);
+        //abstractAdminCommand.commandAddEffectToPlayer("10", globalEffect, 2000, iActiveCharacter);
         Assertions.assertTrue(iActiveCharacter.hasEffect(TestEffectFloat.name));
     }
 
@@ -99,14 +99,14 @@ public class AdminCommandTests {
         classDefinition.addExperienceSource("expSourceTest".toUpperCase());
 
         iActiveCharacter.setProperty(CommonProperties.experiences_mult, 1);
-        abstractAdminCommand.commandAddExperiences(iActiveCharacter, 10D, "expSourceTest");
+      //  abstractAdminCommand.commandAddExperiences(iActiveCharacter, 10D, "expSourceTest");
         Assertions.assertEquals(jpaCharacterClass.getExperiences(), 10D);
     }
 
     @Test
     public void testAddUniqueSkillPointsWrongArgs3(@Stage(READY) IActiveCharacter iActiveCharacter) {
         Assertions.assertThrows(IllegalStateException.class, () -> {
-            abstractAdminCommand.commandAddUniqueSkillpoint(iActiveCharacter, "Primary", null);
+       //     abstractAdminCommand.commandAddUniqueSkillpoint(iActiveCharacter, "Primary", null);
         });
     }
 
@@ -118,7 +118,7 @@ public class AdminCommandTests {
         CharacterClass characterClass = characterBase.getCharacterClass(primary.getClassDefinition());
         int i = characterClass.getSkillPoints();
 
-        abstractAdminCommand.commandAddUniqueSkillpoint(iActiveCharacter, "Primary", "testing");
+    //    abstractAdminCommand.commandAddUniqueSkillpoint(iActiveCharacter, "Primary", "testing");
 
         Assertions.assertEquals(characterClass.getSkillPoints(), i + 1);
         Assertions.assertEquals(characterBase.getUniqueSkillpoints().size(), 1);
