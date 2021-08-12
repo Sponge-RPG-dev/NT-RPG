@@ -60,7 +60,7 @@ class ScríptParserTests {
         ScriptSkillModel model = new ScriptSkillModel();
         model.setId("aaa");
         model.setScript("""
-                     @target = targetted_entity{range=$settings.range, entityFrom=@caster}
+                       @target = targetted_entity{range=$settings.range, entityFrom=@caster}
                        IF exists{test=@target}
                           IF damage_entity{damage=20, damaged=@target, damager=@caster}
                              spawn_lighting{location=@target}
@@ -87,7 +87,7 @@ class ScríptParserTests {
     public static class DamageEntity {
 
         @Handler
-        public boolean test(@SkillArgument("damage") double damage, @SkillArgument("damaged")IEntity entity, @SkillArgument("damager")IEntity damager) {
+        public boolean damage(@SkillArgument("damage") double damage, @SkillArgument("damaged")IEntity entity, @SkillArgument("damager")IEntity damager) {
             return true;
         }
     }

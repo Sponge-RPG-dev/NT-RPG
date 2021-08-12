@@ -100,8 +100,6 @@ public class Parser {
                         String value = matcher.group(1);
                         ops.addAll(parse(value, iterator, mechanics)); // IF <EXPR>
 
-                        Label ifLabel = new Label();
-                        Label goToLabel = new Label();
                         int ifIdx = 0;
 
                         //IF
@@ -122,7 +120,7 @@ public class Parser {
                             }
 
                         }
-                        ops.add(new IF(ifLabel, enclosed, goToLabel, IFNE.matcher(input).matches()));
+                        ops.add(new IF(enclosed, IFNE.matcher(input).matches()));
 
                     }
                 }
@@ -199,7 +197,7 @@ public class Parser {
                 SkillArgument annotation = parameter.getAnnotation(SkillArgument.class);
                 String functionParamName = annotation.value();
 
-                Iterator<Pair<String, String>> iterator = variables.iterator();
+                Iterator<Pair<String, String>> iterator = new ArrayList<>(variables).iterator();
                 boolean found = false;
                 while (iterator.hasNext()) {
                     Pair<String, String> next = iterator.next();
@@ -221,7 +219,6 @@ public class Parser {
                         ScriptSkillBytecodeAppenter.RefData refData = context.localVariables().get(value);
                         list.add(refData.type.loadFrom(refData.offset));
                     }
-                    iterator.remove();
                     found = true;
                     break;
                 }
@@ -264,28 +261,27 @@ public class Parser {
     }
 
     private static class IF implements Operation {
-        private Label prevLabel;
         private List<Operation> enclosed;
-        private Label ifLabel;
         private boolean negate;
 
-        public IF(Label prevLabel, List<Operation> enclosed, Label ifLabel, boolean negate) {
-            this.prevLabel = prevLabel;
+        public IF(List<Operation> enclosed, boolean negate) {
             this.enclosed = enclosed;
-            this.ifLabel = ifLabel;
             this.negate = negate;
         }
 
         @Override
         public List<StackManipulation> getStack(TokenizerContext context) {
             var list = new ArrayList<StackManipulation>();
-            list.add(negate ? new IfNEq(ifLabel) : new IfEq(ifLabel));
-            list.add(new Mark(ifLabel));
+            Label label1 = new Label();
+            Label label = label1;
+            list.add(negate ? new IfNEq(label) : new IfEq(label));
+
+            list.add(new Mark(label1));
             for (Operation operation : enclosed) {
                 list.addAll(operation.getStack(context));
             }
-            list.add(new Mark(prevLabel));
-            //todo APPEND FRAME or ref SAME depending on enclosed
+            list.add(new Mark(label));
+            //todo APPEND FRAME or ref SAME depending on enclosed or just tell MethodVisitor to compute frames?
             return list;
         }
     }
@@ -308,7 +304,8 @@ public class Parser {
         @Override
         public StackManipulation.Size apply(MethodVisitor mv, Implementation.Context ctx) {
             mv.visitJumpInsn(Opcodes.IFEQ, label);
-            return new StackManipulation.Size(-1, 0);
+            System.out.println("mv.visitJumpInsn(Opcodes.IFEQ, label);" + label.toString());
+            return new StackManipulation.Size(0, 0);
         }
     }
 
@@ -327,7 +324,8 @@ public class Parser {
         @Override
         public StackManipulation.Size apply(MethodVisitor mv, Implementation.Context ctx) {
             mv.visitJumpInsn(Opcodes.IFNE, label);
-            return new StackManipulation.Size(-1, 0);
+            System.out.println("mv.visitJumpInsn(Opcodes.IFNE, label);" + label.toString());
+            return new StackManipulation.Size(0, 0);
         }
     }
 
@@ -346,6 +344,7 @@ public class Parser {
         @Override
         public StackManipulation.Size apply(MethodVisitor mv, Implementation.Context ctx) {
             mv.visitJumpInsn(Opcodes.GOTO, label);
+            System.out.println("mv.visitJumpInsn(Opcodes.GOTO, label);" + label.toString());
             return new StackManipulation.Size(0, 0);
         }
     }
@@ -365,6 +364,7 @@ public class Parser {
         @Override
         public StackManipulation.Size apply(MethodVisitor mv, Implementation.Context ctx) {
             mv.visitLabel(label);
+            System.out.println("mv.visitLabel(label);" + label.toString());
             return new StackManipulation.Size(0, 0);
         }
     }
