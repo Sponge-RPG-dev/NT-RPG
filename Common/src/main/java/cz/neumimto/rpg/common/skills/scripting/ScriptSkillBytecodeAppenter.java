@@ -82,7 +82,7 @@ public class ScriptSkillBytecodeAppenter implements ByteCodeAppender {
 
         List<Parser.Operation> operations = parserOutput.operations();
         for (Parser.Operation operation : operations) {
-            operation.getStack(tokenizerctx);
+            stackManipulations.addAll(operation.getStack(tokenizerctx));
         }
 
         StackManipulation.Size size = new StackManipulation.Compound(

@@ -42,9 +42,6 @@ public abstract class CustomSkillGenerator {
     @Inject
     private Injector injector;
 
-    @Inject
-    private DamageService damageService;
-
     public Class<? extends ISkill> generate(ScriptSkillModel scriptSkillModel, ClassLoader classLoader) throws Exception {
         if (scriptSkillModel == null || scriptSkillModel.getScript() == null || scriptSkillModel.getScript().isEmpty()) {
             return null;
@@ -70,12 +67,13 @@ public abstract class CustomSkillGenerator {
 
         for (String requiredMechanic : parse.requiredMechanics()) {
             Object o = filterMechanicById(requiredMechanic);
-            bb.defineField(o.getClass().getSimpleName(), o.getClass())
+            bb = bb.defineField(o.getClass().getSimpleName(), o.getClass())
                     .annotateField(AnnotationDescription.Builder.ofType(Inject.class).build());
 
         }
 
-        bb.defineMethod("cast", SkillResult.class, Visibility.PUBLIC)
+
+        DynamicType.Unloaded<ActiveSkill> make = bb.defineMethod("cast", SkillResult.class, Visibility.PUBLIC)
                 .withParameter(characterClassImpl(), "caster")
                 .withParameter(PlayerSkillContext.class, "context")
                 .intercept(new Implementation() {
@@ -90,10 +88,10 @@ public abstract class CustomSkillGenerator {
                     }
 
                 })
-                .make()
-                .saveIn(new File("/tmp/test.class"))
-        ;//.load(classLoader)
-        //.getLoaded();
+                .make();
+        make.saveIn(new File("/tmp/test.class"));
+        make.load(classLoader)
+        .getLoaded();
 
         Log.info("", DebugLevel.DEVELOP);
         return sk;

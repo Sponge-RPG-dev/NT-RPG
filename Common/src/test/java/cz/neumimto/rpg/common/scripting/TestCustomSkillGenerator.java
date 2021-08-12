@@ -35,18 +35,4 @@ public class TestCustomSkillGenerator extends CustomSkillGenerator {
     }
 
 
-    public static class TestM01 {
-
-        @Handler
-        public void testMethod(@Caster Object o,
-                               @SkillArgument("settings.test") int n,
-                               Object w,
-                               @StaticArgument("name") String k,
-                               @SkillArgument("settings.damage") int i,
-                               ISkill skill,
-                               @SkillArgument("effect") IEffect effect) {
-
-        }
-    }
-
 }

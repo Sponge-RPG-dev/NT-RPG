@@ -76,7 +76,7 @@ public class Parser {
                 
                 Matcher matcher1 = MECHANIC_CALL_ARGS.matcher(mechanicArgs);
                 List<Pair<String, String>> argList = new ArrayList<>();
-                if (matcher1.matches()) {
+                if (matcher1.find()) {
                     int id = 1;
                     while (id < matcher1.groupCount()) {
                         String expr = matcher1.group(id);
@@ -172,8 +172,10 @@ public class Parser {
             for (Pair<String, String> var : variables) {
                 Optional<Parameter> first = Stream.of(method.getParameters())
                         .filter(a -> a.isAnnotationPresent(SkillArgument.class)
-                                && a.getAnnotation(SkillArgument.class).value().equals(var.key)).findFirst();
-                first.ifPresent(parameter -> map.put(parameter.getType().getName(), MethodVariableAccess.of(new TypeDescription.ForLoadedType(parameter.getType()))));
+                                && a.getAnnotation(SkillArgument.class).value().equals(var.key)
+                                && var.value.equals("$settings"))
+                        .findFirst();
+                first.ifPresent(parameter -> map.put(var.key, MethodVariableAccess.of(new TypeDescription.ForLoadedType(parameter.getType()))));
             }
 
             return map;
@@ -206,8 +208,8 @@ public class Parser {
                     }
                     String value = next.value;
                     //settings ref
-                    if (value.startsWith("$settings.")) { //param = $settings.xxx
-                        value = value.replaceAll("\\$settings\\.", "");
+                    if (value.equals("$settings")) { //param = $settings.xxx
+                        value = next.key;
                         ScriptSkillBytecodeAppenter.RefData refData = context.localVariables().get(value);
                         list.add(refData.type.loadFrom(refData.offset));
 
