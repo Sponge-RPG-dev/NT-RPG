@@ -17,7 +17,6 @@ import net.bytebuddy.jar.asm.MethodVisitor;
 import javax.inject.Inject;
 import java.lang.reflect.Method;
 import java.util.*;
-import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
 public class ScriptSkillBytecodeAppenter implements ByteCodeAppender {
@@ -41,17 +40,11 @@ public class ScriptSkillBytecodeAppenter implements ByteCodeAppender {
         }
     }
 
-    private final Implementation.Target implementationTarget;
-    private final Set<Object> mechanics;
     private Map<String, RefData> localVariables = new HashMap<>();
-    final TypeDescription thisType;
-    private Parser.ParserOutput parserOutput;
 
-    public ScriptSkillBytecodeAppenter(Implementation.Target implementationTarget, Set<Object> mechanics, Parser.ParserOutput parserOutput) {
-        this.implementationTarget = implementationTarget;
-        this.mechanics = mechanics;
-        this.thisType = implementationTarget.getInstrumentedType();
-        this.parserOutput = parserOutput;
+    private TokenizerContext tokenizerctx;
+    public ScriptSkillBytecodeAppenter(TokenizerContext tokenizerctx) {
+        tokenizerctx = tokenizerctx;
     }
 
     @Override
@@ -68,7 +61,7 @@ public class ScriptSkillBytecodeAppenter implements ByteCodeAppender {
       //         break;
       //     }
       // }
-        var tokenizerctx = new TokenizerContext(localVariables, thisType, mechanics);
+
 
         Map<String, MethodVariableAccess> localVars = new HashMap<>();
         for (Parser.Operation operation : parserOutput.operations()) {

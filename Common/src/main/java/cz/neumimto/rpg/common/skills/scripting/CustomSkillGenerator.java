@@ -2,6 +2,7 @@ package cz.neumimto.rpg.common.skills.scripting;
 
 import com.google.inject.Injector;
 import com.google.inject.Key;
+import com.sun.org.apache.bcel.internal.classfile.Synthetic;
 import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.damage.DamageService;
 import cz.neumimto.rpg.api.logging.Log;
@@ -17,6 +18,8 @@ import net.bytebuddy.description.annotation.AnnotationDescription;
 import net.bytebuddy.description.field.FieldDescription;
 import net.bytebuddy.description.field.FieldList;
 import net.bytebuddy.description.method.MethodList;
+import net.bytebuddy.description.modifier.ModifierContributor;
+import net.bytebuddy.description.modifier.SyntheticState;
 import net.bytebuddy.description.modifier.Visibility;
 import net.bytebuddy.description.type.TypeDescription;
 import net.bytebuddy.dynamic.DynamicType;
@@ -67,13 +70,34 @@ public abstract class CustomSkillGenerator {
 
         for (String requiredMechanic : parse.requiredMechanics()) {
             Object o = filterMechanicById(requiredMechanic);
-            bb = bb.defineField(o.getClass().getSimpleName(), o.getClass())
+            bb = bb.defineField(o.getClass().getSimpleName(), o.getClass(), Visibility.PROTECTED)
                     .annotateField(AnnotationDescription.Builder.ofType(Inject.class).build());
 
         }
 
+        var typeDescription = bb.toTypeDescription();
+        var localVariables = new HashMap<String, ScriptSkillBytecodeAppenter.RefData>();
+        var tokenizerctx = new TokenizerContext(localVariables, bb.toTypeDescription(), getMechanics());
 
-        DynamicType.Unloaded<ActiveSkill> make = bb.defineMethod("cast", SkillResult.class, Visibility.PUBLIC)
+        for (Parser.Operation operation : parse.operations()) {
+            Map<String, List<Parser.Operation>> map = operation.additonalMethods(tokenizerctx);
+            for (Map.Entry<String, List<Parser.Operation>> stringListEntry : map.entrySet()) {
+                bb = bb.defineMethod(stringListEntry.getKey(), Void.class, Visibility.PRIVATE, SyntheticState.SYNTHETIC)
+                        .intercept(new Implementation() {
+                            @Override
+                            public ByteCodeAppender appender(Target implementationTarget) {
+                                return new ScriptSkillBytecodeAppenter(implementationTarget, getMechanics(), parse);
+                            }
+
+                            @Override
+                            public InstrumentedType prepare(InstrumentedType instrumentedType) {
+                                return null;
+                            }
+                        });
+            }
+        }
+
+        DynamicType.Unloaded<ActiveSkill> make = bb.defineMethod("cast", SkillResult.class, Visibility.PUBLI)
                 .withParameter(characterClassImpl(), "caster")
                 .withParameter(PlayerSkillContext.class, "context")
                 .intercept(new Implementation() {
@@ -90,11 +114,7 @@ public abstract class CustomSkillGenerator {
                 })
                 .make();
         make.saveIn(new File("/tmp/test.class"));
-        make.load(classLoader)
-        .getLoaded();
-
-        Log.info("", DebugLevel.DEVELOP);
-        return sk;
+        return make.load(classLoader).getLoaded();
     }
 
 

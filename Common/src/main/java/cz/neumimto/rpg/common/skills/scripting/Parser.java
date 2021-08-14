@@ -3,11 +3,9 @@ package cz.neumimto.rpg.common.skills.scripting;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.utils.Pair;
-import net.bytebuddy.description.ModifierReviewable;
 import net.bytebuddy.description.enumeration.EnumerationDescription;
 import net.bytebuddy.description.field.FieldDescription;
 import net.bytebuddy.description.method.MethodDescription;
-import net.bytebuddy.description.type.TypeDefinition;
 import net.bytebuddy.description.type.TypeDescription;
 import net.bytebuddy.implementation.Implementation;
 import net.bytebuddy.implementation.bytecode.StackManipulation;
@@ -17,9 +15,7 @@ import net.bytebuddy.implementation.bytecode.member.FieldAccess;
 import net.bytebuddy.implementation.bytecode.member.MethodInvocation;
 import net.bytebuddy.implementation.bytecode.member.MethodReturn;
 import net.bytebuddy.implementation.bytecode.member.MethodVariableAccess;
-import net.bytebuddy.jar.asm.Label;
-import net.bytebuddy.jar.asm.MethodVisitor;
-import net.bytebuddy.jar.asm.Opcodes;
+import net.bytebuddy.jar.asm.*;
 import net.bytebuddy.matcher.ElementMatchers;
 
 import java.lang.reflect.Method;
@@ -28,6 +24,8 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
+
+import static net.bytebuddy.matcher.ElementMatchers.named;
 
 public class Parser {
 
@@ -39,6 +37,7 @@ public class Parser {
     private static final Pattern IF = Pattern.compile(" *IF (.*)");
     private static final Pattern IFNE = Pattern.compile(" *IF *NOT *(.*)");
     private static final Pattern END = Pattern.compile(" *END *");
+    private static final Pattern DELAY = Pattern.compile(" *DELAY *([0-9]*) *");
 
     private static final Pattern SETTINGS_VAR = Pattern.compile("(?<=\\$settings\\.)([a-zA-Z-_0-9]*)(?=[} ,])");
 
@@ -123,6 +122,30 @@ public class Parser {
                         ops.add(new IF(enclosed, IFNE.matcher(input).matches()));
 
                     }
+                    //DELAY 1000
+                    // <body>
+                    //END
+                    matcher = DELAY.matcher(input);
+                    if (matcher.matches()) {
+                        String delay = matcher.group(1);
+                        int ifIdx = 0;
+
+                        List<Operation> enclosed = new ArrayList<>();
+                        while (iterator.hasNext()) {
+                            String next = iterator.next();
+                            enclosed.addAll(parse(next, iterator, mechanics));
+                            if (END.matcher(next).matches()) {
+                                ifIdx--;
+                                if (ifIdx <= 0) {
+                                    break;
+                                }
+                            }
+                            if (IF.matcher(next).matches()) {
+                                ifIdx++;
+                            }
+                        }
+                        ops.add(new Delay(nextLambdaName(), enclosed));
+                    }
                 }
             }
         }
@@ -130,11 +153,22 @@ public class Parser {
         return ops;
     }
 
+    int lambdaIdx = 0;
+    private String nextLambdaName() {
+        String s = "lambda$a$"+lambdaIdx;
+        lambdaIdx++;
+        return s;
+    }
+
     public interface Operation {
 
         List<StackManipulation> getStack(TokenizerContext context);
 
         default Map<String, MethodVariableAccess> skillSettingsVarsRequired(TokenizerContext context) {
+            return Collections.emptyMap();
+        }
+
+        default Map<String, List<Operation>> additonalMethods(TokenizerContext context) {
             return Collections.emptyMap();
         }
     }
@@ -249,6 +283,28 @@ public class Parser {
 
     }
 
+    private static record Delay(String methodname, List<Operation> enclosed) implements Operation {
+
+        @Override
+        public List<StackManipulation> getStack(TokenizerContext context) {
+
+            MethodDescription.InDefinedShape targetCall = context.thisType().getDeclaredMethods().filter(named(methodname)).getOnly();
+            //InvokeDynamic methodRef = InvokeDynamic.lambda(targetCall, new TypeDescription.ForLoadedType(type)).withoutArguments();
+
+            RunnableLambdaCall runnableLambdaCall = new RunnableLambdaCall(context.thisType(), methodname);
+            return Collections.singletonList(
+                runnableLambdaCall
+            );
+        }
+
+        @Override
+        public Map<String, List<Operation>> additonalMethods(TokenizerContext context) {
+            Map<String, List<Operation>> map = new HashMap<>();
+            map.put(methodname, enclosed);
+            return map;
+        }
+    }
+
     private static record Return(String value) implements Operation {
 
         @Override
@@ -304,7 +360,6 @@ public class Parser {
         @Override
         public StackManipulation.Size apply(MethodVisitor mv, Implementation.Context ctx) {
             mv.visitJumpInsn(Opcodes.IFEQ, label);
-            System.out.println("mv.visitJumpInsn(Opcodes.IFEQ, label);" + label.toString());
             return new StackManipulation.Size(0, 0);
         }
     }
@@ -324,7 +379,6 @@ public class Parser {
         @Override
         public StackManipulation.Size apply(MethodVisitor mv, Implementation.Context ctx) {
             mv.visitJumpInsn(Opcodes.IFNE, label);
-            System.out.println("mv.visitJumpInsn(Opcodes.IFNE, label);" + label.toString());
             return new StackManipulation.Size(0, 0);
         }
     }
@@ -344,7 +398,6 @@ public class Parser {
         @Override
         public StackManipulation.Size apply(MethodVisitor mv, Implementation.Context ctx) {
             mv.visitJumpInsn(Opcodes.GOTO, label);
-            System.out.println("mv.visitJumpInsn(Opcodes.GOTO, label);" + label.toString());
             return new StackManipulation.Size(0, 0);
         }
     }
@@ -364,9 +417,37 @@ public class Parser {
         @Override
         public StackManipulation.Size apply(MethodVisitor mv, Implementation.Context ctx) {
             mv.visitLabel(label);
-            System.out.println("mv.visitLabel(label);" + label.toString());
             return new StackManipulation.Size(0, 0);
         }
     }
 
+    static class RunnableLambdaCall implements StackManipulation {
+
+        private TypeDescription typeDefinitions;
+        private String methodName;
+
+        public RunnableLambdaCall(TypeDescription typeDefinitions,
+                                  String methodName) {
+            this.typeDefinitions = typeDefinitions;
+            this.methodName = methodName;
+        }
+
+        @Override
+        public boolean isValid() {
+            return true;
+        }
+
+        @Override
+        public Size apply(MethodVisitor methodVisitor, Implementation.Context implementationContext) {
+
+
+            methodVisitor.visitInvokeDynamicInsn("run",
+                    "(L"+typeDefinitions.getDescriptor()+";)Ljava/lang/Runnable;",
+                    new Handle(Opcodes.H_INVOKESTATIC, "java/lang/invoke/LambdaMetafactory", "metafactory", "(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;", false),
+                    Type.VOID_TYPE,
+                    new Handle(Opcodes.H_INVOKESPECIAL, typeDefinitions.getDescriptor(), methodName, Type.VOID_TYPE.getDescriptor(), false),
+                    Type.VOID_TYPE);
+            return new Size(1,0);
+        }
+    }
 }
