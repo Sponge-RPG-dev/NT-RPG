@@ -247,6 +247,11 @@ public class TestApiImpl implements RpgApi {
     }
 
     @Override
+    public void scheduleSyncLater(long millis, Runnable runnable) {
+
+    }
+
+    @Override
     public void init(Path workingDirPath, Object commandManager, Class[] commandClasses, RpgAddon defaultStorageImpl, BiFunction<Map, Map<Class<?>, ?>, Module> fnInjProv, Consumer<Injector> injectorc) {
 
     }

@@ -95,6 +95,8 @@ public interface RpgApi {
 
     void scheduleSyncLater(Runnable runnable);
 
+    void scheduleSyncLater(long millis, Runnable runnable);
+
     void init(Path workingDirPath, Object commandManager, Class[] commandClasses, RpgAddon defaultStorageImpl,
               BiFunction<Map, Map<Class<?>, ?>, Module> fnInjProv, Consumer<Injector> injectorc);
 

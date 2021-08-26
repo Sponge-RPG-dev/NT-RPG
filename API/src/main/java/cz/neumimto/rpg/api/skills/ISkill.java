@@ -4,6 +4,7 @@ package cz.neumimto.rpg.api.skills;
 
 import com.typesafe.config.Config;
 import cz.neumimto.rpg.api.IRpgElement;
+import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.effects.EffectSourceType;
 import cz.neumimto.rpg.api.effects.IEffectSource;
 import cz.neumimto.rpg.api.effects.IEffectSourceProvider;
@@ -55,6 +56,10 @@ public interface ISkill<T> extends IEffectSourceProvider, IRpgElement {
 
     default <T extends SkillData> void loadSkillData(T skillData, SkillTree context, SkillLoadingErrors errors, Config c) {
 
+    }
+
+    default void delay(long millis, Runnable action) {
+        Rpg.get().scheduleSyncLater(millis, action);
     }
 
     SkillExecutionType getSkillExecutionType();

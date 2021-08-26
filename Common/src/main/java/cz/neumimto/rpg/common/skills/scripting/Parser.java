@@ -10,6 +10,8 @@ import net.bytebuddy.description.type.TypeDescription;
 import net.bytebuddy.implementation.Implementation;
 import net.bytebuddy.implementation.bytecode.StackManipulation;
 import net.bytebuddy.implementation.bytecode.constant.DoubleConstant;
+import net.bytebuddy.implementation.bytecode.constant.IntegerConstant;
+import net.bytebuddy.implementation.bytecode.constant.LongConstant;
 import net.bytebuddy.implementation.bytecode.constant.NullConstant;
 import net.bytebuddy.implementation.bytecode.member.FieldAccess;
 import net.bytebuddy.implementation.bytecode.member.MethodInvocation;
@@ -18,14 +20,17 @@ import net.bytebuddy.implementation.bytecode.member.MethodVariableAccess;
 import net.bytebuddy.jar.asm.*;
 import net.bytebuddy.matcher.ElementMatchers;
 
+import java.lang.invoke.CallSite;
+import java.lang.invoke.LambdaMetafactory;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
-
-import static net.bytebuddy.matcher.ElementMatchers.named;
 
 public class Parser {
 
@@ -41,7 +46,7 @@ public class Parser {
 
     private static final Pattern SETTINGS_VAR = Pattern.compile("(?<=\\$settings\\.)([a-zA-Z-_0-9]*)(?=[} ,])");
 
-    public ParserOutput parse(String input) {
+    public ParseTree parse(String input) {
         String[] split = input.split("\\r?\\n");
 
         var iterator = Arrays.stream(split).iterator();
@@ -53,104 +58,111 @@ public class Parser {
             list.addAll(parse(iterator.next(), iterator, mechanics));
         }
 
-
-        return new ParserOutput(list, mechanics);
+        return new ParseTree(list, mechanics);
     }
 
     private List<Operation> parse(String input, Iterator<String> iterator, Set<String> mechanics) {
         List<Operation> ops = new ArrayList<>();
 
-        Matcher matcher = ASSIGN.matcher(input);
-        if (matcher.find()) {
-            String rightPart = matcher.group(2);
-            ops.addAll(parse(rightPart, iterator, mechanics));
+        regexp(ASSIGN, input, matcher -> parseAssign(input, iterator, mechanics, matcher, ops));
+        regexp(RETURN, input, matcher -> parseReturn(input, iterator, mechanics, matcher, ops));
+        regexp(MECHANIC_CALL,input, pattern -> parseMechanicCall(input, iterator, mechanics, pattern, ops));
+        regexp(IF, input, matcher -> parseIf(input, iterator, mechanics, matcher, ops));
+        regexp(DELAY, input, matcher -> parseDelay(input, iterator, mechanics, matcher, ops));
+        return ops;
+    }
 
-            String leftPart = matcher.group(1);
-            ops.add(new AssignValue(leftPart));
-        } else {
-            matcher = MECHANIC_CALL.matcher(input);
-            if (matcher.matches()) {
-                String mechanicName = matcher.group(1);
-                String mechanicArgs = matcher.group(2);
-                
-                Matcher matcher1 = MECHANIC_CALL_ARGS.matcher(mechanicArgs);
-                List<Pair<String, String>> argList = new ArrayList<>();
-                if (matcher1.find()) {
-                    int id = 1;
-                    while (id < matcher1.groupCount()) {
-                        String expr = matcher1.group(id);
-                        id++;
-                        String leftSide = matcher1.group(id);
-                        id++;
-                        String rightSide = matcher1.group(id);
-                        argList.add(new Pair<>(leftSide, rightSide));
-                    }
-                }
-                mechanics.add(mechanicName);
-                ops.add(new CallMechanic(mechanicName, argList));
-            } else {
-                matcher = RETURN.matcher(input);
-                if (matcher.matches()) {
-                    String returnVal = matcher.group(1);
-                    ops.add(new Return(returnVal.toUpperCase(Locale.ROOT)));
-                } else {
-                    matcher = IF.matcher(input);
-                    if (matcher.matches()) {
-                        String value = matcher.group(1);
-                        ops.addAll(parse(value, iterator, mechanics)); // IF <EXPR>
 
-                        int ifIdx = 0;
+    private void parseDelay(String input, Iterator<String> iterator, Set<String> mechanics, Matcher matcher, List<Operation> ops) {
+        String delay = matcher.group(1);
 
-                        //IF
-                        // <body>
-                        //END
-                        List<Operation> enclosed = new ArrayList<>();
-                        while (iterator.hasNext()) {
-                            String next = iterator.next();
-                            enclosed.addAll(parse(next, iterator, mechanics));
-                            if (END.matcher(next).matches()) {
-                                ifIdx--;
-                                if (ifIdx <= 0) {
-                                    break;
-                                }
-                            }
-                            if (IF.matcher(next).matches()) {
-                                ifIdx++;
-                            }
+        int ifIdx = 0;
 
-                        }
-                        ops.add(new IF(enclosed, IFNE.matcher(input).matches()));
-
-                    }
-                    //DELAY 1000
-                    // <body>
-                    //END
-                    matcher = DELAY.matcher(input);
-                    if (matcher.matches()) {
-                        String delay = matcher.group(1);
-                        int ifIdx = 0;
-
-                        List<Operation> enclosed = new ArrayList<>();
-                        while (iterator.hasNext()) {
-                            String next = iterator.next();
-                            enclosed.addAll(parse(next, iterator, mechanics));
-                            if (END.matcher(next).matches()) {
-                                ifIdx--;
-                                if (ifIdx <= 0) {
-                                    break;
-                                }
-                            }
-                            if (IF.matcher(next).matches()) {
-                                ifIdx++;
-                            }
-                        }
-                        ops.add(new Delay(nextLambdaName(), enclosed));
-                    }
+        List<Operation> enclosed = new ArrayList<>();
+        List<Operation> delayParam = parse(delay, iterator, mechanics);
+        delayParam.add(new Operation() {
+            @Override
+            public List<StackManipulation> getStack(TokenizerContext context) {
+                return Arrays.asList(
+                        MethodVariableAccess.loadThis(),
+                        LongConstant.forValue(1000)
+                );
+            }
+        });
+        while (iterator.hasNext()) {
+            String next = iterator.next();
+            enclosed.addAll(parse(next, iterator, mechanics));
+            if (END.matcher(next).matches()) {
+                ifIdx--;
+                if (ifIdx <= 0) {
+                    enclosed.add(new ReturnVoid());
+                    break;
                 }
             }
+            if (IF.matcher(next).matches()) {
+                ifIdx++;
+            }
+        }
+        ops.add(new Delay(nextLambdaName(), enclosed));
+    }
+
+    private void parseReturn(String input, Iterator<String> iterator, Set<String> mechanics, Matcher matcher, List<Operation> ops) {
+        String returnVal = matcher.group(1);
+        ops.add(new ReturnEnum(returnVal.toUpperCase(Locale.ROOT)));
+    }
+
+    private void parseIf(String input, Iterator<String> iterator, Set<String> mechanics, Matcher matcher, List<Operation> ops) {
+        String value = matcher.group(1);
+        ops.addAll(parse(value, iterator, mechanics)); // IF <EXPR>
+
+        int ifIdx = 0;
+
+        //IF
+        // <body>
+        //END
+        List<Operation> enclosed = new ArrayList<>();
+        while (iterator.hasNext()) {
+            String next = iterator.next();
+            enclosed.addAll(parse(next, iterator, mechanics));
+            if (END.matcher(next).matches()) {
+                ifIdx--;
+                if (ifIdx <= 0) {
+                    break;
+                }
+            }
+            if (IF.matcher(next).matches()) {
+                ifIdx++;
+            }
+
+        }
+        ops.add(new IF(enclosed, IFNE.matcher(input).matches()));
+    }
+
+    private void parseAssign(String input, Iterator<String> iterator, Set<String> mechanics, Matcher matcher, List<Operation> ops) {
+        String rightPart = matcher.group(2);
+        ops.addAll(parse(rightPart, iterator, mechanics));
+
+        String leftPart = matcher.group(1);
+        ops.add(new AssignValue(leftPart));
+    }
+
+    private void parseMechanicCall(String input, Iterator<String> iterator, Set<String> mechanics, Matcher matcher, List<Operation> ops) {
+        String mechanicName = matcher.group(1);
+        String mechanicArgs = matcher.group(2);
+
+        String[] args = mechanicArgs.split(",");
+
+        List<Pair<String, String>> argList = new ArrayList<>();
+
+        for (String arg : args) {
+            String[] split = arg.split("=");
+            String leftSide = split[0];
+            String rightSide = split[1];
+            argList.add(new Pair<>(leftSide.trim(), rightSide.trim()));
         }
 
-        return ops;
+        mechanics.add(mechanicName);
+        ops.add(new CallMechanic(mechanicName, argList));
     }
 
     int lambdaIdx = 0;
@@ -158,6 +170,15 @@ public class Parser {
         String s = "lambda$a$"+lambdaIdx;
         lambdaIdx++;
         return s;
+    }
+
+    public boolean regexp(Pattern regexp, String input, Consumer<Matcher> p) {
+        Matcher matcher = regexp.matcher(input);
+        if (matcher.matches()) {
+            p.accept(matcher);
+            return true;
+        }
+        return false;
     }
 
     public interface Operation {
@@ -171,6 +192,13 @@ public class Parser {
         default Map<String, List<Operation>> additonalMethods(TokenizerContext context) {
             return Collections.emptyMap();
         }
+
+        default List<Pair<String, String>> variables() {
+            return Collections.emptyList();
+        }
+
+
+
     }
 
 
@@ -205,9 +233,9 @@ public class Parser {
                 Optional<Parameter> first = Stream.of(method.getParameters())
                         .filter(a -> a.isAnnotationPresent(SkillArgument.class)
                                 && a.getAnnotation(SkillArgument.class).value().equals(var.key)
-                                && var.value.equals("$settings"))
+                                && var.value.contains("$settings"))
                         .findFirst();
-                first.ifPresent(parameter -> map.put(var.key, MethodVariableAccess.of(new TypeDescription.ForLoadedType(parameter.getType()))));
+                first.ifPresent(parameter -> map.put(var.key.trim(), MethodVariableAccess.of(new TypeDescription.ForLoadedType(parameter.getType()))));
             }
 
             return map;
@@ -225,12 +253,11 @@ public class Parser {
 
             for (Parameter parameter : parameters) {
                 if (parameter.getType() == ISkill.class) {
-                    list.add(MethodVariableAccess.loadThis()); //alod_0
+                    list.add(MethodVariableAccess.loadThis()); //aload_0
                     continue;
                 }
                 SkillArgument annotation = parameter.getAnnotation(SkillArgument.class);
                 String functionParamName = annotation.value();
-
                 Iterator<Pair<String, String>> iterator = new ArrayList<>(variables).iterator();
                 boolean found = false;
                 while (iterator.hasNext()) {
@@ -240,7 +267,7 @@ public class Parser {
                     }
                     String value = next.value;
                     //settings ref
-                    if (value.equals("$settings")) { //param = $settings.xxx
+                      if (value.startsWith("$settings")) { //param = $settings.xxx
                         value = next.key;
                         ScriptSkillBytecodeAppenter.RefData refData = context.localVariables().get(value);
                         list.add(refData.type.loadFrom(refData.offset));
@@ -287,11 +314,7 @@ public class Parser {
 
         @Override
         public List<StackManipulation> getStack(TokenizerContext context) {
-
-            MethodDescription.InDefinedShape targetCall = context.thisType().getDeclaredMethods().filter(named(methodname)).getOnly();
-            //InvokeDynamic methodRef = InvokeDynamic.lambda(targetCall, new TypeDescription.ForLoadedType(type)).withoutArguments();
-
-            RunnableLambdaCall runnableLambdaCall = new RunnableLambdaCall(context.thisType(), methodname);
+            RunnableLambdaCall runnableLambdaCall = new RunnableLambdaCall(context, methodname, enclosed);
             return Collections.singletonList(
                 runnableLambdaCall
             );
@@ -300,12 +323,15 @@ public class Parser {
         @Override
         public Map<String, List<Operation>> additonalMethods(TokenizerContext context) {
             Map<String, List<Operation>> map = new HashMap<>();
+            for (Operation operation : enclosed) {
+                map.putAll(operation.additonalMethods(context));
+            }
             map.put(methodname, enclosed);
             return map;
         }
     }
 
-    private static record Return(String value) implements Operation {
+    private static record ReturnEnum(String value) implements Operation {
 
         @Override
         public List<StackManipulation> getStack(TokenizerContext context) {
@@ -313,6 +339,13 @@ public class Parser {
                     FieldAccess.forEnumeration(new EnumerationDescription.ForLoadedEnumeration(Enum.valueOf(SkillResult.class, value))),
                     MethodReturn.REFERENCE
             );
+        }
+    }
+
+    private static record ReturnVoid() implements Operation {
+        @Override
+        public List<StackManipulation> getStack(TokenizerContext context) {
+            return Collections.singletonList(MethodReturn.VOID);
         }
     }
 
@@ -340,9 +373,18 @@ public class Parser {
             //todo APPEND FRAME or ref SAME depending on enclosed or just tell MethodVisitor to compute frames?
             return list;
         }
+
+        @Override
+        public Map<String, List<Operation>> additonalMethods(TokenizerContext context) {
+            Map<String, List<Operation>> map = new HashMap();
+            for (Operation operation : enclosed) {
+                map.putAll(operation.additonalMethods(context));
+            }
+            return map;
+        }
     }
 
-    public static record ParserOutput(List<Operation> operations, Collection<String> requiredMechanics) {}
+    public static record ParseTree(List<Operation> operations, Collection<String> requiredMechanics) {}
 
 
     static class IfEq implements StackManipulation {
@@ -424,12 +466,16 @@ public class Parser {
     static class RunnableLambdaCall implements StackManipulation {
 
         private TypeDescription typeDefinitions;
+        private TokenizerContext ctx;
         private String methodName;
+        private List<Operation> enclosed;
 
-        public RunnableLambdaCall(TypeDescription typeDefinitions,
-                                  String methodName) {
-            this.typeDefinitions = typeDefinitions;
+        public RunnableLambdaCall(TokenizerContext ctx,
+                                  String methodName, List<Operation> enclosed) {
+            this.typeDefinitions = ctx.thisType();
+            this.ctx = ctx;
             this.methodName = methodName;
+            this.enclosed = enclosed;
         }
 
         @Override
@@ -440,12 +486,32 @@ public class Parser {
         @Override
         public Size apply(MethodVisitor methodVisitor, Implementation.Context implementationContext) {
 
+            String descriptor = "(%s)Ljava/lang/Runnable;";
+            String k = "";
+            for (Operation operation : enclosed) {
+                List<Pair<String, String>> variables = operation.variables();
+
+
+                for (Pair<String, String> entrya : variables) {
+                    ScriptSkillBytecodeAppenter.RefData refData = ctx.localVariables().get(entrya.value);
+                    k += new TypeDescription.ForLoadedType(refData.aClass).getDescriptor();
+                }
+            }
+            descriptor = descriptor.replaceAll("%s",k);
 
             methodVisitor.visitInvokeDynamicInsn("run",
-                    "(L"+typeDefinitions.getDescriptor()+";)Ljava/lang/Runnable;",
-                    new Handle(Opcodes.H_INVOKESTATIC, "java/lang/invoke/LambdaMetafactory", "metafactory", "(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;", false),
+                    descriptor,
+                    new Handle(Opcodes.H_INVOKESTATIC,
+                            new TypeDescription.ForLoadedType(LambdaMetafactory.class).getInternalName(),
+                            "metafactory",
+                            MethodType.methodType(CallSite.class, MethodHandles.Lookup.class, String.class, MethodType.class, String.class, Object[].class).toMethodDescriptorString(),
+                            false),
                     Type.VOID_TYPE,
-                    new Handle(Opcodes.H_INVOKESPECIAL, typeDefinitions.getDescriptor(), methodName, Type.VOID_TYPE.getDescriptor(), false),
+                    new Handle(Opcodes.H_INVOKESPECIAL,
+                            this.ctx.thisType().getInternalName(),
+                            methodName,
+                            "("+k+")V",
+                            false),
                     Type.VOID_TYPE);
             return new Size(1,0);
         }

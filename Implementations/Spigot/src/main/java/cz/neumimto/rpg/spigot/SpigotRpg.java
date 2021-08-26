@@ -15,6 +15,7 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -101,6 +102,11 @@ public final class SpigotRpg extends AbstractRpg {
     @Override
     public void scheduleSyncLater(Runnable runnable) {
         Bukkit.getScheduler().scheduleSyncDelayedTask(SpigotRpgPlugin.getInstance(), runnable);
+    }
+
+    @Override
+    public void scheduleSyncLater(long millis, Runnable runnable) {
+        Bukkit.getScheduler().scheduleSyncDelayedTask(SpigotRpgPlugin.getInstance(), runnable, millis / 50);
     }
 
     @Override

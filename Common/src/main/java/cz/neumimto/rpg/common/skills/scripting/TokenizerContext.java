@@ -9,5 +9,11 @@ import java.util.Set;
 public record TokenizerContext(
         Map<String, ScriptSkillBytecodeAppenter.RefData> localVariables,
         TypeDescription thisType,
-        Set<Object> mechanics
-) {}
+        Set<Object> mechanics,
+        List<Parser.Operation> operations
+) {
+
+    public TokenizerContext copyContext(List<Parser.Operation> operations) {
+        return new TokenizerContext(localVariables, thisType, mechanics, operations);
+    }
+}

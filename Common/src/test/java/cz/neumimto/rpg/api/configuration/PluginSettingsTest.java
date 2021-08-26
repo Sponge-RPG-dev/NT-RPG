@@ -75,6 +75,11 @@ public class PluginSettingsTest {
         }
 
         @Override
+        public void scheduleSyncLater(long millis, Runnable runnable) {
+
+        }
+
+        @Override
         public Set<UUID> getOnlinePlayers() {
             return null;
         }

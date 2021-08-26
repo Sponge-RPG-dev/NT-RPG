@@ -2,23 +2,19 @@ package cz.neumimto.rpg.common.skills.scripting;
 
 import com.google.inject.Injector;
 import com.google.inject.Key;
-import com.sun.org.apache.bcel.internal.classfile.Synthetic;
 import cz.neumimto.rpg.api.ResourceLoader;
-import cz.neumimto.rpg.api.damage.DamageService;
-import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.scripting.ScriptSkillModel;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
-import cz.neumimto.rpg.api.utils.DebugLevel;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.asm.AsmVisitorWrapper;
 import net.bytebuddy.description.annotation.AnnotationDescription;
 import net.bytebuddy.description.field.FieldDescription;
 import net.bytebuddy.description.field.FieldList;
 import net.bytebuddy.description.method.MethodList;
-import net.bytebuddy.description.modifier.ModifierContributor;
+import net.bytebuddy.description.modifier.Ownership;
 import net.bytebuddy.description.modifier.SyntheticState;
 import net.bytebuddy.description.modifier.Visibility;
 import net.bytebuddy.description.type.TypeDescription;
@@ -50,7 +46,7 @@ public abstract class CustomSkillGenerator {
             return null;
         }
 
-        Parser.ParserOutput parse = new Parser().parse(scriptSkillModel.getScript());
+        Parser.ParseTree parse = new Parser().parse(scriptSkillModel.getScript());
 
 
         String skillId = scriptSkillModel.getId();
@@ -75,29 +71,10 @@ public abstract class CustomSkillGenerator {
 
         }
 
-        var typeDescription = bb.toTypeDescription();
         var localVariables = new HashMap<String, ScriptSkillBytecodeAppenter.RefData>();
-        var tokenizerctx = new TokenizerContext(localVariables, bb.toTypeDescription(), getMechanics());
+        var tokenizerctx = new TokenizerContext(localVariables, bb.toTypeDescription(), getMechanics(), parse.operations());
 
-        for (Parser.Operation operation : parse.operations()) {
-            Map<String, List<Parser.Operation>> map = operation.additonalMethods(tokenizerctx);
-            for (Map.Entry<String, List<Parser.Operation>> stringListEntry : map.entrySet()) {
-                bb = bb.defineMethod(stringListEntry.getKey(), Void.class, Visibility.PRIVATE, SyntheticState.SYNTHETIC)
-                        .intercept(new Implementation() {
-                            @Override
-                            public ByteCodeAppender appender(Target implementationTarget) {
-                                return new ScriptSkillBytecodeAppenter(implementationTarget, getMechanics(), parse);
-                            }
-
-                            @Override
-                            public InstrumentedType prepare(InstrumentedType instrumentedType) {
-                                return null;
-                            }
-                        });
-            }
-        }
-
-        DynamicType.Unloaded<ActiveSkill> make = bb.defineMethod("cast", SkillResult.class, Visibility.PUBLI)
+        bb = bb.defineMethod("cast", SkillResult.class, Visibility.PUBLIC)
                 .withParameter(characterClassImpl(), "caster")
                 .withParameter(PlayerSkillContext.class, "context")
                 .intercept(new Implementation() {
@@ -108,11 +85,31 @@ public abstract class CustomSkillGenerator {
 
                     @Override
                     public ByteCodeAppender appender(Target implementationTarget) {
-                        return new ScriptSkillBytecodeAppenter(implementationTarget, getMechanics(), parse);
+                        return new ScriptSkillBytecodeAppenter(tokenizerctx);
                     }
 
-                })
-                .make();
+                });
+
+        for (Parser.Operation operation : parse.operations()) {
+            Map<String, List<Parser.Operation>> map = operation.additonalMethods(tokenizerctx);
+            for (Map.Entry<String, List<Parser.Operation>> stringListEntry : map.entrySet()) {
+                bb = bb.defineMethod(stringListEntry.getKey(), Void.class, Visibility.PRIVATE, SyntheticState.SYNTHETIC, Ownership.STATIC)
+                        .withParameters(tokenizerctx.localVariables().values().stream().map(a->a.aClass).collect(Collectors.toList()))
+                        .intercept(new Implementation() {
+                            @Override
+                            public ByteCodeAppender appender(Target implementationTarget) {
+                                return new ScriptSkillBytecodeAppenter(tokenizerctx.copyContext(stringListEntry.getValue()));
+                            }
+
+                            @Override
+                            public InstrumentedType prepare(InstrumentedType instrumentedType) {
+                                return instrumentedType;
+                            }
+                        });
+            }
+        }
+
+        DynamicType.Unloaded<ActiveSkill> make = bb.make();
         make.saveIn(new File("/tmp/test.class"));
         return make.load(classLoader).getLoaded();
     }

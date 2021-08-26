@@ -222,7 +222,12 @@ public class RpgTests implements RpgApi {
 
     @Override
     public void scheduleSyncLater(Runnable runnable) {
+        runnable.run();
+    }
 
+    @Override
+    public void scheduleSyncLater(long millis, Runnable runnable) {
+        runnable.run();
     }
 
     @Override

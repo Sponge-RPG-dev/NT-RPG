@@ -4,7 +4,6 @@ import com.google.inject.Injector;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.skills.scripting.ScriptSkillModel;
 import cz.neumimto.rpg.common.scripting.TestCustomSkillGenerator;
-import cz.neumimto.rpg.junit.CharactersExtension;
 import cz.neumimto.rpg.junit.NtRpgExtension;
 import cz.neumimto.rpg.junit.TestGuiceModule;
 import name.falgout.jeffrey.testing.junit.guice.GuiceExtension;
@@ -14,8 +13,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.HashSet;
-import java.util.Set;
 
 @ExtendWith({GuiceExtension.class, NtRpgExtension.class})
 @IncludeModule(TestGuiceModule.class)
@@ -28,14 +25,15 @@ class ScríptParserTests {
     private Injector injector;
 
     @Test
-    public void test_01() {
-        Set<Object> mechanics = new HashSet<>();
+    public void test_01() throws Exception {
         injector.getInstance(TargettedEntity.class);
         injector.getInstance(Exists.class);
         injector.getInstance(A.class);
         injector.getInstance(DamageEntity.class);
-        Parser.ParserOutput lex = new Parser().parse("""
-                     @target = targetted_entity{range=$settings.range, entityFrom=@caster}
+        ScriptSkillModel model = new ScriptSkillModel();
+        model.setId("aaa");
+        model.setScript("""
+                       @target = targetted_entity{range=$settings.range, entityFrom=@caster}
                        IF exists{test=@target}
                           IF damage_entity{damage=20, damaged=@target, damager=@caster}
                              spawn_lighting{location=@target}
@@ -45,10 +43,8 @@ class ScríptParserTests {
                        RETURN CANCELLED
                 """);
 
-        assert lex.requiredMechanics().contains("damage_entity");
-        assert lex.requiredMechanics().contains("targetted_entity");
-        assert lex.requiredMechanics().contains("spawn_lighting");
-        assert lex.requiredMechanics().contains("exists");
+        skillGenerator.generate(model,this.getClass().getClassLoader());
+
     }
 
     @Test
@@ -63,7 +59,32 @@ class ScríptParserTests {
                        @target = targetted_entity{range=$settings.range, entityFrom=@caster}
                        IF exists{test=@target}
                           IF damage_entity{damage=20, damaged=@target, damager=@caster}
-                             spawn_lighting{location=@target}
+                             DELAY 10000
+                               spawn_lighting{location=@target}
+                             END
+                             RETURN OK
+                          END
+                       END
+                       RETURN CANCELLED
+                """);
+        skillGenerator.generate(model,this.getClass().getClassLoader());
+    }
+
+    @Test
+    public void test_03() throws Exception {
+        injector.getInstance(TargettedEntity.class);
+        injector.getInstance(Exists.class);
+        injector.getInstance(A.class);
+        injector.getInstance(DamageEntity.class);
+        ScriptSkillModel model = new ScriptSkillModel();
+        model.setId("aaa");
+        model.setScript("""
+                       @target = targetted_entity{range=$settings.range, entityFrom=@caster}
+                       IF exists{test=@target}
+                          IF damage_entity{damage=20, damaged=@target, damager=@caster}
+                             DELAY $settings.cooldown
+                               spawn_lighting{location=@target}
+                             END
                              RETURN OK
                           END
                        END
@@ -107,7 +128,7 @@ class ScríptParserTests {
     public static class A {
 
         @Handler
-        public void test(@SkillArgument("target") IEntity o) {
+        public void spawn(@SkillArgument("location") IEntity o) {
             int i = 1;
         }
     }

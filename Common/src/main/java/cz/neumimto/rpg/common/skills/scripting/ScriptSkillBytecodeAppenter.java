@@ -2,6 +2,8 @@ package cz.neumimto.rpg.common.skills.scripting;
 
 import com.google.inject.Injector;
 import com.google.inject.Key;
+import cz.neumimto.rpg.api.entity.IEntity;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import net.bytebuddy.description.method.MethodDescription;
 import net.bytebuddy.description.type.TypeDescription;
@@ -26,9 +28,6 @@ public class ScriptSkillBytecodeAppenter implements ByteCodeAppender {
     static Method getLongNodeValue;
     static Method getIntegerNodeValue;
 
-    @Inject
-    private Injector injector;
-
     static {
         try {
             getDoubleNodeValue = PlayerSkillContext.class.getMethod("getDoubleNodeValue", String.class);
@@ -40,40 +39,46 @@ public class ScriptSkillBytecodeAppenter implements ByteCodeAppender {
         }
     }
 
-    private Map<String, RefData> localVariables = new HashMap<>();
+    private Map<String, RefData> localVariables;
 
     private TokenizerContext tokenizerctx;
     public ScriptSkillBytecodeAppenter(TokenizerContext tokenizerctx) {
-        tokenizerctx = tokenizerctx;
+        this.tokenizerctx = tokenizerctx;
+        this.localVariables = tokenizerctx.localVariables();
     }
 
     @Override
     public Size apply(MethodVisitor mv, Implementation.Context ctx, MethodDescription md) {
-        localVariables.put("@caster", new RefData(MethodVariableAccess.REFERENCE, 1));
-        localVariables.put("@context", new RefData(MethodVariableAccess.REFERENCE, 2));
-        createTargetVariable();
-
+        boolean lambdaCall = false;
         List<StackManipulation> stackManipulations = new ArrayList<>();
+        if (localVariables.containsKey("@caster")) {
+            lambdaCall = true;
+        } else {
 
-      // for (String mechanic : mechanics) {
-      //     if (mechanic.contains("@target")) {
-      //         stackManipulations.addAll(createTargetVariable());
-      //         break;
-      //     }
-      // }
+            localVariables.putIfAbsent("@caster", new RefData(MethodVariableAccess.REFERENCE, IActiveCharacter.class, 1));
+            localVariables.putIfAbsent("@context", new RefData(MethodVariableAccess.REFERENCE, PlayerSkillContext.class, 2));
+            createTargetVariable();
 
 
-        Map<String, MethodVariableAccess> localVars = new HashMap<>();
-        for (Parser.Operation operation : parserOutput.operations()) {
-            localVars.putAll(operation.skillSettingsVarsRequired(tokenizerctx));
+            // for (String mechanic : mechanics) {
+            //     if (mechanic.contains("@target")) {
+            //         stackManipulations.addAll(createTargetVariable());
+            //         break;
+            //     }
+            // }
+
+
+            Map<String, MethodVariableAccess> localVars = new HashMap<>();
+            for (Parser.Operation operation : tokenizerctx.operations()) {
+                localVars.putAll(operation.skillSettingsVarsRequired(tokenizerctx));
+            }
+
+            for (Map.Entry<String, MethodVariableAccess> e : localVars.entrySet()) {
+                stackManipulations.addAll(skillSettingsIntoLocalVar(e.getKey(), e.getValue()));
+            }
         }
 
-        for (Map.Entry<String, MethodVariableAccess> e : localVars.entrySet()) {
-            stackManipulations.addAll(skillSettingsIntoLocalVar(e.getKey(), e.getValue()));
-        }
-
-
-        List<Parser.Operation> operations = parserOutput.operations();
+        List<Parser.Operation> operations = tokenizerctx.operations();
         for (Parser.Operation operation : operations) {
             stackManipulations.addAll(operation.getStack(tokenizerctx));
         }
@@ -104,22 +109,34 @@ public class ScriptSkillBytecodeAppenter implements ByteCodeAppender {
      */
     private List<StackManipulation> skillSettingsIntoLocalVar(String mapKey, MethodVariableAccess type) {
         int next = getNextOffset();
-
+        Class<?> ptype = null;
         var stack = Arrays.asList(
                 MethodVariableAccess.REFERENCE.loadFrom(localVariables.get("@context").offset),
                 new TextConstant(mapKey),
                 MethodInvocation.invoke(new MethodDescription.ForLoadedMethod(
                         switch (type) {
-                            case LONG -> getLongNodeValue;
-                            case DOUBLE -> getDoubleNodeValue;
-                            case FLOAT -> getFloatNodeValue;
-                            case INTEGER -> getIntegerNodeValue;
+                            case LONG -> {
+                                ptype = long.class;
+                                yield  getLongNodeValue;
+                            }
+                            case DOUBLE -> {
+                                ptype = double.class;
+                                yield getDoubleNodeValue;
+                            }
+                            case FLOAT -> {
+                                ptype = float.class;
+                                yield getFloatNodeValue;
+                            }
+                            case INTEGER -> {
+                                ptype = int.class;
+                                yield getIntegerNodeValue;
+                            }
                             default -> throw new IllegalStateException("REFERENCE");
                         }
                 )),
                 type.storeAt(next)
         );
-        localVariables.put(mapKey, new RefData(type, next));
+        localVariables.put(mapKey, new RefData(type, ptype, next));
         return stack;
     }
 
@@ -130,7 +147,7 @@ public class ScriptSkillBytecodeAppenter implements ByteCodeAppender {
      */
     private List<StackManipulation> createTargetVariable() {
         int nextOffset = getNextOffset();
-        localVariables.put("@target", new RefData(MethodVariableAccess.REFERENCE, nextOffset));
+        localVariables.put("@target", new RefData(MethodVariableAccess.REFERENCE, IEntity.class, nextOffset));
         return Arrays.asList(
                 NullConstant.INSTANCE,
                 MethodVariableAccess.REFERENCE.storeAt(nextOffset)
@@ -140,25 +157,32 @@ public class ScriptSkillBytecodeAppenter implements ByteCodeAppender {
 
     static class RefData {
         MethodVariableAccess type;
+        Class<?> aClass;
         int offset;
 
         public RefData(MethodVariableAccess type, int offset) {
             this.type = type;
             this.offset = offset;
         }
-    }
 
-
-    protected Object getMechanic(String id) {
-        for (Key<?> key : injector.getAllBindings().keySet()) {
-            Class<?> rawType = key.getTypeLiteral().getRawType();
-            if (rawType.isAnnotationPresent(SkillMechanic.class)) {
-                if (id.equalsIgnoreCase(rawType.getAnnotation(SkillMechanic.class).value())) {
-                    return injector.getInstance(rawType);
-                }
-            }
+        public RefData(MethodVariableAccess type, Class<?> aClass, int offset) {
+            this.type = type;
+            this.aClass = aClass;
+            this.offset = offset;
         }
-        return null;
     }
+
+
+   //protected Object getMechanic(String id) {
+   //    for (Key<?> key : injector.getAllBindings().keySet()) {
+   //        Class<?> rawType = key.getTypeLiteral().getRawType();
+   //        if (rawType.isAnnotationPresent(SkillMechanic.class)) {
+   //            if (id.equalsIgnoreCase(rawType.getAnnotation(SkillMechanic.class).value())) {
+   //                return injector.getInstance(rawType);
+   //            }
+   //        }
+   //    }
+   //    return null;
+   //}
 
 }
