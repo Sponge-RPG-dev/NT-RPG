@@ -6,9 +6,9 @@ import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterClass;
 import org.junit.jupiter.api.*;
-import org.slf4j.Logger;
 
 import java.util.Optional;
+import java.util.logging.Logger;
 
 public class JdbcPlayerDaoTest {
 
@@ -17,7 +17,7 @@ public class JdbcPlayerDaoTest {
     @BeforeAll
     public static void before() {
         new RpgTests();
-        Logger logger = org.slf4j.LoggerFactory.getLogger(JdbcPlayerDaoTest.class);
+        Logger logger = Logger.getLogger(JdbcPlayerDaoTest.class.getSimpleName());
         Log.setLogger(logger);
         try {
             MariaDbBootstrap.runMigrations();

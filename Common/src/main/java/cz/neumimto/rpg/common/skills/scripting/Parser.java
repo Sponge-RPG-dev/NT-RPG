@@ -10,7 +10,6 @@ import net.bytebuddy.description.type.TypeDescription;
 import net.bytebuddy.implementation.Implementation;
 import net.bytebuddy.implementation.bytecode.StackManipulation;
 import net.bytebuddy.implementation.bytecode.constant.DoubleConstant;
-import net.bytebuddy.implementation.bytecode.constant.IntegerConstant;
 import net.bytebuddy.implementation.bytecode.constant.LongConstant;
 import net.bytebuddy.implementation.bytecode.constant.NullConstant;
 import net.bytebuddy.implementation.bytecode.member.FieldAccess;
@@ -30,6 +29,7 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Parser {
@@ -79,16 +79,6 @@ public class Parser {
         int ifIdx = 0;
 
         List<Operation> enclosed = new ArrayList<>();
-        List<Operation> delayParam = parse(delay, iterator, mechanics);
-        delayParam.add(new Operation() {
-            @Override
-            public List<StackManipulation> getStack(TokenizerContext context) {
-                return Arrays.asList(
-                        MethodVariableAccess.loadThis(),
-                        LongConstant.forValue(1000)
-                );
-            }
-        });
         while (iterator.hasNext()) {
             String next = iterator.next();
             enclosed.addAll(parse(next, iterator, mechanics));
@@ -103,7 +93,7 @@ public class Parser {
                 ifIdx++;
             }
         }
-        ops.add(new Delay(nextLambdaName(), enclosed));
+        ops.add(new Delay(nextLambdaName(), enclosed, delay));
     }
 
     private void parseReturn(String input, Iterator<String> iterator, Set<String> mechanics, Matcher matcher, List<Operation> ops) {
@@ -197,17 +187,13 @@ public class Parser {
             return Collections.emptyList();
         }
 
-
-
     }
-
-
 
     private record AssignValue(String variableName) implements Operation {
 
         @Override
         public List<StackManipulation> getStack(TokenizerContext context) {
-            ScriptSkillBytecodeAppenter.RefData refData = context.localVariables().get(variableName);
+            RefData refData = context.localVariables().get(variableName);
             return Arrays.asList(
                     refData.type.storeAt(refData.offset)
             );
@@ -269,7 +255,7 @@ public class Parser {
                     //settings ref
                       if (value.startsWith("$settings")) { //param = $settings.xxx
                         value = next.key;
-                        ScriptSkillBytecodeAppenter.RefData refData = context.localVariables().get(value);
+                        RefData refData = context.localVariables().get(value);
                         list.add(refData.type.loadFrom(refData.offset));
 
                     } else if (NUMBER_CONSTANT.matcher(value).matches()) { //param = 20
@@ -277,7 +263,7 @@ public class Parser {
 
                     } else {
                         //variable ref
-                        ScriptSkillBytecodeAppenter.RefData refData = context.localVariables().get(value);
+                        RefData refData = context.localVariables().get(value);
                         list.add(refData.type.loadFrom(refData.offset));
                     }
                     found = true;
@@ -310,14 +296,50 @@ public class Parser {
 
     }
 
-    private static record Delay(String methodname, List<Operation> enclosed) implements Operation {
+    private static record Delay(String methodname, List<Operation> enclosed, String delayArg) implements Operation {
 
         @Override
         public List<StackManipulation> getStack(TokenizerContext context) {
+            StackManipulation delay = null;
+            if (delayArg.startsWith("$settings.")) {
+                RefData refData = context.localVariables().get(delayArg.replaceAll("\\$settings\\.", ""));
+                delay = refData.type.loadFrom(refData.offset);
+            } else {
+                delay = LongConstant.forValue(Long.parseLong(delayArg));
+            }
+
             RunnableLambdaCall runnableLambdaCall = new RunnableLambdaCall(context, methodname, enclosed);
-            return Collections.singletonList(
-                runnableLambdaCall
+            Method method = null;
+            try {
+                method = ISkill.class.getDeclaredMethod("delay", long.class, Runnable.class);
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            }
+
+            List<StackManipulation> list = new ArrayList<>();
+            list.addAll(Arrays.asList(
+                            MethodVariableAccess.loadThis(),
+                            delay,
+                            MethodVariableAccess.loadThis())
             );
+            for (RefData value : context.localVariables().values()) {
+                list.add(value.type.loadFrom(value.offset));
+            }
+            var s0 = Arrays.asList(
+                    MethodVariableAccess.loadThis(),
+                    delay,
+                    MethodVariableAccess.loadThis()
+            );
+            var s1 = context.localVariables().values().stream().map(a->a.type.loadFrom(a.offset)).collect(Collectors.toList());
+            var s2 = Arrays.asList(
+                runnableLambdaCall,
+                MethodInvocation.invoke(new MethodDescription.ForLoadedMethod(method))
+            );
+            var result = new ArrayList<StackManipulation>();
+            result.addAll(s0);
+            result.addAll(s1);
+            result.addAll(s2);
+            return result;
         }
 
         @Override
@@ -487,17 +509,8 @@ public class Parser {
         public Size apply(MethodVisitor methodVisitor, Implementation.Context implementationContext) {
 
             String descriptor = "(%s)Ljava/lang/Runnable;";
-            String k = "";
-            for (Operation operation : enclosed) {
-                List<Pair<String, String>> variables = operation.variables();
-
-
-                for (Pair<String, String> entrya : variables) {
-                    ScriptSkillBytecodeAppenter.RefData refData = ctx.localVariables().get(entrya.value);
-                    k += new TypeDescription.ForLoadedType(refData.aClass).getDescriptor();
-                }
-            }
-            descriptor = descriptor.replaceAll("%s",k);
+            String k = ctx.localVariables().values().stream().map(a-> new TypeDescription.ForLoadedType(a.aClass).getDescriptor()).collect(Collectors.joining());
+            descriptor = descriptor.replaceAll("%s",ctx.thisType().getDescriptor() + k);
 
             methodVisitor.visitInvokeDynamicInsn("run",
                     descriptor,

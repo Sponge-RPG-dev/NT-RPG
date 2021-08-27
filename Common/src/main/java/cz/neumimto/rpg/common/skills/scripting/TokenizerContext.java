@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 public record TokenizerContext(
-        Map<String, ScriptSkillBytecodeAppenter.RefData> localVariables,
+        Map<String, RefData> localVariables,
         TypeDescription thisType,
         Set<Object> mechanics,
         List<Parser.Operation> operations

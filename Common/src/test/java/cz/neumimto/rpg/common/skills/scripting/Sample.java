@@ -31,13 +31,16 @@ public class Sample extends ActiveSkill {
 
     @Override
     public SkillResult cast(IActiveCharacter character, PlayerSkillContext info) {
-        int range = info.getIntNodeValue("range");
-
-        IEntity iEntity = TargettedEntity.get(range, character);
+        final int range = info.getIntNodeValue("range");
+        final IEntity iEntity = TargettedEntity.get(range, character);;
+        //iEntity = TargettedEntity.get(range, character);
         if (Exists.test(iEntity)) {
             if (DamageEntity.damage(20, iEntity, character)) {
                 delay(1000, () -> {
-                    A.spawn(iEntity);
+                    character.getAllowedArmor();
+                    info.getBonusLevel();
+                    iEntity.getEntity();
+                    int k = range;
                 });
                 return SkillResult.OK;
             }

@@ -3,6 +3,8 @@ package cz.neumimto.rpg.common.skills.scripting;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import cz.neumimto.rpg.api.ResourceLoader;
+import cz.neumimto.rpg.api.entity.IEntity;
+import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillResult;
@@ -13,6 +15,7 @@ import net.bytebuddy.asm.AsmVisitorWrapper;
 import net.bytebuddy.description.annotation.AnnotationDescription;
 import net.bytebuddy.description.field.FieldDescription;
 import net.bytebuddy.description.field.FieldList;
+import net.bytebuddy.description.method.MethodDescription;
 import net.bytebuddy.description.method.MethodList;
 import net.bytebuddy.description.modifier.Ownership;
 import net.bytebuddy.description.modifier.SyntheticState;
@@ -22,6 +25,10 @@ import net.bytebuddy.dynamic.DynamicType;
 import net.bytebuddy.dynamic.scaffold.InstrumentedType;
 import net.bytebuddy.implementation.Implementation;
 import net.bytebuddy.implementation.bytecode.ByteCodeAppender;
+import net.bytebuddy.implementation.bytecode.constant.NullConstant;
+import net.bytebuddy.implementation.bytecode.constant.TextConstant;
+import net.bytebuddy.implementation.bytecode.member.MethodInvocation;
+import net.bytebuddy.implementation.bytecode.member.MethodVariableAccess;
 import net.bytebuddy.jar.asm.ClassWriter;
 import net.bytebuddy.pool.TypePool;
 
@@ -34,9 +41,26 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public abstract class CustomSkillGenerator {
+
+    static Method getDoubleNodeValue;
+    static Method getFloatNodeValue;
+    static Method getLongNodeValue;
+    static Method getIntegerNodeValue;
+
+    static {
+        try {
+            getDoubleNodeValue = PlayerSkillContext.class.getMethod("getDoubleNodeValue", String.class);
+            getFloatNodeValue = PlayerSkillContext.class.getMethod("getFloatNodeValue", String.class);
+            getLongNodeValue = PlayerSkillContext.class.getMethod("getLongNodeValue", String.class);
+            getIntegerNodeValue = PlayerSkillContext.class.getMethod("getIntNodeValue", String.class);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Inject
     private Injector injector;
@@ -71,8 +95,22 @@ public abstract class CustomSkillGenerator {
 
         }
 
-        var localVariables = new HashMap<String, ScriptSkillBytecodeAppenter.RefData>();
+        var localVariables = new LinkedHashMap<String, RefData>();
         var tokenizerctx = new TokenizerContext(localVariables, bb.toTypeDescription(), getMechanics(), parse.operations());
+
+        localVariables.putIfAbsent("@caster", new RefData(MethodVariableAccess.REFERENCE, IActiveCharacter.class, 1));
+        localVariables.putIfAbsent("@context", new RefData(MethodVariableAccess.REFERENCE, PlayerSkillContext.class, 2));
+        localVariables.putIfAbsent("@target", new RefData(MethodVariableAccess.REFERENCE, IEntity.class, 3, Arrays.asList(
+                NullConstant.INSTANCE,
+                MethodVariableAccess.REFERENCE.storeAt(3)
+        )));
+        Map<String, MethodVariableAccess> localVars = new HashMap<>();
+        for (Parser.Operation operation : tokenizerctx.operations()) {
+            localVars.putAll(operation.skillSettingsVarsRequired(tokenizerctx));
+        }
+        for (Map.Entry<String, MethodVariableAccess> e : localVars.entrySet()) {
+            skillSettingsIntoLocalVar(e.getKey(), e.getValue(), tokenizerctx);
+        }
 
         bb = bb.defineMethod("cast", SkillResult.class, Visibility.PUBLIC)
                 .withParameter(characterClassImpl(), "caster")
@@ -85,20 +123,25 @@ public abstract class CustomSkillGenerator {
 
                     @Override
                     public ByteCodeAppender appender(Target implementationTarget) {
-                        return new ScriptSkillBytecodeAppenter(tokenizerctx);
+                        return new ScriptSkillBytecodeAppenter.CastMethod(tokenizerctx);
                     }
 
                 });
+
+        var params = tokenizerctx.localVariables().values().stream()
+                .sorted(Comparator.comparingInt(value -> value.offset))
+                .map(a->a.aClass)
+                .collect(Collectors.toList());
 
         for (Parser.Operation operation : parse.operations()) {
             Map<String, List<Parser.Operation>> map = operation.additonalMethods(tokenizerctx);
             for (Map.Entry<String, List<Parser.Operation>> stringListEntry : map.entrySet()) {
                 bb = bb.defineMethod(stringListEntry.getKey(), Void.class, Visibility.PRIVATE, SyntheticState.SYNTHETIC, Ownership.STATIC)
-                        .withParameters(tokenizerctx.localVariables().values().stream().map(a->a.aClass).collect(Collectors.toList()))
+                        .withParameters(params)
                         .intercept(new Implementation() {
                             @Override
                             public ByteCodeAppender appender(Target implementationTarget) {
-                                return new ScriptSkillBytecodeAppenter(tokenizerctx.copyContext(stringListEntry.getValue()));
+                                return new ScriptSkillBytecodeAppenter.LambdaMethod(tokenizerctx.copyContext(stringListEntry.getValue()));
                             }
 
                             @Override
@@ -213,6 +256,44 @@ public abstract class CustomSkillGenerator {
         }
     }
 
-
-
+    private int getNextOffset(TokenizerContext ctx) {
+        OptionalInt max = ctx.localVariables().values().stream().flatMapToInt(a -> IntStream.of(a.offset)).max();
+        return max.getAsInt() + 1;
+    }
+    /**
+     * generates method
+     * double damage = playerSkillContext.getDoubleNodeValue("damage");
+     */
+    private void skillSettingsIntoLocalVar(String mapKey, MethodVariableAccess type, TokenizerContext ctx) {
+        Map<String, RefData> localVariables = ctx.localVariables();
+        int next = getNextOffset(ctx);
+        Class<?> ptype = null;
+        var stack = Arrays.asList(
+                MethodVariableAccess.REFERENCE.loadFrom(localVariables.get("@context").offset),
+                new TextConstant(mapKey),
+                MethodInvocation.invoke(new MethodDescription.ForLoadedMethod(
+                        switch (type) {
+                            case LONG -> {
+                                ptype = long.class;
+                                yield getLongNodeValue;
+                            }
+                            case DOUBLE -> {
+                                ptype = double.class;
+                                yield getDoubleNodeValue;
+                            }
+                            case FLOAT -> {
+                                ptype = float.class;
+                                yield getFloatNodeValue;
+                            }
+                            case INTEGER -> {
+                                ptype = int.class;
+                                yield getIntegerNodeValue;
+                            }
+                            default -> throw new IllegalStateException("REFERENCE");
+                        }
+                )),
+                type.storeAt(next)
+        );
+        localVariables.put(mapKey, new RefData(type, ptype, next, stack));
+    }
 }
