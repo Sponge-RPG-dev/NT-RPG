@@ -25,6 +25,7 @@ import net.bytebuddy.dynamic.DynamicType;
 import net.bytebuddy.dynamic.scaffold.InstrumentedType;
 import net.bytebuddy.implementation.Implementation;
 import net.bytebuddy.implementation.bytecode.ByteCodeAppender;
+import net.bytebuddy.implementation.bytecode.StackManipulation;
 import net.bytebuddy.implementation.bytecode.constant.NullConstant;
 import net.bytebuddy.implementation.bytecode.constant.TextConstant;
 import net.bytebuddy.implementation.bytecode.member.MethodInvocation;
@@ -70,7 +71,7 @@ public abstract class CustomSkillGenerator {
             return null;
         }
 
-        Parser.ParseTree parse = new Parser().parse(scriptSkillModel.getScript());
+        Parser.ParseTree parse = new Parser(getMechanics()).parse(scriptSkillModel.getScript());
 
 
         String skillId = scriptSkillModel.getId();
@@ -100,17 +101,32 @@ public abstract class CustomSkillGenerator {
 
         localVariables.putIfAbsent("@caster", new RefData(MethodVariableAccess.REFERENCE, IActiveCharacter.class, 1));
         localVariables.putIfAbsent("@context", new RefData(MethodVariableAccess.REFERENCE, PlayerSkillContext.class, 2));
-        localVariables.putIfAbsent("@target", new RefData(MethodVariableAccess.REFERENCE, IEntity.class, 3, Arrays.asList(
-                NullConstant.INSTANCE,
-                MethodVariableAccess.REFERENCE.storeAt(3)
-        )));
+       // localVariables.putIfAbsent("@target", new RefData(MethodVariableAccess.REFERENCE, IEntity.class, 3, Arrays.asList(
+       //         NullConstant.INSTANCE,
+       //         MethodVariableAccess.REFERENCE.storeAt(3)
+       // )));
         Map<String, MethodVariableAccess> localVars = new HashMap<>();
-        for (Parser.Operation operation : tokenizerctx.operations()) {
+        for (Operation operation : tokenizerctx.operations()) {
             localVars.putAll(operation.skillSettingsVarsRequired(tokenizerctx));
         }
         for (Map.Entry<String, MethodVariableAccess> e : localVars.entrySet()) {
             skillSettingsIntoLocalVar(e.getKey(), e.getValue(), tokenizerctx);
         }
+
+        List<StackManipulation> stackManipulations = new ArrayList<>();
+
+        Map<String, RefData> stringRefDataMap = tokenizerctx.localVariables();;
+        for (RefData value : stringRefDataMap.values()) {
+            if (value.initInstruction != null) {
+                stackManipulations.addAll(value.initInstruction);
+            }
+        }
+
+        List<Operation> operations = tokenizerctx.operations();
+        for (Operation operation : operations) {
+            stackManipulations.addAll(operation.getStack(tokenizerctx));
+        }
+
 
         bb = bb.defineMethod("cast", SkillResult.class, Visibility.PUBLIC)
                 .withParameter(characterClassImpl(), "caster")
@@ -123,7 +139,7 @@ public abstract class CustomSkillGenerator {
 
                     @Override
                     public ByteCodeAppender appender(Target implementationTarget) {
-                        return new ScriptSkillBytecodeAppenter.CastMethod(tokenizerctx);
+                        return new ScriptSkillBytecodeAppenter(stackManipulations);
                     }
 
                 });
@@ -133,9 +149,9 @@ public abstract class CustomSkillGenerator {
                 .map(a->a.aClass)
                 .collect(Collectors.toList());
 
-        for (Parser.Operation operation : parse.operations()) {
-            Map<String, List<Parser.Operation>> map = operation.additonalMethods(tokenizerctx);
-            for (Map.Entry<String, List<Parser.Operation>> stringListEntry : map.entrySet()) {
+        for (Operation operation : parse.operations()) {
+            Map<String, List<Operation>> map = operation.additonalMethods(tokenizerctx);
+            for (Map.Entry<String, List<Operation>> stringListEntry : map.entrySet()) {
                 bb = bb.defineMethod(stringListEntry.getKey(), Void.class, Visibility.PRIVATE, SyntheticState.SYNTHETIC, Ownership.STATIC)
                         .withParameters(params)
                         .intercept(new Implementation() {

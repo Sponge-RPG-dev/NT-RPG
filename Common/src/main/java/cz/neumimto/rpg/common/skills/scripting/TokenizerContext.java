@@ -10,10 +10,10 @@ public record TokenizerContext(
         Map<String, RefData> localVariables,
         TypeDescription thisType,
         Set<Object> mechanics,
-        List<Parser.Operation> operations
+        List<Operation> operations
 ) {
 
-    public TokenizerContext copyContext(List<Parser.Operation> operations) {
+    public TokenizerContext copyContext(List<Operation> operations) {
         return new TokenizerContext(localVariables, thisType, mechanics, operations);
     }
 }

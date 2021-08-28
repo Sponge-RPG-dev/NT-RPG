@@ -10,42 +10,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class ScriptSkillBytecodeAppenter {
+public class ScriptSkillBytecodeAppenter implements ByteCodeAppender {
 
+    private final List<StackManipulation> stack;
 
-    public static class CastMethod implements ByteCodeAppender {
-        private Map<String, RefData> localVariables;
-
-        private TokenizerContext tokenizerctx;
-        public CastMethod(TokenizerContext tokenizerctx) {
-            this.tokenizerctx = tokenizerctx;
-            this.localVariables = tokenizerctx.localVariables();
-        }
-
-        @Override
-        public Size apply(MethodVisitor mv, Implementation.Context ctx, MethodDescription md) {
-            List<StackManipulation> stackManipulations = new ArrayList<>();
-
-            Map<String, RefData> stringRefDataMap = tokenizerctx.localVariables();;
-            for (RefData value : stringRefDataMap.values()) {
-                if (value.initInstruction != null) {
-                    stackManipulations.addAll(value.initInstruction);
-                }
-            }
-
-            List<Parser.Operation> operations = tokenizerctx.operations();
-            for (Parser.Operation operation : operations) {
-                stackManipulations.addAll(operation.getStack(tokenizerctx));
-            }
-
-            StackManipulation.Size size = new StackManipulation.Compound(
-                    stackManipulations
-            ).apply(mv, ctx);
-
-            return new Size(size.getMaximalSize(), md.getStackSize());
-        }
-
+    public ScriptSkillBytecodeAppenter(List<StackManipulation> stack) {
+        this.stack = stack;
     }
+
+    @Override
+    public Size apply(MethodVisitor methodVisitor, Implementation.Context implementationContext, MethodDescription instrumentedMethod) {
+        StackManipulation.Size size = new StackManipulation.Compound(
+                stack
+        ).apply(methodVisitor, implementationContext);
+
+        return new Size(size.getMaximalSize(), instrumentedMethod.getStackSize());
+    }
+
 
     public static class LambdaMethod implements ByteCodeAppender {
         private Map<String, RefData> localVariables;
@@ -60,8 +41,8 @@ public class ScriptSkillBytecodeAppenter {
         public Size apply(MethodVisitor mv, Implementation.Context ctx, MethodDescription md) {
             List<StackManipulation> stackManipulations = new ArrayList<>();
 
-            List<Parser.Operation> operations = tokenizerctx.operations();
-            for (Parser.Operation operation : operations) {
+            List<Operation> operations = tokenizerctx.operations();
+            for (Operation operation : operations) {
                 stackManipulations.addAll(operation.getStack(tokenizerctx));
             }
 
