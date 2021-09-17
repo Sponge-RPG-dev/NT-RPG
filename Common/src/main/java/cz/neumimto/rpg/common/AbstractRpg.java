@@ -33,7 +33,6 @@ import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.api.utils.FileUtils;
 import cz.neumimto.rpg.api.utils.rng.PseudoRandomDistribution;
 import cz.neumimto.rpg.common.commands.ACFBootstrap;
-import cz.neumimto.rpg.common.skills.scripting.CustomSkillGenerator;
 
 import javax.inject.Inject;
 import java.io.File;

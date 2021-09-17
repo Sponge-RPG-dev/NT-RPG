@@ -1,6 +1,5 @@
 package cz.neumimto.rpg.spigot.scripting;
 
-import cz.neumimto.rpg.common.skills.scripting.CustomSkillGenerator;
 import cz.neumimto.rpg.spigot.effects.common.StunEffect;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.skills.TargetedEntitySkill;

@@ -94,41 +94,33 @@ class ScríptParserTests {
     }
 
     @Singleton
-    @SkillMechanic("targetted_entity")
     public static class TargettedEntity {
 
-        @Handler
-        public IEntity get(@SkillArgument("range") int range, @SkillArgument("entityFrom")IEntity entity) {
+        public IEntity get(int range, IEntity entity) {
             return null;
         }
     }
 
     @Singleton
-    @SkillMechanic("damage_entity")
     public static class DamageEntity {
 
-        @Handler
-        public boolean damage(@SkillArgument("damage") double damage, @SkillArgument("damaged")IEntity entity, @SkillArgument("damager")IEntity damager) {
+        public boolean damage(double damage, IEntity entity, IEntity damager) {
             return true;
         }
     }
 
     @Singleton
-    @SkillMechanic("exists")
     public static class Exists {
 
-        @Handler
-        public boolean test(@SkillArgument("test") Object o) {
+        public boolean test(Object o) {
             return o != null;
         }
     }
 
     @Singleton
-    @SkillMechanic("spawn_lighting")
     public static class A {
 
-        @Handler
-        public void spawn(@SkillArgument("location") IEntity o) {
+        public void spawn(IEntity o) {
             int i = 1;
         }
     }

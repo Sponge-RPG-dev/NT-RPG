@@ -9,8 +9,12 @@ version = project.subp_version
 dependencies {
     annotationProcessor project(':Generator')
 
+    implementation fileTree(dir: 'lib-cp', include: '*.jar')
+    compileOnly fileTree(dir: 'lib', include: '*.jar')
+
     api project(':API')
     api 'net.bytebuddy:byte-buddy:' + project.bytebuddy
+    //api 'com.github.Sponge-RPG-dev:NT-Script:28394a3fc9'
 
     compileOnly "co.aikar:acf-core:" + project.acf
     compileOnly 'org.graalvm.sdk:graal-sdk:' + project.graal

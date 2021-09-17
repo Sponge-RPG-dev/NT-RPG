@@ -55,7 +55,6 @@ import cz.neumimto.rpg.common.scripting.TestCustomSkillGenerator;
 import cz.neumimto.rpg.common.skills.reagents.Cooldown;
 import cz.neumimto.rpg.common.skills.reagents.HPCast;
 import cz.neumimto.rpg.common.skills.reagents.ManaCast;
-import cz.neumimto.rpg.common.skills.scripting.CustomSkillGenerator;
 import cz.neumimto.rpg.effects.TestEffectService;
 import cz.neumimto.rpg.entity.TestEntityService;
 import cz.neumimto.rpg.model.TestPersistanceHandler;

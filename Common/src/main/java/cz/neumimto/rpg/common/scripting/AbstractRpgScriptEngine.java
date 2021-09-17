@@ -18,7 +18,6 @@ import cz.neumimto.rpg.api.utils.DebugLevel;
 import cz.neumimto.rpg.api.utils.FileUtils;
 import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.bytecode.ClassGenerator;
-import cz.neumimto.rpg.common.skills.scripting.SkillComponent;
 
 import javax.inject.Inject;
 import java.io.File;

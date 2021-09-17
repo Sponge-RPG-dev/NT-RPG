@@ -17,4 +17,8 @@ dependencies {
         exclude group: "com.google.guava", module: "guava"
     }
 
+    //implementation 'com.github.Sponge-Rpg-Dev:NT-Script:d8902b5325'
+
+    api fileTree(dir: 'lib-cp', include: '*.jar')
+    compileOnly fileTree(dir: 'lib', include: '*.jar')
 }

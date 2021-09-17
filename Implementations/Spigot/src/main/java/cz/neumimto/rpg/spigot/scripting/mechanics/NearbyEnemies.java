@@ -1,10 +1,6 @@
 package cz.neumimto.rpg.spigot.scripting.mechanics;
 
 import cz.neumimto.rpg.api.entity.IEntity;
-import cz.neumimto.rpg.common.skills.scripting.Caster;
-import cz.neumimto.rpg.common.skills.scripting.Handler;
-import cz.neumimto.rpg.common.skills.scripting.SkillArgument;
-import cz.neumimto.rpg.common.skills.scripting.TargetSelector;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
 import cz.neumimto.rpg.spigot.entities.SpigotEntityService;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
@@ -18,7 +14,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Singleton
-@TargetSelector("nearby_enemies")
 public class NearbyEnemies {
 
     @Inject
@@ -29,7 +24,7 @@ public class NearbyEnemies {
 
 
 
-    public Set<IEntity> getTargets(@Caster ISpigotCharacter character, @SkillArgument("settings.radius") float radius) {
+    public Set<IEntity> getTargets(ISpigotCharacter character, float radius) {
         Set<IEntity> entities = new HashSet<>();
         Player player = character.getPlayer();
         for (Entity nearbyEntity : player.getNearbyEntities(radius, radius, radius)) {

@@ -18,7 +18,6 @@ import cz.neumimto.rpg.api.skills.types.ScriptSkill;
 import cz.neumimto.rpg.api.utils.ClassUtils;
 import cz.neumimto.rpg.api.utils.DebugLevel;
 import cz.neumimto.rpg.api.utils.annotations.CatalogId;
-import cz.neumimto.rpg.common.skills.scripting.CustomSkillGenerator;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.description.annotation.AnnotationDescription;
 

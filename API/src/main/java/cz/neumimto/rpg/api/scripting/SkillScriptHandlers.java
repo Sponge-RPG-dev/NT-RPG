@@ -5,17 +5,27 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillResult;
 
+import static cz.neumimto.nts.annotations.ScriptMeta.*;
+
 public interface SkillScriptHandlers {
 
     interface Active extends SkillScriptHandlers {
-        SkillResult onCast(IActiveCharacter caster, PlayerSkillContext context);
+        @ScriptTarget
+        SkillResult onCast(@NamedParam("caster") IActiveCharacter caster,
+                           @NamedParam("context") PlayerSkillContext context);
     }
 
+
     interface Targetted extends SkillScriptHandlers  {
-        SkillResult castOnTarget(IActiveCharacter caster, PlayerSkillContext context, IEntity target);
+        @ScriptTarget
+        SkillResult castOnTarget(@NamedParam("caster") IActiveCharacter caster,
+                                 @NamedParam("context") PlayerSkillContext context,
+                                 @NamedParam("target") IEntity target);
     }
 
     interface Passive extends SkillScriptHandlers {
-        SkillResult init(IActiveCharacter caster, PlayerSkillContext context);
+        @ScriptTarget
+        SkillResult init(@NamedParam("caster") IActiveCharacter caster,
+                         @NamedParam("context") PlayerSkillContext context);
     }
 }
