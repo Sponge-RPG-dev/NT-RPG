@@ -22,7 +22,11 @@ public class NTScriptEngine {
     @Inject
     private Injector injector;
 
-    private NTScript getCompiler(List<Object> stl, Class<? extends SkillScriptHandlers> type) {
+    public boolean canCompile(Class c) {
+        return compilers.containsKey(c);
+    }
+
+    public NTScript prepareCompiler(List<Object> stl, Class<? extends SkillScriptHandlers> type) {
        return compilers.putIfAbsent(type, scriptContextForSkills(stl, type));
     }
 
@@ -40,11 +44,11 @@ public class NTScriptEngine {
     }
 
     public <T extends SkillScriptHandlers> Class<? extends T> compile(String script, Class<T> type) {
-        NTScript compiler = getCompiler(getStl(), type);
+        NTScript compiler = prepareCompiler(getStl(), type);
         return (Class<? extends T>) compiler.compile(script);
     }
 
-    private List<Object> getStl() {
+    public List<Object> getStl() {
         List<Object> list = new ArrayList<>();
         for (Key<?> key : injector.getAllBindings().keySet()) {
             if (key.getTypeLiteral().getRawType().isAnnotationPresent(ScriptMeta.Function.class)) {

@@ -1,18 +1,21 @@
 package cz.neumimto.rpg.common.skills;
 
 import com.google.inject.Injector;
+import cz.neumimto.nts.NTScript;
 import cz.neumimto.rpg.api.ResourceLoader;
 import cz.neumimto.rpg.api.Rpg;
 import cz.neumimto.rpg.api.classes.ClassService;
 import cz.neumimto.rpg.api.configuration.SkillTreeDao;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.logging.Log;
+import cz.neumimto.rpg.api.scripting.NTScriptEngine;
 import cz.neumimto.rpg.api.scripting.SkillScriptHandlers;
 import cz.neumimto.rpg.api.skills.*;
 import cz.neumimto.rpg.api.skills.scripting.ActiveScriptSkill;
 import cz.neumimto.rpg.api.skills.scripting.ScriptSkillModel;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.skills.tree.SkillType;
+import cz.neumimto.rpg.api.skills.types.IPassiveScriptSkill;
 import cz.neumimto.rpg.api.skills.types.PassiveScriptSkill;
 import cz.neumimto.rpg.api.skills.types.ScriptSkill;
 import cz.neumimto.rpg.api.utils.ClassUtils;
@@ -23,10 +26,7 @@ import net.bytebuddy.description.annotation.AnnotationDescription;
 
 import javax.inject.Inject;
 import java.lang.reflect.Field;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
@@ -49,7 +49,7 @@ public abstract class AbstractSkillService implements SkillService {
     private Injector injector;
 
     @Inject
-    private CustomSkillGenerator customSkillGenerator;
+    private NTScriptEngine ntScriptEngine;
 
     private Map<String, SkillScriptHandlers> skillHandlers = new HashMap<>();
 
@@ -169,16 +169,27 @@ public abstract class AbstractSkillService implements SkillService {
         skillByNames.put(name, skill);
     }
 
+    public NTScript getNtScriptCompilerFor(Class<? extends SkillScriptHandlers> c) {
+        return ntScriptEngine.prepareCompiler(getScriptSTL(), c);
+    }
+
+    private List<Object> getScriptSTL() {
+        List<Object> list = new ArrayList<>();
+        list.addAll(ntScriptEngine.getStl());
+        return list;
+    }
+
     @Override
     public ISkill skillDefinitionToSkill(ScriptSkillModel scriptSkillModel, ClassLoader classLoader) {
 
-        if (scriptSkillModel.getHandlerId().equalsIgnoreCase("custom")) {
+        if (scriptSkillModel.getHandlerId().equalsIgnoreCase("nts")) {
             try {
-                Class<? extends ISkill> generate = customSkillGenerator.generate(scriptSkillModel, classLoader);
+                Class<? extends SkillScriptHandlers.Active> generate = getNtScriptCompilerFor(SkillScriptHandlers.Active.class).compile(scriptSkillModel.getScript());
                 if (generate == null) {
                     Log.error("Unable to generate skill " + scriptSkillModel.getId());
                 }
-                return injector.getInstance(generate);
+                SkillScriptHandlers.Active instance = injector.getInstance(generate);
+                ScriptSkill s = getSkillByHandlerType(instance);
             } catch (Exception e) {
                 Log.error("Unable to generate skill " + scriptSkillModel.getId(), e);
             }
@@ -231,6 +242,15 @@ public abstract class AbstractSkillService implements SkillService {
             }
         }
         return null;
+    }
+
+    public ScriptSkill getSkillByHandlerType(SkillScriptHandlers instance) {
+        if (instance instanceof SkillScriptHandlers.Active) {
+            return new ActiveScriptSkill();
+        } else if (instance instanceof SkillScriptHandlers.Passive) {
+            return new PassiveScriptSkill();
+        }
+        throw new RuntimeException("Unknown type " + instance);
     }
 
     @Override

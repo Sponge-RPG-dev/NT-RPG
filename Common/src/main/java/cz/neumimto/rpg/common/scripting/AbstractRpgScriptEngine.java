@@ -99,45 +99,38 @@ public abstract class AbstractRpgScriptEngine implements IRpgScriptEngine {
     protected void prepareBindings(BiConsumer<String, Object> consumer) {
         consumer.accept("Injector", injector);
         consumer.accept("Rpg", Rpg.get());
-        for (Map.Entry<Class<?>, JsBinding.Type> objectTypeEntry : getDataToBind().entrySet()) {
-            try {
-                if (objectTypeEntry.getValue() == JsBinding.Type.CONTAINER) {
-                    for (Field field : objectTypeEntry.getKey().getDeclaredFields()) {
-                        field.setAccessible(true);
-                        if (field.isAnnotationPresent(SkillComponent.class)) {
-                            Object o = field.get(null);
-                            String name = field.getName();
-                            consumer.accept(name.toLowerCase(), o);
-                            dumpDocumentedFunction(name.toLowerCase(), o);
-                        }
-                    }
-                    continue;
-                }
-                if (objectTypeEntry.getValue() == JsBinding.Type.CLASS) {
-                    consumer.accept(objectTypeEntry.getKey().getSimpleName(), objectTypeEntry.getKey());
-                    dumpDocumentedJavaType(objectTypeEntry.getKey().getSimpleName(), objectTypeEntry.getKey());
-                    continue;
-                }
-                if (objectTypeEntry.getValue() == JsBinding.Type.OBJECT) {
-                    if (objectTypeEntry.getKey().isAnnotationPresent(SkillComponent.class)) {
-                        consumer.accept(objectTypeEntry.getKey().getSimpleName().toLowerCase(), objectTypeEntry.getKey().newInstance());
-                    } else {
-                        consumer.accept(objectTypeEntry.getKey().getSimpleName(), objectTypeEntry.getKey().newInstance());
-                    }
-                }
-            } catch (Exception e) {
-                Log.error("Could not create bindings ", e);
-            }
-        }
+        //for (Map.Entry<Class<?>, JsBinding.Type> objectTypeEntry : getDataToBind().entrySet()) {
+        //    try {
+        //        if (objectTypeEntry.getValue() == JsBinding.Type.CONTAINER) {
+        //            for (Field field : objectTypeEntry.getKey().getDeclaredFields()) {
+        //                field.setAccessible(true);
+        //                if (field.isAnnotationPresent(SkillComponent.class)) {
+        //                    Object o = field.get(null);
+        //                    String name = field.getName();
+        //                    consumer.accept(name.toLowerCase(), o);
+        //                    dumpDocumentedFunction(name.toLowerCase(), o);
+        //                }
+        //            }
+        //            continue;
+        //        }
+        //        if (objectTypeEntry.getValue() == JsBinding.Type.CLASS) {
+        //            consumer.accept(objectTypeEntry.getKey().getSimpleName(), objectTypeEntry.getKey());
+        //            dumpDocumentedJavaType(objectTypeEntry.getKey().getSimpleName(), objectTypeEntry.getKey());
+        //            continue;
+        //        }
+        //        if (objectTypeEntry.getValue() == JsBinding.Type.OBJECT) {
+        //            if (objectTypeEntry.getKey().isAnnotationPresent(SkillComponent.class)) {
+        //                consumer.accept(objectTypeEntry.getKey().getSimpleName().toLowerCase(), objectTypeEntry.getKey().newInstance());
+        //            } else {
+        //                consumer.accept(objectTypeEntry.getKey().getSimpleName(), objectTypeEntry.getKey().newInstance());
+        //            }
+        //        }
+        //    } catch (Exception e) {
+        //        Log.error("Could not create bindings ", e);
+        //    }
+        //}
     }
 
-    private void dumpDocumentedFunction(String toLowerCase, Object o) {
-
-    }
-
-    private void dumpDocumentedJavaType(String simpleName, Class<?> key) {
-
-    }
 
     @Override
     public void loadInternalSkills() {
@@ -176,43 +169,10 @@ public abstract class AbstractRpgScriptEngine implements IRpgScriptEngine {
                 .forEach(a -> skillService.registerAdditionalCatalog(a));
     }
 
-    protected void dumpDocumentedFunctions(List<SkillComponent> skillComponents) {
-        File file = new File(Rpg.get().getWorkingDirectory(), "functions.md");
-        if (file.exists()) {
-            file.delete();
-        }
-        try {
-            file.createNewFile();
-            for (SkillComponent skillComponent : skillComponents) {
-                String s = assetService.getAssetAsString("templates/function.md");
-                s = s.replaceAll("\\{\\{function\\.name}}", skillComponent.value());
-                s = s.replaceAll("\\{\\{function\\.usage}}", skillComponent.usage());
-
-                StringBuilder buffer = new StringBuilder();
-                for (SkillComponent.Param param : skillComponent.params()) {
-                    buffer.append("    * ").append(param.value()).append("\n");
-                }
-                s = s.replaceAll("\\{\\{function\\.params}}", buffer.toString());
-                Files.write(file.toPath(), s.getBytes(), StandardOpenOption.APPEND);
-            }
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
     public void reloadSkills() {
         Path addonDir = Paths.get(Rpg.get().getWorkingDirectory() + File.separator + "addons");
 
-        URLClassLoader urlClassLoader = new URLClassLoader(new URL[]{}, this.getClass().getClassLoader()) {
-            @Override
-            protected void finalize() throws Throwable {
-                super.finalize();
-                info("Removing URLClassloader used for " + addonDir, DebugLevel.DEVELOP);
-            }
-        };
+        URLClassLoader urlClassLoader = new URLClassLoader(new URL[]{}, this.getClass().getClassLoader());
 
         File file1 = addonDir.toFile();
         File[] files = file1.listFiles(pathname -> pathname.isFile() && pathname.getName().endsWith(".conf"));
@@ -232,11 +192,4 @@ public abstract class AbstractRpgScriptEngine implements IRpgScriptEngine {
     }
 
 
-    protected static class ScriptExecutionException extends RuntimeException {
-
-        public ScriptExecutionException(String message, Throwable cause) {
-            super(message, cause);
-        }
-
-    }
 }

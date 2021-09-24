@@ -5,6 +5,7 @@ import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import io.lumine.mythic.lib.api.DamageType;
+import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import net.Indyuce.mmoitems.api.ItemAttackResult;
@@ -42,7 +43,7 @@ public class MMOItemSkill extends ActiveSkill<ISpigotCharacter> {
 
         PlayerData playerData = PlayerData.get(player);
         PlayerStats playerStats = new PlayerStats(playerData);
-        PlayerStats.CachedStats stats = playerStats.newTemporary();
+        PlayerStats.CachedStats stats = playerStats.newTemporary(EquipmentSlot.OTHER);
 
         for (Object2DoubleMap.Entry<String> e : compSettings.object2DoubleEntrySet()) {
             abilityData.setModifier(e.getKey(), e.getDoubleValue());

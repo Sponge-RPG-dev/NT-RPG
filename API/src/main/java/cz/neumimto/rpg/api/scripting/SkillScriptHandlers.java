@@ -2,8 +2,10 @@ package cz.neumimto.rpg.api.scripting;
 
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.PlayerSkillContext;
 import cz.neumimto.rpg.api.skills.SkillResult;
+import cz.neumimto.rpg.api.skills.scripting.ActiveScriptSkill;
 
 import static cz.neumimto.nts.annotations.ScriptMeta.*;
 
@@ -14,7 +16,6 @@ public interface SkillScriptHandlers {
         SkillResult onCast(@NamedParam("caster") IActiveCharacter caster,
                            @NamedParam("context") PlayerSkillContext context);
     }
-
 
     interface Targetted extends SkillScriptHandlers  {
         @ScriptTarget
@@ -28,4 +29,5 @@ public interface SkillScriptHandlers {
         SkillResult init(@NamedParam("caster") IActiveCharacter caster,
                          @NamedParam("context") PlayerSkillContext context);
     }
+
 }

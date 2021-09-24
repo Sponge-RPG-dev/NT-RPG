@@ -1,7 +1,6 @@
 package cz.neumimto.rpg.spigot.skills;
 
 import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.entity.EntityService;
 import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.scripting.SkillScriptHandlers;
@@ -12,9 +11,6 @@ import cz.neumimto.rpg.api.skills.scripting.ScriptSkillModel;
 import cz.neumimto.rpg.api.skills.types.ITargetedScriptSkill;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 
-import javax.inject.Inject;
-import javax.script.Bindings;
-import javax.script.SimpleBindings;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,19 +19,12 @@ import java.util.Optional;
  */
 public class TargetedScriptSkill extends TargetedEntitySkill implements ITargetedScriptSkill {
 
-    @Inject
-    private EntityService entityService;
-
     private ScriptSkillModel model;
 
     private SkillScriptHandlers.Targetted handler;
 
     @Override
     public SkillResult castOn(IEntity target, ISpigotCharacter source, PlayerSkillContext skillContext) {
-        Bindings bindings = new SimpleBindings();
-        bindings.put("_target", target);
-        bindings.put("_caster", source);
-        bindings.put("_context", skillContext);
         SkillResult skillResult = handler.castOnTarget(source, skillContext, target);
         return skillResult == null ? SkillResult.OK : skillResult;
     }

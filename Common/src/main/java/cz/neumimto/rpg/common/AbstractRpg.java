@@ -85,8 +85,6 @@ public abstract class AbstractRpg implements RpgApi {
     private Injector injector;
     @Inject
     private Gui gui;
-    @Inject
-    private CustomSkillGenerator skillGenerator;
 
     protected Executor currentThreadExecutor;
 
@@ -192,10 +190,6 @@ public abstract class AbstractRpg implements RpgApi {
     @Override
     public PermissionService getPermissionService() {
         return permissionService;
-    }
-
-    public CustomSkillGenerator getCustomSkillGenerator() {
-        return skillGenerator;
     }
 
     @Override
