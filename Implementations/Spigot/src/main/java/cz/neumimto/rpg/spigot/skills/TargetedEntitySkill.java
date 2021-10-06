@@ -13,7 +13,7 @@ import cz.neumimto.rpg.api.skills.tree.SkillType;
 import cz.neumimto.rpg.api.skills.types.ActiveSkill;
 import cz.neumimto.rpg.api.skills.types.ITargeted;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
-import cz.neumimto.rpg.spigot.scripting.mechanics.TargettedEntity;
+import cz.neumimto.rpg.spigot.scripting.mechanics.Targetting;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -25,7 +25,7 @@ public abstract class TargetedEntitySkill extends ActiveSkill<ISpigotCharacter> 
     protected DamageService damageService;
 
     @Inject
-    protected TargettedEntity targettedEntity;
+    protected Targetting targettedEntity;
 
     @Override
     public void init() {

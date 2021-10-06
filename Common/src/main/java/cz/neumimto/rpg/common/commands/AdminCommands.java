@@ -25,7 +25,7 @@ import cz.neumimto.rpg.api.skills.SkillData;
 import cz.neumimto.rpg.api.skills.SkillResult;
 import cz.neumimto.rpg.api.skills.tree.SkillTree;
 import cz.neumimto.rpg.api.utils.ActionResult;
-import cz.neumimto.rpg.common.assets.AssetService;
+import cz.neumimto.rpg.api.assets.AssetService;
 import cz.neumimto.rpg.common.effects.InternalEffectSourceProvider;
 import cz.neumimto.rpg.common.utils.GraalInstaller;
 import cz.neumimto.rpg.common.utils.model.InstallOptions;

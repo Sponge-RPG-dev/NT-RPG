@@ -14,15 +14,13 @@ import cz.neumimto.rpg.api.scripting.IRpgScriptEngine;
 import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.api.skills.SkillsDefinition;
 import cz.neumimto.rpg.api.skills.scripting.JsBinding;
-import cz.neumimto.rpg.api.utils.DebugLevel;
 import cz.neumimto.rpg.api.utils.FileUtils;
-import cz.neumimto.rpg.common.assets.AssetService;
+import cz.neumimto.rpg.api.assets.AssetService;
 import cz.neumimto.rpg.common.bytecode.ClassGenerator;
 
 import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
@@ -139,14 +137,6 @@ public abstract class AbstractRpgScriptEngine implements IRpgScriptEngine {
         HoconFormat instance = HoconFormat.instance();
         ConfigParser<CommentedConfig> parser = instance.createParser();
         CommentedConfig config = parser.parse(assetAsString);
-
-        //URLClassLoader urlClassLoader = new URLClassLoader(new URL[]{}, this.getClass().getClassLoader()) {
-        //    @Override
-        //    protected void finalize() throws Throwable {
-        //        super.finalize();
-        //        info("Removing URLClassloader used for defaults/skills.conf", DebugLevel.DEVELOP);
-        //    }
-        //};
 
         loadSkillDefinitionFile(config, this.getClass().getClassLoader());
     }

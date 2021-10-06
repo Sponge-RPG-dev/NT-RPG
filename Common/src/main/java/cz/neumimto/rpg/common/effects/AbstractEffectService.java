@@ -9,7 +9,7 @@ import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.api.skills.SkillSettings;
-import cz.neumimto.rpg.common.assets.AssetService;
+import cz.neumimto.rpg.api.assets.AssetService;
 
 import javax.inject.Inject;
 import java.io.File;

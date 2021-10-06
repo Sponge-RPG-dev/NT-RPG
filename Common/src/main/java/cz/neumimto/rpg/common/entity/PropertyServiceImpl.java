@@ -10,7 +10,7 @@ import cz.neumimto.rpg.api.items.ItemService;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.properties.Property;
 import cz.neumimto.rpg.api.utils.Console;
-import cz.neumimto.rpg.common.assets.AssetService;
+import cz.neumimto.rpg.api.assets.AssetService;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

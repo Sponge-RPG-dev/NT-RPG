@@ -3,7 +3,7 @@ package cz.neumimto.rpg.assets;
 import com.google.common.base.Charsets;
 import com.google.common.io.CharStreams;
 import cz.neumimto.rpg.api.logging.Log;
-import cz.neumimto.rpg.common.assets.AssetService;
+import cz.neumimto.rpg.api.assets.AssetService;
 
 import javax.inject.Singleton;
 import java.io.IOException;

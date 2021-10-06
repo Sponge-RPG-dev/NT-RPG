@@ -3,7 +3,7 @@ package cz.neumimto.rpg.spigot;
 import com.google.inject.Injector;
 import cz.neumimto.rpg.api.utils.Console;
 import cz.neumimto.rpg.common.AbstractRpg;
-import cz.neumimto.rpg.common.assets.AssetService;
+import cz.neumimto.rpg.api.assets.AssetService;
 import cz.neumimto.rpg.spigot.gui.SpigotGuiHelper;
 import cz.neumimto.rpg.spigot.gui.inventoryviews.ConfigurableInventoryGui;
 import org.bukkit.Bukkit;
@@ -15,7 +15,6 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

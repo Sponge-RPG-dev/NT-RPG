@@ -17,7 +17,7 @@ import cz.neumimto.rpg.api.skills.utils.SkillLoadingErrors;
 import cz.neumimto.rpg.api.utils.FileUtils;
 import cz.neumimto.rpg.api.utils.MathUtils;
 import cz.neumimto.rpg.api.utils.Pair;
-import cz.neumimto.rpg.common.assets.AssetService;
+import cz.neumimto.rpg.api.assets.AssetService;
 import cz.neumimto.rpg.common.skills.SkillConfigLoader;
 import cz.neumimto.rpg.common.skills.SkillConfigLoaders;
 import cz.neumimto.rpg.common.skills.SkillExecutor;

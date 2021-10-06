@@ -1,6 +1,5 @@
 package cz.neumimto.rpg.api.skills.scripting;
 
-import com.electronwill.nightconfig.core.Config;
 import com.electronwill.nightconfig.core.conversion.Path;
 import com.typesafe.config.Optional;
 

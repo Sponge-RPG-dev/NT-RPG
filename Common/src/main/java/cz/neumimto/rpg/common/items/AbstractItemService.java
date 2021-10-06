@@ -15,7 +15,7 @@ import cz.neumimto.rpg.api.items.sockets.SocketType;
 import cz.neumimto.rpg.api.items.subtypes.ItemSubtype;
 import cz.neumimto.rpg.api.logging.Log;
 import cz.neumimto.rpg.api.permissions.PermissionService;
-import cz.neumimto.rpg.common.assets.AssetService;
+import cz.neumimto.rpg.api.assets.AssetService;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.common.utils.Wildcards;
 

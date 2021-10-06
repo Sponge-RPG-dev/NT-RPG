@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.common.assets;
+package cz.neumimto.rpg.api.assets;
 
 import java.io.IOException;
 import java.nio.file.Files;

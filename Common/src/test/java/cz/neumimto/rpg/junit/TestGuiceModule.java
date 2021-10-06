@@ -29,7 +29,7 @@ import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.assets.TestAssetService;
 import cz.neumimto.rpg.common.ResourceManagerImpl;
 import cz.neumimto.rpg.common.TestPartyService;
-import cz.neumimto.rpg.common.assets.AssetService;
+import cz.neumimto.rpg.api.assets.AssetService;
 import cz.neumimto.rpg.common.bytecode.ClassGenerator;
 import cz.neumimto.rpg.common.classes.ClassServiceImpl;
 import cz.neumimto.rpg.common.configuration.SkillTreeLoaderImpl;

@@ -13,6 +13,7 @@ import cz.neumimto.rpg.spigot.entities.ISpigotEntity;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Tameable;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
@@ -44,6 +45,26 @@ public class SpigotDamageService extends AbstractDamageService<ISpigotCharacter,
     public void damageEntity(ISpigotEntity<LivingEntity> entity, double value) {
         entity.getEntity().damage(value);
         //todo workaround bukkit stupidity entity.setLastDamageCause
+    }
+
+    public boolean canDamage(ISpigotEntity damager, LivingEntity damaged) {
+        LivingEntity entity = damager.getEntity();
+        if (entity.getType() == EntityType.PLAYER) {
+            if (damaged instanceof Tameable t) {
+                if (t.getOwner() != null && t.getOwner().equals(entity)) {
+                    return false;
+                }
+            }
+            return super.canDamage((ISpigotCharacter) damaged, damaged);
+        } else {
+            if (damaged instanceof Tameable t) {
+                if (t.getOwner() != null && t.getOwner().equals(entity)) {
+                    return false;
+                }
+            }
+            //todo
+            return true;
+        }
     }
 
     @Override

@@ -7,7 +7,7 @@ import cz.neumimto.rpg.api.persistance.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.api.persistance.model.CharacterBase;
 import cz.neumimto.rpg.api.persistance.model.CharacterClass;
 import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
-import cz.neumimto.rpg.common.assets.AssetService;
+import cz.neumimto.rpg.api.assets.AssetService;
 import cz.neumimto.rpg.common.persistance.dao.IPersistenceHandler;
 import cz.neumimto.rpg.persistence.jdbc.migrations.DbMigrationsService;
 import cz.neumimto.rpg.persistence.model.BaseCharacterAttributeImpl;

@@ -13,7 +13,7 @@ import cz.neumimto.rpg.api.items.subtypes.ItemSubtype;
 import cz.neumimto.rpg.api.items.subtypes.ItemSubtypes;
 import cz.neumimto.rpg.api.permissions.PermissionService;
 import cz.neumimto.rpg.api.utils.Console;
-import cz.neumimto.rpg.common.assets.AssetService;
+import cz.neumimto.rpg.api.assets.AssetService;
 
 import javax.inject.Inject;
 import java.io.File;
