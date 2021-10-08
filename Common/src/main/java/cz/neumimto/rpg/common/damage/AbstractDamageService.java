@@ -1,14 +1,13 @@
 package cz.neumimto.rpg.common.damage;
 
-import cz.neumimto.rpg.api.classes.ClassService;
-import cz.neumimto.rpg.api.configuration.PluginConfig;
-import cz.neumimto.rpg.api.damage.DamageService;
-import cz.neumimto.rpg.api.entity.EntityService;
-import cz.neumimto.rpg.api.entity.IEntity;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.items.ItemService;
-import cz.neumimto.rpg.api.items.RpgItemStack;
-import cz.neumimto.rpg.api.items.RpgItemType;
+import cz.neumimto.rpg.common.classes.ClassService;
+import cz.neumimto.rpg.common.configuration.PluginConfig;
+import cz.neumimto.rpg.common.entity.EntityService;
+import cz.neumimto.rpg.common.entity.IEntity;
+import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.items.ItemService;
+import cz.neumimto.rpg.common.items.RpgItemStack;
+import cz.neumimto.rpg.common.items.RpgItemType;
 
 import javax.inject.Inject;
 

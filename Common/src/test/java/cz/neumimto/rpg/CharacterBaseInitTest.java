@@ -1,9 +1,9 @@
 package cz.neumimto.rpg;
 
-import cz.neumimto.rpg.api.entity.players.CharacterService;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.logging.Log;
-import cz.neumimto.rpg.api.persistance.model.CharacterBase;
+import cz.neumimto.rpg.common.entity.players.CharacterService;
+import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.logging.Log;
+import cz.neumimto.rpg.common.model.CharacterBase;
 import cz.neumimto.rpg.junit.NtRpgExtension;
 import cz.neumimto.rpg.junit.TestGuiceModule;
 import name.falgout.jeffrey.testing.junit.guice.GuiceExtension;

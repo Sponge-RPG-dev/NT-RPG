@@ -1,7 +1,5 @@
 package cz.neumimto.rpg.common.events;
 
-import cz.neumimto.rpg.api.events.EventFactoryService;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;

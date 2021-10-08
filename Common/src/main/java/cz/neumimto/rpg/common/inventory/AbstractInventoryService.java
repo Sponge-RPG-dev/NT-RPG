@@ -2,18 +2,15 @@ package cz.neumimto.rpg.common.inventory;
 
 import com.electronwill.nightconfig.core.Config;
 import com.electronwill.nightconfig.core.file.FileConfig;
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.entity.EntityHand;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.inventory.InventoryService;
-import cz.neumimto.rpg.api.inventory.ManagedSlot;
-import cz.neumimto.rpg.api.inventory.RpgInventory;
-import cz.neumimto.rpg.api.items.ItemService;
-import cz.neumimto.rpg.api.items.subtypes.ItemSubtype;
-import cz.neumimto.rpg.api.items.subtypes.ItemSubtypes;
-import cz.neumimto.rpg.api.permissions.PermissionService;
-import cz.neumimto.rpg.api.utils.Console;
-import cz.neumimto.rpg.api.assets.AssetService;
+import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.entity.EntityHand;
+import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.items.ItemService;
+import cz.neumimto.rpg.common.items.subtypes.ItemSubtype;
+import cz.neumimto.rpg.common.items.subtypes.ItemSubtypes;
+import cz.neumimto.rpg.common.permissions.PermissionService;
+import cz.neumimto.rpg.common.utils.Console;
+import cz.neumimto.rpg.common.assets.AssetService;
 
 import javax.inject.Inject;
 import java.io.File;
@@ -22,7 +19,7 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static cz.neumimto.rpg.api.logging.Log.error;
+import static cz.neumimto.rpg.common.logging.Log.error;
 
 
 public abstract class AbstractInventoryService<T extends IActiveCharacter> implements InventoryService<T> {

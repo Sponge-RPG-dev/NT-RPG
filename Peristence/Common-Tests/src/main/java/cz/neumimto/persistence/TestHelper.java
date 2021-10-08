@@ -1,6 +1,6 @@
 package cz.neumimto.persistence;
 
-import cz.neumimto.rpg.api.persistance.model.*;
+import cz.neumimto.rpg.common.model.*;
 import cz.neumimto.rpg.persistence.model.BaseCharacterAttributeImpl;
 import cz.neumimto.rpg.persistence.model.CharacterBaseImpl;
 import cz.neumimto.rpg.persistence.model.CharacterClassImpl;

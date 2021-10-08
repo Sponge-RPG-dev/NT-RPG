@@ -1,12 +1,12 @@
 package cz.neumimto.rpg.junit;
 
-import cz.neumimto.rpg.api.entity.IReservable;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
-import cz.neumimto.rpg.api.inventory.ManagedSlot;
-import cz.neumimto.rpg.api.items.ItemClass;
-import cz.neumimto.rpg.api.persistance.model.CharacterBase;
-import cz.neumimto.rpg.api.persistance.model.CharacterClass;
+import cz.neumimto.rpg.common.entity.IReservable;
+import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
+import cz.neumimto.rpg.common.inventory.ManagedSlot;
+import cz.neumimto.rpg.common.items.ItemClass;
+import cz.neumimto.rpg.common.model.CharacterBase;
+import cz.neumimto.rpg.common.model.CharacterClass;
 import cz.neumimto.rpg.common.entity.TestCharacter;
 import cz.neumimto.rpg.common.entity.TestPropertyService;
 import cz.neumimto.rpg.common.inventory.FilteredManagedSlotImpl;

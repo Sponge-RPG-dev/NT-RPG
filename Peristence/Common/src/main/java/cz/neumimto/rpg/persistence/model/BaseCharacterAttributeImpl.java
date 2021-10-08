@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.persistence.model;
 
-import cz.neumimto.rpg.api.persistance.model.BaseCharacterAttribute;
-import cz.neumimto.rpg.api.persistance.model.CharacterBase;
+import cz.neumimto.rpg.common.model.BaseCharacterAttribute;
+import cz.neumimto.rpg.common.model.CharacterBase;
 
 /**
  * Created by NeumimTo on 8.10.2016.

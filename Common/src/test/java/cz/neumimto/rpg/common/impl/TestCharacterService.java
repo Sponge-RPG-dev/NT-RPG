@@ -1,9 +1,9 @@
 package cz.neumimto.rpg.common.impl;
 
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.persistance.model.CharacterBase;
-import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
-import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.model.CharacterBase;
+import cz.neumimto.rpg.common.model.CharacterSkill;
+import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.common.entity.TestCharacter;
 import cz.neumimto.rpg.common.entity.players.AbstractCharacterService;

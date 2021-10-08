@@ -1,8 +1,8 @@
 package cz.neumimto.rpg.common.scripting.mechanics;
 
-import cz.neumimto.rpg.api.entity.EntityService;
-import cz.neumimto.rpg.api.entity.IEntity;
-import cz.neumimto.rpg.api.skills.ISkill;
+import cz.neumimto.rpg.common.entity.EntityService;
+import cz.neumimto.rpg.common.entity.IEntity;
+import cz.neumimto.rpg.common.skills.ISkill;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

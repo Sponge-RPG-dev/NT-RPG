@@ -1,15 +1,14 @@
 package cz.neumimto.rpg.common.classes;
 
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.classes.ClassService;
-import cz.neumimto.rpg.api.damage.DamageService;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
-import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
-import cz.neumimto.rpg.api.entity.players.classes.PlayerClassPermission;
-import cz.neumimto.rpg.api.logging.Log;
-import cz.neumimto.rpg.api.permissions.PermissionService;
-import cz.neumimto.rpg.api.assets.AssetService;
+import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.damage.DamageService;
+import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
+import cz.neumimto.rpg.common.entity.players.classes.PlayerClassPermission;
+import cz.neumimto.rpg.common.logging.Log;
+import cz.neumimto.rpg.common.permissions.PermissionService;
+import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.persistance.dao.ClassDefinitionDao;
 
 import javax.inject.Inject;

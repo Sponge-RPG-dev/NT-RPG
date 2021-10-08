@@ -2,9 +2,9 @@ package cz.neumimto.rpg.spigot.listeners;
 
 import com.google.auto.service.AutoService;
 import com.google.inject.Singleton;
-import cz.neumimto.rpg.api.ResourceLoader;
-import cz.neumimto.rpg.api.entity.UserActionType;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.ResourceLoader;
+import cz.neumimto.rpg.common.entity.UserActionType;
+import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.spigot.SpigotRpg;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
 import cz.neumimto.rpg.spigot.services.IRpgListener;

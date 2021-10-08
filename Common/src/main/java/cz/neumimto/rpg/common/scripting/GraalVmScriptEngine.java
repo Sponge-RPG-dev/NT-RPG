@@ -2,12 +2,11 @@ package cz.neumimto.rpg.common.scripting;
 
 import com.oracle.truffle.js.runtime.JSRealm;
 import com.oracle.truffle.polyglot.PolyglotImpl;
-import cz.neumimto.rpg.api.entity.IEntity;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.logging.Log;
-import cz.neumimto.rpg.api.scripting.SkillScriptHandlers;
-import cz.neumimto.rpg.api.skills.PlayerSkillContext;
-import cz.neumimto.rpg.api.skills.SkillResult;
+import cz.neumimto.rpg.common.entity.IEntity;
+import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.logging.Log;
+import cz.neumimto.rpg.common.skills.PlayerSkillContext;
+import cz.neumimto.rpg.common.skills.SkillResult;
 import cz.neumimto.rpg.common.utils.Java12FieldUtils;
 import org.graalvm.polyglot.*;
 import org.graalvm.polyglot.impl.AbstractPolyglotImpl;

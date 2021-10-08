@@ -1,8 +1,5 @@
 package cz.neumimto.rpg.common.items;
 
-import cz.neumimto.rpg.api.items.ItemClass;
-import cz.neumimto.rpg.api.items.RpgItemType;
-
 public class RpgItemTypeImpl implements RpgItemType {
 
     protected ItemClass itemClass;

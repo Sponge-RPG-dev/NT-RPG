@@ -1,11 +1,10 @@
 package cz.neumimto.rpg.common.scripting.mechanics;
 
 import cz.neumimto.nts.annotations.ScriptMeta;
-import cz.neumimto.rpg.api.effects.EffectService;
-import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.api.effects.IEffectSourceProvider;
-import cz.neumimto.rpg.api.entity.IEntity;
-import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.common.effects.EffectService;
+import cz.neumimto.rpg.common.effects.IEffect;
+import cz.neumimto.rpg.common.effects.IEffectSourceProvider;
+import cz.neumimto.rpg.common.entity.IEntity;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.common.inventory.crafting.runewords;
 
-import cz.neumimto.rpg.api.effects.EffectParams;
-import cz.neumimto.rpg.api.items.sockets.SocketType;
+import cz.neumimto.rpg.common.effects.EffectParams;
+import cz.neumimto.rpg.common.items.sockets.SocketType;
 
 import java.util.HashMap;
 import java.util.Map;

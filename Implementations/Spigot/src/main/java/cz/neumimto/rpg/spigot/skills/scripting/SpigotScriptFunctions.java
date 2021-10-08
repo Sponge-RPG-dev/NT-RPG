@@ -1,12 +1,12 @@
 package cz.neumimto.rpg.spigot.skills.scripting;
 
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.api.entity.IEntity;
-import cz.neumimto.rpg.api.skills.F;
-import cz.neumimto.rpg.api.skills.PlayerSkillContext;
-import cz.neumimto.rpg.api.skills.scripting.JsBinding;
-import cz.neumimto.rpg.api.utils.TriConsumer;
+import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.effects.IEffect;
+import cz.neumimto.rpg.common.entity.IEntity;
+import cz.neumimto.rpg.common.skills.F;
+import cz.neumimto.rpg.common.skills.PlayerSkillContext;
+import cz.neumimto.rpg.common.skills.scripting.JsBinding;
+import cz.neumimto.rpg.common.utils.TriConsumer;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import org.bukkit.Bukkit;

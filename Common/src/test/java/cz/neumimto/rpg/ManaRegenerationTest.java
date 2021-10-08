@@ -1,14 +1,14 @@
 package cz.neumimto.rpg;
 
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.RpgApi;
-import cz.neumimto.rpg.api.configuration.PluginConfig;
-import cz.neumimto.rpg.api.entity.CommonProperties;
-import cz.neumimto.rpg.api.entity.EntityService;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.events.EventFactoryService;
-import cz.neumimto.rpg.api.gui.Gui;
-import cz.neumimto.rpg.api.gui.IPlayerMessage;
+import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.RpgApi;
+import cz.neumimto.rpg.common.configuration.PluginConfig;
+import cz.neumimto.rpg.common.entity.CommonProperties;
+import cz.neumimto.rpg.common.entity.EntityService;
+import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.events.EventFactoryService;
+import cz.neumimto.rpg.common.gui.Gui;
+import cz.neumimto.rpg.common.gui.IPlayerMessage;
 import cz.neumimto.rpg.common.effects.AbstractEffectService;
 import cz.neumimto.rpg.common.effects.core.DefaultManaRegeneration;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;

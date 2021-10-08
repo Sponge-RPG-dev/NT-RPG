@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.common.inventory.crafting.runewords;
 
-import cz.neumimto.rpg.api.items.sockets.SocketType;
-import cz.neumimto.rpg.api.items.sockets.SocketTypes;
+import cz.neumimto.rpg.common.items.sockets.SocketType;
+import cz.neumimto.rpg.common.items.sockets.SocketTypes;
 
 /**
  * Created by NeumimTo on 29.10.2015.

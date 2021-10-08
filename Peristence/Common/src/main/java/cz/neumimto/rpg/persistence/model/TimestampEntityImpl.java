@@ -2,7 +2,7 @@
 
 package cz.neumimto.rpg.persistence.model;
 
-import cz.neumimto.rpg.api.persistance.model.TimestampEntity;
+import cz.neumimto.rpg.common.model.TimestampEntity;
 
 import java.util.Date;
 

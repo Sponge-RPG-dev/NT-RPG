@@ -1,15 +1,14 @@
 package cz.neumimto.rpg.common.effects;
 
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.effects.*;
-import cz.neumimto.rpg.api.effects.model.EffectModelFactory;
-import cz.neumimto.rpg.api.entity.IEffectConsumer;
-import cz.neumimto.rpg.api.entity.IEntity;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.skills.ISkill;
-import cz.neumimto.rpg.api.skills.SkillService;
-import cz.neumimto.rpg.api.skills.SkillSettings;
-import cz.neumimto.rpg.api.assets.AssetService;
+import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.effects.model.EffectModelFactory;
+import cz.neumimto.rpg.common.entity.IEffectConsumer;
+import cz.neumimto.rpg.common.entity.IEntity;
+import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.skills.ISkill;
+import cz.neumimto.rpg.common.skills.SkillService;
+import cz.neumimto.rpg.common.skills.SkillSettings;
+import cz.neumimto.rpg.common.assets.AssetService;
 
 import javax.inject.Inject;
 import java.io.File;

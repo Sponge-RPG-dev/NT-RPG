@@ -1,8 +1,8 @@
 package cz.neumimto.rpg.common.scripting.mechanics;
 
-import cz.neumimto.rpg.api.damage.DamageService;
-import cz.neumimto.rpg.api.entity.IEntity;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.damage.DamageService;
+import cz.neumimto.rpg.common.entity.IEntity;
+import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

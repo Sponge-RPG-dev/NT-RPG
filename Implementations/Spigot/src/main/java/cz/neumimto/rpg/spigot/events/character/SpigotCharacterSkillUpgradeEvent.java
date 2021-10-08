@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.spigot.events.character;
 
-import cz.neumimto.rpg.api.events.character.CharacterSkillUpgradeEvent;
-import cz.neumimto.rpg.api.skills.ISkill;
+import cz.neumimto.rpg.common.events.character.CharacterSkillUpgradeEvent;
+import cz.neumimto.rpg.common.skills.ISkill;
 import org.bukkit.event.HandlerList;
 
 /**

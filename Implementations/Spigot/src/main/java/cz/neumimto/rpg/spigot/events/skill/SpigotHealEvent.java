@@ -1,8 +1,8 @@
 package cz.neumimto.rpg.spigot.events.skill;
 
-import cz.neumimto.rpg.api.IRpgElement;
-import cz.neumimto.rpg.api.entity.IEntity;
-import cz.neumimto.rpg.api.events.skill.SkillHealEvent;
+import cz.neumimto.rpg.common.IRpgElement;
+import cz.neumimto.rpg.common.entity.IEntity;
+import cz.neumimto.rpg.common.events.skill.SkillHealEvent;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 

@@ -1,15 +1,15 @@
 package cz.neumimto.rpg;
 
 
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.RpgApi;
-import cz.neumimto.rpg.api.configuration.ClassTypeDefinition;
-import cz.neumimto.rpg.api.entity.players.CharacterService;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
-import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
-import cz.neumimto.rpg.api.persistance.model.CharacterClass;
-import cz.neumimto.rpg.api.utils.ActionResult;
+import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.RpgApi;
+import cz.neumimto.rpg.common.configuration.ClassTypeDefinition;
+import cz.neumimto.rpg.common.entity.players.CharacterService;
+import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
+import cz.neumimto.rpg.common.model.CharacterClass;
+import cz.neumimto.rpg.common.utils.ActionResult;
 import cz.neumimto.rpg.junit.CharactersExtension;
 import cz.neumimto.rpg.junit.CharactersExtension.Stage;
 import cz.neumimto.rpg.junit.NtRpgExtension;

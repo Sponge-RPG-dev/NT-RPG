@@ -1,11 +1,11 @@
 package cz.neumimto.rpg.spigot.inventory;
 
 import com.google.inject.Injector;
-import cz.neumimto.rpg.api.inventory.ManagedSlot;
-import cz.neumimto.rpg.api.inventory.RpgInventory;
-import cz.neumimto.rpg.api.items.RpgItemStack;
-import cz.neumimto.rpg.api.persistance.model.EquipedSlot;
-import cz.neumimto.rpg.api.skills.SkillData;
+import cz.neumimto.rpg.common.inventory.ManagedSlot;
+import cz.neumimto.rpg.common.inventory.RpgInventory;
+import cz.neumimto.rpg.common.items.RpgItemStack;
+import cz.neumimto.rpg.common.model.EquipedSlot;
+import cz.neumimto.rpg.common.skills.SkillData;
 import cz.neumimto.rpg.common.inventory.AbstractInventoryService;
 import cz.neumimto.rpg.common.inventory.InventoryHandler;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;

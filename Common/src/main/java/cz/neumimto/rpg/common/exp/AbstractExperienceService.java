@@ -1,7 +1,5 @@
 package cz.neumimto.rpg.common.exp;
 
-import cz.neumimto.rpg.api.exp.ExperienceService;
-
 import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;

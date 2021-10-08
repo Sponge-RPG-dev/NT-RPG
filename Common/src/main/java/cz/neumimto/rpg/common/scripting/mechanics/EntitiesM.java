@@ -3,10 +3,10 @@ package cz.neumimto.rpg.common.scripting.mechanics;
 import cz.neumimto.nts.annotations.ScriptMeta.Function;
 import cz.neumimto.nts.annotations.ScriptMeta.Handler;
 import cz.neumimto.nts.annotations.ScriptMeta.NamedParam;
-import cz.neumimto.rpg.api.IRpgElement;
-import cz.neumimto.rpg.api.damage.DamageService;
-import cz.neumimto.rpg.api.entity.EntityService;
-import cz.neumimto.rpg.api.entity.IEntity;
+import cz.neumimto.rpg.common.IRpgElement;
+import cz.neumimto.rpg.common.damage.DamageService;
+import cz.neumimto.rpg.common.entity.EntityService;
+import cz.neumimto.rpg.common.entity.IEntity;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -35,9 +35,10 @@ public class EntitiesM {
                     @NamedParam("e|damager") IEntity damager,
                     @NamedParam("d|damage") double damage) {
 
-        if (damageService.canDamage()) {
-            damageService.damageEntity(target, damage);
-        }
+      //  if (damageService.canDamage()) {
+      //      damageService.damageEntity(target, damage);
+      //  }
+        return true;
     }
 
 }

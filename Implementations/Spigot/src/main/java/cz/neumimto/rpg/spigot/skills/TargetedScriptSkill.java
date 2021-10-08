@@ -1,14 +1,14 @@
 package cz.neumimto.rpg.spigot.skills;
 
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.entity.IEntity;
-import cz.neumimto.rpg.api.logging.Log;
-import cz.neumimto.rpg.api.scripting.SkillScriptHandlers;
-import cz.neumimto.rpg.api.skills.ISkillType;
-import cz.neumimto.rpg.api.skills.PlayerSkillContext;
-import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.api.skills.scripting.ScriptSkillModel;
-import cz.neumimto.rpg.api.skills.types.ITargetedScriptSkill;
+import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.entity.IEntity;
+import cz.neumimto.rpg.common.logging.Log;
+import cz.neumimto.rpg.common.scripting.SkillScriptHandlers;
+import cz.neumimto.rpg.common.skills.ISkillType;
+import cz.neumimto.rpg.common.skills.PlayerSkillContext;
+import cz.neumimto.rpg.common.skills.SkillResult;
+import cz.neumimto.rpg.common.skills.scripting.ScriptSkillModel;
+import cz.neumimto.rpg.common.skills.types.ITargetedScriptSkill;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 
 import java.util.List;

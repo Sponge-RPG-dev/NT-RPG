@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.spigot.gui.inventoryviews;
 
-import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.common.Rpg;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

@@ -1,10 +1,9 @@
 package cz.neumimto.rpg.common.entity.players;
 
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.entity.CommonProperties;
-import cz.neumimto.rpg.api.entity.EntityService;
-import cz.neumimto.rpg.api.entity.IReservable;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.entity.CommonProperties;
+import cz.neumimto.rpg.common.entity.EntityService;
+import cz.neumimto.rpg.common.entity.IReservable;
 import it.unimi.dsi.fastutil.doubles.DoubleIterator;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 

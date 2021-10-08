@@ -1,9 +1,9 @@
 package cz.neumimto.rpg.spigot.skills;
 
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.gui.ISkillTreeInterfaceModel;
-import cz.neumimto.rpg.api.scripting.SkillScriptHandlers;
-import cz.neumimto.rpg.api.skills.types.ScriptSkill;
+import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.gui.ISkillTreeInterfaceModel;
+import cz.neumimto.rpg.common.scripting.SkillScriptHandlers;
+import cz.neumimto.rpg.common.skills.types.ScriptSkill;
 import cz.neumimto.rpg.common.skills.AbstractSkillService;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import org.bukkit.Material;

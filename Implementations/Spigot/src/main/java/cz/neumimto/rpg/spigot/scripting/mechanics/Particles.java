@@ -1,17 +1,13 @@
 package cz.neumimto.rpg.spigot.scripting.mechanics;
 
-import cz.neumimto.nts.annotations.ScriptMeta;
-import cz.neumimto.rpg.api.entity.IEntity;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.entities.ISpigotEntity;
 import de.slikey.effectlib.EffectType;
 import de.slikey.effectlib.effect.LineEffect;
-import io.lumine.xikage.mythicmobs.skills.mechanics.ParticleLineEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.block.data.BlockData;
-import org.bukkit.material.MaterialData;
 import org.bukkit.util.Vector;
 
 import javax.inject.Singleton;

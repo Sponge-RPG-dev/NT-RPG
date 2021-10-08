@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.common.entity;
 
-import cz.neumimto.rpg.api.entity.players.party.IParty;
+import cz.neumimto.rpg.common.entity.players.party.IParty;
 
 import java.util.HashSet;
 import java.util.Set;

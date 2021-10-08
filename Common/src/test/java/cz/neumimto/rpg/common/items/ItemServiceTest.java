@@ -2,10 +2,7 @@ package cz.neumimto.rpg.common.items;
 
 import com.typesafe.config.ConfigFactory;
 import cz.neumimto.rpg.RpgTest;
-import cz.neumimto.rpg.api.RpgApi;
-import cz.neumimto.rpg.api.items.ItemClass;
-import cz.neumimto.rpg.api.items.ItemService;
-import cz.neumimto.rpg.api.items.RpgItemType;
+import cz.neumimto.rpg.common.RpgApi;
 import cz.neumimto.rpg.junit.NtRpgExtension;
 import cz.neumimto.rpg.junit.TestGuiceModule;
 import name.falgout.jeffrey.testing.junit.guice.GuiceExtension;

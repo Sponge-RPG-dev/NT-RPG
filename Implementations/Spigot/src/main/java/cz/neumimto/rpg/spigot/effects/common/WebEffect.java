@@ -1,8 +1,8 @@
 package cz.neumimto.rpg.spigot.effects.common;
 
-import cz.neumimto.rpg.api.effects.EffectBase;
-import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.api.entity.IEffectConsumer;
+import cz.neumimto.rpg.common.effects.EffectBase;
+import cz.neumimto.rpg.common.effects.IEffect;
+import cz.neumimto.rpg.common.entity.IEffectConsumer;
 import cz.neumimto.rpg.spigot.entities.ISpigotEntity;
 import org.bukkit.Location;
 import org.bukkit.Material;

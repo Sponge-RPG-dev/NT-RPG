@@ -1,9 +1,9 @@
 package cz.neumimto.rpg;
 
-import cz.neumimto.rpg.api.effects.EffectBase;
-import cz.neumimto.rpg.api.effects.EffectContainer;
-import cz.neumimto.rpg.api.effects.IEffectContainer;
-import cz.neumimto.rpg.api.entity.IEffectConsumer;
+import cz.neumimto.rpg.common.effects.EffectBase;
+import cz.neumimto.rpg.common.effects.EffectContainer;
+import cz.neumimto.rpg.common.effects.IEffectContainer;
+import cz.neumimto.rpg.common.entity.IEffectConsumer;
 
 public class TickableEffect extends EffectBase<Double> {
 

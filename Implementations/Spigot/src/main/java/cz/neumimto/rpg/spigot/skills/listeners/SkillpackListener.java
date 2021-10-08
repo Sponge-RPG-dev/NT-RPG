@@ -1,8 +1,8 @@
 package cz.neumimto.rpg.spigot.skills.listeners;
 
 import com.google.auto.service.AutoService;
-import cz.neumimto.rpg.api.effects.IEffectContainer;
-import cz.neumimto.rpg.api.entity.IEntity;
+import cz.neumimto.rpg.common.effects.IEffectContainer;
+import cz.neumimto.rpg.common.entity.IEntity;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
 import cz.neumimto.rpg.spigot.effects.common.*;
 import cz.neumimto.rpg.spigot.entities.SpigotEntityService;

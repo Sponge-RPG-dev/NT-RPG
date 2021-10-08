@@ -1,7 +1,6 @@
 rootProject.name = 'NtRpgParent'
 
 include ':Generator'
-include ':API'
 include ':Common'
 include ':Database-Persistence'
 include ':FlatFiles-Persistence'
@@ -13,7 +12,6 @@ include ':Spigot'
 include ':Bootstrap-Common'
 include ':Bootstrap-Spigot'
 
-project(':API').projectDir = file('API')
 project(':Common').projectDir = file('Common')
 
 project(':Database-Persistence').projectDir = file('Peristence/Database')

@@ -1,8 +1,8 @@
 package cz.neumimto.rpg.spigot.skills.scripting;
 
-import cz.neumimto.rpg.api.entity.PropertyService;
-import cz.neumimto.rpg.api.logging.Log;
-import cz.neumimto.rpg.api.skills.scripting.JsBinding;
+import cz.neumimto.rpg.common.entity.PropertyService;
+import cz.neumimto.rpg.common.logging.Log;
+import cz.neumimto.rpg.common.skills.scripting.JsBinding;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

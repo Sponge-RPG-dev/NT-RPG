@@ -1,13 +1,13 @@
 package cz.neumimto.rpg;
 
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.configuration.SkillTreeDao;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.localization.LocalizationService;
-import cz.neumimto.rpg.api.skills.*;
-import cz.neumimto.rpg.api.skills.tree.SkillTree;
-import cz.neumimto.rpg.api.skills.types.ActiveSkill;
-import cz.neumimto.rpg.api.assets.AssetService;
+import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.configuration.SkillTreeDao;
+import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.localization.LocalizationService;
+import cz.neumimto.rpg.common.skills.*;
+import cz.neumimto.rpg.common.skills.tree.SkillTree;
+import cz.neumimto.rpg.common.skills.types.ActiveSkill;
+import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.entity.TestCharacter;
 import cz.neumimto.rpg.junit.NtRpgExtension;
 import cz.neumimto.rpg.junit.TestGuiceModule;

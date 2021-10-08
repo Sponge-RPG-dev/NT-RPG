@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.common.exp;
 
 
-import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.common.Rpg;
 
 import javax.inject.Singleton;
 import java.io.File;

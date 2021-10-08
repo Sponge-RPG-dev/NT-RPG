@@ -1,11 +1,9 @@
 package cz.neumimto.rpg.common.items;
 
-import cz.neumimto.rpg.api.configuration.AttributeConfig;
-import cz.neumimto.rpg.api.effects.EffectParams;
-import cz.neumimto.rpg.api.effects.IGlobalEffect;
-import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
-import cz.neumimto.rpg.api.items.RpgItemStack;
-import cz.neumimto.rpg.api.items.RpgItemType;
+import cz.neumimto.rpg.common.configuration.AttributeConfig;
+import cz.neumimto.rpg.common.effects.EffectParams;
+import cz.neumimto.rpg.common.effects.IGlobalEffect;
+import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 
 import java.util.Map;
 

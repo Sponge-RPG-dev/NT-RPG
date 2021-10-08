@@ -1,13 +1,12 @@
 package cz.neumimto.rpg.common.skills;
 
-import cz.neumimto.rpg.api.ResourceLoader;
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.skills.ISkill;
-import cz.neumimto.rpg.api.utils.DebugLevel;
+import cz.neumimto.rpg.common.ResourceLoader;
+import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.utils.DebugLevel;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.description.annotation.AnnotationDescription;
 
-import static cz.neumimto.rpg.api.logging.Log.info;
+import static cz.neumimto.rpg.common.logging.Log.info;
 
 public class SkillConfigLoader {
 

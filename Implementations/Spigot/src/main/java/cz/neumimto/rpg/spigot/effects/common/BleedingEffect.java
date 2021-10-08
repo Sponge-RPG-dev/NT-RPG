@@ -1,9 +1,9 @@
 package cz.neumimto.rpg.spigot.effects.common;
 
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.effects.EffectBase;
-import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.api.entity.IEntity;
+import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.effects.EffectBase;
+import cz.neumimto.rpg.common.effects.IEffect;
+import cz.neumimto.rpg.common.entity.IEntity;
 import de.slikey.effectlib.effect.BleedEffect;
 import de.slikey.effectlib.util.RandomUtils;
 import org.bukkit.Effect;

@@ -2,9 +2,9 @@
 
 package cz.neumimto.rpg.persistence.model;
 
-import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
-import cz.neumimto.rpg.api.persistance.model.*;
-import cz.neumimto.rpg.api.skills.ISkill;
+import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.common.model.*;
+import cz.neumimto.rpg.common.skills.ISkill;
 
 import java.util.*;
 

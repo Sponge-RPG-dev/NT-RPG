@@ -1,9 +1,9 @@
 package cz.neumimto.rpg;
 
-import cz.neumimto.rpg.api.classes.ClassService;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
-import cz.neumimto.rpg.api.permissions.PermissionService;
+import cz.neumimto.rpg.common.classes.ClassService;
+import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.common.permissions.PermissionService;
 import cz.neumimto.rpg.common.persistance.dao.ClassDefinitionDao;
 import cz.neumimto.rpg.junit.CharactersExtension;
 import cz.neumimto.rpg.junit.CharactersExtension.Stage;

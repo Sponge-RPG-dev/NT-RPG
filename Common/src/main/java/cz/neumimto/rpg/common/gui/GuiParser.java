@@ -3,12 +3,12 @@ package cz.neumimto.rpg.common.gui;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
 import com.typesafe.config.ConfigFactory;
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.RpgApi;
-import cz.neumimto.rpg.api.configuration.ClassTypeDefinition;
-import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
-import cz.neumimto.rpg.api.items.ClassItem;
-import cz.neumimto.rpg.api.logging.Log;
+import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.RpgApi;
+import cz.neumimto.rpg.common.configuration.ClassTypeDefinition;
+import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.common.items.ClassItem;
+import cz.neumimto.rpg.common.logging.Log;
 
 import javax.script.Invocable;
 import javax.script.ScriptEngine;

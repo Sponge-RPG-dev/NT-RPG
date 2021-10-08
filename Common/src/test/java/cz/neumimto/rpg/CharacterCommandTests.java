@@ -1,13 +1,13 @@
 package cz.neumimto.rpg;
 
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.RpgApi;
-import cz.neumimto.rpg.api.configuration.AttributeConfig;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
-import cz.neumimto.rpg.api.gui.Gui;
-import cz.neumimto.rpg.api.gui.IPlayerMessage;
-import cz.neumimto.rpg.api.logging.Log;
+import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.RpgApi;
+import cz.neumimto.rpg.common.configuration.AttributeConfig;
+import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.common.gui.Gui;
+import cz.neumimto.rpg.common.gui.IPlayerMessage;
+import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.common.commands.CharacterCommandFacade;
 import cz.neumimto.rpg.common.commands.CharacterCommands;
 import cz.neumimto.rpg.common.effects.AbstractEffectService;

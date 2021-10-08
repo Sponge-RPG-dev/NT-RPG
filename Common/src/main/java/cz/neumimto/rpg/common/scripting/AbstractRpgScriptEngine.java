@@ -7,15 +7,14 @@ import com.electronwill.nightconfig.core.file.FileConfig;
 import com.electronwill.nightconfig.core.io.ConfigParser;
 import com.electronwill.nightconfig.hocon.HoconFormat;
 import com.google.inject.Injector;
-import cz.neumimto.rpg.api.ResourceLoader;
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.logging.Log;
-import cz.neumimto.rpg.api.scripting.IRpgScriptEngine;
-import cz.neumimto.rpg.api.skills.SkillService;
-import cz.neumimto.rpg.api.skills.SkillsDefinition;
-import cz.neumimto.rpg.api.skills.scripting.JsBinding;
-import cz.neumimto.rpg.api.utils.FileUtils;
-import cz.neumimto.rpg.api.assets.AssetService;
+import cz.neumimto.rpg.common.ResourceLoader;
+import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.logging.Log;
+import cz.neumimto.rpg.common.skills.SkillService;
+import cz.neumimto.rpg.common.skills.SkillsDefinition;
+import cz.neumimto.rpg.common.skills.scripting.JsBinding;
+import cz.neumimto.rpg.common.utils.FileUtils;
+import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.bytecode.ClassGenerator;
 
 import javax.inject.Inject;
@@ -30,7 +29,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.*;
 import java.util.function.BiConsumer;
 
-import static cz.neumimto.rpg.api.logging.Log.info;
+import static cz.neumimto.rpg.common.logging.Log.info;
 
 public abstract class AbstractRpgScriptEngine implements IRpgScriptEngine {
 

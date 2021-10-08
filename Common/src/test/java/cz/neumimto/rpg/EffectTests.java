@@ -1,10 +1,9 @@
 package cz.neumimto.rpg;
 
-import cz.neumimto.rpg.api.effects.EffectStackingStrategy;
-import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.api.effects.stacking.DoubleEffectStackingStrategy;
-import cz.neumimto.rpg.api.persistance.model.CharacterBase;
-import cz.neumimto.rpg.api.scripting.IRpgScriptEngine;
+import cz.neumimto.rpg.common.effects.IEffect;
+import cz.neumimto.rpg.common.effects.stacking.DoubleEffectStackingStrategy;
+import cz.neumimto.rpg.common.model.CharacterBase;
+import cz.neumimto.rpg.common.scripting.IRpgScriptEngine;
 import cz.neumimto.rpg.common.effects.InternalEffectSourceProvider;
 import cz.neumimto.rpg.common.entity.TestCharacter;
 import cz.neumimto.rpg.common.entity.players.ActiveCharacter;

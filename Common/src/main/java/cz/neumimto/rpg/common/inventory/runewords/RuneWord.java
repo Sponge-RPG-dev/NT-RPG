@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.common.inventory.runewords;
 
-import cz.neumimto.rpg.api.effects.IGlobalEffect;
-import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.common.effects.IGlobalEffect;
+import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.inventory.crafting.runewords.ItemUpgrade;
 
 import java.util.*;

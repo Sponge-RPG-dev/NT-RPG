@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.common.scripting.mechanics;
 
-import cz.neumimto.rpg.api.effects.EffectService;
-import cz.neumimto.rpg.api.entity.IEntity;
+import cz.neumimto.rpg.common.effects.EffectService;
+import cz.neumimto.rpg.common.entity.IEntity;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

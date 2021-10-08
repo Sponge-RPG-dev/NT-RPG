@@ -2,15 +2,14 @@ package cz.neumimto.rpg.common.entity;
 
 import com.electronwill.nightconfig.core.conversion.ObjectConverter;
 import com.electronwill.nightconfig.core.file.FileConfig;
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.configuration.AttributeConfig;
-import cz.neumimto.rpg.api.configuration.Attributes;
-import cz.neumimto.rpg.api.entity.PropertyService;
-import cz.neumimto.rpg.api.items.ItemService;
-import cz.neumimto.rpg.api.logging.Log;
-import cz.neumimto.rpg.api.properties.Property;
-import cz.neumimto.rpg.api.utils.Console;
-import cz.neumimto.rpg.api.assets.AssetService;
+import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.configuration.AttributeConfig;
+import cz.neumimto.rpg.common.configuration.Attributes;
+import cz.neumimto.rpg.common.items.ItemService;
+import cz.neumimto.rpg.common.logging.Log;
+import cz.neumimto.rpg.common.properties.Property;
+import cz.neumimto.rpg.common.utils.Console;
+import cz.neumimto.rpg.common.assets.AssetService;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -24,7 +23,7 @@ import java.text.Collator;
 import java.util.*;
 import java.util.function.Supplier;
 
-import static cz.neumimto.rpg.api.logging.Log.info;
+import static cz.neumimto.rpg.common.logging.Log.info;
 
 @Singleton
 public class PropertyServiceImpl implements PropertyService {

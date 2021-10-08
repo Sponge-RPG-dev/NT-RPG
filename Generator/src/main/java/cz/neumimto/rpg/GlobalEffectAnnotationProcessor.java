@@ -22,9 +22,9 @@ public class GlobalEffectAnnotationProcessor extends AbstractProcessor {
 
     private String template =  //fuck it
             "\n" +
-                    "import cz.neumimto.rpg.api.entity.IEffectConsumer;\n" +
-                    "import cz.neumimto.rpg.api.effects.IGlobalEffect;\n" +
-                    "import cz.neumimto.rpg.api.effects.model.EffectModelFactory;\n" +
+                    "import cz.neumimto.rpg.common.entity.IEffectConsumer;\n" +
+                    "import cz.neumimto.rpg.common.effects.IGlobalEffect;\n" +
+                    "import cz.neumimto.rpg.common.effects.model.EffectModelFactory;\n" +
                     "import com.google.auto.service.AutoService;" +
                     "\n" +
                     "import java.util.Map;\n" +
@@ -62,13 +62,13 @@ public class GlobalEffectAnnotationProcessor extends AbstractProcessor {
     private String modelTemplate = ""
             + "\n"
             + "import java.util.Map;\n"
-            + "import cz.neumimto.rpg.api.effects.model.EffectModelMapper;\n"
-            + "import cz.neumimto.rpg.api.skills.scripting.JsBinding;\n"
+            + "import cz.neumimto.rpg.common.effects.model.EffectModelMapper;\n"
+            + "import cz.neumimto.rpg.common.skills.scripting.JsBinding;\n"
             + "import com.google.auto.service.AutoService;\n"
             + "\n"
             + "@AutoService(EffectModelMapper.class)"
             + "@JsBinding(JsBinding.Type.CLASS)\n"
-            + "@cz.neumimto.rpg.api.ResourceLoader.ModelMapper\n"
+            + "@cz.neumimto.rpg.common.ResourceLoader.ModelMapper\n"
             + "public class %stype%Mapper extends EffectModelMapper {\n"
             + "\n"
             + "        public %stype%Mapper() {\n"
@@ -108,7 +108,7 @@ public class GlobalEffectAnnotationProcessor extends AbstractProcessor {
 
         filerUtils = processingEnv.getFiler();
         elementUtils = processingEnv.getElementUtils();
-        myAnnotationTypeElement = elementUtils.getTypeElement("cz.neumimto.rpg.api.effects.Generate");
+        myAnnotationTypeElement = elementUtils.getTypeElement("cz.neumimto.rpg.common.effects.Generate");
     }
 
     @Override
@@ -285,7 +285,7 @@ public class GlobalEffectAnnotationProcessor extends AbstractProcessor {
 
     @Override
     public Set<String> getSupportedAnnotationTypes() {
-        return Collections.singleton("cz.neumimto.rpg.api.effects.Generate");
+        return Collections.singleton("cz.neumimto.rpg.common.effects.Generate");
     }
 
 }

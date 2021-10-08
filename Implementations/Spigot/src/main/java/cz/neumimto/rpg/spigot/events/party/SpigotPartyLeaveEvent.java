@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.spigot.events.party;
 
-import cz.neumimto.rpg.api.events.party.PartyLeaveEvent;
+import cz.neumimto.rpg.common.events.party.PartyLeaveEvent;
 import org.bukkit.event.HandlerList;
 
 public class SpigotPartyLeaveEvent extends SpigotAbstractPartyEvent implements PartyLeaveEvent {

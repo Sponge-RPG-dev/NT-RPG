@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.spigot;
 
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.RpgApi;
+import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.RpgApi;
 
 public class RpgImpl extends Rpg {
 

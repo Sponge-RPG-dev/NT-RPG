@@ -1,10 +1,9 @@
 package cz.neumimto.rpg.common;
 
 import com.google.inject.Injector;
-import cz.neumimto.rpg.api.RpgAddon;
-import cz.neumimto.rpg.api.effects.IGlobalEffect;
-import cz.neumimto.rpg.api.effects.model.EffectModelMapper;
-import cz.neumimto.rpg.api.skills.ISkill;
+import cz.neumimto.rpg.common.effects.IGlobalEffect;
+import cz.neumimto.rpg.common.effects.model.EffectModelMapper;
+import cz.neumimto.rpg.common.skills.ISkill;
 
 import java.io.IOException;
 import java.lang.module.Configuration;

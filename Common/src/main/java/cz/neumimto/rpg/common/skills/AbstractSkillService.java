@@ -2,25 +2,23 @@ package cz.neumimto.rpg.common.skills;
 
 import com.google.inject.Injector;
 import cz.neumimto.nts.NTScript;
-import cz.neumimto.rpg.api.ResourceLoader;
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.classes.ClassService;
-import cz.neumimto.rpg.api.configuration.SkillTreeDao;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.logging.Log;
-import cz.neumimto.rpg.api.scripting.NTScriptEngine;
-import cz.neumimto.rpg.api.scripting.SkillScriptHandlers;
-import cz.neumimto.rpg.api.skills.*;
-import cz.neumimto.rpg.api.skills.scripting.ActiveScriptSkill;
-import cz.neumimto.rpg.api.skills.scripting.ScriptSkillModel;
-import cz.neumimto.rpg.api.skills.tree.SkillTree;
-import cz.neumimto.rpg.api.skills.tree.SkillType;
-import cz.neumimto.rpg.api.skills.types.IPassiveScriptSkill;
-import cz.neumimto.rpg.api.skills.types.PassiveScriptSkill;
-import cz.neumimto.rpg.api.skills.types.ScriptSkill;
-import cz.neumimto.rpg.api.utils.ClassUtils;
-import cz.neumimto.rpg.api.utils.DebugLevel;
-import cz.neumimto.rpg.api.utils.annotations.CatalogId;
+import cz.neumimto.rpg.common.ResourceLoader;
+import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.classes.ClassService;
+import cz.neumimto.rpg.common.configuration.SkillTreeDao;
+import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.logging.Log;
+import cz.neumimto.rpg.common.scripting.NTScriptEngine;
+import cz.neumimto.rpg.common.scripting.SkillScriptHandlers;
+import cz.neumimto.rpg.common.skills.scripting.ActiveScriptSkill;
+import cz.neumimto.rpg.common.skills.scripting.ScriptSkillModel;
+import cz.neumimto.rpg.common.skills.tree.SkillTree;
+import cz.neumimto.rpg.common.skills.tree.SkillType;
+import cz.neumimto.rpg.common.skills.types.PassiveScriptSkill;
+import cz.neumimto.rpg.common.skills.types.ScriptSkill;
+import cz.neumimto.rpg.common.utils.ClassUtils;
+import cz.neumimto.rpg.common.utils.DebugLevel;
+import cz.neumimto.rpg.common.utils.annotations.CatalogId;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.description.annotation.AnnotationDescription;
 
@@ -30,7 +28,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
-import static cz.neumimto.rpg.api.logging.Log.*;
+import static cz.neumimto.rpg.common.logging.Log.*;
 
 public abstract class AbstractSkillService implements SkillService {
 

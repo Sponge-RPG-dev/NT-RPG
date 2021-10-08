@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.spigot.entities.configuration;
 
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.utils.FileUtils;
+import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.utils.FileUtils;
 import cz.neumimto.rpg.common.entity.configuration.MobSettingsDao;
 import cz.neumimto.rpg.common.entity.configuration.MobsConfig;
 import cz.neumimto.rpg.common.entity.configuration.RootMobConfig;

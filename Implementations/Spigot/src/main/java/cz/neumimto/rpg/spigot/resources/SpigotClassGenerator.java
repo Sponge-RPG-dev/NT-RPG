@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.spigot.resources;
 
-import cz.neumimto.rpg.api.scripting.IRpgScriptEngine;
+import cz.neumimto.rpg.common.scripting.IRpgScriptEngine;
 import cz.neumimto.rpg.common.bytecode.ClassGenerator;
 import net.bytebuddy.description.annotation.AnnotationDescription;
 import net.bytebuddy.dynamic.DynamicType;

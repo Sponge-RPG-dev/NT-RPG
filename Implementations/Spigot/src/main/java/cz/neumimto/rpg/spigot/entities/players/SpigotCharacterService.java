@@ -1,10 +1,10 @@
 package cz.neumimto.rpg.spigot.entities.players;
 
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.gui.Gui;
-import cz.neumimto.rpg.api.persistance.model.CharacterBase;
-import cz.neumimto.rpg.api.skills.ISkill;
-import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.gui.Gui;
+import cz.neumimto.rpg.common.model.CharacterBase;
+import cz.neumimto.rpg.common.skills.ISkill;
+import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.common.entity.players.AbstractCharacterService;
 import cz.neumimto.rpg.common.entity.players.CharacterMana;
@@ -21,7 +21,7 @@ import org.bukkit.inventory.ItemStack;
 import javax.inject.Singleton;
 import java.util.UUID;
 
-import static cz.neumimto.rpg.api.logging.Log.info;
+import static cz.neumimto.rpg.common.logging.Log.info;
 
 @Singleton
 public class SpigotCharacterService extends AbstractCharacterService<ISpigotCharacter> {

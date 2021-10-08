@@ -1,9 +1,9 @@
 package cz.neumimto.rpg.spigot;
 
 import com.google.inject.Injector;
-import cz.neumimto.rpg.api.utils.Console;
+import cz.neumimto.rpg.common.utils.Console;
 import cz.neumimto.rpg.common.AbstractRpg;
-import cz.neumimto.rpg.api.assets.AssetService;
+import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.spigot.gui.SpigotGuiHelper;
 import cz.neumimto.rpg.spigot.gui.inventoryviews.ConfigurableInventoryGui;
 import org.bukkit.Bukkit;
@@ -22,7 +22,7 @@ import java.util.*;
 import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
 
-import static cz.neumimto.rpg.api.logging.Log.info;
+import static cz.neumimto.rpg.common.logging.Log.info;
 
 @Singleton
 public final class SpigotRpg extends AbstractRpg {

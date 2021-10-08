@@ -2,8 +2,8 @@ package cz.neumimto.rpg.spigot.gui.inventoryviews;
 
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.google.auto.service.AutoService;
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.classes.ClassService;
+import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.classes.ClassService;
 import cz.neumimto.rpg.spigot.gui.elements.GuiCommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemStack;

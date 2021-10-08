@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.persistence;
 
-import cz.neumimto.rpg.api.persistance.model.CharacterBase;
-import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
+import cz.neumimto.rpg.common.model.CharacterBase;
+import cz.neumimto.rpg.common.model.CharacterSkill;
 import cz.neumimto.rpg.common.persistance.dao.IPlayerDao;
 
 import javax.inject.Singleton;

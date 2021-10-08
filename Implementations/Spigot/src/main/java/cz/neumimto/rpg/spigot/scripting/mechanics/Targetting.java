@@ -3,7 +3,7 @@ package cz.neumimto.rpg.spigot.scripting.mechanics;
 import cz.neumimto.nts.annotations.ScriptMeta.Function;
 import cz.neumimto.nts.annotations.ScriptMeta.Handler;
 import cz.neumimto.nts.annotations.ScriptMeta.NamedParam;
-import cz.neumimto.rpg.api.entity.IEntity;
+import cz.neumimto.rpg.common.entity.IEntity;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
 import cz.neumimto.rpg.spigot.entities.ISpigotEntity;
 import cz.neumimto.rpg.spigot.entities.SpigotEntityService;

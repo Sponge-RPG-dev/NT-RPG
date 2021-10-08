@@ -1,7 +1,7 @@
 package cz.neumimto.rpg;
 
-import cz.neumimto.rpg.api.entity.PropertyService;
-import cz.neumimto.rpg.api.items.ItemClass;
+import cz.neumimto.rpg.common.entity.PropertyService;
+import cz.neumimto.rpg.common.items.ItemClass;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 
 import javax.inject.Inject;
