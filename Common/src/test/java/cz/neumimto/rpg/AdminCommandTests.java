@@ -12,7 +12,7 @@ import cz.neumimto.rpg.common.gui.IPlayerMessage;
 import cz.neumimto.rpg.common.model.CharacterBase;
 import cz.neumimto.rpg.common.model.CharacterClass;
 import cz.neumimto.rpg.common.commands.AdminCommands;
-import cz.neumimto.rpg.common.effects.AbstractEffectService;
+import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.effects.TestEffectFloat;
 import cz.neumimto.rpg.effects.TestEffectFloatGlobal;
 import cz.neumimto.rpg.junit.CharactersExtension;
@@ -39,7 +39,7 @@ public class AdminCommandTests {
     private AdminCommands abstractAdminCommand;
 
     @Inject
-    private AbstractEffectService effectService;
+    private EffectService effectService;
 
     @Inject
     private IPlayerMessage vanillaMessaging;

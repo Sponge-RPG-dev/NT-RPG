@@ -1,7 +1,7 @@
 package cz.neumimto.rpg;
 
-import cz.neumimto.rpg.common.effects.CommonEffectTypes;
 import cz.neumimto.rpg.common.effects.EffectService;
+import cz.neumimto.rpg.common.effects.CommonEffectTypes;
 import cz.neumimto.rpg.common.effects.EffectType;
 import cz.neumimto.rpg.effects.TestEffectService;
 import cz.neumimto.rpg.junit.NtRpgExtension;

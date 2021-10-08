@@ -3,6 +3,7 @@ package cz.neumimto.rpg.common.skills.reagents;
 import cz.neumimto.rpg.common.damage.DamageService;
 import cz.neumimto.rpg.common.entity.CommonProperties;
 import cz.neumimto.rpg.common.entity.EntityService;
+import cz.neumimto.rpg.common.entity.IEntity;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.skills.SkillData;
@@ -19,7 +20,7 @@ public class HPCast extends SkillCastMechanic {
     private EntityService entityService;
 
     @Inject
-    private DamageService damageService;
+    private DamageService<IActiveCharacter, Object, IEntity<Object>> damageService;
 
     double getHPCost(IActiveCharacter character, PlayerSkillContext context) {
         return context.getFloatNodeValue(SkillNodes.HPCOST)

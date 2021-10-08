@@ -2,8 +2,8 @@ package cz.neumimto.rpg.spigot.skills;
 
 import com.google.auto.service.AutoService;
 import cz.neumimto.rpg.common.ResourceLoader;
-import cz.neumimto.rpg.common.effects.EffectBase;
 import cz.neumimto.rpg.common.effects.EffectService;
+import cz.neumimto.rpg.common.effects.EffectBase;
 import cz.neumimto.rpg.common.effects.IEffect;
 import cz.neumimto.rpg.common.entity.IEntity;
 import cz.neumimto.rpg.common.skills.ISkill;

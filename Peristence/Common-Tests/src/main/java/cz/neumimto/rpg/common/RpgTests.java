@@ -2,15 +2,12 @@ package cz.neumimto.rpg.common;
 
 import com.google.inject.Module;
 import cz.neumimto.persistence.TestHelper;
-import cz.neumimto.rpg.common.ResourceLoader;
-import cz.neumimto.rpg.common.Rpg;
-import cz.neumimto.rpg.common.RpgAddon;
-import cz.neumimto.rpg.common.RpgApi;
 import cz.neumimto.rpg.common.classes.ClassService;
 import cz.neumimto.rpg.common.configuration.PluginConfig;
 import cz.neumimto.rpg.common.damage.DamageService;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.entity.EntityService;
+import cz.neumimto.rpg.common.entity.IEntity;
 import cz.neumimto.rpg.common.entity.PropertyService;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
@@ -127,7 +124,7 @@ public class RpgTests implements RpgApi {
     }
 
     @Override
-    public DamageService getDamageService() {
+    public DamageService<IActiveCharacter, Object, IEntity<Object>> getDamageService() {
         return null;
     }
 

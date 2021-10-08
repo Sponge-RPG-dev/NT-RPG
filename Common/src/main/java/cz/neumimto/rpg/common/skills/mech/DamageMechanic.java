@@ -11,7 +11,7 @@ import javax.inject.Singleton;
 public class DamageMechanic {
 
     @Inject
-    private DamageService damageService;
+    private DamageService<IActiveCharacter, Object, IEntity<Object>> damageService;
 
     public void damage(IActiveCharacter character, IEntity entity, float damage) {
         if (damageService.canDamage(character, entity.getEntity())) {

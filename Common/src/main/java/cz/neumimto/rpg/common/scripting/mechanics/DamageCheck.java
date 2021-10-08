@@ -11,7 +11,7 @@ import javax.inject.Singleton;
 public class DamageCheck {
 
     @Inject
-    private DamageService damageService;
+    private DamageService<IActiveCharacter, Object, IEntity<Object>> damageService;
 
     public boolean canDamage(IActiveCharacter character, IEntity target) {
         return damageService.canDamage(character, target);

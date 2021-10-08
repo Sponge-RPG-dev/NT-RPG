@@ -7,6 +7,7 @@ import cz.neumimto.rpg.common.IRpgElement;
 import cz.neumimto.rpg.common.damage.DamageService;
 import cz.neumimto.rpg.common.entity.EntityService;
 import cz.neumimto.rpg.common.entity.IEntity;
+import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -18,7 +19,7 @@ public class EntitiesM {
     private EntityService entityService;
 
     @Inject
-    private DamageService damageService;
+    private DamageService<IActiveCharacter, Object, IEntity<Object>> damageService;
 
     @Handler
     @Function("heal")

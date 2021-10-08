@@ -9,10 +9,7 @@ import cz.neumimto.rpg.common.configuration.PluginConfig;
 import cz.neumimto.rpg.common.damage.DamageService;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.effects.IEffectContainer;
-import cz.neumimto.rpg.common.entity.CommonProperties;
-import cz.neumimto.rpg.common.entity.EntityService;
-import cz.neumimto.rpg.common.entity.PropertyService;
-import cz.neumimto.rpg.common.entity.UserActionType;
+import cz.neumimto.rpg.common.entity.*;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.entity.players.classes.DependencyGraph;
 import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
@@ -68,7 +65,7 @@ public abstract class AbstractCharacterService<T extends IActiveCharacter> imple
     @Inject
     private EntityService entityService;
     @Inject
-    private DamageService damageService;
+    private DamageService<IActiveCharacter, Object, IEntity<Object>> damageService;
     @Inject
     private PropertyService propertyService;
     @Inject

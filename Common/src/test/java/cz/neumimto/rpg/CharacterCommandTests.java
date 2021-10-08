@@ -10,7 +10,7 @@ import cz.neumimto.rpg.common.gui.IPlayerMessage;
 import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.common.commands.CharacterCommandFacade;
 import cz.neumimto.rpg.common.commands.CharacterCommands;
-import cz.neumimto.rpg.common.effects.AbstractEffectService;
+import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
 import cz.neumimto.rpg.junit.CharactersExtension;
 import cz.neumimto.rpg.junit.CharactersExtension.Stage;
@@ -43,7 +43,7 @@ public class CharacterCommandTests {
     private CharacterCommands characterCommands;
 
     @Inject
-    private AbstractEffectService effectService;
+    private EffectService effectService;
 
     @Inject
     private IPlayerMessage vanillaMessaging;

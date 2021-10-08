@@ -1,14 +1,11 @@
 package cz.neumimto.rpg.common.inventory;
 
 import cz.neumimto.rpg.common.configuration.AttributeConfig;
-import cz.neumimto.rpg.common.effects.EffectParams;
-import cz.neumimto.rpg.common.effects.EffectService;
-import cz.neumimto.rpg.common.effects.IGlobalEffect;
+import cz.neumimto.rpg.common.effects.*;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.items.ItemService;
 import cz.neumimto.rpg.common.items.RpgItemStack;
-import cz.neumimto.rpg.common.effects.InternalEffectSourceProvider;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

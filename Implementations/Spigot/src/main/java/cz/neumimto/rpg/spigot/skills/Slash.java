@@ -6,6 +6,7 @@ import cz.neumimto.rpg.common.ResourceLoader;
 import cz.neumimto.rpg.common.damage.DamageService;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.entity.IEntity;
+import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.skills.ISkill;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.skills.SkillNodes;
@@ -30,7 +31,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Slash extends TargetedEntitySkill {
 
     @Inject
-    private DamageService damageService;
+    private DamageService<IActiveCharacter, Object, IEntity<Object>> damageService;
 
     @Inject
     private EffectService effectService;

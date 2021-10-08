@@ -6,11 +6,10 @@ import cz.neumimto.rpg.TestDamageService;
 import cz.neumimto.rpg.TestSkillService;
 import cz.neumimto.rpg.common.ResourceLoader;
 import cz.neumimto.rpg.common.RpgApi;
-import cz.neumimto.rpg.common.classes.ClassService;
 import cz.neumimto.rpg.common.configuration.SkillTreeDao;
 import cz.neumimto.rpg.common.damage.DamageService;
-import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.entity.EntityService;
+import cz.neumimto.rpg.common.entity.IEntity;
 import cz.neumimto.rpg.common.entity.PropertyService;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
@@ -31,9 +30,9 @@ import cz.neumimto.rpg.common.ResourceManagerImpl;
 import cz.neumimto.rpg.common.TestPartyService;
 import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.bytecode.ClassGenerator;
-import cz.neumimto.rpg.common.classes.ClassServiceImpl;
+import cz.neumimto.rpg.common.classes.ClassService;
 import cz.neumimto.rpg.common.configuration.SkillTreeLoaderImpl;
-import cz.neumimto.rpg.common.effects.AbstractEffectService;
+import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.entity.TestPropertyService;
 import cz.neumimto.rpg.common.entity.configuration.MobSettingsDao;
 import cz.neumimto.rpg.common.entity.configuration.TestMobSettingsDao;
@@ -99,10 +98,10 @@ public class TestGuiceModule extends AbstractModule {
             }
 
         });
-        bind(ClassService.class).to(ClassServiceImpl.class);
+        bind(ClassService.class).to(ClassService.class);
         bind(ResourceLoader.class).to(ResourceManagerImpl.class);
-        bind(DamageService.class).to(TestDamageService.class);
-        bind(AbstractEffectService.class).to(TestEffectService.class);
+        bind(DamageService<IActiveCharacter, Object, IEntity<Object>>.class).to(TestDamageService.class);
+        bind(EffectService.class).to(TestEffectService.class);
         bind(EntityService.class).to(TestEntityService.class);
         bind(MobSettingsDao.class).to(TestMobSettingsDao.class);
         bind(ExperienceDAO.class);

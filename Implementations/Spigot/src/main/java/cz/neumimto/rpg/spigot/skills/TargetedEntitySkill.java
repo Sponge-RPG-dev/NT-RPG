@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.damage.DamageService;
 import cz.neumimto.rpg.common.entity.IEntity;
+import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.events.skill.SkillTargetAttemptEvent;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.skills.SkillNodes;
@@ -22,7 +23,7 @@ import org.bukkit.util.RayTraceResult;
 public abstract class TargetedEntitySkill extends ActiveSkill<ISpigotCharacter> implements ITargeted<ISpigotCharacter> {
 
     @Inject
-    protected DamageService damageService;
+    protected DamageService<IActiveCharacter, Object, IEntity<Object>> damageService;
 
     @Inject
     protected Targetting targettedEntity;
