@@ -47,7 +47,7 @@ public class AdminCommands extends BaseCommand {
     private EffectService effectService;
 
     @Inject
-    private CharacterService<? super IActiveCharacter> characterService;
+    private CharacterService characterService;
 
     @Inject
     private InfoCommands infoCommands;

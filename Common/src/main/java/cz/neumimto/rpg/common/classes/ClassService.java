@@ -27,7 +27,7 @@ public class ClassService {
     private static final String CLASS_ACCESS_PERM = "ntrpg.class.";
 
     @Inject
-    private DamageService<IActiveCharacter, Object, IEntity<Object>> damageService;
+    private DamageService damageService;
 
     @Inject
     private ClassDefinitionDao classDefinitionDao;

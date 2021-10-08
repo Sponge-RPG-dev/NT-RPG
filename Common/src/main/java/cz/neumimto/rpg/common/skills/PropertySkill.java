@@ -5,7 +5,6 @@ import com.typesafe.config.Config;
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.damage.DamageService;
 import cz.neumimto.rpg.common.entity.EntityService;
-import cz.neumimto.rpg.common.entity.IEntity;
 import cz.neumimto.rpg.common.entity.PropertyService;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.skills.tree.SkillTree;
@@ -24,7 +23,7 @@ public class PropertySkill extends AbstractSkill<IActiveCharacter> {
     private PropertyService propertyService;
 
     @Inject
-    private DamageService<IActiveCharacter, Object, IEntity<Object>> damageService;
+    private DamageService damageService;
 
     @Inject
     private EntityService entityService;

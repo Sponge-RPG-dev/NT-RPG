@@ -11,7 +11,7 @@ import cz.neumimto.rpg.common.gui.Gui;
 import cz.neumimto.rpg.common.gui.IPlayerMessage;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.effects.core.DefaultManaRegeneration;
-import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
+import cz.neumimto.rpg.common.entity.PropertyService;
 import cz.neumimto.rpg.junit.CharactersExtension;
 import cz.neumimto.rpg.junit.CharactersExtension.Stage;
 import cz.neumimto.rpg.junit.NtRpgExtension;
@@ -35,7 +35,7 @@ public class ManaRegenerationTest {
     private EffectService iEffectService;
 
     @Inject
-    private PropertyServiceImpl propertyService;
+    private PropertyService propertyService;
 
     @Inject
     private PluginConfig pluginConfig;

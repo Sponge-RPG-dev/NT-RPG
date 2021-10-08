@@ -18,7 +18,7 @@ import cz.neumimto.rpg.common.permissions.PermissionService;
 import cz.neumimto.rpg.common.model.CharacterBase;
 import cz.neumimto.rpg.common.skills.tree.SkillTree;
 import cz.neumimto.rpg.common.utils.ActionResult;
-import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
+import cz.neumimto.rpg.common.entity.PropertyService;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -47,7 +47,7 @@ public class CharacterCommandFacade {
     private ClassService classService;
 
     @Inject
-    private PropertyServiceImpl propertyService;
+    private PropertyService propertyService;
 
     @Inject
     private InventoryService inventoryService;

@@ -4,9 +4,9 @@ import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.model.CharacterBase;
 import cz.neumimto.rpg.common.model.CharacterSkill;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
-import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
+import cz.neumimto.rpg.common.entity.PropertyService;
 import cz.neumimto.rpg.common.entity.TestCharacter;
-import cz.neumimto.rpg.common.entity.players.AbstractCharacterService;
+import cz.neumimto.rpg.common.entity.players.CharacterService;
 
 import javax.inject.Singleton;
 import java.util.Collection;
@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @Singleton
-public class TestCharacterService extends AbstractCharacterService<TestCharacter> {
+public class TestCharacterService extends CharacterService<TestCharacter> {
 
     private Map<UUID, TestCharacter> characterMap = new HashMap<>();
 
@@ -42,12 +42,12 @@ public class TestCharacterService extends AbstractCharacterService<TestCharacter
 
     @Override
     protected TestCharacter createCharacter(UUID player, CharacterBase characterBase) {
-        return new TestCharacter(player, characterBase, PropertyServiceImpl.LAST_ID);
+        return new TestCharacter(player, characterBase, PropertyService.LAST_ID);
     }
 
     @Override
     public TestCharacter buildDummyChar(UUID uuid) {
-        return new TestCharacter(uuid, createCharacterBase(), PropertyServiceImpl.LAST_ID) {
+        return new TestCharacter(uuid, createCharacterBase(), PropertyService.LAST_ID) {
 
             @Override
             public boolean isStub() {

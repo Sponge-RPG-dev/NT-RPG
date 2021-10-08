@@ -13,7 +13,6 @@ import cz.neumimto.rpg.common.configuration.PluginConfig;
 import cz.neumimto.rpg.common.damage.DamageService;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.entity.EntityService;
-import cz.neumimto.rpg.common.entity.IEntity;
 import cz.neumimto.rpg.common.entity.PropertyService;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
@@ -55,7 +54,7 @@ public abstract class AbstractRpg implements RpgApi {
     //@Inject
     private PluginConfig pluginConfig;
     @Inject
-    private DamageService<IActiveCharacter, Object, IEntity<Object>> damageService;
+    private DamageService damageService;
     @Inject
     private EffectService effectService;
     @Inject
@@ -127,7 +126,7 @@ public abstract class AbstractRpg implements RpgApi {
     }
 
     @Override
-    public CharacterService getCharacterService() {
+    public CharacterService<IActiveCharacter> getCharacterService() {
         return characterService;
     }
 
@@ -137,7 +136,7 @@ public abstract class AbstractRpg implements RpgApi {
     }
 
     @Override
-    public DamageService<IActiveCharacter, Object, IEntity<Object>> getDamageService() {
+    public DamageService getDamageService() {
         return damageService;
     }
 

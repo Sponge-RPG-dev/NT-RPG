@@ -19,7 +19,7 @@ public class EntitiesM {
     private EntityService entityService;
 
     @Inject
-    private DamageService<IActiveCharacter, Object, IEntity<Object>> damageService;
+    private DamageService damageService;
 
     @Handler
     @Function("heal")

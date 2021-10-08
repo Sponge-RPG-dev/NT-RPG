@@ -15,7 +15,7 @@ import cz.neumimto.rpg.common.skills.SkillService;
 import cz.neumimto.rpg.common.utils.DebugLevel;
 import cz.neumimto.rpg.common.utils.FileUtils;
 import cz.neumimto.rpg.common.bytecode.ClassGenerator;
-import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
+import cz.neumimto.rpg.common.entity.PropertyService;
 
 import javax.inject.Inject;
 import java.io.*;
@@ -45,7 +45,7 @@ public class ResourceManagerImpl implements ResourceLoader {
     @Inject
     private EffectService effectService;
     @Inject
-    private PropertyServiceImpl propertyService;
+    private PropertyService propertyService;
     @Inject
     private ClassGenerator classGenerator;
     @Inject

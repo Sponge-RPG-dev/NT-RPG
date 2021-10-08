@@ -17,7 +17,7 @@ import cz.neumimto.rpg.common.skills.ISkill;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.skills.preprocessors.InterruptableSkillPreprocessor;
 import cz.neumimto.rpg.common.skills.tree.SkillTreeSpecialization;
-import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
+import cz.neumimto.rpg.common.entity.PropertyService;
 
 import java.util.*;
 
@@ -27,7 +27,7 @@ import java.util.*;
  */
 public abstract class PreloadCharacter<T, P extends IParty> implements IActiveCharacter<T, P> {
 
-    private static double[] characterProperties = new double[PropertyServiceImpl.LAST_ID];
+    private static double[] characterProperties = new double[PropertyService.LAST_ID];
     protected UUID uuid;
 
     private boolean isusinggui;

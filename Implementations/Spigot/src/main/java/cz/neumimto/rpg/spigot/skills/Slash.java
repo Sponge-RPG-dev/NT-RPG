@@ -31,7 +31,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Slash extends TargetedEntitySkill {
 
     @Inject
-    private DamageService<IActiveCharacter, Object, IEntity<Object>> damageService;
+    private DamageService damageService;
 
     @Inject
     private EffectService effectService;

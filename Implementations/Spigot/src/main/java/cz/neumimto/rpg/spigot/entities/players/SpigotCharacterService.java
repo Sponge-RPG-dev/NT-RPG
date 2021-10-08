@@ -5,8 +5,8 @@ import cz.neumimto.rpg.common.gui.Gui;
 import cz.neumimto.rpg.common.model.CharacterBase;
 import cz.neumimto.rpg.common.skills.ISkill;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
-import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
-import cz.neumimto.rpg.common.entity.players.AbstractCharacterService;
+import cz.neumimto.rpg.common.entity.PropertyService;
+import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.common.entity.players.CharacterMana;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.gui.SpellbookListener;
@@ -24,11 +24,11 @@ import java.util.UUID;
 import static cz.neumimto.rpg.common.logging.Log.info;
 
 @Singleton
-public class SpigotCharacterService extends AbstractCharacterService<ISpigotCharacter> {
+public class SpigotCharacterService extends CharacterService<ISpigotCharacter> {
 
     @Override
     protected ISpigotCharacter createCharacter(UUID player, CharacterBase characterBase) {
-        SpigotCharacter iActiveCharacter = new SpigotCharacter(player, characterBase, PropertyServiceImpl.LAST_ID);
+        SpigotCharacter iActiveCharacter = new SpigotCharacter(player, characterBase, PropertyService.LAST_ID);
         iActiveCharacter.setMana(new CharacterMana(iActiveCharacter));
         iActiveCharacter.setHealth(new SpigotCharacterHealth(iActiveCharacter));
         return iActiveCharacter;

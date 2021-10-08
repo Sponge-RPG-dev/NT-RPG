@@ -23,7 +23,7 @@ import org.bukkit.util.RayTraceResult;
 public abstract class TargetedEntitySkill extends ActiveSkill<ISpigotCharacter> implements ITargeted<ISpigotCharacter> {
 
     @Inject
-    protected DamageService<IActiveCharacter, Object, IEntity<Object>> damageService;
+    protected DamageService damageService;
 
     @Inject
     protected Targetting targettedEntity;

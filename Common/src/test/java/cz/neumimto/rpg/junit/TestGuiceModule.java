@@ -8,9 +8,7 @@ import cz.neumimto.rpg.common.ResourceLoader;
 import cz.neumimto.rpg.common.RpgApi;
 import cz.neumimto.rpg.common.configuration.SkillTreeDao;
 import cz.neumimto.rpg.common.damage.DamageService;
-import cz.neumimto.rpg.common.entity.EntityService;
-import cz.neumimto.rpg.common.entity.IEntity;
-import cz.neumimto.rpg.common.entity.PropertyService;
+import cz.neumimto.rpg.common.entity.*;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.parties.PartyService;
@@ -33,7 +31,6 @@ import cz.neumimto.rpg.common.bytecode.ClassGenerator;
 import cz.neumimto.rpg.common.classes.ClassService;
 import cz.neumimto.rpg.common.configuration.SkillTreeLoaderImpl;
 import cz.neumimto.rpg.common.effects.EffectService;
-import cz.neumimto.rpg.common.entity.TestPropertyService;
 import cz.neumimto.rpg.common.entity.configuration.MobSettingsDao;
 import cz.neumimto.rpg.common.entity.configuration.TestMobSettingsDao;
 import cz.neumimto.rpg.common.events.TestEventFactory;
@@ -100,7 +97,7 @@ public class TestGuiceModule extends AbstractModule {
         });
         bind(ClassService.class).to(ClassService.class);
         bind(ResourceLoader.class).to(ResourceManagerImpl.class);
-        bind(DamageService<IActiveCharacter, Object, IEntity<Object>>.class).to(TestDamageService.class);
+        bind(DamageService.class).to(TestDamageService.class);
         bind(EffectService.class).to(TestEffectService.class);
         bind(EntityService.class).to(TestEntityService.class);
         bind(MobSettingsDao.class).to(TestMobSettingsDao.class);
@@ -135,12 +132,12 @@ public class TestGuiceModule extends AbstractModule {
         bind(LocalizationService.class).to(LocalizationServiceImpl.class);
         bind(SkillService.class).to(TestSkillService.class);
         bind(AssetService.class).to(TestAssetService.class);
-        bind(new TypeLiteral<CharacterService<? extends IActiveCharacter>>() {
+        bind(new TypeLiteral<CharacterService<IActiveCharacter>>() {
         }).to(TestCharacterService.class);
 
-        bind(CharacterService.class).toProvider(SpongeCharacterServiceProvider.class);
+        bind(CharacterService<IActiveCharacter>.class).toProvider(SpongeCharacterServiceProvider.class);
 
-        bind(new TypeLiteral<CharacterService<? super IActiveCharacter>>() {
+        bind(new TypeLiteral<CharacterService<IActiveCharacter>>() {
         })
                 .toProvider(SpongeCharacterServiceProvider1.class);//.toProvider(() -> (CharacterService) TestCharacterService);
         bind(new TypeLiteral<CharacterService<IActiveCharacter>>() {
@@ -161,7 +158,7 @@ public class TestGuiceModule extends AbstractModule {
         private Injector injector;
 
         @Override
-        public CharacterService get() {
+        public CharacterService<IActiveCharacter> get() {
             if (scs == null) {
                 scs = injector.getInstance(TestCharacterService.class);
             }
@@ -169,17 +166,17 @@ public class TestGuiceModule extends AbstractModule {
         }
     }
 
-    public static class SpongeCharacterServiceProvider1 implements Provider<CharacterService<? super IActiveCharacter>> {
+    public static class SpongeCharacterServiceProvider1 implements Provider<CharacterService<IActiveCharacter>> {
 
         @Inject
         private Injector injector;
 
         @Override
-        public CharacterService<? super IActiveCharacter> get() {
+        public CharacterService<IActiveCharacter> get() {
             if (scs == null) {
                 scs = injector.getInstance(TestCharacterService.class);
             }
-            return (CharacterService) scs;
+            return (CharacterService<IActiveCharacter>) scs;
         }
     }
 

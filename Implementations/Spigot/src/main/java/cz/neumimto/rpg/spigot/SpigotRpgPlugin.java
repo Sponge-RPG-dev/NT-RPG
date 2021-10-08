@@ -253,7 +253,7 @@ public class SpigotRpgPlugin implements NtRpgBootstrap {
 
     public void disable() {
         executor.shutdown();
-        CharacterService characterService = Rpg.get().getCharacterService();
+        CharacterService<IActiveCharacter> characterService = Rpg.get().getCharacterService();
         Collection<IActiveCharacter> characters = characterService.getCharacters();
         for (IActiveCharacter character : characters) {
             if (character instanceof PreloadCharacter) {

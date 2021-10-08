@@ -7,7 +7,6 @@ import cz.neumimto.rpg.common.configuration.PluginConfig;
 import cz.neumimto.rpg.common.damage.DamageService;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.entity.EntityService;
-import cz.neumimto.rpg.common.entity.IEntity;
 import cz.neumimto.rpg.common.entity.PropertyService;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
@@ -114,7 +113,7 @@ public class RpgTests implements RpgApi {
     }
 
     @Override
-    public CharacterService getCharacterService() {
+    public CharacterService<IActiveCharacter> getCharacterService() {
         return null;
     }
 
@@ -124,7 +123,7 @@ public class RpgTests implements RpgApi {
     }
 
     @Override
-    public DamageService<IActiveCharacter, Object, IEntity<Object>> getDamageService() {
+    public DamageService getDamageService() {
         return null;
     }
 

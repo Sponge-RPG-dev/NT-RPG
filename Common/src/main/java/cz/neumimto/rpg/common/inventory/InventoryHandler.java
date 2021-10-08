@@ -26,7 +26,7 @@ public class InventoryHandler implements CharacterInventoryInteractionHandler {
     private EffectService effectService;
 
     @Inject
-    private CharacterService<? super IActiveCharacter> characterService;
+    private CharacterService characterService;
 
     @Override
     public boolean handleCharacterEquipActionPre(IActiveCharacter character, ManagedSlot managedSlot, RpgItemStack rpgItemStack) {

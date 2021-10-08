@@ -9,9 +9,7 @@ import cz.neumimto.rpg.common.classes.ClassService;
 import cz.neumimto.rpg.common.configuration.PluginConfig;
 import cz.neumimto.rpg.common.damage.DamageService;
 import cz.neumimto.rpg.common.effects.EffectService;
-import cz.neumimto.rpg.common.entity.IEntity;
 import cz.neumimto.rpg.common.entity.PropertyService;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.parties.PartyService;
 import cz.neumimto.rpg.common.events.EventFactoryService;
 import cz.neumimto.rpg.common.exp.ExperienceService;
@@ -75,7 +73,7 @@ public class TestApiImpl implements RpgApi {
     private TestEntityService entityService;
 
     @Inject
-    private DamageService<IActiveCharacter, Object, IEntity<Object>> damageService;
+    private DamageService damageService;
 
     @Inject
     private PropertyService propertyService;
@@ -112,7 +110,7 @@ public class TestApiImpl implements RpgApi {
     }
 
     @Override
-    public DamageService<IActiveCharacter, Object, IEntity<Object>> getDamageService() {
+    public DamageService getDamageService() {
         return damageService;
     }
 

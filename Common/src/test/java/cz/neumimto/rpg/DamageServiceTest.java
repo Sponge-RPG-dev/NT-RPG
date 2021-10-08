@@ -1,7 +1,6 @@
 package cz.neumimto.rpg;
 
 import cz.neumimto.rpg.common.damage.DamageService;
-import cz.neumimto.rpg.common.entity.IEntity;
 import cz.neumimto.rpg.common.entity.PropertyService;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.items.RpgItemStack;
@@ -30,7 +29,7 @@ public class DamageServiceTest {
     private TestItemService testItemService;
 
     @Inject
-    private DamageService<IActiveCharacter, Object, IEntity<Object>> damageService;
+    private DamageService damageService;
 
     @Inject
     private PropertyService propertyService;
