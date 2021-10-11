@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.spigot.events.effects;
 
-import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.api.events.effect.EffectApplyEvent;
+import cz.neumimto.rpg.common.effects.IEffect;
+import cz.neumimto.rpg.common.events.effect.EffectApplyEvent;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 

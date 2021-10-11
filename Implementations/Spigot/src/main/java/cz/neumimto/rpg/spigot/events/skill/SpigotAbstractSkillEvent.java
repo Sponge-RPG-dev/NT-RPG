@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.spigot.events.skill;
 
-import cz.neumimto.rpg.api.events.skill.SkillEvent;
-import cz.neumimto.rpg.api.skills.ISkill;
+import cz.neumimto.rpg.common.events.skill.SkillEvent;
+import cz.neumimto.rpg.common.skills.ISkill;
 import cz.neumimto.rpg.spigot.events.AbstractNEvent;
 
 public abstract class SpigotAbstractSkillEvent extends AbstractNEvent implements SkillEvent {

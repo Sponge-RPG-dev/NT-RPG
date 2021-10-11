@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.spigot.events.character;
 
-import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
-import cz.neumimto.rpg.api.events.character.CharacterGainedLevelEvent;
+import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
+import cz.neumimto.rpg.common.events.character.CharacterGainedLevelEvent;
 import org.bukkit.event.HandlerList;
 
 /**

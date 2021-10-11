@@ -1,8 +1,8 @@
 package cz.neumimto.rpg.spigot.effects.common;
 
-import cz.neumimto.rpg.api.effects.EffectBase;
-import cz.neumimto.rpg.api.effects.Generate;
-import cz.neumimto.rpg.api.entity.IEffectConsumer;
+import cz.neumimto.rpg.common.effects.EffectBase;
+import cz.neumimto.rpg.common.effects.Generate;
+import cz.neumimto.rpg.common.entity.IEffectConsumer;
 
 @Generate(id = "name", description = "Entity cannot be healed by potions, food")
 public class NoNaturalHealingEffect extends EffectBase<NoNaturalHealingEffect.Model> {

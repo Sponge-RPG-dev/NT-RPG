@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.persistence.flatfiles;
 
 import com.google.auto.service.AutoService;
-import cz.neumimto.rpg.api.RpgAddon;
+import cz.neumimto.rpg.common.RpgAddon;
 import cz.neumimto.rpg.common.persistance.dao.ICharacterClassDao;
 import cz.neumimto.rpg.common.persistance.dao.IPersistenceHandler;
 import cz.neumimto.rpg.common.persistance.dao.IPlayerDao;

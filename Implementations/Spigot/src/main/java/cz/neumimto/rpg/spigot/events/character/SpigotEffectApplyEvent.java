@@ -1,9 +1,9 @@
 package cz.neumimto.rpg.spigot.events.character;
 
-import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.api.effects.IEffectSourceProvider;
-import cz.neumimto.rpg.api.entity.IEntity;
-import cz.neumimto.rpg.api.events.Cancellable;
+import cz.neumimto.rpg.common.effects.IEffect;
+import cz.neumimto.rpg.common.effects.IEffectSourceProvider;
+import cz.neumimto.rpg.common.entity.IEntity;
+import cz.neumimto.rpg.common.events.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 

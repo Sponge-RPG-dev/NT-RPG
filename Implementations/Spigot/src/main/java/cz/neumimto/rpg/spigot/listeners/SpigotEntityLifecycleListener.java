@@ -1,12 +1,12 @@
 package cz.neumimto.rpg.spigot.listeners;
 
 import com.google.auto.service.AutoService;
-import cz.neumimto.rpg.api.ResourceLoader;
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.configuration.PluginConfig;
-import cz.neumimto.rpg.api.effects.EffectService;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.exp.ExperienceService;
+import cz.neumimto.rpg.common.ResourceLoader;
+import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.configuration.PluginConfig;
+import cz.neumimto.rpg.common.effects.EffectService;
+import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.exp.ExperienceService;
 import cz.neumimto.rpg.common.exp.ExperienceSources;
 import cz.neumimto.rpg.spigot.SpigotRpg;
 import cz.neumimto.rpg.spigot.entities.SpigotEntityService;

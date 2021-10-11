@@ -1,13 +1,14 @@
 package cz.neumimto.rpg.common.skills.reagents;
 
-import cz.neumimto.rpg.api.damage.DamageService;
-import cz.neumimto.rpg.api.entity.CommonProperties;
-import cz.neumimto.rpg.api.entity.EntityService;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.skills.PlayerSkillContext;
-import cz.neumimto.rpg.api.skills.SkillData;
-import cz.neumimto.rpg.api.skills.SkillNodes;
-import cz.neumimto.rpg.api.skills.SkillResult;
+import cz.neumimto.rpg.common.damage.DamageService;
+import cz.neumimto.rpg.common.entity.CommonProperties;
+import cz.neumimto.rpg.common.entity.EntityService;
+import cz.neumimto.rpg.common.entity.IEntity;
+import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.skills.PlayerSkillContext;
+import cz.neumimto.rpg.common.skills.SkillData;
+import cz.neumimto.rpg.common.skills.SkillNodes;
+import cz.neumimto.rpg.common.skills.SkillResult;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

@@ -1,6 +1,6 @@
 package cz.neumimto.rpg;
 
-import cz.neumimto.rpg.api.logging.Log;
+import cz.neumimto.rpg.common.logging.Log;
 
 import java.lang.reflect.Field;
 

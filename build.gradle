@@ -70,6 +70,6 @@ subprojects {
     }
 
     tasks.named("jar") {
-        duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+        duplicatesStrategy(DuplicatesStrategy.INCLUDE)
     }
 }

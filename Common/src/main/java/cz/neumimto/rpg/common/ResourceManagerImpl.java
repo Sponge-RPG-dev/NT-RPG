@@ -1,23 +1,20 @@
 package cz.neumimto.rpg.common;
 
 import com.google.inject.Injector;
-import cz.neumimto.rpg.api.ResourceLoader;
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.classes.ClassService;
-import cz.neumimto.rpg.api.effects.EffectService;
-import cz.neumimto.rpg.api.effects.IGlobalEffect;
-import cz.neumimto.rpg.api.effects.model.EffectModelFactory;
-import cz.neumimto.rpg.api.effects.model.EffectModelMapper;
-import cz.neumimto.rpg.api.localization.LocalizationService;
-import cz.neumimto.rpg.api.logging.Log;
-import cz.neumimto.rpg.api.scripting.IRpgScriptEngine;
-import cz.neumimto.rpg.api.services.IPropertyContainer;
-import cz.neumimto.rpg.api.skills.ISkill;
-import cz.neumimto.rpg.api.skills.SkillService;
-import cz.neumimto.rpg.api.utils.DebugLevel;
-import cz.neumimto.rpg.api.utils.FileUtils;
+import cz.neumimto.rpg.common.classes.ClassService;
+import cz.neumimto.rpg.common.effects.EffectService;
+import cz.neumimto.rpg.common.effects.IGlobalEffect;
+import cz.neumimto.rpg.common.effects.model.EffectModelFactory;
+import cz.neumimto.rpg.common.effects.model.EffectModelMapper;
+import cz.neumimto.rpg.common.localization.LocalizationService;
+import cz.neumimto.rpg.common.logging.Log;
+import cz.neumimto.rpg.common.services.IPropertyContainer;
+import cz.neumimto.rpg.common.skills.SkillService;
+import cz.neumimto.rpg.common.skills.ISkill;
+import cz.neumimto.rpg.common.utils.DebugLevel;
+import cz.neumimto.rpg.common.utils.FileUtils;
 import cz.neumimto.rpg.common.bytecode.ClassGenerator;
-import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
+import cz.neumimto.rpg.common.entity.PropertyService;
 
 import javax.inject.Inject;
 import java.io.*;
@@ -28,7 +25,7 @@ import java.util.Properties;
 import java.util.ServiceLoader;
 import java.util.stream.Stream;
 
-import static cz.neumimto.rpg.api.logging.Log.info;
+import static cz.neumimto.rpg.common.logging.Log.info;
 
 public class ResourceManagerImpl implements ResourceLoader {
 
@@ -36,8 +33,6 @@ public class ResourceManagerImpl implements ResourceLoader {
 
     private static boolean reload = false;
 
-    @Inject
-    protected IRpgScriptEngine jsEngine;
     @Inject
     protected Injector injector;
     @Inject
@@ -47,7 +42,7 @@ public class ResourceManagerImpl implements ResourceLoader {
     @Inject
     private EffectService effectService;
     @Inject
-    private PropertyServiceImpl propertyService;
+    private PropertyService propertyService;
     @Inject
     private ClassGenerator classGenerator;
     @Inject

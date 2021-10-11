@@ -1,16 +1,16 @@
 package cz.neumimto.rpg.persistence.jdbc.dao;
 
-import cz.neumimto.rpg.api.logging.Log;
-import cz.neumimto.rpg.api.persistance.model.CharacterBase;
-import cz.neumimto.rpg.api.persistance.model.CharacterClass;
-import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
-import cz.neumimto.rpg.api.persistance.model.TimestampEntity;
+import cz.neumimto.rpg.common.logging.Log;
+import cz.neumimto.rpg.common.model.CharacterBase;
+import cz.neumimto.rpg.common.model.CharacterClass;
+import cz.neumimto.rpg.common.model.CharacterSkill;
+import cz.neumimto.rpg.common.model.TimestampEntity;
 import cz.neumimto.rpg.common.persistance.dao.IPlayerDao;
 import cz.neumimto.rpg.persistence.jdbc.NamedPreparedStatement;
 import cz.neumimto.rpg.persistence.jdbc.converters.EquipedSlot2Json;
-import cz.neumimto.rpg.persistence.model.CharacterBaseImpl;
-import cz.neumimto.rpg.persistence.model.CharacterClassImpl;
-import cz.neumimto.rpg.persistence.model.CharacterSkillImpl;
+import cz.neumimto.rpg.common.persistance.model.CharacterBaseImpl;
+import cz.neumimto.rpg.common.persistance.model.CharacterClassImpl;
+import cz.neumimto.rpg.common.persistance.model.CharacterSkillImpl;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

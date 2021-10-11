@@ -1,11 +1,11 @@
 package cz.neumimto.rpg.spigot.effects;
 
-import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.api.effects.IEffectContainer;
-import cz.neumimto.rpg.api.effects.IEffectSourceProvider;
-import cz.neumimto.rpg.api.entity.IEffectConsumer;
-import cz.neumimto.rpg.api.entity.IEntity;
-import cz.neumimto.rpg.common.effects.AbstractEffectService;
+import cz.neumimto.rpg.common.effects.IEffect;
+import cz.neumimto.rpg.common.effects.IEffectContainer;
+import cz.neumimto.rpg.common.effects.IEffectSourceProvider;
+import cz.neumimto.rpg.common.entity.IEffectConsumer;
+import cz.neumimto.rpg.common.entity.IEntity;
+import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.events.character.SpigotEffectApplyEvent;
 import cz.neumimto.rpg.spigot.events.character.SpigotEffectRemoveEvent;
@@ -15,7 +15,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import javax.inject.Singleton;
 
 @Singleton
-public class SpigotEffectService extends AbstractEffectService {
+public class SpigotEffectService extends EffectService {
 
 
     private BukkitRunnable bukkitRunnable;

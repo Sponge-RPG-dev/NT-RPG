@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.spigot.events.character;
 
-import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
-import cz.neumimto.rpg.api.events.character.CharacterChangeGroupEvent;
+import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.common.events.character.CharacterChangeGroupEvent;
 import org.bukkit.event.HandlerList;
 
 /**

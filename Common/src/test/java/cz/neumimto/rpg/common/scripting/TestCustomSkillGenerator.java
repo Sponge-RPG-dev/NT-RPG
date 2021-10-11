@@ -1,16 +1,10 @@
 package cz.neumimto.rpg.common.scripting;
 
-import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.api.skills.ISkill;
 import cz.neumimto.rpg.common.entity.TestCharacter;
-import cz.neumimto.rpg.common.skills.scripting.*;
 import cz.neumimto.rpg.effects.TestEffectFloat;
-import org.junit.Assert;
-import org.junit.jupiter.api.Test;
 
 import javax.inject.Singleton;
 import java.lang.reflect.Type;
-import java.util.Collection;
 
 @Singleton
 public class TestCustomSkillGenerator extends CustomSkillGenerator {

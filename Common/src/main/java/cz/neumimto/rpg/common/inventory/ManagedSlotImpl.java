@@ -1,7 +1,6 @@
 package cz.neumimto.rpg.common.inventory;
 
-import cz.neumimto.rpg.api.inventory.ManagedSlot;
-import cz.neumimto.rpg.api.items.RpgItemStack;
+import cz.neumimto.rpg.common.items.RpgItemStack;
 
 import java.util.Optional;
 

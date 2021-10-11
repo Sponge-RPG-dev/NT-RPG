@@ -1,21 +1,15 @@
 package cz.neumimto.rpg.common;
 
 import com.google.inject.AbstractModule;
-import cz.neumimto.rpg.api.classes.ClassService;
-import cz.neumimto.rpg.api.configuration.SkillTreeDao;
-import cz.neumimto.rpg.api.entity.PropertyService;
-import cz.neumimto.rpg.api.gui.Gui;
-import cz.neumimto.rpg.api.localization.LocalizationService;
-import cz.neumimto.rpg.api.scripting.IRpgScriptEngine;
-import cz.neumimto.rpg.common.classes.ClassServiceImpl;
+import cz.neumimto.rpg.common.configuration.SkillTreeDao;
+import cz.neumimto.rpg.common.gui.Gui;
+import cz.neumimto.rpg.common.localization.LocalizationService;
+import cz.neumimto.rpg.common.classes.ClassService;
 import cz.neumimto.rpg.common.configuration.SkillTreeLoaderImpl;
-import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
+import cz.neumimto.rpg.common.entity.PropertyService;
 import cz.neumimto.rpg.common.exp.ExperienceDAO;
 import cz.neumimto.rpg.common.localization.LocalizationServiceImpl;
 import cz.neumimto.rpg.common.persistance.dao.ClassDefinitionDao;
-import cz.neumimto.rpg.common.scripting.DummyScriptEngine;
-import cz.neumimto.rpg.common.scripting.GraalVmScriptEngine;
-import cz.neumimto.rpg.common.utils.GraalInstaller;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,15 +19,13 @@ public class AbstractRpgGuiceModule extends AbstractModule {
     protected <T> Map<Class<T>, Class<? extends T>> getBindings() {
         Map map = new HashMap<>();
         map.put(SkillTreeDao.class, SkillTreeLoaderImpl.class);
-        map.put(PropertyService.class, PropertyServiceImpl.class);
-        map.put(ClassService.class, ClassServiceImpl.class);
+        map.put(PropertyService.class, null);
+        map.put(ClassService.class, null);
         map.put(ClassDefinitionDao.class, null);
         map.put(ExperienceDAO.class, null);
         map.put(Gui.class, null);
         map.put(LocalizationService.class, LocalizationServiceImpl.class);
 
-
-        map.put(IRpgScriptEngine.class, GraalInstaller.check() != null ? GraalVmScriptEngine.class : DummyScriptEngine.class);
 
         return map;
     }

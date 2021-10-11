@@ -1,15 +1,14 @@
 package cz.neumimto.rpg.common.inventory;
 
 import cz.neumimto.rpg.RpgTest;
-import cz.neumimto.rpg.api.RpgApi;
-import cz.neumimto.rpg.api.configuration.AttributeConfig;
-import cz.neumimto.rpg.api.entity.PropertyService;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
-import cz.neumimto.rpg.api.inventory.ManagedSlot;
-import cz.neumimto.rpg.api.items.ItemService;
-import cz.neumimto.rpg.api.items.RpgItemStack;
-import cz.neumimto.rpg.api.logging.Log;
+import cz.neumimto.rpg.common.RpgApi;
+import cz.neumimto.rpg.common.configuration.AttributeConfig;
+import cz.neumimto.rpg.common.entity.PropertyService;
+import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.common.items.ItemService;
+import cz.neumimto.rpg.common.items.RpgItemStack;
+import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.common.entity.TestCharacter;
 import cz.neumimto.rpg.common.items.RpgItemStackImpl;
 import cz.neumimto.rpg.junit.CharactersExtension;

@@ -1,10 +1,10 @@
 package cz.neumimto.persistence;
 
-import cz.neumimto.rpg.api.persistance.model.*;
-import cz.neumimto.rpg.persistence.model.BaseCharacterAttributeImpl;
-import cz.neumimto.rpg.persistence.model.CharacterBaseImpl;
-import cz.neumimto.rpg.persistence.model.CharacterClassImpl;
-import cz.neumimto.rpg.persistence.model.CharacterSkillImpl;
+import cz.neumimto.rpg.common.model.*;
+import cz.neumimto.rpg.common.persistance.model.BaseCharacterAttributeImpl;
+import cz.neumimto.rpg.common.persistance.model.CharacterBaseImpl;
+import cz.neumimto.rpg.common.persistance.model.CharacterClassImpl;
+import cz.neumimto.rpg.common.persistance.model.CharacterSkillImpl;
 
 import java.util.*;
 

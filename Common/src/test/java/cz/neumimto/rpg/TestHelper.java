@@ -1,9 +1,9 @@
 package cz.neumimto.rpg;
 
-import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
-import cz.neumimto.rpg.api.logging.Log;
-import cz.neumimto.rpg.api.persistance.model.CharacterClass;
-import cz.neumimto.rpg.api.skills.ISkill;
+import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.common.logging.Log;
+import cz.neumimto.rpg.common.model.CharacterClass;
+import cz.neumimto.rpg.common.skills.ISkill;
 import cz.neumimto.rpg.model.CharacterClassTest;
 import org.mockito.Mockito;
 import sun.misc.Unsafe;

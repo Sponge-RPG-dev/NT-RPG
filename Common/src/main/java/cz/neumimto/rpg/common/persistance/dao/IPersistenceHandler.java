@@ -1,9 +1,9 @@
 package cz.neumimto.rpg.common.persistance.dao;
 
-import cz.neumimto.rpg.api.persistance.model.BaseCharacterAttribute;
-import cz.neumimto.rpg.api.persistance.model.CharacterBase;
-import cz.neumimto.rpg.api.persistance.model.CharacterClass;
-import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
+import cz.neumimto.rpg.common.model.BaseCharacterAttribute;
+import cz.neumimto.rpg.common.model.CharacterBase;
+import cz.neumimto.rpg.common.model.CharacterClass;
+import cz.neumimto.rpg.common.model.CharacterSkill;
 
 public interface IPersistenceHandler {
     BaseCharacterAttribute createCharacterAttribute();

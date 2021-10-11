@@ -1,8 +1,8 @@
 package cz.neumimto.rpg.effects;
 
-import cz.neumimto.rpg.api.effects.IGlobalEffect;
-import cz.neumimto.rpg.api.effects.model.EffectModelFactory;
-import cz.neumimto.rpg.api.entity.IEffectConsumer;
+import cz.neumimto.rpg.common.effects.IGlobalEffect;
+import cz.neumimto.rpg.common.effects.model.EffectModelFactory;
+import cz.neumimto.rpg.common.entity.IEffectConsumer;
 
 import java.util.Map;
 

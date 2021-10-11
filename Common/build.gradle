@@ -9,25 +9,25 @@ version = project.subp_version
 dependencies {
     annotationProcessor project(':Generator')
 
+
+    api 'com.electronwill.night-config:hocon:' + project.nightconfig
+    api 'com.electronwill.night-config:json:' + project.nightconfig
+    api 'com.scireum:parsii:' + project.parsii
+    api('com.google.inject:guice:' + project.guice) {
+        exclude group: "com.google.guava", module: "guava"
+    }
+
+    //api 'com.github.Sponge-Rpg-Dev:NT-Script:73c0166687'
+
+    api fileTree(dir: 'lib-cp', include: '*.jar') //why the fuck is jitpack being retarded on java 16 projects
+    api 'org.antlr:antlr4-runtime:4.9.2'
+
     implementation fileTree(dir: 'lib-cp', include: '*.jar')
     compileOnly fileTree(dir: 'lib', include: '*.jar')
 
-    api project(':API')
     api 'net.bytebuddy:byte-buddy:' + project.bytebuddy
     //api 'com.github.Sponge-RPG-dev:NT-Script:28394a3fc9'
-
     compileOnly "co.aikar:acf-core:" + project.acf
-    compileOnly 'org.graalvm.sdk:graal-sdk:' + project.graal
-    compileOnly 'org.graalvm.js:js:' + project.graal
-    compileOnly 'org.graalvm.js:js-scriptengine:' + project.graal
-
-    testImplementation project(':Database-Persistence')
-    testImplementation project(':Common-Persistence')
-    testImplementation 'org.graalvm.sdk:graal-sdk:' + project.graal
-    testImplementation 'org.graalvm.js:js:' + project.graal
-    testImplementation 'org.graalvm.sdk:graal-sdk:' + project.graal
-    testImplementation 'org.graalvm.js:js:' + project.graal
-    testImplementation 'org.graalvm.js:js-scriptengine:' + project.graal
 
 }
 

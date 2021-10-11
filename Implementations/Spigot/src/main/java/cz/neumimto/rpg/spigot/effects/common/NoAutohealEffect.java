@@ -1,8 +1,8 @@
 package cz.neumimto.rpg.spigot.effects.common;
 
-import cz.neumimto.rpg.api.effects.EffectBase;
-import cz.neumimto.rpg.api.effects.Generate;
-import cz.neumimto.rpg.api.entity.IEffectConsumer;
+import cz.neumimto.rpg.common.effects.EffectBase;
+import cz.neumimto.rpg.common.effects.Generate;
+import cz.neumimto.rpg.common.entity.IEffectConsumer;
 
 @Generate(id = "name", description = "Disables vanilla autoheal behavior")
 public class NoAutohealEffect extends EffectBase<Void> {

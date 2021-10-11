@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.spigot.permissions;
 
-import cz.neumimto.rpg.api.permissions.PermissionService;
+import cz.neumimto.rpg.common.permissions.PermissionService;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import org.bukkit.entity.Player;

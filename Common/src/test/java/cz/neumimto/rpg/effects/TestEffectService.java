@@ -1,11 +1,11 @@
 package cz.neumimto.rpg.effects;
 
-import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.common.effects.AbstractEffectService;
+import cz.neumimto.rpg.common.effects.IEffect;
+import cz.neumimto.rpg.common.effects.EffectService;
 
 import java.util.Set;
 
-public class TestEffectService extends AbstractEffectService {
+public class TestEffectService extends EffectService {
 
     @Override
     public void load() {

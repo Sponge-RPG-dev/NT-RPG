@@ -1,12 +1,12 @@
 package cz.neumimto.rpg.spigot.gui;
 
 
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.configuration.ClassTypeDefinition;
-import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
-import cz.neumimto.rpg.api.items.ClassItem;
-import cz.neumimto.rpg.api.localization.LocalizationKeys;
-import cz.neumimto.rpg.api.localization.LocalizationService;
+import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.configuration.ClassTypeDefinition;
+import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.common.items.ClassItem;
+import cz.neumimto.rpg.common.localization.LocalizationKeys;
+import cz.neumimto.rpg.common.localization.LocalizationService;
 import cz.neumimto.rpg.common.gui.GuiParser;
 import cz.neumimto.rpg.common.gui.InventorySlotProcessor;
 import cz.neumimto.rpg.spigot.gui.inventoryviews.CharacterGuiView;

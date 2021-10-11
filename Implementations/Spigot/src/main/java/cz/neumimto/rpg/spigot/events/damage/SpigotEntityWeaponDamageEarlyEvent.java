@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.spigot.events.damage;
 
-import cz.neumimto.rpg.api.events.damage.IEntityWeaponDamageEarlyEvent;
-import cz.neumimto.rpg.api.items.RpgItemStack;
+import cz.neumimto.rpg.common.events.damage.IEntityWeaponDamageEarlyEvent;
+import cz.neumimto.rpg.common.items.RpgItemStack;
 import org.bukkit.event.HandlerList;
 
 import java.util.Optional;

@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.spigot.entities;
 
-import cz.neumimto.rpg.api.skills.PlayerSkillContext;
-import cz.neumimto.rpg.api.utils.TriConsumer;
+import cz.neumimto.rpg.common.skills.PlayerSkillContext;
+import cz.neumimto.rpg.common.utils.TriConsumer;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;

@@ -6,28 +6,20 @@ import co.aikar.commands.annotation.Optional;
 import co.aikar.commands.annotation.*;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.effects.EffectParams;
-import cz.neumimto.rpg.api.effects.EffectService;
-import cz.neumimto.rpg.api.effects.IGlobalEffect;
-import cz.neumimto.rpg.api.effects.model.EffectModelFactory;
-import cz.neumimto.rpg.api.entity.players.CharacterService;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
-import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
-import cz.neumimto.rpg.api.events.skill.SkillPostUsageEvent;
-import cz.neumimto.rpg.api.logging.Log;
-import cz.neumimto.rpg.api.persistance.model.CharacterBase;
-import cz.neumimto.rpg.api.scripting.IRpgScriptEngine;
-import cz.neumimto.rpg.api.skills.ISkill;
-import cz.neumimto.rpg.api.skills.PlayerSkillContext;
-import cz.neumimto.rpg.api.skills.SkillData;
-import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.api.skills.tree.SkillTree;
-import cz.neumimto.rpg.api.utils.ActionResult;
-import cz.neumimto.rpg.api.assets.AssetService;
-import cz.neumimto.rpg.common.effects.InternalEffectSourceProvider;
-import cz.neumimto.rpg.common.utils.GraalInstaller;
+import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.effects.*;
+import cz.neumimto.rpg.common.effects.model.EffectModelFactory;
+import cz.neumimto.rpg.common.entity.players.CharacterService;
+import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
+import cz.neumimto.rpg.common.events.skill.SkillPostUsageEvent;
+import cz.neumimto.rpg.common.logging.Log;
+import cz.neumimto.rpg.common.model.CharacterBase;
+import cz.neumimto.rpg.common.skills.*;
+import cz.neumimto.rpg.common.skills.tree.SkillTree;
+import cz.neumimto.rpg.common.utils.ActionResult;
+import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.utils.model.InstallOptions;
 
 import javax.inject.Inject;
@@ -38,8 +30,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
-import static cz.neumimto.rpg.api.logging.Log.info;
+import static cz.neumimto.rpg.common.logging.Log.info;
 
 @Singleton
 @CommandAlias("nadmin|na")
@@ -50,16 +43,16 @@ public class AdminCommands extends BaseCommand {
     private EffectService effectService;
 
     @Inject
-    private CharacterService<? super IActiveCharacter> characterService;
+    private CharacterService characterService;
 
     @Inject
     private InfoCommands infoCommands;
 
     @Inject
-    private IRpgScriptEngine scriptEngine;
+    private AssetService assetService;
 
     @Inject
-    private AssetService assetService;
+    private SkillService skillService;
 
     private Gson gson = new Gson();
 
@@ -71,6 +64,13 @@ public class AdminCommands extends BaseCommand {
             characterService.removeClassFromSlot(player.character, classDefinition.getClassType());
         }
         characterService.addNewClass(player.character, classDefinition);
+    }
+
+    @Subcommand("skills")
+    @Description("Prints all registered ntrpg skills")
+    public void skills(CommandIssuer commandIssuer) {
+        Map<String, ISkill> map = skillService.getSkills();
+        commandIssuer.sendMessage(map.keySet().stream().collect(Collectors.joining(", ")));
     }
 
     @CommandCompletion("@players")
@@ -120,6 +120,7 @@ public class AdminCommands extends BaseCommand {
 
     @Subcommand("skill")
     @CommandCompletion("@skilltree @nothing @skillskctx")
+    @Description("Executes a skill from specifc skilltree")
     public void adminExecuteSkillCommand(IActiveCharacter character, SkillTree tree, int level, ISkill skill) {
         long e = System.nanoTime();
         commandExecuteSkill(character, tree, skill, level);
@@ -130,6 +131,7 @@ public class AdminCommands extends BaseCommand {
 
     @Subcommand("cast-skill-as")
     @CommandCompletion("@skilltree @nothing @skillskctx")
+    @Description("Forces other player to use skill")
     public void adminExecuteSkillCommandAs(OnlineOtherPlayer executor, SkillTree tree, int level, ISkill skill) {
         commandExecuteSkill(executor.character, tree, skill, level);
     }
@@ -189,29 +191,10 @@ public class AdminCommands extends BaseCommand {
         }
     }
 
-    //https://medium.com/graalvm/graalvms-javascript-engine-on-jdk11-with-high-performance-3e79f968a819
-    @Subcommand("graal?")
-    public void checkGraalPresent(CommandIssuer executor) {
-        if (GraalInstaller.check() == null) {
-            executor.sendMessage("To enable js scripting you additional action is required.");
-            executor.sendMessage(">1) Run your server on GraalVM https://www.graalvm.org/downloads/, instead of standard JRE");
-            executor.sendMessage(">2) Run command /nadmin install-graal ; this action will download several Graal binaries from https://mvnrepository.com/artifact/org.graalvm/ !");
-            executor.sendMessage("> ! If you choose the second option you will also want to add additional server startup flags -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCI !");
-        } else {
-            executor.sendMessage("- OK");
-        }
-    }
-
-    @Private
-    @Subcommand("install-graal")
-    public void installGraal(CommandIssuer commandIssuer) {
-        GraalInstaller.downloadTo(Paths.get(Rpg.get().getWorkingDirectory() + "/addons"), commandIssuer::sendMessage);
-    }
 
     @Subcommand("reload")
     public void reload(@Optional @Default("a") String arg) {
         boolean reloadAll = arg.equalsIgnoreCase("a");
-        boolean reloadJs = reloadAll || arg.equalsIgnoreCase("js");
         boolean reloadLocalizations = reloadAll || arg.equalsIgnoreCase("l");
         boolean reloadItems = reloadAll || arg.equalsIgnoreCase("i");
         boolean reloadSkills = reloadAll || arg.equalsIgnoreCase("s");
@@ -259,11 +242,6 @@ public class AdminCommands extends BaseCommand {
         if (reloadAll) {
             info("[RELOAD] Reading Entity conf files: ");
             Rpg.get().getEntityService().reload();
-        }
-
-        if (reloadJs) {
-            info("[RELOAD] Scripts ");
-            scriptEngine.prepareEngine();
         }
 
         if (reloadItems) {

@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.spigot.events.party;
 
-import cz.neumimto.rpg.api.events.party.PartyCreateEvent;
+import cz.neumimto.rpg.common.events.party.PartyCreateEvent;
 import org.bukkit.event.HandlerList;
 
 public class SpigotPartyCreateEvent extends SpigotAbstractPartyEvent implements PartyCreateEvent {

@@ -1,18 +1,18 @@
 package cz.neumimto.rpg;
 
-import cz.neumimto.rpg.api.RpgApi;
-import cz.neumimto.rpg.api.effects.IGlobalEffect;
-import cz.neumimto.rpg.api.entity.CommonProperties;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
-import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
-import cz.neumimto.rpg.api.entity.players.leveling.Linear;
-import cz.neumimto.rpg.api.gui.Gui;
-import cz.neumimto.rpg.api.gui.IPlayerMessage;
-import cz.neumimto.rpg.api.persistance.model.CharacterBase;
-import cz.neumimto.rpg.api.persistance.model.CharacterClass;
+import cz.neumimto.rpg.common.RpgApi;
+import cz.neumimto.rpg.common.effects.IGlobalEffect;
+import cz.neumimto.rpg.common.entity.CommonProperties;
+import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
+import cz.neumimto.rpg.common.entity.players.leveling.Linear;
+import cz.neumimto.rpg.common.gui.Gui;
+import cz.neumimto.rpg.common.gui.IPlayerMessage;
+import cz.neumimto.rpg.common.model.CharacterBase;
+import cz.neumimto.rpg.common.model.CharacterClass;
 import cz.neumimto.rpg.common.commands.AdminCommands;
-import cz.neumimto.rpg.common.effects.AbstractEffectService;
+import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.effects.TestEffectFloat;
 import cz.neumimto.rpg.effects.TestEffectFloatGlobal;
 import cz.neumimto.rpg.junit.CharactersExtension;
@@ -39,7 +39,7 @@ public class AdminCommandTests {
     private AdminCommands abstractAdminCommand;
 
     @Inject
-    private AbstractEffectService effectService;
+    private EffectService effectService;
 
     @Inject
     private IPlayerMessage vanillaMessaging;

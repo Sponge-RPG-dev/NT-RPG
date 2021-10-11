@@ -1,8 +1,8 @@
 package cz.neumimto.rpg.spigot.bridges.mmoitems;
 
-import cz.neumimto.rpg.api.logging.Log;
-import cz.neumimto.rpg.api.skills.ISkill;
-import cz.neumimto.rpg.api.utils.DebugLevel;
+import cz.neumimto.rpg.common.logging.Log;
+import cz.neumimto.rpg.common.skills.ISkill;
+import cz.neumimto.rpg.common.utils.DebugLevel;
 import cz.neumimto.rpg.common.skills.SkillConfigLoader;
 import net.Indyuce.mmoitems.api.ability.Ability;
 

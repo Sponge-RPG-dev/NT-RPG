@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.spigot.events.character;
 
-import cz.neumimto.rpg.api.IRpgElement;
-import cz.neumimto.rpg.api.events.character.CharacterManaRegainEvent;
+import cz.neumimto.rpg.common.IRpgElement;
+import cz.neumimto.rpg.common.events.character.CharacterManaRegainEvent;
 import org.bukkit.event.HandlerList;
 
 /**

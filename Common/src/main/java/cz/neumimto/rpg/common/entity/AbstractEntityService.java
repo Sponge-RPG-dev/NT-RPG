@@ -1,11 +1,10 @@
 package cz.neumimto.rpg.common.entity;
 
-import cz.neumimto.rpg.api.IRpgElement;
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.effects.EffectService;
-import cz.neumimto.rpg.api.entity.*;
-import cz.neumimto.rpg.api.entity.players.CharacterService;
-import cz.neumimto.rpg.api.events.skill.SkillHealEvent;
+import cz.neumimto.rpg.common.IRpgElement;
+import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.effects.EffectService;
+import cz.neumimto.rpg.common.entity.players.CharacterService;
+import cz.neumimto.rpg.common.events.skill.SkillHealEvent;
 import cz.neumimto.rpg.common.entity.configuration.MobSettingsDao;
 import cz.neumimto.rpg.common.entity.configuration.MobsConfig;
 
@@ -13,7 +12,7 @@ import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.UUID;
 
-import static cz.neumimto.rpg.api.logging.Log.warn;
+import static cz.neumimto.rpg.common.logging.Log.warn;
 
 public abstract class AbstractEntityService<T, I extends IMob<T>> implements EntityService<T> {
 

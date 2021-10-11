@@ -1,9 +1,9 @@
 package cz.neumimto.rpg.common.skills.mech.precast;
 
-import cz.neumimto.rpg.api.entity.EntityService;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.skills.PlayerSkillContext;
-import cz.neumimto.rpg.api.skills.SkillData;
+import cz.neumimto.rpg.common.entity.EntityService;
+import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.skills.PlayerSkillContext;
+import cz.neumimto.rpg.common.skills.SkillData;
 import cz.neumimto.rpg.common.skills.mech.ValidatedMechanic;
 import cz.neumimto.rpg.common.skills.reagents.ISkillCastMechanic;
 

@@ -1,8 +1,7 @@
 package cz.neumimto.rpg.common.skills.scripting;
 
 import com.google.inject.Injector;
-import cz.neumimto.rpg.api.entity.IEntity;
-import cz.neumimto.rpg.api.skills.scripting.ScriptSkillModel;
+import cz.neumimto.rpg.common.entity.IEntity;
 import cz.neumimto.rpg.common.scripting.TestCustomSkillGenerator;
 import cz.neumimto.rpg.junit.NtRpgExtension;
 import cz.neumimto.rpg.junit.TestGuiceModule;

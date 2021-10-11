@@ -7,32 +7,30 @@ import com.electronwill.nightconfig.core.file.FileConfig;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
-import cz.neumimto.rpg.api.ResourceLoader;
-import cz.neumimto.rpg.api.RpgAddon;
-import cz.neumimto.rpg.api.RpgApi;
-import cz.neumimto.rpg.api.classes.ClassService;
-import cz.neumimto.rpg.api.configuration.ClassTypeDefinition;
-import cz.neumimto.rpg.api.configuration.PluginConfig;
-import cz.neumimto.rpg.api.damage.DamageService;
-import cz.neumimto.rpg.api.effects.EffectService;
-import cz.neumimto.rpg.api.entity.EntityService;
-import cz.neumimto.rpg.api.entity.PropertyService;
-import cz.neumimto.rpg.api.entity.players.CharacterService;
-import cz.neumimto.rpg.api.entity.players.parties.PartyService;
-import cz.neumimto.rpg.api.events.EventFactoryService;
-import cz.neumimto.rpg.api.exp.ExperienceService;
-import cz.neumimto.rpg.api.gui.Gui;
-import cz.neumimto.rpg.api.inventory.InventoryService;
-import cz.neumimto.rpg.api.items.ItemService;
-import cz.neumimto.rpg.api.localization.Arg;
-import cz.neumimto.rpg.api.localization.LocalizationService;
-import cz.neumimto.rpg.api.logging.Log;
-import cz.neumimto.rpg.api.permissions.PermissionService;
-import cz.neumimto.rpg.api.scripting.IRpgScriptEngine;
-import cz.neumimto.rpg.api.skills.SkillService;
-import cz.neumimto.rpg.api.utils.FileUtils;
-import cz.neumimto.rpg.api.utils.rng.PseudoRandomDistribution;
+import cz.neumimto.rpg.common.classes.ClassService;
 import cz.neumimto.rpg.common.commands.ACFBootstrap;
+import cz.neumimto.rpg.common.configuration.ClassTypeDefinition;
+import cz.neumimto.rpg.common.configuration.PluginConfig;
+import cz.neumimto.rpg.common.damage.DamageService;
+import cz.neumimto.rpg.common.effects.EffectService;
+import cz.neumimto.rpg.common.entity.EntityService;
+import cz.neumimto.rpg.common.entity.PropertyService;
+import cz.neumimto.rpg.common.entity.players.CharacterService;
+import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.parties.PartyService;
+import cz.neumimto.rpg.common.events.EventFactoryService;
+import cz.neumimto.rpg.common.exp.ExperienceService;
+import cz.neumimto.rpg.common.gui.Gui;
+import cz.neumimto.rpg.common.inventory.InventoryService;
+import cz.neumimto.rpg.common.items.ItemService;
+import cz.neumimto.rpg.common.localization.Arg;
+import cz.neumimto.rpg.common.localization.LocalizationService;
+import cz.neumimto.rpg.common.logging.Log;
+import cz.neumimto.rpg.common.permissions.PermissionService;
+import cz.neumimto.rpg.common.scripting.NTScriptEngine;
+import cz.neumimto.rpg.common.skills.SkillService;
+import cz.neumimto.rpg.common.utils.FileUtils;
+import cz.neumimto.rpg.common.utils.rng.PseudoRandomDistribution;
 
 import javax.inject.Inject;
 import java.io.File;
@@ -66,7 +64,7 @@ public abstract class AbstractRpg implements RpgApi {
     @Inject
     private InventoryService inventoryService;
     @Inject
-    private IRpgScriptEngine scriptEngine;
+    private NTScriptEngine scriptEngine;
     @Inject
     private PartyService partyService;
     @Inject
@@ -128,7 +126,7 @@ public abstract class AbstractRpg implements RpgApi {
     }
 
     @Override
-    public CharacterService getCharacterService() {
+    public CharacterService<IActiveCharacter> getCharacterService() {
         return characterService;
     }
 
@@ -173,7 +171,7 @@ public abstract class AbstractRpg implements RpgApi {
     }
 
     @Override
-    public IRpgScriptEngine getScriptEngine() {
+    public NTScriptEngine getScriptEngine() {
         return scriptEngine;
     }
 
@@ -282,7 +280,6 @@ public abstract class AbstractRpg implements RpgApi {
 
         getPropertyService().load();
 
-        getScriptEngine().prepareEngine();
         getSkillService().load();
         getClassService().load();
         getEffectService().load();

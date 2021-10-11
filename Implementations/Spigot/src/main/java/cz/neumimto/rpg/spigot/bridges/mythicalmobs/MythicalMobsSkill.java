@@ -1,8 +1,8 @@
 package cz.neumimto.rpg.spigot.bridges.mythicalmobs;
 
-import cz.neumimto.rpg.api.skills.PlayerSkillContext;
-import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.api.skills.types.ActiveSkill;
+import cz.neumimto.rpg.common.skills.PlayerSkillContext;
+import cz.neumimto.rpg.common.skills.SkillResult;
+import cz.neumimto.rpg.common.skills.types.ActiveSkill;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import io.lumine.mythic.lib.api.DamageType;
 import io.lumine.xikage.mythicmobs.MythicMobs;

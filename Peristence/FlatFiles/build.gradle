@@ -2,8 +2,6 @@ group = 'cz.neumimto.rpg'
 version = project.subp_version
 
 dependencies {
-    implementation project(':Common-Persistence')
-    compileOnlyApi project(':API')
     compileOnlyApi project(':Common')
 
     //compileOnly 'com.google.inject:guice:4.2.2'

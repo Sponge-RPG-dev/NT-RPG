@@ -1,7 +1,0 @@
-group = 'cz.neumimto.rpg'
-version = '2.1.0-SNAPSHOT'
-
-dependencies {
-    compileOnly project(':API')
-    compileOnly project(':Common')
-}

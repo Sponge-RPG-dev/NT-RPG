@@ -1,16 +1,16 @@
 package cz.neumimto.rpg.spigot.inventory;
 
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.configuration.AttributeConfig;
-import cz.neumimto.rpg.api.configuration.ItemString;
-import cz.neumimto.rpg.api.effects.EffectParams;
-import cz.neumimto.rpg.api.effects.IGlobalEffect;
-import cz.neumimto.rpg.api.entity.PropertyService;
-import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
-import cz.neumimto.rpg.api.items.ItemClass;
-import cz.neumimto.rpg.api.items.RpgItemStack;
-import cz.neumimto.rpg.api.items.RpgItemType;
-import cz.neumimto.rpg.api.logging.Log;
+import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.configuration.AttributeConfig;
+import cz.neumimto.rpg.common.configuration.ItemString;
+import cz.neumimto.rpg.common.effects.EffectParams;
+import cz.neumimto.rpg.common.effects.IGlobalEffect;
+import cz.neumimto.rpg.common.entity.PropertyService;
+import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.common.items.ItemClass;
+import cz.neumimto.rpg.common.items.RpgItemStack;
+import cz.neumimto.rpg.common.items.RpgItemType;
+import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.common.items.AbstractItemService;
 import cz.neumimto.rpg.common.items.RpgItemStackImpl;
 import cz.neumimto.rpg.spigot.items.SpigotRpgItemType;

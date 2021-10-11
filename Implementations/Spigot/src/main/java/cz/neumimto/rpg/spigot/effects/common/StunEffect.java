@@ -1,22 +1,30 @@
 package cz.neumimto.rpg.spigot.effects.common;
 
-import cz.neumimto.rpg.api.effects.Generate;
-import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.api.effects.UnstackableEffectBase;
-import cz.neumimto.rpg.api.entity.IEffectConsumer;
+import com.google.auto.service.AutoService;
+import cz.neumimto.nts.annotations.ScriptMeta;
+import cz.neumimto.nts.annotations.ScriptMeta.Function;
+import cz.neumimto.rpg.common.effects.Generate;
+import cz.neumimto.rpg.common.effects.IEffect;
+import cz.neumimto.rpg.common.effects.UnstackableEffectBase;
+import cz.neumimto.rpg.common.entity.IEffectConsumer;
 import cz.neumimto.rpg.spigot.entities.ISpigotEntity;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
+import static cz.neumimto.nts.annotations.ScriptMeta.*;
+
 @Generate(id = "name", description = "Stuns entity for a duration")
+@AutoService(IEffect.class)
+@Function("StunEffect")
 public class StunEffect extends UnstackableEffectBase<Long> {
     public static String name = "Stun";
     private LivingEntity livingEntity;
     private Location appliedLoc;
 
 
-    public StunEffect(ISpigotEntity consumer, long duration) {
+    @Handler
+    public StunEffect(@NamedParam("target") ISpigotEntity consumer, @NamedParam("duration") long duration) {
         super(name, consumer);
         setValue(duration);
         setDuration(duration);

@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.spigot.skills.utils;
 
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.entity.IEntity;
+import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.entity.IEntity;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import org.bukkit.FluidCollisionMode;
 import org.bukkit.Location;

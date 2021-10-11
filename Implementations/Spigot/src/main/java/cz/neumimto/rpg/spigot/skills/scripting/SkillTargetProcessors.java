@@ -1,10 +1,11 @@
 package cz.neumimto.rpg.spigot.skills.scripting;
 
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.entity.IEntity;
-import cz.neumimto.rpg.api.entity.IEntityType;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.skills.scripting.JsBinding;
+import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.damage.DamageService;
+import cz.neumimto.rpg.common.entity.IEntity;
+import cz.neumimto.rpg.common.entity.IEntityType;
+import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.skills.scripting.JsBinding;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.skills.TargetedEntitySkill;
@@ -66,7 +67,7 @@ public class SkillTargetProcessors {
             ISpigotCharacter character = (ISpigotCharacter) caster;
             LivingEntity targetedEntity = TargetedEntitySkill.rayTraceEntity(character.getPlayer(), range.doubleValue());
             if (targetedEntity != null) {
-                SpigotDamageService damageService = (SpigotDamageService) Rpg.get().getDamageService();
+                SpigotDamageService damageService = (SpigotDamageService) Rpg.get().getDamageService();;
                 if (damageService.canDamage(character, targetedEntity)) {
                     return Rpg.get().getEntityService().get(targetedEntity);
                 }

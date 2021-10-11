@@ -2,11 +2,11 @@ package cz.neumimto.rpg.spigot.gui.inventoryviews;
 
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.google.auto.service.AutoService;
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.configuration.AttributeConfig;
-import cz.neumimto.rpg.api.localization.Arg;
-import cz.neumimto.rpg.api.localization.LocalizationKeys;
-import cz.neumimto.rpg.api.localization.LocalizationService;
+import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.configuration.AttributeConfig;
+import cz.neumimto.rpg.common.localization.Arg;
+import cz.neumimto.rpg.common.localization.LocalizationKeys;
+import cz.neumimto.rpg.common.localization.LocalizationService;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
 import cz.neumimto.rpg.spigot.gui.elements.GuiCommand;

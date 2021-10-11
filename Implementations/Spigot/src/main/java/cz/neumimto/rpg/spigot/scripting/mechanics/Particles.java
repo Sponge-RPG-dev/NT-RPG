@@ -1,17 +1,15 @@
 package cz.neumimto.rpg.spigot.scripting.mechanics;
 
-import cz.neumimto.nts.annotations.ScriptMeta;
-import cz.neumimto.rpg.api.entity.IEntity;
+import com.google.auto.service.AutoService;
+import cz.neumimto.rpg.common.scripting.mechanics.NTScriptProxy;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.entities.ISpigotEntity;
 import de.slikey.effectlib.EffectType;
 import de.slikey.effectlib.effect.LineEffect;
-import io.lumine.xikage.mythicmobs.skills.mechanics.ParticleLineEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.block.data.BlockData;
-import org.bukkit.material.MaterialData;
 import org.bukkit.util.Vector;
 
 import javax.inject.Singleton;
@@ -19,10 +17,11 @@ import javax.inject.Singleton;
 import static cz.neumimto.nts.annotations.ScriptMeta.*;
 
 @Singleton
-public class Particles {
+@AutoService(NTScriptProxy.class)
+public class Particles implements NTScriptProxy {
 
     @Handler
-    @Function("lighning")
+    @Function("lightning")
     public void spawnLigting(@NamedParam("e|at_entity") ISpigotEntity entity) {
         Location location = entity.getEntity().getLocation();
         location.getWorld().strikeLightningEffect(location);

@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.common.commands;
 
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 
 public class OnlineOtherPlayer {
     public final IActiveCharacter character;

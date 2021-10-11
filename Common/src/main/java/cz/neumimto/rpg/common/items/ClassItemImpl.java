@@ -1,8 +1,5 @@
 package cz.neumimto.rpg.common.items;
 
-import cz.neumimto.rpg.api.items.ClassItem;
-import cz.neumimto.rpg.api.items.RpgItemType;
-
 public class ClassItemImpl implements ClassItem {
 
     private final RpgItemType type;

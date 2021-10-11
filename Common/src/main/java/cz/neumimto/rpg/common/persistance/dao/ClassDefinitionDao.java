@@ -4,12 +4,12 @@ import com.electronwill.nightconfig.core.Config;
 import com.electronwill.nightconfig.core.conversion.ObjectConverter;
 import com.electronwill.nightconfig.core.file.FileConfig;
 import com.electronwill.nightconfig.core.file.NoFormatFoundException;
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.configuration.ClassTypeDefinition;
-import cz.neumimto.rpg.api.configuration.adapters.ClassDependencyGraphAdapter;
-import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
-import cz.neumimto.rpg.api.entity.players.leveling.EmptyLevelProgression;
-import cz.neumimto.rpg.api.logging.Log;
+import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.configuration.ClassTypeDefinition;
+import cz.neumimto.rpg.common.configuration.adapters.ClassDependencyGraphAdapter;
+import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.common.entity.players.leveling.EmptyLevelProgression;
+import cz.neumimto.rpg.common.logging.Log;
 
 import javax.inject.Singleton;
 import java.io.IOException;
@@ -22,8 +22,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static cz.neumimto.rpg.api.logging.Log.error;
-import static cz.neumimto.rpg.api.logging.Log.info;
+import static cz.neumimto.rpg.common.logging.Log.error;
+import static cz.neumimto.rpg.common.logging.Log.info;
 
 /**
  * Created by NeumimTo on 10.7.2015.

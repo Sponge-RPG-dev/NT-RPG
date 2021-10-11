@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.spigot.events.damage;
 
-import cz.neumimto.rpg.api.events.damage.DamageIEntityEarlyEvent;
+import cz.neumimto.rpg.common.events.damage.DamageIEntityEarlyEvent;
 import org.bukkit.event.HandlerList;
 
 
