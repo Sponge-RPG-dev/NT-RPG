@@ -4,16 +4,12 @@ import com.google.inject.AbstractModule;
 import cz.neumimto.rpg.common.configuration.SkillTreeDao;
 import cz.neumimto.rpg.common.gui.Gui;
 import cz.neumimto.rpg.common.localization.LocalizationService;
-import cz.neumimto.rpg.common.scripting.IRpgScriptEngine;
 import cz.neumimto.rpg.common.classes.ClassService;
 import cz.neumimto.rpg.common.configuration.SkillTreeLoaderImpl;
 import cz.neumimto.rpg.common.entity.PropertyService;
 import cz.neumimto.rpg.common.exp.ExperienceDAO;
 import cz.neumimto.rpg.common.localization.LocalizationServiceImpl;
 import cz.neumimto.rpg.common.persistance.dao.ClassDefinitionDao;
-import cz.neumimto.rpg.common.scripting.DummyScriptEngine;
-import cz.neumimto.rpg.common.scripting.GraalVmScriptEngine;
-import cz.neumimto.rpg.common.utils.GraalInstaller;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,8 +26,6 @@ public class AbstractRpgGuiceModule extends AbstractModule {
         map.put(Gui.class, null);
         map.put(LocalizationService.class, LocalizationServiceImpl.class);
 
-
-        map.put(IRpgScriptEngine.class, GraalInstaller.check() != null ? GraalVmScriptEngine.class : DummyScriptEngine.class);
 
         return map;
     }

@@ -5,8 +5,8 @@ import cz.neumimto.rpg.common.effects.model.EffectModelFactory;
 import cz.neumimto.rpg.common.entity.IEffectConsumer;
 import cz.neumimto.rpg.common.entity.IEntity;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.common.skills.ISkill;
 import cz.neumimto.rpg.common.skills.SkillService;
+import cz.neumimto.rpg.common.skills.ISkill;
 import cz.neumimto.rpg.common.skills.SkillSettings;
 import cz.neumimto.rpg.common.assets.AssetService;
 

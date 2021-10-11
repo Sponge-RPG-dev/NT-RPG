@@ -19,7 +19,7 @@ import cz.neumimto.rpg.common.localization.Arg;
 import cz.neumimto.rpg.common.localization.LocalizationService;
 import cz.neumimto.rpg.common.permissions.PermissionService;
 import cz.neumimto.rpg.common.model.EquipedSlot;
-import cz.neumimto.rpg.common.scripting.IRpgScriptEngine;
+import cz.neumimto.rpg.common.scripting.NTScriptEngine;
 import cz.neumimto.rpg.common.skills.SkillService;
 
 import java.nio.file.Path;
@@ -158,7 +158,7 @@ public class RpgTests implements RpgApi {
     }
 
     @Override
-    public IRpgScriptEngine getScriptEngine() {
+    public NTScriptEngine getScriptEngine() {
         return null;
     }
 

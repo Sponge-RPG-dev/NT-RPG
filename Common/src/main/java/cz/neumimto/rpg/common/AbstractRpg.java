@@ -8,6 +8,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import cz.neumimto.rpg.common.classes.ClassService;
+import cz.neumimto.rpg.common.commands.ACFBootstrap;
 import cz.neumimto.rpg.common.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.common.configuration.PluginConfig;
 import cz.neumimto.rpg.common.damage.DamageService;
@@ -26,11 +27,10 @@ import cz.neumimto.rpg.common.localization.Arg;
 import cz.neumimto.rpg.common.localization.LocalizationService;
 import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.common.permissions.PermissionService;
-import cz.neumimto.rpg.common.scripting.IRpgScriptEngine;
+import cz.neumimto.rpg.common.scripting.NTScriptEngine;
 import cz.neumimto.rpg.common.skills.SkillService;
 import cz.neumimto.rpg.common.utils.FileUtils;
 import cz.neumimto.rpg.common.utils.rng.PseudoRandomDistribution;
-import cz.neumimto.rpg.common.commands.ACFBootstrap;
 
 import javax.inject.Inject;
 import java.io.File;
@@ -64,7 +64,7 @@ public abstract class AbstractRpg implements RpgApi {
     @Inject
     private InventoryService inventoryService;
     @Inject
-    private IRpgScriptEngine scriptEngine;
+    private NTScriptEngine scriptEngine;
     @Inject
     private PartyService partyService;
     @Inject
@@ -171,7 +171,7 @@ public abstract class AbstractRpg implements RpgApi {
     }
 
     @Override
-    public IRpgScriptEngine getScriptEngine() {
+    public NTScriptEngine getScriptEngine() {
         return scriptEngine;
     }
 
@@ -280,7 +280,6 @@ public abstract class AbstractRpg implements RpgApi {
 
         getPropertyService().load();
 
-        getScriptEngine().prepareEngine();
         getSkillService().load();
         getClassService().load();
         getEffectService().load();

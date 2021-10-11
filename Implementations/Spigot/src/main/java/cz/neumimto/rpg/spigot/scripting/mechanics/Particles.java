@@ -1,5 +1,7 @@
 package cz.neumimto.rpg.spigot.scripting.mechanics;
 
+import com.google.auto.service.AutoService;
+import cz.neumimto.rpg.common.scripting.mechanics.NTScriptProxy;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.entities.ISpigotEntity;
 import de.slikey.effectlib.EffectType;
@@ -15,10 +17,11 @@ import javax.inject.Singleton;
 import static cz.neumimto.nts.annotations.ScriptMeta.*;
 
 @Singleton
-public class Particles {
+@AutoService(NTScriptProxy.class)
+public class Particles implements NTScriptProxy {
 
     @Handler
-    @Function("lighning")
+    @Function("lightning")
     public void spawnLigting(@NamedParam("e|at_entity") ISpigotEntity entity) {
         Location location = entity.getEntity().getLocation();
         location.getWorld().strikeLightningEffect(location);

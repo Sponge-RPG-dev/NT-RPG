@@ -24,4 +24,12 @@ public class EffectsM {
             ) {
         effectService.addEffect(effect,provider, entity);
     }
+
+    @ScriptMeta.Function("remote_effect")
+    public void removeEffect(@ScriptMeta.NamedParam("ef|effect_name") String effect, @ScriptMeta.NamedParam("e|entity") IEntity target) {
+        if (target.hasEffect(effect)) {
+            effectService.removeEffectContainer(target.getEffect(effect), target);
+        }
+    }
+
 }

@@ -4,7 +4,7 @@ import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.gui.ISkillTreeInterfaceModel;
 import cz.neumimto.rpg.common.scripting.SkillScriptHandlers;
 import cz.neumimto.rpg.common.skills.types.ScriptSkill;
-import cz.neumimto.rpg.common.skills.AbstractSkillService;
+import cz.neumimto.rpg.common.skills.SkillService;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import org.bukkit.Material;
 
@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Singleton
-public class SpigotSkillService extends AbstractSkillService {
+public class SpigotSkillService extends SkillService {
 
     private Map<Character, SpigotSkillTreeInterfaceModel> guiModelByCharacter;
 

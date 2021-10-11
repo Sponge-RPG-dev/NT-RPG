@@ -97,7 +97,10 @@ shadowJar {
     relocate 'de.slikey.effectlib', 'rpgshaded.de.slikey.effectlib'
     relocate 'de.tr7zw', 'rpgshaded.de.tr7zw'
 
-
+    mergeServiceFiles()
 }
 
 build.dependsOn shadowJar
+build.mustRunAfter tasks.getByPath(':Common:build')
+build.mustRunAfter tasks.getByPath(':FlatFiles-Persistence:build')
+

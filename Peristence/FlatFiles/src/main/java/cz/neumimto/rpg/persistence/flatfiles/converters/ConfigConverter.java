@@ -4,10 +4,10 @@ import com.electronwill.nightconfig.core.Config;
 import com.electronwill.nightconfig.core.file.FileConfig;
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.model.*;
-import cz.neumimto.rpg.persistence.model.BaseCharacterAttributeImpl;
-import cz.neumimto.rpg.persistence.model.CharacterBaseImpl;
-import cz.neumimto.rpg.persistence.model.CharacterClassImpl;
-import cz.neumimto.rpg.persistence.model.CharacterSkillImpl;
+import cz.neumimto.rpg.common.persistance.model.BaseCharacterAttributeImpl;
+import cz.neumimto.rpg.common.persistance.model.CharacterBaseImpl;
+import cz.neumimto.rpg.common.persistance.model.CharacterClassImpl;
+import cz.neumimto.rpg.common.persistance.model.CharacterSkillImpl;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

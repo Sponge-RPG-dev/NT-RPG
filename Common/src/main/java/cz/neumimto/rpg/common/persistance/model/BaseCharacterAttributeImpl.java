@@ -1,11 +1,8 @@
-package cz.neumimto.rpg.persistence.model;
+package cz.neumimto.rpg.common.persistance.model;
 
 import cz.neumimto.rpg.common.model.BaseCharacterAttribute;
 import cz.neumimto.rpg.common.model.CharacterBase;
 
-/**
- * Created by NeumimTo on 8.10.2016.
- */
 public class BaseCharacterAttributeImpl extends TimestampEntityImpl implements BaseCharacterAttribute {
 
     private Long id;

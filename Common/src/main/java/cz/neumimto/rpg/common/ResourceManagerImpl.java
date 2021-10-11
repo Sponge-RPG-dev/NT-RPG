@@ -8,10 +8,9 @@ import cz.neumimto.rpg.common.effects.model.EffectModelFactory;
 import cz.neumimto.rpg.common.effects.model.EffectModelMapper;
 import cz.neumimto.rpg.common.localization.LocalizationService;
 import cz.neumimto.rpg.common.logging.Log;
-import cz.neumimto.rpg.common.scripting.IRpgScriptEngine;
 import cz.neumimto.rpg.common.services.IPropertyContainer;
-import cz.neumimto.rpg.common.skills.ISkill;
 import cz.neumimto.rpg.common.skills.SkillService;
+import cz.neumimto.rpg.common.skills.ISkill;
 import cz.neumimto.rpg.common.utils.DebugLevel;
 import cz.neumimto.rpg.common.utils.FileUtils;
 import cz.neumimto.rpg.common.bytecode.ClassGenerator;
@@ -34,8 +33,6 @@ public class ResourceManagerImpl implements ResourceLoader {
 
     private static boolean reload = false;
 
-    @Inject
-    protected IRpgScriptEngine jsEngine;
     @Inject
     protected Injector injector;
     @Inject

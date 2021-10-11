@@ -27,19 +27,7 @@ dependencies {
 
     api 'net.bytebuddy:byte-buddy:' + project.bytebuddy
     //api 'com.github.Sponge-RPG-dev:NT-Script:28394a3fc9'
-
     compileOnly "co.aikar:acf-core:" + project.acf
-    compileOnly 'org.graalvm.sdk:graal-sdk:' + project.graal
-    compileOnly 'org.graalvm.js:js:' + project.graal
-    compileOnly 'org.graalvm.js:js-scriptengine:' + project.graal
-
-    testImplementation project(':Database-Persistence')
-    testImplementation project(':Common-Persistence')
-    testImplementation 'org.graalvm.sdk:graal-sdk:' + project.graal
-    testImplementation 'org.graalvm.js:js:' + project.graal
-    testImplementation 'org.graalvm.sdk:graal-sdk:' + project.graal
-    testImplementation 'org.graalvm.js:js:' + project.graal
-    testImplementation 'org.graalvm.js:js-scriptengine:' + project.graal
 
 }
 

@@ -21,7 +21,6 @@ import cz.neumimto.rpg.common.items.ItemService;
 import cz.neumimto.rpg.common.localization.LocalizationService;
 import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.common.permissions.PermissionService;
-import cz.neumimto.rpg.common.scripting.IRpgScriptEngine;
 import cz.neumimto.rpg.common.skills.SkillService;
 import cz.neumimto.rpg.assets.TestAssetService;
 import cz.neumimto.rpg.common.ResourceManagerImpl;
@@ -46,7 +45,6 @@ import cz.neumimto.rpg.common.persistance.dao.ClassDefinitionDao;
 import cz.neumimto.rpg.common.persistance.dao.ICharacterClassDao;
 import cz.neumimto.rpg.common.persistance.dao.IPersistenceHandler;
 import cz.neumimto.rpg.common.persistance.dao.IPlayerDao;
-import cz.neumimto.rpg.common.scripting.GraalVmScriptEngine;
 import cz.neumimto.rpg.common.scripting.TestCustomSkillGenerator;
 import cz.neumimto.rpg.common.skills.reagents.Cooldown;
 import cz.neumimto.rpg.common.skills.reagents.HPCast;
@@ -125,8 +123,6 @@ public class TestGuiceModule extends AbstractModule {
         bind(RWDao.class);
         bind(RpgApi.class).to(TestApiImpl.class);
 
-        bind(IRpgScriptEngine.class).to(GraalVmScriptEngine.class);
-
         bind(PermissionService.class).to(TestPermissionService.class);
         bind(EventFactoryService.class).to(TestEventFactory.class);
         bind(LocalizationService.class).to(LocalizationServiceImpl.class);
@@ -146,7 +142,6 @@ public class TestGuiceModule extends AbstractModule {
         bind(Cooldown.class).to(CooldownTest.class);
         bind(HPCast.class);
         bind(ManaCast.class);
-        bind(IRpgScriptEngine.class).to(GraalVmScriptEngine.class);
 
     }
 

@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.common.scripting.mechanics;
 
+import com.google.auto.service.AutoService;
 import cz.neumimto.nts.annotations.ScriptMeta.Function;
 import cz.neumimto.nts.annotations.ScriptMeta.Handler;
 import cz.neumimto.nts.annotations.ScriptMeta.NamedParam;
@@ -13,7 +14,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class EntitiesM {
+@AutoService(NTScriptProxy.class)
+public class EntitiesM implements NTScriptProxy {
 
     @Inject
     private EntityService entityService;

@@ -2,7 +2,6 @@ package cz.neumimto.rpg;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
-import cz.neumimto.rpg.RpgTest;
 import cz.neumimto.rpg.common.RpgApi;
 import cz.neumimto.rpg.common.configuration.SkillTreeLoaderImpl;
 import cz.neumimto.rpg.common.skills.SkillService;

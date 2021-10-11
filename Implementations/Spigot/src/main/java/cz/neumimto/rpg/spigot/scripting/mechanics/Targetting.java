@@ -1,9 +1,11 @@
 package cz.neumimto.rpg.spigot.scripting.mechanics;
 
+import com.google.auto.service.AutoService;
 import cz.neumimto.nts.annotations.ScriptMeta.Function;
 import cz.neumimto.nts.annotations.ScriptMeta.Handler;
 import cz.neumimto.nts.annotations.ScriptMeta.NamedParam;
 import cz.neumimto.rpg.common.entity.IEntity;
+import cz.neumimto.rpg.common.scripting.mechanics.NTScriptProxy;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
 import cz.neumimto.rpg.spigot.entities.ISpigotEntity;
 import cz.neumimto.rpg.spigot.entities.SpigotEntityService;
@@ -18,7 +20,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Singleton
-public class Targetting {
+@AutoService(NTScriptProxy.class)
+public class Targetting implements NTScriptProxy {
 
     @Inject
     private SpigotDamageService damageService;

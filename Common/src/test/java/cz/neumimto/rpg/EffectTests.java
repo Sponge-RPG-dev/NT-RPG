@@ -3,7 +3,6 @@ package cz.neumimto.rpg;
 import cz.neumimto.rpg.common.effects.IEffect;
 import cz.neumimto.rpg.common.effects.stacking.DoubleEffectStackingStrategy;
 import cz.neumimto.rpg.common.model.CharacterBase;
-import cz.neumimto.rpg.common.scripting.IRpgScriptEngine;
 import cz.neumimto.rpg.common.effects.InternalEffectSourceProvider;
 import cz.neumimto.rpg.common.entity.TestCharacter;
 import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
@@ -19,7 +18,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 
-import javax.inject.Inject;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.Set;
@@ -41,8 +39,6 @@ public class EffectTests {
 
     private static Set<IEffect> processedEffects;
 
-    @Inject
-    private IRpgScriptEngine scriptEngine;
 
     @BeforeEach
     public void before() {

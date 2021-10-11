@@ -17,7 +17,7 @@ import cz.neumimto.rpg.common.items.ItemService;
 import cz.neumimto.rpg.common.localization.Arg;
 import cz.neumimto.rpg.common.localization.LocalizationService;
 import cz.neumimto.rpg.common.permissions.PermissionService;
-import cz.neumimto.rpg.common.scripting.IRpgScriptEngine;
+import cz.neumimto.rpg.common.scripting.NTScriptEngine;
 import cz.neumimto.rpg.common.skills.SkillService;
 import cz.neumimto.rpg.common.impl.TestCharacterService;
 import cz.neumimto.rpg.common.inventory.TestInventoryService;
@@ -67,7 +67,7 @@ public class TestApiImpl implements RpgApi {
     private EffectService effectService;
 
     @Inject
-    private IRpgScriptEngine jsLoader;
+    private NTScriptEngine ntScriptEngine;
 
     @Inject
     private TestEntityService entityService;
@@ -100,8 +100,8 @@ public class TestApiImpl implements RpgApi {
     }
 
     @Override
-    public IRpgScriptEngine getScriptEngine() {
-        return jsLoader;
+    public NTScriptEngine getScriptEngine() {
+        return ntScriptEngine;
     }
 
     @Override

@@ -1,5 +1,9 @@
 package cz.neumimto.rpg.spigot.effects.common;
 
+import com.google.auto.service.AutoService;
+import cz.neumimto.nts.annotations.ScriptMeta;
+import cz.neumimto.nts.annotations.ScriptMeta.Handler;
+import cz.neumimto.nts.annotations.ScriptMeta.NamedParam;
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.effects.EffectBase;
 import cz.neumimto.rpg.common.effects.IEffect;
@@ -10,6 +14,8 @@ import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 
+@AutoService(IEffect.class)
+@ScriptMeta.Function("BleedingEffect")
 public class BleedingEffect extends EffectBase {
 
     public static String name = "Bleeding";
@@ -18,7 +24,11 @@ public class BleedingEffect extends EffectBase {
     private BleedEffect effect;
     private LivingEntity livingEntity;
 
-    public BleedingEffect(IEntity consumer, long duration, long period, double damage) {
+    @Handler
+    public BleedingEffect(@NamedParam("target") IEntity consumer,
+                          @NamedParam("d|duration") long duration,
+                          @NamedParam("p|period") long period,
+                          @NamedParam("d|damage") double damage) {
         super(name, consumer);
         setDuration(duration);
         setPeriod(period);

@@ -1,11 +1,8 @@
-package cz.neumimto.rpg.persistence.model;
+package cz.neumimto.rpg.common.persistance.model;
 
 import cz.neumimto.rpg.common.model.CharacterBase;
 import cz.neumimto.rpg.common.model.CharacterClass;
 
-/**
- * Created by ja on 8.10.2016.
- */
 public class CharacterClassImpl extends TimestampEntityImpl implements CharacterClass {
 
     private Long classId;

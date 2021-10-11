@@ -10,10 +10,10 @@ import cz.neumimto.rpg.common.model.CharacterSkill;
 import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.persistance.dao.IPersistenceHandler;
 import cz.neumimto.rpg.persistence.jdbc.migrations.DbMigrationsService;
-import cz.neumimto.rpg.persistence.model.BaseCharacterAttributeImpl;
-import cz.neumimto.rpg.persistence.model.CharacterBaseImpl;
-import cz.neumimto.rpg.persistence.model.CharacterClassImpl;
-import cz.neumimto.rpg.persistence.model.CharacterSkillImpl;
+import cz.neumimto.rpg.common.persistance.model.BaseCharacterAttributeImpl;
+import cz.neumimto.rpg.common.persistance.model.CharacterBaseImpl;
+import cz.neumimto.rpg.common.persistance.model.CharacterClassImpl;
+import cz.neumimto.rpg.common.persistance.model.CharacterSkillImpl;
 
 import java.io.IOException;
 import java.util.Arrays;

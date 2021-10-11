@@ -5,6 +5,7 @@ import com.google.inject.Key;
 import cz.neumimto.nts.NTScript;
 import cz.neumimto.nts.annotations.ScriptMeta;
 import cz.neumimto.rpg.common.assets.AssetService;
+import cz.neumimto.rpg.common.scripting.mechanics.NTScriptProxy;
 import cz.neumimto.rpg.common.skills.SkillResult;
 import cz.neumimto.rpg.common.skills.types.ScriptSkill;
 
@@ -13,10 +14,7 @@ import javax.inject.Singleton;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
 
 @Singleton
@@ -35,7 +33,10 @@ public class NTScriptEngine {
     }
 
     public NTScript prepareCompiler(List<Object> stl, Class<? extends SkillScriptHandlers> type) {
-       return compilers.putIfAbsent(type, scriptContextForSkills(stl, type));
+       if (!compilers.containsKey(type)) {
+           compilers.put(type, scriptContextForSkills(stl, type));
+       }
+       return compilers.get(type);
     }
 
     public NTScript scriptContextForSkills(List<Object> stĺ, Class type) {
@@ -60,6 +61,7 @@ public class NTScriptEngine {
                 .withEnum(SkillResult.class)
                 .implementingType(type)
                 .add(stĺ)
+                .debugOutput("/tmp")
                 .package_("cz.neumimto.rpg.script.skills")
                 .setClassNamePattern("SkillHandler")
                 .build();
@@ -72,11 +74,9 @@ public class NTScriptEngine {
 
     public List<Object> getStl() {
         List<Object> list = new ArrayList<>();
-        for (Key<?> key : injector.getAllBindings().keySet()) {
-            if (key.getTypeLiteral().getRawType().isAnnotationPresent(ScriptMeta.Function.class)) {
-                list.add(injector.getInstance(key));
-            }
-        }
+        ServiceLoader.load(NTScriptProxy.class, getClass().getClassLoader()).stream()
+                .map(ServiceLoader.Provider::get)
+                .forEach(a-> list.add(injector.getInstance(a.getClass())));
         return list;
     }
 

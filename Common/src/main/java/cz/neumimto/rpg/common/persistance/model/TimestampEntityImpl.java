@@ -1,14 +1,11 @@
 
 
-package cz.neumimto.rpg.persistence.model;
+package cz.neumimto.rpg.common.persistance.model;
 
 import cz.neumimto.rpg.common.model.TimestampEntity;
 
 import java.util.Date;
 
-/**
- * Created by NeumimTo on 24.7.2015.
- */
 public abstract class TimestampEntityImpl implements TimestampEntity {
 
     private Date created;

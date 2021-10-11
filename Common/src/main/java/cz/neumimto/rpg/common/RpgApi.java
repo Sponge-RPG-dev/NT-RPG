@@ -18,7 +18,7 @@ import cz.neumimto.rpg.common.items.ItemService;
 import cz.neumimto.rpg.common.localization.Arg;
 import cz.neumimto.rpg.common.localization.LocalizationService;
 import cz.neumimto.rpg.common.permissions.PermissionService;
-import cz.neumimto.rpg.common.scripting.IRpgScriptEngine;
+import cz.neumimto.rpg.common.scripting.NTScriptEngine;
 import cz.neumimto.rpg.common.skills.SkillService;
 
 import java.nio.file.Path;
@@ -84,7 +84,7 @@ public interface RpgApi {
 
     EffectService getEffectService();
 
-    IRpgScriptEngine getScriptEngine();
+    NTScriptEngine getScriptEngine();
 
     InventoryService getInventoryService();
 
