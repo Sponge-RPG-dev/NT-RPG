@@ -25,9 +25,9 @@ public class EntitiesM implements NTScriptProxy {
 
     @Handler
     @Function("heal")
-    public double heal(@NamedParam("entity") IEntity target,
-                     @NamedParam("amount") float amount,
-                     @NamedParam("source") IRpgElement skill) {
+    public double heal(@NamedParam("e|entity") IEntity target,
+                     @NamedParam("a|amount") float amount,
+                     @NamedParam("s|source") IRpgElement skill) {
         return entityService.healEntity(target, amount, skill);
     }
 

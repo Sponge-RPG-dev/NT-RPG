@@ -25,7 +25,7 @@ public class ScriptSkillModel {
     private String script;
 
     @Optional
-    @Path("Supertype")
+    @Path("SuperType")
     private String superType;
 
     public String getHandlerId() {

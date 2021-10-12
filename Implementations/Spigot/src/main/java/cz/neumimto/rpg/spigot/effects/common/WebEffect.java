@@ -1,5 +1,7 @@
 package cz.neumimto.rpg.spigot.effects.common;
 
+import com.google.auto.service.AutoService;
+import cz.neumimto.nts.annotations.ScriptMeta;
 import cz.neumimto.rpg.common.effects.EffectBase;
 import cz.neumimto.rpg.common.effects.IEffect;
 import cz.neumimto.rpg.common.entity.IEffectConsumer;
@@ -10,13 +12,17 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.util.Vector;
 
+@AutoService(IEffect.class)
+@ScriptMeta.Function("WebEffect")
 public class WebEffect extends EffectBase<Long> {
 
     public static String name = "Web";
     private Vector[] vector3is = new Vector[9];
     private World world;
 
-    public WebEffect(IEffectConsumer effectConsumer, long duration) {
+    @ScriptMeta.Handler
+    public WebEffect(@ScriptMeta.NamedParam("e|entity") IEffectConsumer effectConsumer,
+                     @ScriptMeta.NamedParam("d|duration") long duration) {
         super(name, effectConsumer);
         setDuration(duration);
         setStackable(false, null);

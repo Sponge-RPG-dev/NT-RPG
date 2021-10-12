@@ -1,5 +1,7 @@
 package cz.neumimto.rpg.spigot.effects.common;
 
+import com.google.auto.service.AutoService;
+import cz.neumimto.nts.annotations.ScriptMeta;
 import cz.neumimto.rpg.common.effects.*;
 import cz.neumimto.rpg.common.entity.IEffectConsumer;
 import cz.neumimto.rpg.common.skills.scripting.JsBinding;
@@ -13,7 +15,8 @@ import org.bukkit.util.Vector;
 import java.util.Collections;
 import java.util.Set;
 
-@JsBinding(JsBinding.Type.CLASS)
+@ScriptMeta.Function("ManaShieldEffect")
+@AutoService(IEffect.class)
 @Generate(id = "name", description = "Damage to mana")
 public class ManaShieldEffect extends EffectBase<Double> implements IEffectContainer<Double, ManaShieldEffect> {
 
@@ -31,7 +34,10 @@ public class ManaShieldEffect extends EffectBase<Double> implements IEffectConta
         dustOptions = new Particle.DustOptions(Color.fromRGB(66, 120, 245), 1);
     }
 
-    public ManaShieldEffect(IEffectConsumer consumer, long duration, double multiplier) {
+    @ScriptMeta.Handler
+    public ManaShieldEffect(@ScriptMeta.NamedParam("e|entity") IEffectConsumer consumer,
+                            @ScriptMeta.NamedParam("d|duration") long duration,
+                            @ScriptMeta.NamedParam("m|multiplier") double multiplier) {
         super(name, consumer);
         setDuration(duration);
         setPeriod(20);

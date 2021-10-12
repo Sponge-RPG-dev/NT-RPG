@@ -1,5 +1,7 @@
 package cz.neumimto.rpg.spigot.effects.common;
 
+import com.google.auto.service.AutoService;
+import cz.neumimto.nts.annotations.ScriptMeta;
 import cz.neumimto.rpg.common.effects.EffectBase;
 import cz.neumimto.rpg.common.effects.IEffect;
 import cz.neumimto.rpg.common.entity.IEffectConsumer;
@@ -12,6 +14,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+@AutoService(IEffect.class)
+@ScriptMeta.Function("PiggifyEffect")
 public class PiggifyEffect extends EffectBase {
 
     public static Set<UUID> entities = new HashSet<>();
@@ -21,7 +25,9 @@ public class PiggifyEffect extends EffectBase {
     private LivingEntity le;
 
 
-    public PiggifyEffect(IEffectConsumer consumer, long duration) {
+    @ScriptMeta.Handler
+    public PiggifyEffect(@ScriptMeta.NamedParam("e|entity") IEffectConsumer consumer,
+                         @ScriptMeta.NamedParam("d|duration") long duration) {
         super(name, consumer);
         setDuration(duration);
         le = (LivingEntity) consumer.getEntity();

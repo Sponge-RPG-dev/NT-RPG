@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.common.scripting.mechanics;
 
+import com.google.auto.service.AutoService;
 import cz.neumimto.nts.annotations.ScriptMeta;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.effects.IEffect;
@@ -10,23 +11,24 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class EffectsM {
+@AutoService(NTScriptProxy.class)
+public class EffectsM implements NTScriptProxy {
 
     @Inject
     private EffectService effectService;
 
-    @ScriptMeta.Function("apply_effect")
+    @ScriptMeta.Function("add_effect")
     @ScriptMeta.Handler
     public void applyEffect(
-            @ScriptMeta.NamedParam("effect") IEffect effect,
-            @ScriptMeta.NamedParam("source") IEffectSourceProvider provider,
-            @ScriptMeta.NamedParam("entity_source")IEntity entity
+            @ScriptMeta.NamedParam("e|effect") IEffect effect,
+            @ScriptMeta.NamedParam("s|source") IEffectSourceProvider provider,
+            @ScriptMeta.NamedParam("es|entity_source")IEntity entity
             ) {
         effectService.addEffect(effect,provider, entity);
     }
 
     @ScriptMeta.Function("remote_effect")
-    public void removeEffect(@ScriptMeta.NamedParam("ef|effect_name") String effect, @ScriptMeta.NamedParam("e|entity") IEntity target) {
+    public void removeEffect(@ScriptMeta.NamedParam("en|effect_name") String effect, @ScriptMeta.NamedParam("e|entity") IEntity target) {
         if (target.hasEffect(effect)) {
             effectService.removeEffectContainer(target.getEffect(effect), target);
         }

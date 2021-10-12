@@ -25,7 +25,7 @@ public class TargetedScriptSkill extends TargetedEntitySkill implements ITargete
 
     @Override
     public SkillResult castOn(IEntity target, ISpigotCharacter source, PlayerSkillContext skillContext) {
-        SkillResult skillResult = handler.castOnTarget(source, skillContext, target);
+        SkillResult skillResult = handler.castOnTarget(source, skillContext, target, this);
         return skillResult == null ? SkillResult.OK : skillResult;
     }
 
@@ -42,16 +42,6 @@ public class TargetedScriptSkill extends TargetedEntitySkill implements ITargete
     @Override
     public void setModel(ScriptSkillModel model) {
         this.model = model;
-        setDamageType(model.getDamageType());
-        setCatalogId(model.getId());
-        List<String> configTypes = model.getSkillTypes();
-        for (String configType : configTypes) {
-            Optional<ISkillType> skillType = Rpg.get().getSkillService().getSkillType(configType);
-            if (skillType.isPresent()) {
-                addSkillType(skillType.get());
-            } else {
-                Log.warn("Unknown skill type " + configType);
-            }
-        }
+        initFromModel();
     }
 }

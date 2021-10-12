@@ -19,6 +19,7 @@ import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.common.scripting.NTScriptEngine;
 import cz.neumimto.rpg.common.scripting.SkillScriptHandlers;
 import cz.neumimto.rpg.common.skills.scripting.ActiveScriptSkill;
+import cz.neumimto.rpg.common.skills.scripting.PassiveScriptSkillHandler;
 import cz.neumimto.rpg.common.skills.scripting.ScriptSkillModel;
 import cz.neumimto.rpg.common.skills.tree.SkillTree;
 import cz.neumimto.rpg.common.skills.tree.SkillType;
@@ -185,63 +186,41 @@ public abstract class SkillService {
 
         if (scriptSkillModel.getHandlerId().equalsIgnoreCase("nts")) {
             try {
-                Log.info("Compiling nts script " + scriptSkillModel.getId());
+
+                Class c = null;
+
+                String s = String.valueOf(scriptSkillModel.getSuperType()).toLowerCase();
+                if ("a".equalsIgnoreCase(s) || "active".equalsIgnoreCase(s)) {
+                    c = SkillScriptHandlers.Active.class;
+                } else if ("t".equalsIgnoreCase(s) || "targeted".equalsIgnoreCase(s)) {
+                    c = SkillScriptHandlers.Targetted.class;
+                } else if ("p".equalsIgnoreCase(s) || "passive".equalsIgnoreCase(s)) {
+                    c = SkillScriptHandlers.Passive.class;
+                }
+
+                if (c == null) {
+                    c = SkillScriptHandlers.Active.class;
+                    Log.info("Unknown SuperType " + scriptSkillModel.getSuperType());
+                }
+
+                Log.info("Compiling nts script " + scriptSkillModel.getId() + " as " + c.getSimpleName());
+
                 Class<? extends SkillScriptHandlers.Active> generate = getNtScriptCompilerFor(SkillScriptHandlers.Active.class).compile(scriptSkillModel.getScript());
                 if (generate == null) {
                     Log.error("Unable to generate script " + scriptSkillModel.getId());
                 }
                 SkillScriptHandlers.Active instance = injector.getInstance(generate);
-                ScriptSkill s = getSkillByHandlerType(instance);
-            } catch (Exception e) {
+                ScriptSkill ss = getSkillByHandlerType(instance);
+                ss.setModel(scriptSkillModel);
+                ss.setHandler(instance);
+                injector.injectMembers(ss);
+                injectCatalogId((ISkill) ss, scriptSkillModel.getId());
+                return (ISkill) ss;
+
+            } catch (Throwable e) {
                 Log.error("Unable to compile script " + scriptSkillModel.getId(), e);
             }
-        } else {
-            SkillScriptHandlers type = getSkillHandler(scriptSkillModel.getHandlerId());
-            if (type == null) {
-                warn("Could not load skill " + scriptSkillModel.getId() + " unknown handler " + scriptSkillModel.getHandlerId());
-                return null;
-            }
 
-            //todo
-            Class subClass = null;
-            if (type instanceof SkillScriptHandlers.Active) {
-                subClass = ActiveScriptSkill.class;
-            } else if (type instanceof SkillScriptHandlers.Passive) {
-                subClass = PassiveScriptSkill.class;
-            } else if (type instanceof SkillScriptHandlers.Targetted) {
-                //todo
-            }
-
-            String name = scriptSkillModel.getId();
-            name = name.replaceAll("[\\W]", "");
-            Class sk = new ByteBuddy()
-                    .subclass(subClass)
-                    .name("cz.neumimto.skills.scripts." + name)
-                    .annotateType(AnnotationDescription.Builder.ofType(ResourceLoader.Skill.class)
-                            .define("value", scriptSkillModel.getId())
-                            .build())
-                    .make()
-                    .load(classLoader)
-                    .getLoaded();
-            try {
-
-                ScriptSkill s = (ScriptSkill) injector.getInstance(sk);
-                s.setHandler(type);
-                SkillSettings settings = new SkillSettings();
-                ((ISkill) s).setSettings(settings);
-                injectCatalogId((ISkill) s, scriptSkillModel.getId());
-                s.setModel(scriptSkillModel);
-                if (Rpg.get().getPluginConfig().DEBUG.isDevelop()) {
-                    info("-------- Created skill from skill def.");
-                    info("+ ClassName " + s.getClass().getName());
-                    info("+ ClassLoader " + s.getClass().getClassLoader());
-                    info("+ Handler Id " + s.getModel().getHandlerId());
-                    info("+ Type " + subClass.getSimpleName());
-                }
-                return (ISkill) s;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
         return null;
     }

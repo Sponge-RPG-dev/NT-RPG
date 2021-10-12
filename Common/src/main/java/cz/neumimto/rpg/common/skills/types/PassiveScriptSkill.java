@@ -24,11 +24,7 @@ public class PassiveScriptSkill extends PassiveSkill implements IPassiveScriptSk
 
     @Override
     public void applyEffect(PlayerSkillContext context, IActiveCharacter character) {
-        Bindings bindings = new SimpleBindings();
-        bindings.put("_context", context);
-        bindings.put("_caster", character);
-
-        handler.init(character, context);
+        handler.init(character, context, this);
     }
 
 
@@ -45,16 +41,6 @@ public class PassiveScriptSkill extends PassiveSkill implements IPassiveScriptSk
     @Override
     public void setModel(ScriptSkillModel model) {
         this.model = model;
-        setDamageType(model.getDamageType());
-        setCatalogId(model.getId());
-        List<String> configTypes = model.getSkillTypes();
-        for (String configType : configTypes) {
-            Optional<ISkillType> skillType = Rpg.get().getSkillService().getSkillType(configType);
-            if (skillType.isPresent()) {
-                addSkillType(skillType.get());
-            } else {
-                Log.warn("Unknown skill type " + configType);
-            }
-        }
+        initFromModel();
     }
 }

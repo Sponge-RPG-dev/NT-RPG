@@ -12,8 +12,8 @@ public class SkillCommons implements NTScriptProxy {
     @Handler
     @Function("config_value")
     public double configValue(
-            @NamedParam("ctx") PlayerSkillContext skillContext,
-            @NamedParam("key") String key
+            @NamedParam("c|ctx") PlayerSkillContext skillContext,
+            @NamedParam("k|key") String key
     ) {
         return skillContext.getDoubleNodeValue(key);
     }

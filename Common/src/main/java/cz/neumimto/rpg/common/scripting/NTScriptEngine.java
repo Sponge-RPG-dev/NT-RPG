@@ -5,6 +5,8 @@ import com.google.inject.Key;
 import cz.neumimto.nts.NTScript;
 import cz.neumimto.nts.annotations.ScriptMeta;
 import cz.neumimto.rpg.common.assets.AssetService;
+import cz.neumimto.rpg.common.effects.IEffect;
+import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.common.scripting.mechanics.NTScriptProxy;
 import cz.neumimto.rpg.common.skills.SkillResult;
 import cz.neumimto.rpg.common.skills.types.ScriptSkill;
@@ -74,9 +76,39 @@ public class NTScriptEngine {
 
     public List<Object> getStl() {
         List<Object> list = new ArrayList<>();
+
+        //instances
         ServiceLoader.load(NTScriptProxy.class, getClass().getClassLoader()).stream()
                 .map(ServiceLoader.Provider::get)
                 .forEach(a-> list.add(injector.getInstance(a.getClass())));
+
+        //types
+        try {
+            ServiceLoader.load(IEffect.class, getClass().getClassLoader()).stream()
+                    .map(ServiceLoader.Provider::type) //java bug | java 16.0.2
+                    .forEach(list::add);
+
+        } catch (Throwable t) {
+            Log.info("Java service provider bug still present, doing it the stupid way");
+
+            try {
+                list.add(Class.forName("cz.neumimto.rpg.spigot.effects.common.BleedingEffect"));
+                list.add(Class.forName("cz.neumimto.rpg.spigot.effects.common.FeatherFall"));
+                list.add(Class.forName("cz.neumimto.rpg.spigot.effects.common.Maim"));
+                list.add(Class.forName("cz.neumimto.rpg.spigot.effects.common.ManaShieldEffect"));
+                list.add(Class.forName("cz.neumimto.rpg.spigot.effects.common.NoAutohealEffect"));
+                list.add(Class.forName("cz.neumimto.rpg.spigot.effects.common.PiggifyEffect"));
+                list.add(Class.forName("cz.neumimto.rpg.spigot.effects.common.SlowEffect"));
+                list.add(Class.forName("cz.neumimto.rpg.spigot.effects.common.StunEffect"));
+                list.add(Class.forName("cz.neumimto.rpg.spigot.effects.common.UnhealEffect"));
+                list.add(Class.forName("cz.neumimto.rpg.spigot.effects.common.UnlimtedFoodLevelEffect"));
+                list.add(Class.forName("cz.neumimto.rpg.spigot.effects.common.WebEffect"));
+            } catch (Exception e) {
+
+            }
+        }
+
+
         return list;
     }
 

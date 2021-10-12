@@ -24,7 +24,7 @@ public class ActiveScriptSkill extends ActiveSkill<IActiveCharacter> implements 
 
     @Override
     public SkillResult cast(IActiveCharacter character, PlayerSkillContext context) {
-        SkillResult result = handler.onCast(character, context);
+        SkillResult result = handler.onCast(character, context, this);
         return result == null ? SkillResult.OK : result;
     }
 
@@ -40,19 +40,6 @@ public class ActiveScriptSkill extends ActiveSkill<IActiveCharacter> implements 
 
     public void setModel(ScriptSkillModel model) {
         this.model = model;
-        setDamageType(model.getDamageType());
-        setCatalogId(model.getId());
-        List<String> configTypes = model.getSkillTypes();
-
-        if (configTypes != null) {
-            for (String configType : configTypes) {
-                Optional<ISkillType> skillType = Rpg.get().getSkillService().getSkillType(configType);
-                if (skillType.isPresent()) {
-                    addSkillType(skillType.get());
-                } else {
-                    Log.warn("Unknown skill type " + configType);
-                }
-            }
-        }
+        initFromModel();
     }
 }
