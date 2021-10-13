@@ -31,9 +31,9 @@ public class Targetting implements NTScriptProxy {
 
     @Function("find_nearby_entities")
     @Handler
-    public Collection<IEntity> find(@NamedParam("entity") ISpigotEntity around,
-                                    @NamedParam("radius") float radius,
-                                    @NamedParam("damageCheck") boolean damageCheck) {
+    public Collection<IEntity> find(@NamedParam("e|entity") ISpigotEntity around,
+                                    @NamedParam("r|radius") float radius,
+                                    @NamedParam("d|damageCheck") boolean damageCheck) {
         Set<IEntity> entities = new HashSet<>();
         LivingEntity entity = around.getEntity();
         for (Entity nearbyEntity : entity.getNearbyEntities(radius, radius, radius)) {
@@ -52,7 +52,7 @@ public class Targetting implements NTScriptProxy {
 
     @Handler
     @Function("targetted_entity")
-    public IEntity getTarget(@NamedParam("ef|entity_from") ISpigotEntity entity,
+    public IEntity getTarget(@NamedParam("e|entity_from") ISpigotEntity entity,
                              @NamedParam("d|distance") double maxDistance) {
         if (maxDistance <= 0.0) {
             return null;

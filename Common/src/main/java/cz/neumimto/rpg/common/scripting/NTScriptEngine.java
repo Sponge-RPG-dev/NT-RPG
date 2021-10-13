@@ -64,6 +64,7 @@ public class NTScriptEngine {
                 .implementingType(type)
                 .add(stĺ)
                 .debugOutput("/tmp")
+                .logging(Log::warn)
                 .package_("cz.neumimto.rpg.script.skills")
                 .setClassNamePattern("SkillHandler")
                 .build();

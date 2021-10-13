@@ -205,11 +205,11 @@ public abstract class SkillService {
 
                 Log.info("Compiling nts script " + scriptSkillModel.getId() + " as " + c.getSimpleName());
 
-                Class<? extends SkillScriptHandlers.Active> generate = getNtScriptCompilerFor(SkillScriptHandlers.Active.class).compile(scriptSkillModel.getScript());
+                Class<? extends SkillScriptHandlers> generate = getNtScriptCompilerFor(c).compile(scriptSkillModel.getScript());
                 if (generate == null) {
                     Log.error("Unable to generate script " + scriptSkillModel.getId());
                 }
-                SkillScriptHandlers.Active instance = injector.getInstance(generate);
+                SkillScriptHandlers instance = injector.getInstance(generate);
                 ScriptSkill ss = getSkillByHandlerType(instance);
                 ss.setModel(scriptSkillModel);
                 ss.setHandler(instance);
@@ -284,6 +284,7 @@ public abstract class SkillService {
         SkillsDefinition definition = new ObjectConverter().toObject(config, SkillsDefinition::new);
         definition.getSkills().stream()
                 .map(a -> skillDefinitionToSkill(a, urlClassLoader))
+                .filter(Objects::nonNull)
                 .forEach(a -> registerAdditionalCatalog(a));
     }
 
