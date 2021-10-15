@@ -9,6 +9,7 @@ import de.slikey.effectlib.effect.LineEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.util.Vector;
 
@@ -25,6 +26,16 @@ public class Particles implements NTScriptProxy {
     public void spawnLigting(@NamedParam("e|at_entity") ISpigotEntity entity) {
         Location location = entity.getEntity().getLocation();
         location.getWorld().strikeLightningEffect(location);
+    }
+
+    @Handler
+    @Function("particle")
+    public void spawnParticle(@NamedParam("s|sound") Sound sound,
+                              @NamedParam("l|location") Location l,
+                              @NamedParam("v|volume") float volume,
+                              @NamedParam("p|pitch") float pitch) {
+        l.getWorld().playSound(l, sound, volume, pitch);
+
     }
 
     @Handler

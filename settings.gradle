@@ -1,3 +1,13 @@
+pluginManagement {
+    repositories {
+        maven {
+            url "https://papermc.io/repo/repository/maven-public/"
+        }
+        gradlePluginPortal()
+        //maven("https://repo.jpenilla.xyz/snapshots/")
+    }
+}
+
 rootProject.name = 'NtRpgParent'
 
 include ':Generator'

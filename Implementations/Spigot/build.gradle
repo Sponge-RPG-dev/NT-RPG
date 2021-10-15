@@ -1,6 +1,7 @@
 plugins {
     id 'java-library'
     id 'com.github.johnrengelman.shadow' version '7.0.0'
+    id "io.papermc.paperweight.userdev" version "1.1.12"
 }
 
 repositories {
@@ -29,26 +30,21 @@ group = 'cz.neumimto.rpg'
 version = project.p_spigot_version
 
 dependencies {
-    compileOnly 'com.google.auto.service:auto-service:1.0'
-    annotationProcessor 'com.google.auto.service:auto-service:1.0'
-    compileOnly 'com.google.auto.service:auto-service-annotations:1.0'
+    implementation fileTree(dir: 'lib-cp', include: '*.jar')
+    compileOnly fileTree(dir: 'lib', include: '*.jar')
+
+    paperweightDevelopmentBundle("io.papermc.paper:dev-bundle:1.17.1-R0.1-SNAPSHOT")
 
     annotationProcessor project(':Generator')
 
     api project(':Common')
     api project(':FlatFiles-Persistence')
-    api 'de.tr7zw:item-nbt-api-plugin:' + project.nbtapi
 
     compileOnly project(':Bootstrap-Common')
 
+    api 'de.tr7zw:item-nbt-api-plugin:' + project.nbtapi
+
     // api 'com.github.stefvanschie.inventoryframework:IF:' + project.if
-
-
-    // runtimeOnly fileTree(dir: 'lib', include: '*.jar')
-    implementation fileTree(dir: 'lib-cp', include: '*.jar')
-    compileOnly fileTree(dir: 'lib', include: '*.jar')
-
-    compileOnly "org.spigotmc:spigot-api:" + project.spigotapi
 
     compileOnly("org.spigotmc:plugin-annotations:" + project.pluginannotations) {
         exclude group: "org.bukkit", module: "bukkit"
@@ -58,7 +54,6 @@ dependencies {
         exclude group: "com.comphenix.executors", module: "BukkitExecutors"
     }
 
-    //runtimeOnly 'com.github.dmulloy2:ProtocolLib:master'
     api 'com.elmakers.mine.bukkit:EffectLib:' + project.effectlib
     //  compileOnly 'placeholderapi.me.clip:placeholderapi:' + project.papi
     compileOnly 'com.gmail.filoghost.holographicdisplays:holographicdisplays-api:' + project.hdisplays
@@ -100,6 +95,7 @@ shadowJar {
     mergeServiceFiles()
 }
 
+build.dependsOn reobfJar
 build.dependsOn shadowJar
 build.mustRunAfter tasks.getByPath(':Common:build')
 build.mustRunAfter tasks.getByPath(':FlatFiles-Persistence:build')

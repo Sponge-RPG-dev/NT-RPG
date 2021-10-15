@@ -31,17 +31,4 @@ public class EntitiesM implements NTScriptProxy {
         return entityService.healEntity(target, amount, skill);
     }
 
-    @Handler
-    @Function("damage")
-    public boolean damage(
-                    @NamedParam("t|target") IEntity target,
-                    @NamedParam("e|damager") IEntity damager,
-                    @NamedParam("d|damage") double damage) {
-
-      //  if (damageService.canDamage()) {
-      //      damageService.damageEntity(target, damage);
-      //  }
-        return true;
-    }
-
 }

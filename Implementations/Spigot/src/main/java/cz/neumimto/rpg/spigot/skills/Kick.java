@@ -7,6 +7,7 @@ import cz.neumimto.rpg.common.skills.ISkill;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.skills.SkillNodes;
 import cz.neumimto.rpg.common.skills.SkillResult;
+import cz.neumimto.rpg.common.skills.tree.SkillType;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
@@ -33,7 +34,7 @@ public class Kick extends TargetedEntitySkill {
     public void init() {
         super.init();
         setDamageType(EntityDamageEvent.DamageCause.CONTACT.name());
-
+        addSkillType(SkillType.PHYSICAL);
         settings.addNode(SkillNodes.DAMAGE, 15);
     }
 
