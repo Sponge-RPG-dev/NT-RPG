@@ -17,7 +17,6 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_17_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_17_R1.entity.CraftLivingEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -56,19 +55,10 @@ public class SpigotEntitiesM implements NTScriptProxy {
     @ScriptMeta.Function("set_velocity")
     public void setVelocity(
             @NamedParam("t|target") IEntity target,
-            @NamedParam("x") double x,
-            @NamedParam("y") double y,
-            @NamedParam("z") double z,
-            @NamedParam("r|randomize") boolean r,
-            @NamedParam("rx") double rx,
-            @NamedParam("rz") double rz
+            @NamedParam("v|vector") Vector v
     ) {
         LivingEntity livingEntity = (LivingEntity) target.getEntity();
-        if (r) {
-            livingEntity.setVelocity(new Vector(x,y,z));
-        } else {
-            livingEntity.setVelocity(new Vector(Math.random() * 0.4 - 0.2, 0.8, Math.random() * 0.4 - 0.2));
-        }
+        livingEntity.setVelocity(v);
     }
 
     @Handler

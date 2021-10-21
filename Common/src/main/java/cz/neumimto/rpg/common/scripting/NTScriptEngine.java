@@ -17,6 +17,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
 @Singleton
@@ -34,14 +35,14 @@ public class NTScriptEngine {
         return compilers.containsKey(c);
     }
 
-    public NTScript prepareCompiler(List<Object> stl, Class<? extends SkillScriptHandlers> type) {
+    public NTScript prepareCompiler(Consumer<NTScript.Builder> builder, Class<? extends SkillScriptHandlers> type) {
        if (!compilers.containsKey(type)) {
-           compilers.put(type, scriptContextForSkills(stl, type));
+           compilers.put(type, scriptContextForSkills(builder, type));
        }
        return compilers.get(type);
     }
 
-    public NTScript scriptContextForSkills(List<Object> stĺ, Class type) {
+    public NTScript scriptContextForSkills(Consumer<NTScript.Builder> builder, Class type) {
         String macros = assetService.getAssetAsString("defaults/nts.macros");
 
         Map<Pattern, String> macrosMap = new HashMap<>();
@@ -55,24 +56,22 @@ public class NTScriptEngine {
             e.printStackTrace();
         }
 
-        return NTScript.builder()
+        NTScript.Builder n = NTScript.builder()
                 .implementingType(ScriptSkill.class)
                 .classAnnotations(new Class[]{Singleton.class})
                 .fieldAnnotation(new Class[]{Inject.class})
                 .macro(macrosMap)
                 .withEnum(SkillResult.class)
                 .implementingType(type)
-                .add(stĺ)
+                .add(getStl())
                 .debugOutput("/tmp")
                 .logging(Log::warn)
                 .package_("cz.neumimto.rpg.script.skills")
-                .setClassNamePattern("SkillHandler")
-                .build();
-    }
+                .setClassNamePattern("SkillHandler");
 
-    public <T extends SkillScriptHandlers> Class<? extends T> compile(String script, Class<T> type) {
-        NTScript compiler = prepareCompiler(getStl(), type);
-        return (Class<? extends T>) compiler.compile(script);
+        builder.accept(n);
+
+        return n.build();
     }
 
     public List<Object> getStl() {

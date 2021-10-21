@@ -52,19 +52,19 @@ public abstract class SkillService {
     protected Map<String, ISkillType> skillTypes = new HashMap<>();
 
     @Inject
-    private SkillTreeDao skillTreeDao;
+    protected SkillTreeDao skillTreeDao;
 
     @Inject
-    private ClassService classService;
+    protected ClassService classService;
 
     @Inject
-    private Injector injector;
+    protected Injector injector;
 
     @Inject
-    private AssetService assetService;
+    protected AssetService assetService;
 
     @Inject
-    private NTScriptEngine ntScriptEngine;
+    protected NTScriptEngine ntScriptEngine;
 
     private Map<String, SkillScriptHandlers> skillHandlers = new HashMap<>();
 
@@ -172,15 +172,8 @@ public abstract class SkillService {
         skillByNames.put(name, skill);
     }
 
-    public NTScript getNtScriptCompilerFor(Class<? extends SkillScriptHandlers> c) {
-        return ntScriptEngine.prepareCompiler(getScriptSTL(), c);
-    }
 
-    private List<Object> getScriptSTL() {
-        List<Object> list = new ArrayList<>();
-        list.addAll(ntScriptEngine.getStl());
-        return list;
-    }
+    public abstract NTScript getNtScriptCompilerFor(Class<? extends SkillScriptHandlers> c);
 
     public ISkill skillDefinitionToSkill(ScriptSkillModel scriptSkillModel, ClassLoader classLoader) {
 
