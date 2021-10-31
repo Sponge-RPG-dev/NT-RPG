@@ -9,7 +9,6 @@ import cz.neumimto.rpg.common.effects.IEffect;
 import cz.neumimto.rpg.common.entity.IEffectConsumer;
 import cz.neumimto.rpg.spigot.effects.common.model.SlowModel;
 import cz.neumimto.rpg.spigot.entities.ISpigotEntity;
-import net.Indyuce.mmoitems.ability.onhit.Slow;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;

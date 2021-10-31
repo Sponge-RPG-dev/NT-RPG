@@ -4,11 +4,12 @@ import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.common.skills.ISkill;
 import cz.neumimto.rpg.common.utils.DebugLevel;
 import cz.neumimto.rpg.common.skills.SkillConfigLoader;
-import net.Indyuce.mmoitems.api.ability.Ability;
+import net.Indyuce.mmoitems.ability.Ability;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 public class MMOItemWrapperFactory {
 
@@ -43,7 +44,8 @@ public class MMOItemWrapperFactory {
         }
         skill.setAbility(ability);
         Log.info(" - Settings: " + lowerCaseID, DebugLevel.BALANCE);
-        for (String s : skill.getAbility().getModifiers()) {
+        Set<String> modifiers = skill.getAbility().getModifiers();
+        for (String s : modifiers) {
             if (s.equals("mana") || s.equals("stamina") || s.equals("cooldown")) {
                 continue;
             }

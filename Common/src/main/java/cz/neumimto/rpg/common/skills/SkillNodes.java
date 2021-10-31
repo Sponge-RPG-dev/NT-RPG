@@ -24,7 +24,8 @@ public enum SkillNodes implements ISkillNode {
     HEALED_AMOUNT("healed_amount"),
     AMPLIFIER("amplifier"),
     MAX("max"),
-    DISTANCE("distance");
+    DISTANCE("distance"),
+    GRAVITY("gravity");
     private final String str;
 
     SkillNodes(String str) {

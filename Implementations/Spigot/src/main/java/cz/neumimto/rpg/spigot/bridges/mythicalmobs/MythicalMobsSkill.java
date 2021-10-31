@@ -4,7 +4,7 @@ import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.skills.SkillResult;
 import cz.neumimto.rpg.common.skills.types.ActiveSkill;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
-import io.lumine.mythic.lib.api.DamageType;
+import io.lumine.mythic.lib.damage.DamageType;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.skills.Skill;
 import org.bukkit.entity.Player;
