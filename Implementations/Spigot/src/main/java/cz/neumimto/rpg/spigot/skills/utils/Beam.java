@@ -7,7 +7,6 @@ import cz.neumimto.rpg.common.events.skill.SkillTargetAttemptEvent;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.events.skill.SpigotSkillTargetAttemptEvent;
-import cz.neumimto.rpg.spigot.utils.MutableBoundingBox;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.LivingEntity;

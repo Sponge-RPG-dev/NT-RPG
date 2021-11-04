@@ -13,8 +13,6 @@ public abstract class BeamSkill extends ActiveSkill<ISpigotCharacter> {
     protected Beam.OnEntityHit onEntityHit;
     protected Beam.OnHitGround onHitGround;
     protected double step = 0.5;
-    protected double gravity;
-    protected double maxDistance;
 
     @Override
     public void init() {

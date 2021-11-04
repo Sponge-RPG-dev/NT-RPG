@@ -1,7 +1,7 @@
 plugins {
     id 'java-library'
     id 'com.github.johnrengelman.shadow' version '7.0.0'
-    id "io.papermc.paperweight.userdev" version "1.1.12"
+    id "xyz.jpenilla.run-paper" version "1.0.4"
 }
 
 repositories {
@@ -33,13 +33,11 @@ dependencies {
     implementation fileTree(dir: 'lib-cp', include: '*.jar')
     compileOnly fileTree(dir: 'lib', include: '*.jar')
 
-    paperweightDevelopmentBundle("io.papermc.paper:dev-bundle:1.17.1-R0.1-SNAPSHOT")
-
     annotationProcessor project(':Generator')
 
     api project(':Common')
     api project(':FlatFiles-Persistence')
-
+    api project(":Spigot-NMS")
     compileOnly project(':Bootstrap-Common')
 
     api 'de.tr7zw:item-nbt-api-plugin:' + project.nbtapi
@@ -58,6 +56,7 @@ dependencies {
     //  compileOnly 'placeholderapi.me.clip:placeholderapi:' + project.papi
     compileOnly 'com.gmail.filoghost.holographicdisplays:holographicdisplays-api:' + project.hdisplays
     compileOnly "co.aikar:acf-paper:" + project.acf
+    compileOnly "io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT"
 
   // compileOnly('net.Indyuce:MMOItems:' + project.mmoitems) {
   //     exclude group: 'com.mojang', module: 'authlib'
@@ -95,8 +94,42 @@ shadowJar {
     mergeServiceFiles()
 }
 
-build.dependsOn reobfJar
+import org.gradle.api.internal.tasks.DefaultTaskOutputs
+
+import java.nio.file.Files
+import java.nio.file.Paths
+import java.nio.file.StandardCopyOption;
+
+task copyNMSImpl {
+    DefaultTaskOutputs output = project(':Spigot-117').jar.outputs
+    boolean found = false;
+    for (File file : output.getFiles()) {
+        for (File f : file.getParentFile().listFiles(new FilenameFilter() {
+            @Override
+            boolean accept(File directory, String name) {
+                if (name.endsWith("dev.jar") || name.endsWith("sources.jar")) {
+                    return false
+                }
+                return  true;
+            }
+        })) {
+            Project spigot = project(":Spigot")
+            var p = spigot.file("lib-cp/").toPath()
+            try {
+                Files.copy(f.toPath(), p.resolve(f.getName()), StandardCopyOption.REPLACE_EXISTING);
+            } catch (Exception e) {
+                e.printStackTrace()
+            }
+            found = true;
+            break;
+        }
+        break;
+    }
+}
+
+build.dependsOn copyNMSImpl
 build.dependsOn shadowJar
 build.mustRunAfter tasks.getByPath(':Common:build')
+build.mustRunAfter tasks.getByPath(':Spigot-117:build')
 build.mustRunAfter tasks.getByPath(':FlatFiles-Persistence:build')
 

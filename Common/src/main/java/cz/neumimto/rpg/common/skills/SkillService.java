@@ -74,8 +74,8 @@ public abstract class SkillService {
 
     public void load() {
         skillTrees.clear();
-        skillTrees.putAll(skillTreeDao.getAll());
         reloadSkills();
+        skillTrees.putAll(skillTreeDao.getAll());
     }
 
     public Map<String, ISkill> getSkills() {
@@ -278,7 +278,7 @@ public abstract class SkillService {
         definition.getSkills().stream()
                 .map(a -> skillDefinitionToSkill(a, urlClassLoader))
                 .filter(Objects::nonNull)
-                .forEach(a -> registerAdditionalCatalog(a));
+                .forEach(this::registerAdditionalCatalog);
     }
 
     public void reloadSkills() {

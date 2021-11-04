@@ -8,9 +8,11 @@ import cz.neumimto.rpg.common.skills.types.ScriptSkill;
 import cz.neumimto.rpg.common.skills.SkillService;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.util.Vector;
 
 import javax.inject.Singleton;
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,7 +57,9 @@ public class SpigotSkillService extends SkillService {
         return ntScriptEngine.prepareCompiler(builder -> {
             try {
                 builder
-                    .add(Vector.class.getConstructor(double.class, double.class, double.class), List.of("x","y","z"))
+                    .withEnum(Particle.class)
+
+                    .add(Vector.class.getConstructor(double.class, double.class, double.class), "vector", List.of("x","y","z"))
 
                     .add(Math.class.getDeclaredMethod("max", double.class, double.class), List.of("a","b"))
                     .add(Math.class.getDeclaredMethod("min", double.class, double.class), List.of("a","b"))
@@ -80,6 +84,7 @@ public class SpigotSkillService extends SkillService {
                     .add(Math.class.getDeclaredMethod("cos", double.class), List.of("a"))
                     .add(Math.class.getDeclaredMethod("cosh", double.class), List.of("a"))
                     .add(Math.class.getDeclaredMethod("acos", double.class), List.of("a"))
+                    .debugOutput(Rpg.get().getWorkingDirectory() + File.separator + "/compiled-scripts")
                     ;
             } catch (Throwable t) {
                 t.printStackTrace();

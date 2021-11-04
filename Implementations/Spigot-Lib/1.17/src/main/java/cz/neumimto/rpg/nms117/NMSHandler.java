@@ -1,10 +1,6 @@
-package cz.neumimto.rpg.spigot.scripting.mechanics;
+package cz.neumimto.rpg.nms117;
 
 import com.google.auto.service.AutoService;
-import cz.neumimto.nts.annotations.ScriptMeta;
-import cz.neumimto.rpg.common.entity.IEntity;
-import cz.neumimto.rpg.common.scripting.mechanics.NTScriptProxy;
-import cz.neumimto.rpg.common.skills.ISkill;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
@@ -15,86 +11,36 @@ import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Arrow;
+import net.minecraft.world.entity.projectile.FireworkRocketEntity;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.projectile.WitherSkull;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_17_R1.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_17_R1.event.CraftEventFactory;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Trident;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
-import org.bukkit.util.Vector;
 
-import javax.inject.Singleton;
+import static org.bukkit.event.entity.EntityDamageEvent.DamageCause.*;
 
-import static cz.neumimto.nts.annotations.ScriptMeta.Handler;
-import static cz.neumimto.nts.annotations.ScriptMeta.NamedParam;
+@AutoService(cz.neumimto.rpg.nms.NMSHandler.class)
+public class NMSHandler extends cz.neumimto.rpg.nms.NMSHandler {
 
-@Singleton
-@AutoService(NTScriptProxy.class)
-public class SpigotEntitiesM implements NTScriptProxy {
-
-    @Handler
-    @ScriptMeta.Function("get_location")
-    public Location getLocation(
-            @NamedParam("e|entity") IEntity e
-    ) {
-        return ((LivingEntity)e.getEntity()).getLocation();
+    @Override
+    public String getVersion() {
+        return "1.17";
     }
 
-    @Handler
-    @ScriptMeta.Function("teleport")
-    public void teleport(
-            @NamedParam("e|entity") IEntity e,
-            @NamedParam("l|location") Location l
-    ) {
-        ((LivingEntity)e.getEntity()).teleport(l, PlayerTeleportEvent.TeleportCause.COMMAND);
-    }
-
-    @Handler
-    @ScriptMeta.Function("set_velocity")
-    public void setVelocity(
-            @NamedParam("t|target") IEntity target,
-            @NamedParam("v|vector") Vector v
-    ) {
-        LivingEntity livingEntity = (LivingEntity) target.getEntity();
-        livingEntity.setVelocity(v);
-    }
-
-    @Handler
-    @ScriptMeta.Function("damage")
-    public boolean damage(
-            @NamedParam("t|target") IEntity target,
-            @NamedParam("e|damager") IEntity damager,
-            @NamedParam("d|damage") double damage,
-            @NamedParam("k|knockback") double knockback,
-            @NamedParam("c|cause") EntityDamageEvent.DamageCause cause,
-            @NamedParam("s|skill") ISkill e) {
-
-        LivingEntity tEntity = (LivingEntity) target.getEntity();
-
-        if (tEntity.getHealth() <= 0) {
-            return false;
-        }
-
-        LivingEntity dEntity = (LivingEntity) damager.getEntity();
-
-        if (cause == null && e.getDamageType() != null) {
-            cause = EntityDamageEvent.DamageCause.valueOf(e.getDamageType());
-        } else {
-            cause = EntityDamageEvent.DamageCause.ENTITY_ATTACK;
-        }
-
-        EntityDamageEvent event = handleEntityDamageEvent(tEntity, dEntity, cause, damage, knockback);
-        return !event.isCancelled() && event.getFinalDamage() > 0;
-    }
-
-    public static EntityDamageEvent handleEntityDamageEvent(LivingEntity target,
-                                                            LivingEntity damager,
-                                                            EntityDamageEvent.DamageCause source,
-
-                                                            double damage,
-                                                            double knockbackPower) {
+    @Override
+    public EntityDamageEvent handleEntityDamageEvent(LivingEntity target,
+                                                     LivingEntity damager,
+                                                     EntityDamageEvent.DamageCause source,
+                                                     double damage,
+                                                     double knockbackPower) {
 
         EntityDamageEvent event = new EntityDamageByEntityEvent(damager, target, source, damage);
 
@@ -111,6 +57,9 @@ public class SpigotEntitiesM implements NTScriptProxy {
             newHealth = 0.0D;
         }
 
+        // ServerLevel level = MinecraftServer.getServer().getLevel(ResourceKey.create());
+        // Entity entity = level.getEntity(damager.getUniqueId());
+
         net.minecraft.world.entity.LivingEntity ed = ((CraftLivingEntity) damager).getHandle();
         net.minecraft.world.entity.LivingEntity el = ((CraftLivingEntity) target).getHandle();
         if (el.isDeadOrDying() || el.isRemoved()) {
@@ -123,7 +72,6 @@ public class SpigotEntitiesM implements NTScriptProxy {
          */
 
         el.lastHurt = (float) event.getDamage();
-//        el.hurtTicks = el.ax = 10;
         el.invulnerableTime = el.invulnerableDuration;
         el.hurtDuration = 10;
         el.hurtTime = el.hurtDuration;
@@ -184,17 +132,92 @@ public class SpigotEntitiesM implements NTScriptProxy {
         return event;
     }
 
-    private static DamageSource dmgSourceFromCause(EntityDamageEvent.DamageCause source, net.minecraft.world.entity.LivingEntity attacker) {
+    private static DamageSource dmgSourceFromCause(EntityDamageEvent.DamageCause damageCause,
+                                                   net.minecraft.world.entity.Entity attackingEntity) {
+        switch (damageCause) {
+            case CONTACT:
+                return DamageSource.CACTUS;
+            case ENTITY_ATTACK:
+                if (attackingEntity instanceof Player p) {
+                    return DamageSource.playerAttack(p);
+                }
+                return DamageSource.mobAttack((net.minecraft.world.entity.LivingEntity) attackingEntity);
+            case ENTITY_SWEEP_ATTACK:
+                if (attackingEntity instanceof Player p) {
+                    return DamageSource.playerAttack(p).sweep();
+                }
+                return DamageSource.mobAttack((net.minecraft.world.entity.LivingEntity) attackingEntity).sweep();
 
-        if (attacker instanceof Player p) {
-            return DamageSource.playerAttack(p);
-        } else {
-            return DamageSource.mobAttack(attacker);
+            case PROJECTILE:
+                if (attackingEntity instanceof Projectile projectile) {
+                    EntityType entityType = projectile.getType();
+                    if (entityType == EntityType.TRIDENT) {
+                        return DamageSource.trident(attackingEntity, projectile);
+                    } else if (entityType == EntityType.ARROW || entityType == EntityType.SPECTRAL_ARROW) {
+                        return DamageSource.arrow((Arrow) attackingEntity, projectile.getOwner());
+                    } else if (entityType == EntityType.SNOWBALL || entityType == EntityType.EGG ||
+                            entityType == EntityType.ENDER_PEARL || entityType == EntityType.POTION) {
+                        return DamageSource.indirectMobAttack(attackingEntity, (net.minecraft.world.entity.LivingEntity) projectile.getOwner());
+                    } else if (entityType == EntityType.FIREWORK_ROCKET) {
+                        return DamageSource.fireworks((FireworkRocketEntity) attackingEntity, projectile);
+                    } else if (entityType == EntityType.WITHER_SKULL) {
+                        return DamageSource.witherSkull((WitherSkull) attackingEntity, projectile);
+                    }
+                    return DamageSource.indirectMobAttack(projectile, (net.minecraft.world.entity.LivingEntity) projectile.getOwner());
+                }
+                return DamageSource.GENERIC;
+            case SUFFOCATION:
+                return DamageSource.IN_WALL;
+            case FALL:
+                return DamageSource.FALL;
+            case FIRE:
+                return DamageSource.IN_FIRE;
+            case FIRE_TICK:
+                return DamageSource.ON_FIRE;
+            case MELTING:
+                return CraftEventFactory.MELTING;
+            case LAVA:
+                return DamageSource.LAVA;
+            case DROWNING:
+                return DamageSource.DROWN;
+            case VOID:
+                return DamageSource.OUT_OF_WORLD;
+            case LIGHTNING:
+                return DamageSource.LIGHTNING_BOLT;
+            case STARVATION:
+                return DamageSource.STARVE;
+            case POISON:
+                return CraftEventFactory.POISON;
+            case MAGIC:
+                return DamageSource.MAGIC;
+            case WITHER:
+                return DamageSource.WITHER;
+            case FALLING_BLOCK:
+                return DamageSource.FALLING_BLOCK;
+            case THORNS:
+                if (attackingEntity == null) {
+                    return DamageSource.GENERIC;
+                }
+                return DamageSource.thorns(attackingEntity);
+            case DRAGON_BREATH:
+                return DamageSource.DRAGON_BREATH;
+            case CUSTOM:
+                return DamageSource.GENERIC;
+            case FLY_INTO_WALL:
+                return DamageSource.FLY_INTO_WALL;
+            case HOT_FLOOR:
+                return DamageSource.HOT_FLOOR;
+            case CRAMMING:
+                return DamageSource.CRAMMING;
+            case DRYOUT:
+                return DamageSource.DRY_OUT;
         }
+        return DamageSource.GENERIC;
     }
 
+
     public static SoundEvent getHurtSound(Entity entity) {
-        EntityType<?> type = entity.getType();
+        net.minecraft.world.entity.EntityType<?> type = entity.getType();
         if (type == EntityType.PLAYER) {
             return SoundEvents.PLAYER_HURT;
         }
@@ -423,5 +446,4 @@ public class SpigotEntitiesM implements NTScriptProxy {
         return SoundEvents.GENERIC_HURT;
 
     }
-
 }

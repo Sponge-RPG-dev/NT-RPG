@@ -4,7 +4,8 @@ import com.google.auto.service.AutoService;
 import cz.neumimto.rpg.common.ResourceLoader;
 import cz.neumimto.rpg.common.skills.ISkill;
 import cz.neumimto.rpg.common.skills.SkillNodes;
-import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
+import cz.neumimto.rpg.common.skills.tree.SkillType;
+import cz.neumimto.rpg.spigot.scripting.mechanics.SpigotEntityUtils;
 import cz.neumimto.rpg.spigot.skills.utils.Beam;
 import org.bukkit.Particle;
 import org.bukkit.entity.LivingEntity;
@@ -19,16 +20,18 @@ import javax.inject.Singleton;
 public class Dragonbreath extends BeamSkill {
 
     @Inject
-    private SpigotDamageService damageService;
+    private SpigotEntityUtils damageMechanic;
 
     @Override
     public void init() {
         super.init();
+        settings.addExpression(SkillNodes.DAMAGE, "10 + level * 2");
+        setDamageType(EntityDamageEvent.DamageCause.FIRE.name());
+        addSkillType(SkillType.AOE);
+        addSkillType(SkillType.FIRE);
         step = 1;
         onEntityHit = (target, tick, distance, caster, context, location) -> {
-            LivingEntity d = (LivingEntity) target.getEntity();
-            LivingEntity a = (LivingEntity) caster.getEntity();
-            damageService.damage(a,d, EntityDamageEvent.DamageCause.FIRE, context.getDoubleNodeValue(SkillNodes.DAMAGE),false);
+            damageMechanic.damage(target, caster, context.getDoubleNodeValue(SkillNodes.DAMAGE), 0, EntityDamageEvent.DamageCause.FIRE, this);
             return Beam.BeamActionResult.CONTINUE;
         };
         onTick = (tick, caster, distance, context, location) -> {
@@ -38,3 +41,4 @@ public class Dragonbreath extends BeamSkill {
         };
     }
 }
+
