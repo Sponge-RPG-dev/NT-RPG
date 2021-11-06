@@ -8,10 +8,8 @@ import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.events.skill.SpigotSkillTargetAttemptEvent;
 import org.bukkit.*;
-import org.bukkit.block.Block;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
 
 import java.util.HashSet;
@@ -38,7 +36,7 @@ public class Beam extends BukkitRunnable {
     private double step;
     private int tick;
     PlayerSkillContext playerSkillContext;
-
+    double beamDistance = 0;
 
     public Beam(IEntity caster,
                  double step, double gravityForce, double maxDistance,
@@ -46,7 +44,8 @@ public class Beam extends BukkitRunnable {
                  OnTick onTick, OnEntityHit onTarget, OnHitGround onHitGround) {
         this.caster = (LivingEntity) caster.getEntity();
         this.nCaster = caster;
-        this.startLoc = this.caster.getLocation().clone();
+        this.startLoc = this.caster.getEyeLocation().clone();
+        this.currentLoc = startLoc.clone();
         this.onTick = onTick;
         this.onTarget = onTarget;
         this.onHitGround = onHitGround;
@@ -63,19 +62,15 @@ public class Beam extends BukkitRunnable {
 
     @Override
     public void run() {
-        Vector startDir = startLoc.getDirection().normalize();
-
-        currentLoc = startLoc.clone();
-
         Vector dir = startLoc.getDirection().multiply(step);
 
         MutableBoundingBox box = new MutableBoundingBox(currentLoc, step /2);
 
-        float d = 0;
 
-        if (d < maxDistance) {
 
-            d += step;
+        if (beamDistance < maxDistance) {
+
+            beamDistance += step;
             currentLoc.add(dir);
 
             if (gravityForce != 0) {
@@ -85,14 +80,14 @@ public class Beam extends BukkitRunnable {
 
             if (!currentLoc.getBlock().isPassable()) {
                 if (onHitGround != null) {
-                    onHitGround.process(tick, d,nCaster, playerSkillContext, currentLoc);
+                    onHitGround.process(tick, beamDistance,nCaster, playerSkillContext, currentLoc);
                 }
                 super.cancel();
                 return;
             }
 
             if (onTick != null) {
-                onTick.process(tick, nCaster, d, playerSkillContext, currentLoc);
+                onTick.process(tick, nCaster, beamDistance, playerSkillContext, currentLoc);
             }
 
             box.moveAt(currentLoc);
@@ -115,7 +110,7 @@ public class Beam extends BukkitRunnable {
                 target = skillTargetAttemptEvent.getTarget();
 
                 if (onTarget != null) {
-                    BeamActionResult process = onTarget.process(target, tick, d, nCaster, playerSkillContext, currentLoc);
+                    BeamActionResult process = onTarget.process(target, tick, beamDistance, nCaster, playerSkillContext, currentLoc);
                     if (process == BeamActionResult.STOP) {
                         super.cancel();
                         return;

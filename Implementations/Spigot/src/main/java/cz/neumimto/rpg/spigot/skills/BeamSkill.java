@@ -23,11 +23,15 @@ public abstract class BeamSkill extends ActiveSkill<ISpigotCharacter> {
 
     @Override
     public SkillResult cast(ISpigotCharacter character, PlayerSkillContext info) {
-        new Beam(character, step,
+        long tick = info.getLongNodeValue("beam-tick-period");
+        new Beam(character,
+                step,
                 info.getDoubleNodeValue(SkillNodes.GRAVITY),
                 info.getDoubleNodeValue(SkillNodes.DISTANCE),
                 info,
-                onTick, onEntityHit, onHitGround);
+                onTick, onEntityHit, onHitGround)
+                .start(tick <= 0 ? 1 : tick);
+        ;
         return SkillResult.OK;
     }
 

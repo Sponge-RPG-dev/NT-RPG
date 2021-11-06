@@ -35,9 +35,9 @@ public class Dragonbreath extends BeamSkill {
             return Beam.BeamActionResult.CONTINUE;
         };
         onTick = (tick, caster, distance, context, location) -> {
-            location.getWorld().spawnParticle(Particle.FLAME, location, 3, 3,3,3);
-            location.getWorld().spawnParticle(Particle.FLAME, location.add(0,0.5,0), 3, 4,4,4);
-            location.getWorld().spawnParticle(Particle.ASH, location.add(0,0.5,0), 3, 2,2,2);
+            location.getWorld().spawnParticle(Particle.FLAME, location, 3, 0,0,0);
+            location.getWorld().spawnParticle(Particle.FLAME, location.add(0,0.5,0), 3, 0,0,0);
+            location.getWorld().spawnParticle(Particle.ASH, location.add(0,0.5,0), 3, 0,0,0);
         };
     }
 }

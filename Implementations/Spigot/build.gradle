@@ -101,6 +101,10 @@ import java.nio.file.Paths
 import java.nio.file.StandardCopyOption;
 
 task copyNMSImpl {
+    Project spigot = project(":Spigot")
+    if (spigot.file("lib-cp/Spigot-117-1.0.0-SNAPSHOT.jar").exists()) {
+        return ;
+    }
     DefaultTaskOutputs output = project(':Spigot-117').jar.outputs
     boolean found = false;
     for (File file : output.getFiles()) {
@@ -113,7 +117,6 @@ task copyNMSImpl {
                 return  true;
             }
         })) {
-            Project spigot = project(":Spigot")
             var p = spigot.file("lib-cp/").toPath()
             try {
                 Files.copy(f.toPath(), p.resolve(f.getName()), StandardCopyOption.REPLACE_EXISTING);
@@ -130,6 +133,5 @@ task copyNMSImpl {
 build.dependsOn copyNMSImpl
 build.dependsOn shadowJar
 build.mustRunAfter tasks.getByPath(':Common:build')
-build.mustRunAfter tasks.getByPath(':Spigot-117:build')
 build.mustRunAfter tasks.getByPath(':FlatFiles-Persistence:build')
 
