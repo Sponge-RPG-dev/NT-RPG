@@ -36,6 +36,7 @@ import cz.neumimto.rpg.spigot.gui.SpigotGui;
 import cz.neumimto.rpg.spigot.inventory.SpigotInventoryService;
 import cz.neumimto.rpg.spigot.inventory.SpigotItemService;
 import cz.neumimto.rpg.spigot.permissions.SpigotPermissionService;
+import cz.neumimto.rpg.spigot.scripting.mechanics.SpigotEntityUtils;
 import cz.neumimto.rpg.spigot.skills.SpigotSkillService;
 
 import java.util.Map;
@@ -76,6 +77,7 @@ public class SpigotGuiceModule extends AbstractRpgGuiceModule {
         map.put(RWDao.class, null);
         map.put(CharacterService.class, SpigotCharacterService.class);
         map.put(NMSHandler.class, cz.neumimto.rpg.nms117.NMSHandler.class);
+        map.put(SpigotEntityUtils.class, null);
         //map.put(ICharacterClassDao.class).to(JPACharacterClassDao.class);
         //map.put(IPlayerDao.class).to(JPAPlayerDao.class);
         map.putAll(extraBindings);

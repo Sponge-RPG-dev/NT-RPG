@@ -6,6 +6,7 @@ import cz.neumimto.rpg.common.entity.IEntity;
 import cz.neumimto.rpg.common.scripting.mechanics.NTScriptProxy;
 import cz.neumimto.rpg.common.skills.ISkill;
 import cz.neumimto.rpg.nms.NMSHandler;
+import cz.neumimto.rpg.spigot.entities.ISpigotEntity;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -55,20 +56,20 @@ public class SpigotEntityUtils implements NTScriptProxy {
     @Handler
     @ScriptMeta.Function("damage")
     public boolean damage(
-            @NamedParam("t|target") IEntity target,
-            @NamedParam("e|damager") IEntity damager,
+            @NamedParam("t|target") ISpigotEntity target,
+            @NamedParam("e|damager") ISpigotEntity damager,
             @NamedParam("d|damage") double damage,
             @NamedParam("k|knockback") double knockback,
             @NamedParam("c|cause") EntityDamageEvent.DamageCause cause,
             @NamedParam("s|skill") ISkill e) {
 
-        LivingEntity tEntity = (LivingEntity) target.getEntity();
+        LivingEntity tEntity = target.getEntity();
 
         if (tEntity.getHealth() <= 0) {
             return false;
         }
-
-        LivingEntity dEntity = (LivingEntity) damager.getEntity();
+        target.setSkillOrEffectDamageCause(e);
+        LivingEntity dEntity = damager.getEntity();
 
         if (cause == null && e.getDamageType() != null) {
             cause = EntityDamageEvent.DamageCause.valueOf(e.getDamageType());

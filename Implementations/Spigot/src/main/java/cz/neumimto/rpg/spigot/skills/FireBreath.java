@@ -16,8 +16,8 @@ import javax.inject.Singleton;
 
 @Singleton
 @AutoService(ISkill.class)
-@ResourceLoader.Skill("ntrpg:dragonbreath")
-public class Dragonbreath extends BeamSkill {
+@ResourceLoader.Skill("ntrpg:firebreath")
+public class FireBreath extends BeamSkill {
 
     @Inject
     private SpigotEntityUtils damageMechanic;
@@ -26,18 +26,20 @@ public class Dragonbreath extends BeamSkill {
     public void init() {
         super.init();
         settings.addExpression(SkillNodes.DAMAGE, "10 + level * 2");
+        settings.addExpression("fire-ticks", "10");
         setDamageType(EntityDamageEvent.DamageCause.FIRE.name());
         addSkillType(SkillType.AOE);
         addSkillType(SkillType.FIRE);
         step = 1;
         onEntityHit = (target, tick, distance, caster, context, location) -> {
             damageMechanic.damage(target, caster, context.getDoubleNodeValue(SkillNodes.DAMAGE), 0, EntityDamageEvent.DamageCause.FIRE, this);
+            target.getEntity().setFireTicks(context.getIntNodeValue("fire-tics"));
             return Beam.BeamActionResult.CONTINUE;
         };
-        onTick = (tick, caster, distance, context, location) -> {
-            location.getWorld().spawnParticle(Particle.FLAME, location, 3, 0,0,0);
-            location.getWorld().spawnParticle(Particle.FLAME, location.add(0,0.5,0), 3, 0,0,0);
-            location.getWorld().spawnParticle(Particle.ASH, location.add(0,0.5,0), 3, 0,0,0);
+        onTick = (tick, caster, distance, context, location, box, dir) -> {
+            box.radius = box.radius + tick*0.5;
+            LivingEntity entity = caster.getEntity();
+            entity.getWorld().spawnParticle(Particle.FLAME, location, 5+tick*2, 0.175D, 0.275D, 0, 0.2D);
         };
     }
 }

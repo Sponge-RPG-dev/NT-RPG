@@ -63,7 +63,7 @@ public class ResourceManagerImpl implements ResourceLoader {
 
     @Override
     public void loadServices() {
-        load(ISkill.class, getClass().getClassLoader()).forEach(a -> skillService.registerAdditionalCatalog(a));
+        load(ISkill.class, getClass().getClassLoader()).peek(iSkill -> injector.injectMembers(iSkill)).forEach(a -> skillService.registerAdditionalCatalog(a));
         load(IPropertyContainer.class, getClass().getClassLoader()).forEach(a -> loadPropertyContainerClass(a.getClass()));
         load(IGlobalEffect.class, getClass().getClassLoader()).forEach(a -> effectService.registerGlobalEffect(a));
         load(EffectModelMapper.class, getClass().getClassLoader()).forEach(a -> EffectModelFactory.getTypeMappers().put(a.getType(), a));
