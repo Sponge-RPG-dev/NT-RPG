@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.spigot.events.damage;
 
-import cz.neumimto.rpg.api.events.damage.DamageIEntityLateEvent;
+import cz.neumimto.rpg.common.events.damage.DamageIEntityLateEvent;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.HandlerList;
 

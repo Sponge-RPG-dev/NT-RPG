@@ -1,12 +1,11 @@
 package cz.neumimto.rpg;
 
 
-import cz.neumimto.rpg.api.classes.ClassService;
-import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
-import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
-import cz.neumimto.rpg.api.entity.players.classes.PlayerClassPermission;
-import cz.neumimto.rpg.api.persistance.model.CharacterClass;
-import cz.neumimto.rpg.common.classes.ClassServiceImpl;
+import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
+import cz.neumimto.rpg.common.entity.players.classes.PlayerClassPermission;
+import cz.neumimto.rpg.common.model.CharacterClass;
+import cz.neumimto.rpg.common.classes.ClassService;
 import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.model.CharacterClassTest;
 import org.junit.jupiter.api.Assertions;
@@ -45,7 +44,7 @@ public class Tests {
 
     @Test
     public void testPermissionsManagement() {
-        ClassService classService = new ClassServiceImpl();
+        ClassService classService = new ClassService();
         ActiveCharacter character = Mockito.mock(ActiveCharacter.class);
         when(character.getLevel()).thenReturn(2);
 

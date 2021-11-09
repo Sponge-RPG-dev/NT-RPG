@@ -1,8 +1,8 @@
 package cz.neumimto.rpg.spigot.events.party;
 
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.entity.players.party.IParty;
-import cz.neumimto.rpg.api.events.party.PartyEvent;
+import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.party.IParty;
+import cz.neumimto.rpg.common.events.party.PartyEvent;
 import cz.neumimto.rpg.spigot.events.AbstractNEvent;
 import org.bukkit.event.Cancellable;
 

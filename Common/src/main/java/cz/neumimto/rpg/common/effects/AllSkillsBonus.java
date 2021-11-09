@@ -1,12 +1,9 @@
 package cz.neumimto.rpg.common.effects;
 
-import cz.neumimto.rpg.api.effects.EffectBase;
-import cz.neumimto.rpg.api.effects.Generate;
-import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.api.effects.stacking.IntegerEffectStackingStrategy;
-import cz.neumimto.rpg.api.entity.CommonProperties;
-import cz.neumimto.rpg.api.entity.IEffectConsumer;
-import cz.neumimto.rpg.api.skills.scripting.JsBinding;
+import cz.neumimto.rpg.common.effects.stacking.IntegerEffectStackingStrategy;
+import cz.neumimto.rpg.common.entity.CommonProperties;
+import cz.neumimto.rpg.common.entity.IEffectConsumer;
+import cz.neumimto.rpg.common.skills.scripting.JsBinding;
 
 @JsBinding(JsBinding.Type.CLASS)
 @Generate(id = "name", description = "An effect which gives +x bonus points to all skill")

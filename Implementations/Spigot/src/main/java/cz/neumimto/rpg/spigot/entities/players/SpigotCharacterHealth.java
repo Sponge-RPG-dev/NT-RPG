@@ -1,8 +1,8 @@
 package cz.neumimto.rpg.spigot.entities.players;
 
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.entity.CommonProperties;
-import cz.neumimto.rpg.api.entity.IReservable;
+import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.entity.CommonProperties;
+import cz.neumimto.rpg.common.entity.IReservable;
 
 class SpigotCharacterHealth implements IReservable {
 

@@ -1,9 +1,9 @@
 package cz.neumimto.rpg.spigot.effects.common;
 
-import cz.neumimto.rpg.api.effects.EffectBase;
-import cz.neumimto.rpg.api.effects.Generate;
-import cz.neumimto.rpg.api.effects.IEffectContainer;
-import cz.neumimto.rpg.api.entity.IEffectConsumer;
+import cz.neumimto.rpg.common.effects.EffectBase;
+import cz.neumimto.rpg.common.effects.Generate;
+import cz.neumimto.rpg.common.effects.IEffectContainer;
+import cz.neumimto.rpg.common.entity.IEffectConsumer;
 
 import java.util.Collections;
 import java.util.HashSet;

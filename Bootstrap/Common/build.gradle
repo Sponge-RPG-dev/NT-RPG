@@ -7,6 +7,7 @@ version = project.subp_version
 
 dependencies {
     compileOnly "co.aikar:acf-core:" + project.acf
+    testCompileClasspath "co.aikar:acf-core:" + project.acf
 
     api 'com.github.stefvanschie.inventoryframework:IF:' + project.if // todo make a pr to if, this shit must be loaded by a javapluginclassloader
 

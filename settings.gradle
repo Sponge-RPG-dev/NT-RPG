@@ -1,27 +1,37 @@
+pluginManagement {
+    repositories {
+        maven {
+            url "https://papermc.io/repo/repository/maven-public/"
+        }
+        gradlePluginPortal()
+        //maven("https://repo.jpenilla.xyz/snapshots/")
+    }
+}
+
 rootProject.name = 'NtRpgParent'
 
 include ':Generator'
-include ':API'
 include ':Common'
 include ':Database-Persistence'
 include ':FlatFiles-Persistence'
-include ':Common-Persistence'
 include ':Common-Persistence-Test'
 
 include ':Spigot'
+include ':Spigot-NMS'
+include ':Spigot-117'
 //include ':Sponge'
 include ':Bootstrap-Common'
 include ':Bootstrap-Spigot'
 
-project(':API').projectDir = file('API')
 project(':Common').projectDir = file('Common')
 
 project(':Database-Persistence').projectDir = file('Peristence/Database')
 project(':FlatFiles-Persistence').projectDir = file('Peristence/FlatFiles')
-project(':Common-Persistence').projectDir = file('Peristence/Common')
 project(':Common-Persistence-Test').projectDir = file('Peristence/Common-Tests')
 
 project(':Spigot').projectDir = file('Implementations/Spigot')
+project(':Spigot-NMS').projectDir = file('Implementations/Spigot-Lib/NMS')
+project(':Spigot-117').projectDir = file('Implementations/Spigot-Lib/1.17')
 //project(':Sponge').projectDir = file('Implementations/Sponge')
 
 project(':Bootstrap-Common').projectDir = file('Bootstrap/Common')

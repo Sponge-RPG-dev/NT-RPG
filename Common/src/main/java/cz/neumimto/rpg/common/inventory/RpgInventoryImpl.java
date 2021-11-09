@@ -1,8 +1,5 @@
 package cz.neumimto.rpg.common.inventory;
 
-import cz.neumimto.rpg.api.inventory.ManagedSlot;
-import cz.neumimto.rpg.api.inventory.RpgInventory;
-
 import java.util.HashMap;
 import java.util.Map;
 

@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.spigot.events.skill;
 
-import cz.neumimto.rpg.api.entity.IEntity;
-import cz.neumimto.rpg.api.events.skill.SkillPostUsageEvent;
+import cz.neumimto.rpg.common.entity.IEntity;
+import cz.neumimto.rpg.common.events.skill.SkillPostUsageEvent;
 import org.bukkit.event.HandlerList;
 
 /**

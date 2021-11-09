@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.common.effects.core;
 
-import cz.neumimto.rpg.api.effects.EffectBase;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.effects.EffectBase;
+import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.effects.CoreEffectTypes;
 
 import java.lang.ref.WeakReference;

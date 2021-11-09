@@ -1,8 +1,8 @@
 package cz.neumimto.rpg.spigot.events.effects;
 
-import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.api.entity.IEffectConsumer;
-import cz.neumimto.rpg.api.events.effect.TargetEffectEvent;
+import cz.neumimto.rpg.common.effects.IEffect;
+import cz.neumimto.rpg.common.entity.IEffectConsumer;
+import cz.neumimto.rpg.common.events.effect.TargetEffectEvent;
 import cz.neumimto.rpg.spigot.events.AbstractNEvent;
 
 public abstract class AbstractEffectEvent<T extends IEffect> extends AbstractNEvent implements TargetEffectEvent<T> {

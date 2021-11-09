@@ -1,9 +1,9 @@
 package cz.neumimto.rpg.spigot.bridges;
 
-import cz.neumimto.rpg.api.configuration.PluginConfig;
-import cz.neumimto.rpg.api.entity.PropertyService;
-import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
-import cz.neumimto.rpg.api.entity.players.leveling.ILevelProgression;
+import cz.neumimto.rpg.common.configuration.PluginConfig;
+import cz.neumimto.rpg.common.entity.PropertyService;
+import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
+import cz.neumimto.rpg.common.entity.players.leveling.ILevelProgression;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;

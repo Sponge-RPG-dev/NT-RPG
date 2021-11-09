@@ -1,8 +1,8 @@
 package cz.neumimto.rpg.model;
 
-import cz.neumimto.rpg.api.persistance.model.CharacterBase;
-import cz.neumimto.rpg.api.persistance.model.CharacterClass;
-import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
+import cz.neumimto.rpg.common.model.CharacterBase;
+import cz.neumimto.rpg.common.model.CharacterClass;
+import cz.neumimto.rpg.common.model.CharacterSkill;
 
 /**
  * Created by ja on 8.10.2016.

@@ -1,8 +1,7 @@
 package cz.neumimto.rpg.common.skills;
 
-import cz.neumimto.rpg.api.skills.*;
-import cz.neumimto.rpg.api.skills.tree.SkillTreeSpecialization;
-import cz.neumimto.rpg.api.skills.types.CharacterAttributeSkill;
+import cz.neumimto.rpg.common.skills.tree.SkillTreeSpecialization;
+import cz.neumimto.rpg.common.skills.types.CharacterAttributeSkill;
 import cz.neumimto.rpg.common.skills.types.ItemAccessSkill;
 
 import java.util.HashMap;

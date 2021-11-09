@@ -1,8 +1,8 @@
 package cz.neumimto.rpg.spigot.entities;
 
-import cz.neumimto.rpg.api.entity.IEffectConsumer;
-import cz.neumimto.rpg.api.entity.IEntity;
-import cz.neumimto.rpg.api.skills.ISkill;
+import cz.neumimto.rpg.common.entity.IEffectConsumer;
+import cz.neumimto.rpg.common.entity.IEntity;
+import cz.neumimto.rpg.common.skills.ISkill;
 import org.bukkit.entity.LivingEntity;
 
 import java.util.UUID;

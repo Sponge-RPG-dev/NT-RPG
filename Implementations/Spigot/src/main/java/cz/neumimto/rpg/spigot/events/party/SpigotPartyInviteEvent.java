@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.spigot.events.party;
 
-import cz.neumimto.rpg.api.events.party.PartyInviteEvent;
+import cz.neumimto.rpg.common.events.party.PartyInviteEvent;
 import org.bukkit.event.HandlerList;
 
 public class SpigotPartyInviteEvent extends SpigotAbstractPartyEvent implements PartyInviteEvent {

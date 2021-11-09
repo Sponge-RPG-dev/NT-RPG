@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.spigot.events.character;
 
-import cz.neumimto.rpg.api.events.character.EventCharacterArmorPostUpdate;
-import cz.neumimto.rpg.api.items.RpgItemType;
+import cz.neumimto.rpg.common.events.character.EventCharacterArmorPostUpdate;
+import cz.neumimto.rpg.common.items.RpgItemType;
 import org.bukkit.event.HandlerList;
 
 import java.util.Set;

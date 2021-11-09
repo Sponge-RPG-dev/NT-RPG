@@ -1,7 +1,5 @@
 package cz.neumimto.rpg.common.effects;
 
-import cz.neumimto.rpg.api.effects.EffectType;
-
 /**
  * Created by NeumimTo on 20.3.2016.
  */

@@ -1,6 +1,7 @@
 plugins {
     id 'java-library'
     id 'com.github.johnrengelman.shadow' version '7.0.0'
+    id "xyz.jpenilla.run-paper" version "1.0.4"
 }
 
 repositories {
@@ -24,7 +25,7 @@ repositories {
         url = "https://repo.extendedclip.com/content/repositories"
     }
     maven {
-        url "https://repo.dmulloy2.net/nexus/repository/public/"
+        url "https://repo.dmulloy2.net/repository/public/"
     }
     maven {
         url "https://mvn.lumine.io/repository/maven-releases/"
@@ -39,27 +40,24 @@ group = 'cz.neumimto.rpg'
 version = project.p_spigot_version
 
 dependencies {
-    compileOnly 'com.google.auto.service:auto-service:1.0'
-    annotationProcessor 'com.google.auto.service:auto-service:1.0'
-    compileOnly 'com.google.auto.service:auto-service-annotations:1.0'
+    implementation fileTree(dir: 'lib-cp', include: '*.jar')
+    compileOnly fileTree(dir: 'lib', include: '*.jar')
 
     annotationProcessor project(':Generator')
 
     api project(':Common')
     api project(':FlatFiles-Persistence')
-    api 'de.tr7zw:item-nbt-api-plugin:' + project.nbtapi
-
+    api project(":Spigot-NMS")
     compileOnly project(':Bootstrap-Common')
+
+    api 'de.tr7zw:item-nbt-api-plugin:' + project.nbtapi
 
     // api 'com.github.stefvanschie.inventoryframework:IF:' + project.if
 
 
-    // runtimeOnly fileTree(dir: 'lib', include: '*.jar')
-    implementation fileTree(dir: 'lib-cp', include: '*.jar')
-    compileOnly fileTree(dir: 'lib', include: '*.jar')
-
    // compileOnly "org.spigotmc:spigot-api:" + project.spigotapi
     compileOnly 'io.papermc.paper:paper-api:1.17-R0.1-SNAPSHOT'
+
     compileOnly("org.spigotmc:plugin-annotations:" + project.pluginannotations) {
         exclude group: "org.bukkit", module: "bukkit"
     }
@@ -68,20 +66,20 @@ dependencies {
         exclude group: "com.comphenix.executors", module: "BukkitExecutors"
     }
 
-    //runtimeOnly 'com.github.dmulloy2:ProtocolLib:master'
     api 'com.elmakers.mine.bukkit:EffectLib:' + project.effectlib
     //  compileOnly 'placeholderapi.me.clip:placeholderapi:' + project.papi
     compileOnly 'com.gmail.filoghost.holographicdisplays:holographicdisplays-api:' + project.hdisplays
     compileOnly "co.aikar:acf-paper:" + project.acf
+    compileOnly "io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT"
 
-    compileOnly('net.Indyuce:MMOItems:' + project.mmoitems) {
-        exclude group: 'com.mojang', module: 'authlib'
-        exclude group: 'org.jetbrains', module: 'annotations'
-    }
+  // compileOnly('net.Indyuce:MMOItems:' + project.mmoitems) {
+  //     exclude group: 'com.mojang', module: 'authlib'
+  //     exclude group: 'org.jetbrains', module: 'annotations'
+  // }
 
-    compileOnly('io.lumine:MythicLib:' + project.mythiclib)
+  // compileOnly('io.lumine:MythicLib:' + project.mythiclib)
 
-    compileOnly 'io.lumine.xikage:MythicMobs:' + project.mythicmobs
+  // compileOnly 'io.lumine.xikage:MythicMobs:' + project.mythicmobs
 
     compileOnly 'com.gitlab.SamB440:RPGRegions-2:' + project.rpgregions
 
@@ -107,7 +105,47 @@ shadowJar {
     relocate 'de.slikey.effectlib', 'rpgshaded.de.slikey.effectlib'
     relocate 'de.tr7zw', 'rpgshaded.de.tr7zw'
 
-
+    mergeServiceFiles()
 }
 
+import org.gradle.api.internal.tasks.DefaultTaskOutputs
+
+import java.nio.file.Files
+import java.nio.file.Paths
+import java.nio.file.StandardCopyOption;
+
+task copyNMSImpl {
+    Project spigot = project(":Spigot")
+    if (spigot.file("lib-cp/Spigot-117-1.0.0-SNAPSHOT.jar").exists()) {
+        return ;
+    }
+    DefaultTaskOutputs output = project(':Spigot-117').jar.outputs
+    boolean found = false;
+    for (File file : output.getFiles()) {
+        for (File f : file.getParentFile().listFiles(new FilenameFilter() {
+            @Override
+            boolean accept(File directory, String name) {
+                if (name.endsWith("dev.jar") || name.endsWith("sources.jar")) {
+                    return false
+                }
+                return  true;
+            }
+        })) {
+            var p = spigot.file("lib-cp/").toPath()
+            try {
+                Files.copy(f.toPath(), p.resolve(f.getName()), StandardCopyOption.REPLACE_EXISTING);
+            } catch (Exception e) {
+                e.printStackTrace()
+            }
+            found = true;
+            break;
+        }
+        break;
+    }
+}
+
+build.dependsOn copyNMSImpl
 build.dependsOn shadowJar
+build.mustRunAfter tasks.getByPath(':Common:build')
+build.mustRunAfter tasks.getByPath(':FlatFiles-Persistence:build')
+

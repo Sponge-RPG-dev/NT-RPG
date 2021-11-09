@@ -1,31 +1,25 @@
 package cz.neumimto.rpg.spigot.bridges.mmoitems;
 
 import com.google.inject.Injector;
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.configuration.ClassTypeDefinition;
-import cz.neumimto.rpg.api.entity.CommonProperties;
-import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
-import cz.neumimto.rpg.api.items.ItemService;
-import cz.neumimto.rpg.api.skills.ISkill;
+import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.configuration.ClassTypeDefinition;
+import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
+import cz.neumimto.rpg.common.items.ItemService;
+import cz.neumimto.rpg.common.skills.ISkill;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
 import cz.neumimto.rpg.spigot.events.character.SpigotCharacterGainedLevelEvent;
 import cz.neumimto.rpg.spigot.inventory.SpigotItemService;
 import de.tr7zw.nbtapi.NBTItem;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.ability.Ability;
-import net.Indyuce.mmoitems.api.player.CooldownInformation;
+import net.Indyuce.mmoitems.ability.Ability;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
-import net.Indyuce.mmoitems.api.util.message.Message;
 import net.Indyuce.mmoitems.comp.rpg.RPGHandler;
-import net.Indyuce.mmoitems.stat.data.AbilityData;
-import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import javax.inject.Inject;
-import java.text.DecimalFormat;
 import java.util.*;
 
 public class MMOItemsExpansion implements Listener {
@@ -156,46 +150,6 @@ public class MMOItemsExpansion implements Listener {
             getCharacter().getPlayer().setFoodLevel((int) value);
         }
 
-        @Override
-        public boolean canCast(AbilityData data) {
-            //mmoitems start
-            if (getPlayerData().hasCooldownInfo(data.getAbility())) {
-                CooldownInformation info = getPlayerData().getCooldownInfo(data.getAbility());
-                if (!info.hasCooledDown()) {
-                    if (data.getCastingMode().displaysMessage()) {
-                        String progressBar = ChatColor.YELLOW + "";
-                        double progress = (info.getInitialCooldown() - info.getRemaining()) / info.getInitialCooldown() * 10.0D;
-                        String barChar = MMOItems.plugin.getConfig().getString("cooldown-progress-bar-char");
-
-                        for (int j = 0; j < 10; ++j) {
-                            progressBar = progressBar + (progress >= (double) j ? ChatColor.GREEN : ChatColor.WHITE) + barChar;
-                        }
-
-                        Message.SPELL_ON_COOLDOWN.format(ChatColor.RED, new String[]{"#left#", "" + (new DecimalFormat("0.#")).format(info.getRemaining()), "#progress#", progressBar, "#s#", info.getRemaining() >= 2.0D ? "s" : ""}).send(getPlayer(), "ability-cooldown");
-                    }
-
-                    return false;
-                }
-            }
-            //mmoitewms end
-
-            double manacostReduce = character.getProperty(CommonProperties.mana_cost_reduce);
-
-            if (MMOItems.plugin.getConfig().getBoolean("permissions.abilities") && !getPlayer().hasPermission("mmoitems.ability." + data.getAbility().getLowerCaseID()) && !getPlayer().hasPermission("mmoitems.bypass.ability")) {
-                return false;
-                //ntrpg start
-            } else if (data.hasModifier("mana") && this.getMana() < data.getModifier("mana") * manacostReduce) {
-                Message.NOT_ENOUGH_MANA.format(ChatColor.RED, new String[0]).send(getPlayer(), "not-enough-mana");
-                return false;
-                //ntrpg end
-            } else if (data.hasModifier("stamina") && this.getStamina() < data.getModifier("stamina")) {
-                Message.NOT_ENOUGH_STAMINA.format(ChatColor.RED, new String[0]).send(getPlayer(), "not-enough-stamina");
-                return false;
-            } else {
-                return true;
-            }
-            //mmoitems end
-        }
     }
 
     public static class MMOItemStackRpgHandler extends SpigotItemService.SpigotItemHandler {

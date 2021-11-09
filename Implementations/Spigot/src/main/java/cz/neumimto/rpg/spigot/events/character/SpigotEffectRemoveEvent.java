@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.spigot.events.character;
 
-import cz.neumimto.rpg.api.effects.IEffect;
+import cz.neumimto.rpg.common.effects.IEffect;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 

@@ -3,7 +3,7 @@ package cz.neumimto.rpg.common.entity;
 import com.google.inject.Singleton;
 
 @Singleton
-public class TestPropertyService extends PropertyServiceImpl {
+public class TestPropertyService extends PropertyService {
 
     public TestPropertyService() {
         LAST_ID = 100;

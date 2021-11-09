@@ -3,14 +3,12 @@ package cz.neumimto.rpg;
 import com.electronwill.nightconfig.core.conversion.ObjectConverter;
 import com.electronwill.nightconfig.core.file.FileConfig;
 import com.google.inject.Injector;
-import cz.neumimto.rpg.api.entity.IEntity;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.skills.PlayerSkillContext;
-import cz.neumimto.rpg.api.skills.scripting.ScriptSkillModel;
-import cz.neumimto.rpg.api.skills.types.ActiveSkill;
-import cz.neumimto.rpg.common.scripting.mechanics.ApplyEffect;
+import cz.neumimto.rpg.common.entity.IEntity;
+import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.skills.PlayerSkillContext;
+import cz.neumimto.rpg.common.skills.scripting.ScriptSkillModel;
+import cz.neumimto.rpg.common.skills.types.ActiveSkill;
 import cz.neumimto.rpg.common.skills.mech.DamageMechanic;
-import cz.neumimto.rpg.common.skills.scripting.*;
 import cz.neumimto.rpg.junit.CharactersExtension;
 import cz.neumimto.rpg.junit.NtRpgExtension;
 import cz.neumimto.rpg.junit.TestGuiceModule;
@@ -37,9 +35,6 @@ public class CustomSkillGeneratorTests {
 
     @Inject
     private NearbyEnemies nearbyEnemies;
-
-    @Inject
-    private ApplyEffect applyEffect;
 
     @Inject
     private DamageCheck damageCheck;
@@ -96,31 +91,26 @@ public class CustomSkillGeneratorTests {
     }
 
     @Singleton
-    @SkillMechanic("ntrpg:test_mechanic")
     public static class TestMechanic {
 
-        public void doAction(@Caster IActiveCharacter character, @SkillArgument("settings.node") float value) {
+        public void doAction(IActiveCharacter character, float value) {
 
         }
     }
 
 
 
-    @SkillMechanic("damage_check")
     public static class DamageCheck {
 
-        @Handler
-        public boolean check(@Caster IActiveCharacter caster, @Target IEntity entity) {
+        public boolean check(IActiveCharacter caster, IEntity entity) {
             return true;
         }
 
     }
 
-    @TargetSelector("nearby_enemies")
     public static class NearbyEnemies {
 
-        @Handler
-        public List<IEntity> getTargets(@Caster IActiveCharacter character, @SkillArgument("settings.range") float range) {
+        public List<IEntity> getTargets(IActiveCharacter character, float range) {
             return Collections.emptyList();
         }
     }

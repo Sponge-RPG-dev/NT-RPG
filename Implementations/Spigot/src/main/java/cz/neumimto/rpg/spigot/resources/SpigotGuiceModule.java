@@ -1,31 +1,26 @@
 package cz.neumimto.rpg.spigot.resources;
 
-import com.google.inject.Inject;
-import com.google.inject.Injector;
-import com.google.inject.Provider;
-import com.google.inject.TypeLiteral;
-import cz.neumimto.rpg.api.ResourceLoader;
-import cz.neumimto.rpg.api.damage.DamageService;
-import cz.neumimto.rpg.api.effects.EffectService;
-import cz.neumimto.rpg.api.entity.EntityService;
-import cz.neumimto.rpg.api.entity.players.CharacterService;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.entity.players.parties.PartyService;
-import cz.neumimto.rpg.api.events.EventFactoryService;
-import cz.neumimto.rpg.api.exp.ExperienceService;
-import cz.neumimto.rpg.api.gui.IPlayerMessage;
-import cz.neumimto.rpg.api.inventory.CharacterInventoryInteractionHandler;
-import cz.neumimto.rpg.api.inventory.InventoryService;
-import cz.neumimto.rpg.api.items.ItemService;
-import cz.neumimto.rpg.api.permissions.PermissionService;
-import cz.neumimto.rpg.api.skills.SkillService;
 import cz.neumimto.rpg.common.AbstractRpgGuiceModule;
+import cz.neumimto.rpg.common.ResourceLoader;
 import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.bytecode.ClassGenerator;
+import cz.neumimto.rpg.common.damage.DamageService;
+import cz.neumimto.rpg.common.effects.EffectService;
+import cz.neumimto.rpg.common.entity.EntityService;
 import cz.neumimto.rpg.common.entity.configuration.MobSettingsDao;
+import cz.neumimto.rpg.common.entity.players.CharacterService;
+import cz.neumimto.rpg.common.entity.players.parties.PartyService;
+import cz.neumimto.rpg.common.events.EventFactoryService;
+import cz.neumimto.rpg.common.exp.ExperienceService;
+import cz.neumimto.rpg.common.gui.IPlayerMessage;
+import cz.neumimto.rpg.common.inventory.CharacterInventoryInteractionHandler;
 import cz.neumimto.rpg.common.inventory.InventoryHandler;
+import cz.neumimto.rpg.common.inventory.InventoryService;
 import cz.neumimto.rpg.common.inventory.crafting.runewords.RWDao;
-import cz.neumimto.rpg.common.skills.scripting.CustomSkillGenerator;
+import cz.neumimto.rpg.common.items.ItemService;
+import cz.neumimto.rpg.common.permissions.PermissionService;
+import cz.neumimto.rpg.common.skills.SkillService;
+import cz.neumimto.rpg.nms.NMSHandler;
 import cz.neumimto.rpg.spigot.SpigotRpg;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.assets.SpigotAssetService;
@@ -41,7 +36,7 @@ import cz.neumimto.rpg.spigot.gui.SpigotGui;
 import cz.neumimto.rpg.spigot.inventory.SpigotInventoryService;
 import cz.neumimto.rpg.spigot.inventory.SpigotItemService;
 import cz.neumimto.rpg.spigot.permissions.SpigotPermissionService;
-import cz.neumimto.rpg.spigot.scripting.SpigotCustomSkillGenerator;
+import cz.neumimto.rpg.spigot.scripting.mechanics.SpigotEntityUtils;
 import cz.neumimto.rpg.spigot.skills.SpigotSkillService;
 
 import java.util.Map;
@@ -79,8 +74,10 @@ public class SpigotGuiceModule extends AbstractRpgGuiceModule {
         map.put(EventFactoryService.class, SpigotEventFactory.class);
         map.put(CharacterInventoryInteractionHandler.class, InventoryHandler.class);
         map.put(ResourceLoader.class, SpigotResourceManager.class);
-        map.put(CustomSkillGenerator.class, SpigotCustomSkillGenerator.class);
         map.put(RWDao.class, null);
+        map.put(CharacterService.class, SpigotCharacterService.class);
+        map.put(NMSHandler.class, cz.neumimto.rpg.nms117.NMSHandler.class);
+        map.put(SpigotEntityUtils.class, null);
         //map.put(ICharacterClassDao.class).to(JPACharacterClassDao.class);
         //map.put(IPlayerDao.class).to(JPAPlayerDao.class);
         map.putAll(extraBindings);
@@ -91,13 +88,6 @@ public class SpigotGuiceModule extends AbstractRpgGuiceModule {
     protected void configure() {
         super.configure();
 
-        bind(new TypeLiteral<CharacterService>() {
-        }).toProvider(SpigotCharacterServiceProvider.class);
-        bind(new TypeLiteral<CharacterService<? extends IActiveCharacter>>() {
-        }).to(SpigotCharacterService.class);
-        bind(new TypeLiteral<CharacterService<? super IActiveCharacter>>() {
-        }).toProvider(SpigotCharacterServiceProvider1.class);
-
         bind(SpigotRpgPlugin.class).toProvider(() -> ntRpgPlugin);
         bind(SpigotRpg.class).toProvider(() -> spigotRpg);
         for (Map.Entry<Class, Object> entry : providers.entrySet()) {
@@ -105,34 +95,4 @@ public class SpigotGuiceModule extends AbstractRpgGuiceModule {
         }
     }
 
-    private static SpigotCharacterService scs;
-
-    public static class SpigotCharacterServiceProvider implements Provider<CharacterService<IActiveCharacter>> {
-
-        @Inject
-        private Injector injector;
-
-
-        @Override
-        public CharacterService get() {
-            if (scs == null) {
-                scs = injector.getInstance(SpigotCharacterService.class);
-            }
-            return scs;
-        }
-    }
-
-    public static class SpigotCharacterServiceProvider1 implements Provider<CharacterService<? super IActiveCharacter>> {
-
-        @Inject
-        private Injector injector;
-
-        @Override
-        public CharacterService<? super IActiveCharacter> get() {
-            if (scs == null) {
-                scs = injector.getInstance(SpigotCharacterService.class);
-            }
-            return (CharacterService) scs;
-        }
-    }
 }

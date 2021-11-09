@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.spigot.persistance;
 
-import cz.neumimto.rpg.api.persistance.model.EquipedSlot;
+import cz.neumimto.rpg.common.model.EquipedSlot;
 
 public final class SpigotEquipedSlot implements EquipedSlot {
 

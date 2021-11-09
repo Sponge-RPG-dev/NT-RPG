@@ -1,10 +1,10 @@
 package cz.neumimto.rpg.spigot.listeners;
 
 import com.google.auto.service.AutoService;
-import cz.neumimto.rpg.api.ResourceLoader;
-import cz.neumimto.rpg.api.effects.EffectType;
-import cz.neumimto.rpg.api.entity.IReservable;
-import cz.neumimto.rpg.api.events.damage.DamageIEntityEarlyEvent;
+import cz.neumimto.rpg.common.ResourceLoader;
+import cz.neumimto.rpg.common.effects.EffectType;
+import cz.neumimto.rpg.common.entity.IReservable;
+import cz.neumimto.rpg.common.events.damage.DamageIEntityEarlyEvent;
 import cz.neumimto.rpg.spigot.effects.SpigotEffectService;
 import cz.neumimto.rpg.spigot.effects.common.ManaShieldEffect;
 import cz.neumimto.rpg.spigot.effects.common.Rage;

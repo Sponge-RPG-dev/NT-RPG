@@ -1,9 +1,9 @@
 package cz.neumimto.rpg.spigot.skills;
 
-import cz.neumimto.rpg.api.skills.PlayerSkillContext;
-import cz.neumimto.rpg.api.skills.SkillNodes;
-import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.api.skills.types.ActiveSkill;
+import cz.neumimto.rpg.common.skills.PlayerSkillContext;
+import cz.neumimto.rpg.common.skills.SkillNodes;
+import cz.neumimto.rpg.common.skills.SkillResult;
+import cz.neumimto.rpg.common.skills.types.ActiveSkill;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import org.bukkit.FluidCollisionMode;
 import org.bukkit.block.Block;

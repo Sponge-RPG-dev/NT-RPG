@@ -1,8 +1,8 @@
 package cz.neumimto.rpg.persistence.jdbc.converters;
 
 import com.google.gson.*;
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.persistance.model.EquipedSlot;
+import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.model.EquipedSlot;
 
 import java.lang.reflect.Type;
 

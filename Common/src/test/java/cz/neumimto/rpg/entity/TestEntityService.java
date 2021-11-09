@@ -1,11 +1,7 @@
 package cz.neumimto.rpg.entity;
 
-import cz.neumimto.rpg.api.IRpgElement;
-import cz.neumimto.rpg.api.entity.EntityService;
-import cz.neumimto.rpg.api.entity.IEffectConsumer;
-import cz.neumimto.rpg.api.entity.IEntity;
-import cz.neumimto.rpg.api.entity.PropertyService;
-import cz.neumimto.rpg.common.entity.TestCharacter;
+import cz.neumimto.rpg.common.IRpgElement;
+import cz.neumimto.rpg.common.entity.*;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

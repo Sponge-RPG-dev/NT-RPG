@@ -10,6 +10,7 @@ subprojects {
 
     repositories {
         mavenCentral()
+        mavenLocal()
         maven {
             url 'https://jitpack.io'
         }
@@ -69,6 +70,6 @@ subprojects {
     }
 
     tasks.named("jar") {
-        duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+        duplicatesStrategy(DuplicatesStrategy.INCLUDE)
     }
 }

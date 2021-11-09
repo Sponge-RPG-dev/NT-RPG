@@ -1,9 +1,9 @@
 package cz.neumimto.rpg.spigot.scripting.mechanics;
 
+import com.google.auto.service.AutoService;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import cz.neumimto.rpg.common.skills.scripting.Handler;
-import cz.neumimto.rpg.common.skills.scripting.Target;
+import cz.neumimto.rpg.common.scripting.mechanics.NTScriptProxy;
 import cz.neumimto.rpg.spigot.SpigotRpg;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
@@ -18,8 +18,9 @@ import javax.inject.Singleton;
 import java.util.UUID;
 
 //https://minecraft.fandom.com/wiki/Advancement/JSON_format
+@AutoService(NTScriptProxy.class)
 @Singleton
-public class ToastMechanic {
+public class ToastMechanic implements NTScriptProxy {
     private static final Gson gson = new Gson();
 
     public static final String challenge = "challenge";
@@ -29,8 +30,7 @@ public class ToastMechanic {
     @Inject
     private SpigotRpg rpgApi;
 
-    @Handler
-    public void sendToPlayer(@Target ISpigotCharacter character,
+    public void sendToPlayer(ISpigotCharacter character,
                              String message,
                              String icon,
                              String nbt,

@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.spigot.entities;
 
-import cz.neumimto.rpg.api.entity.IEntityResource;
+import cz.neumimto.rpg.common.entity.IEntityResource;
 import org.bukkit.entity.LivingEntity;
 
 public class SpigotEntityHealth implements IEntityResource {

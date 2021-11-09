@@ -7,7 +7,7 @@ import org.bukkit.entity.EntityType;
 import javax.inject.Singleton;
 import java.util.Map;
 
-import static cz.neumimto.rpg.api.logging.Log.warn;
+import static cz.neumimto.rpg.common.logging.Log.warn;
 
 @Singleton
 public class SpigotExperienceService extends AbstractExperienceService {

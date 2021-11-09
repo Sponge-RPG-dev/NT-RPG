@@ -2,21 +2,20 @@ package cz.neumimto.rpg.common.configuration;
 
 import com.google.inject.Injector;
 import com.typesafe.config.*;
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.classes.ClassService;
-import cz.neumimto.rpg.api.configuration.SkillTreeDao;
-import cz.neumimto.rpg.api.gui.ISkillTreeInterfaceModel;
-import cz.neumimto.rpg.api.localization.LocalizationService;
-import cz.neumimto.rpg.api.logging.Log;
-import cz.neumimto.rpg.api.skills.*;
-import cz.neumimto.rpg.api.skills.WrappedSkill.WrappedSkillData;
-import cz.neumimto.rpg.api.skills.scripting.ScriptedSkillNodeDescription;
-import cz.neumimto.rpg.api.skills.tree.SkillTree;
-import cz.neumimto.rpg.api.skills.types.ActiveSkill;
-import cz.neumimto.rpg.api.skills.utils.SkillLoadingErrors;
-import cz.neumimto.rpg.api.utils.FileUtils;
-import cz.neumimto.rpg.api.utils.MathUtils;
-import cz.neumimto.rpg.api.utils.Pair;
+import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.classes.ClassService;
+import cz.neumimto.rpg.common.gui.ISkillTreeInterfaceModel;
+import cz.neumimto.rpg.common.localization.LocalizationService;
+import cz.neumimto.rpg.common.logging.Log;
+import cz.neumimto.rpg.common.skills.*;
+import cz.neumimto.rpg.common.skills.WrappedSkill.WrappedSkillData;
+import cz.neumimto.rpg.common.skills.scripting.ScriptedSkillNodeDescription;
+import cz.neumimto.rpg.common.skills.tree.SkillTree;
+import cz.neumimto.rpg.common.skills.types.ActiveSkill;
+import cz.neumimto.rpg.common.skills.utils.SkillLoadingErrors;
+import cz.neumimto.rpg.common.utils.FileUtils;
+import cz.neumimto.rpg.common.utils.MathUtils;
+import cz.neumimto.rpg.common.utils.Pair;
 import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.skills.SkillConfigLoader;
 import cz.neumimto.rpg.common.skills.SkillConfigLoaders;
@@ -31,7 +30,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
-import static cz.neumimto.rpg.api.logging.Log.*;
+import static cz.neumimto.rpg.common.logging.Log.*;
 
 /**
  * Created by NeumimTo on 24.7.2015.

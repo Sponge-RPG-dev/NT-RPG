@@ -2,7 +2,7 @@ package cz.neumimto.rpg.common.commands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

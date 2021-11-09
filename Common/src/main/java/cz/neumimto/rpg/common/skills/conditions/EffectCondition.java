@@ -1,9 +1,9 @@
 package cz.neumimto.rpg.common.skills.conditions;
 
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.skills.PlayerSkillContext;
-import cz.neumimto.rpg.api.skills.SkillCastCondition;
-import cz.neumimto.rpg.api.skills.SkillData;
+import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.skills.PlayerSkillContext;
+import cz.neumimto.rpg.common.skills.SkillCastCondition;
+import cz.neumimto.rpg.common.skills.SkillData;
 import cz.neumimto.rpg.common.skills.processors.ISkillCondition;
 
 import javax.inject.Singleton;

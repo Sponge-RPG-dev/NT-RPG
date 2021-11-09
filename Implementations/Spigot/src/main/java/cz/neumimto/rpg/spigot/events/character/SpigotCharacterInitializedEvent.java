@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.spigot.events.character;
 
-import cz.neumimto.rpg.api.events.character.CharacterInitializedEvent;
+import cz.neumimto.rpg.common.events.character.CharacterInitializedEvent;
 import org.bukkit.event.HandlerList;
 
 /**

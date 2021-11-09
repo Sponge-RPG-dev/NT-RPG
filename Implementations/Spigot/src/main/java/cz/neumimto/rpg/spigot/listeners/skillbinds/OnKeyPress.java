@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.spigot.listeners.skillbinds;
 
-import cz.neumimto.rpg.api.localization.LocalizationService;
-import cz.neumimto.rpg.api.skills.SkillService;
+import cz.neumimto.rpg.common.localization.LocalizationService;
+import cz.neumimto.rpg.common.skills.SkillService;
 import cz.neumimto.rpg.common.commands.SkillsCommandFacade;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;

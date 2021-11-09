@@ -18,9 +18,9 @@ dependencies {
     api "co.aikar:acf-paper:" + project.acf
 }
 
-var spigotJarTask = tasks.getByPath(':Spigot:shadowJar');
+var spigotJarTask = tasks.getByPath(':Spigot:shadowJar')
 var outputs = spigotJarTask.outputs
-var path = outputs.getFiles().getSingleFile();
+var path = outputs.getFiles().getSingleFile()
 
 shadowJar {
     libsDirName = '../../../server-spigot/plugins'
@@ -28,7 +28,7 @@ shadowJar {
 }
 
 build.dependsOn processResources
-build.mustRunAfter tasks.getByPath(':Spigot:build');
+build.mustRunAfter tasks.getByPath(':Spigot:build')
 
 processResources {
     from (path) {

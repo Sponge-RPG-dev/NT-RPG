@@ -2,7 +2,7 @@ package cz.neumimto.rpg.assets;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.CharStreams;
-import cz.neumimto.rpg.api.logging.Log;
+import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.common.assets.AssetService;
 
 import javax.inject.Singleton;
@@ -37,5 +37,10 @@ public class TestAssetService extends AssetService {
         } catch (IOException e) {
             Log.error("Could not create file " + toPath, e);
         }
+    }
+
+    @Override
+    public void copyDefaultGuis(Path workingDir) {
+
     }
 }

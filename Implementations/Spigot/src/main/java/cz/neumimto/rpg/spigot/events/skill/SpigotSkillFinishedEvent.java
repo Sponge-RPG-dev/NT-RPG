@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.spigot.events.skill;
 
-import cz.neumimto.rpg.api.entity.IEntity;
-import cz.neumimto.rpg.api.events.skill.SkillFinishedEvent;
+import cz.neumimto.rpg.common.entity.IEntity;
+import cz.neumimto.rpg.common.events.skill.SkillFinishedEvent;
 import org.bukkit.event.HandlerList;
 
 public class SpigotSkillFinishedEvent extends SpigotAbstractSkillEvent implements SkillFinishedEvent {

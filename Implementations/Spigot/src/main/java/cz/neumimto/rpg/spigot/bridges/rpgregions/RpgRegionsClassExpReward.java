@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.spigot.bridges.rpgregions;
 
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import net.islandearth.rpgregions.api.IRPGRegionsAPI;
 import net.islandearth.rpgregions.api.RPGRegionsAPI;
 import net.islandearth.rpgregions.gui.GuiEditable;

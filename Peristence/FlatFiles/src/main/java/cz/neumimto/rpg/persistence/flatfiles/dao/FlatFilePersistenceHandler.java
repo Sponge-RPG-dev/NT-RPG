@@ -2,15 +2,15 @@ package cz.neumimto.rpg.persistence.flatfiles.dao;
 
 import com.google.auto.service.AutoService;
 import com.google.inject.Singleton;
-import cz.neumimto.rpg.api.persistance.model.BaseCharacterAttribute;
-import cz.neumimto.rpg.api.persistance.model.CharacterBase;
-import cz.neumimto.rpg.api.persistance.model.CharacterClass;
-import cz.neumimto.rpg.api.persistance.model.CharacterSkill;
+import cz.neumimto.rpg.common.model.BaseCharacterAttribute;
+import cz.neumimto.rpg.common.model.CharacterBase;
+import cz.neumimto.rpg.common.model.CharacterClass;
+import cz.neumimto.rpg.common.model.CharacterSkill;
 import cz.neumimto.rpg.common.persistance.dao.IPersistenceHandler;
-import cz.neumimto.rpg.persistence.model.BaseCharacterAttributeImpl;
-import cz.neumimto.rpg.persistence.model.CharacterBaseImpl;
-import cz.neumimto.rpg.persistence.model.CharacterClassImpl;
-import cz.neumimto.rpg.persistence.model.CharacterSkillImpl;
+import cz.neumimto.rpg.common.persistance.model.BaseCharacterAttributeImpl;
+import cz.neumimto.rpg.common.persistance.model.CharacterBaseImpl;
+import cz.neumimto.rpg.common.persistance.model.CharacterClassImpl;
+import cz.neumimto.rpg.common.persistance.model.CharacterSkillImpl;
 
 @AutoService(IPersistenceHandler.class)
 @Singleton

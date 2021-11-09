@@ -1,8 +1,8 @@
 package cz.neumimto.rpg.spigot.effects.common;
 
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.effects.*;
-import cz.neumimto.rpg.api.entity.IEffectConsumer;
+import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.effects.*;
+import cz.neumimto.rpg.common.entity.IEffectConsumer;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import de.slikey.effectlib.Effect;
 import de.slikey.effectlib.EffectManager;

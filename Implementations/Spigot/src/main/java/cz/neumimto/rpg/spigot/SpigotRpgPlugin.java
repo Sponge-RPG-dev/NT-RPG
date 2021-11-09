@@ -8,13 +8,11 @@ import com.google.auto.service.AutoService;
 import com.google.inject.Injector;
 import cz.neumimto.FireworkHandler;
 import cz.neumimto.rpg.NtRpgBootstrap;
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.entity.players.CharacterService;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.gui.Gui;
-import cz.neumimto.rpg.api.logging.Log;
-import cz.neumimto.rpg.api.scripting.IRpgScriptEngine;
-import cz.neumimto.rpg.api.skills.scripting.JsBinding;
+import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.entity.players.CharacterService;
+import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.gui.Gui;
+import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.common.commands.*;
 import cz.neumimto.rpg.common.entity.players.PreloadCharacter;
 import cz.neumimto.rpg.persistence.flatfiles.FlatFilesModule;
@@ -37,13 +35,8 @@ import cz.neumimto.rpg.spigot.listeners.skillbinds.OnKeyPress;
 import cz.neumimto.rpg.spigot.packetwrapper.PacketHandler;
 import cz.neumimto.rpg.spigot.resources.SpigotGuiceModule;
 import de.slikey.effectlib.EffectManager;
-import de.slikey.effectlib.effect.*;
 import org.bukkit.Bukkit;
-import org.bukkit.Color;
-import org.bukkit.Particle;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.jetbrains.annotations.NotNull;
@@ -54,7 +47,6 @@ import java.util.Collection;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-//@ServiceLoader
 @AutoService(NtRpgBootstrap.class)
 public class SpigotRpgPlugin implements NtRpgBootstrap {
 
@@ -172,59 +164,6 @@ public class SpigotRpgPlugin implements NtRpgBootstrap {
                 RpgRegionsClassExpReward.init();
             }
 
-            IRpgScriptEngine scriptEngine = Rpg.get().getScriptEngine();
-            scriptEngine.getDataToBind().put(EntityDamageEvent.DamageCause.class, JsBinding.Type.CLASS);
-            scriptEngine.getDataToBind().put(EntityType.class, JsBinding.Type.CLASS);
-            scriptEngine.getDataToBind().put(Particle.class, JsBinding.Type.CLASS);
-            scriptEngine.getDataToBind().put(Color.class, JsBinding.Type.CLASS);
-
-            if (Bukkit.getPluginManager().isPluginEnabled("EffectLib")) {
-                scriptEngine.getDataToBind().put(AnimatedBallEffect.class, JsBinding.Type.CLASS);
-                scriptEngine.getDataToBind().put(ArcEffect.class, JsBinding.Type.CLASS);
-                scriptEngine.getDataToBind().put(AtomEffect.class, JsBinding.Type.CLASS);
-                scriptEngine.getDataToBind().put(BigBangEffect.class, JsBinding.Type.CLASS);
-                scriptEngine.getDataToBind().put(BleedEffect.class, JsBinding.Type.CLASS);
-                scriptEngine.getDataToBind().put(CircleEffect.class, JsBinding.Type.CLASS);
-                scriptEngine.getDataToBind().put(CloudEffect.class, JsBinding.Type.CLASS);
-                scriptEngine.getDataToBind().put(ColoredImageEffect.class, JsBinding.Type.CLASS);
-                scriptEngine.getDataToBind().put(ConeEffect.class, JsBinding.Type.CLASS);
-                scriptEngine.getDataToBind().put(CubeEffect.class, JsBinding.Type.CLASS);
-                scriptEngine.getDataToBind().put(CylinderEffect.class, JsBinding.Type.CLASS);
-                scriptEngine.getDataToBind().put(DiscoBallEffect.class, JsBinding.Type.CLASS);
-                scriptEngine.getDataToBind().put(DnaEffect.class, JsBinding.Type.CLASS);
-                scriptEngine.getDataToBind().put(DonutEffect.class, JsBinding.Type.CLASS);
-                scriptEngine.getDataToBind().put(DragonEffect.class, JsBinding.Type.CLASS);
-                scriptEngine.getDataToBind().put(EarthEffect.class, JsBinding.Type.CLASS);
-                scriptEngine.getDataToBind().put(EquationEffect.class, JsBinding.Type.CLASS);
-                scriptEngine.getDataToBind().put(ExplodeEffect.class, JsBinding.Type.CLASS);
-                scriptEngine.getDataToBind().put(FlameEffect.class, JsBinding.Type.CLASS);
-                scriptEngine.getDataToBind().put(FountainEffect.class, JsBinding.Type.CLASS);
-                scriptEngine.getDataToBind().put(GridEffect.class, JsBinding.Type.CLASS);
-                scriptEngine.getDataToBind().put(HeartEffect.class, JsBinding.Type.CLASS);
-                scriptEngine.getDataToBind().put(HelixEffect.class, JsBinding.Type.CLASS);
-                scriptEngine.getDataToBind().put(HillEffect.class, JsBinding.Type.CLASS);
-                scriptEngine.getDataToBind().put(IconEffect.class, JsBinding.Type.CLASS);
-                scriptEngine.getDataToBind().put(ImageEffect.class, JsBinding.Type.CLASS);
-                scriptEngine.getDataToBind().put(JumpEffect.class, JsBinding.Type.CLASS);
-                scriptEngine.getDataToBind().put(LineEffect.class, JsBinding.Type.CLASS);
-                scriptEngine.getDataToBind().put(LoveEffect.class, JsBinding.Type.CLASS);
-                scriptEngine.getDataToBind().put(ModifiedEffect.class, JsBinding.Type.CLASS);
-                scriptEngine.getDataToBind().put(MusicEffect.class, JsBinding.Type.CLASS);
-                scriptEngine.getDataToBind().put(PlotEffect.class, JsBinding.Type.CLASS);
-                scriptEngine.getDataToBind().put(ShieldEffect.class, JsBinding.Type.CLASS);
-                scriptEngine.getDataToBind().put(SkyRocketEffect.class, JsBinding.Type.CLASS);
-                scriptEngine.getDataToBind().put(SmokeEffect.class, JsBinding.Type.CLASS);
-                scriptEngine.getDataToBind().put(SphereEffect.class, JsBinding.Type.CLASS);
-                scriptEngine.getDataToBind().put(StarEffect.class, JsBinding.Type.CLASS);
-                scriptEngine.getDataToBind().put(TextEffect.class, JsBinding.Type.CLASS);
-                scriptEngine.getDataToBind().put(TornadoEffect.class, JsBinding.Type.CLASS);
-                scriptEngine.getDataToBind().put(TraceEffect.class, JsBinding.Type.CLASS);
-                scriptEngine.getDataToBind().put(TurnEffect.class, JsBinding.Type.CLASS);
-                scriptEngine.getDataToBind().put(VortexEffect.class, JsBinding.Type.CLASS);
-                scriptEngine.getDataToBind().put(WarpEffect.class, JsBinding.Type.CLASS);
-                scriptEngine.getDataToBind().put(WaveEffect.class, JsBinding.Type.CLASS);
-            }
-
             Rpg.get().registerListeners(injector.getInstance(OnKeyPress.class));
             PacketHandler.init();
             new SpigotSkillTreeViewModel(); //just to call static block
@@ -253,7 +192,7 @@ public class SpigotRpgPlugin implements NtRpgBootstrap {
 
     public void disable() {
         executor.shutdown();
-        CharacterService characterService = Rpg.get().getCharacterService();
+        CharacterService<IActiveCharacter> characterService = Rpg.get().getCharacterService();
         Collection<IActiveCharacter> characters = characterService.getCharacters();
         for (IActiveCharacter character : characters) {
             if (character instanceof PreloadCharacter) {

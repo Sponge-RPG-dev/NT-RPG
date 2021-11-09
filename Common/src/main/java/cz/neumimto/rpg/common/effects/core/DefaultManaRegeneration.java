@@ -1,15 +1,15 @@
 package cz.neumimto.rpg.common.effects.core;
 
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.effects.EffectBase;
-import cz.neumimto.rpg.api.effects.EffectStatusType;
-import cz.neumimto.rpg.api.effects.Generate;
-import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.api.entity.CommonProperties;
-import cz.neumimto.rpg.api.entity.IEffectConsumer;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.events.character.CharacterManaRegainEvent;
-import cz.neumimto.rpg.api.gui.Gui;
+import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.effects.EffectBase;
+import cz.neumimto.rpg.common.effects.EffectStatusType;
+import cz.neumimto.rpg.common.effects.Generate;
+import cz.neumimto.rpg.common.effects.IEffect;
+import cz.neumimto.rpg.common.entity.CommonProperties;
+import cz.neumimto.rpg.common.entity.IEffectConsumer;
+import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.events.character.CharacterManaRegainEvent;
+import cz.neumimto.rpg.common.gui.Gui;
 import cz.neumimto.rpg.common.effects.CoreEffectTypes;
 
 /**

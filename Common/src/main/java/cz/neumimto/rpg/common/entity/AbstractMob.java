@@ -1,10 +1,8 @@
 package cz.neumimto.rpg.common.entity;
 
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.effects.IEffect;
-import cz.neumimto.rpg.api.effects.IEffectContainer;
-import cz.neumimto.rpg.api.entity.IEntityResource;
-import cz.neumimto.rpg.api.entity.IMob;
+import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.effects.IEffect;
+import cz.neumimto.rpg.common.effects.IEffectContainer;
 
 import java.util.HashMap;
 import java.util.Map;

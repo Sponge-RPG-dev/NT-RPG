@@ -1,15 +1,18 @@
 package cz.neumimto.rpg.spigot.bridges.mmoitems;
 
-import cz.neumimto.rpg.api.skills.PlayerSkillContext;
-import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.api.skills.types.ActiveSkill;
+import cz.neumimto.rpg.common.skills.PlayerSkillContext;
+import cz.neumimto.rpg.common.skills.SkillResult;
+import cz.neumimto.rpg.common.skills.types.ActiveSkill;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
-import io.lumine.mythic.lib.api.DamageType;
+import io.lumine.mythic.lib.api.player.EquipmentSlot;
+import io.lumine.mythic.lib.api.stat.StatMap;
+import io.lumine.mythic.lib.damage.DamageMetadata;
+import io.lumine.mythic.lib.damage.DamageType;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
-import net.Indyuce.mmoitems.api.ItemAttackResult;
-import net.Indyuce.mmoitems.api.ability.Ability;
-import net.Indyuce.mmoitems.api.ability.AbilityResult;
+import net.Indyuce.mmoitems.ability.Ability;
+import net.Indyuce.mmoitems.ability.AbilityMetadata;
+import net.Indyuce.mmoitems.api.ItemAttackMetadata;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.PlayerStats;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
@@ -29,7 +32,7 @@ public class MMOItemSkill extends ActiveSkill<ISpigotCharacter> {
     public void init() {
         Set<String> modifiers = ability.getModifiers();
         for (String modifier : modifiers) {
-            settings.addExpression(modifier, 10);
+            settings.addExpression(modifier, ability.getDefaultValue(modifier));
         }
     }
 
@@ -42,13 +45,17 @@ public class MMOItemSkill extends ActiveSkill<ISpigotCharacter> {
 
         PlayerData playerData = PlayerData.get(player);
         PlayerStats playerStats = new PlayerStats(playerData);
-        PlayerStats.CachedStats stats = playerStats.newTemporary();
+        StatMap.CachedStatMap stats = playerStats.newTemporary(EquipmentSlot.OTHER);
 
         for (Object2DoubleMap.Entry<String> e : compSettings.object2DoubleEntrySet()) {
             abilityData.setModifier(e.getKey(), e.getDoubleValue());
         }
 
-        boolean casted = this.cast(stats, new ItemAttackResult(true, DamageType.SKILL), abilityData);
+        DamageMetadata damageMetadata = new DamageMetadata();
+        if (skillContext.hasNode("damage")) {
+            damageMetadata.add(skillContext.getDoubleNodeValue("damage"), DamageType.SKILL);
+        }
+        boolean casted = this.cast(stats, new ItemAttackMetadata(damageMetadata, stats), abilityData);
         return casted ? SkillResult.OK : SkillResult.CANCELLED;
     }
 
@@ -56,10 +63,11 @@ public class MMOItemSkill extends ActiveSkill<ISpigotCharacter> {
         return ability;
     }
 
-    public boolean cast(PlayerStats.CachedStats stats, ItemAttackResult attack, AbilityData ability) {
-        AbilityResult abilityResult = ability.getAbility().whenRan(stats, null, ability, attack);
-        if (abilityResult.isSuccessful()) {
-            ability.getAbility().whenCast(stats, abilityResult, attack);
+    public boolean cast(StatMap.CachedStatMap stats, ItemAttackMetadata data, AbilityData ability) {
+
+        AbilityMetadata abilityMetadata = ability.getAbility().canBeCast(data, null, ability);
+        if (abilityMetadata.isSuccessful()) {
+            ability.getAbility().whenCast(data, abilityMetadata);
             return true;
         }
         return false;

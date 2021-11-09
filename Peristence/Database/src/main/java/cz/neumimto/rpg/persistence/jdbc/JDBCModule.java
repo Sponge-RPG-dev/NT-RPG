@@ -4,8 +4,8 @@ import com.google.auto.service.AutoService;
 import com.google.inject.Injector;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import cz.neumimto.rpg.api.RpgAddon;
-import cz.neumimto.rpg.api.logging.Log;
+import cz.neumimto.rpg.common.RpgAddon;
+import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.common.persistance.dao.ICharacterClassDao;
 import cz.neumimto.rpg.common.persistance.dao.IPersistenceHandler;
 import cz.neumimto.rpg.common.persistance.dao.IPlayerDao;
@@ -27,8 +27,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import static cz.neumimto.rpg.api.logging.Log.error;
-import static cz.neumimto.rpg.api.logging.Log.info;
+import static cz.neumimto.rpg.common.logging.Log.error;
+import static cz.neumimto.rpg.common.logging.Log.info;
 
 @AutoService(RpgAddon.class)
 public class JDBCModule implements RpgAddon {

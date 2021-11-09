@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.persistence.jdbc.dao;
 
-import cz.neumimto.rpg.api.persistance.model.CharacterClass;
+import cz.neumimto.rpg.common.model.CharacterClass;
 import cz.neumimto.rpg.common.persistance.dao.ICharacterClassDao;
 
 import javax.inject.Inject;

@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.spigot.events.skill;
 
-import cz.neumimto.rpg.api.entity.IEntity;
-import cz.neumimto.rpg.api.events.skill.SkillPreUsageEvent;
+import cz.neumimto.rpg.common.entity.IEntity;
+import cz.neumimto.rpg.common.events.skill.SkillPreUsageEvent;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 

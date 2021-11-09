@@ -1,10 +1,9 @@
 package cz.neumimto.rpg;
 
-import cz.neumimto.rpg.api.effects.CommonEffectTypes;
-import cz.neumimto.rpg.api.effects.EffectService;
-import cz.neumimto.rpg.api.effects.EffectType;
+import cz.neumimto.rpg.common.effects.EffectService;
+import cz.neumimto.rpg.common.effects.CommonEffectTypes;
+import cz.neumimto.rpg.common.effects.EffectType;
 import cz.neumimto.rpg.effects.TestEffectService;
-import cz.neumimto.rpg.junit.CharactersExtension;
 import cz.neumimto.rpg.junit.NtRpgExtension;
 import cz.neumimto.rpg.junit.TestGuiceModule;
 import name.falgout.jeffrey.testing.junit.guice.GuiceExtension;

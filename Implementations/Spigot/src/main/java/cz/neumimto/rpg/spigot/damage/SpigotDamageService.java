@@ -1,18 +1,19 @@
 package cz.neumimto.rpg.spigot.damage;
 
 import com.google.common.collect.Lists;
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.entity.CommonProperties;
-import cz.neumimto.rpg.api.entity.EntityService;
-import cz.neumimto.rpg.api.entity.IEntity;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
-import cz.neumimto.rpg.api.items.ClassItem;
-import cz.neumimto.rpg.common.damage.AbstractDamageService;
+import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.entity.CommonProperties;
+import cz.neumimto.rpg.common.entity.EntityService;
+import cz.neumimto.rpg.common.entity.IEntity;
+import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.common.items.ClassItem;
+import cz.neumimto.rpg.common.damage.DamageService;
 import cz.neumimto.rpg.spigot.entities.ISpigotEntity;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Tameable;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
@@ -21,7 +22,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Singleton
-public class SpigotDamageService extends AbstractDamageService<ISpigotCharacter, LivingEntity, ISpigotEntity<LivingEntity>> {
+public class SpigotDamageService extends DamageService<ISpigotCharacter, LivingEntity, ISpigotEntity<LivingEntity>> {
 
     private Map<Double, String> doubleColorMap = new TreeMap<>();
 
@@ -44,6 +45,26 @@ public class SpigotDamageService extends AbstractDamageService<ISpigotCharacter,
     public void damageEntity(ISpigotEntity<LivingEntity> entity, double value) {
         entity.getEntity().damage(value);
         //todo workaround bukkit stupidity entity.setLastDamageCause
+    }
+
+    public boolean canDamage(ISpigotEntity damager, LivingEntity damaged) {
+        LivingEntity entity = damager.getEntity();
+        if (entity.getType() == EntityType.PLAYER) {
+            if (damaged instanceof Tameable t) {
+                if (t.getOwner() != null && t.getOwner().equals(entity)) {
+                    return false;
+                }
+            }
+            return super.canDamage((ISpigotCharacter) damaged, damaged);
+        } else {
+            if (damaged instanceof Tameable t) {
+                if (t.getOwner() != null && t.getOwner().equals(entity)) {
+                    return false;
+                }
+            }
+            //todo
+            return true;
+        }
     }
 
     @Override

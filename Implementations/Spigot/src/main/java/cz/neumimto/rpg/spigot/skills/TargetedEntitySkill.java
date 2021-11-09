@@ -2,17 +2,19 @@ package cz.neumimto.rpg.spigot.skills;
 
 
 import com.google.inject.Inject;
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.damage.DamageService;
-import cz.neumimto.rpg.api.entity.IEntity;
-import cz.neumimto.rpg.api.events.skill.SkillTargetAttemptEvent;
-import cz.neumimto.rpg.api.skills.PlayerSkillContext;
-import cz.neumimto.rpg.api.skills.SkillNodes;
-import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.api.skills.tree.SkillType;
-import cz.neumimto.rpg.api.skills.types.ActiveSkill;
-import cz.neumimto.rpg.api.skills.types.ITargeted;
+import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.damage.DamageService;
+import cz.neumimto.rpg.common.entity.IEntity;
+import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.events.skill.SkillTargetAttemptEvent;
+import cz.neumimto.rpg.common.skills.PlayerSkillContext;
+import cz.neumimto.rpg.common.skills.SkillNodes;
+import cz.neumimto.rpg.common.skills.SkillResult;
+import cz.neumimto.rpg.common.skills.tree.SkillType;
+import cz.neumimto.rpg.common.skills.types.ActiveSkill;
+import cz.neumimto.rpg.common.skills.types.ITargeted;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.scripting.mechanics.Targetting;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -22,6 +24,9 @@ public abstract class TargetedEntitySkill extends ActiveSkill<ISpigotCharacter> 
 
     @Inject
     protected DamageService damageService;
+
+    @Inject
+    protected Targetting targettedEntity;
 
     @Override
     public void init() {

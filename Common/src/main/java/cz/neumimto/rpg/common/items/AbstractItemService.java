@@ -3,20 +3,18 @@ package cz.neumimto.rpg.common.items;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
 import com.typesafe.config.ConfigFactory;
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.configuration.AttributeConfig;
-import cz.neumimto.rpg.api.configuration.ItemString;
-import cz.neumimto.rpg.api.entity.PropertyService;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.entity.players.classes.ClassDefinition;
-import cz.neumimto.rpg.api.entity.players.classes.PlayerClassData;
-import cz.neumimto.rpg.api.items.*;
-import cz.neumimto.rpg.api.items.sockets.SocketType;
-import cz.neumimto.rpg.api.items.subtypes.ItemSubtype;
-import cz.neumimto.rpg.api.logging.Log;
-import cz.neumimto.rpg.api.permissions.PermissionService;
+import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.configuration.AttributeConfig;
+import cz.neumimto.rpg.common.configuration.ItemString;
+import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
+import cz.neumimto.rpg.common.items.sockets.SocketType;
+import cz.neumimto.rpg.common.items.subtypes.ItemSubtype;
+import cz.neumimto.rpg.common.logging.Log;
+import cz.neumimto.rpg.common.permissions.PermissionService;
 import cz.neumimto.rpg.common.assets.AssetService;
-import cz.neumimto.rpg.common.entity.PropertyServiceImpl;
+import cz.neumimto.rpg.common.entity.PropertyService;
 import cz.neumimto.rpg.common.utils.Wildcards;
 
 import javax.inject.Inject;
@@ -25,7 +23,7 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static cz.neumimto.rpg.api.logging.Log.*;
+import static cz.neumimto.rpg.common.logging.Log.*;
 
 public abstract class AbstractItemService implements ItemService {
 
@@ -97,7 +95,7 @@ public abstract class AbstractItemService implements ItemService {
 
     @Override
     public void registerProperty(ItemClass itemClass, String property) {
-        int val = PropertyServiceImpl.getAndIncrement.get();
+        int val = PropertyService.getAndIncrement.get();
 
         if (!propertyService.exists(property)) {
             propertyService.registerProperty(property, val);

@@ -1,10 +1,10 @@
 package cz.neumimto.rpg.common.commands;
 
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.entity.players.parties.PartyService;
-import cz.neumimto.rpg.api.localization.LocalizationKeys;
-import cz.neumimto.rpg.api.localization.LocalizationService;
+import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.parties.PartyService;
+import cz.neumimto.rpg.common.localization.LocalizationKeys;
+import cz.neumimto.rpg.common.localization.LocalizationService;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

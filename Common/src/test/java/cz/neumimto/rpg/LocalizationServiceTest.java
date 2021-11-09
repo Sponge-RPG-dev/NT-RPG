@@ -1,7 +1,7 @@
 package cz.neumimto.rpg;
 
-import cz.neumimto.rpg.api.localization.Arg;
-import cz.neumimto.rpg.api.localization.LocalizationService;
+import cz.neumimto.rpg.common.localization.Arg;
+import cz.neumimto.rpg.common.localization.LocalizationService;
 import cz.neumimto.rpg.junit.CharactersExtension;
 import cz.neumimto.rpg.junit.NtRpgExtension;
 import cz.neumimto.rpg.junit.TestGuiceModule;

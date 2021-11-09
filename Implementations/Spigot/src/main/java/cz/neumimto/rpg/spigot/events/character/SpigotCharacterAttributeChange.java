@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.spigot.events.character;
 
-import cz.neumimto.rpg.api.configuration.AttributeConfig;
-import cz.neumimto.rpg.api.events.character.CharacterAttributeChange;
+import cz.neumimto.rpg.common.configuration.AttributeConfig;
+import cz.neumimto.rpg.common.events.character.CharacterAttributeChange;
 import org.bukkit.event.HandlerList;
 
 import java.util.Map;

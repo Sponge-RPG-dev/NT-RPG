@@ -3,7 +3,7 @@ package cz.neumimto.rpg.persistence.jdbc.converters;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import cz.neumimto.rpg.api.persistance.model.EquipedSlot;
+import cz.neumimto.rpg.common.model.EquipedSlot;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.spigot.skills;
 
-import cz.neumimto.rpg.api.gui.ISkillTreeInterfaceModel;
+import cz.neumimto.rpg.common.gui.ISkillTreeInterfaceModel;
 import cz.neumimto.rpg.spigot.gui.SpigotGuiHelper;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;

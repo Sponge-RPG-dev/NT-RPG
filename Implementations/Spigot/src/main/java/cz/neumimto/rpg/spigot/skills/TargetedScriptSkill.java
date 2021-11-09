@@ -1,20 +1,16 @@
 package cz.neumimto.rpg.spigot.skills;
 
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.entity.EntityService;
-import cz.neumimto.rpg.api.entity.IEntity;
-import cz.neumimto.rpg.api.logging.Log;
-import cz.neumimto.rpg.api.scripting.SkillScriptHandlers;
-import cz.neumimto.rpg.api.skills.ISkillType;
-import cz.neumimto.rpg.api.skills.PlayerSkillContext;
-import cz.neumimto.rpg.api.skills.SkillResult;
-import cz.neumimto.rpg.api.skills.scripting.ScriptSkillModel;
-import cz.neumimto.rpg.api.skills.types.ITargetedScriptSkill;
+import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.entity.IEntity;
+import cz.neumimto.rpg.common.logging.Log;
+import cz.neumimto.rpg.common.scripting.SkillScriptHandlers;
+import cz.neumimto.rpg.common.skills.ISkillType;
+import cz.neumimto.rpg.common.skills.PlayerSkillContext;
+import cz.neumimto.rpg.common.skills.SkillResult;
+import cz.neumimto.rpg.common.skills.scripting.ScriptSkillModel;
+import cz.neumimto.rpg.common.skills.types.ITargetedScriptSkill;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 
-import javax.inject.Inject;
-import javax.script.Bindings;
-import javax.script.SimpleBindings;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,20 +19,13 @@ import java.util.Optional;
  */
 public class TargetedScriptSkill extends TargetedEntitySkill implements ITargetedScriptSkill {
 
-    @Inject
-    private EntityService entityService;
-
     private ScriptSkillModel model;
 
     private SkillScriptHandlers.Targetted handler;
 
     @Override
     public SkillResult castOn(IEntity target, ISpigotCharacter source, PlayerSkillContext skillContext) {
-        Bindings bindings = new SimpleBindings();
-        bindings.put("_target", target);
-        bindings.put("_caster", source);
-        bindings.put("_context", skillContext);
-        SkillResult skillResult = handler.castOnTarget(source, skillContext, target);
+        SkillResult skillResult = handler.castOnTarget(source, skillContext, target, this);
         return skillResult == null ? SkillResult.OK : skillResult;
     }
 
@@ -53,16 +42,6 @@ public class TargetedScriptSkill extends TargetedEntitySkill implements ITargete
     @Override
     public void setModel(ScriptSkillModel model) {
         this.model = model;
-        setDamageType(model.getDamageType());
-        setCatalogId(model.getId());
-        List<String> configTypes = model.getSkillTypes();
-        for (String configType : configTypes) {
-            Optional<ISkillType> skillType = Rpg.get().getSkillService().getSkillType(configType);
-            if (skillType.isPresent()) {
-                addSkillType(skillType.get());
-            } else {
-                Log.warn("Unknown skill type " + configType);
-            }
-        }
+        initFromModel();
     }
 }

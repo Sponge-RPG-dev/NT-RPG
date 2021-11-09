@@ -1,17 +1,17 @@
 package cz.neumimto.rpg.common.entity.parties;
 
 
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.entity.players.parties.PartyService;
-import cz.neumimto.rpg.api.entity.players.party.IParty;
-import cz.neumimto.rpg.api.events.party.PartyCreateEvent;
-import cz.neumimto.rpg.api.events.party.PartyInviteEvent;
-import cz.neumimto.rpg.api.events.party.PartyJoinEvent;
-import cz.neumimto.rpg.api.events.party.PartyLeaveEvent;
-import cz.neumimto.rpg.api.localization.Arg;
-import cz.neumimto.rpg.api.localization.LocalizationKeys;
-import cz.neumimto.rpg.api.localization.LocalizationService;
+import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.parties.PartyService;
+import cz.neumimto.rpg.common.entity.players.party.IParty;
+import cz.neumimto.rpg.common.events.party.PartyCreateEvent;
+import cz.neumimto.rpg.common.events.party.PartyInviteEvent;
+import cz.neumimto.rpg.common.events.party.PartyJoinEvent;
+import cz.neumimto.rpg.common.events.party.PartyLeaveEvent;
+import cz.neumimto.rpg.common.localization.Arg;
+import cz.neumimto.rpg.common.localization.LocalizationKeys;
+import cz.neumimto.rpg.common.localization.LocalizationService;
 
 import javax.inject.Inject;
 

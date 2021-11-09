@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.spigot.assets;
 
-import cz.neumimto.rpg.api.logging.Log;
+import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.spigot.gui.inventoryviews.ConfigurableInventoryGui;
 

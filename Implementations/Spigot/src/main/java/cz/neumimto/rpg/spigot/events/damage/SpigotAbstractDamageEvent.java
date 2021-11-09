@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.spigot.events.damage;
 
-import cz.neumimto.rpg.api.entity.IEntity;
+import cz.neumimto.rpg.common.entity.IEntity;
 import cz.neumimto.rpg.spigot.events.AbstractNEvent;
 import org.bukkit.event.Cancellable;
 

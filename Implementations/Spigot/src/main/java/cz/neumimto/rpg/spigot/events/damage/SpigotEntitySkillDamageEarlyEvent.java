@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.spigot.events.damage;
 
-import cz.neumimto.rpg.api.events.damage.IEntitySkillDamageEarlyEvent;
-import cz.neumimto.rpg.api.skills.ISkill;
+import cz.neumimto.rpg.common.events.damage.IEntitySkillDamageEarlyEvent;
+import cz.neumimto.rpg.common.skills.ISkill;
 import org.bukkit.event.HandlerList;
 
 public class SpigotEntitySkillDamageEarlyEvent extends SpigotAbstractDamageEvent implements IEntitySkillDamageEarlyEvent {

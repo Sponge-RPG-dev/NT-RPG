@@ -3,15 +3,11 @@ package cz.neumimto.rpg.common.skills;
 
 import com.google.inject.Injector;
 import com.google.inject.Key;
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.api.events.EventFactoryService;
-import cz.neumimto.rpg.api.events.skill.SkillPostUsageEvent;
-import cz.neumimto.rpg.api.events.skill.SkillPreUsageEvent;
-import cz.neumimto.rpg.api.skills.ISkillExecutor;
-import cz.neumimto.rpg.api.skills.PlayerSkillContext;
-import cz.neumimto.rpg.api.skills.SkillData;
-import cz.neumimto.rpg.api.skills.SkillResult;
+import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.events.EventFactoryService;
+import cz.neumimto.rpg.common.events.skill.SkillPostUsageEvent;
+import cz.neumimto.rpg.common.events.skill.SkillPreUsageEvent;
 import cz.neumimto.rpg.common.skills.processors.ISkillCondition;
 import cz.neumimto.rpg.common.skills.reagents.ISkillCastMechanic;
 

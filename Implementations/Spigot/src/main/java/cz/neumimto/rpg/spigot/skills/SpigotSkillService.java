@@ -1,17 +1,24 @@
 package cz.neumimto.rpg.spigot.skills;
 
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.gui.ISkillTreeInterfaceModel;
-import cz.neumimto.rpg.common.skills.AbstractSkillService;
+import cz.neumimto.nts.NTScript;
+import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.gui.ISkillTreeInterfaceModel;
+import cz.neumimto.rpg.common.scripting.SkillScriptHandlers;
+import cz.neumimto.rpg.common.skills.types.ScriptSkill;
+import cz.neumimto.rpg.common.skills.SkillService;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import org.bukkit.Material;
+import org.bukkit.Particle;
+import org.bukkit.util.Vector;
 
 import javax.inject.Singleton;
+import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Singleton
-public class SpigotSkillService extends AbstractSkillService {
+public class SpigotSkillService extends SkillService {
 
     private Map<Character, SpigotSkillTreeInterfaceModel> guiModelByCharacter;
 
@@ -46,10 +53,57 @@ public class SpigotSkillService extends AbstractSkillService {
     }
 
     @Override
+    public NTScript getNtScriptCompilerFor(Class<? extends SkillScriptHandlers> c) {
+        return ntScriptEngine.prepareCompiler(builder -> {
+            try {
+                builder
+                    .withEnum(Particle.class)
+
+                    .add(Vector.class.getConstructor(double.class, double.class, double.class), "vector", List.of("x","y","z"))
+
+                    .add(Math.class.getDeclaredMethod("max", double.class, double.class), List.of("a","b"))
+                    .add(Math.class.getDeclaredMethod("min", double.class, double.class), List.of("a","b"))
+                    .add(Math.class.getDeclaredMethod("pow", double.class, double.class), List.of("a","b"))
+                    .add(Math.class.getDeclaredMethod("abs", double.class), List.of("a"))
+                    .add(Math.class.getDeclaredMethod("sqrt", double.class), List.of("a"))
+                    .add(Math.class.getDeclaredMethod("ceil", double.class), List.of("a"))
+                    .add(Math.class.getDeclaredMethod("floor", double.class), List.of("a"))
+                    .add(Math.class.getDeclaredMethod("log", double.class), List.of("a"))
+                    .add(Math.class.getDeclaredMethod("toDegrees", double.class), List.of("a"))
+                    .add(Math.class.getDeclaredMethod("toRadians", double.class), List.of("a"))
+                    .add(Math.class.getDeclaredMethod("random"), List.of("a"))
+
+                    .add(Math.class.getDeclaredMethod("sin", double.class), List.of("a"))
+                    .add(Math.class.getDeclaredMethod("sinh", double.class), List.of("a"))
+                    .add(Math.class.getDeclaredMethod("asin", double.class), List.of("a"))
+
+                    .add(Math.class.getDeclaredMethod("tan", double.class), List.of("a"))
+                    .add(Math.class.getDeclaredMethod("tanh", double.class), List.of("a"))
+                    .add(Math.class.getDeclaredMethod("atan", double.class), List.of("a"))
+
+                    .add(Math.class.getDeclaredMethod("cos", double.class), List.of("a"))
+                    .add(Math.class.getDeclaredMethod("cosh", double.class), List.of("a"))
+                    .add(Math.class.getDeclaredMethod("acos", double.class), List.of("a"))
+                    .debugOutput(Rpg.get().getWorkingDirectory() + File.separator + "/compiled-scripts")
+                    ;
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
+        }, c);
+    }
+
+    @Override
     public ISkillTreeInterfaceModel getGuiModelByCharacter(char c) {
         return guiModelByCharacter.get(c);
     }
 
+    @Override
+    public ScriptSkill getSkillByHandlerType(SkillScriptHandlers instance) {
+        if (instance instanceof SkillScriptHandlers.Targetted) {
+            return new TargetedScriptSkill();
+        }
+        return super.getSkillByHandlerType(instance);
+    }
 
     public SpigotSkillTreeInterfaceModel getGuiModelById(Short k) {
         return guiModelById.get(k);

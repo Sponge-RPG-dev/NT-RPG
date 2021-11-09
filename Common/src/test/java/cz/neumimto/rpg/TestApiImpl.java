@@ -2,29 +2,29 @@ package cz.neumimto.rpg;
 
 import com.google.inject.Injector;
 import com.google.inject.Module;
-import cz.neumimto.rpg.api.ResourceLoader;
-import cz.neumimto.rpg.api.RpgAddon;
-import cz.neumimto.rpg.api.RpgApi;
-import cz.neumimto.rpg.api.classes.ClassService;
-import cz.neumimto.rpg.api.configuration.PluginConfig;
-import cz.neumimto.rpg.api.damage.DamageService;
-import cz.neumimto.rpg.api.effects.EffectService;
-import cz.neumimto.rpg.api.entity.PropertyService;
-import cz.neumimto.rpg.api.entity.players.parties.PartyService;
-import cz.neumimto.rpg.api.events.EventFactoryService;
-import cz.neumimto.rpg.api.exp.ExperienceService;
-import cz.neumimto.rpg.api.items.ItemService;
-import cz.neumimto.rpg.api.localization.Arg;
-import cz.neumimto.rpg.api.localization.LocalizationService;
-import cz.neumimto.rpg.api.scripting.IRpgScriptEngine;
-import cz.neumimto.rpg.api.skills.SkillService;
+import cz.neumimto.rpg.common.ResourceLoader;
+import cz.neumimto.rpg.common.RpgAddon;
+import cz.neumimto.rpg.common.RpgApi;
+import cz.neumimto.rpg.common.classes.ClassService;
+import cz.neumimto.rpg.common.configuration.PluginConfig;
+import cz.neumimto.rpg.common.damage.DamageService;
+import cz.neumimto.rpg.common.effects.EffectService;
+import cz.neumimto.rpg.common.entity.PropertyService;
+import cz.neumimto.rpg.common.entity.players.parties.PartyService;
+import cz.neumimto.rpg.common.events.EventFactoryService;
+import cz.neumimto.rpg.common.exp.ExperienceService;
+import cz.neumimto.rpg.common.items.ItemService;
+import cz.neumimto.rpg.common.localization.Arg;
+import cz.neumimto.rpg.common.localization.LocalizationService;
+import cz.neumimto.rpg.common.permissions.PermissionService;
+import cz.neumimto.rpg.common.scripting.NTScriptEngine;
+import cz.neumimto.rpg.common.skills.SkillService;
 import cz.neumimto.rpg.common.impl.TestCharacterService;
 import cz.neumimto.rpg.common.inventory.TestInventoryService;
 import cz.neumimto.rpg.entity.TestEntityService;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -67,7 +67,7 @@ public class TestApiImpl implements RpgApi {
     private EffectService effectService;
 
     @Inject
-    private IRpgScriptEngine jsLoader;
+    private NTScriptEngine ntScriptEngine;
 
     @Inject
     private TestEntityService entityService;
@@ -100,8 +100,8 @@ public class TestApiImpl implements RpgApi {
     }
 
     @Override
-    public IRpgScriptEngine getScriptEngine() {
-        return jsLoader;
+    public NTScriptEngine getScriptEngine() {
+        return ntScriptEngine;
     }
 
     @Override
@@ -231,6 +231,11 @@ public class TestApiImpl implements RpgApi {
     }
 
     @Override
+    public PermissionService getPermissionService() {
+        return null;
+    }
+
+    @Override
     public void reloadMainPluginConfig() {
 
     }
@@ -238,6 +243,11 @@ public class TestApiImpl implements RpgApi {
     @Override
     public void scheduleSyncLater(Runnable runnable) {
         runnable.run();
+    }
+
+    @Override
+    public void scheduleSyncLater(long millis, Runnable runnable) {
+
     }
 
     @Override

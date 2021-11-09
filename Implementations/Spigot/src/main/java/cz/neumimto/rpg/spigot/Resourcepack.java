@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.spigot;
 
-import cz.neumimto.rpg.api.utils.rng.XORShiftRnd;
+import cz.neumimto.rpg.common.utils.rng.XORShiftRnd;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;

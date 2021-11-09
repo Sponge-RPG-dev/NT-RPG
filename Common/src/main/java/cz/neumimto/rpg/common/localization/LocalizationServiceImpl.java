@@ -1,7 +1,5 @@
 package cz.neumimto.rpg.common.localization;
 
-import cz.neumimto.rpg.api.localization.Arg;
-import cz.neumimto.rpg.api.localization.LocalizationService;
 import cz.neumimto.rpg.common.utils.StringUtils;
 
 import javax.inject.Singleton;

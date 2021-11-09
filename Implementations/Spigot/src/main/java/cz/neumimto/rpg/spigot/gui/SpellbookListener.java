@@ -1,11 +1,12 @@
 package cz.neumimto.rpg.spigot.gui;
 
 import com.google.auto.service.AutoService;
-import cz.neumimto.rpg.api.ResourceLoader;
-import cz.neumimto.rpg.api.Rpg;
-import cz.neumimto.rpg.api.entity.players.CharacterService;
-import cz.neumimto.rpg.api.localization.LocalizationKeys;
-import cz.neumimto.rpg.api.skills.PlayerSkillContext;
+import cz.neumimto.rpg.common.ResourceLoader;
+import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.entity.players.CharacterService;
+import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.localization.LocalizationKeys;
+import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.services.IRpgListener;
 import de.tr7zw.nbtapi.NBTItem;
