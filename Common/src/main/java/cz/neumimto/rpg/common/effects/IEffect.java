@@ -10,7 +10,7 @@ import java.util.Set;
 /**
  * Created by NeumimTo on 17.1.2015.
  */
-public interface IEffect<K> extends IRpgElement {
+public interface IEffect<K> extends IRpgElement, IEffectSourceProvider {
 
     /**
      * @param self The reference to the effect currently being processed. IE: self == this is always true. Useful mainly for JavaScript scripts
@@ -82,4 +82,8 @@ public interface IEffect<K> extends IRpgElement {
     boolean isTickingDisabled();
 
     void setTickingDisabled(boolean tickingDisabled);
+
+    default IEffectSource getType() {
+        return EffectSourceType.EFFECT;
+    }
 }

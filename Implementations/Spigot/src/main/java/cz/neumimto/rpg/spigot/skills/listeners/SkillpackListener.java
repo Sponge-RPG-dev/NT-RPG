@@ -14,6 +14,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
+import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 import org.spigotmc.event.entity.EntityDismountEvent;
 
 import javax.inject.Inject;
@@ -88,4 +89,13 @@ public class SkillpackListener implements IRpgListener {
         }
     }
 
+    @EventHandler
+    public void onEntityFindTarget(EntityTargetLivingEntityEvent event) {
+        if (event.getTarget() == null) {
+            return;
+        }
+        if (InvisibilityEffect.invisibleEntities.contains(event.getTarget().getUniqueId())) {
+            event.setCancelled(true);
+        }
+    }
 }
