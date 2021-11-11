@@ -8,14 +8,8 @@ import cz.neumimto.rpg.common.effects.Generate;
 import cz.neumimto.rpg.common.effects.IEffect;
 import cz.neumimto.rpg.common.entity.IEffectConsumer;
 import cz.neumimto.rpg.common.entity.IEntity;
-import cz.neumimto.rpg.spigot.entities.ISpigotEntity;
 import org.bukkit.Particle;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
 
 @ScriptMeta.Function("FlickerEffect")
 @AutoService(IEffect.class)
@@ -27,7 +21,7 @@ public class FlickerEffect extends EffectBase {
 
 
     @ScriptMeta.Handler
-    public FlickerEffect(@ScriptMeta.NamedParam("e|entity") IEntity consumer,
+    public FlickerEffect(@ScriptMeta.NamedParam("e|entity") IEffectConsumer consumer,
                          @ScriptMeta.NamedParam("d|duration") long duration,
                          @ScriptMeta.NamedParam("id|invisDuration") long invisDuration) {
         super(name, consumer);
@@ -38,7 +32,7 @@ public class FlickerEffect extends EffectBase {
     @Override
     public void onTick(IEffect self) {
         InvisibilityEffect invisibilityEffect = new InvisibilityEffect(getConsumer(), invisDuration);
-        Rpg.get().getEffectService().addEffect(invisibilityEffect, this, (IEntity) getConsumer());
+        Rpg.get().getEffectService().addEffect(invisibilityEffect, getEffectSourceProvider(), (IEntity) getConsumer());
         LivingEntity entity = (LivingEntity) getConsumer().getEntity();
         entity.getWorld().spawnParticle(Particle.SMOKE_NORMAL, entity.getLocation(),  5);
     }

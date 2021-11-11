@@ -9,6 +9,8 @@ import cz.neumimto.rpg.common.skills.SkillService;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import org.bukkit.Material;
 import org.bukkit.Particle;
+import org.bukkit.Sound;
+import org.bukkit.block.BlockFace;
 import org.bukkit.util.Vector;
 
 import javax.inject.Singleton;
@@ -53,11 +55,21 @@ public class SpigotSkillService extends SkillService {
     }
 
     @Override
+    protected Class getScriptTargetType(Class c, String s) {
+        if ("tb".equalsIgnoreCase(s) || "TargetedBlock".equalsIgnoreCase(s)) {
+            return SpigotSkillScriptHandlers.TargetedBlock.class;
+        }
+        return super.getScriptTargetType(c, s);
+    }
+
+    @Override
     public NTScript getNtScriptCompilerFor(Class<? extends SkillScriptHandlers> c) {
         return ntScriptEngine.prepareCompiler(builder -> {
             try {
                 builder
                     .withEnum(Particle.class)
+                    .withEnum(Sound.class)
+                    .withEnum(BlockFace.class)
 
                     .add(Vector.class.getConstructor(double.class, double.class, double.class), "vector", List.of("x","y","z"))
 
@@ -101,6 +113,9 @@ public class SpigotSkillService extends SkillService {
     public ScriptSkill getSkillByHandlerType(SkillScriptHandlers instance) {
         if (instance instanceof SkillScriptHandlers.Targetted) {
             return new TargetedScriptSkill();
+        }
+        if (instance instanceof SpigotSkillScriptHandlers.TargetedBlock) {
+            return new TargetedBlockScriptSkill();
         }
         return super.getSkillByHandlerType(instance);
     }

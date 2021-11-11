@@ -8,13 +8,18 @@ import cz.neumimto.rpg.common.skills.ISkill;
 import cz.neumimto.rpg.nms.NMSHandler;
 import cz.neumimto.rpg.spigot.entities.ISpigotEntity;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.util.Vector;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import java.util.List;
 
 import static cz.neumimto.nts.annotations.ScriptMeta.Handler;
 import static cz.neumimto.nts.annotations.ScriptMeta.NamedParam;
@@ -38,9 +43,23 @@ public class SpigotEntityUtils implements NTScriptProxy {
     @ScriptMeta.Function("teleport")
     public void teleport(
             @NamedParam("e|entity") IEntity e,
-            @NamedParam("l|location") Location l
+            @NamedParam("l|location") Location l,
+            @NamedParam("p|pitch") float pitch,
+            @NamedParam("y|yaw") float yaw,
+            @NamedParam("rbf|relativeBlockFace") BlockFace blockFace
+
     ) {
-        ((LivingEntity)e.getEntity()).teleport(l, PlayerTeleportEvent.TeleportCause.COMMAND);
+        if (pitch != 0) {
+            l.setPitch(pitch);
+        }
+        if (yaw != 0) {
+            l.setYaw(yaw);
+        }
+        if (blockFace != null) {
+            l = l.getBlock().getRelative(blockFace).getLocation();
+        }
+        ((LivingEntity) e.getEntity()).teleport(l, PlayerTeleportEvent.TeleportCause.COMMAND);
+
     }
 
     @Handler

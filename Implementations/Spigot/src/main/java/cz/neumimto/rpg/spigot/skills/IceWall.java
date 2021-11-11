@@ -10,6 +10,7 @@ import cz.neumimto.rpg.common.skills.tree.SkillType;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
@@ -33,7 +34,7 @@ public class IceWall extends TargetedBlockSkill {
     }
 
     @Override
-    protected SkillResult castOn(Block block, ISpigotCharacter character, PlayerSkillContext skillContext) {
+    protected SkillResult castOn(Block block, BlockFace blockFace, ISpigotCharacter character, PlayerSkillContext skillContext) {
         Player player = character.getPlayer();
         Location eyeLocation = player.getEyeLocation();
         Location centerLocation = block.getLocation().clone().add(new Vector(0, 1, 0));

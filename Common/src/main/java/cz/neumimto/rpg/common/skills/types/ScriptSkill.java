@@ -9,7 +9,7 @@ import cz.neumimto.rpg.common.skills.scripting.ScriptSkillModel;
 import java.util.List;
 import java.util.Optional;
 
-public interface ScriptSkill<T> {
+public interface ScriptSkill {
 
     void setHandler(SkillScriptHandlers handler);
 

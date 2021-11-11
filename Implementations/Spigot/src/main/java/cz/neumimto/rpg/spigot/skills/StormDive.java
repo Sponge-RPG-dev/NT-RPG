@@ -18,6 +18,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -50,7 +51,7 @@ public class StormDive extends TargetedBlockSkill {
     }
 
     @Override
-    protected SkillResult castOn(Block block, ISpigotCharacter character, PlayerSkillContext skillContext) {
+    protected SkillResult castOn(Block block, BlockFace blockFace, ISpigotCharacter character, PlayerSkillContext skillContext) {
         if (block.getLocation().getY() + 2 < character.getPlayer().getEyeLocation().getY()) {
             double damage = skillContext.getDoubleNodeValue(SkillNodes.DAMAGE);
             double range = skillContext.getDoubleNodeValue("land-damage-range");

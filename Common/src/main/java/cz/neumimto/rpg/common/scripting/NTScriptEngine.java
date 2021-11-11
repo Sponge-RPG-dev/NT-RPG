@@ -103,6 +103,8 @@ public class NTScriptEngine {
                 list.add(Class.forName("cz.neumimto.rpg.spigot.effects.common.UnhealEffect"));
                 list.add(Class.forName("cz.neumimto.rpg.spigot.effects.common.UnlimtedFoodLevelEffect"));
                 list.add(Class.forName("cz.neumimto.rpg.spigot.effects.common.WebEffect"));
+                list.add(Class.forName("cz.neumimto.rpg.spigot.effects.common.FlickerEffect"));
+                list.add(Class.forName("cz.neumimto.rpg.spigot.effects.common.InvisibilityEffect"));
             } catch (Exception e) {
 
             }

@@ -19,6 +19,7 @@ import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -54,7 +55,7 @@ public class IceSpike extends TargetedBlockSkill {
     }
 
     @Override
-    protected SkillResult castOn(Block block, ISpigotCharacter character, PlayerSkillContext skillContext) {
+    protected SkillResult castOn(Block block, BlockFace blockFace, ISpigotCharacter character, PlayerSkillContext skillContext) {
 
         double damage = skillContext.getDoubleNodeValue(SkillNodes.DAMAGE);
         double damageInitial = skillContext.getDoubleNodeValue("damage-initial");

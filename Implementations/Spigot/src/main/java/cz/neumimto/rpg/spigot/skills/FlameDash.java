@@ -15,6 +15,7 @@ import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
 import javax.inject.Singleton;
@@ -34,7 +35,7 @@ public class FlameDash extends TargetedBlockSkill {
 
 
     @Override
-    protected SkillResult castOn(Block block, ISpigotCharacter character, PlayerSkillContext skillContext) {
+    protected SkillResult castOn(Block block, BlockFace blockFace, ISpigotCharacter character, PlayerSkillContext skillContext) {
         Player player = character.getPlayer();
         long delay = skillContext.getLongNodeValue("delay");
 

@@ -8,7 +8,6 @@ import com.electronwill.nightconfig.core.io.ConfigParser;
 import com.electronwill.nightconfig.hocon.HoconFormat;
 import com.google.inject.Injector;
 import cz.neumimto.nts.NTScript;
-import cz.neumimto.rpg.common.ResourceLoader;
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.classes.ClassService;
@@ -19,7 +18,6 @@ import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.common.scripting.NTScriptEngine;
 import cz.neumimto.rpg.common.scripting.SkillScriptHandlers;
 import cz.neumimto.rpg.common.skills.scripting.ActiveScriptSkill;
-import cz.neumimto.rpg.common.skills.scripting.PassiveScriptSkillHandler;
 import cz.neumimto.rpg.common.skills.scripting.ScriptSkillModel;
 import cz.neumimto.rpg.common.skills.tree.SkillTree;
 import cz.neumimto.rpg.common.skills.tree.SkillType;
@@ -28,8 +26,6 @@ import cz.neumimto.rpg.common.skills.types.ScriptSkill;
 import cz.neumimto.rpg.common.utils.ClassUtils;
 import cz.neumimto.rpg.common.utils.DebugLevel;
 import cz.neumimto.rpg.common.utils.annotations.CatalogId;
-import net.bytebuddy.ByteBuddy;
-import net.bytebuddy.description.annotation.AnnotationDescription;
 
 import javax.inject.Inject;
 import java.io.File;
@@ -183,13 +179,7 @@ public abstract class SkillService {
                 Class c = null;
 
                 String s = String.valueOf(scriptSkillModel.getSuperType()).toLowerCase();
-                if ("a".equalsIgnoreCase(s) || "active".equalsIgnoreCase(s)) {
-                    c = SkillScriptHandlers.Active.class;
-                } else if ("t".equalsIgnoreCase(s) || "targeted".equalsIgnoreCase(s)) {
-                    c = SkillScriptHandlers.Targetted.class;
-                } else if ("p".equalsIgnoreCase(s) || "passive".equalsIgnoreCase(s)) {
-                    c = SkillScriptHandlers.Passive.class;
-                }
+                c = getScriptTargetType(c, s);
 
                 if (c == null) {
                     c = SkillScriptHandlers.Active.class;
@@ -216,6 +206,17 @@ public abstract class SkillService {
 
         }
         return null;
+    }
+
+    protected Class getScriptTargetType(Class c, String s) {
+        if ("a".equalsIgnoreCase(s) || "active".equalsIgnoreCase(s)) {
+            c = SkillScriptHandlers.Active.class;
+        } else if ("t".equalsIgnoreCase(s) || "targeted".equalsIgnoreCase(s)) {
+            c = SkillScriptHandlers.Targetted.class;
+        } else if ("p".equalsIgnoreCase(s) || "passive".equalsIgnoreCase(s)) {
+            c = SkillScriptHandlers.Passive.class;
+        }
+        return c;
     }
 
     public ScriptSkill getSkillByHandlerType(SkillScriptHandlers instance) {

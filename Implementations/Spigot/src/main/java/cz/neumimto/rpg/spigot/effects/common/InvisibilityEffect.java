@@ -18,7 +18,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-@ScriptMeta.Function("MainEffect")
+@ScriptMeta.Function("InvisibilityEffect")
 @AutoService(IEffect.class)
 @Generate(id = "name", description = "Makes entity invisible")
 public class InvisibilityEffect extends EffectBase {
