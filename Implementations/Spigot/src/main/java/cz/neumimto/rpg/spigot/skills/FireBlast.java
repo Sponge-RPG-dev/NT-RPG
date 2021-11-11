@@ -1,13 +1,13 @@
 package cz.neumimto.rpg.spigot.skills;
 
 import com.google.auto.service.AutoService;
-import cz.neumimto.FireworkHandler;
 import cz.neumimto.rpg.common.ResourceLoader;
 import cz.neumimto.rpg.common.skills.ISkill;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.skills.SkillNodes;
 import cz.neumimto.rpg.common.skills.SkillResult;
 import cz.neumimto.rpg.common.skills.tree.SkillType;
+import cz.neumimto.rpg.nms.NMSHandler;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
@@ -46,6 +46,9 @@ public class FireBlast extends TargetedBlockSkill {
 
     @Inject
     private SpigotDamageService spigotDamageService;
+
+    @Inject
+    private NMSHandler nmsHandler;
 
     @Override
     public void init() {
@@ -97,11 +100,11 @@ public class FireBlast extends TargetedBlockSkill {
     }
 
     private void spawnFireworks(Location location) {
-        FireworkHandler.spawn(location, FireworkEffect.builder()
+        nmsHandler.spawnFireworkExplosion(location, FireworkEffect.builder()
                 .withColor(Color.fromRGB(229, 55, 28))
                 .withFade(Color.fromRGB(229, 125, 28))
                 .with(FireworkEffect.Type.BALL)
-                .build(), 40);
+                .build(), location.getWorld().getPlayers());
     }
 
     private class Particles extends BukkitRunnable {

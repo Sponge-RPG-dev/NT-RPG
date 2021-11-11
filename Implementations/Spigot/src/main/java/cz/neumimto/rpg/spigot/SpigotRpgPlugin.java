@@ -6,7 +6,6 @@ import co.aikar.commands.CommandManager;
 import co.aikar.commands.InvalidCommandArgument;
 import com.google.auto.service.AutoService;
 import com.google.inject.Injector;
-import cz.neumimto.FireworkHandler;
 import cz.neumimto.rpg.NtRpgBootstrap;
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
@@ -90,11 +89,6 @@ public class SpigotRpgPlugin implements NtRpgBootstrap {
         final BukkitScheduler scheduler = Bukkit.getScheduler();
         SpigotRpg spigotRpg = new SpigotRpg(workingDirPath.toString(), command -> scheduler.runTask(SpigotRpgPlugin.getInstance(), command));
 
-        try {
-            FireworkHandler.load(getClass().getClassLoader());
-        } catch (Throwable t) {
-            Log.warn("Unable to load Firework Handler");
-        }
         CommandManager manager = data.commandManager();
 
         manager.getCommandContexts().registerContext(OnlineOtherPlayer.class, c -> {

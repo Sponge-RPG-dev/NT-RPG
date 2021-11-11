@@ -16,16 +16,16 @@ import net.minecraft.world.entity.projectile.FireworkRocketEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.WitherSkull;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
+import org.bukkit.FireworkEffect;
+import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_17_R1.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_17_R1.event.CraftEventFactory;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Trident;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 
-import static org.bukkit.event.entity.EntityDamageEvent.DamageCause.*;
+import java.util.List;
 
 @AutoService(cz.neumimto.rpg.nms.NMSHandler.class)
 public class NMSHandler extends cz.neumimto.rpg.nms.NMSHandler {
@@ -33,6 +33,11 @@ public class NMSHandler extends cz.neumimto.rpg.nms.NMSHandler {
     @Override
     public String getVersion() {
         return "1.17";
+    }
+
+    @Override
+    public void spawnFireworkExplosion(Location location, FireworkEffect effect, List<org.bukkit.entity.Player> observers) {
+        new CustomFirework(location,effect, observers);
     }
 
     @Override

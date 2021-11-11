@@ -1,7 +1,6 @@
 package cz.neumimto.rpg.spigot.skills;
 
 import com.google.auto.service.AutoService;
-import cz.neumimto.FireworkHandler;
 import cz.neumimto.rpg.common.ResourceLoader;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.effects.EffectBase;
@@ -13,6 +12,7 @@ import cz.neumimto.rpg.common.skills.SkillNodes;
 import cz.neumimto.rpg.common.skills.SkillResult;
 import cz.neumimto.rpg.common.skills.types.ActiveSkill;
 import cz.neumimto.rpg.common.skills.mech.DamageMechanic;
+import cz.neumimto.rpg.nms.NMSHandler;
 import cz.neumimto.rpg.spigot.Resourcepack;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
@@ -39,6 +39,8 @@ public class FireRemnant extends ActiveSkill<ISpigotCharacter> {
     @Inject
     private DamageMechanic damageMechanic;
 
+    @Inject
+    private NMSHandler nmsHandler;
 
     @Override
     public void init() {
@@ -89,7 +91,7 @@ public class FireRemnant extends ActiveSkill<ISpigotCharacter> {
         }
     }
 
-    public static class FireRemnantEffect extends EffectBase {
+    public class FireRemnantEffect extends EffectBase {
 
         public static final String name = "fireremnanteff";
         private final ArmorStand remnant;
@@ -127,13 +129,13 @@ public class FireRemnant extends ActiveSkill<ISpigotCharacter> {
             Entity entitty = (Entity) getConsumer().getEntity();
             entitty.teleport(remnant);
             if (damage > 0) {
-                FireworkHandler.spawn(remnant.getLocation(),
+                nmsHandler.spawnFireworkExplosion(remnant.getLocation(),
                         FireworkEffect.builder().withColor(Color.RED,
                                 Color.YELLOW,
                                 Color.fromRGB(214, 76, 45))
                                 .with(FireworkEffect.Type.BURST)
                                 .build(),
-                        50);
+                        remnant.getLocation().getWorld().getPlayers());
 
                 remnant.getLocation().getWorld().spawnParticle(Particle.EXPLOSION_NORMAL, remnant.getLocation(), 2);
             }
