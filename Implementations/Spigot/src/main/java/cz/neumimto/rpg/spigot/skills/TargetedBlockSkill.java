@@ -36,13 +36,11 @@ public abstract class TargetedBlockSkill extends ActiveSkill<ISpigotCharacter> {
         if (lastTwoTargetBlocks.size() != 2 || !lastTwoTargetBlocks.get(1).getType().isOccluding()) {
 
         }
-        Block targetBlock = lastTwoTargetBlocks.get(1);
+        Block block = lastTwoTargetBlocks.get(1);
         Block adjacentBlock = lastTwoTargetBlocks.get(0);
-        BlockFace blockFace = targetBlock.getFace(adjacentBlock);
+        BlockFace blockFace = block.getFace(adjacentBlock);
 
-
-        Block block = rayTraceBlock(player, range);
-        if (block != null && isValidBlock(block)) {
+        if (isValidBlock(block)) {
             return castOn(block, blockFace, character, skillContext);
         } else {
             return SkillResult.NO_TARGET;

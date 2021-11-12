@@ -30,7 +30,7 @@ public class Particles implements NTScriptProxy {
 
     @Handler
     @Function("sound")
-    public void spawnParticle(@NamedParam("s|sound") Sound sound,
+    public void sound(@NamedParam("s|sound") Sound sound,
                               @NamedParam("l|location") Location l,
                               @NamedParam("v|volume") float volume,
                               @NamedParam("p|pitch") float pitch) {

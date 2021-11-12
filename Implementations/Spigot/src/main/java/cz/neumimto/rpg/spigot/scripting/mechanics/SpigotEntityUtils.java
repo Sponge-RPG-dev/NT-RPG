@@ -49,14 +49,14 @@ public class SpigotEntityUtils implements NTScriptProxy {
             @NamedParam("rbf|relativeBlockFace") BlockFace blockFace
 
     ) {
+        if (blockFace != null) {
+            l = l.getBlock().getRelative(blockFace).getLocation();
+        }
         if (pitch != 0) {
             l.setPitch(pitch);
         }
         if (yaw != 0) {
             l.setYaw(yaw);
-        }
-        if (blockFace != null) {
-            l = l.getBlock().getRelative(blockFace).getLocation();
         }
         ((LivingEntity) e.getEntity()).teleport(l, PlayerTeleportEvent.TeleportCause.COMMAND);
 

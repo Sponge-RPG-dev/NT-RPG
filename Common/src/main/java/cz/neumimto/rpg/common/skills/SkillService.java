@@ -283,6 +283,8 @@ public abstract class SkillService {
     }
 
     public void reloadSkills() {
+        loadInternalSkills();
+
         Path addonDir = Paths.get(Rpg.get().getWorkingDirectory() + File.separator + "addons");
 
         URLClassLoader urlClassLoader = new URLClassLoader(new URL[]{}, this.getClass().getClassLoader());
@@ -296,6 +298,5 @@ public abstract class SkillService {
             }
         }
 
-        loadInternalSkills();
     }
 }
