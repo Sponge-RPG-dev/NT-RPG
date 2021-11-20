@@ -8,6 +8,7 @@ import cz.neumimto.rpg.common.IRpgElement;
 import cz.neumimto.rpg.common.damage.DamageService;
 import cz.neumimto.rpg.common.entity.EntityService;
 import cz.neumimto.rpg.common.entity.IEntity;
+import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 
 import javax.inject.Inject;
@@ -21,6 +22,9 @@ public class EntitiesM implements NTScriptProxy {
     private EntityService entityService;
 
     @Inject
+    private CharacterService characterService;
+
+    @Inject
     private DamageService damageService;
 
     @Handler
@@ -30,5 +34,14 @@ public class EntitiesM implements NTScriptProxy {
                      @NamedParam("s|source") IRpgElement skill) {
         return entityService.healEntity(target, amount, skill);
     }
+
+    @Handler
+    @Function("regain_mana")
+    public void regain_mana(@NamedParam("e|entity") IActiveCharacter target,
+                       @NamedParam("a|amount") float amount,
+                       @NamedParam("s|source") IRpgElement skill) {
+        characterService.gainMana(target, amount, skill);
+    }
+
 
 }

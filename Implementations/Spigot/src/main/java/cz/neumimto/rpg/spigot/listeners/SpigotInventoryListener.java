@@ -50,6 +50,7 @@ import org.bukkit.inventory.PlayerInventory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.swing.event.ChangeEvent;
 import java.util.Map;
 import java.util.Optional;
 
@@ -399,7 +400,11 @@ public class SpigotInventoryListener implements IRpgListener {
                 return;
             }
             int slotId = event.getSlot();
-            if (!inventoryService.isManagedInventory(PlayerInventory.class, slotId)) {
+            boolean shiftClick = event.isShiftClick();
+            ItemStack currentItem = event.getCurrentItem();
+            ItemStack cursor = event.getCursor();
+
+            if (!inventoryService.isManagedInventory(PlayerInventory.class, slotId) || event.isShiftClick()) {
                 return;
             }
 
@@ -409,8 +414,7 @@ public class SpigotInventoryListener implements IRpgListener {
             RpgInventory rpgInventory = managedInventory.get(PlayerInventory.class);
             ManagedSlot managedSlot = rpgInventory.getManagedSlots().get(slotId);
 
-            ItemStack currentItem = event.getCurrentItem();
-            ItemStack cursor = event.getCursor();
+
 
             Optional<RpgItemStack> future = itemService.getRpgItemStack(cursor);
             Optional<RpgItemStack> original = itemService.getRpgItemStack(currentItem);

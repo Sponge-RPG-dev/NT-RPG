@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 @Singleton
 public class NTScriptEngine {
 
-    private Map<Class<? extends SkillScriptHandlers>, NTScript> compilers = new HashMap<>();
+    private Map<Class, NTScript> compilers = new HashMap<>();
 
     @Inject
     private AssetService assetService;
@@ -35,7 +35,7 @@ public class NTScriptEngine {
         return compilers.containsKey(c);
     }
 
-    public NTScript prepareCompiler(Consumer<NTScript.Builder> builder, Class<? extends SkillScriptHandlers> type) {
+    public NTScript prepareCompiler(Consumer<NTScript.Builder> builder, Class type) {
        if (!compilers.containsKey(type)) {
            compilers.put(type, scriptContextForSkills(builder, type));
        }

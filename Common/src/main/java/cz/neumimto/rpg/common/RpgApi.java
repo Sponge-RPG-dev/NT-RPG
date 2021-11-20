@@ -92,6 +92,8 @@ public interface RpgApi {
 
     PermissionService getPermissionService();
 
+    Injector getInjector();
+
     void reloadMainPluginConfig();
 
     void scheduleSyncLater(Runnable runnable);

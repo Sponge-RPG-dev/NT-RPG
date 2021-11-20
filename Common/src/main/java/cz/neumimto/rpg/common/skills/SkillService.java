@@ -12,12 +12,16 @@ import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.classes.ClassService;
 import cz.neumimto.rpg.common.configuration.SkillTreeDao;
+import cz.neumimto.rpg.common.effects.EffectBase;
+import cz.neumimto.rpg.common.effects.IEffect;
+import cz.neumimto.rpg.common.effects.ScriptEffectBase;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.gui.ISkillTreeInterfaceModel;
 import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.common.scripting.NTScriptEngine;
 import cz.neumimto.rpg.common.scripting.SkillScriptHandlers;
 import cz.neumimto.rpg.common.skills.scripting.ActiveScriptSkill;
+import cz.neumimto.rpg.common.skills.scripting.ScriptEffectModel;
 import cz.neumimto.rpg.common.skills.scripting.ScriptSkillModel;
 import cz.neumimto.rpg.common.skills.tree.SkillTree;
 import cz.neumimto.rpg.common.skills.tree.SkillType;
@@ -26,10 +30,28 @@ import cz.neumimto.rpg.common.skills.types.ScriptSkill;
 import cz.neumimto.rpg.common.utils.ClassUtils;
 import cz.neumimto.rpg.common.utils.DebugLevel;
 import cz.neumimto.rpg.common.utils.annotations.CatalogId;
+import net.bytebuddy.ByteBuddy;
+import net.bytebuddy.description.field.FieldDescription;
+import net.bytebuddy.description.method.MethodDescription;
+import net.bytebuddy.description.type.TypeDescription;
+import net.bytebuddy.dynamic.DynamicType;
+import net.bytebuddy.implementation.Implementation;
+import net.bytebuddy.implementation.bytecode.ByteCodeAppender;
+import net.bytebuddy.implementation.bytecode.StackManipulation;
+import net.bytebuddy.implementation.bytecode.collection.ArrayLength;
+import net.bytebuddy.implementation.bytecode.constant.TextConstant;
+import net.bytebuddy.implementation.bytecode.member.FieldAccess;
+import net.bytebuddy.implementation.bytecode.member.MethodInvocation;
+import net.bytebuddy.implementation.bytecode.member.MethodVariableAccess;
+import net.bytebuddy.jar.asm.Label;
+import net.bytebuddy.jar.asm.Opcodes;
 
 import javax.inject.Inject;
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Path;
@@ -171,37 +193,42 @@ public abstract class SkillService {
 
     public abstract NTScript getNtScriptCompilerFor(Class<? extends SkillScriptHandlers> c);
 
+
+    private Object effectDefinitionToEffect(ScriptEffectModel model, ClassLoader urlClassLoader) {
+
+    }
+
     public ISkill skillDefinitionToSkill(ScriptSkillModel scriptSkillModel, ClassLoader classLoader) {
 
-        if (scriptSkillModel.getHandlerId().equalsIgnoreCase("nts")) {
+        if (scriptSkillModel.handlerId.equalsIgnoreCase("nts")) {
             try {
 
                 Class c = null;
 
-                String s = String.valueOf(scriptSkillModel.getSuperType()).toLowerCase();
+                String s = String.valueOf(scriptSkillModel.superType).toLowerCase();
                 c = getScriptTargetType(c, s);
 
                 if (c == null) {
                     c = SkillScriptHandlers.Active.class;
-                    Log.info("Unknown SuperType " + scriptSkillModel.getSuperType());
+                    Log.info("Unknown SuperType " + scriptSkillModel.superType);
                 }
 
-                Log.info("Compiling nts script " + scriptSkillModel.getId() + " as " + c.getSimpleName());
+                Log.info("Compiling nts script " + scriptSkillModel.id + " as " + c.getSimpleName());
 
-                Class<? extends SkillScriptHandlers> generate = getNtScriptCompilerFor(c).compile(scriptSkillModel.getScript());
+                Class<? extends SkillScriptHandlers> generate = getNtScriptCompilerFor(c).compile(scriptSkillModel.script);
                 if (generate == null) {
-                    Log.error("Unable to generate script " + scriptSkillModel.getId());
+                    Log.error("Unable to generate script " + scriptSkillModel.id);
                 }
                 SkillScriptHandlers instance = injector.getInstance(generate);
                 ScriptSkill ss = getSkillByHandlerType(instance);
                 ss.setModel(scriptSkillModel);
                 ss.setHandler(instance);
                 injector.injectMembers(ss);
-                injectCatalogId((ISkill) ss, scriptSkillModel.getId());
+                injectCatalogId((ISkill) ss, scriptSkillModel.id);
                 return (ISkill) ss;
 
             } catch (Throwable e) {
-                Log.error("Unable to compile script " + scriptSkillModel.getId(), e);
+                Log.error("Unable to compile script " + scriptSkillModel.id, e);
             }
 
         }
@@ -276,11 +303,17 @@ public abstract class SkillService {
 
     private void loadSkillDefinitionFile(Config config, ClassLoader urlClassLoader) {
         SkillsDefinition definition = new ObjectConverter().toObject(config, SkillsDefinition::new);
-        definition.getSkills().stream()
+        //definition.effects.stream()
+        //        .map(a-> effectDefinitionToEffect(a, urlClassLoader))
+        //        .filter(Objects::nonNull)
+        //        .forEach(this::registerEffectHandler);
+        definition.skills.stream()
                 .map(a -> skillDefinitionToSkill(a, urlClassLoader))
                 .filter(Objects::nonNull)
                 .forEach(this::registerAdditionalCatalog);
     }
+
+
 
     public void reloadSkills() {
         loadInternalSkills();

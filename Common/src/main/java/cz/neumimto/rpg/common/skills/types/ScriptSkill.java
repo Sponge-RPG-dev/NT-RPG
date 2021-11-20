@@ -17,9 +17,9 @@ public interface ScriptSkill {
 
     void setModel(ScriptSkillModel model);
     default void initFromModel() {
-        setDamageType(getModel().getDamageType());
-        setCatalogId(getModel().getId());
-        List<String> configTypes = getModel().getSkillTypes();
+        setDamageType(getModel().damageType);
+        setCatalogId(getModel().id);
+        List<String> configTypes = getModel().skillTypes;
         for (String configType : configTypes) {
             Optional<ISkillType> skillType = Rpg.get().getSkillService().getSkillType(configType);
             if (skillType.isPresent()) {

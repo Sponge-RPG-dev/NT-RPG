@@ -15,7 +15,7 @@ public abstract class EffectBase<VALUE> implements IEffect<VALUE> {
     protected Set<EffectType> effectTypes = new HashSet<>();
     private boolean stackable = false;
 
-    private String name;
+    protected String effectName;
 
     private IEffectConsumer consumer;
 
@@ -41,12 +41,12 @@ public abstract class EffectBase<VALUE> implements IEffect<VALUE> {
 
     public EffectBase(String name, IEffectConsumer consumer) {
         this();
-        this.name = name;
+        this.effectName = name;
         this.consumer = consumer;
     }
 
     public void init(IEffectConsumer consumer, String name, long duration, long period) {
-        this.name = name;
+        this.effectName = name;
         this.consumer = consumer;
         this.setPeriod(period);
         this.setDuration(duration);
@@ -54,7 +54,7 @@ public abstract class EffectBase<VALUE> implements IEffect<VALUE> {
 
     @Override
     public String getName() {
-        return name;
+        return effectName;
     }
 
     @Override

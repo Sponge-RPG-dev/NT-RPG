@@ -191,6 +191,11 @@ public abstract class AbstractRpg implements RpgApi {
     }
 
     @Override
+    public Injector getInjector() {
+        return injector;
+    }
+
+    @Override
     public void reloadMainPluginConfig() {
         File file = new File(getWorkingDirectory());
         if (!file.exists()) {
