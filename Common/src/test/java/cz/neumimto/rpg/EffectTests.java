@@ -47,8 +47,6 @@ public class EffectTests {
         character = new TestCharacter(UUID.randomUUID(), characterBase, 1);
 
         effect = createEffectMock("testEffect");
-
-        scriptEngine.prepareEngine();
     }
 
     private static TickableEffect createEffectMock(String name) {
@@ -147,19 +145,7 @@ public class EffectTests {
         processEffectStacking(effect, test);
     }
 
-    @Test
-    public void test_Effect_Expirable_stackable_2_js() throws Exception {
-        IEffect effect = createEffectJsMock();
-        IEffect test = createEffectJsMock();
-        processEffectStacking(effect, test);
-    }
 
-    private IEffect createEffectJsMock() throws Exception {
-        File file = new File(getClass().getClassLoader().getResource("effects/effect01.js").getFile());
-        byte[] bytes = Files.readAllBytes(file.toPath());
-        scriptEngine.eval(new String(bytes), Void.class);
-        return scriptEngine.eval("EffectBase", IEffect.class);
-    }
 
     private void processEffectStacking(IEffect first, IEffect test) {
         first = makeEffectStackable(first);

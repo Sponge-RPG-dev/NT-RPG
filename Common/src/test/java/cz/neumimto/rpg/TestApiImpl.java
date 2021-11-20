@@ -10,6 +10,8 @@ import cz.neumimto.rpg.common.configuration.PluginConfig;
 import cz.neumimto.rpg.common.damage.DamageService;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.entity.PropertyService;
+import cz.neumimto.rpg.common.entity.TestCharacter;
+import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.common.entity.players.parties.PartyService;
 import cz.neumimto.rpg.common.events.EventFactoryService;
 import cz.neumimto.rpg.common.exp.ExperienceService;
@@ -83,6 +85,9 @@ public class TestApiImpl implements RpgApi {
 
     @Inject
     private ExperienceService experienceService;
+
+    @Inject
+    private Injector injector;
 
     @Override
     public ResourceLoader getResourceLoader() {
@@ -202,7 +207,7 @@ public class TestApiImpl implements RpgApi {
     }
 
     @Override
-    public TestCharacterService getCharacterService() {
+    public CharacterService getCharacterService() {
         return testCharacterService;
     }
 
@@ -233,6 +238,11 @@ public class TestApiImpl implements RpgApi {
     @Override
     public PermissionService getPermissionService() {
         return null;
+    }
+
+    @Override
+    public Injector getInjector() {
+        return injector;
     }
 
     @Override

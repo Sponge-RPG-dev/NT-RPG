@@ -1,11 +1,9 @@
 package cz.neumimto.rpg.common.skills;
 
-import cz.neumimto.nts.NTScript;
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.effects.EffectBase;
 import cz.neumimto.rpg.common.effects.IEffect;
 import cz.neumimto.rpg.common.effects.ScriptEffectBase;
-import cz.neumimto.rpg.common.scripting.NTScriptEngine;
 import cz.neumimto.rpg.common.skills.scripting.ScriptEffectModel;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.description.field.FieldDescription;
@@ -34,7 +32,7 @@ import static cz.neumimto.rpg.common.effects.ScriptEffectBase.onApply;
 
 public class EffectScriptGenerator {
 
-    public Class<? extends IEffect> from(ScriptEffectModel model, ClassLoader classLoader) {
+    public static Class<? extends IEffect> from(ScriptEffectModel model, ClassLoader classLoader) {
         Class<?> superType = null;
 
         var bb = new ByteBuddy()
@@ -97,7 +95,7 @@ public class EffectScriptGenerator {
         return loaded;
     }
 
-    private ScriptEffectBase.Handler generateHandler(String onApply) {
+    private static ScriptEffectBase.Handler generateHandler(String onApply) {
         Class compile = Rpg.get().getScriptEngine().prepareCompiler(builder -> {
                 }, ScriptEffectBase.Handler.class)
                 .compile(onApply);
@@ -111,14 +109,14 @@ public class EffectScriptGenerator {
         }
     }
 
-    private void injectIfExists(String field, ScriptEffectBase.Handler handler, Class<? extends EffectBase> loaded) {
+    private static void injectIfExists(String field, ScriptEffectBase.Handler handler, Class<? extends EffectBase> loaded) {
         try {
             loaded.getDeclaredField(field).set(handler, null);
         } catch (IllegalAccessException | NoSuchFieldException e) {
         }
     }
 
-    private DynamicType.Builder<EffectBase> generateMethodBody(String methodName, DynamicType.Builder<EffectBase> bb) {
+    private static DynamicType.Builder<EffectBase> generateMethodBody(String methodName, DynamicType.Builder<EffectBase> bb) {
         bb = bb.defineField(methodName, ScriptEffectBase.Handler.class, Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC);
         TypeDescription typeDefinitions = bb.toTypeDescription();
         FieldDescription.InDefinedShape field = typeDefinitions.getDeclaredFields().stream().filter(a -> a.getActualName().equals(onApply)).findFirst().get();

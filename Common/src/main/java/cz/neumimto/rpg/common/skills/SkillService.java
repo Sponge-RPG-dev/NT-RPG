@@ -195,7 +195,7 @@ public abstract class SkillService {
 
 
     private Object effectDefinitionToEffect(ScriptEffectModel model, ClassLoader urlClassLoader) {
-
+        return null;
     }
 
     public ISkill skillDefinitionToSkill(ScriptSkillModel scriptSkillModel, ClassLoader classLoader) {

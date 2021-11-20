@@ -45,7 +45,6 @@ import cz.neumimto.rpg.common.persistance.dao.ClassDefinitionDao;
 import cz.neumimto.rpg.common.persistance.dao.ICharacterClassDao;
 import cz.neumimto.rpg.common.persistance.dao.IPersistenceHandler;
 import cz.neumimto.rpg.common.persistance.dao.IPlayerDao;
-import cz.neumimto.rpg.common.scripting.TestCustomSkillGenerator;
 import cz.neumimto.rpg.common.skills.reagents.Cooldown;
 import cz.neumimto.rpg.common.skills.reagents.HPCast;
 import cz.neumimto.rpg.common.skills.reagents.ManaCast;
@@ -80,7 +79,6 @@ public class TestGuiceModule extends AbstractModule {
         bind(ClassDefinitionDao.class);
         bind(IPlayerDao.class).to(InMemoryPlayerStorage.class);
         bind(ExperienceService.class).to(TestExperienceService.class);
-        bind(CustomSkillGenerator.class).to(TestCustomSkillGenerator.class);
         bind(ClassGenerator.class).toProvider(() -> new ClassGenerator() {
             @Override
             public Type getListenerSubclass() {
@@ -128,17 +126,16 @@ public class TestGuiceModule extends AbstractModule {
         bind(LocalizationService.class).to(LocalizationServiceImpl.class);
         bind(SkillService.class).to(TestSkillService.class);
         bind(AssetService.class).to(TestAssetService.class);
-        bind(new TypeLiteral<CharacterService<IActiveCharacter>>() {
-        }).to(TestCharacterService.class);
+        bind(CharacterService.class).to(TestCharacterService.class);
 
-        bind(CharacterService<IActiveCharacter>.class).toProvider(SpongeCharacterServiceProvider.class);
+        bind(CharacterService.class).toProvider(SpongeCharacterServiceProvider.class);
 
         bind(new TypeLiteral<CharacterService<IActiveCharacter>>() {
         })
                 .toProvider(SpongeCharacterServiceProvider1.class);//.toProvider(() -> (CharacterService) TestCharacterService);
         bind(new TypeLiteral<CharacterService<IActiveCharacter>>() {
         })
-                .toProvider(SpongeCharacterServiceProvider.class);
+                .toProvider((Class<? extends javax.inject.Provider<? extends CharacterService<IActiveCharacter>>>) SpongeCharacterServiceProvider.class);
         bind(Cooldown.class).to(CooldownTest.class);
         bind(HPCast.class);
         bind(ManaCast.class);
@@ -147,13 +144,13 @@ public class TestGuiceModule extends AbstractModule {
 
     private static TestCharacterService scs;
 
-    public static class SpongeCharacterServiceProvider implements Provider<CharacterService<IActiveCharacter>> {
+    public static class SpongeCharacterServiceProvider implements Provider<TestCharacterService> {
 
         @Inject
         private Injector injector;
 
         @Override
-        public CharacterService<IActiveCharacter> get() {
+        public TestCharacterService get() {
             if (scs == null) {
                 scs = injector.getInstance(TestCharacterService.class);
             }
@@ -171,7 +168,7 @@ public class TestGuiceModule extends AbstractModule {
             if (scs == null) {
                 scs = injector.getInstance(TestCharacterService.class);
             }
-            return (CharacterService<IActiveCharacter>) scs;
+            return null;  //todo fiíx tests
         }
     }
 
