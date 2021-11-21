@@ -45,6 +45,63 @@ import java.util.Map;
 
 import static net.bytebuddy.dynamic.loading.ClassLoadingStrategy.Default.INJECTION;
 
+/**
+ * Multiple classes are generated
+ *
+ * Assume input
+ *   {
+ *       Id: Test
+ *       Fields: [
+ *          Num: numeric
+ *       ]
+ *       OnApply: """
+ *         @effect.Num=50
+ *         RETURN
+ *       """
+ *   }
+ * Generates
+ *
+ * 1) Effect base class
+ *
+ *  public class Test{timestamp} extends EffectBase {
+ *     public double Num;
+ *     public static Handler onApply;
+ *
+ *     public void onApply(IEffect var1) {
+ *         if (onApply != null) {
+ *             onApply.run(this);
+ *         }
+ *
+ *     }
+ *
+ *     @ScriptTarget
+ *     public Test1637495972021() {
+ *         super.effectName = "Test";
+ *     }
+ * }
+ *
+ * 2) Handler proxy but with concrete generic type
+ *
+ * public interface Handler{timestamp} extends Handler<Test{timestamp}> {
+ *     @ScriptTarget
+ *     void run(@NamedParam("effect") Test{timestamp} var1);
+ * }
+ *
+ * 3) OnApply method as implementation of proxy interface from step 2
+ *
+ * @Singleton
+ * public class HandlerTest{timestamp} implements HandlerTest{timestamp} {
+ *     public void run(Test{timestamp} var1) {
+ *         var1.Num = 50.0D;
+ *     }
+ * }
+ *
+ * This proxy implementation is also automatically initialized with guice injector and its reference is injected into the static field
+ * Test{timestamp}.OnApply = injector.newInstance(HandlerTest{timestamp}.class)
+ *
+ * The timestamps are part of all classnames to ensure easy reloading at runtime, im not reimplementing osgi, just throw away old refs
+ *
+ */
 public class EffectScriptGenerator {
 
     public static Class<? extends IEffect> from(ScriptEffectModel model, ClassLoader classLoader) {
