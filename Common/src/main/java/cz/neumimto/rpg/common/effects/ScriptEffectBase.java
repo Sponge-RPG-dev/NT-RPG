@@ -15,18 +15,6 @@ public class ScriptEffectBase extends EffectBase {
         void run(@ScriptMeta.NamedParam("effect") T t);
     }
 
-    public static class W implements Handler<AllSkillsBonus> {
-
-        @Override
-        public void run(AllSkillsBonus allSkillsBonus) {
-
-        }
-    }
-
-    static {
-        onApply = new W();
-    }
-
     public ScriptEffectBase() {
         super();
         effectName = "w";

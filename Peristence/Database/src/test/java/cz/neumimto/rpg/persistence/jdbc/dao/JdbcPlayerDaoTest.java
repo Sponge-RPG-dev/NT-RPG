@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.persistence.jdbc.dao;
 
 import cz.neumimto.persistence.TestHelper;
-import cz.neumimto.rpg.api.RpgTests;
+import cz.neumimto.rpg.common.RpgTests;
 import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.common.model.CharacterBase;
 import cz.neumimto.rpg.common.model.CharacterClass;

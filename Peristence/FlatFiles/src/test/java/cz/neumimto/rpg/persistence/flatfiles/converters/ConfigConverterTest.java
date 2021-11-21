@@ -2,7 +2,7 @@ package cz.neumimto.rpg.persistence.flatfiles.converters;
 
 import cz.neumimto.persistence.TestHelper;
 import cz.neumimto.rpg.common.Rpg;
-import cz.neumimto.rpg.api.RpgTests;
+import cz.neumimto.rpg.common.RpgTests;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.inventory.InventoryService;
 import cz.neumimto.rpg.common.model.CharacterBase;

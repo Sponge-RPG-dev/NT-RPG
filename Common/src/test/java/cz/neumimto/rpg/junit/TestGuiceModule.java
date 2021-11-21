@@ -62,6 +62,7 @@ import net.bytebuddy.matcher.ElementMatchers;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
 
 public class TestGuiceModule extends AbstractModule {
@@ -91,7 +92,7 @@ public class TestGuiceModule extends AbstractModule {
             }
 
         });
-        bind(ClassService.class).to(ClassService.class);
+        bind(ClassService.class);
         bind(ResourceLoader.class).to(ResourceManagerImpl.class);
         bind(DamageService.class).to(TestDamageService.class);
         bind(EffectService.class).to(TestEffectService.class);
@@ -99,17 +100,15 @@ public class TestGuiceModule extends AbstractModule {
         bind(MobSettingsDao.class).to(TestMobSettingsDao.class);
         bind(ExperienceDAO.class);
 
-        Class<IPlayerMessage> type = (Class<IPlayerMessage>) new ByteBuddy()
-                .subclass(Object.class)
-                .implement(IPlayerMessage.class)
-                .method(ElementMatchers.any())
-                .intercept(InvocationHandlerAdapter.of(new MethodInterceptor()))
-                .make().load(IPlayerMessage.class.getClassLoader(), ClassLoadingStrategy.Default.WRAPPER)
-                .getLoaded();
 
         bind(IPlayerMessage.class).toProvider(() -> {
             try {
-                return type.getConstructor().newInstance();
+                IPlayerMessage o = (IPlayerMessage) Proxy.newProxyInstance(getClass().getClassLoader(), new Class[]{IPlayerMessage.class},
+                        (proxy, method, args) -> {
+                            Log.info(method.getName());
+                            return null;
+                        });
+                return o;
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -128,14 +127,10 @@ public class TestGuiceModule extends AbstractModule {
         bind(AssetService.class).to(TestAssetService.class);
         bind(CharacterService.class).to(TestCharacterService.class);
 
-        bind(CharacterService.class).toProvider(SpongeCharacterServiceProvider.class);
+        //bind(new TypeLiteral<CharacterService<IActiveCharacter>>() {
+        //})
+        //        .toProvider(SpongeCharacterServiceProvider1.class);//.toProvider(() -> (CharacterService) TestCharacterService);
 
-        bind(new TypeLiteral<CharacterService<IActiveCharacter>>() {
-        })
-                .toProvider(SpongeCharacterServiceProvider1.class);//.toProvider(() -> (CharacterService) TestCharacterService);
-        bind(new TypeLiteral<CharacterService<IActiveCharacter>>() {
-        })
-                .toProvider((Class<? extends javax.inject.Provider<? extends CharacterService<IActiveCharacter>>>) SpongeCharacterServiceProvider.class);
         bind(Cooldown.class).to(CooldownTest.class);
         bind(HPCast.class);
         bind(ManaCast.class);
@@ -144,7 +139,7 @@ public class TestGuiceModule extends AbstractModule {
 
     private static TestCharacterService scs;
 
-    public static class SpongeCharacterServiceProvider implements Provider<TestCharacterService> {
+    public static class TestCharacterServiceProvider implements Provider<TestCharacterService> {
 
         @Inject
         private Injector injector;
@@ -168,16 +163,6 @@ public class TestGuiceModule extends AbstractModule {
             if (scs == null) {
                 scs = injector.getInstance(TestCharacterService.class);
             }
-            return null;  //todo fiíx tests
-        }
-    }
-
-
-    public class MethodInterceptor implements InvocationHandler {
-
-        @Override
-        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-            Log.info(method.getName());
             return null;
         }
     }

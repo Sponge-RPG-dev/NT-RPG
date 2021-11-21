@@ -31,9 +31,7 @@ public class NTScriptEngine {
     @Inject
     private Injector injector;
 
-    public boolean canCompile(Class c) {
-        return compilers.containsKey(c);
-    }
+
 
     public NTScript prepareCompiler(Consumer<NTScript.Builder> builder, Class type) {
        if (!compilers.containsKey(type)) {
@@ -67,7 +65,7 @@ public class NTScriptEngine {
                 .debugOutput("/tmp")
                 .logging(Log::warn)
                 .package_("cz.neumimto.rpg.script.skills")
-                .setClassNamePattern("SkillHandler");
+                .setClassNamePattern(type.getSimpleName());
 
         builder.accept(n);
 

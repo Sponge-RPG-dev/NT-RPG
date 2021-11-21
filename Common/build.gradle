@@ -35,5 +35,4 @@ shadowJar {
    // relocate 'co.aikar.commands', 'cz.neumimto.acf'
 }
 
-
 build.dependsOn shadowJar

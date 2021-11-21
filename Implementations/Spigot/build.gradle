@@ -99,7 +99,7 @@ shadowJar {
     relocate 'com.squareup.javapoet', 'rpgshaded.com.squareup.javapoet'
     relocate 'com.typesafe.config', 'rpgshaded.com.typesafe.config'
     relocate 'javax.inject', 'rpgshaded.javax.inject'
-    relocate 'net.bytebuddy', 'rpgshaded.net.bytebuddy'
+  //  relocate 'net.bytebuddy', 'rpgshaded.net.bytebuddy'
     relocate 'org.aopalliance', 'rpgshaded.org.aopalliance'
     relocate 'org.codehaus', 'rpgshaded.org.codehaus'
     relocate 'de.slikey.effectlib', 'rpgshaded.de.slikey.effectlib'
@@ -131,9 +131,10 @@ task copyNMSImpl {
                 return  true;
             }
         })) {
-            var p = spigot.file("lib-cp/").toPath()
+            var p = spigot.file("lib-cp/").toPath().resolve(f.getName())
+            var v = f.exists();
             try {
-                Files.copy(f.toPath(), p.resolve(f.getName()), StandardCopyOption.REPLACE_EXISTING);
+                Files.copy(f.toPath(), p, StandardCopyOption.REPLACE_EXISTING);
             } catch (Exception e) {
                 e.printStackTrace()
             }

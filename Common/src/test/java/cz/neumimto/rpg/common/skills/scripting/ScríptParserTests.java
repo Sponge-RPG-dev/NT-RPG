@@ -2,6 +2,7 @@ package cz.neumimto.rpg.common.skills.scripting;
 
 import com.google.inject.Injector;
 import cz.neumimto.rpg.common.entity.IEntity;
+import cz.neumimto.rpg.common.skills.SkillService;
 import cz.neumimto.rpg.junit.NtRpgExtension;
 import cz.neumimto.rpg.junit.TestGuiceModule;
 import name.falgout.jeffrey.testing.junit.guice.GuiceExtension;
@@ -17,7 +18,7 @@ import javax.inject.Singleton;
 class ScríptParserTests {
 
     @Inject
-    private TestCustomSkillGenerator skillGenerator;
+    private SkillService skillService;
 
     @Inject
     private Injector injector;
@@ -29,8 +30,8 @@ class ScríptParserTests {
         injector.getInstance(A.class);
         injector.getInstance(DamageEntity.class);
         ScriptSkillModel model = new ScriptSkillModel();
-        model.setId("aaa");
-        model.setScript("""
+        model.id = "aaa";
+        model.script = """
                        @target = targetted_entity{range=$settings.range, entityFrom=@caster}
                        IF exists{test=@target}
                           IF damage_entity{damage=20, damaged=@target, damager=@caster}
@@ -39,9 +40,9 @@ class ScríptParserTests {
                           END
                        END
                        RETURN CANCELLED
-                """);
+                """;
 
-        skillGenerator.generate(model,this.getClass().getClassLoader());
+        skillService.skillDefinitionToSkill(model,this.getClass().getClassLoader());
 
     }
 
@@ -52,8 +53,8 @@ class ScríptParserTests {
         injector.getInstance(A.class);
         injector.getInstance(DamageEntity.class);
         ScriptSkillModel model = new ScriptSkillModel();
-        model.setId("aaa");
-        model.setScript("""
+        model.id = "aaa";
+        model.script = """
                        @target = targetted_entity{range=$settings.range, entityFrom=@caster}
                        IF exists{test=@target}
                           IF damage_entity{damage=20, damaged=@target, damager=@caster}
@@ -64,8 +65,8 @@ class ScríptParserTests {
                           END
                        END
                        RETURN CANCELLED
-                """);
-        skillGenerator.generate(model,this.getClass().getClassLoader());
+                """;
+        skillService.skillDefinitionToSkill(model,this.getClass().getClassLoader());
     }
 
     @Test
@@ -75,8 +76,8 @@ class ScríptParserTests {
         injector.getInstance(A.class);
         injector.getInstance(DamageEntity.class);
         ScriptSkillModel model = new ScriptSkillModel();
-        model.setId("aaa");
-        model.setScript("""
+        model.id = "aaa";
+        model.script = """
                        @target = targetted_entity{range=$settings.range, entityFrom=@caster}
                        IF exists{test=@target}
                           IF damage_entity{damage=20, damaged=@target, damager=@caster}
@@ -87,8 +88,8 @@ class ScríptParserTests {
                           END
                        END
                        RETURN CANCELLED
-                """);
-        skillGenerator.generate(model,this.getClass().getClassLoader());
+                """;
+        skillService.skillDefinitionToSkill(model,this.getClass().getClassLoader());
     }
 
     @Singleton

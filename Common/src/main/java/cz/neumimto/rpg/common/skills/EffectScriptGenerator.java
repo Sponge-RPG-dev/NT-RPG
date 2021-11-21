@@ -1,104 +1,158 @@
 package cz.neumimto.rpg.common.skills;
 
+import cz.neumimto.nts.annotations.ScriptMeta;
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.effects.EffectBase;
 import cz.neumimto.rpg.common.effects.IEffect;
 import cz.neumimto.rpg.common.effects.ScriptEffectBase;
 import cz.neumimto.rpg.common.skills.scripting.ScriptEffectModel;
 import net.bytebuddy.ByteBuddy;
+import net.bytebuddy.asm.AsmVisitorWrapper;
+import net.bytebuddy.description.ModifierReviewable;
+import net.bytebuddy.description.annotation.AnnotationDescription;
 import net.bytebuddy.description.field.FieldDescription;
+import net.bytebuddy.description.field.FieldList;
 import net.bytebuddy.description.method.MethodDescription;
+import net.bytebuddy.description.method.MethodList;
+import net.bytebuddy.description.method.ParameterDescription;
+import net.bytebuddy.description.type.TypeDefinition;
 import net.bytebuddy.description.type.TypeDescription;
 import net.bytebuddy.dynamic.DynamicType;
+import net.bytebuddy.dynamic.loading.ClassLoadingStrategy;
+import net.bytebuddy.dynamic.loading.InjectionClassLoader;
 import net.bytebuddy.implementation.Implementation;
+import net.bytebuddy.implementation.MethodCall;
 import net.bytebuddy.implementation.bytecode.ByteCodeAppender;
 import net.bytebuddy.implementation.bytecode.StackManipulation;
 import net.bytebuddy.implementation.bytecode.constant.TextConstant;
 import net.bytebuddy.implementation.bytecode.member.FieldAccess;
 import net.bytebuddy.implementation.bytecode.member.MethodInvocation;
 import net.bytebuddy.implementation.bytecode.member.MethodVariableAccess;
+import net.bytebuddy.jar.asm.ClassVisitor;
+import net.bytebuddy.jar.asm.ClassWriter;
 import net.bytebuddy.jar.asm.Label;
 import net.bytebuddy.jar.asm.Opcodes;
+import net.bytebuddy.matcher.ElementMatchers;
+import net.bytebuddy.pool.TypePool;
 
 import java.io.File;
-import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Map;
 
-import static cz.neumimto.rpg.common.effects.ScriptEffectBase.onApply;
+import static net.bytebuddy.dynamic.loading.ClassLoadingStrategy.Default.INJECTION;
 
 public class EffectScriptGenerator {
 
     public static Class<? extends IEffect> from(ScriptEffectModel model, ClassLoader classLoader) {
         Class<?> superType = null;
 
-        var bb = new ByteBuddy()
-                .subclass(EffectBase.class)
-                .name("cz.neumimto.rpg.generated.effects." + model.id);
+        try {
+            var bb = new ByteBuddy()
+                    .subclass(EffectBase.class)
+                    .visit(new AsmVisitorWrapper() {
+                        @Override
+                        public int mergeWriter(int flags) {
+                            return flags | ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS;
+                        }
 
-        for (Map.Entry<String, String> field : model.fields.entrySet()) {
-            String value = field.getValue();
-            String key = field.getKey();
-            Class type = null;
-            if (key.equalsIgnoreCase("numeric")) {
-                type = double.class;
-            } else {
-                try {
-                    type = Class.forName(key);
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
+                        @Override
+                        public int mergeReader(int flags) {
+                            return flags | ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS;
+                        }
+
+                        @Override
+                        public ClassVisitor wrap(TypeDescription instrumentedType, ClassVisitor classVisitor, Implementation.Context implementationContext, TypePool typePool, FieldList<FieldDescription.InDefinedShape> fields, MethodList<?> methods, int writerFlags, int readerFlags) {
+                            return classVisitor;
+                        }
+                    })
+                    .name("cz.neumimto.rpg.generated.effects." + model.id + System.currentTimeMillis());
+
+            for (Map.Entry<String, String> field : model.fields.entrySet()) {
+                String value = field.getValue();
+                String key = field.getKey();
+                Class type = null;
+                if (value.equalsIgnoreCase("numeric")) {
+                    type = double.class;
+                } else {
+                    try {
+                        type = Class.forName(value);
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
                 }
+                bb = bb.defineField(key, type, Modifier.PUBLIC);
             }
-            bb = bb.defineField(value, type, Modifier.PUBLIC);
-        }
 
-        Field effectName = null;
-        try {
-            effectName = EffectBase.class.getDeclaredField("effectName");
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        }
+            Field effectName = EffectBase.class.getDeclaredField("effectName");
 
-        bb = bb.defineConstructor(Modifier.PUBLIC)
-                .intercept(new Implementation.Simple(new ByteCodeAppender.Simple(Arrays.asList(
-                        MethodVariableAccess.loadThis(),
-                        new TextConstant(model.id),
-                        FieldAccess.forField(new FieldDescription.ForLoadedField(effectName)).write()
-                ))));
+            Constructor c = null;
+            bb = bb.constructor(ElementMatchers.isDefaultConstructor())
+                   .intercept(MethodCall.invoke(EffectBase.class.getConstructor())
+                           .andThen(new Implementation.Simple(new ByteCodeAppender.Simple(Arrays.asList(
+                               MethodVariableAccess.loadThis(),
+                               new TextConstant(model.id),
+                               FieldAccess.forField(new FieldDescription.ForLoadedField(effectName)).write(),
+                               new StackManipulation.Simple((m, i) -> {
+                                   m.visitInsn(Opcodes.RETURN);
+                                   return new StackManipulation.Size(1,1);
+                               }))
+                           )))
+                   )
+                   .annotateMethod(AnnotationDescription.Builder.ofType(ScriptMeta.ScriptTarget.class).build());
 
-        ScriptEffectBase.Handler onApply = null;
-        ScriptEffectBase.Handler onTick = null;
-        ScriptEffectBase.Handler onRemove = null;
+            if (model.onApply != null && !model.onApply.isBlank()) {
+                bb = generateMethodBody("onApply", bb);
+            }
+            if (model.onTick != null && !model.onTick.isBlank()) {
+                bb = generateMethodBody("onTick", bb);
+            }
+            if (model.onRemove != null && !model.onRemove.isBlank()) {
+                bb = generateMethodBody("onRemove", bb);
 
-        if (model.onApply != null && !model.onApply.isBlank()) {
-            bb = generateMethodBody("onApply", bb);
-            onApply = generateHandler(model.onApply);
+            }
+
+            bb.make().saveIn(new File("/tmp"));
+            Class<? extends EffectBase> loaded = bb.make()
+                    .load(classLoader, INJECTION)
+                    .getLoaded();
+
+            injectIfExists("onApply", generateHandler(model.onApply, classLoader, loaded), loaded);
+            injectIfExists("onRemove", generateHandler(model.onTick, classLoader, loaded), loaded);
+            injectIfExists("onTick", generateHandler(model.onRemove, classLoader, loaded), loaded);
+            return loaded;
+        } catch (Throwable t) {
+            t.printStackTrace();
         }
-        if (model.onTick != null && !model.onTick.isBlank()) {
-            bb = generateMethodBody("onTick", bb);
-        }
-        if (model.onRemove != null && !model.onRemove.isBlank()) {
-            bb = generateMethodBody("onRemove", bb);
-        }
-        try {
-            bb.make().saveIn(new File("/tmp/"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Class<? extends EffectBase> loaded = bb.make().load(classLoader).getLoaded();
-        injectIfExists("onApply", onApply, loaded);
-        injectIfExists("onRemove", onRemove, loaded);
-        injectIfExists("onTick", onTick, loaded);
-        return loaded;
+        return null;
     }
 
-    private static ScriptEffectBase.Handler generateHandler(String onApply) {
-        Class compile = Rpg.get().getScriptEngine().prepareCompiler(builder -> {
-                }, ScriptEffectBase.Handler.class)
-                .compile(onApply);
+    private static ScriptEffectBase.Handler generateHandler(String script, ClassLoader classLoader, Class<? extends EffectBase> loaded) {
+        if (script == null) {
+            return null;
+        }
+
+        TypeDescription.Generic generic = TypeDescription.Generic.Builder
+                .parameterizedType(ScriptEffectBase.Handler.class, loaded).build();
+
+        Class<?> loaded1 = new ByteBuddy()
+                .makeInterface(generic)
+                .name("cz.neumimto.rpg.generated.effects.Handler" + loaded.getSimpleName() + System.currentTimeMillis())
+                .defineMethod("run", void.class, Opcodes.ACC_PUBLIC)
+                .withParameter(loaded)
+                .annotateParameter(AnnotationDescription.Builder.ofType(ScriptMeta.NamedParam.class).define("value", "effect").build())
+                .withoutCode()
+                .annotateMethod(AnnotationDescription.Builder.ofType(ScriptMeta.ScriptTarget.class).build())
+                .make()
+                .load(classLoader, INJECTION)
+                .getLoaded();
+
+        Class compile = Rpg.get().getScriptEngine()
+                .prepareCompiler(builder -> {}, loaded1)
+                .compile(script);
         try {
             Object o = compile.newInstance();
             Rpg.get().getInjector().injectMembers(o);
@@ -118,8 +172,10 @@ public class EffectScriptGenerator {
 
     private static DynamicType.Builder<EffectBase> generateMethodBody(String methodName, DynamicType.Builder<EffectBase> bb) {
         bb = bb.defineField(methodName, ScriptEffectBase.Handler.class, Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC);
+
         TypeDescription typeDefinitions = bb.toTypeDescription();
-        FieldDescription.InDefinedShape field = typeDefinitions.getDeclaredFields().stream().filter(a -> a.getActualName().equals(onApply)).findFirst().get();
+        FieldDescription.InDefinedShape field = typeDefinitions.getDeclaredFields().stream()
+                .filter(a -> a.getActualName().equalsIgnoreCase(methodName)).findFirst().get();
 
         Label label1 = new Label();
         Label label2 = new Label();
@@ -129,8 +185,8 @@ public class EffectScriptGenerator {
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
-        bb = bb.defineMethod(methodName, void.class, Modifier.PUBLIC)
-                .withParameter(IEffect.class)
+        bb = bb.defineMethod(methodName, void.class, Opcodes.ACC_PUBLIC)
+                .withParameters(IEffect.class)
                 .intercept(new Implementation.Simple(new ByteCodeAppender.Simple(Arrays.asList(
                         FieldAccess.forField(field).read(),
                         new StackManipulation.Simple((m, i) -> {

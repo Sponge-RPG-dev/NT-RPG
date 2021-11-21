@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.common;
 
+import com.google.inject.Injector;
 import com.google.inject.Module;
 import cz.neumimto.persistence.TestHelper;
 import cz.neumimto.rpg.common.classes.ClassService;
@@ -211,6 +212,11 @@ public class RpgTests implements RpgApi {
 
     @Override
     public PermissionService getPermissionService() {
+        return null;
+    }
+
+    @Override
+    public Injector getInjector() {
         return null;
     }
 
