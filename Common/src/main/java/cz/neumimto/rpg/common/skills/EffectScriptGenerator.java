@@ -165,7 +165,7 @@ public class EffectScriptGenerator {
 
     private static void injectIfExists(String field, ScriptEffectBase.Handler handler, Class<? extends EffectBase> loaded) {
         try {
-            loaded.getDeclaredField(field).set(handler, null);
+            loaded.getDeclaredField(field).set(null, handler);
         } catch (IllegalAccessException | NoSuchFieldException e) {
         }
     }

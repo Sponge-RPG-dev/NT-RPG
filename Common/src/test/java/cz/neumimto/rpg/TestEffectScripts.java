@@ -13,8 +13,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.platform.commons.support.ModifierSupport;
 
 import javax.inject.Inject;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 
 @ExtendWith({GuiceExtension.class})
@@ -58,9 +60,15 @@ public class TestEffectScripts {
         Assertions.assertEquals(model.id, iEffect.getName());
         Assertions.assertTrue(iEffect.getClass().getConstructor().isAnnotationPresent(ScriptMeta.ScriptTarget.class));
 
+        Assertions.assertSame(iEffect.getClass().getField("Num").getType(), double.class);
+
+        Assertions.assertNotNull(iEffect.getClass().getDeclaredField("onApply"));
+        Assertions.assertTrue(Modifier.isStatic(iEffect.getClass().getDeclaredField("onApply").getModifiers()));
+        Assertions.assertNotNull(iEffect.getClass().getDeclaredField("onApply").get(null));
+
         iEffect.onApply(iEffect);
         double d = (double) iEffect.getClass().getField("Num").get(iEffect);
-        Assertions.assertSame(d, 50);
+        Assertions.assertEquals(d, 50);
 
     }
 }
