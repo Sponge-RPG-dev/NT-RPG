@@ -3,17 +3,15 @@ package cz.neumimto.rpg;
 import cz.neumimto.nts.annotations.ScriptMeta;
 import cz.neumimto.rpg.common.RpgApi;
 import cz.neumimto.rpg.common.effects.IEffect;
-import cz.neumimto.rpg.common.skills.EffectScriptGenerator;
+import cz.neumimto.rpg.common.skills.scripting.EffectScriptGenerator;
 import cz.neumimto.rpg.common.skills.scripting.ScriptEffectModel;
 import cz.neumimto.rpg.junit.TestGuiceModule;
 import name.falgout.jeffrey.testing.junit.guice.GuiceExtension;
 import name.falgout.jeffrey.testing.junit.guice.IncludeModule;
-import net.bytebuddy.dynamic.loading.MultipleParentClassLoader;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.platform.commons.support.ModifierSupport;
 
 import javax.inject.Inject;
 import java.lang.reflect.Modifier;

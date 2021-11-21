@@ -1,7 +1,9 @@
 package cz.neumimto.rpg;
 
 import co.aikar.commands.PaperCommandManager;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.java.JavaPluginLoader;
 import org.bukkit.plugin.java.annotation.dependency.Dependency;
 import org.bukkit.plugin.java.annotation.dependency.DependsOn;
 import org.bukkit.plugin.java.annotation.dependency.SoftDependency;
@@ -9,6 +11,7 @@ import org.bukkit.plugin.java.annotation.dependency.SoftDependsOn;
 import org.bukkit.plugin.java.annotation.plugin.*;
 import org.bukkit.plugin.java.annotation.plugin.author.Author;
 
+import java.io.File;
 import java.util.logging.Logger;
 
 @Plugin(name = "NT-RPG", version = "2.1.0-SNAPSHOT-13")
@@ -35,6 +38,14 @@ public class SpigotRpgBootstrap extends JavaPlugin {
 
     private NtRpgBootstrap bootstrap;
     private final static String jarName = "ntrpg-embed.jar";
+
+    public SpigotRpgBootstrap() {
+        super();
+    }
+
+    protected SpigotRpgBootstrap(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file) {
+        super(loader, description, dataFolder, file);
+    }
 
     @Override
     public void onEnable() {

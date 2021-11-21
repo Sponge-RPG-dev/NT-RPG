@@ -2,6 +2,7 @@ package cz.neumimto.rpg.common.skills;
 
 import com.electronwill.nightconfig.core.conversion.Path;
 import cz.neumimto.rpg.common.skills.scripting.ScriptEffectModel;
+import cz.neumimto.rpg.common.skills.scripting.ScriptListenerModel;
 import cz.neumimto.rpg.common.skills.scripting.ScriptSkillModel;
 
 import java.util.ArrayList;
@@ -15,6 +16,6 @@ public class SkillsDefinition {
     @Path("Effects")
     public List<ScriptEffectModel> effects = new ArrayList<>();
 
-    //@Path("Listeners")
-    //public List<ScriptListenerModel> listeners = new ArrayList<>;
+    @Path("Listeners")
+    public List<ScriptListenerModel> listeners = new ArrayList<>();
 }

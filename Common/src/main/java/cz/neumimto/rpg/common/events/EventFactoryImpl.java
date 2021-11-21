@@ -18,5 +18,13 @@ public abstract class EventFactoryImpl implements EventFactoryService {
         cache.put(clazz, provider);
     }
 
-
+    @Override
+    public Supplier<?> findBySimpleName(String name) {
+        for (Map.Entry<Class<?>, Supplier<?>> entry : cache.entrySet()) {
+            if (entry.getKey().getSimpleName().equalsIgnoreCase(name)) {
+                return entry.getValue();
+            }
+        }
+        return null;
+    }
 }

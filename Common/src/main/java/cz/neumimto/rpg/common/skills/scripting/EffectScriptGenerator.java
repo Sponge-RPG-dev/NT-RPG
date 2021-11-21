@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.common.skills;
+package cz.neumimto.rpg.common.skills.scripting;
 
 import cz.neumimto.nts.annotations.ScriptMeta;
 import cz.neumimto.rpg.common.Rpg;
@@ -105,8 +105,6 @@ import static net.bytebuddy.dynamic.loading.ClassLoadingStrategy.Default.INJECTI
 public class EffectScriptGenerator {
 
     public static Class<? extends IEffect> from(ScriptEffectModel model, ClassLoader classLoader) {
-        Class<?> superType = null;
-
         try {
             var bb = new ByteBuddy()
                     .subclass(EffectBase.class)

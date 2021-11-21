@@ -83,11 +83,6 @@ dependencies {
 
     compileOnly 'com.gitlab.SamB440:RPGRegions-2:' + project.rpgregions
 
-    testImplementation('com.github.NeumimTo:MockBukkit:e92bb7bbd1') {
-        exclude group: "org.spigotmc", module: "spigot-api"
-        exclude group: "org.jetbrains", module: "annotations"
-    }
-
 }
 
 shadowJar {

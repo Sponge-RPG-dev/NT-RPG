@@ -19,11 +19,23 @@ import cz.neumimto.rpg.spigot.events.party.SpigotPartyInviteEvent;
 import cz.neumimto.rpg.spigot.events.party.SpigotPartyJoinEvent;
 import cz.neumimto.rpg.spigot.events.party.SpigotPartyLeaveEvent;
 import cz.neumimto.rpg.spigot.events.skill.*;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 
 import javax.inject.Singleton;
 
 @Singleton
 public class SpigotEventFactory extends EventFactoryImpl {
+
+    @Override
+    public Class listenerAnnotation() {
+        return EventHandler.class;
+    }
+
+    @Override
+    public Class listenerSubclass() {
+        return Listener.class;
+    }
 
     @Override
     public void registerEventProviders() {

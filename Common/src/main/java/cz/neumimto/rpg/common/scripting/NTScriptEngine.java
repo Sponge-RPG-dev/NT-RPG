@@ -31,7 +31,7 @@ public class NTScriptEngine {
     @Inject
     private Injector injector;
 
-
+    public List<Class> STL = new ArrayList<>();
 
     public NTScript prepareCompiler(Consumer<NTScript.Builder> builder, Class type) {
        if (!compilers.containsKey(type)) {
@@ -108,7 +108,7 @@ public class NTScriptEngine {
             }
         }
 
-
+        list.addAll(STL);
         return list;
     }
 
