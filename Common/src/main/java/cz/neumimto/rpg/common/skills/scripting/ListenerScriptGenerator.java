@@ -1,29 +1,16 @@
 package cz.neumimto.rpg.common.skills.scripting;
 
-import cz.neumimto.nts.NTScript;
 import cz.neumimto.nts.annotations.ScriptMeta;
 import cz.neumimto.rpg.common.Rpg;
-import cz.neumimto.rpg.common.effects.EffectBase;
 import net.bytebuddy.ByteBuddy;
-import net.bytebuddy.asm.AsmVisitorWrapper;
 import net.bytebuddy.description.annotation.AnnotationDescription;
-import net.bytebuddy.description.field.FieldDescription;
-import net.bytebuddy.description.field.FieldList;
-import net.bytebuddy.description.method.MethodList;
-import net.bytebuddy.description.type.TypeDescription;
 import net.bytebuddy.dynamic.loading.ClassLoadingStrategy;
-import net.bytebuddy.dynamic.scaffold.subclass.ConstructorStrategy;
-import net.bytebuddy.implementation.FixedValue;
 import net.bytebuddy.implementation.Implementation;
 import net.bytebuddy.implementation.bytecode.ByteCodeAppender;
 import net.bytebuddy.implementation.bytecode.member.MethodReturn;
-import net.bytebuddy.jar.asm.ClassVisitor;
-import net.bytebuddy.jar.asm.ClassWriter;
 import net.bytebuddy.jar.asm.Opcodes;
-import net.bytebuddy.pool.TypePool;
 
 import javax.inject.Singleton;
-import java.lang.reflect.Type;
 import java.util.Arrays;
 
 @SuppressWarnings("unchecked")

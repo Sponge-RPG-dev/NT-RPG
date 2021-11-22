@@ -52,6 +52,10 @@ public abstract class EffectBase<VALUE> implements IEffect<VALUE> {
         this.setDuration(duration);
     }
 
+    protected void setConsumer(IEffectConsumer consumer) {
+        this.consumer = consumer;
+    }
+
     @Override
     public String getName() {
         return effectName;

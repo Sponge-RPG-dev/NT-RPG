@@ -17,7 +17,7 @@ import static cz.neumimto.nts.annotations.ScriptMeta.*;
 @Generate(id = "name", description = "Stuns entity for a duration")
 @AutoService(IEffect.class)
 @Function("StunEffect")
-public class StunEffect extends UnstackableEffectBase<Long> {
+public class StunEffect extends UnstackableEffectBase<Long>  {
     public static String name = "Stun";
     private LivingEntity livingEntity;
     private Location appliedLoc;

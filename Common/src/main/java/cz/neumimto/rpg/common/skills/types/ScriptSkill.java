@@ -20,12 +20,14 @@ public interface ScriptSkill {
         setDamageType(getModel().damageType);
         setCatalogId(getModel().id);
         List<String> configTypes = getModel().skillTypes;
-        for (String configType : configTypes) {
-            Optional<ISkillType> skillType = Rpg.get().getSkillService().getSkillType(configType);
-            if (skillType.isPresent()) {
-                addSkillType(skillType.get());
-            } else {
-                Log.warn("Unknown skill type " + configType);
+        if (configTypes != null) {
+            for (String configType : configTypes) {
+                Optional<ISkillType> skillType = Rpg.get().getSkillService().getSkillType(configType);
+                if (skillType.isPresent()) {
+                    addSkillType(skillType.get());
+                } else {
+                    Log.warn("Unknown skill type " + configType);
+                }
             }
         }
     }

@@ -2,24 +2,16 @@ package cz.neumimto.rpg.common.skills.scripting;
 
 import cz.neumimto.nts.annotations.ScriptMeta;
 import cz.neumimto.rpg.common.Rpg;
-import cz.neumimto.rpg.common.effects.EffectBase;
-import cz.neumimto.rpg.common.effects.IEffect;
-import cz.neumimto.rpg.common.effects.ScriptEffectBase;
-import cz.neumimto.rpg.common.skills.scripting.ScriptEffectModel;
+import cz.neumimto.rpg.common.effects.*;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.asm.AsmVisitorWrapper;
-import net.bytebuddy.description.ModifierReviewable;
 import net.bytebuddy.description.annotation.AnnotationDescription;
 import net.bytebuddy.description.field.FieldDescription;
 import net.bytebuddy.description.field.FieldList;
 import net.bytebuddy.description.method.MethodDescription;
 import net.bytebuddy.description.method.MethodList;
-import net.bytebuddy.description.method.ParameterDescription;
-import net.bytebuddy.description.type.TypeDefinition;
 import net.bytebuddy.description.type.TypeDescription;
 import net.bytebuddy.dynamic.DynamicType;
-import net.bytebuddy.dynamic.loading.ClassLoadingStrategy;
-import net.bytebuddy.dynamic.loading.InjectionClassLoader;
 import net.bytebuddy.implementation.Implementation;
 import net.bytebuddy.implementation.MethodCall;
 import net.bytebuddy.implementation.bytecode.ByteCodeAppender;
@@ -63,7 +55,7 @@ import static net.bytebuddy.dynamic.loading.ClassLoadingStrategy.Default.INJECTI
  *
  * 1) Effect base class
  *
- *  public class Test{timestamp} extends EffectBase {
+ *  public class Test{timestamp} extends UnstackableEffect {
  *     public double Num;
  *     public static Handler onApply;
  *
@@ -106,8 +98,8 @@ public class EffectScriptGenerator {
 
     public static Class<? extends IEffect> from(ScriptEffectModel model, ClassLoader classLoader) {
         try {
-            var bb = new ByteBuddy()
-                    .subclass(EffectBase.class)
+            DynamicType.Builder bb = new ByteBuddy()
+                    .subclass(UnstackableEffectBase.class)
                     .visit(new AsmVisitorWrapper() {
                         @Override
                         public int mergeWriter(int flags) {
@@ -124,7 +116,8 @@ public class EffectScriptGenerator {
                             return classVisitor;
                         }
                     })
-                    .name("cz.neumimto.rpg.generated.effects." + model.id + System.currentTimeMillis());
+                    .name("cz.neumimto.rpg.generated.effects." + model.id + System.currentTimeMillis())
+                    .annotateType(AnnotationDescription.Builder.ofType(ScriptMeta.Function.class).define("value", model.id).build());
 
             for (Map.Entry<String, String> field : model.fields.entrySet()) {
                 String value = field.getValue();
@@ -146,7 +139,7 @@ public class EffectScriptGenerator {
 
             Constructor c = null;
             bb = bb.constructor(ElementMatchers.isDefaultConstructor())
-                   .intercept(MethodCall.invoke(EffectBase.class.getConstructor())
+                   .intercept(MethodCall.invoke(UnstackableEffectBase.class.getConstructor())
                            .andThen(new Implementation.Simple(new ByteCodeAppender.Simple(Arrays.asList(
                                MethodVariableAccess.loadThis(),
                                new TextConstant(model.id),
@@ -157,7 +150,7 @@ public class EffectScriptGenerator {
                                }))
                            )))
                    )
-                   .annotateMethod(AnnotationDescription.Builder.ofType(ScriptMeta.ScriptTarget.class).build());
+                   .annotateMethod(AnnotationDescription.Builder.ofType(ScriptMeta.Handler.class).build());
 
             if (model.onApply != null && !model.onApply.isBlank()) {
                 bb = generateMethodBody("onApply", bb);
@@ -218,14 +211,14 @@ public class EffectScriptGenerator {
         }
     }
 
-    private static void injectIfExists(String field, ScriptEffectBase.Handler handler, Class<? extends EffectBase> loaded) {
+    private static void injectIfExists(String field, ScriptEffectBase.Handler handler, Class<? extends IEffect> loaded) {
         try {
             loaded.getDeclaredField(field).set(null, handler);
         } catch (IllegalAccessException | NoSuchFieldException e) {
         }
     }
 
-    private static DynamicType.Builder<EffectBase> generateMethodBody(String methodName, DynamicType.Builder<EffectBase> bb) {
+    private static DynamicType.Builder<? extends IEffect> generateMethodBody(String methodName, DynamicType.Builder bb) {
         bb = bb.defineField(methodName, ScriptEffectBase.Handler.class, Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC);
 
         TypeDescription typeDefinitions = bb.toTypeDescription();

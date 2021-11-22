@@ -278,6 +278,10 @@ public abstract class SkillService {
 
     private void loadSkillDefinitionFile(Config config, ClassLoader urlClassLoader) {
         SkillsDefinition definition = new ObjectConverter().toObject(config, SkillsDefinition::new);
+        loadSkillDefinitions(urlClassLoader, definition);
+    }
+
+    public void loadSkillDefinitions(ClassLoader urlClassLoader, SkillsDefinition definition) {
         if (definition.effects != null) {
             definition.effects.stream()
                     .map(a -> EffectScriptGenerator.from(a, urlClassLoader))
@@ -298,7 +302,6 @@ public abstract class SkillService {
                     .forEach(a->Rpg.get().registerListeners(a));
         }
     }
-
 
 
     public void reloadSkills() {

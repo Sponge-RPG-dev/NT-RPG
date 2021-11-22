@@ -8,6 +8,10 @@ import java.util.Set;
 
 public abstract class UnstackableEffectBase<VALUE> extends EffectBase<VALUE> implements IEffectContainer {
 
+    public UnstackableEffectBase() {
+        super();
+    }
+
     public UnstackableEffectBase(String name, IEffectConsumer consumer) {
         super(name, consumer);
         setStackable(false, null);
@@ -31,6 +35,11 @@ public abstract class UnstackableEffectBase<VALUE> extends EffectBase<VALUE> imp
     @Override
     public void removeStack(IEffect iEffect) {
 
+    }
+
+    @Override
+    public void setConsumer(IEffectConsumer consumer) {
+        super.setConsumer(consumer);
     }
 
     @Override

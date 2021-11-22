@@ -2,6 +2,7 @@ package cz.neumimto.rpg;
 
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.RpgApi;
+import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.skills.scripting.EffectScriptGenerator;
 import cz.neumimto.rpg.common.skills.scripting.ListenerScriptGenerator;
 import cz.neumimto.rpg.common.skills.scripting.ScriptListenerModel;

@@ -3,7 +3,7 @@ package cz.neumimto.rpg.common.effects;
 import cz.neumimto.nts.annotations.ScriptMeta;
 import cz.neumimto.nts.annotations.ScriptMeta.ScriptTarget;
 
-public class ScriptEffectBase extends EffectBase {
+public class ScriptEffectBase extends UnstackableEffectBase {
 
     public static Handler onApply;
     public static Handler onTick;
