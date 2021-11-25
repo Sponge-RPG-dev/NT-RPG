@@ -38,11 +38,6 @@ public abstract class UnstackableEffectBase<VALUE> extends EffectBase<VALUE> imp
     }
 
     @Override
-    public void setConsumer(IEffectConsumer consumer) {
-        super.setConsumer(consumer);
-    }
-
-    @Override
     public IEffectContainer<VALUE, IEffect<VALUE>> getEffectContainer() {
         return this;
     }
@@ -55,5 +50,15 @@ public abstract class UnstackableEffectBase<VALUE> extends EffectBase<VALUE> imp
     @Override
     public void setEffectContainer(IEffectContainer<VALUE, IEffect<VALUE>> iEffectContainer) {
 
+    }
+
+    @Override
+    public void setConsumer(IEffectConsumer consumer) {
+        super.setConsumer(consumer);
+    }
+
+    @Override
+    public IEffectConsumer getConsumer() {
+        return super.getConsumer();
     }
 }

@@ -4,7 +4,9 @@ pluginManagement {
             url "https://papermc.io/repo/repository/maven-public/"
         }
         gradlePluginPortal()
-        //maven("https://repo.jpenilla.xyz/snapshots/")
+        maven {
+            url "https://repo.jpenilla.xyz/snapshots/"
+        }
     }
 }
 

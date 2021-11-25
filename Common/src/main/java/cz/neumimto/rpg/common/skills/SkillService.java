@@ -284,18 +284,21 @@ public abstract class SkillService {
     public void loadSkillDefinitions(ClassLoader urlClassLoader, SkillsDefinition definition) {
         if (definition.effects != null) {
             definition.effects.stream()
+                    .peek(a-> Log.info("Compiling Effect " +a.id))
                     .map(a -> EffectScriptGenerator.from(a, urlClassLoader))
                     .filter(Objects::nonNull)
                     .forEach(a->Rpg.get().getScriptEngine().STL.add(a));
         }
         if (definition.skills != null) {
             definition.skills.stream()
+                    .peek(a-> Log.info("Compiling Skill " +a.id))
                     .map(a -> skillDefinitionToSkill(a, urlClassLoader))
                     .filter(Objects::nonNull)
                     .forEach(this::registerAdditionalCatalog);
         }
         if (definition.listeners != null) {
             definition.listeners.stream()
+                    .peek(a-> Log.info("Compiling Listener " +a.id))
                     .map(a-> ListenerScriptGenerator.from(a, urlClassLoader))
                     .filter(Objects::nonNull)
                     .map(a->injector.getInstance(a))

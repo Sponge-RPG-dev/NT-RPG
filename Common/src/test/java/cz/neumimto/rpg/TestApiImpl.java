@@ -89,6 +89,8 @@ public class TestApiImpl implements RpgApi {
     @Inject
     private Injector injector;
 
+    public static List<Object> listeners = new ArrayList<>();
+
     @Override
     public ResourceLoader getResourceLoader() {
         return resourceLoader;
@@ -173,12 +175,12 @@ public class TestApiImpl implements RpgApi {
 
     @Override
     public void unregisterListeners(Object listener) {
-
+        listeners.remove(listener);
     }
 
     @Override
     public void registerListeners(Object listener) {
-
+        listeners.add(listener);
     }
 
     @Override

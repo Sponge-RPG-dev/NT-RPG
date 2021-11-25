@@ -55,6 +55,7 @@ import static net.bytebuddy.dynamic.loading.ClassLoadingStrategy.Default.INJECTI
  *
  * 1) Effect base class
  *
+ *  @SimpleName("Test")
  *  public class Test{timestamp} extends UnstackableEffect {
  *     public double Num;
  *     public static Handler onApply;
@@ -89,6 +90,7 @@ import static net.bytebuddy.dynamic.loading.ClassLoadingStrategy.Default.INJECTI
  * }
  *
  * This proxy implementation is also automatically initialized with guice injector and its reference is injected into the static field
+ *
  * Test{timestamp}.OnApply = injector.newInstance(HandlerTest{timestamp}.class)
  *
  * The timestamps are part of all classnames to ensure easy reloading at runtime, im not reimplementing osgi, just throw away old refs
@@ -117,7 +119,8 @@ public class EffectScriptGenerator {
                         }
                     })
                     .name("cz.neumimto.rpg.generated.effects." + model.id + System.currentTimeMillis())
-                    .annotateType(AnnotationDescription.Builder.ofType(ScriptMeta.Function.class).define("value", model.id).build());
+                    .annotateType(AnnotationDescription.Builder.ofType(ScriptMeta.Function.class).define("value", model.id).build())
+                    .annotateType(AnnotationDescription.Builder.ofType(ScriptMeta.SimpleName.class).define("value", model.id).build());
 
             for (Map.Entry<String, String> field : model.fields.entrySet()) {
                 String value = field.getValue();
@@ -163,7 +166,7 @@ public class EffectScriptGenerator {
 
             }
 
-            bb.make().saveIn(new File("/tmp"));
+        //    bb.make().saveIn(new File("/tmp"));
             Class<? extends EffectBase> loaded = bb.make()
                     .load(classLoader, INJECTION)
                     .getLoaded();

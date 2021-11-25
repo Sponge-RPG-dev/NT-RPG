@@ -3,6 +3,7 @@ package cz.neumimto.rpg;
 import com.google.inject.Injector;
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.RpgApi;
+import cz.neumimto.rpg.common.effects.IEffectContainer;
 import cz.neumimto.rpg.common.effects.UnstackableEffectBase;
 import cz.neumimto.rpg.common.entity.TestCharacter;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
@@ -16,12 +17,15 @@ import cz.neumimto.rpg.junit.TestGuiceModule;
 import cz.neumimto.rpg.model.CharacterBaseTest;
 import name.falgout.jeffrey.testing.junit.guice.GuiceExtension;
 import name.falgout.jeffrey.testing.junit.guice.IncludeModule;
+import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import javax.inject.Inject;
+import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.UUID;
@@ -96,7 +100,12 @@ public class TestScriptingComplexUsecase {
         lmodel.event = "CharacterEvent";
         lmodel.script = """
                     @character = @event.character
-                    @effect = get_effect{e=@character,n="TestEffect"}
+                    @effect = get_effect{e=@character,en="TestEffect"} as TestEffect
+                    IF exists{o=@effect}
+                        print{o=@effect}
+                        @effect.Num=77
+                        printd{d=@effect.Num}
+                    END
                     RETURN
                 """;
         skillsDefinition.listeners.add(lmodel);
@@ -113,6 +122,18 @@ public class TestScriptingComplexUsecase {
         iSkill.cast(testCharacter, playerSkillContext);
 
         Assertions.assertTrue(testCharacter.getEffects().stream().anyMatch(a -> a.getName().equals(emodel.id)));
+
+        Assertions.assertTrue(TestApiImpl.listeners.size() == 1);
+
+        Object listener = TestApiImpl.listeners.get(0);
+
+        CharacterEvent event = new CharacterEvent();
+        event.setCharacter(testCharacter);
+
+        Method m = Arrays.stream(listener.getClass().getDeclaredMethods()).findFirst().get();
+        m.invoke(listener, event);
+
+        IEffectContainer effect = testCharacter.getEffect(emodel.id);
 
     }
 
