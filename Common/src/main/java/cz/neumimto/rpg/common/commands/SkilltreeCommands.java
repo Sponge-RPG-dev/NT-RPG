@@ -10,8 +10,8 @@ import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.common.gui.Gui;
 import cz.neumimto.rpg.common.gui.SkillTreeViewModel;
 import cz.neumimto.rpg.common.localization.LocalizationService;
-import cz.neumimto.rpg.common.skills.SkillService;
 import cz.neumimto.rpg.common.skills.ISkill;
+import cz.neumimto.rpg.common.skills.SkillService;
 import cz.neumimto.rpg.common.skills.tree.SkillTree;
 
 import javax.inject.Inject;

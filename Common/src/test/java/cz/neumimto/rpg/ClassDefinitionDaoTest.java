@@ -1,10 +1,10 @@
 package cz.neumimto.rpg;
 
 import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.classes.ClassService;
 import cz.neumimto.rpg.common.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
-import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.persistance.dao.ClassDefinitionDao;
 import cz.neumimto.rpg.junit.CharactersExtension;
 import cz.neumimto.rpg.junit.NtRpgExtension;
@@ -39,8 +39,8 @@ public class ClassDefinitionDaoTest {
         Path classDirectory = classDefinitionDao.getClassDirectory();
         classDirectory.resolve("class1.conf").toFile().delete();
         classDirectory.resolve("class2.conf").toFile().delete();
-        assetService.copyToFile("classDependencyGraphTest/class1.conf",classDirectory.resolve("class1.conf"));
-        assetService.copyToFile("classDependencyGraphTest/class2.conf",classDirectory.resolve("class2.conf"));
+        assetService.copyToFile("classDependencyGraphTest/class1.conf", classDirectory.resolve("class1.conf"));
+        assetService.copyToFile("classDependencyGraphTest/class2.conf", classDirectory.resolve("class2.conf"));
 
     }
 
@@ -57,7 +57,7 @@ public class ClassDefinitionDaoTest {
                 Assertions.assertEquals(1, softDepends.size());
                 Assertions.assertNotNull(softDepends.iterator().next());
                 Assertions.assertTrue(softDepends.iterator().next().getName().equalsIgnoreCase("class1"));
-                run =true;
+                run = true;
             }
         }
         Assertions.assertTrue(run);

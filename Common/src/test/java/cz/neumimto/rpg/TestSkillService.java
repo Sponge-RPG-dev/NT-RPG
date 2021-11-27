@@ -3,7 +3,6 @@ package cz.neumimto.rpg;
 import cz.neumimto.nts.NTScript;
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.gui.ISkillTreeInterfaceModel;
-import cz.neumimto.rpg.common.scripting.SkillScriptHandlers;
 import cz.neumimto.rpg.common.skills.ISkill;
 import cz.neumimto.rpg.common.skills.SkillService;
 import cz.neumimto.rpg.junit.TestDictionary;
@@ -20,9 +19,9 @@ public class TestSkillService extends SkillService {
         return ntScriptEngine.prepareCompiler(builder -> {
             try {
                 builder
-                        .add(Math.class.getDeclaredMethod("max", double.class, double.class), List.of("a","b"))
-                        .add(Math.class.getDeclaredMethod("min", double.class, double.class), List.of("a","b"))
-                        .add(Math.class.getDeclaredMethod("pow", double.class, double.class), List.of("a","b"))
+                        .add(Math.class.getDeclaredMethod("max", double.class, double.class), List.of("a", "b"))
+                        .add(Math.class.getDeclaredMethod("min", double.class, double.class), List.of("a", "b"))
+                        .add(Math.class.getDeclaredMethod("pow", double.class, double.class), List.of("a", "b"))
                         .add(Math.class.getDeclaredMethod("abs", double.class), List.of("a"))
                         .add(Math.class.getDeclaredMethod("sqrt", double.class), List.of("a"))
                         .add(Math.class.getDeclaredMethod("ceil", double.class), List.of("a"))

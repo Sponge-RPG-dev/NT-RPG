@@ -1,10 +1,10 @@
 package cz.neumimto.rpg.spigot.entities.configuration;
 
 import cz.neumimto.rpg.common.Rpg;
-import cz.neumimto.rpg.common.utils.FileUtils;
 import cz.neumimto.rpg.common.entity.configuration.MobSettingsDao;
 import cz.neumimto.rpg.common.entity.configuration.MobsConfig;
 import cz.neumimto.rpg.common.entity.configuration.RootMobConfig;
+import cz.neumimto.rpg.common.utils.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.EntityType;

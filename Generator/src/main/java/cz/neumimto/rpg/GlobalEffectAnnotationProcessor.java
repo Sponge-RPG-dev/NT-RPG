@@ -63,11 +63,9 @@ public class GlobalEffectAnnotationProcessor extends AbstractProcessor {
             + "\n"
             + "import java.util.Map;\n"
             + "import cz.neumimto.rpg.common.effects.model.EffectModelMapper;\n"
-            + "import cz.neumimto.rpg.common.skills.scripting.JsBinding;\n"
             + "import com.google.auto.service.AutoService;\n"
             + "\n"
-            + "@AutoService(EffectModelMapper.class)"
-            + "@JsBinding(JsBinding.Type.CLASS)\n"
+            + "@AutoService(EffectModelMapper.class)\n"
             + "@cz.neumimto.rpg.common.ResourceLoader.ModelMapper\n"
             + "public class %stype%Mapper extends EffectModelMapper {\n"
             + "\n"
@@ -255,7 +253,7 @@ public class GlobalEffectAnnotationProcessor extends AbstractProcessor {
                 writer.flush();
             }
         } catch (IOException ee) {
-            System.out.println("Unable to create " + modelSimpleName+"Mapper");
+            System.out.println("Unable to create " + modelSimpleName + "Mapper");
         }
     }
 

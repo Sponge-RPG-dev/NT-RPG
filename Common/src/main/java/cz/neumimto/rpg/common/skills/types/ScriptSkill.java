@@ -16,6 +16,7 @@ public interface ScriptSkill {
     ScriptSkillModel getModel();
 
     void setModel(ScriptSkillModel model);
+
     default void initFromModel() {
         setDamageType(getModel().damageType);
         setCatalogId(getModel().id);
@@ -34,7 +35,9 @@ public interface ScriptSkill {
 
 
     void setCatalogId(String id);
+
     void setDamageType(String type);
+
     void addSkillType(ISkillType type);
 
 }

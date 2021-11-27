@@ -5,6 +5,7 @@ import cz.neumimto.rpg.common.effects.IEffect;
 import cz.neumimto.rpg.common.effects.IEffectContainer;
 import cz.neumimto.rpg.common.entity.EntityHand;
 import cz.neumimto.rpg.common.entity.IReservable;
+import cz.neumimto.rpg.common.entity.PropertyService;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.common.entity.players.party.IParty;
@@ -17,7 +18,6 @@ import cz.neumimto.rpg.common.skills.ISkill;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.skills.preprocessors.InterruptableSkillPreprocessor;
 import cz.neumimto.rpg.common.skills.tree.SkillTreeSpecialization;
-import cz.neumimto.rpg.common.entity.PropertyService;
 
 import java.util.*;
 

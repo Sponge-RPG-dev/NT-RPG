@@ -1,15 +1,11 @@
 package cz.neumimto.rpg.spigot.effects.common.def;
 
 import cz.neumimto.rpg.common.Rpg;
-import cz.neumimto.rpg.common.effects.EffectBase;
-import cz.neumimto.rpg.common.effects.IEffect;
-import cz.neumimto.rpg.common.effects.IEffectContainer;
-import cz.neumimto.rpg.common.effects.IEffectSourceProvider;
+import cz.neumimto.rpg.common.effects.*;
 import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.common.localization.LocalizationKeys;
 import cz.neumimto.rpg.common.localization.LocalizationService;
 import cz.neumimto.rpg.common.utils.MathUtils;
-import cz.neumimto.rpg.common.effects.CoreEffectTypes;
 import cz.neumimto.rpg.common.utils.StringUtils;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import org.bukkit.Bukkit;

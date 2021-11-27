@@ -19,7 +19,7 @@ public class DimExperiencesAdapter implements Converter<Map<String, Map<String, 
             Map<String, Double> expMap = new HashMap<>();
             Config c = (Config) entry.getValue();
             for (Config.Entry e : c.entrySet()) {
-                expMap.put(e.getKey(), ((Number)e.getValue()).doubleValue());
+                expMap.put(e.getKey(), ((Number) e.getValue()).doubleValue());
             }
             map.put(entry.getKey(), expMap);
         }

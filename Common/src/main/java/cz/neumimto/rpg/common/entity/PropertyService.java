@@ -3,13 +3,13 @@ package cz.neumimto.rpg.common.entity;
 import com.electronwill.nightconfig.core.conversion.ObjectConverter;
 import com.electronwill.nightconfig.core.file.FileConfig;
 import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.configuration.AttributeConfig;
 import cz.neumimto.rpg.common.configuration.Attributes;
 import cz.neumimto.rpg.common.items.ItemService;
 import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.common.properties.Property;
 import cz.neumimto.rpg.common.utils.Console;
-import cz.neumimto.rpg.common.assets.AssetService;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

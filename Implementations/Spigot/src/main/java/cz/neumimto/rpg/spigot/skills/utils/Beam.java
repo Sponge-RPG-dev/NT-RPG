@@ -6,7 +6,7 @@ import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.entities.ISpigotEntity;
 import cz.neumimto.rpg.spigot.events.skill.SpigotSkillTargetAttemptEvent;
-import org.bukkit.*;
+import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
@@ -38,9 +38,9 @@ public class Beam extends BukkitRunnable {
     double beamDistance = 0;
 
     public Beam(ISpigotEntity caster,
-                 double step, double gravityForce, double maxDistance,
-                 PlayerSkillContext playerSkillContext,
-                 OnTick onTick, OnEntityHit onTarget, OnHitGround onHitGround) {
+                double step, double gravityForce, double maxDistance,
+                PlayerSkillContext playerSkillContext,
+                OnTick onTick, OnEntityHit onTarget, OnHitGround onHitGround) {
         this.caster = caster.getEntity();
         this.nCaster = caster;
         this.onTick = onTick;
@@ -53,37 +53,37 @@ public class Beam extends BukkitRunnable {
         this.playerSkillContext = playerSkillContext;
         this.loc = this.caster.getEyeLocation();
         this.dir = loc.getDirection().normalize().multiply(step);
-        this.box = new MutableBoundingBox(loc, step /2);
+        this.box = new MutableBoundingBox(loc, step / 2);
     }
 
     public void start(long period) {
         runTaskTimer(SpigotRpgPlugin.getInstance(), 0, period);
 
-       // new BukkitRunnable() {
-       //     double t = 0;
-       //     @Override
-       //     public void run() {
-       //         double radius = Math.sin(t);
-       //         for (double angle = 0; angle < Math.PI * 2; angle += Math.PI / 8) {
-       //             double x = Math.sin(angle) * radius;
-       //             double z = Math.cos(angle) * radius;
-       //             Vector v = new Vector(x, 0, z);
-       //             v.rotateAroundX(caster.getLocation().getPitch() + 90F);
-       //             v.rotateAroundY(-caster.getLocation().getYaw());
-       //             ParticleEffect.VILLAGER_HAPPY.display(0F, 0F, 0F, 0.004F, 1, loc.clone().add(v), 257D);
-       //         }
-       //         t += Math.PI / 8;
-       //         if (t > Math.PI * 2)
-       //             t = 0;
-       //         loc.add(dir);
-       //     }
-       // }.runTaskTimer(SpigotRpgPlugin.getInstance(), 0,1);
+        // new BukkitRunnable() {
+        //     double t = 0;
+        //     @Override
+        //     public void run() {
+        //         double radius = Math.sin(t);
+        //         for (double angle = 0; angle < Math.PI * 2; angle += Math.PI / 8) {
+        //             double x = Math.sin(angle) * radius;
+        //             double z = Math.cos(angle) * radius;
+        //             Vector v = new Vector(x, 0, z);
+        //             v.rotateAroundX(caster.getLocation().getPitch() + 90F);
+        //             v.rotateAroundY(-caster.getLocation().getYaw());
+        //             ParticleEffect.VILLAGER_HAPPY.display(0F, 0F, 0F, 0.004F, 1, loc.clone().add(v), 257D);
+        //         }
+        //         t += Math.PI / 8;
+        //         if (t > Math.PI * 2)
+        //             t = 0;
+        //         loc.add(dir);
+        //     }
+        // }.runTaskTimer(SpigotRpgPlugin.getInstance(), 0,1);
     }
 
     @Override
     public void run() {
 
-        MutableBoundingBox box = new MutableBoundingBox(loc, step /2);
+        MutableBoundingBox box = new MutableBoundingBox(loc, step / 2);
 
         if (beamDistance < maxDistance) {
 
@@ -91,13 +91,13 @@ public class Beam extends BukkitRunnable {
             loc.add(dir);
 
             if (gravityForce != 0) {
-                dir.add(new Vector(0, -gravityForce,0));
+                dir.add(new Vector(0, -gravityForce, 0));
                 loc.setDirection(dir);
             }
 
             if (!loc.getBlock().isPassable()) {
                 if (onHitGround != null) {
-                    onHitGround.process(tick, beamDistance,nCaster, playerSkillContext, loc);
+                    onHitGround.process(tick, beamDistance, nCaster, playerSkillContext, loc);
                 }
                 super.cancel();
                 return;
@@ -148,11 +148,11 @@ public class Beam extends BukkitRunnable {
 
         @ScriptMeta.ScriptTarget
         BeamActionResult process(@ScriptMeta.NamedParam("target") ISpigotEntity target,
-                                     @ScriptMeta.NamedParam("tick") int tick,
-                                     @ScriptMeta.NamedParam("distance") double distance,
-                                     @ScriptMeta.NamedParam("caster") ISpigotEntity caster,
-                                     @ScriptMeta.NamedParam("context") PlayerSkillContext context,
-                                     @ScriptMeta.NamedParam("location") Location location);
+                                 @ScriptMeta.NamedParam("tick") int tick,
+                                 @ScriptMeta.NamedParam("distance") double distance,
+                                 @ScriptMeta.NamedParam("caster") ISpigotEntity caster,
+                                 @ScriptMeta.NamedParam("context") PlayerSkillContext context,
+                                 @ScriptMeta.NamedParam("location") Location location);
     }
 
     public interface OnTick {
@@ -169,10 +169,10 @@ public class Beam extends BukkitRunnable {
 
         @ScriptMeta.ScriptTarget
         void process(@ScriptMeta.NamedParam("tick") int tick,
-                        @ScriptMeta.NamedParam("distance") double distance,
-                         @ScriptMeta.NamedParam("caster") ISpigotEntity caster,
-                         @ScriptMeta.NamedParam("context") PlayerSkillContext context,
-                         @ScriptMeta.NamedParam("location") Location location);
+                     @ScriptMeta.NamedParam("distance") double distance,
+                     @ScriptMeta.NamedParam("caster") ISpigotEntity caster,
+                     @ScriptMeta.NamedParam("context") PlayerSkillContext context,
+                     @ScriptMeta.NamedParam("location") Location location);
     }
 
 }

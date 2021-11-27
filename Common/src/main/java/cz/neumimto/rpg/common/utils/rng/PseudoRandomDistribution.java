@@ -1,13 +1,11 @@
 package cz.neumimto.rpg.common.utils.rng;
 
-import cz.neumimto.rpg.common.skills.scripting.JsBinding;
 
 import static java.lang.Math.*;
 
 /**
  * Created by NeumimTo on 14.03.2016.
  */
-@JsBinding(JsBinding.Type.CLASS)
 public class PseudoRandomDistribution {
 
     public static double[] C = null;

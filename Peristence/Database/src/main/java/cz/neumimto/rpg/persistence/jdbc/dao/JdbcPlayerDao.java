@@ -6,11 +6,11 @@ import cz.neumimto.rpg.common.model.CharacterClass;
 import cz.neumimto.rpg.common.model.CharacterSkill;
 import cz.neumimto.rpg.common.model.TimestampEntity;
 import cz.neumimto.rpg.common.persistance.dao.IPlayerDao;
-import cz.neumimto.rpg.persistence.jdbc.NamedPreparedStatement;
-import cz.neumimto.rpg.persistence.jdbc.converters.EquipedSlot2Json;
 import cz.neumimto.rpg.common.persistance.model.CharacterBaseImpl;
 import cz.neumimto.rpg.common.persistance.model.CharacterClassImpl;
 import cz.neumimto.rpg.common.persistance.model.CharacterSkillImpl;
+import cz.neumimto.rpg.persistence.jdbc.NamedPreparedStatement;
+import cz.neumimto.rpg.persistence.jdbc.converters.EquipedSlot2Json;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

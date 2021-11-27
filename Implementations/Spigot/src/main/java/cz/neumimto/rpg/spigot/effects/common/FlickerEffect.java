@@ -34,7 +34,7 @@ public class FlickerEffect extends EffectBase {
         InvisibilityEffect invisibilityEffect = new InvisibilityEffect(getConsumer(), invisDuration);
         Rpg.get().getEffectService().addEffect(invisibilityEffect, getEffectSourceProvider(), (IEntity) getConsumer());
         LivingEntity entity = (LivingEntity) getConsumer().getEntity();
-        entity.getWorld().spawnParticle(Particle.SMOKE_NORMAL, entity.getLocation(),  5);
+        entity.getWorld().spawnParticle(Particle.SMOKE_NORMAL, entity.getLocation(), 5);
     }
 
 }

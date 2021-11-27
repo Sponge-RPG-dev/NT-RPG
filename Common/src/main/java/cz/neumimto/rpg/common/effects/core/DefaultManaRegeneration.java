@@ -1,16 +1,12 @@
 package cz.neumimto.rpg.common.effects.core;
 
 import cz.neumimto.rpg.common.Rpg;
-import cz.neumimto.rpg.common.effects.EffectBase;
-import cz.neumimto.rpg.common.effects.EffectStatusType;
-import cz.neumimto.rpg.common.effects.Generate;
-import cz.neumimto.rpg.common.effects.IEffect;
+import cz.neumimto.rpg.common.effects.*;
 import cz.neumimto.rpg.common.entity.CommonProperties;
 import cz.neumimto.rpg.common.entity.IEffectConsumer;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.events.character.CharacterManaRegainEvent;
 import cz.neumimto.rpg.common.gui.Gui;
-import cz.neumimto.rpg.common.effects.CoreEffectTypes;
 
 /**
  * Created by NeumimTo on 9.8.2015.

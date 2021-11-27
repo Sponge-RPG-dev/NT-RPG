@@ -190,7 +190,7 @@ public abstract class SkillService {
 
                 Log.info("Compiling nts script " + scriptSkillModel.id + " as " + c.getSimpleName());
 
-                Class<? extends SkillScriptHandlers> generate = ntScriptEngine.prepareCompiler(getNTSBuilderContext(),c)
+                Class<? extends SkillScriptHandlers> generate = ntScriptEngine.prepareCompiler(getNTSBuilderContext(), c)
                         .compile(scriptSkillModel.script);
                 if (generate == null) {
                     Log.error("Unable to generate script " + scriptSkillModel.id);
@@ -300,25 +300,25 @@ public abstract class SkillService {
     public void loadSkillDefinitions(ClassLoader urlClassLoader, SkillsDefinition definition) {
         if (definition.effects != null) {
             definition.effects.stream()
-                    .peek(a-> Log.info("Compiling Effect " +a.id))
+                    .peek(a -> Log.info("Compiling Effect " + a.id))
                     .map(a -> EffectScriptGenerator.from(a, urlClassLoader))
                     .filter(Objects::nonNull)
-                    .forEach(a->Rpg.get().getScriptEngine().STL.add(a));
+                    .forEach(a -> Rpg.get().getScriptEngine().STL.add(a));
         }
         if (definition.skills != null) {
             definition.skills.stream()
-                    .peek(a-> Log.info("Compiling Skill " +a.id))
+                    .peek(a -> Log.info("Compiling Skill " + a.id))
                     .map(a -> skillDefinitionToSkill(a, urlClassLoader))
                     .filter(Objects::nonNull)
                     .forEach(this::registerAdditionalCatalog);
         }
         if (definition.listeners != null) {
             definition.listeners.stream()
-                    .peek(a-> Log.info("Compiling Listener " +a.id))
-                    .map(a-> ListenerScriptGenerator.from(a, urlClassLoader))
+                    .peek(a -> Log.info("Compiling Listener " + a.id))
+                    .map(a -> ListenerScriptGenerator.from(a, urlClassLoader))
                     .filter(Objects::nonNull)
-                    .map(a->injector.getInstance(a))
-                    .forEach(a->Rpg.get().registerListeners(a));
+                    .map(a -> injector.getInstance(a))
+                    .forEach(a -> Rpg.get().registerListeners(a));
         }
     }
 

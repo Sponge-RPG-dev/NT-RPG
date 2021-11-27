@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.spigot.assets;
 
-import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.common.assets.AssetService;
+import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.spigot.gui.inventoryviews.ConfigurableInventoryGui;
 
 import javax.inject.Singleton;

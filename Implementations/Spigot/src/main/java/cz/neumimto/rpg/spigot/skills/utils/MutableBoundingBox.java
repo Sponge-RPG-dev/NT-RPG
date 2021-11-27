@@ -34,25 +34,25 @@ public class MutableBoundingBox {
     public void draw() {
         int particleDistance = 1;
 
-        int _minX = (int) (minX*100);
-        int _minY = (int) (minY*100);
-        int _minZ = (int) (minZ*100);
-        int _maxX = (int) (maxX*100);
-        int _maxY = (int) (maxY*100);
-        int _maxZ = (int) (maxZ*100);
-        
-        for (double x = _minX; x <= _maxX; x+=particleDistance) {
-            for (double y = _minY; y <= _maxY; y+=particleDistance) {
-                for (double z = _minZ; z <= _maxZ; z+=particleDistance) {
+        int _minX = (int) (minX * 100);
+        int _minY = (int) (minY * 100);
+        int _minZ = (int) (minZ * 100);
+        int _maxX = (int) (maxX * 100);
+        int _maxY = (int) (maxY * 100);
+        int _maxZ = (int) (maxZ * 100);
+
+        for (double x = _minX; x <= _maxX; x += particleDistance) {
+            for (double y = _minY; y <= _maxY; y += particleDistance) {
+                for (double z = _minZ; z <= _maxZ; z += particleDistance) {
                     boolean edge = false;
-                    if ((x == _minX ||  x == _maxX) && (y == _minY ||  y == _maxY)) edge = true;
-                    if ((z == _minZ ||  z == _maxZ) && ( y == _minY ||  y == _maxY)) edge = true;
-                    if ((x == _minX ||  x == _maxX) && ( z == _minZ ||  z == _maxZ)) edge = true;
+                    if ((x == _minX || x == _maxX) && (y == _minY || y == _maxY)) edge = true;
+                    if ((z == _minZ || z == _maxZ) && (y == _minY || y == _maxY)) edge = true;
+                    if ((x == _minX || x == _maxX) && (z == _minZ || z == _maxZ)) edge = true;
 
                     if (edge) {
                         world.spawnParticle(Particle.VILLAGER_HAPPY,
-                                new Location(world, x/100, y/100, z/100),
-                                1,0,0,0,
+                                new Location(world, x / 100, y / 100, z / 100),
+                                1, 0, 0, 0,
                                 0);
                     }
                 }

@@ -1,7 +1,6 @@
 package cz.neumimto.rpg.spigot.effects.common;
 
 import com.google.auto.service.AutoService;
-import cz.neumimto.nts.annotations.ScriptMeta;
 import cz.neumimto.nts.annotations.ScriptMeta.Function;
 import cz.neumimto.rpg.common.effects.Generate;
 import cz.neumimto.rpg.common.effects.IEffect;
@@ -12,12 +11,13 @@ import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
-import static cz.neumimto.nts.annotations.ScriptMeta.*;
+import static cz.neumimto.nts.annotations.ScriptMeta.Handler;
+import static cz.neumimto.nts.annotations.ScriptMeta.NamedParam;
 
 @Generate(id = "name", description = "Stuns entity for a duration")
 @AutoService(IEffect.class)
 @Function("StunEffect")
-public class StunEffect extends UnstackableEffectBase<Long>  {
+public class StunEffect extends UnstackableEffectBase<Long> {
     public static String name = "Stun";
     private LivingEntity livingEntity;
     private Location appliedLoc;

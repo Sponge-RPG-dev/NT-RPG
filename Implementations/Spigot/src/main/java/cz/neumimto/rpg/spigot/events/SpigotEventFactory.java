@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.spigot.events;
 
+import cz.neumimto.rpg.common.events.EventFactoryImpl;
 import cz.neumimto.rpg.common.events.character.*;
 import cz.neumimto.rpg.common.events.damage.*;
 import cz.neumimto.rpg.common.events.effect.EffectApplyEvent;
@@ -9,7 +10,6 @@ import cz.neumimto.rpg.common.events.party.PartyInviteEvent;
 import cz.neumimto.rpg.common.events.party.PartyJoinEvent;
 import cz.neumimto.rpg.common.events.party.PartyLeaveEvent;
 import cz.neumimto.rpg.common.events.skill.*;
-import cz.neumimto.rpg.common.events.EventFactoryImpl;
 import cz.neumimto.rpg.spigot.events.character.*;
 import cz.neumimto.rpg.spigot.events.damage.*;
 import cz.neumimto.rpg.spigot.events.effects.SpigotEffectApplyEvent;

@@ -2,13 +2,13 @@ package cz.neumimto.rpg.spigot.damage;
 
 import com.google.common.collect.Lists;
 import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.damage.DamageService;
 import cz.neumimto.rpg.common.entity.CommonProperties;
 import cz.neumimto.rpg.common.entity.EntityService;
 import cz.neumimto.rpg.common.entity.IEntity;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.items.ClassItem;
-import cz.neumimto.rpg.common.damage.DamageService;
 import cz.neumimto.rpg.spigot.entities.ISpigotEntity;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import org.bukkit.entity.EntityType;

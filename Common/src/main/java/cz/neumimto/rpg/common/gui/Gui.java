@@ -1,5 +1,3 @@
-
-
 package cz.neumimto.rpg.common.gui;
 
 import com.google.inject.Singleton;
@@ -10,13 +8,11 @@ import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.common.model.CharacterBase;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
-import cz.neumimto.rpg.common.skills.scripting.JsBinding;
 import cz.neumimto.rpg.common.skills.tree.SkillTree;
 
 /**
  * Created by NeumimTo on 12.2.2015.
  */
-@JsBinding(JsBinding.Type.CLASS)
 @Singleton
 public class Gui {
 

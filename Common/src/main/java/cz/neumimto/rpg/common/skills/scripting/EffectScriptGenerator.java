@@ -2,7 +2,10 @@ package cz.neumimto.rpg.common.skills.scripting;
 
 import cz.neumimto.nts.annotations.ScriptMeta;
 import cz.neumimto.rpg.common.Rpg;
-import cz.neumimto.rpg.common.effects.*;
+import cz.neumimto.rpg.common.effects.EffectBase;
+import cz.neumimto.rpg.common.effects.IEffect;
+import cz.neumimto.rpg.common.effects.ScriptEffectBase;
+import cz.neumimto.rpg.common.effects.UnstackableEffectBase;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.asm.AsmVisitorWrapper;
 import net.bytebuddy.description.annotation.AnnotationDescription;
@@ -27,7 +30,6 @@ import net.bytebuddy.jar.asm.Opcodes;
 import net.bytebuddy.matcher.ElementMatchers;
 import net.bytebuddy.pool.TypePool;
 
-import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -39,62 +41,54 @@ import static net.bytebuddy.dynamic.loading.ClassLoadingStrategy.Default.INJECTI
 
 /**
  * Multiple classes are generated
- *
+ * <p>
  * Assume input
- *   {
- *       Id: Test
- *       Fields: [
- *          Num: numeric
- *       ]
- *       OnApply: """
- *         @effect.Num=50
- *         RETURN
- *       """
- *   }
+ * {
+ * Id: Test
+ * Fields: [
+ * Num: numeric
+ * ]
+ * OnApply: """
+ *
+ * @effect.Num=50 RETURN
+ * """
+ * }
  * Generates
- *
+ * <p>
  * 1) Effect base class
- *
- *  @SimpleName("Test")
- *  public class Test{timestamp} extends UnstackableEffect {
- *     public double Num;
- *     public static Handler onApply;
- *
- *     public void onApply(IEffect var1) {
- *         if (onApply != null) {
- *             onApply.run(this);
- *         }
- *
- *     }
- *
- *     @ScriptTarget
- *     public Test1637495972021() {
- *         super.effectName = "Test";
- *     }
+ * @SimpleName("Test") public class Test{timestamp} extends UnstackableEffect {
+ * public double Num;
+ * public static Handler onApply;
+ * <p>
+ * public void onApply(IEffect var1) {
+ * if (onApply != null) {
+ * onApply.run(this);
  * }
- *
+ * <p>
+ * }
+ * @ScriptTarget public Test1637495972021() {
+ * super.effectName = "Test";
+ * }
+ * }
+ * <p>
  * 2) Handler proxy but with concrete generic type
- *
+ * <p>
  * public interface Handler{timestamp} extends Handler<Test{timestamp}> {
- *     @ScriptTarget
- *     void run(@NamedParam("effect") Test{timestamp} var1);
+ * @ScriptTarget void run(@NamedParam("effect") Test{timestamp} var1);
  * }
- *
+ * <p>
  * 3) OnApply method as implementation of proxy interface from step 2
- *
- * @Singleton
- * public class HandlerTest{timestamp} implements HandlerTest{timestamp} {
- *     public void run(Test{timestamp} var1) {
- *         var1.Num = 50.0D;
- *     }
+ * @Singleton public class HandlerTest{timestamp} implements HandlerTest{timestamp} {
+ * public void run(Test{timestamp} var1) {
+ * var1.Num = 50.0D;
  * }
- *
+ * }
+ * <p>
  * This proxy implementation is also automatically initialized with guice injector and its reference is injected into the static field
- *
+ * <p>
  * Test{timestamp}.OnApply = injector.newInstance(HandlerTest{timestamp}.class)
- *
+ * <p>
  * The timestamps are part of all classnames to ensure easy reloading at runtime, im not reimplementing osgi, just throw away old refs
- *
  */
 public class EffectScriptGenerator {
 
@@ -142,18 +136,18 @@ public class EffectScriptGenerator {
 
             Constructor c = null;
             bb = bb.constructor(ElementMatchers.isDefaultConstructor())
-                   .intercept(MethodCall.invoke(UnstackableEffectBase.class.getConstructor())
-                           .andThen(new Implementation.Simple(new ByteCodeAppender.Simple(Arrays.asList(
-                               MethodVariableAccess.loadThis(),
-                               new TextConstant(model.id),
-                               FieldAccess.forField(new FieldDescription.ForLoadedField(effectName)).write(),
-                               new StackManipulation.Simple((m, i) -> {
-                                   m.visitInsn(Opcodes.RETURN);
-                                   return new StackManipulation.Size(1,1);
-                               }))
-                           )))
-                   )
-                   .annotateMethod(AnnotationDescription.Builder.ofType(ScriptMeta.Handler.class).build());
+                    .intercept(MethodCall.invoke(UnstackableEffectBase.class.getConstructor())
+                            .andThen(new Implementation.Simple(new ByteCodeAppender.Simple(Arrays.asList(
+                                    MethodVariableAccess.loadThis(),
+                                    new TextConstant(model.id),
+                                    FieldAccess.forField(new FieldDescription.ForLoadedField(effectName)).write(),
+                                    new StackManipulation.Simple((m, i) -> {
+                                        m.visitInsn(Opcodes.RETURN);
+                                        return new StackManipulation.Size(1, 1);
+                                    }))
+                            )))
+                    )
+                    .annotateMethod(AnnotationDescription.Builder.ofType(ScriptMeta.Handler.class).build());
 
             if (model.onApply != null && !model.onApply.isBlank()) {
                 bb = generateMethodBody("onApply", bb);
@@ -242,7 +236,7 @@ public class EffectScriptGenerator {
                         new StackManipulation.Simple((m, i) -> {
                             m.visitJumpInsn(Opcodes.IFNULL, label1);
                             m.visitLabel(label2);
-                            return new StackManipulation.Size(1,1);
+                            return new StackManipulation.Size(1, 1);
                         }),
                         FieldAccess.forField(field).read(),
                         MethodVariableAccess.loadThis(),
@@ -250,7 +244,7 @@ public class EffectScriptGenerator {
                         new StackManipulation.Simple((m, i) -> {
                             m.visitLabel(label1);
                             m.visitInsn(Opcodes.RETURN);
-                            return new StackManipulation.Size(1,1);
+                            return new StackManipulation.Size(1, 1);
                         })
                 ))));
         return bb;

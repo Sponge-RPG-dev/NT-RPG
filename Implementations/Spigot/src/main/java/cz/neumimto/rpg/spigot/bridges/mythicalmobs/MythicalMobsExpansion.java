@@ -1,9 +1,9 @@
 package cz.neumimto.rpg.spigot.bridges.mythicalmobs;
 
 import com.google.inject.Injector;
-import cz.neumimto.rpg.common.skills.ISkill;
 import cz.neumimto.rpg.common.entity.AbstractEntityService;
 import cz.neumimto.rpg.common.entity.configuration.MobSettingsDao;
+import cz.neumimto.rpg.common.skills.ISkill;
 import cz.neumimto.rpg.spigot.entities.SpigotEntityService;
 import cz.neumimto.rpg.spigot.entities.SpigotMob;
 import cz.neumimto.rpg.spigot.skills.SpigotSkillService;

@@ -1,5 +1,3 @@
-
-
 package cz.neumimto.rpg.common.utils;
 
 import com.electronwill.nightconfig.core.CommentedConfig;
@@ -84,7 +82,7 @@ public class FileUtils {
     }
 
     public static void copyDirectory(File from, File to, Function<Path, Boolean> copyFn) {
-        Path source =  from.toPath();
+        Path source = from.toPath();
         Path target = to.toPath();
         try {
             Files.walkFileTree(source, new SimpleFileVisitor<>() {

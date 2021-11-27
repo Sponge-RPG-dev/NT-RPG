@@ -37,7 +37,7 @@ public class NMSHandler extends cz.neumimto.rpg.nms.NMSHandler {
 
     @Override
     public void spawnFireworkExplosion(Location location, FireworkEffect effect, List<org.bukkit.entity.Player> observers) {
-        new CustomFirework(location,effect, observers);
+        new CustomFirework(location, effect, observers);
     }
 
     @Override

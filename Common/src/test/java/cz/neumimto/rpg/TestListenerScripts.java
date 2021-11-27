@@ -2,8 +2,6 @@ package cz.neumimto.rpg;
 
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.RpgApi;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.common.skills.scripting.EffectScriptGenerator;
 import cz.neumimto.rpg.common.skills.scripting.ListenerScriptGenerator;
 import cz.neumimto.rpg.common.skills.scripting.ScriptListenerModel;
 import cz.neumimto.rpg.junit.TestGuiceModule;
@@ -48,9 +46,9 @@ public class TestListenerScripts {
         model.id = "TestListener";
         model.event = "CancellableEvent";
         model.script = """
-            @event.cancelled = T
-            RETURN
-            """;
+                @event.cancelled = T
+                RETURN
+                """;
         Class from = ListenerScriptGenerator.from(model, this.getClass().getClassLoader());
         CancellableEvent cancellableEvent = new CancellableEvent();
         Arrays.stream(from.getDeclaredMethods()).findFirst().get().invoke(from.newInstance(), cancellableEvent);

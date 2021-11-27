@@ -3,6 +3,7 @@ package cz.neumimto.rpg.common.inventory;
 import com.electronwill.nightconfig.core.Config;
 import com.electronwill.nightconfig.core.file.FileConfig;
 import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.entity.EntityHand;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.items.ItemService;
@@ -10,7 +11,6 @@ import cz.neumimto.rpg.common.items.subtypes.ItemSubtype;
 import cz.neumimto.rpg.common.items.subtypes.ItemSubtypes;
 import cz.neumimto.rpg.common.permissions.PermissionService;
 import cz.neumimto.rpg.common.utils.Console;
-import cz.neumimto.rpg.common.assets.AssetService;
 
 import javax.inject.Inject;
 import java.io.File;

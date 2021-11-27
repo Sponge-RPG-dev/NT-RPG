@@ -1,13 +1,13 @@
 package cz.neumimto.rpg.common;
 
 import com.google.inject.AbstractModule;
-import cz.neumimto.rpg.common.configuration.SkillTreeDao;
-import cz.neumimto.rpg.common.gui.Gui;
-import cz.neumimto.rpg.common.localization.LocalizationService;
 import cz.neumimto.rpg.common.classes.ClassService;
+import cz.neumimto.rpg.common.configuration.SkillTreeDao;
 import cz.neumimto.rpg.common.configuration.SkillTreeLoaderImpl;
 import cz.neumimto.rpg.common.entity.PropertyService;
 import cz.neumimto.rpg.common.exp.ExperienceDAO;
+import cz.neumimto.rpg.common.gui.Gui;
+import cz.neumimto.rpg.common.localization.LocalizationService;
 import cz.neumimto.rpg.common.localization.LocalizationServiceImpl;
 import cz.neumimto.rpg.common.persistance.dao.ClassDefinitionDao;
 

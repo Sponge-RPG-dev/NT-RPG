@@ -266,7 +266,7 @@ public class ConfigConverter {
         characterBase.getUniqueSkillpoints().putAll(stringSetMap);
 
 
-        List<List<String>> spellbookPages = config.getOrElse(SPELLBOOK,  new ArrayList<>());
+        List<List<String>> spellbookPages = config.getOrElse(SPELLBOOK, new ArrayList<>());
         String[][] pages = spellbookPages
                 .stream()
                 .map((l) -> l.toArray(new String[l.size()]))

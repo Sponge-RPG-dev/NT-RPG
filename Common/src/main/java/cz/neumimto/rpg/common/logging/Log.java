@@ -3,6 +3,7 @@ package cz.neumimto.rpg.common.logging;
 
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.utils.DebugLevel;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

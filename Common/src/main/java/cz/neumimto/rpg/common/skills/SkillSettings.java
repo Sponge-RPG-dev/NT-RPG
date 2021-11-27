@@ -1,9 +1,6 @@
-
-
 package cz.neumimto.rpg.common.skills;
 
 import cz.neumimto.rpg.common.configuration.AttributeConfig;
-import cz.neumimto.rpg.common.skills.scripting.JsBinding;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -12,7 +9,6 @@ import java.util.Map;
 /**
  * Created by NeumimTo on 14.2.2015.
  */
-@JsBinding(JsBinding.Type.CLASS)
 public class SkillSettings {
 
     private Map<String, String> skillSettings = new HashMap<>();
@@ -21,19 +17,25 @@ public class SkillSettings {
 
     private Map<AttributeConfig, AttributeSettings> attributeSettingsMap = new HashMap<>();
 
-    /** use addExpression **/
+    /**
+     * use addExpression
+     **/
     @Deprecated
     public void addNode(ISkillNode n, float val) {
         addExpression(n.toString(), val);
     }
 
-    /** use addExpression **/
+    /**
+     * use addExpression
+     **/
     @Deprecated
     public void addNode(String n, float val) {
         addExpression(n, val);
     }
 
-    /** use addExpression **/
+    /**
+     * use addExpression
+     **/
     @Deprecated
     public void addNode(String n, String val) {
         addExpression(n, val);

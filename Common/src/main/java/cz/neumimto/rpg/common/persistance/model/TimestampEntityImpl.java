@@ -1,5 +1,3 @@
-
-
 package cz.neumimto.rpg.common.persistance.model;
 
 import cz.neumimto.rpg.common.model.TimestampEntity;

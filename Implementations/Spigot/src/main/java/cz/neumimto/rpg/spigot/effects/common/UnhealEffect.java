@@ -1,7 +1,6 @@
 package cz.neumimto.rpg.spigot.effects.common;
 
 import com.google.auto.service.AutoService;
-import cz.neumimto.nts.annotations.ScriptMeta;
 import cz.neumimto.nts.annotations.ScriptMeta.Function;
 import cz.neumimto.nts.annotations.ScriptMeta.Handler;
 import cz.neumimto.nts.annotations.ScriptMeta.NamedParam;

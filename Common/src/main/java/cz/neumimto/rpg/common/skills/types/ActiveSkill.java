@@ -1,5 +1,3 @@
-
-
 package cz.neumimto.rpg.common.skills.types;
 
 import com.google.inject.Inject;
@@ -10,13 +8,11 @@ import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.skills.SkillExecutionType;
 import cz.neumimto.rpg.common.skills.SkillNodes;
 import cz.neumimto.rpg.common.skills.SkillResult;
-import cz.neumimto.rpg.common.skills.scripting.JsBinding;
 import cz.neumimto.rpg.common.skills.tree.SkillType;
 
 /**
  * Created by NeumimTo on 26.7.2015.
  */
-@JsBinding(JsBinding.Type.CLASS)
 public abstract class ActiveSkill<T extends IActiveCharacter> extends AbstractSkill<T> implements IActiveSkill<T> {
 
     @Inject

@@ -1,5 +1,3 @@
-
-
 package cz.neumimto.rpg.common.skills.tree;
 
 import cz.neumimto.rpg.common.skills.SkillData;

@@ -11,7 +11,6 @@ import cz.neumimto.rpg.common.events.EventFactoryService;
 import cz.neumimto.rpg.common.localization.LocalizationService;
 import cz.neumimto.rpg.common.skills.*;
 import cz.neumimto.rpg.common.skills.types.ActiveSkill;
-import cz.neumimto.rpg.common.skills.SkillExecutor;
 import cz.neumimto.rpg.junit.CharactersExtension;
 import cz.neumimto.rpg.junit.CharactersExtension.Stage;
 import cz.neumimto.rpg.junit.NtRpgExtension;
@@ -78,7 +77,7 @@ public class SkillExecutionTests {
         skillData.setSkillExecutor(injector.getInstance(SkillExecutor.class));
         skillData.getSkillExecutor().init(skillData);
         skillData.setSkill(testSkill);
-        
+
         playerSkillContext.setSkillData(skillData);
         character.addSkill("test", playerSkillContext);
 

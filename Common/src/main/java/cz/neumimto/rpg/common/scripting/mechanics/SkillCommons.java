@@ -4,11 +4,7 @@ import com.google.auto.service.AutoService;
 import cz.neumimto.nts.annotations.ScriptMeta.Function;
 import cz.neumimto.nts.annotations.ScriptMeta.Handler;
 import cz.neumimto.nts.annotations.ScriptMeta.NamedParam;
-import cz.neumimto.rpg.common.entity.IEntity;
-import cz.neumimto.rpg.common.entity.IEntityType;
-import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
-import jdk.jfr.Name;
 
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Logger;
@@ -47,7 +43,7 @@ public class SkillCommons implements NTScriptProxy {
 
     @Handler
     @Function("printd")
-    public void printd(@NamedParam("d|n")double d) {
-        logger.info(""+d);
+    public void printd(@NamedParam("d|n") double d) {
+        logger.info("" + d);
     }
 }

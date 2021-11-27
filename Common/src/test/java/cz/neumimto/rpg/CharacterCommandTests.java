@@ -2,16 +2,16 @@ package cz.neumimto.rpg;
 
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.RpgApi;
+import cz.neumimto.rpg.common.commands.CharacterCommandFacade;
+import cz.neumimto.rpg.common.commands.CharacterCommands;
 import cz.neumimto.rpg.common.configuration.AttributeConfig;
+import cz.neumimto.rpg.common.effects.EffectService;
+import cz.neumimto.rpg.common.entity.PropertyService;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.gui.Gui;
 import cz.neumimto.rpg.common.gui.IPlayerMessage;
 import cz.neumimto.rpg.common.logging.Log;
-import cz.neumimto.rpg.common.commands.CharacterCommandFacade;
-import cz.neumimto.rpg.common.commands.CharacterCommands;
-import cz.neumimto.rpg.common.effects.EffectService;
-import cz.neumimto.rpg.common.entity.PropertyService;
 import cz.neumimto.rpg.junit.CharactersExtension;
 import cz.neumimto.rpg.junit.CharactersExtension.Stage;
 import cz.neumimto.rpg.junit.NtRpgExtension;
@@ -83,7 +83,7 @@ public class CharacterCommandTests {
     @Test
     public void testAddExpCommand(@Stage(READY) IActiveCharacter iActiveCharacter) {
         ClassDefinition classDefinition = new ClassDefinition("test", Rpg.get().getPluginConfig().CLASS_TYPES.keySet().iterator().next());
-    //    characterCommands.chooseCharacterClass(iActiveCharacter, classDefinition);
+        //    characterCommands.chooseCharacterClass(iActiveCharacter, classDefinition);
         Assertions.assertTrue(iActiveCharacter.getClasses().containsKey("test"));
     }
 
@@ -94,7 +94,7 @@ public class CharacterCommandTests {
         String i = iterator.next();
         ClassDefinition classDefinition = new ClassDefinition("test", i);
         Rpg.get().getPluginConfig().RESPECT_CLASS_SELECTION_ORDER = true;
-    //    characterCommands.chooseCharacterClass(iActiveCharacter, classDefinition);
+        //    characterCommands.chooseCharacterClass(iActiveCharacter, classDefinition);
         Assertions.assertFalse(iActiveCharacter.getClasses().containsKey("test"));
     }
 

@@ -10,9 +10,9 @@ import java.util.stream.Collectors;
 public class ClassDependencyGraphAdapter {
 
     public static DependencyGraph load(Config value, ClassDefinition classDef, Set<ClassDefinition> set) {
-        List<String> soft = readOrEmpty(value,"Soft");
-        List<String> hard = readOrEmpty(value,"Hard");
-        List<String> conflicts = readOrEmpty(value,"Conflicts");
+        List<String> soft = readOrEmpty(value, "Soft");
+        List<String> hard = readOrEmpty(value, "Hard");
+        List<String> conflicts = readOrEmpty(value, "Conflicts");
 
         DependencyGraph graph = classDef.getClassDependencyGraph();
 

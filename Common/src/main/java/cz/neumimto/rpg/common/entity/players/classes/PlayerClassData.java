@@ -1,5 +1,3 @@
-
-
 package cz.neumimto.rpg.common.entity.players.classes;
 
 import cz.neumimto.rpg.common.entity.players.leveling.ILevelProgression;

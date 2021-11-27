@@ -12,7 +12,6 @@ import org.bukkit.plugin.java.annotation.plugin.*;
 import org.bukkit.plugin.java.annotation.plugin.author.Author;
 
 import java.io.File;
-import java.util.logging.Logger;
 
 @Plugin(name = "NT-RPG", version = "2.1.0-SNAPSHOT-13")
 @Description("Complete combat overhaul with classes and skills")

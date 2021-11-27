@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.effects;
 
-import cz.neumimto.rpg.common.effects.IEffect;
 import cz.neumimto.rpg.common.effects.EffectService;
+import cz.neumimto.rpg.common.effects.IEffect;
 
 import java.util.Set;
 

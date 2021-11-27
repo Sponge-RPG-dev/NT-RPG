@@ -4,7 +4,6 @@ import com.google.inject.Injector;
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.RpgApi;
 import cz.neumimto.rpg.common.effects.IEffectContainer;
-import cz.neumimto.rpg.common.effects.UnstackableEffectBase;
 import cz.neumimto.rpg.common.entity.TestCharacter;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
@@ -12,12 +11,14 @@ import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.common.skills.ISkill;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.skills.SkillsDefinition;
-import cz.neumimto.rpg.common.skills.scripting.*;
+import cz.neumimto.rpg.common.skills.scripting.ActiveScriptSkill;
+import cz.neumimto.rpg.common.skills.scripting.ScriptEffectModel;
+import cz.neumimto.rpg.common.skills.scripting.ScriptListenerModel;
+import cz.neumimto.rpg.common.skills.scripting.ScriptSkillModel;
 import cz.neumimto.rpg.junit.TestGuiceModule;
 import cz.neumimto.rpg.model.CharacterBaseTest;
 import name.falgout.jeffrey.testing.junit.guice.GuiceExtension;
 import name.falgout.jeffrey.testing.junit.guice.IncludeModule;
-import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -79,7 +80,7 @@ public class TestScriptingComplexUsecase {
                 @effect.consumer = @caster
                 @effect.Num = @num
                 add_effect{effect=@effect, es=@caster, source=@this_skill}
-                
+                                
                 RETURN SkillResult.OK
                 """;
         skillsDefinition.skills.add(smodel);
@@ -118,7 +119,7 @@ public class TestScriptingComplexUsecase {
         ActiveScriptSkill iSkill = (ActiveScriptSkill) byId.get();
 
         TestCharacter testCharacter = new TestCharacter(UUID.randomUUID(), new CharacterBaseTest(), 0);
-        PlayerSkillContext playerSkillContext = new PlayerSkillContext(new ClassDefinition("",""), iSkill, testCharacter);
+        PlayerSkillContext playerSkillContext = new PlayerSkillContext(new ClassDefinition("", ""), iSkill, testCharacter);
         iSkill.cast(testCharacter, playerSkillContext);
 
         Assertions.assertTrue(testCharacter.getEffects().stream().anyMatch(a -> a.getName().equals(emodel.id)));

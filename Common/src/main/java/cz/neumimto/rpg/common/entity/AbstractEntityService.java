@@ -3,10 +3,10 @@ package cz.neumimto.rpg.common.entity;
 import cz.neumimto.rpg.common.IRpgElement;
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.effects.EffectService;
-import cz.neumimto.rpg.common.entity.players.CharacterService;
-import cz.neumimto.rpg.common.events.skill.SkillHealEvent;
 import cz.neumimto.rpg.common.entity.configuration.MobSettingsDao;
 import cz.neumimto.rpg.common.entity.configuration.MobsConfig;
+import cz.neumimto.rpg.common.entity.players.CharacterService;
+import cz.neumimto.rpg.common.events.skill.SkillHealEvent;
 
 import javax.inject.Inject;
 import java.util.HashMap;

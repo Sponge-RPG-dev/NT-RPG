@@ -11,20 +11,18 @@ public class Tests {
     private SpigotRpgBootstrap plugin;
 
     @BeforeEach
-    public void setUp()
-    {
+    public void setUp() {
         server = MockBukkit.mock();
         plugin = MockBukkit.load(SpigotRpgBootstrap.class);
     }
 
-  //  @Test
+    //  @Test
     public void load() {
 
     }
 
     @AfterEach
-    public void tearDown()
-    {
+    public void tearDown() {
         MockBukkit.unmock();
     }
 }

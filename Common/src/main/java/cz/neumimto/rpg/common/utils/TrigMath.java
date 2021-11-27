@@ -1,12 +1,13 @@
 package cz.neumimto.rpg.common.utils;
 
 public class TrigMath {
-    
+
     private static final int SIN_BITS, SIN_MASK, SIN_COUNT;
     private static final double radFull, radToIndex;
     private static final double degFull, degToIndex;
     private static final double[] sin, cos;
     public static double PI = Math.PI;
+
     static {
         SIN_BITS = 12;
         SIN_MASK = ~(-1 << SIN_BITS);
@@ -26,8 +27,8 @@ public class TrigMath {
         }
 
         for (int i = 0; i < 360; i += 90) {
-            sin[(int) (i * degToIndex) & SIN_MASK] =  Math.sin(i * Math.PI / 180.0);
-            cos[(int) (i * degToIndex) & SIN_MASK] =  Math.cos(i * Math.PI / 180.0);
+            sin[(int) (i * degToIndex) & SIN_MASK] = Math.sin(i * Math.PI / 180.0);
+            cos[(int) (i * degToIndex) & SIN_MASK] = Math.cos(i * Math.PI / 180.0);
         }
     }
 

@@ -6,7 +6,6 @@ import net.minecraft.world.entity.projectile.FireworkRocketEntity;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_17_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_17_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
@@ -19,6 +18,7 @@ public class CustomFirework extends FireworkRocketEntity {
 
     List<Player> players = null;
     boolean flag = false;
+
     public CustomFirework(Location location, FireworkEffect effect, List<Player> p) {
         super(EntityType.FIREWORK_ROCKET, ((CraftWorld) location.getWorld()).getHandle());
         players = p;
@@ -32,6 +32,7 @@ public class CustomFirework extends FireworkRocketEntity {
             setInvisible(true);
         }
     }
+
     @Override
     public void tick() {
         if (flag) {

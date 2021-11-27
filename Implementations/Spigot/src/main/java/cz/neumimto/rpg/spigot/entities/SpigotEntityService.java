@@ -1,10 +1,10 @@
 package cz.neumimto.rpg.spigot.entities;
 
 import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.entity.AbstractEntityService;
 import cz.neumimto.rpg.common.entity.CommonProperties;
 import cz.neumimto.rpg.common.entity.IEntity;
 import cz.neumimto.rpg.common.entity.IMob;
-import cz.neumimto.rpg.common.entity.AbstractEntityService;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.EntityType;

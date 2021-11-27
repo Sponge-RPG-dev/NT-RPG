@@ -135,7 +135,7 @@ public class DbMigrationsService {
         StringBuffer sb = new StringBuffer();
         String str;
         try {
-            while((str = reader.readLine())!= null){
+            while ((str = reader.readLine()) != null) {
                 sb.append(str);
             }
         } catch (IOException e) {

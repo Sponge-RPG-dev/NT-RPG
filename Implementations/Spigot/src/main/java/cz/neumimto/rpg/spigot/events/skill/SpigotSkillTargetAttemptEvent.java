@@ -17,7 +17,6 @@ package cz.neumimto.rpg.spigot.events.skill;
 
 import cz.neumimto.rpg.common.entity.IEntity;
 import cz.neumimto.rpg.common.events.skill.SkillTargetAttemptEvent;
-import cz.neumimto.rpg.spigot.entities.ISpigotEntity;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 

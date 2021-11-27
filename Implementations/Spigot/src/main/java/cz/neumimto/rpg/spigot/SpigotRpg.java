@@ -1,9 +1,9 @@
 package cz.neumimto.rpg.spigot;
 
 import com.google.inject.Injector;
-import cz.neumimto.rpg.common.utils.Console;
 import cz.neumimto.rpg.common.AbstractRpg;
 import cz.neumimto.rpg.common.assets.AssetService;
+import cz.neumimto.rpg.common.utils.Console;
 import cz.neumimto.rpg.spigot.gui.SpigotGuiHelper;
 import cz.neumimto.rpg.spigot.gui.inventoryviews.ConfigurableInventoryGui;
 import org.bukkit.Bukkit;

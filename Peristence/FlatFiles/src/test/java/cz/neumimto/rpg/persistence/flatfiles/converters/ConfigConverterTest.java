@@ -4,14 +4,14 @@ import cz.neumimto.persistence.TestHelper;
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.RpgTests;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.inventory.AbstractInventoryService;
 import cz.neumimto.rpg.common.inventory.InventoryService;
 import cz.neumimto.rpg.common.model.CharacterBase;
 import cz.neumimto.rpg.common.model.CharacterClass;
 import cz.neumimto.rpg.common.model.DateKeyPair;
 import cz.neumimto.rpg.common.model.EquipedSlot;
-import cz.neumimto.rpg.common.inventory.AbstractInventoryService;
-import cz.neumimto.rpg.persistence.flatfiles.dao.FlatFilePlayerDao;
 import cz.neumimto.rpg.common.persistance.model.CharacterBaseImpl;
+import cz.neumimto.rpg.persistence.flatfiles.dao.FlatFilePlayerDao;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -121,7 +121,6 @@ class ConfigConverterTest {
             Assertions.assertEquals(characterClass.getSkillPoints(), loadedClass.getSkillPoints());
             Assertions.assertEquals(characterClass.getUsedSkillPoints(), loadedClass.getUsedSkillPoints());
         }
-
 
 
     }

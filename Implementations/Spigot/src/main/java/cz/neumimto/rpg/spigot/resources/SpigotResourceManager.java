@@ -1,8 +1,8 @@
 package cz.neumimto.rpg.spigot.resources;
 
 import com.google.inject.Injector;
-import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.ResourceManagerImpl;
+import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.spigot.services.IRpgListener;
 
 import javax.inject.Inject;

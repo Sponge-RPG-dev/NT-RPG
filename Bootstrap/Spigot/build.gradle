@@ -11,7 +11,7 @@ version = project.subp_version
 dependencies {
     api project(':Bootstrap-Common')
 
-    compileOnly ("org.spigotmc:plugin-annotations:" + project.pluginannotations){
+    compileOnly("org.spigotmc:plugin-annotations:" + project.pluginannotations) {
         exclude group: "org.bukkit", module: "bukkit"
     }
     annotationProcessor("org.spigotmc:plugin-annotations:" + project.pluginannotations)
@@ -35,10 +35,10 @@ build.dependsOn processResources
 build.mustRunAfter tasks.getByPath(':Spigot:build')
 
 processResources {
-    from (path) {
-       into ''
-       rename {
-           "ntrpg-embed.jar"
-       }
+    from(path) {
+        into ''
+        rename {
+            "ntrpg-embed.jar"
+        }
     }
 }

@@ -1,5 +1,3 @@
-
-
 package cz.neumimto.rpg.common.skills.types;
 
 import cz.neumimto.rpg.common.ResourceLoader;
@@ -13,7 +11,6 @@ import cz.neumimto.rpg.common.skills.ISkill;
 import cz.neumimto.rpg.common.skills.ISkillType;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.skills.SkillSettings;
-import cz.neumimto.rpg.common.skills.scripting.JsBinding;
 import cz.neumimto.rpg.common.utils.Console;
 import cz.neumimto.rpg.common.utils.DebugLevel;
 import cz.neumimto.rpg.common.utils.annotations.CatalogId;
@@ -26,7 +23,6 @@ import java.util.Set;
 /**
  * Created by NeumimTo on 12.3.2015.
  */
-@JsBinding(JsBinding.Type.CLASS)
 public abstract class AbstractSkill<T> implements ISkill<T> {
 
     private static final String SKILL = "skill";

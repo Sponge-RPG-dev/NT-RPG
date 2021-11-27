@@ -2,7 +2,6 @@ package cz.neumimto.rpg.common.events;
 
 import cz.neumimto.nts.annotations.ScriptMeta;
 
-import java.beans.EventHandler;
 import java.util.function.Supplier;
 
 public interface EventFactoryService {

@@ -8,9 +8,9 @@ import cz.neumimto.rpg.common.gui.SkillTreeViewModel;
 import cz.neumimto.rpg.common.localization.Arg;
 import cz.neumimto.rpg.common.localization.LocalizationKeys;
 import cz.neumimto.rpg.common.localization.LocalizationService;
-import cz.neumimto.rpg.common.skills.SkillService;
 import cz.neumimto.rpg.common.skills.ISkill;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
+import cz.neumimto.rpg.common.skills.SkillService;
 import cz.neumimto.rpg.common.skills.tree.SkillTree;
 
 import javax.inject.Inject;

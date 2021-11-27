@@ -22,9 +22,9 @@ public class SlowEffect extends EffectBase<SlowModel> {
 
     @ScriptMeta.Handler
     public SlowEffect(@ScriptMeta.NamedParam("e|entity") IEffectConsumer consumer,
-                @ScriptMeta.NamedParam("d|duration") long duration,
-                @ScriptMeta.NamedParam("sL|slowLevel") int slowLevel,
-                @ScriptMeta.NamedParam("jh|jumpHeight") boolean jh) {
+                      @ScriptMeta.NamedParam("d|duration") long duration,
+                      @ScriptMeta.NamedParam("sL|slowLevel") int slowLevel,
+                      @ScriptMeta.NamedParam("jh|jumpHeight") boolean jh) {
         this(consumer, duration, new SlowModel(slowLevel, jh));
     }
 

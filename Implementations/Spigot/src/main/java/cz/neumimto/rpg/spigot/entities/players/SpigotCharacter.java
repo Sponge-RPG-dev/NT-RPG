@@ -1,8 +1,8 @@
 package cz.neumimto.rpg.spigot.entities.players;
 
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.model.CharacterBase;
 import cz.neumimto.rpg.common.skills.ISkill;
-import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.spigot.entities.ISpigotEntity;
 import cz.neumimto.rpg.spigot.entities.players.party.SpigotParty;
 import cz.neumimto.rpg.spigot.gui.SpigotSkillTreeViewModel;

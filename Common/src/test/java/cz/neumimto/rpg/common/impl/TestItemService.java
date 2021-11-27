@@ -1,12 +1,7 @@
 package cz.neumimto.rpg.common.impl;
 
 import cz.neumimto.rpg.common.configuration.ItemString;
-import cz.neumimto.rpg.common.items.ItemClass;
-import cz.neumimto.rpg.common.items.RpgItemStack;
-import cz.neumimto.rpg.common.items.RpgItemType;
-import cz.neumimto.rpg.common.items.AbstractItemService;
-import cz.neumimto.rpg.common.items.RpgItemStackImpl;
-import cz.neumimto.rpg.common.items.TestItemType;
+import cz.neumimto.rpg.common.items.*;
 
 import javax.inject.Singleton;
 import java.util.Collections;

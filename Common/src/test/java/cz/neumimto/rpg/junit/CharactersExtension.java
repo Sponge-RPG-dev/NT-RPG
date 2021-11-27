@@ -1,16 +1,16 @@
 package cz.neumimto.rpg.junit;
 
 import cz.neumimto.rpg.common.entity.IReservable;
+import cz.neumimto.rpg.common.entity.TestCharacter;
+import cz.neumimto.rpg.common.entity.TestPropertyService;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
+import cz.neumimto.rpg.common.inventory.FilteredManagedSlotImpl;
 import cz.neumimto.rpg.common.inventory.ManagedSlot;
+import cz.neumimto.rpg.common.inventory.RpgInventoryImpl;
 import cz.neumimto.rpg.common.items.ItemClass;
 import cz.neumimto.rpg.common.model.CharacterBase;
 import cz.neumimto.rpg.common.model.CharacterClass;
-import cz.neumimto.rpg.common.entity.TestCharacter;
-import cz.neumimto.rpg.common.entity.TestPropertyService;
-import cz.neumimto.rpg.common.inventory.FilteredManagedSlotImpl;
-import cz.neumimto.rpg.common.inventory.RpgInventoryImpl;
 import cz.neumimto.rpg.model.CharacterBaseTest;
 import cz.neumimto.rpg.model.CharacterClassTest;
 import org.junit.jupiter.api.extension.ExtensionContext;

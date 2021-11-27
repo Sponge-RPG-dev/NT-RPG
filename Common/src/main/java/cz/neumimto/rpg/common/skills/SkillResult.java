@@ -1,13 +1,9 @@
-
-
 package cz.neumimto.rpg.common.skills;
 
-import cz.neumimto.rpg.common.skills.scripting.JsBinding;
 
 /**
  * Created by NeumimTo on 26.7.2015.
  */
-@JsBinding(JsBinding.Type.CLASS)
 public enum SkillResult {
     OK,
     FAIL,

@@ -1,6 +1,8 @@
 package cz.neumimto.rpg;
 
 import cz.neumimto.rpg.common.configuration.PluginConfig;
+import cz.neumimto.rpg.common.entity.TestCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
@@ -14,8 +16,6 @@ import cz.neumimto.rpg.common.skills.SkillData;
 import cz.neumimto.rpg.common.skills.SkillDependency;
 import cz.neumimto.rpg.common.skills.tree.SkillTree;
 import cz.neumimto.rpg.common.utils.ActionResult;
-import cz.neumimto.rpg.common.entity.TestCharacter;
-import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.junit.CharactersExtension;
 import cz.neumimto.rpg.junit.CharactersExtension.Stage;
 import cz.neumimto.rpg.junit.NtRpgExtension;

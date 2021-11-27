@@ -1,11 +1,11 @@
 package cz.neumimto.rpg;
 
 import cz.neumimto.rpg.common.effects.IEffect;
-import cz.neumimto.rpg.common.effects.stacking.DoubleEffectStackingStrategy;
-import cz.neumimto.rpg.common.model.CharacterBase;
 import cz.neumimto.rpg.common.effects.InternalEffectSourceProvider;
+import cz.neumimto.rpg.common.effects.stacking.DoubleEffectStackingStrategy;
 import cz.neumimto.rpg.common.entity.TestCharacter;
 import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
+import cz.neumimto.rpg.common.model.CharacterBase;
 import cz.neumimto.rpg.effects.TestEffectService;
 import cz.neumimto.rpg.junit.NtRpgExtension;
 import cz.neumimto.rpg.junit.TestGuiceModule;
@@ -18,8 +18,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 
-import java.io.File;
-import java.nio.file.Files;
 import java.util.Set;
 import java.util.UUID;
 
@@ -144,7 +142,6 @@ public class EffectTests {
         TickableEffect test = createEffectMock("testEffect");
         processEffectStacking(effect, test);
     }
-
 
 
     private void processEffectStacking(IEffect first, IEffect test) {

@@ -1,16 +1,13 @@
 package cz.neumimto.rpg.common.scripting;
 
 import com.google.inject.Injector;
-import com.google.inject.Key;
 import cz.neumimto.nts.NTScript;
-import cz.neumimto.nts.annotations.ScriptMeta;
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.effects.IEffect;
 import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.common.scripting.mechanics.NTScriptProxy;
 import cz.neumimto.rpg.common.skills.SkillResult;
-import cz.neumimto.rpg.common.skills.types.ScriptSkill;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -36,10 +33,10 @@ public class NTScriptEngine {
     public List<Class> STL = new ArrayList<>();
 
     public NTScript prepareCompiler(Consumer<NTScript.Builder> builder, Class type) {
-       if (!compilers.containsKey(type)) {
-           compilers.put(type, scriptContextForSkills(builder, type));
-       }
-       return compilers.get(type);
+        if (!compilers.containsKey(type)) {
+            compilers.put(type, scriptContextForSkills(builder, type));
+        }
+        return compilers.get(type);
     }
 
     public NTScript scriptContextForSkills(Consumer<NTScript.Builder> builder, Class type) {
@@ -47,10 +44,10 @@ public class NTScriptEngine {
 
         Map<Pattern, String> macrosMap = new HashMap<>();
         try (BufferedReader bufReader = new BufferedReader(new StringReader(macros))) {
-            String line=null;
-            while((line=bufReader.readLine()) != null) {
+            String line = null;
+            while ((line = bufReader.readLine()) != null) {
                 String[] split = line.split(";;");
-                macrosMap.put(Pattern.compile(split[0]),split[1]);
+                macrosMap.put(Pattern.compile(split[0]), split[1]);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -80,7 +77,7 @@ public class NTScriptEngine {
         //instances
         ServiceLoader.load(NTScriptProxy.class, getClass().getClassLoader()).stream()
                 .map(ServiceLoader.Provider::get)
-                .forEach(a-> list.add(injector.getInstance(a.getClass())));
+                .forEach(a -> list.add(injector.getInstance(a.getClass())));
 
         //types
         try {

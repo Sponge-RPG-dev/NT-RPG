@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.common.inventory;
 
-import cz.neumimto.rpg.common.model.EquipedSlot;
 import cz.neumimto.rpg.common.entity.TestCharacter;
+import cz.neumimto.rpg.common.model.EquipedSlot;
 
 import javax.inject.Singleton;
 

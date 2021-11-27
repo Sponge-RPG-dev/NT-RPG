@@ -1,5 +1,3 @@
-
-
 package cz.neumimto.rpg.common.gui;
 
 import cz.neumimto.rpg.common.Rpg;

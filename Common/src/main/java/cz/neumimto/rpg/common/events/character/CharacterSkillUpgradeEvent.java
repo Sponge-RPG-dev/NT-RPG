@@ -1,5 +1,3 @@
-
-
 package cz.neumimto.rpg.common.events.character;
 
 import cz.neumimto.rpg.common.events.skill.SkillEvent;

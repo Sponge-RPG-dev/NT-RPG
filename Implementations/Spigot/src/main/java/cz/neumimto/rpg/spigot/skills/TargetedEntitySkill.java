@@ -5,7 +5,6 @@ import com.google.inject.Inject;
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.damage.DamageService;
 import cz.neumimto.rpg.common.entity.IEntity;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.events.skill.SkillTargetAttemptEvent;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.skills.SkillNodes;

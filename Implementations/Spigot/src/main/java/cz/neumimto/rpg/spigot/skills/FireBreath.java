@@ -37,9 +37,9 @@ public class FireBreath extends BeamSkill {
             return Beam.BeamActionResult.CONTINUE;
         };
         onTick = (tick, caster, distance, context, location, box, dir) -> {
-            box.radius = box.radius + tick*0.5;
+            box.radius = box.radius + tick * 0.5;
             LivingEntity entity = caster.getEntity();
-            entity.getWorld().spawnParticle(Particle.FLAME, location, 5+tick*2, 0.175D, 0.275D, 0, 0.2D);
+            entity.getWorld().spawnParticle(Particle.FLAME, location, 5 + tick * 2, 0.175D, 0.275D, 0, 0.2D);
         };
     }
 }

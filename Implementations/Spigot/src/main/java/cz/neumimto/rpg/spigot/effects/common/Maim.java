@@ -21,7 +21,7 @@ public class Maim extends SlowEffect {
     CircleEffect circleEffect;
 
     @Generate.Constructor
-    public Maim(IEffectConsumer consumer, long duration,@Generate.Model SlowModel slowModel) {
+    public Maim(IEffectConsumer consumer, long duration, @Generate.Model SlowModel slowModel) {
         super(consumer, duration, slowModel);
         name = "maim";
     }

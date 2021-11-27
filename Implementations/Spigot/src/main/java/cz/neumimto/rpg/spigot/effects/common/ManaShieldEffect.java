@@ -4,7 +4,6 @@ import com.google.auto.service.AutoService;
 import cz.neumimto.nts.annotations.ScriptMeta;
 import cz.neumimto.rpg.common.effects.*;
 import cz.neumimto.rpg.common.entity.IEffectConsumer;
-import cz.neumimto.rpg.common.skills.scripting.JsBinding;
 import cz.neumimto.rpg.spigot.utils.VectorUtils;
 import de.slikey.effectlib.Effect;
 import org.bukkit.Color;

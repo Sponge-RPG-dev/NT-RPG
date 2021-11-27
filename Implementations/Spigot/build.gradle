@@ -8,7 +8,7 @@ repositories {
     mavenCentral()
     maven {
         url "https://papermc.io/repo/repository/maven-public/"
-        content{
+        content {
             includeGroupByRegex "(net\\.Indyuce|io\\.lumine)"
         }
     }
@@ -29,7 +29,7 @@ repositories {
     }
     maven {
         url "https://mvn.lumine.io/repository/maven-releases/"
-        content{
+        content {
             includeGroupByRegex "(net\\.Indyuce|io\\.lumine)"
         }
     }
@@ -55,7 +55,7 @@ dependencies {
     // api 'com.github.stefvanschie.inventoryframework:IF:' + project.if
 
 
-   // compileOnly "org.spigotmc:spigot-api:" + project.spigotapi
+    // compileOnly "org.spigotmc:spigot-api:" + project.spigotapi
     compileOnly 'io.papermc.paper:paper-api:1.17-R0.1-SNAPSHOT'
 
     compileOnly("org.spigotmc:plugin-annotations:" + project.pluginannotations) {
@@ -72,14 +72,14 @@ dependencies {
     compileOnly "co.aikar:acf-paper:" + project.acf
     compileOnly "io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT"
 
-  // compileOnly('net.Indyuce:MMOItems:' + project.mmoitems) {
-  //     exclude group: 'com.mojang', module: 'authlib'
-  //     exclude group: 'org.jetbrains', module: 'annotations'
-  // }
+    // compileOnly('net.Indyuce:MMOItems:' + project.mmoitems) {
+    //     exclude group: 'com.mojang', module: 'authlib'
+    //     exclude group: 'org.jetbrains', module: 'annotations'
+    // }
 
-  // compileOnly('io.lumine:MythicLib:' + project.mythiclib)
+    // compileOnly('io.lumine:MythicLib:' + project.mythiclib)
 
-  // compileOnly 'io.lumine.xikage:MythicMobs:' + project.mythicmobs
+    // compileOnly 'io.lumine.xikage:MythicMobs:' + project.mythicmobs
 
     compileOnly 'com.gitlab.SamB440:RPGRegions-2:' + project.rpgregions
 
@@ -94,7 +94,7 @@ shadowJar {
     relocate 'com.squareup.javapoet', 'rpgshaded.com.squareup.javapoet'
     relocate 'com.typesafe.config', 'rpgshaded.com.typesafe.config'
     relocate 'javax.inject', 'rpgshaded.javax.inject'
-  //  relocate 'net.bytebuddy', 'rpgshaded.net.bytebuddy'
+    //  relocate 'net.bytebuddy', 'rpgshaded.net.bytebuddy'
     relocate 'org.aopalliance', 'rpgshaded.org.aopalliance'
     relocate 'org.codehaus', 'rpgshaded.org.codehaus'
     relocate 'de.slikey.effectlib', 'rpgshaded.de.slikey.effectlib'
@@ -103,16 +103,16 @@ shadowJar {
     mergeServiceFiles()
 }
 
+
 import org.gradle.api.internal.tasks.DefaultTaskOutputs
 
 import java.nio.file.Files
-import java.nio.file.Paths
-import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardCopyOption
 
 task copyNMSImpl {
     Project spigot = project(":Spigot")
     if (spigot.file("lib-cp/Spigot-117-1.0.0-SNAPSHOT.jar").exists()) {
-        return ;
+        return;
     }
     DefaultTaskOutputs output = project(':Spigot-117').jar.outputs
     boolean found = false;
@@ -123,7 +123,7 @@ task copyNMSImpl {
                 if (name.endsWith("dev.jar") || name.endsWith("sources.jar")) {
                     return false
                 }
-                return  true;
+                return true;
             }
         })) {
             var p = spigot.file("lib-cp/").toPath().resolve(f.getName())

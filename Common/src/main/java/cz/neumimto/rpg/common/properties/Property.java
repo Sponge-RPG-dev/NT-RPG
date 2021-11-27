@@ -1,5 +1,3 @@
-
-
 package cz.neumimto.rpg.common.properties;
 
 import java.lang.annotation.ElementType;

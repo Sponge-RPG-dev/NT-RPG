@@ -1,9 +1,9 @@
 package cz.neumimto.rpg.spigot.entities;
 
+import cz.neumimto.rpg.common.entity.AbstractMob;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.party.IParty;
 import cz.neumimto.rpg.common.skills.ISkill;
-import cz.neumimto.rpg.common.entity.AbstractMob;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.LivingEntity;

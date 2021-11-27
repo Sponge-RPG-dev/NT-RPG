@@ -8,18 +8,14 @@ import cz.neumimto.rpg.common.skills.ISkill;
 import cz.neumimto.rpg.nms.NMSHandler;
 import cz.neumimto.rpg.spigot.entities.ISpigotEntity;
 import org.bukkit.Location;
-import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.util.Vector;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
-import java.util.List;
 
 import static cz.neumimto.nts.annotations.ScriptMeta.Handler;
 import static cz.neumimto.nts.annotations.ScriptMeta.NamedParam;
@@ -36,7 +32,7 @@ public class SpigotEntityUtils implements NTScriptProxy {
     public Location getLocation(
             @NamedParam("e|entity") IEntity e
     ) {
-        return ((LivingEntity)e.getEntity()).getLocation();
+        return ((LivingEntity) e.getEntity()).getLocation();
     }
 
     @Handler

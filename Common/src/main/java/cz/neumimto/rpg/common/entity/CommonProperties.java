@@ -1,9 +1,9 @@
 package cz.neumimto.rpg.common.entity;
 
 import com.google.auto.service.AutoService;
-import cz.neumimto.rpg.common.services.IPropertyContainer;
 import cz.neumimto.rpg.common.properties.Property;
 import cz.neumimto.rpg.common.properties.PropertyContainer;
+import cz.neumimto.rpg.common.services.IPropertyContainer;
 
 @PropertyContainer
 @AutoService(IPropertyContainer.class)

@@ -2,13 +2,11 @@ package cz.neumimto.rpg.spigot.effects.common;
 
 import com.google.auto.service.AutoService;
 import cz.neumimto.nts.annotations.ScriptMeta;
-import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.effects.EffectBase;
 import cz.neumimto.rpg.common.effects.Generate;
 import cz.neumimto.rpg.common.effects.IEffect;
 import cz.neumimto.rpg.common.entity.IEffectConsumer;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
-import cz.neumimto.rpg.spigot.entities.ISpigotEntity;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Mob;
@@ -30,8 +28,8 @@ public class InvisibilityEffect extends EffectBase {
 
     @ScriptMeta.Handler
     public InvisibilityEffect(
-                @ScriptMeta.NamedParam("e|entity") IEffectConsumer consumer,
-                @ScriptMeta.NamedParam("d|duration") long duration) {
+            @ScriptMeta.NamedParam("e|entity") IEffectConsumer consumer,
+            @ScriptMeta.NamedParam("d|duration") long duration) {
         super(name, consumer);
         setDuration(duration);
     }

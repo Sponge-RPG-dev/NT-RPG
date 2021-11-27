@@ -1,11 +1,11 @@
 package cz.neumimto.rpg.spigot.effects;
 
+import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.effects.IEffect;
 import cz.neumimto.rpg.common.effects.IEffectContainer;
 import cz.neumimto.rpg.common.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.common.entity.IEffectConsumer;
 import cz.neumimto.rpg.common.entity.IEntity;
-import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.events.character.SpigotEffectApplyEvent;
 import cz.neumimto.rpg.spigot.events.character.SpigotEffectRemoveEvent;

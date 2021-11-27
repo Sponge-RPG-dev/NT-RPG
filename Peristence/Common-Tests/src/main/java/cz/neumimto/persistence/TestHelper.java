@@ -31,8 +31,8 @@ public class TestHelper {
                 new HashSet<>(Arrays.asList(new DateKeyPair("uq1"), new DateKeyPair("uq2"))));
 
         characterBase.setSpellbookPages(new String[][]{
-                {"test", "test2",null,"123"},
-                {null, null,null,null}
+                {"test", "test2", null, "123"},
+                {null, null, null, null}
         });
 
         return characterBase;

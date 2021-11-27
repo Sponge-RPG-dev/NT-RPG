@@ -1,5 +1,3 @@
-
-
 package cz.neumimto.rpg.common.skills;
 
 

@@ -31,9 +31,9 @@ public class Particles implements NTScriptProxy {
     @Handler
     @Function("sound")
     public void sound(@NamedParam("s|sound") Sound sound,
-                              @NamedParam("l|location") Location l,
-                              @NamedParam("v|volume") float volume,
-                              @NamedParam("p|pitch") float pitch) {
+                      @NamedParam("l|location") Location l,
+                      @NamedParam("v|volume") float volume,
+                      @NamedParam("p|pitch") float pitch) {
         l.getWorld().playSound(l, sound, volume, pitch);
 
     }
@@ -49,14 +49,14 @@ public class Particles implements NTScriptProxy {
                               @NamedParam("oz|offset_z") double offsetZ,
                               @NamedParam("e|extra") double extra,
                               @NamedParam("m|m_data") Material material
-                              ) {
+    ) {
         Location pLoc = location;
         if (pLoc == null) {
             pLoc = entity.getEntity().getLocation();
         }
         BlockData data = null;
         if (material != null) {
-          data = material.createBlockData();
+            data = material.createBlockData();
         }
         pLoc.getWorld().spawnParticle(particle, location, amount, offsetX, offsetY, offsetZ, extra, data);
     }

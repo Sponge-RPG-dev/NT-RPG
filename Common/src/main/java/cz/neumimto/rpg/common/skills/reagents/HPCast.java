@@ -3,7 +3,6 @@ package cz.neumimto.rpg.common.skills.reagents;
 import cz.neumimto.rpg.common.damage.DamageService;
 import cz.neumimto.rpg.common.entity.CommonProperties;
 import cz.neumimto.rpg.common.entity.EntityService;
-import cz.neumimto.rpg.common.entity.IEntity;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.skills.SkillData;

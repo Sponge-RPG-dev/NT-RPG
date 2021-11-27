@@ -7,6 +7,7 @@ import cz.neumimto.rpg.common.skills.SkillResult;
 import cz.neumimto.rpg.common.skills.types.ActiveSkill;
 
 import javax.inject.Inject;
+
 /*
     @target = targetted_entity{range=$settings.range, entityFrom=@caster}
     IF exists{test=@target}
@@ -32,7 +33,8 @@ public class Sample extends ActiveSkill {
     @Override
     public SkillResult cast(IActiveCharacter character, PlayerSkillContext info) {
         final int range = info.getIntNodeValue("range");
-        final IEntity iEntity = TargettedEntity.get(range, character);;
+        final IEntity iEntity = TargettedEntity.get(range, character);
+        ;
         //iEntity = TargettedEntity.get(range, character);
         if (Exists.test(iEntity)) {
             if (DamageEntity.damage(20, iEntity, character)) {

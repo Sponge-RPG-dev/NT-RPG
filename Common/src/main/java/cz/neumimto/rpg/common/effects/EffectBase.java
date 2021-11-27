@@ -1,5 +1,3 @@
-
-
 package cz.neumimto.rpg.common.effects;
 
 import cz.neumimto.rpg.common.entity.IEffectConsumer;

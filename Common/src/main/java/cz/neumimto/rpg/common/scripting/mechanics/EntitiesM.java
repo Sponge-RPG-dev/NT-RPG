@@ -30,16 +30,16 @@ public class EntitiesM implements NTScriptProxy {
     @Handler
     @Function("heal")
     public double heal(@NamedParam("e|entity") IEntity target,
-                     @NamedParam("a|amount") float amount,
-                     @NamedParam("s|source") IRpgElement skill) {
+                       @NamedParam("a|amount") float amount,
+                       @NamedParam("s|source") IRpgElement skill) {
         return entityService.healEntity(target, amount, skill);
     }
 
     @Handler
     @Function("regain_mana")
     public void regain_mana(@NamedParam("e|entity") IActiveCharacter target,
-                       @NamedParam("a|amount") float amount,
-                       @NamedParam("s|source") IRpgElement skill) {
+                            @NamedParam("a|amount") float amount,
+                            @NamedParam("s|source") IRpgElement skill) {
         characterService.gainMana(target, amount, skill);
     }
 

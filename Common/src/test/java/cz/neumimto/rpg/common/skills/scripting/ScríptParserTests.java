@@ -42,7 +42,7 @@ class ScríptParserTests {
                        RETURN CANCELLED
                 """;
 
-        skillService.skillDefinitionToSkill(model,this.getClass().getClassLoader());
+        skillService.skillDefinitionToSkill(model, this.getClass().getClassLoader());
 
     }
 
@@ -66,7 +66,7 @@ class ScríptParserTests {
                        END
                        RETURN CANCELLED
                 """;
-        skillService.skillDefinitionToSkill(model,this.getClass().getClassLoader());
+        skillService.skillDefinitionToSkill(model, this.getClass().getClassLoader());
     }
 
     @Test
@@ -89,7 +89,7 @@ class ScríptParserTests {
                        END
                        RETURN CANCELLED
                 """;
-        skillService.skillDefinitionToSkill(model,this.getClass().getClassLoader());
+        skillService.skillDefinitionToSkill(model, this.getClass().getClassLoader());
     }
 
     @Singleton

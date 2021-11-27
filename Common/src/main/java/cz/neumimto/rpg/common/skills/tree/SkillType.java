@@ -1,5 +1,3 @@
-
-
 package cz.neumimto.rpg.common.skills.tree;
 
 
@@ -37,7 +35,7 @@ public enum SkillType implements ISkillType {
     CANNOT_BE_SELF_CASTED(UNDEFINED, "ntrpg:cannot_be_self_casted", "Cannot be self casted"),
     PROTECTION(TRUE, "ntrpg:protection", "Protection"),
     ILLUSION(FALSE, "ntrpg:illusion", "Illusion"),
-    BUFF(FALSE,"ntrpg:buff", "Buff"),
+    BUFF(FALSE, "ntrpg:buff", "Buff"),
     DAMAGE_CHECK_TARGET(TRUE, "ntrpg:damage_check_target", "Negative"),
     /**
      * Do not use this one in custom skills

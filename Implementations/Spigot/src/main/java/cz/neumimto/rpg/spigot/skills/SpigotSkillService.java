@@ -3,11 +3,10 @@ package cz.neumimto.rpg.spigot.skills;
 import cz.neumimto.nts.NTScript;
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.gui.ISkillTreeInterfaceModel;
-import cz.neumimto.rpg.common.scripting.NTScriptEngine;
 import cz.neumimto.rpg.common.scripting.SkillScriptHandlers;
 import cz.neumimto.rpg.common.skills.SkillResult;
-import cz.neumimto.rpg.common.skills.types.ScriptSkill;
 import cz.neumimto.rpg.common.skills.SkillService;
+import cz.neumimto.rpg.common.skills.types.ScriptSkill;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.effects.common.*;
 import org.bukkit.Material;
@@ -41,11 +40,11 @@ public class SpigotSkillService extends SkillService {
                         .withEnum(Sound.class)
                         .withEnum(BlockFace.class)
                         .withEnum(SkillResult.class)
-                        .add(Vector.class.getConstructor(double.class, double.class, double.class), "vector", List.of("x","y","z"))
+                        .add(Vector.class.getConstructor(double.class, double.class, double.class), "vector", List.of("x", "y", "z"))
 
-                        .add(Math.class.getDeclaredMethod("max", double.class, double.class), List.of("a","b"))
-                        .add(Math.class.getDeclaredMethod("min", double.class, double.class), List.of("a","b"))
-                        .add(Math.class.getDeclaredMethod("pow", double.class, double.class), List.of("a","b"))
+                        .add(Math.class.getDeclaredMethod("max", double.class, double.class), List.of("a", "b"))
+                        .add(Math.class.getDeclaredMethod("min", double.class, double.class), List.of("a", "b"))
+                        .add(Math.class.getDeclaredMethod("pow", double.class, double.class), List.of("a", "b"))
                         .add(Math.class.getDeclaredMethod("abs", double.class), List.of("a"))
                         .add(Math.class.getDeclaredMethod("sqrt", double.class), List.of("a"))
                         .add(Math.class.getDeclaredMethod("ceil", double.class), List.of("a"))

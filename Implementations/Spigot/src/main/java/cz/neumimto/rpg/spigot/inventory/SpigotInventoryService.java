@@ -1,13 +1,13 @@
 package cz.neumimto.rpg.spigot.inventory;
 
 import com.google.inject.Injector;
+import cz.neumimto.rpg.common.inventory.AbstractInventoryService;
+import cz.neumimto.rpg.common.inventory.InventoryHandler;
 import cz.neumimto.rpg.common.inventory.ManagedSlot;
 import cz.neumimto.rpg.common.inventory.RpgInventory;
 import cz.neumimto.rpg.common.items.RpgItemStack;
 import cz.neumimto.rpg.common.model.EquipedSlot;
 import cz.neumimto.rpg.common.skills.SkillData;
-import cz.neumimto.rpg.common.inventory.AbstractInventoryService;
-import cz.neumimto.rpg.common.inventory.InventoryHandler;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.gui.inventoryviews.ConfigurableInventoryGui;
 import cz.neumimto.rpg.spigot.persistance.SpigotEquipedSlot;
@@ -158,8 +158,8 @@ public class SpigotInventoryService extends AbstractInventoryService<ISpigotChar
 
         ServiceLoader.load(ConfigurableInventoryGui.class, getClass().getClassLoader()).stream()
                 .map(ServiceLoader.Provider::get).forEach(a -> {
-            injector.injectMembers(a);
-            a.clearCache(uniqueId);
-        });
+                    injector.injectMembers(a);
+                    a.clearCache(uniqueId);
+                });
     }
 }

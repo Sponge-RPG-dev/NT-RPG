@@ -1,13 +1,13 @@
 package cz.neumimto.rpg.spigot.entities.players;
 
+import cz.neumimto.rpg.common.entity.PropertyService;
+import cz.neumimto.rpg.common.entity.players.CharacterMana;
+import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.gui.Gui;
 import cz.neumimto.rpg.common.model.CharacterBase;
 import cz.neumimto.rpg.common.skills.ISkill;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
-import cz.neumimto.rpg.common.entity.PropertyService;
-import cz.neumimto.rpg.common.entity.players.CharacterService;
-import cz.neumimto.rpg.common.entity.players.CharacterMana;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.gui.SpellbookListener;
 import cz.neumimto.rpg.spigot.gui.SpigotGuiHelper;

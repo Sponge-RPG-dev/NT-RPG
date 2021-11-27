@@ -1,7 +1,6 @@
 package cz.neumimto.rpg.common.scripting.mechanics;
 
 import com.google.auto.service.AutoService;
-import cz.neumimto.nts.annotations.ScriptMeta;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.effects.IEffect;
 import cz.neumimto.rpg.common.effects.IEffectContainer;
@@ -25,9 +24,9 @@ public class EffectsM implements NTScriptProxy {
     public void applyEffect(
             @NamedParam("e|effect") IEffect effect,
             @NamedParam("s|source") IEffectSourceProvider provider,
-            @NamedParam("es|entity_source")IEntity entity
-            ) {
-        effectService.addEffect(effect,provider, entity);
+            @NamedParam("es|entity_source") IEntity entity
+    ) {
+        effectService.addEffect(effect, provider, entity);
     }
 
     @Function("remove_effect")

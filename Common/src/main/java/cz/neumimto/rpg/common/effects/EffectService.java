@@ -1,21 +1,14 @@
 package cz.neumimto.rpg.common.effects;
 
 import cz.neumimto.rpg.common.Rpg;
-import cz.neumimto.rpg.common.effects.model.EffectModelFactory;
+import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.entity.IEffectConsumer;
 import cz.neumimto.rpg.common.entity.IEntity;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.skills.SkillService;
-import cz.neumimto.rpg.common.skills.ISkill;
-import cz.neumimto.rpg.common.skills.SkillSettings;
-import cz.neumimto.rpg.common.assets.AssetService;
 
 import javax.inject.Inject;
 import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -394,71 +387,6 @@ public abstract class EffectService {
             file.delete();
         }
 
-        try {
-            StringBuilder finalString = new StringBuilder();
-            file.createNewFile();
-            String template = assetService.getAssetAsString("templates/Effect.md");
-            for (Map.Entry<String, IGlobalEffect> effect : globalEffects.entrySet()) {
-                Class aClass = effect.getValue().asEffectClass();
-                if (aClass != null && aClass.isAnnotationPresent(Generate.class)) {
-                    Generate meta = (Generate) aClass.getAnnotation(Generate.class);
-                    String description = meta.description();
-                    String name = effect.getKey();
-
-                    Class<?> modelType = EffectModelFactory.getModelType(aClass);
-
-                    String s = new String(template);
-                    s = s.replaceAll("\\{\\{effect\\.name}}", name);
-                    s = s.replaceAll("\\{\\{effect\\.description}}", description);
-
-                    if (EffectModelFactory.getTypeMappers().containsKey(modelType)) {
-                        s = s.replaceAll("\\{\\{effect\\.parameter}}", modelType.getSimpleName());
-                        s = s.replaceAll("\\{\\{effect\\.parameters}}", "");
-                    } else if (modelType == null) {
-                        s = s.replaceAll("\\{\\{effect\\.parameter}}", "");
-                        s = s.replaceAll("\\{\\{effect\\.parameters}}", "");
-                    } else {
-                        Field[] fields = modelType.getFields();
-                        s = s.replaceAll("\\{\\{effect\\.parameter}}", "");
-                        StringBuilder buffer = new StringBuilder();
-                        for (Field field : fields) {
-                            String fname = field.getName();
-                            String type = field.getType().getSimpleName();
-                            buffer.append("   * ").append(fname).append(" - ").append(type).append("\n\n");
-                        }
-                        s = s.replaceAll("\\{\\{effect\\.parameters}}", buffer.toString());
-                    }
-                    finalString.append(s);
-                }
-            }
-
-            template = assetService.getAssetAsString("templates/Skill.md");
-            StringBuilder skills = new StringBuilder();
-            for (ISkill iSkill : skillService.getAll()) {
-
-                String damageType = iSkill.getDamageType();
-                String s = new String(template);
-                s = s.replaceAll("\\{\\{skill\\.damageType}}", damageType == null ? "Deals no damage" : damageType);
-
-                String id = iSkill.getId();
-                s = s.replaceAll("\\{\\{skill\\.id}}", id);
-
-                SkillSettings defaultSkillSettings = iSkill.getDefaultSkillSettings();
-
-                StringBuilder buffer = new StringBuilder();
-                for (Map.Entry<String, String> stringFloatEntry : defaultSkillSettings.getNodes().entrySet()) {
-                    buffer.append("   * ").append(stringFloatEntry.getKey()).append("\n\n");
-                }
-                s = s.replaceAll("\\{\\{skill\\.parameters}}", buffer.toString());
-                skills.append(s);
-            }
-            template = assetService.getAssetAsString("templates/SE.md");
-
-            Files.write(file.toPath(), template.replaceAll("\\{\\{effects}}", finalString.toString())
-                    .replaceAll("\\{\\{skills}}", skills.toString()).getBytes(), StandardOpenOption.APPEND);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public abstract void startEffectScheduler();

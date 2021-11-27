@@ -2,8 +2,8 @@ package cz.neumimto.rpg.spigot.bridges.mythicalmobs;
 
 import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.common.skills.ISkill;
-import cz.neumimto.rpg.common.utils.DebugLevel;
 import cz.neumimto.rpg.common.skills.SkillConfigLoader;
+import cz.neumimto.rpg.common.utils.DebugLevel;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.skills.Skill;
 

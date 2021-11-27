@@ -2,16 +2,16 @@ package cz.neumimto.rpg.spigot.skills;
 
 import com.google.auto.service.AutoService;
 import cz.neumimto.rpg.common.ResourceLoader;
-import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.effects.EffectBase;
+import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.effects.IEffect;
 import cz.neumimto.rpg.common.entity.IEffectConsumer;
 import cz.neumimto.rpg.common.skills.ISkill;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.skills.SkillNodes;
 import cz.neumimto.rpg.common.skills.SkillResult;
-import cz.neumimto.rpg.common.skills.types.ActiveSkill;
 import cz.neumimto.rpg.common.skills.mech.DamageMechanic;
+import cz.neumimto.rpg.common.skills.types.ActiveSkill;
 import cz.neumimto.rpg.nms.NMSHandler;
 import cz.neumimto.rpg.spigot.Resourcepack;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
@@ -131,8 +131,8 @@ public class FireRemnant extends ActiveSkill<ISpigotCharacter> {
             if (damage > 0) {
                 nmsHandler.spawnFireworkExplosion(remnant.getLocation(),
                         FireworkEffect.builder().withColor(Color.RED,
-                                Color.YELLOW,
-                                Color.fromRGB(214, 76, 45))
+                                        Color.YELLOW,
+                                        Color.fromRGB(214, 76, 45))
                                 .with(FireworkEffect.Type.BURST)
                                 .build(),
                         remnant.getLocation().getWorld().getPlayers());

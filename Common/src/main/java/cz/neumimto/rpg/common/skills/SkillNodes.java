@@ -1,11 +1,9 @@
 package cz.neumimto.rpg.common.skills;
 
-import cz.neumimto.rpg.common.skills.scripting.JsBinding;
 
 /**
  * Created by ja on 22.10.2016.
  */
-@JsBinding(JsBinding.Type.CLASS)
 public enum SkillNodes implements ISkillNode {
 
     DAMAGE("damage"),

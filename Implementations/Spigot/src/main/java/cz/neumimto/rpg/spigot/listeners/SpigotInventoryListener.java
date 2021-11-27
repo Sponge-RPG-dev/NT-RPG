@@ -5,6 +5,7 @@ import cz.neumimto.rpg.common.ResourceLoader;
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.gui.Gui;
+import cz.neumimto.rpg.common.inventory.InventoryHandler;
 import cz.neumimto.rpg.common.inventory.ManagedSlot;
 import cz.neumimto.rpg.common.inventory.RpgInventory;
 import cz.neumimto.rpg.common.items.ItemClass;
@@ -12,9 +13,8 @@ import cz.neumimto.rpg.common.items.RpgItemStack;
 import cz.neumimto.rpg.common.items.RpgItemType;
 import cz.neumimto.rpg.common.localization.LocalizationKeys;
 import cz.neumimto.rpg.common.localization.LocalizationService;
-import cz.neumimto.rpg.common.skills.SkillService;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
-import cz.neumimto.rpg.common.inventory.InventoryHandler;
+import cz.neumimto.rpg.common.skills.SkillService;
 import cz.neumimto.rpg.spigot.SpigotRpg;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
@@ -50,7 +50,6 @@ import org.bukkit.inventory.PlayerInventory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.swing.event.ChangeEvent;
 import java.util.Map;
 import java.util.Optional;
 
@@ -413,7 +412,6 @@ public class SpigotInventoryListener implements IRpgListener {
             Map<Class<?>, RpgInventory> managedInventory = character.getManagedInventory();
             RpgInventory rpgInventory = managedInventory.get(PlayerInventory.class);
             ManagedSlot managedSlot = rpgInventory.getManagedSlots().get(slotId);
-
 
 
             Optional<RpgItemStack> future = itemService.getRpgItemStack(cursor);

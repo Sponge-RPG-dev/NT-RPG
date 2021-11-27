@@ -11,11 +11,11 @@ import cz.neumimto.rpg.common.effects.IGlobalEffect;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
+import cz.neumimto.rpg.common.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.common.skills.ISkill;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.skills.SkillData;
 import cz.neumimto.rpg.common.skills.tree.SkillTree;
-import cz.neumimto.rpg.common.inventory.runewords.RuneWord;
 
 import java.util.*;
 import java.util.stream.Collectors;
