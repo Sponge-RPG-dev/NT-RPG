@@ -10,6 +10,7 @@ import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import jdk.jfr.Name;
 
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Logger;
 
 @AutoService(NTScriptProxy.class)
@@ -30,6 +31,12 @@ public class SkillCommons implements NTScriptProxy {
     @Function("exists")
     public boolean exists(@NamedParam("o|obj|var") Object o) {
         return o != null;
+    }
+
+    @Handler
+    @Function("roll")
+    public boolean roll(@NamedParam("pass") double min, @NamedParam("maxVal|max") double max) {
+        return ThreadLocalRandom.current().nextDouble(max) <= min;
     }
 
     @Handler

@@ -16,7 +16,7 @@ import java.util.List;
 public class TestSkillService extends SkillService {
 
     @Override
-    public NTScript getNtScriptCompilerFor(Class<? extends SkillScriptHandlers> c) {
+    public NTScript getNtScriptCompilerFor(Class c) {
         return ntScriptEngine.prepareCompiler(builder -> {
             try {
                 builder

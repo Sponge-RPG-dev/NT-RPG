@@ -38,6 +38,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import static cz.neumimto.rpg.common.logging.Log.*;
@@ -69,6 +70,8 @@ public abstract class SkillService {
     public SkillService() {
         Stream.of(SkillType.values()).forEach(this::registerSkillType);
     }
+
+    public abstract Consumer<NTScript.Builder> getNTSBuilderContext();
 
     public void load() {
         skillTrees.clear();
@@ -170,9 +173,6 @@ public abstract class SkillService {
         skillByNames.put(name, skill);
     }
 
-
-    public abstract NTScript getNtScriptCompilerFor(Class<? extends SkillScriptHandlers> c);
-
     public ISkill skillDefinitionToSkill(ScriptSkillModel scriptSkillModel, ClassLoader classLoader) {
 
         if (scriptSkillModel.handlerId.equalsIgnoreCase("nts")) {
@@ -190,7 +190,8 @@ public abstract class SkillService {
 
                 Log.info("Compiling nts script " + scriptSkillModel.id + " as " + c.getSimpleName());
 
-                Class<? extends SkillScriptHandlers> generate = getNtScriptCompilerFor(c).compile(scriptSkillModel.script);
+                Class<? extends SkillScriptHandlers> generate = ntScriptEngine.prepareCompiler(getNTSBuilderContext(),c)
+                        .compile(scriptSkillModel.script);
                 if (generate == null) {
                     Log.error("Unable to generate script " + scriptSkillModel.id);
                 }
@@ -198,6 +199,21 @@ public abstract class SkillService {
                 ScriptSkill ss = getSkillByHandlerType(instance);
                 ss.setModel(scriptSkillModel);
                 ss.setHandler(instance);
+                if (ss instanceof PassiveScriptSkill p) {
+                    p.setRelevantEffectName(scriptSkillModel.relevantEffectName);
+                }
+
+                if (scriptSkillModel.skillTypes != null) {
+                    for (String skillType : scriptSkillModel.skillTypes) {
+                        SkillType st = SkillType.byId(skillType);
+                        if (st == null) {
+                            Log.warn("Unknown skill type " + st);
+                        } else {
+                            ss.addSkillType(st);
+                        }
+                    }
+                }
+
                 injector.injectMembers(ss);
                 injectCatalogId((ISkill) ss, scriptSkillModel.id);
                 return (ISkill) ss;

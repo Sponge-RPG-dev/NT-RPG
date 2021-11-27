@@ -69,4 +69,13 @@ public enum SkillType implements ISkillType {
     public String getTranslationKey() {
         return name;
     }
+
+    public static SkillType byId(String id) {
+        for (SkillType value : values()) {
+            if (value.id.equalsIgnoreCase(id)) {
+                return value;
+            }
+        }
+        return null;
+    }
 }

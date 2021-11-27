@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 @Author("NeumimTo")
 @Website("https://github.com/Sponge-RPG-dev/NT-RPG")
 @LogPrefix("NTRPG")
-@ApiVersion(ApiVersion.Target.v1_14)
+@ApiVersion(ApiVersion.Target.v1_17)
 @SoftDependsOn(
         value = {
                 @SoftDependency("PlaceholderAPI"),

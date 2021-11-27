@@ -1,17 +1,9 @@
 package cz.neumimto.rpg.common.skills.types;
 
-import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.common.scripting.SkillScriptHandlers;
-import cz.neumimto.rpg.common.skills.ISkillType;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.skills.scripting.ScriptSkillModel;
-
-import javax.script.Bindings;
-import javax.script.SimpleBindings;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * Created by NeumimTo on 7.10.2018.

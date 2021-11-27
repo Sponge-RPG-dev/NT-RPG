@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.common.utils;
 
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,6 +26,10 @@ public class MathUtils {
         if (precision <= 0) throw new ArithmeticException("Precision has to be > 0");
         int scale = (int) Math.pow(10, precision);
         return Math.round(value * scale) / scale;
+    }
+
+    public static double randomInRange(double min, double max) {
+        return min + (max - min) * ThreadLocalRandom.current().nextDouble();
     }
 
     public static boolean isNumeric(String str) {

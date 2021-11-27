@@ -177,6 +177,7 @@ public class SpigotDamageListener extends AbstractDamageListener implements IRpg
         e.setTarget(target);
         e.setDamage(newdamage);
         e.setWeapon(rpgItemStack);
+        e.setDamager(attacker);
 
         if (Rpg.get().postEvent(e)) {
             event.setCancelled(true);

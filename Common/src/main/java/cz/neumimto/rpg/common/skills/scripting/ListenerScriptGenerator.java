@@ -32,8 +32,8 @@ public class ListenerScriptGenerator {
                     .make()
                     .load(classLoader, ClassLoadingStrategy.Default.INJECTION)
                     .getLoaded();
-            Class compile = Rpg.get().getScriptEngine().prepareCompiler(builder -> {
-            }, bb).compile(model.script);
+
+            Class compile = Rpg.get().getScriptEngine().prepareCompiler(Rpg.get().getSkillService().getNTSBuilderContext(), bb).compile(model.script);
             return compile;
         } catch (Throwable t) {
             t.printStackTrace();

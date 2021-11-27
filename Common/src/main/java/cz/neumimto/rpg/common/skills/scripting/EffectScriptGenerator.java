@@ -166,7 +166,6 @@ public class EffectScriptGenerator {
 
             }
 
-        //    bb.make().saveIn(new File("/tmp"));
             Class<? extends EffectBase> loaded = bb.make()
                     .load(classLoader, INJECTION)
                     .getLoaded();
@@ -202,7 +201,7 @@ public class EffectScriptGenerator {
                 .getLoaded();
 
         Class compile = Rpg.get().getScriptEngine()
-                .prepareCompiler(builder -> {}, loaded1)
+                .prepareCompiler(Rpg.get().getSkillService().getNTSBuilderContext(), loaded1)
                 .compile(script);
         try {
             Object o = compile.newInstance();

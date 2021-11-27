@@ -27,7 +27,7 @@ public interface SkillScriptHandlers {
 
     interface Passive extends SkillScriptHandlers {
         @ScriptTarget
-        SkillResult init(@NamedParam("caster") IActiveCharacter caster,
+        void init(@NamedParam("caster") IActiveCharacter caster,
                          @NamedParam("context") PlayerSkillContext context,
                          @NamedParam("this_skill")ISkill iSkill);
     }

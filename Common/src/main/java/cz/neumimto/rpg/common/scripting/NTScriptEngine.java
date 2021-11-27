@@ -4,6 +4,7 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import cz.neumimto.nts.NTScript;
 import cz.neumimto.nts.annotations.ScriptMeta;
+import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.effects.IEffect;
 import cz.neumimto.rpg.common.logging.Log;
@@ -14,6 +15,7 @@ import cz.neumimto.rpg.common.skills.types.ScriptSkill;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.*;
@@ -55,18 +57,18 @@ public class NTScriptEngine {
         }
 
         NTScript.Builder n = NTScript.builder()
-                .implementingType(ScriptSkill.class)
+                .implementingType(type)
                 .classAnnotations(new Class[]{Singleton.class})
                 .fieldAnnotation(new Class[]{Inject.class})
                 .macro(macrosMap)
                 .withEnum(SkillResult.class)
-                .implementingType(type)
+                .debugOutput(Rpg.get().getWorkingDirectory() + File.separator + "/compiled-scripts")
                 .add(getStl())
-                .debugOutput("/tmp")
                 .logging(Log::warn)
                 .package_("cz.neumimto.rpg.script.skills")
                 .setClassNamePattern(type.getSimpleName());
 
+        n.add(STL);
         builder.accept(n);
 
         return n.build();
@@ -87,25 +89,6 @@ public class NTScriptEngine {
                     .forEach(list::add);
 
         } catch (Throwable t) {
-            Log.info("Java service provider bug still present, doing it the stupid way");
-
-            try {
-                list.add(Class.forName("cz.neumimto.rpg.spigot.effects.common.BleedingEffect"));
-                list.add(Class.forName("cz.neumimto.rpg.spigot.effects.common.FeatherFall"));
-                list.add(Class.forName("cz.neumimto.rpg.spigot.effects.common.Maim"));
-                list.add(Class.forName("cz.neumimto.rpg.spigot.effects.common.ManaShieldEffect"));
-                list.add(Class.forName("cz.neumimto.rpg.spigot.effects.common.NoAutohealEffect"));
-                list.add(Class.forName("cz.neumimto.rpg.spigot.effects.common.PiggifyEffect"));
-                list.add(Class.forName("cz.neumimto.rpg.spigot.effects.common.SlowEffect"));
-                list.add(Class.forName("cz.neumimto.rpg.spigot.effects.common.StunEffect"));
-                list.add(Class.forName("cz.neumimto.rpg.spigot.effects.common.UnhealEffect"));
-                list.add(Class.forName("cz.neumimto.rpg.spigot.effects.common.UnlimtedFoodLevelEffect"));
-                list.add(Class.forName("cz.neumimto.rpg.spigot.effects.common.WebEffect"));
-                list.add(Class.forName("cz.neumimto.rpg.spigot.effects.common.FlickerEffect"));
-                list.add(Class.forName("cz.neumimto.rpg.spigot.effects.common.InvisibilityEffect"));
-            } catch (Exception e) {
-
-            }
         }
 
         list.addAll(STL);

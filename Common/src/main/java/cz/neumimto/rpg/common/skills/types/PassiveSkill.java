@@ -2,6 +2,8 @@
 
 package cz.neumimto.rpg.common.skills.types;
 
+import cz.neumimto.nts.annotations.ScriptMeta.NamedParam;
+import cz.neumimto.nts.annotations.ScriptMeta.ScriptTarget;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.inventory.InventoryService;
@@ -10,14 +12,13 @@ import cz.neumimto.rpg.common.localization.LocalizationKeys;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.skills.SkillExecutionType;
 import cz.neumimto.rpg.common.skills.SkillResult;
-import cz.neumimto.rpg.common.skills.scripting.JsBinding;
 
 import javax.inject.Inject;
 
 /**
  * Created by NeumimTo on 6.8.2015.
  */
-@JsBinding(JsBinding.Type.CLASS)
+
 public abstract class PassiveSkill extends AbstractSkill<IActiveCharacter> {
 
     public static enum Type {
@@ -53,6 +54,7 @@ public abstract class PassiveSkill extends AbstractSkill<IActiveCharacter> {
     protected void update(IActiveCharacter IActiveCharacter) {
         inventoryService.initializeCharacterInventory(IActiveCharacter);
         PlayerSkillContext skill = IActiveCharacter.getSkill(getId());
+        effectService.removeEffect(relevantEffectName, IActiveCharacter, this);
         applyEffect(skill, IActiveCharacter);
     }
 
@@ -79,10 +81,20 @@ public abstract class PassiveSkill extends AbstractSkill<IActiveCharacter> {
         }
     }
 
-    public abstract void applyEffect(PlayerSkillContext info, IActiveCharacter character);
+    @ScriptTarget
+    public abstract void applyEffect(@NamedParam("c|context") PlayerSkillContext info,
+                                     @NamedParam("caster") IActiveCharacter character);
 
     @Override
     public SkillExecutionType getSkillExecutionType() {
         return SkillExecutionType.PASSIVE;
+    }
+
+    public String getRelevantEffectName() {
+        return relevantEffectName;
+    }
+
+    public void setRelevantEffectName(String relevantEffectName) {
+        this.relevantEffectName = relevantEffectName;
     }
 }

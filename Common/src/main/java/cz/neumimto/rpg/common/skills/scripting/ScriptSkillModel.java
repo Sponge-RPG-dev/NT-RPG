@@ -25,6 +25,10 @@ public class ScriptSkillModel {
     public String script;
 
     @Optional
+    @Path("RelevantEffectName")
+    public String relevantEffectName;
+
+    @Optional
     @Path("SuperType")
     public String superType;
 
