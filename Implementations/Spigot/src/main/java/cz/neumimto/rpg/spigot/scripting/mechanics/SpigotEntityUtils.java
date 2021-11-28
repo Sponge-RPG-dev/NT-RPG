@@ -2,6 +2,7 @@ package cz.neumimto.rpg.spigot.scripting.mechanics;
 
 import com.google.auto.service.AutoService;
 import cz.neumimto.nts.annotations.ScriptMeta;
+import cz.neumimto.rpg.common.IRpgElement;
 import cz.neumimto.rpg.common.entity.IEntity;
 import cz.neumimto.rpg.common.scripting.mechanics.NTScriptProxy;
 import cz.neumimto.rpg.common.skills.ISkill;

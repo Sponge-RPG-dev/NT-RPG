@@ -10,7 +10,9 @@ import cz.neumimto.rpg.common.gui.Gui;
 import cz.neumimto.rpg.common.localization.LocalizationService;
 import cz.neumimto.rpg.common.localization.LocalizationServiceImpl;
 import cz.neumimto.rpg.common.persistance.dao.ClassDefinitionDao;
+import sun.misc.Unsafe;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 

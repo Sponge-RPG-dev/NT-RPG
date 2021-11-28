@@ -2,7 +2,6 @@ plugins {
     id 'java-library'
     id 'com.github.johnrengelman.shadow' version '7.0.0'
     id("xyz.jpenilla.run-paper") version "1.0.4"
-
 }
 
 group = 'cz.neumimto.rpg'

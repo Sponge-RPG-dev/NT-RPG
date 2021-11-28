@@ -15,9 +15,8 @@ import org.bukkit.util.RayTraceResult;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Singleton
 @AutoService(NTScriptProxy.class)
@@ -29,10 +28,12 @@ public class Targetting implements NTScriptProxy {
     @Inject
     private SpigotEntityService spigotEntityService;
 
+    private SplittableRandom random = new SplittableRandom();
+
     @Function("find_nearby_entities")
     @Handler
     public Collection<IEntity> find(@NamedParam("e|entity") ISpigotEntity around,
-                                    @NamedParam("r|radius") float radius,
+                                    @NamedParam("r|radius") double radius,
                                     @NamedParam("d|damageCheck") boolean damageCheck) {
         Set<IEntity> entities = new HashSet<>();
         LivingEntity entity = around.getEntity();
@@ -74,6 +75,18 @@ public class Targetting implements NTScriptProxy {
                     return spigotEntityService.get((LivingEntity) hitEntity);
                 }
             }
+        }
+        return null;
+    }
+
+    @Handler
+    @Function("find_random_entity")
+    public IEntity findRandomEntity(@NamedParam("e|entity") ISpigotEntity around,
+                                          @NamedParam("r|radius") double radius,
+                                          @NamedParam("d|damageCheck") boolean damageCheck) {
+        List<IEntity> iEntities = new ArrayList<>(find(around, radius, damageCheck));
+        if (iEntities.size() > 0) {
+            return iEntities.get(random.nextInt(iEntities.size()));
         }
         return null;
     }

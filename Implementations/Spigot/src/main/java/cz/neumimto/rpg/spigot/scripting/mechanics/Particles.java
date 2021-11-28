@@ -47,7 +47,7 @@ public class Particles implements NTScriptProxy {
                               @NamedParam("oy|offset_y") double offsetY,
                               @NamedParam("ox|offset_x") double offsetX,
                               @NamedParam("oz|offset_z") double offsetZ,
-                              @NamedParam("e|extra") double extra,
+                              @NamedParam("ex|extra") double extra,
                               @NamedParam("m|m_data") Material material
     ) {
         Location pLoc = location;
