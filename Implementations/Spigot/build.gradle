@@ -111,10 +111,10 @@ import java.nio.file.StandardCopyOption
 
 task copyNMSImpl {
     Project spigot = project(":Spigot")
-    if (spigot.file("lib-cp/Spigot-117-1.0.0-SNAPSHOT.jar").exists()) {
+    if (spigot.file("lib-cp/Spigot-118-1.0.0-SNAPSHOT.jar").exists()) {
         return;
     }
-    DefaultTaskOutputs output = project(':Spigot-117').jar.outputs
+    DefaultTaskOutputs output = project(':Spigot-118').jar.outputs
     boolean found = false;
     for (File file : output.getFiles()) {
         for (File f : file.getParentFile().listFiles(new FilenameFilter() {

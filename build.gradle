@@ -2,8 +2,8 @@ subprojects {
     apply plugin: 'java-library'
 
     tasks.withType(JavaCompile) {
-        sourceCompatibility = "16"
-        targetCompatibility = "16"
+        sourceCompatibility = "17"
+        targetCompatibility = "17"
     }
 
     compileJava.options.encoding = compileTestJava.options.encoding = 'UTF-8'

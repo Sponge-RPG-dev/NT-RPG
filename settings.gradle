@@ -1,9 +1,9 @@
 pluginManagement {
     repositories {
+        gradlePluginPortal()
         maven {
             url "https://papermc.io/repo/repository/maven-public/"
         }
-        gradlePluginPortal()
         maven {
             url "https://repo.jpenilla.xyz/snapshots/"
         }
@@ -20,8 +20,8 @@ include ':Common-Persistence-Test'
 
 include ':Spigot'
 include ':Spigot-NMS'
-include ':Spigot-117'
-//include ':Sponge'
+include ':Spigot-118'
+
 include ':Bootstrap-Common'
 include ':Bootstrap-Spigot'
 
@@ -33,8 +33,7 @@ project(':Common-Persistence-Test').projectDir = file('Peristence/Common-Tests')
 
 project(':Spigot').projectDir = file('Implementations/Spigot')
 project(':Spigot-NMS').projectDir = file('Implementations/Spigot-Lib/NMS')
-project(':Spigot-117').projectDir = file('Implementations/Spigot-Lib/1.17')
-//project(':Sponge').projectDir = file('Implementations/Sponge')
+project(':Spigot-118').projectDir = file('Implementations/Spigot-Lib/1.18')
 
 project(':Bootstrap-Common').projectDir = file('Bootstrap/Common')
 project(':Bootstrap-Spigot').projectDir = file('Bootstrap/Spigot')

@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.nms117;
+package cz.neumimto.rpg.nms118;
 
 import com.google.auto.service.AutoService;
 import net.minecraft.sounds.SoundEvent;
@@ -18,8 +18,8 @@ import net.minecraft.world.entity.projectile.WitherSkull;
 import org.bukkit.Bukkit;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_17_R1.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_17_R1.event.CraftEventFactory;
+import org.bukkit.craftbukkit.v1_18_R1.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_18_R1.event.CraftEventFactory;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -32,7 +32,7 @@ public class NMSHandler extends cz.neumimto.rpg.nms.NMSHandler {
 
     @Override
     public String getVersion() {
-        return "1.17";
+        return "1.18";
     }
 
     @Override
@@ -123,13 +123,13 @@ public class NMSHandler extends cz.neumimto.rpg.nms.NMSHandler {
             el.lastHurtByMobTimestamp = (int) el.level.getGameTime();
 
             if (el instanceof net.minecraft.world.entity.monster.Monster em) {
-                em.setGoalTarget(ed, EntityTargetEvent.TargetReason.TARGET_ATTACKED_ENTITY, true);
+                em.setTarget(ed, EntityTargetEvent.TargetReason.TARGET_ATTACKED_ENTITY, true);
             } else if (target instanceof NeutralMob w) {
 
                 if (w.getTarget() == null) {
                     w.setPersistentAngerTarget(ed.getUUID());
                     w.startPersistentAngerTimer();
-                    w.setGoalTarget(ed, EntityTargetEvent.TargetReason.TARGET_ATTACKED_ENTITY, true);
+                    w.setTarget(ed, EntityTargetEvent.TargetReason.TARGET_ATTACKED_ENTITY, true);
                 }
             }
 

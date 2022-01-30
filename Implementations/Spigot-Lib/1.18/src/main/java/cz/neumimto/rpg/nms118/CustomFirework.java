@@ -1,12 +1,12 @@
-package cz.neumimto.rpg.nms117;
+package cz.neumimto.rpg.nms118;
 
 import net.minecraft.network.protocol.game.ClientboundEntityEventPacket;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.projectile.FireworkRocketEntity;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_17_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_18_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_18_R1.entity.CraftPlayer;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -28,7 +28,7 @@ public class CustomFirework extends FireworkRocketEntity {
         bukkitEntity.setFireworkMeta(meta);
         setOrigin(location);
 
-        if ((((CraftWorld) location.getWorld()).getHandle()).addEntity(this, CreatureSpawnEvent.SpawnReason.COMMAND)) {
+        if ((((CraftWorld) location.getWorld()).getHandle()).addFreshEntity(this, CreatureSpawnEvent.SpawnReason.COMMAND)) {
             setInvisible(true);
         }
     }
