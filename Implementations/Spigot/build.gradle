@@ -54,9 +54,7 @@ dependencies {
 
     // api 'com.github.stefvanschie.inventoryframework:IF:' + project.if
 
-
-    // compileOnly "org.spigotmc:spigot-api:" + project.spigotapi
-    compileOnly 'io.papermc.paper:paper-api:1.17-R0.1-SNAPSHOT'
+    compileOnly 'io.papermc.paper:paper-api:' + project.spigotapi
 
     compileOnly("org.spigotmc:plugin-annotations:" + project.pluginannotations) {
         exclude group: "org.bukkit", module: "bukkit"
