@@ -17,6 +17,7 @@ import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.persistence.flatfiles.FlatFilesModule;
 import cz.neumimto.rpg.spigot.bridges.HolographicDisplaysExpansion;
 import cz.neumimto.rpg.spigot.bridges.NtRpgPlaceholderExpansion;
+import cz.neumimto.rpg.spigot.bridges.mimic.MimicHook;
 import cz.neumimto.rpg.spigot.bridges.mmoitems.MMOItemsExpansion;
 import cz.neumimto.rpg.spigot.bridges.mythicalmobs.MythicalMobsExpansion;
 import cz.neumimto.rpg.spigot.bridges.rpgregions.RpgRegionsClassExpReward;
@@ -161,6 +162,12 @@ public class SpigotRpgPlugin implements NtRpgBootstrap {
             Rpg.get().registerListeners(injector.getInstance(OnKeyPress.class));
             PacketHandler.init();
             new SpigotSkillTreeViewModel(); //just to call static block
+
+            if (Bukkit.getPluginManager().isPluginEnabled("Mimic")) {
+                MimicHook mimicHook = injector.getInstance(MimicHook.class);
+                mimicHook.init(plugin);
+            }
+
         });
 
         if (!testEnv) {

@@ -25,7 +25,8 @@ import java.io.File;
                 @SoftDependency("HolographicDisplays"),
                 @SoftDependency("MythicMobs"),
                 @SoftDependency("MMOItems"),
-                @SoftDependency("RPGRegions")
+                @SoftDependency("RPGRegions"),
+                @SoftDependency("Mimic")
         }
 )
 @DependsOn(

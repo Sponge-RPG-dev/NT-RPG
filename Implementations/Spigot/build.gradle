@@ -33,7 +33,12 @@ repositories {
             includeGroupByRegex "(net\\.Indyuce|io\\.lumine)"
         }
     }
-
+    maven {
+        url "https://ci.citizensnpcs.co/job/Denizen/"
+    }
+    maven {
+        url = "https://repo.citizensnpcs.co"
+    }
 }
 
 group = 'cz.neumimto.rpg'
@@ -56,6 +61,7 @@ dependencies {
 
     compileOnly 'io.papermc.paper:paper-api:' + project.spigotapi
 
+    compileOnly"com.denizenscript:denizen:1.2.3-SNAPSHOT"
     compileOnly("org.spigotmc:plugin-annotations:" + project.pluginannotations) {
         exclude group: "org.bukkit", module: "bukkit"
     }
@@ -65,10 +71,13 @@ dependencies {
     }
 
     api 'com.elmakers.mine.bukkit:EffectLib:' + project.effectlib
+
+
     //  compileOnly 'placeholderapi.me.clip:placeholderapi:' + project.papi
     compileOnly 'com.gmail.filoghost.holographicdisplays:holographicdisplays-api:' + project.hdisplays
     compileOnly "co.aikar:acf-paper:" + project.acf
     compileOnly "io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT"
+    compileOnly "ru.endlesscode.mimic:mimic-bukkit-api:" + project.mimic
 
     // compileOnly('net.Indyuce:MMOItems:' + project.mmoitems) {
     //     exclude group: 'com.mojang', module: 'authlib'
