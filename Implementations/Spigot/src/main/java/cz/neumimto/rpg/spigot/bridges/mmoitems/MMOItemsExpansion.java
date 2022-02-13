@@ -12,10 +12,10 @@ import cz.neumimto.rpg.spigot.events.character.SpigotCharacterGainedLevelEvent;
 import cz.neumimto.rpg.spigot.inventory.SpigotItemService;
 import de.tr7zw.nbtapi.NBTItem;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.ability.Ability;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.comp.rpg.RPGHandler;
+import net.Indyuce.mmoitems.skill.RegisteredSkill;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
@@ -53,7 +53,7 @@ public class MMOItemsExpansion implements Listener {
     }
 
     public void reloadMMOItemSkills() {
-        Collection<Ability> all = MMOItems.plugin.getAbilities().getAll();
+        Collection<RegisteredSkill> all = MMOItems.plugin.getSkills().getAll();
         List<ISkill> iSkills = MMOItemWrapperFactory.generateSkills(all);
         for (ISkill iSkill : iSkills) {
             injector.injectMembers(iSkill);
@@ -64,13 +64,6 @@ public class MMOItemsExpansion implements Listener {
     @EventHandler
     public void onLevelUp(SpigotCharacterGainedLevelEvent event) {
         PlayerData.get(event.getTarget().getUUID()).updateInventory();
-    }
-
-    //@EventHandler
-    public void onCharacterChange(Void event) {
-        //todo
-        UUID uuid = null;
-        ((MMOItemsCharacter) PlayerData.get(uuid).getRPG()).character = null;
     }
 
 
