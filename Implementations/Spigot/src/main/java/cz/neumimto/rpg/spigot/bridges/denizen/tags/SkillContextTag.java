@@ -5,6 +5,7 @@ import com.denizenscript.denizencore.objects.ObjectTag;
 import com.denizenscript.denizencore.objects.core.ElementTag;
 import com.denizenscript.denizencore.tags.ObjectTagProcessor;
 import com.denizenscript.denizencore.tags.TagContext;
+import com.denizenscript.denizencore.utilities.CoreUtilities;
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
@@ -69,6 +70,14 @@ public class SkillContextTag implements ObjectTag {
             }
         }
         return null;
+    }
+
+    public static boolean matches(String arg) {
+        if (arg.startsWith("skillContext@")) {
+            return true;
+        } else {
+            return valueOf(arg, CoreUtilities.noDebugContext) != null;
+        }
     }
 
     @Override

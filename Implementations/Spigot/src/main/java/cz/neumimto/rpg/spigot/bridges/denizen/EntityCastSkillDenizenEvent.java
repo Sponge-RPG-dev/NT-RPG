@@ -24,6 +24,7 @@ public class EntityCastSkillDenizenEvent extends BukkitScriptEvent {
 
     @Override
     public boolean matches(ScriptPath path) {
+        //todo what is this even
         String cmd = path.eventArgLowerAt(1);
         String arg0 = path.eventArgLowerAt(0);
         String arg2 = path.eventArgLowerAt(2);
@@ -60,13 +61,11 @@ public class EntityCastSkillDenizenEvent extends BukkitScriptEvent {
     }
 
     public ObjectTag getContext(String name) {
-        switch (name) {
-            case "caster":
-                return new CharacterTag(character);
-            case "skill_context":
-                return new SkillContextTag(context, character);
-        }
-        return super.getContext(name);
+        return switch (name) {
+            case "character" -> new CharacterTag(character);
+            case "skill_context" -> new SkillContextTag(context, character);
+            default -> super.getContext(name);
+        };
     }
 
     public ScriptEntryData getScriptEntryData() {
