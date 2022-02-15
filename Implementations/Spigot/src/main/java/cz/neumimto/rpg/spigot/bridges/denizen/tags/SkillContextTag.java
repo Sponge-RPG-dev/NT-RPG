@@ -3,6 +3,7 @@ package cz.neumimto.rpg.spigot.bridges.denizen.tags;
 import com.denizenscript.denizencore.objects.Fetchable;
 import com.denizenscript.denizencore.objects.ObjectTag;
 import com.denizenscript.denizencore.objects.core.ElementTag;
+import com.denizenscript.denizencore.tags.Attribute;
 import com.denizenscript.denizencore.tags.ObjectTagProcessor;
 import com.denizenscript.denizencore.tags.TagContext;
 import com.denizenscript.denizencore.utilities.CoreUtilities;
@@ -80,6 +81,10 @@ public class SkillContextTag implements ObjectTag {
         }
     }
 
+    public ObjectTag getObjectAttribute(Attribute attribute) {
+        return tagProcessor.getObjectAttribute(this, attribute);
+    }
+
     @Override
     public String identifySimple() {
         return identify();
@@ -93,8 +98,9 @@ public class SkillContextTag implements ObjectTag {
 
     public static void registerTags() {
         tagProcessor.registerTag(ElementTag.class, "value", (attribute, object) -> {
+            ElementTag elementTag = new ElementTag(object.context.getDoubleNodeValue(attribute.getRawParam()));
             attribute.fulfill(1);
-            return new ElementTag(object.context.getDoubleNodeValue(attribute.getRawParam()));
+            return elementTag;
         });
     }
 }

@@ -8,11 +8,13 @@ import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 
 public class DenizenScriptSkillWrapper extends ActiveSkill<ISpigotCharacter> {
 
+
     @Override
     public SkillResult cast(ISpigotCharacter character, PlayerSkillContext info) {
-        EntityCastSkillDenizenEvent event = new EntityCastSkillDenizenEvent();
+        EntityCastSkillDenizenEvent event = EntityCastSkillDenizenEvent.instance;
         event.character = character;
         event.context = info;
+        event.skillId = info.getSkill().getId();
         event.fire();
         return SkillResult.OK;
     }

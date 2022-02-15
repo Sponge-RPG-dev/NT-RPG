@@ -3,6 +3,7 @@ package cz.neumimto.rpg.spigot.bridges.denizen;
 import com.denizenscript.denizen.events.BukkitScriptEvent;
 import com.denizenscript.denizen.utilities.implementation.BukkitScriptEntryData;
 import com.denizenscript.denizencore.objects.ObjectTag;
+import com.denizenscript.denizencore.objects.core.ElementTag;
 import com.denizenscript.denizencore.scripts.ScriptEntryData;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.spigot.bridges.denizen.tags.CharacterTag;
@@ -13,45 +14,26 @@ public class EntityCastSkillDenizenEvent extends BukkitScriptEvent {
 
     public ISpigotCharacter character;
     public PlayerSkillContext context;
+    public String skillId;
 
     public static EntityCastSkillDenizenEvent instance;
 
     public EntityCastSkillDenizenEvent() {
-        this.registerCouldMatcher("<entity> casts skill <'skill'>");
+        this.registerCouldMatcher("<entity> casts skill");
+        this.registerSwitches("id");
         instance = this;
     }
 
 
     @Override
     public boolean matches(ScriptPath path) {
-        //todo what is this even
-        String cmd = path.eventArgLowerAt(1);
-        String arg0 = path.eventArgLowerAt(0);
-        String arg2 = path.eventArgLowerAt(2);
-        String arg3 = path.eventArgLowerAt(3);
-        String attacker = cmd.equals("kills") ? arg0 : arg2.equals("by") ? arg3 : "";
-        String target = cmd.equals("kills") ? arg2 : arg0;
-
-     // if (!attacker.isEmpty()) {
-     //     if (damager != null) {
-     //         if (!cause.asString().equals(attacker) &&
-     //                 !tryEntity(projectile, attacker) && !tryEntity(damager, attacker)) {
-     //             return false;
-     //         }
-     //     }
-     //     else if (!cause.asString().equals(attacker)) {
-     //         return false;
-     //     }
-     // }
-
-     // if (!tryEntity(entity, target)) {
-     //     return false;
-     // }
-
-     // if (!runInCheck(path, entity.getLocation())) {
-     //     return false;
-     // }
-
+        String entity = path.eventArgLowerAt(0);
+        String casts = path.eventArgLowerAt(1);
+        String skills = path.eventArgLowerAt(2);
+        String skillId = path.switches.get("id");
+        if (this.skillId.equalsIgnoreCase(skillId)) {
+            return true;
+        }
         return super.matches(path);
     }
 
@@ -62,8 +44,9 @@ public class EntityCastSkillDenizenEvent extends BukkitScriptEvent {
 
     public ObjectTag getContext(String name) {
         return switch (name) {
-            case "character" -> new CharacterTag(character);
+            case "caster" -> new CharacterTag(character);
             case "skill_context" -> new SkillContextTag(context, character);
+            case "skill_id" -> new ElementTag(skillId);
             default -> super.getContext(name);
         };
     }
