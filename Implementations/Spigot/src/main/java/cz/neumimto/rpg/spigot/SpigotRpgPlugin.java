@@ -47,6 +47,7 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 @AutoService(NtRpgBootstrap.class)
 public class SpigotRpgPlugin implements NtRpgBootstrap {
@@ -129,45 +130,46 @@ public class SpigotRpgPlugin implements NtRpgBootstrap {
             injector.getInstance(Gui.class).setVanillaMessaging(injector.getInstance(SpigotGui.class));
             injector.getInstance(SpigotMobSettingsDao.class).load();
 
-            if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+
+            initSafely("PlaceholderAPI", () -> {
                 Log.info("PlaceholderAPI installed - registering NTRPG placeholders");
                 injector.getInstance(NtRpgPlaceholderExpansion.class).register();
-            }
+            });
 
-            if (Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays")) {
+            initSafely("HolographicDisplays", () -> {
                 Log.info("HolographicDisplays installed - NTRPG will use it for some extra guis");
                 HolographicDisplaysExpansion hde = injector.getInstance(HolographicDisplaysExpansion.class);
                 hde.init();
                 Bukkit.getPluginManager().registerEvents(hde, getInstance());
-            }
+            });
 
-            if (Bukkit.getPluginManager().isPluginEnabled("MMOItems")) {
+            initSafely("MMOItems", () ->{
                 Log.info("MMOItems installed - Provided hook for Power system and some stuff");
                 MMOItemsExpansion mmie = injector.getInstance(MMOItemsExpansion.class);
                 mmie.init(injector.getInstance(SpigotCharacterService.class));
                 Bukkit.getPluginManager().registerEvents(mmie, getInstance());
-            }
+            });
 
-            if (Bukkit.getPluginManager().isPluginEnabled("MythicMobs")) {
+            initSafely("MythicMobs", () -> {
                 Log.info("MMOItems installed - Provided hook for Power system and some stuff");
                 MythicalMobsExpansion mme = injector.getInstance(MythicalMobsExpansion.class);
                 mme.init(injector.getInstance(SpigotEntityService.class));
                 Bukkit.getPluginManager().registerEvents(mme, getInstance());
-            }
+            });
 
-            if (Bukkit.getPluginManager().isPluginEnabled("RPGRegions")) {
+            initSafely("RPGRegions", () -> {
                 Log.info("RPGRegions installed - registering experience extension");
                 RpgRegionsClassExpReward.init();
-            }
+            });
 
-            if (Bukkit.getPluginManager().isPluginEnabled("Mimic")) {
+            initSafely("Mimic", () -> {
                 MimicHook mimicHook = injector.getInstance(MimicHook.class);
                 mimicHook.init(plugin);
-            }
+            });
 
-            if (Bukkit.getPluginManager().isPluginEnabled("Denizen")) {
+            initSafely("Denizen", () -> {
                 DenizenHook.init(plugin);
-            }
+            });
 
             Rpg.get().registerListeners(injector.getInstance(OnKeyPress.class));
             PacketHandler.init();
@@ -187,6 +189,25 @@ public class SpigotRpgPlugin implements NtRpgBootstrap {
         Collection<? extends Player> onlinePlayers = Bukkit.getServer().getOnlinePlayers();
         for (Player onlinePlayer : onlinePlayers) {
             Rpg.get().getCharacterService().loadPlayerData(onlinePlayer.getUniqueId(), onlinePlayer.getName());
+        }
+
+    }
+
+    public static void initSafely(String name, Runnable r) {
+        if (!Bukkit.getPluginManager().isPluginEnabled(name)) {
+            return;
+        }
+        if (Rpg.get().getPluginConfig().DISABLED_HOOKS
+                .stream()
+                .map(String::toLowerCase)
+                .collect(Collectors.toSet())
+                .contains(name.toLowerCase())) {
+            return;
+        }
+        try {
+            r.run();
+        } catch (Throwable t) {
+            Log.error("Unable to hook into " + name, t);
         }
 
     }

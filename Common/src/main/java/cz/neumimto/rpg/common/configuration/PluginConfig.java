@@ -185,6 +185,9 @@ public class PluginConfig {
         put("period", ItemString.parse("minecraft:paper;model=14"));
     }};
 
+    @Path("DISABLED_HOOKS")
+    public List<String> DISABLED_HOOKS = new ArrayList<>();
+
     private static class ItemDamageProcessorConverter implements Converter<ItemDamageProcessor, String> {
 
         @Override
