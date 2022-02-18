@@ -12,15 +12,14 @@ pluginManagement {
 
 rootProject.name = 'NtRpgParent'
 
-include ':Generator'
-include ':Common'
-include ':Database-Persistence'
-include ':FlatFiles-Persistence'
-include ':Common-Persistence-Test'
-
-include ':Spigot'
-include ':Spigot-NMS'
-include ':Spigot-118'
+include ':Generator',
+        ':Common',
+        ':Database-Persistence',
+        ':FlatFiles-Persistence',
+        ':Common-Persistence-Test',
+        ':Spigot-NMS',
+        ':Spigot-118',
+        ':Spigot'
 
 include ':Bootstrap-Common'
 include ':Bootstrap-Spigot'

@@ -6,17 +6,25 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
 
+import java.util.Collections;
 import java.util.List;
 
-public abstract class NMSHandler {
+public class NMSHandler {
 
-    public abstract String getVersion();
+    public List<String> getVersion() {
+        return Collections.emptyList();
+    }
 
-    public abstract EntityDamageEvent handleEntityDamageEvent(LivingEntity target,
+    public EntityDamageEvent handleEntityDamageEvent(LivingEntity target,
                                                               LivingEntity damager,
                                                               EntityDamageEvent.DamageCause source,
                                                               double damage,
-                                                              double knockbackPower);
+                                                              double knockbackPower) {
 
-    public abstract void spawnFireworkExplosion(Location location, FireworkEffect effect, List<Player> observers);
+        return new EntityDamageEvent(damager, EntityDamageEvent.DamageCause.CONTACT, damage);
+    }
+
+    public void spawnFireworkExplosion(Location location, FireworkEffect effect, List<Player> observers) {
+
+    }
 }

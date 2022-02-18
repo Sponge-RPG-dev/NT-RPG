@@ -10,6 +10,7 @@ import org.bukkit.plugin.ServicePriority;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.mimic.Mimic;
+import ru.endlesscode.mimic.MimicApiLevel;
 import ru.endlesscode.mimic.classes.BukkitClassSystem;
 import ru.endlesscode.mimic.level.BukkitLevelSystem;
 import ru.endlesscode.mimic.level.ExpLevelConverter;
@@ -27,8 +28,8 @@ public class MimicHook {
     private SpigotCharacterService characterService;
 
     public void init(Plugin plugin) {
-        Mimic.getInstance().registerClassSystem(NTClassSystem::new, 1, plugin, ServicePriority.Highest);
-        Mimic.getInstance().registerLevelSystem(NtLevelSystem::new, 1, plugin, ServicePriority.Highest);
+        Mimic.getInstance().registerClassSystem(NTClassSystem::new, MimicApiLevel.CURRENT, plugin, ServicePriority.Highest);
+        Mimic.getInstance().registerLevelSystem(NtLevelSystem::new, MimicApiLevel.CURRENT, plugin, ServicePriority.Highest);
     }
 
     private class NTClassSystem extends BukkitClassSystem {

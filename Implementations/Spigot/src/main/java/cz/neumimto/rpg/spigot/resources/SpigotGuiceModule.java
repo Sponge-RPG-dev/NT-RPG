@@ -18,6 +18,7 @@ import cz.neumimto.rpg.common.inventory.InventoryHandler;
 import cz.neumimto.rpg.common.inventory.InventoryService;
 import cz.neumimto.rpg.common.inventory.crafting.runewords.RWDao;
 import cz.neumimto.rpg.common.items.ItemService;
+import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.common.permissions.PermissionService;
 import cz.neumimto.rpg.common.skills.SkillService;
 import cz.neumimto.rpg.nms.NMSHandler;
@@ -40,6 +41,7 @@ import cz.neumimto.rpg.spigot.scripting.mechanics.SpigotEntityUtils;
 import cz.neumimto.rpg.spigot.skills.SpigotSkillService;
 
 import java.util.Map;
+import java.util.ServiceLoader;
 
 public class SpigotGuiceModule extends AbstractRpgGuiceModule {
 
@@ -47,12 +49,14 @@ public class SpigotGuiceModule extends AbstractRpgGuiceModule {
     private SpigotRpg spigotRpg;
     private Map extraBindings;
     private Map<Class, Object> providers;
+    private String minecraftVersion;
 
-    public SpigotGuiceModule(SpigotRpgPlugin ntRpgPlugin, SpigotRpg spigotRpg, Map extraBindings, Map providers) {
+    public SpigotGuiceModule(SpigotRpgPlugin ntRpgPlugin, SpigotRpg spigotRpg, Map extraBindings, Map providers, String minecraftVersion) {
         this.ntRpgPlugin = ntRpgPlugin;
         this.spigotRpg = spigotRpg;
         this.extraBindings = extraBindings;
         this.providers = providers;
+        this.minecraftVersion = minecraftVersion;
     }
 
     @Override
@@ -76,7 +80,19 @@ public class SpigotGuiceModule extends AbstractRpgGuiceModule {
         map.put(ResourceLoader.class, SpigotResourceManager.class);
         map.put(RWDao.class, null);
         map.put(CharacterService.class, SpigotCharacterService.class);
-        map.put(NMSHandler.class, cz.neumimto.rpg.nms117.NMSHandler.class);
+
+        ServiceLoader<NMSHandler> load = ServiceLoader.load(NMSHandler.class, this.getClass().getClassLoader());
+        for (NMSHandler nmsHandler : load) {
+            if (nmsHandler.getVersion().contains(minecraftVersion)) {
+                map.put(NMSHandler.class, nmsHandler);
+            }
+        }
+        if (!map.containsKey(NMSHandler.class)) {
+            Log.error(" !! NTRPG is not compatible with this version of mc, some features wont work");
+            map.put(NMSHandler.class, new NMSHandler());
+        }
+
+
         map.put(SpigotEntityUtils.class, null);
         //map.put(ICharacterClassDao.class).to(JPACharacterClassDao.class);
         //map.put(IPlayerDao.class).to(JPAPlayerDao.class);

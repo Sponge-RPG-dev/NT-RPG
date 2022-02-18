@@ -34,7 +34,7 @@ import cz.neumimto.rpg.spigot.gui.SpigotGuiHelper;
 import cz.neumimto.rpg.spigot.gui.SpigotSkillTreeViewModel;
 import cz.neumimto.rpg.spigot.listeners.skillbinds.OnKeyPress;
 import cz.neumimto.rpg.spigot.packetwrapper.PacketHandler;
-import cz.neumimto.rpg.spigot.resources.SpigotGuiceModule;
+import cz.neumimto.rpg.spigot.resources.SpigotGuiceModuleBuilder;
 import de.slikey.effectlib.EffectManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -121,7 +121,7 @@ public class SpigotRpgPlugin implements NtRpgBootstrap {
                 SkilltreeCommands.class,
                 SpigotSkillBindCommands.class
 
-        }, new FlatFilesModule(), (bindings, providers) -> new SpigotGuiceModule(this, spigotRpg, bindings, providers), injector -> {
+        }, new FlatFilesModule(), (bindings, providers) -> new SpigotGuiceModuleBuilder().setNtRpgPlugin(this).setSpigotRpg(spigotRpg).setExtraBindings(bindings).setProviders(providers).setMinecraftVersion(Bukkit.getServer().getMinecraftVersion()).createSpigotGuiceModule(), injector -> {
 
             SpigotRpgPlugin.injector = injector;
             injector.injectMembers(spigotRpg);

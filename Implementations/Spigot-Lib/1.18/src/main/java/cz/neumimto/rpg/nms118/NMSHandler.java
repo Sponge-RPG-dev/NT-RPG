@@ -31,8 +31,8 @@ import java.util.List;
 public class NMSHandler extends cz.neumimto.rpg.nms.NMSHandler {
 
     @Override
-    public String getVersion() {
-        return "1.18";
+    public List<String> getVersion() {
+        return List.of("1.18", "1.18.1");
     }
 
     @Override

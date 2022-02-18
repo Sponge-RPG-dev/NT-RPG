@@ -142,8 +142,9 @@ task copyNMSImpl {
     }
 }
 
-build.dependsOn copyNMSImpl
+shadowJar.dependsOn copyNMSImpl
 build.dependsOn shadowJar
 build.mustRunAfter tasks.getByPath(':Common:build')
+build.mustRunAfter tasks.getByPath(':Spigot-118:build')
 build.mustRunAfter tasks.getByPath(':FlatFiles-Persistence:build')
 
