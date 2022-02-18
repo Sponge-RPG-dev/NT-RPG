@@ -16,6 +16,9 @@ repositories {
         url "https://hub.spigotmc.org/nexus/content/repositories/snapshots"
     }
     maven {
+        url "https://mvn.lumine.io/repository/maven-public/"
+    }
+    maven {
         url "https://oss.sonatype.org/content/repositories/snapshots"
     }
     maven {
@@ -27,15 +30,7 @@ repositories {
     maven {
         url "https://repo.dmulloy2.net/repository/public/"
     }
-    maven {
-        url "https://mvn.lumine.io/repository/maven-releases/"
-        content {
-            includeGroupByRegex "(net\\.Indyuce|io\\.lumine)"
-        }
-    }
-    maven {
-        url "https://ci.citizensnpcs.co/job/Denizen/"
-    }
+
     maven {
         url = "https://repo.citizensnpcs.co"
     }
@@ -79,14 +74,14 @@ dependencies {
     compileOnly "io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT"
     compileOnly "ru.endlesscode.mimic:mimic-bukkit-api:" + project.mimic
 
-    // compileOnly('net.Indyuce:MMOItems:' + project.mmoitems) {
-    //     exclude group: 'com.mojang', module: 'authlib'
-    //     exclude group: 'org.jetbrains', module: 'annotations'
-    // }
+     compileOnly('net.Indyuce:MMOItems:' + project.mmoitems) {
+         exclude group: 'com.mojang', module: 'authlib'
+         exclude group: 'org.jetbrains', module: 'annotations'
+     }
 
-    // compileOnly('io.lumine:MythicLib:' + project.mythiclib)
+    compileOnly('io.lumine:MythicLib-dist:' + project.mythiclib)
 
-    // compileOnly 'io.lumine.xikage:MythicMobs:' + project.mythicmobs
+    compileOnly 'io.lumine.xikage:MythicMobs:' + project.mythicmobs
 
     compileOnly 'com.gitlab.SamB440:RPGRegions-2:' + project.rpgregions
 
