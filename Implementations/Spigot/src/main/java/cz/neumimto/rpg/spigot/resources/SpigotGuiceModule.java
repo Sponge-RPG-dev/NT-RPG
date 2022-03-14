@@ -84,12 +84,12 @@ public class SpigotGuiceModule extends AbstractRpgGuiceModule {
         ServiceLoader<NMSHandler> load = ServiceLoader.load(NMSHandler.class, this.getClass().getClassLoader());
         for (NMSHandler nmsHandler : load) {
             if (nmsHandler.getVersion().contains(minecraftVersion)) {
-                map.put(NMSHandler.class, nmsHandler);
+                map.put(NMSHandler.class, nmsHandler.getClass());
             }
         }
         if (!map.containsKey(NMSHandler.class)) {
             Log.error(" !! NTRPG is not compatible with this version of mc, some features wont work");
-            map.put(NMSHandler.class, new NMSHandler());
+            map.put(NMSHandler.class, NMSHandler.class);
         }
 
 

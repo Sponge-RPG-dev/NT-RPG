@@ -32,7 +32,7 @@ public class NMSHandler extends cz.neumimto.rpg.nms.NMSHandler {
 
     @Override
     public List<String> getVersion() {
-        return List.of("1.18", "1.18.1");
+        return List.of("1.18.2");
     }
 
     @Override
