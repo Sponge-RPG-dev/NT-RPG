@@ -1,6 +1,6 @@
 # NT-RPG
 
-A new rpg plugin for Sponge
+A new rpg plugin for Spigot
 
 Discord server - There are two discords you can contact me for support
 
