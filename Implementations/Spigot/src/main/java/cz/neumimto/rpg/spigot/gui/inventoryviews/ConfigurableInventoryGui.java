@@ -148,12 +148,12 @@ public abstract class ConfigurableInventoryGui extends GuiHelper {
                 }
 
                 if (commandSender == null) {
-                    pane.bindItem(maskKez, new GuiCommand(i(maskConfig), onClick.command.replaceAll("%title%", ChatColor.stripColor(title))));
+                    pane.bindItem(maskKez, new GuiCommand(i(maskConfig), onClick.command.replaceAll("%ui_param%", param)));
                 } else {
-                    pane.bindItem(maskKez, new GuiCommand(i(maskConfig), onClick.command.replaceAll("%title%", ChatColor.stripColor(title)), commandSender));
+                    pane.bindItem(maskKez, new GuiCommand(i(maskConfig), onClick.command.replaceAll("%ui_param%", param), commandSender));
                 }
             } else {
-                if (!maskConfig.C.equalsIgnoreCase("-")) {
+                if (!maskConfig.id.toLowerCase().contains("minecraft:air") ) {
                     pane.bindItem(maskKez, new Icon(i(maskConfig)));
                 }
             }
