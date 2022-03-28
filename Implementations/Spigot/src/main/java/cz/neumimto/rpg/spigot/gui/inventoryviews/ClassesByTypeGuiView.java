@@ -51,7 +51,7 @@ public class ClassesByTypeGuiView extends ConfigurableInventoryGui {
 
     @Override
     protected String getTitle(CommandSender commandSender, GuiConfig guiConfig, String param) {
-        return param;
+        return getPrefix(guiConfig) + param;
     }
 
     @Override

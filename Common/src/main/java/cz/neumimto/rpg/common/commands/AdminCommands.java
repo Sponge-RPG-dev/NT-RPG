@@ -291,6 +291,10 @@ public class AdminCommands extends BaseCommand {
             characterService.assignPlayerToCharacter(uuid);
         }
 
+        if (reloadGuis) {
+
+        }
+
         doImplSpecificReload();
     }
 

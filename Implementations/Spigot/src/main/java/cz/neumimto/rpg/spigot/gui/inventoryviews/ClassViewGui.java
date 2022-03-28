@@ -51,7 +51,7 @@ public class ClassViewGui extends ConfigurableInventoryGui {
     @Override
     protected String getTitle(CommandSender commandSender, GuiConfig guiConfig, String param) {
         ClassDefinition cd = classService.getClassDefinitionByName(param);
-        return ChatColor.valueOf(cd.getPreferedColor()) + cd.getName();
+        return getPrefix(guiConfig) + ChatColor.valueOf(cd.getPreferedColor()) + cd.getName();
     }
 
     public static ChestGui get(String className) {

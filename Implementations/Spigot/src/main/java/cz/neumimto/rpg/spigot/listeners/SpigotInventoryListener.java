@@ -338,7 +338,6 @@ public class SpigotInventoryListener implements IRpgListener {
             }
             RpgItemStack rpgItemStack = itemService.getRpgItemStack(rpgItemType, itemStack);
 
-
             ManagedSlot managedSlot = managedSlots.get(selectedSlotIndex);
             if (inventoryHandler.handleCharacterEquipActionPre(character, managedSlot, rpgItemStack)) {
                 inventoryHandler.handleInventoryInitializationPost(character);

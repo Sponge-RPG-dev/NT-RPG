@@ -53,7 +53,7 @@ public class ClassDepedenciesGuiView extends ConfigurableInventoryGui {
     @Override
     protected String getTitle(CommandSender commandSender, GuiConfig guiConfig, String param) {
         ClassDefinition classDefinitionByName = classService.getClassDefinitionByName(param);
-        return ChatColor.valueOf(classDefinitionByName.getPreferedColor()) + classDefinitionByName.getName() + " " + localizationService.translate(LocalizationKeys.CLASS_DEPENDENCIES);
+        return getPrefix(guiConfig) + ChatColor.valueOf(classDefinitionByName.getPreferedColor()) + classDefinitionByName.getName() + " " + localizationService.translate(LocalizationKeys.CLASS_DEPENDENCIES);
     }
 
     @Override

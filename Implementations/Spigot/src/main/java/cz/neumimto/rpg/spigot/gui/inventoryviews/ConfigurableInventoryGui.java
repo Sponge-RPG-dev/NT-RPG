@@ -50,31 +50,44 @@ public abstract class ConfigurableInventoryGui extends GuiHelper {
         Path path = getPath();
 
         if (guiConfig == null) {
-            if (!Files.exists(path)) {
-                String assetAsString = assetService.getAssetAsString("gui/" + fileName);
+            reloadGuiConfig(path);
+        }
 
-                HoconParser hoconParser = new HoconParser();
-                try (StringReader stringReader = new StringReader(assetAsString)) {
-                    CommentedConfig parsed = hoconParser.parse(stringReader);
-                    guiConfig = new ObjectConverter().toObject(parsed, GuiConfig::new);
+        return createPane(guiConfig, commandSender, getPaneData(commandSender, param, guiConfig), param);
+    }
 
-                }
-            } else {
-                try (FileConfig fileConfig = FileConfig.of(path)) {
-                    fileConfig.load();
-                    guiConfig = new ObjectConverter().toObject(fileConfig, GuiConfig::new);
-                }
+    public void reloadGuiConfig() {
+        reloadGuiConfig(getPath());
+    }
+
+    private void reloadGuiConfig(Path path) {
+        if (!Files.exists(path)) {
+            String assetAsString = assetService.getAssetAsString("gui/" + fileName);
+
+            HoconParser hoconParser = new HoconParser();
+            try (StringReader stringReader = new StringReader(assetAsString)) {
+                CommentedConfig parsed = hoconParser.parse(stringReader);
+                guiConfig = new ObjectConverter().toObject(parsed, GuiConfig::new);
+
+            }
+        } else {
+            try (FileConfig fileConfig = FileConfig.of(path)) {
+                fileConfig.load();
+                guiConfig = new ObjectConverter().toObject(fileConfig, GuiConfig::new);
             }
         }
-        return createPane(guiConfig, commandSender, getPaneData(commandSender, param, guiConfig), param);
     }
 
     protected String getTitle(CommandSender commandSender, GuiConfig guiConfig, String param) {
         if (guiConfig.translationkey != null) {
-            return t(guiConfig.translationkey);
+            return getPrefix(guiConfig) + t(guiConfig.translationkey);
         } else {
-            return guiConfig.name;
+            return getPrefix(guiConfig) + guiConfig.name;
         }
+    }
+
+    protected String getPrefix(GuiConfig guiConfig) {
+        return guiConfig.prefix == null ? "" : ChatColor.WHITE + guiConfig.prefix;
     }
 
     protected ChestGui createPane(GuiConfig guiConfig, CommandSender commandSender, Map<String, List<GuiCommand>> data, String param) {
@@ -140,7 +153,9 @@ public abstract class ConfigurableInventoryGui extends GuiHelper {
                     pane.bindItem(maskKez, new GuiCommand(i(maskConfig), onClick.command.replaceAll("%title%", ChatColor.stripColor(title)), commandSender));
                 }
             } else {
-                pane.bindItem(maskKez, new Icon(i(maskConfig)));
+                if (!maskConfig.C.equalsIgnoreCase("-")) {
+                    pane.bindItem(maskKez, new Icon(i(maskConfig)));
+                }
             }
         }
         chestGui.addPane(pane);
@@ -186,7 +201,7 @@ public abstract class ConfigurableInventoryGui extends GuiHelper {
 
     @NotNull
     private Path getPath() {
-        return Paths.get(Rpg.get().getWorkingDirectory(), "gui/" + fileName);
+        return Paths.get(Rpg.get().getWorkingDirectory(), "guis/" + fileName);
     }
 
     public void clearCache() {

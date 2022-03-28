@@ -237,7 +237,7 @@ public class SpigotGuiHelper {
 
     public static Inventory createSkillTreeView(ISpigotCharacter character, SkillTree skillTree) {
         Player player = character.getPlayer();
-        Inventory i = createInventoryTemplate(player, Rpg.get().getLocalizationService().translate(LocalizationKeys.SKILLTREE));
+        Inventory i = createInventoryTemplate(player, ChatColor.WHITE + "ꐡꐡꐟ\uF200ꐣꐣꐣꐣꐣ");// + Rpg.get().getLocalizationService().translate(LocalizationKeys.SKILLTREE));
         fillSkillTreeViewInterface(i);
         return i;
     }
@@ -291,7 +291,7 @@ public class SpigotGuiHelper {
                 if (id > 0) {
                     i.setItem(slotId, getIcon(character, skillTreeViewModel, skillTree, skillService, id));
                 } else {
-                    i.setItem(slotId, blank);
+                    i.setItem(slotId, null);
                 }
             } else {
                 i.setItem(slotId, boundary);
@@ -306,7 +306,7 @@ public class SpigotGuiHelper {
     }
 
     private static ItemStack skillTreeBoundary() {
-        return unclickableInterface(Material.RED_STAINED_GLASS_PANE, 1235);
+        return unclickableInterface(Material.RED_STAINED_GLASS_PANE, 12345);
     }
 
     private static ItemStack getIcon(ISpigotCharacter character, SpigotSkillTreeViewModel skillTreeViewModel, SkillTree skillTree, SpigotSkillService skillService, short id) {

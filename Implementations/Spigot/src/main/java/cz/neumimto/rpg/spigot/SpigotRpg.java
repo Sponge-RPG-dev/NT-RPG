@@ -128,6 +128,7 @@ public final class SpigotRpg extends AbstractRpg {
                     try {
                         injector.injectMembers(a);
                         a.clearCache();
+                        a.reloadGuiConfig();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

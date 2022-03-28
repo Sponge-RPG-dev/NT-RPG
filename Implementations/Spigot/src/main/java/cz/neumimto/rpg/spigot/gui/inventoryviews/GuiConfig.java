@@ -21,6 +21,9 @@ public class GuiConfig {
     @Path("Skip")
     public String content;
 
+    @Path("Prefix")
+    public String prefix;
+
     public static class MaskConfig {
 
         @Path("C")

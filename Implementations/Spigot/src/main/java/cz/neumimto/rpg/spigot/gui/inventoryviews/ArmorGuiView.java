@@ -64,7 +64,7 @@ public class ArmorGuiView extends ConfigurableInventoryGui {
 
     @Override
     protected String getTitle(CommandSender commandSender, GuiConfig guiConfig, String param) {
-        return characterService.getCharacter((Player) commandSender).getName();
+        return getPrefix(guiConfig) + characterService.getCharacter((Player) commandSender).getName();
     }
 
     @Override

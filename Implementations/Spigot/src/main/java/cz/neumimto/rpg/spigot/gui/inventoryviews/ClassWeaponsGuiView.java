@@ -58,7 +58,7 @@ public class ClassWeaponsGuiView extends ConfigurableInventoryGui {
     @Override
     protected String getTitle(CommandSender commandSender, GuiConfig guiConfig, String param) {
         ClassDefinition classDefinitionByName = classService.getClassDefinitionByName(param);
-        return ChatColor.valueOf(classDefinitionByName.getPreferedColor()) + classDefinitionByName.getName() + " " + localizationService.translate(LocalizationKeys.WEAPONS);
+        return getPrefix(guiConfig) + ChatColor.valueOf(classDefinitionByName.getPreferedColor()) + classDefinitionByName.getName() + " " + localizationService.translate(LocalizationKeys.WEAPONS);
     }
 
     @Override

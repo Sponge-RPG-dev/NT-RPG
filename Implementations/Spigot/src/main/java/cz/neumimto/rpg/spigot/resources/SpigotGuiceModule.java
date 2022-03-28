@@ -22,6 +22,7 @@ import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.common.permissions.PermissionService;
 import cz.neumimto.rpg.common.skills.SkillService;
 import cz.neumimto.rpg.nms.NMSHandler;
+import cz.neumimto.rpg.nms.NMSHandlerAnyVersion;
 import cz.neumimto.rpg.spigot.SpigotRpg;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.assets.SpigotAssetService;
@@ -89,7 +90,7 @@ public class SpigotGuiceModule extends AbstractRpgGuiceModule {
         }
         if (!map.containsKey(NMSHandler.class)) {
             Log.error(" !! NTRPG is not compatible with this version of mc, some features wont work");
-            map.put(NMSHandler.class, NMSHandler.class);
+            map.put(NMSHandler.class, NMSHandlerAnyVersion.class);
         }
 
 

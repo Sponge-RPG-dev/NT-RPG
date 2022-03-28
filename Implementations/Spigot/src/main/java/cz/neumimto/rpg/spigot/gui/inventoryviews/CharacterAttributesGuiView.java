@@ -77,7 +77,7 @@ public class CharacterAttributesGuiView extends ConfigurableInventoryGui {
 
     @Override
     protected String getTitle(CommandSender commandSender, GuiConfig guiConfig, String param) {
-        return localizationService.translate(LocalizationKeys.ATTRIBUTES);
+        return getPrefix(guiConfig) + localizationService.translate(LocalizationKeys.ATTRIBUTES);
     }
 
     @Override
