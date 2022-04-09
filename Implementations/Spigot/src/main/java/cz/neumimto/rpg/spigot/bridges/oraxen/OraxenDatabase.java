@@ -9,6 +9,8 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class OraxenDatabase implements NamespacedItemDatabase {
 
@@ -35,6 +37,8 @@ public class OraxenDatabase implements NamespacedItemDatabase {
 
     @Override
     public Collection<String> getAll() {
-        return Arrays.asList(OraxenItems.getItemNames());
+        return Stream.of(OraxenItems.getItemNames())
+                .map(a->"oraxen:"+a)
+                .collect(Collectors.toSet());
     }
 }
