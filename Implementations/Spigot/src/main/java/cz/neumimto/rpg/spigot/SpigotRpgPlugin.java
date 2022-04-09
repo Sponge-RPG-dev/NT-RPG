@@ -21,6 +21,7 @@ import cz.neumimto.rpg.spigot.bridges.denizen.DenizenHook;
 import cz.neumimto.rpg.spigot.bridges.mimic.MimicHook;
 import cz.neumimto.rpg.spigot.bridges.mmoitems.MMOItemsExpansion;
 import cz.neumimto.rpg.spigot.bridges.mythicalmobs.MythicalMobsExpansion;
+import cz.neumimto.rpg.spigot.bridges.oraxen.OraxenHook;
 import cz.neumimto.rpg.spigot.bridges.rpgregions.RpgRegionsClassExpReward;
 import cz.neumimto.rpg.spigot.commands.SpigotAdminCommands;
 import cz.neumimto.rpg.spigot.commands.SpigotCharacterCommands;
@@ -121,7 +122,8 @@ public class SpigotRpgPlugin implements NtRpgBootstrap {
                 SkilltreeCommands.class,
                 SpigotSkillBindCommands.class
 
-        }, new FlatFilesModule(), (bindings, providers) -> new SpigotGuiceModuleBuilder().setNtRpgPlugin(this).setSpigotRpg(spigotRpg).setExtraBindings(bindings).setProviders(providers).setMinecraftVersion(Bukkit.getServer().getMinecraftVersion()).createSpigotGuiceModule(), injector -> {
+        }, new FlatFilesModule(), (bindings, providers) -> new SpigotGuiceModuleBuilder().setNtRpgPlugin(this).setSpigotRpg(spigotRpg).setExtraBindings(bindings).setProviders(providers).setMinecraftVersion(Bukkit.getServer().getMinecraftVersion()).createSpigotGuiceModule(),
+                injector -> {
 
             SpigotRpgPlugin.injector = injector;
             injector.injectMembers(spigotRpg);
@@ -163,12 +165,19 @@ public class SpigotRpgPlugin implements NtRpgBootstrap {
             });
 
             initSafely("Mimic", () -> {
+                Log.info("Mimic installed - registering level and class systems");
                 MimicHook mimicHook = injector.getInstance(MimicHook.class);
                 mimicHook.init(plugin);
             });
 
             initSafely("Denizen", () -> {
+                Log.info("Denizen installed - enabling denizen skill scripting extension");
                 DenizenHook.init(plugin);
+            });
+
+            initSafely("Oraxen", () -> {
+                Log.info("Oraxen installed - any oraxen item can be accessed from ntrpg configs using format 'oraxen:my_custom_item'");
+                injector.getInstance(OraxenHook.class).init();
             });
 
             Rpg.get().registerListeners(injector.getInstance(OnKeyPress.class));
