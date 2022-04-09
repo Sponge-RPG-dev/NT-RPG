@@ -44,6 +44,12 @@ public final class ItemString {
         return new ItemString(id.toLowerCase(), damage, armor, model, permission);
     }
 
+    public int modelOrZero() {
+        if (variant == null)
+            return 0;
+        return Integer.parseInt(variant);
+    }
+
     public static class InvalidItemStringException extends RuntimeException {
 
         private InvalidItemStringException(String s) {

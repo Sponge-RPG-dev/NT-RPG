@@ -9,6 +9,7 @@ import cz.neumimto.rpg.common.entity.PropertyService;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.items.*;
 import cz.neumimto.rpg.common.logging.Log;
+import cz.neumimto.rpg.spigot.items.ItemResolver;
 import cz.neumimto.rpg.spigot.items.SpigotRpgItemType;
 import de.tr7zw.nbtapi.NBTCompoundList;
 import de.tr7zw.nbtapi.NBTItem;
@@ -82,11 +83,7 @@ public class SpigotItemService extends AbstractItemService {
 
     @Override
     public Set<String> getAllItemIds() {
-        return Stream.of(Material.values())
-                .filter(a -> !a.isLegacy())
-                .map(Material::getKey)
-                .map(NamespacedKey::toString)
-                .collect(Collectors.toSet());
+        return ItemResolver.instance.getAll();
     }
 
     public static class SpigotItemHandler {

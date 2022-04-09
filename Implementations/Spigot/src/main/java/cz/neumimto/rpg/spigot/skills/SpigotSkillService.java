@@ -9,12 +9,14 @@ import cz.neumimto.rpg.common.skills.SkillService;
 import cz.neumimto.rpg.common.skills.types.ScriptSkill;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.effects.common.*;
+import cz.neumimto.rpg.spigot.items.ItemResolver;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.block.BlockFace;
 import org.bukkit.util.Vector;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.File;
 import java.util.Arrays;
@@ -25,6 +27,9 @@ import java.util.function.Consumer;
 
 @Singleton
 public class SpigotSkillService extends SkillService {
+
+    @Inject
+    private ItemResolver itemResolver;
 
     private Map<Character, SpigotSkillTreeInterfaceModel> guiModelByCharacter;
 

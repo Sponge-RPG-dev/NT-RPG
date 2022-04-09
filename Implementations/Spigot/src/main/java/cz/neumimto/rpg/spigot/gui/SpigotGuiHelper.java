@@ -20,6 +20,7 @@ import cz.neumimto.rpg.spigot.Resourcepack;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.gui.elements.GuiCommand;
 import cz.neumimto.rpg.spigot.gui.elements.Icon;
+import cz.neumimto.rpg.spigot.items.ItemResolver;
 import cz.neumimto.rpg.spigot.skills.SpigotSkillService;
 import cz.neumimto.rpg.spigot.skills.SpigotSkillTreeInterfaceModel;
 import de.tr7zw.nbtapi.NBTItem;
@@ -346,16 +347,16 @@ public class SpigotGuiHelper {
             lore = fromCache;
         }
 
-        Material material = getSkillIcon(skillData);
-        ItemStack itemStack = createSkillIconItemStack(material, skillData, lore);
+        ItemStack itemStack = ItemResolver.instance.findById(skillData.getIcon());
+        createSkillIconItemStack(itemStack, skillData, lore);
+
         NBTItem nbtItem = new NBTItem(itemStack);
 
         nbtItem.setString("ntrpg.item-command", "skilltree skill " + skillData.getSkillName());
         return nbtItem.getItem();
     }
 
-    private static ItemStack createSkillIconItemStack(Material material, SkillData skillData, List<String> lore) {
-        ItemStack itemStack = new ItemStack(material);
+    private static void createSkillIconItemStack(ItemStack itemStack, SkillData skillData, List<String> lore) {
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName(" ");
         itemMeta.setLore(lore);
@@ -364,17 +365,6 @@ public class SpigotGuiHelper {
             itemMeta.setCustomModelData(skillData.getModelId());
         }
         itemStack.setItemMeta(itemMeta);
-        return itemStack;
-    }
-
-    private static Material getSkillIcon(SkillData skillData) {
-        if (skillData.getIcon() != null) {
-            Material mat = Material.matchMaterial(skillData.getIcon());
-            if (mat != null) {
-                return mat;
-            }
-        }
-        return Material.STONE;
     }
 
 
@@ -382,8 +372,8 @@ public class SpigotGuiHelper {
         SkillData skillData = skillContext.getSkillData();
         List<String> lore = itemLoreFactory.toLore(character, skillData, ChatColor.GREEN);
 
-        Material material = getSkillIcon(skillData);
-        ItemStack itemStack = createSkillIconItemStack(material, skillData, lore);
+        ItemStack itemStack = ItemResolver.instance.findById(skillData.getIcon());
+        createSkillIconItemStack(itemStack, skillData, lore);
 
         NBTItem nbtItem = new NBTItem(itemStack);
         nbtItem.setString("ntrpg.spellbook.learnedspell", skillData.getSkillName());
@@ -573,25 +563,13 @@ public class SpigotGuiHelper {
         if (skillData.getSkillSettings() != null) {
             Map<String, String> nodes = skillData.getSkillSettings().getNodes();
             for (Map.Entry<String, String> s : nodes.entrySet()) {
-                String s1 = configNodeToReadableString(s.getKey());
+                String displayName = configNodeToReadableString(s.getKey());
                 String init = s.getValue();
 
                 ItemString itemString = skill_settings_icons.get(s.getKey());
-                ItemStack of = null;
-                Material material;
-                int variant = 0;
-                String displayName = s1;
-                if (itemString != null) {
-                    material = Material.matchMaterial(itemString.itemId);
-                    variant = Integer.parseInt(itemString.variant);
-                } else {
-                    material = Material.PAPER;
-                    variant = 99;
-                }
-                of = new ItemStack(material);
+                ItemStack of = ItemResolver.instance.findById(itemString.itemId, itemString.modelOrZero());
                 ItemMeta itemMeta = of.getItemMeta();
                 itemMeta.setDisplayName(displayName);
-                itemMeta.setCustomModelData(variant);
                 itemMeta.setLore(Collections.singletonList(init));
 
                 of.setItemMeta(itemMeta);

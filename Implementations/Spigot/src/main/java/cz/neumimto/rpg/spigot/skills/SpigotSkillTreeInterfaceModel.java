@@ -7,16 +7,13 @@ import org.bukkit.inventory.ItemStack;
 
 public class SpigotSkillTreeInterfaceModel implements ISkillTreeInterfaceModel {
 
-    private final Material itemType;
     private final short id;
 
     private ItemStack cache;
 
     public SpigotSkillTreeInterfaceModel(Integer modelId, Material itemType, short id) {
-        this.itemType = itemType;
         this.id = id;
         cache = SpigotGuiHelper.unclickableInterface(itemType, modelId);
-
     }
 
     public ItemStack toItemStack() {

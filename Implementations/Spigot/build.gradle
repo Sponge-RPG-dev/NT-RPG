@@ -85,6 +85,7 @@ dependencies {
 
     compileOnly 'com.gitlab.SamB440:RPGRegions-2:' + project.rpgregions
 
+    compileOnly 'com.github.oraxen:oraxen:-SNAPSHOT'
 }
 
 shadowJar {
