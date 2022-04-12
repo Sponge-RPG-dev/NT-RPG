@@ -9,7 +9,7 @@ import cz.neumimto.rpg.common.skills.SkillService;
 import cz.neumimto.rpg.common.skills.types.ScriptSkill;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.effects.common.*;
-import cz.neumimto.rpg.spigot.items.ItemResolver;
+import cz.neumimto.rpg.spigot.bridges.DatapackManager;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -29,7 +29,7 @@ import java.util.function.Consumer;
 public class SpigotSkillService extends SkillService {
 
     @Inject
-    private ItemResolver itemResolver;
+    private DatapackManager itemResolver;
 
     private Map<Character, SpigotSkillTreeInterfaceModel> guiModelByCharacter;
 

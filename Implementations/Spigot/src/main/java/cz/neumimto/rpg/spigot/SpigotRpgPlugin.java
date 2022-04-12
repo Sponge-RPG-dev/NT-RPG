@@ -33,6 +33,7 @@ import cz.neumimto.rpg.spigot.gui.SpellbookListener;
 import cz.neumimto.rpg.spigot.gui.SpigotGui;
 import cz.neumimto.rpg.spigot.gui.SpigotGuiHelper;
 import cz.neumimto.rpg.spigot.gui.SpigotSkillTreeViewModel;
+import cz.neumimto.rpg.spigot.bridges.DatapackManager;
 import cz.neumimto.rpg.spigot.listeners.skillbinds.OnKeyPress;
 import cz.neumimto.rpg.spigot.packetwrapper.PacketHandler;
 import cz.neumimto.rpg.spigot.resources.SpigotGuiceModuleBuilder;
@@ -132,10 +133,12 @@ public class SpigotRpgPlugin implements NtRpgBootstrap {
             injector.getInstance(Gui.class).setVanillaMessaging(injector.getInstance(SpigotGui.class));
             injector.getInstance(SpigotMobSettingsDao.class).load();
 
+            injector.getInstance(DatapackManager.class).init();
 
             initSafely("PlaceholderAPI", () -> {
                 Log.info("PlaceholderAPI installed - registering NTRPG placeholders");
                 injector.getInstance(NtRpgPlaceholderExpansion.class).register();
+
             });
 
             initSafely("HolographicDisplays", () -> {

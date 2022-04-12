@@ -7,7 +7,6 @@ import cz.neumimto.rpg.common.configuration.ItemString;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
-import cz.neumimto.rpg.common.gui.ConfigInventory;
 import cz.neumimto.rpg.common.gui.SkillTreeViewModel;
 import cz.neumimto.rpg.common.localization.LocalizationKeys;
 import cz.neumimto.rpg.common.localization.LocalizationService;
@@ -20,7 +19,7 @@ import cz.neumimto.rpg.spigot.Resourcepack;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.gui.elements.GuiCommand;
 import cz.neumimto.rpg.spigot.gui.elements.Icon;
-import cz.neumimto.rpg.spigot.items.ItemResolver;
+import cz.neumimto.rpg.spigot.bridges.DatapackManager;
 import cz.neumimto.rpg.spigot.skills.SpigotSkillService;
 import cz.neumimto.rpg.spigot.skills.SpigotSkillTreeInterfaceModel;
 import de.tr7zw.nbtapi.NBTItem;
@@ -50,7 +49,6 @@ public class SpigotGuiHelper {
     public static ItemLoreFactory itemLoreFactory;
 
     public static Map<String, Inventory> CACHED_MENUS = new HashMap<>();
-    public static Map<String, ConfigInventory<ItemStack, Inventory>> CACHED_MENU_TEMPLATES = new HashMap<>();
 
     public static Map<EntityDamageEvent.DamageCause, ItemStack> damageTypeToItemStack = new HashMap<>();
 
@@ -86,20 +84,17 @@ public class SpigotGuiHelper {
         damageTypeToItemStack.put(MAGIC, unclickableIcon(Material.ENCHANTED_BOOK, 354, "MAGIC"));
         damageTypeToItemStack.put(LIGHTNING, unclickableIcon(Material.NETHER_STAR, 354, "LIGHTNING"));
 
-        CACHED_MENU_TEMPLATES.clear();
         CACHED_MENUS.clear();
 
     }
 
-    public static Inventory createMenuInventoryClassesByTypeView(Player player, String classType) {
-        return CACHED_MENUS.get("classes_by_type" + classType);
-    }
-
     public static Inventory createInventoryTemplate(Player player, String title) {
+        title = DatapackManager.instance.resolveGlyphs(player, title);
         return Bukkit.createInventory(player, 6 * 9, title);
     }
 
     public static Inventory createInventoryTemplate(String title) {
+        title = DatapackManager.instance.resolveGlyphs(null, title);
         return Bukkit.createInventory(null, 6 * 9, title);
     }
 
@@ -347,7 +342,7 @@ public class SpigotGuiHelper {
             lore = fromCache;
         }
 
-        ItemStack itemStack = ItemResolver.instance.findById(skillData.getIcon());
+        ItemStack itemStack = DatapackManager.instance.findById(skillData.getIcon());
         createSkillIconItemStack(itemStack, skillData, lore);
 
         NBTItem nbtItem = new NBTItem(itemStack);
@@ -372,7 +367,7 @@ public class SpigotGuiHelper {
         SkillData skillData = skillContext.getSkillData();
         List<String> lore = itemLoreFactory.toLore(character, skillData, ChatColor.GREEN);
 
-        ItemStack itemStack = ItemResolver.instance.findById(skillData.getIcon());
+        ItemStack itemStack = DatapackManager.instance.findById(skillData.getIcon());
         createSkillIconItemStack(itemStack, skillData, lore);
 
         NBTItem nbtItem = new NBTItem(itemStack);
@@ -439,7 +434,7 @@ public class SpigotGuiHelper {
 
     public static Inventory createSpellbookInventory(ISpigotCharacter character) {
         LocalizationService localizationService = Rpg.get().getLocalizationService();
-        Inventory i = createInventoryTemplate(localizationService.translate("gui.spellbook.label"));
+        Inventory i = createInventoryTemplate(character.getPlayer(), localizationService.translate("gui.spellbook.label"));
         CharacterBase characterBase = character.getCharacterBase();
 
         Map<String, PlayerSkillContext> skillsByName = character.getSkillsByName();
@@ -567,7 +562,7 @@ public class SpigotGuiHelper {
                 String init = s.getValue();
 
                 ItemString itemString = skill_settings_icons.get(s.getKey());
-                ItemStack of = ItemResolver.instance.findById(itemString.itemId, itemString.modelOrZero());
+                ItemStack of = DatapackManager.instance.findById(itemString.itemId, itemString.modelOrZero());
                 ItemMeta itemMeta = of.getItemMeta();
                 itemMeta.setDisplayName(displayName);
                 itemMeta.setLore(Collections.singletonList(init));

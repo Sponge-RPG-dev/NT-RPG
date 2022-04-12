@@ -7,11 +7,11 @@ import cz.neumimto.rpg.common.configuration.AttributeConfig;
 import cz.neumimto.rpg.common.localization.Arg;
 import cz.neumimto.rpg.common.localization.LocalizationKeys;
 import cz.neumimto.rpg.common.localization.LocalizationService;
+import cz.neumimto.rpg.spigot.bridges.DatapackManager;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
 import cz.neumimto.rpg.spigot.gui.elements.GuiCommand;
 import de.tr7zw.nbtapi.NBTItem;
-import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -154,7 +154,7 @@ public class CharacterAttributesGuiView extends ConfigurableInventoryGui {
         String attId = config.getId();
         int transientVal = transientAttributes.get(attId);
 
-        ItemStack itemStack = i(Material.matchMaterial(config.getItemType()), config.getModel());
+        ItemStack itemStack = DatapackManager.instance.findById(config.getItemType(), config.getModel());
 
         ItemMeta itemMeta = itemStack.getItemMeta();
         List<String> lore = itemLoreFactory.toLore(config, attributeValue, transientVal);

@@ -9,9 +9,9 @@ import cz.neumimto.rpg.common.entity.PropertyService;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.localization.LocalizationKeys;
 import cz.neumimto.rpg.common.localization.LocalizationService;
+import cz.neumimto.rpg.spigot.bridges.DatapackManager;
 import cz.neumimto.rpg.spigot.gui.elements.GuiCommand;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -92,7 +92,7 @@ public class ClassAttributesGuiView extends ConfigurableInventoryGui {
     }
 
     public static ItemStack attributeConfigToItemStack(AttributeConfig a, Integer value) {
-        ItemStack itemStack = i(Material.matchMaterial(a.getItemType()), a.getModel());
+        ItemStack itemStack = DatapackManager.instance.findById(a.getItemType(), a.getModel());
 
         ItemMeta itemMeta = itemStack.getItemMeta();
 
@@ -114,7 +114,7 @@ public class ClassAttributesGuiView extends ConfigurableInventoryGui {
         itemMeta.setLore(list);
         itemMeta.addItemFlags(ItemFlag.values());
         itemMeta.setDisplayName("");
-        if (a.getModel() != null) {
+        if (a.getModel() > 0) {
             itemMeta.setCustomModelData(value);
         }
         itemStack.setItemMeta(itemMeta);

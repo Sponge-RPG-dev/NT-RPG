@@ -9,6 +9,7 @@ import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.assets.AssetService;
+import cz.neumimto.rpg.spigot.bridges.DatapackManager;
 import cz.neumimto.rpg.spigot.gui.elements.GuiCommand;
 import cz.neumimto.rpg.spigot.gui.elements.Icon;
 import org.bukkit.ChatColor;
@@ -68,7 +69,6 @@ public abstract class ConfigurableInventoryGui extends GuiHelper {
             try (StringReader stringReader = new StringReader(assetAsString)) {
                 CommentedConfig parsed = hoconParser.parse(stringReader);
                 guiConfig = new ObjectConverter().toObject(parsed, GuiConfig::new);
-
             }
         } else {
             try (FileConfig fileConfig = FileConfig.of(path)) {
@@ -87,7 +87,7 @@ public abstract class ConfigurableInventoryGui extends GuiHelper {
     }
 
     protected String getPrefix(GuiConfig guiConfig) {
-        return guiConfig.prefix == null ? "" : ChatColor.WHITE + guiConfig.prefix;
+        return guiConfig.prefix == null ? "" : ChatColor.WHITE + DatapackManager.instance.resolveGlyphs(null, guiConfig.prefix);
     }
 
     protected ChestGui createPane(GuiConfig guiConfig, CommandSender commandSender, Map<String, List<GuiCommand>> data, String param) {

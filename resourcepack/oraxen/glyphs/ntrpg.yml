@@ -1,0 +1,4 @@
+ntrpg_menu_background:
+  texture: ntrpg/gui_layout_basic.png
+  ascent: 37
+  height: 256

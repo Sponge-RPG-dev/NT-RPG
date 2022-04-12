@@ -7,6 +7,7 @@ import cz.neumimto.rpg.common.entity.players.leveling.ILevelProgression;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
+import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 
@@ -48,6 +49,11 @@ public class NtRpgPlaceholderExpansion extends PlaceholderExpansion {
         return true;
     }
 
+    @Override
+    public boolean register() {
+        DatapackManager.setGlyphResolver(PlaceholderAPI::setPlaceholders);
+        return super.register();
+    }
 
     /**
      * ntrpg_character_name - returns character name

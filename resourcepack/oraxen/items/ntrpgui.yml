@@ -1,0 +1,29 @@
+char_armor:
+  displayname: "Armor"
+  material: DIAMOND_CHESTPLATE
+  excludeFromInventory: true
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ntrpg/allowed_armor
+
+char_weapons:
+  displayname: "Weapons"
+  material: DIAMOND_SWORD
+  excludeFromInventory: true
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ntrpg/allowed_weapons
+
+char_attributes:
+  displayname: "Attributes"
+  material: APPLE
+  excludeFromInventory: true
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ntrpg/attributes

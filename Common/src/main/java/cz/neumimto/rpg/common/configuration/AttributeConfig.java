@@ -37,7 +37,8 @@ public class AttributeConfig {
     private String hexColor;
 
     @Path("Model")
-    private Integer model;
+    @PreserveNotNull
+    private int model;
 
     public AttributeConfig(String id, String name, int maxValue, boolean hidden, Map<Integer, Float> propBonus, String itemType, String description) {
         this.id = id;
@@ -80,9 +81,6 @@ public class AttributeConfig {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
 
     public String getHexColor() {
         return hexColor;
@@ -92,11 +90,8 @@ public class AttributeConfig {
         this.hexColor = hexColor;
     }
 
-    public Integer getModel() {
+    public int getModel() {
         return model;
     }
 
-    public void setModel(Integer model) {
-        this.model = model;
-    }
 }

@@ -9,21 +9,18 @@ import cz.neumimto.rpg.common.entity.PropertyService;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.items.*;
 import cz.neumimto.rpg.common.logging.Log;
-import cz.neumimto.rpg.spigot.items.ItemResolver;
+import cz.neumimto.rpg.spigot.bridges.DatapackManager;
 import cz.neumimto.rpg.spigot.items.SpigotRpgItemType;
 import de.tr7zw.nbtapi.NBTCompoundList;
 import de.tr7zw.nbtapi.NBTItem;
 import de.tr7zw.nbtapi.NBTListCompound;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Singleton
 public class SpigotItemService extends AbstractItemService {
@@ -83,7 +80,7 @@ public class SpigotItemService extends AbstractItemService {
 
     @Override
     public Set<String> getAllItemIds() {
-        return ItemResolver.instance.getAll();
+        return DatapackManager.instance.getAll();
     }
 
     public static class SpigotItemHandler {
