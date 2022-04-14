@@ -1,5 +1,77 @@
+ntrpg_back:
+  material: PAPER
+  excludeFromInventory: true
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ntrpg/back_button
+
+ntrpg_confirm:
+  material: DIAMOND
+  excludeFromInventory: true
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ntrpg/confirm_button
+
+ntrpg_agi:
+  material: EMERALD
+  excludeFromInventory: true
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ntrpg/attribute_agi.png
+
+ntrpg_con:
+  material: EMERALD
+  excludeFromInventory: true
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ntrpg/attribute_con.png
+
+ntrpg_dex:
+  material: EMERALD
+  excludeFromInventory: true
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ntrpg/attribute_dex.png
+
+ntrpg_int:
+  material: EMERALD
+  excludeFromInventory: true
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ntrpg/attribute_int.png
+
+ntrpg_str:
+  material: EMERALD
+  excludeFromInventory: true
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ntrpg/attribute_str.png
+
+ntrpg_wis:
+  material: EMERALD
+  excludeFromInventory: true
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ntrpg/attribute_wis.png
+
+
 char_armor:
-  displayname: "Armor"
   material: DIAMOND_CHESTPLATE
   excludeFromInventory: true
   Pack:
@@ -9,7 +81,6 @@ char_armor:
       - ntrpg/allowed_armor
 
 char_weapons:
-  displayname: "Weapons"
   material: DIAMOND_SWORD
   excludeFromInventory: true
   Pack:
@@ -19,7 +90,6 @@ char_weapons:
       - ntrpg/allowed_weapons
 
 char_attributes:
-  displayname: "Attributes"
   material: APPLE
   excludeFromInventory: true
   Pack:
@@ -27,3 +97,30 @@ char_attributes:
     parent_model: "item/generated"
     textures:
       - ntrpg/attributes
+
+char_spellbook:
+  material: BOOK
+  excludeFromInventory: true
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ntrpg/mode_fast
+
+char_class_slot:
+  material: RED_STAINED_GLASS_PANE
+  excludeFromInventory: true
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ntrpg/skilltree_red_slot
+
+classes_proffesion:
+  material: CRAFTING_TABLE
+  excludeFromInventory: true
+  Pack:
+    generate_model: true
+    parent_model: "block/generated"
+    textures:
+      - ntrpg/professions_button

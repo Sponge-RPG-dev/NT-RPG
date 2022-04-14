@@ -2,6 +2,8 @@ package cz.neumimto.rpg.spigot.bridges;
 
 import cz.neumimto.rpg.spigot.gui.GlyphResolver;
 import cz.neumimto.rpg.spigot.items.NamespacedItemDatabase;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -26,8 +28,8 @@ public class DatapackManager {
         itemDatabase.put(key, db);
     }
 
-    public String resolveGlyphs(Player player, String string) {
-        return glyphResolver.resolve(player, string);
+    public Component resolveGlyphs(Player player, String string) {
+        return MiniMessage.miniMessage().deserialize(glyphResolver.resolve(player, string));
     }
 
     public static void setGlyphResolver(GlyphResolver glyphResolver) {

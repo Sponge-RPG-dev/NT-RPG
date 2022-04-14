@@ -1,4 +1,14 @@
+ntrpg_shift_menubg_pre:
+  texture: required/null
+  ascent: -32768
+  height: -19
+
+ntrpg_shift_menubg_post:
+  texture: required/null
+  ascent: -32768
+  height: -188
+
 ntrpg_menu_background:
   texture: ntrpg/gui_layout_basic.png
-  ascent: 37
-  height: 256
+  ascent: 20
+  height: 228

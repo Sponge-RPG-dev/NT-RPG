@@ -7,12 +7,14 @@ import cz.neumimto.rpg.common.localization.LocalizationKeys;
 import cz.neumimto.rpg.common.localization.LocalizationService;
 import cz.neumimto.rpg.common.utils.MathUtils;
 import cz.neumimto.rpg.common.utils.StringUtils;
+import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarStyle;
-import org.bukkit.boss.BossBar;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.bossbar.BossBar;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 
 import java.text.DecimalFormat;
 import java.util.*;
@@ -37,14 +39,9 @@ public class BossBarExpNotifier extends EffectBase<Object> implements IEffectCon
         Optional<PlayerClassData> first = Optional.ofNullable(character.getClassByName(classname));
         if (first.isPresent()) {
             SessionWrapper sessionWrapper = bossBarMap.computeIfAbsent(classname, s -> new SessionWrapper());
-            BossBar serverBossBar = sessionWrapper.serverBossBar;
-            if (serverBossBar == null) {
-                serverBossBar = Bukkit.getServer().createBossBar("", BarColor.BLUE, BarStyle.SEGMENTED_10);
-                serverBossBar.setVisible(false);
 
-                serverBossBar.addPlayer(character.getPlayer());
-                sessionWrapper.serverBossBar = serverBossBar;
-            }
+            BossBar serverBossBar = sessionWrapper.serverBossBar;
+
             PlayerClassData playerClassData = first.get();
 
             sessionWrapper.currentSessionExp += exps;
@@ -54,41 +51,46 @@ public class BossBarExpNotifier extends EffectBase<Object> implements IEffectCon
             LocalizationService localizationService = Rpg.get().getLocalizationService();
             String preferedColor = playerClassData.getClassDefinition().getPreferedColor();
 
-            ChatColor textColor = ChatColor.valueOf(preferedColor);
 
-            String s = textColor + StringUtils.capitalizeFirst(classname) + " " + localizationService.translate(LocalizationKeys.LEVEL)
-                    + ChatColor.DARK_GRAY + " :" + ChatColor.GOLD + playerClassData.getLevel() + " " + ChatColor.GREEN + changeDf.format(sessionWrapper.currentSessionExp)
-                    + " " + df.format(playerClassData.getExperiencesFromLevel()) + " / " + df.format(playerClassData.getClassDefinition().getLevelProgression().getLevelMargins()[playerClassData.getLevel()]);
+            TextComponent title = Component.text(StringUtils.capitalizeFirst(classname)).color(TextColor.fromHexString(preferedColor))
+                    .append(Component.text(" " + localizationService.translate(LocalizationKeys.LEVEL)))
+                    .append(Component.text(" :").color(NamedTextColor.DARK_GRAY))
+                    .append(Component.text(playerClassData.getLevel() + " ").color(NamedTextColor.GOLD))
+                    .append(Component.text(changeDf.format(sessionWrapper.currentSessionExp) + " " + df.format(playerClassData.getExperiencesFromLevel()) + " / " + df.format(playerClassData.getClassDefinition().getLevelProgression().getLevelMargins()[playerClassData.getLevel()])).color(NamedTextColor.GREEN));
 
-
-            serverBossBar.setTitle(s);
-            serverBossBar.setProgress(MathUtils
+            double progress = MathUtils
                     .getPercentage(playerClassData.getExperiencesFromLevel(), playerClassData.getClassDefinition().getLevelProgression().getLevelMargins()[playerClassData.getLevel()])
-                    / 100);
-            serverBossBar.setVisible(true);
-            setLastTickTime(System.currentTimeMillis());
+                    / 100;
 
+
+            if (serverBossBar == null) {
+                serverBossBar = BossBar.bossBar(title,0, BossBar.Color.BLUE, BossBar.Overlay.NOTCHED_10);
+
+                sessionWrapper.serverBossBar = serverBossBar;
+            } else {
+                serverBossBar.progress((float)progress);
+                serverBossBar.name(title);
+            }
+
+            Audience player = SpigotRpgPlugin.getBukkitAudiences().player(character.getPlayer());
+            player.showBossBar(serverBossBar);
+            sessionWrapper.displayed = true;
         }
     }
 
     @Override
     public void onTick(IEffect self) {
+        Audience player = SpigotRpgPlugin.getBukkitAudiences().player(((ISpigotCharacter)getConsumer()).getPlayer());
+
         for (SessionWrapper sessionWrapper : bossBarMap.values()) {
             if (sessionWrapper.serverBossBar != null) {
                 BossBar bossBar = sessionWrapper.serverBossBar;
-                if (bossBar.isVisible()) {
-                    bossBar.setVisible(false);
-                    sessionWrapper.currentSessionExp = 0;
-                }
-            }
-        }
-    }
 
-    @Override
-    public void onRemove(IEffect self) {
-        for (SessionWrapper sessionWrapper : bossBarMap.values()) {
-            if (sessionWrapper.serverBossBar != null) {
-                sessionWrapper.serverBossBar.removePlayer(((ISpigotCharacter) getConsumer()).getPlayer());
+                if (sessionWrapper.displayed) {
+                    player.hideBossBar(bossBar);
+                    sessionWrapper.currentSessionExp = 0;
+                    sessionWrapper.displayed = false;
+                }
             }
         }
     }
@@ -124,6 +126,7 @@ public class BossBarExpNotifier extends EffectBase<Object> implements IEffectCon
     }
 
     private static class SessionWrapper {
+        public boolean displayed;
         BossBar serverBossBar;
         double currentSessionExp;
     }

@@ -5,7 +5,8 @@ import com.google.auto.service.AutoService;
 import cz.neumimto.rpg.common.classes.ClassService;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.spigot.gui.elements.GuiCommand;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.command.CommandSender;
 
 import javax.inject.Inject;
@@ -49,9 +50,9 @@ public class ClassViewGui extends ConfigurableInventoryGui {
     }
 
     @Override
-    protected String getTitle(CommandSender commandSender, GuiConfig guiConfig, String param) {
+    protected Component getTitle(CommandSender commandSender, GuiConfig guiConfig, String param) {
         ClassDefinition cd = classService.getClassDefinitionByName(param);
-        return getPrefix(guiConfig) + ChatColor.valueOf(cd.getPreferedColor()) + cd.getName();
+        return getPrefix(guiConfig).append(Component.text(cd.getName())).color(TextColor.fromHexString(cd.getPreferedColor()));
     }
 
     public static ChestGui get(String className) {

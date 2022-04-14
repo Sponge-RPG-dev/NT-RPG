@@ -8,7 +8,8 @@ import cz.neumimto.rpg.common.items.ClassItem;
 import cz.neumimto.rpg.common.localization.LocalizationKeys;
 import cz.neumimto.rpg.common.localization.LocalizationService;
 import cz.neumimto.rpg.spigot.gui.elements.GuiCommand;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemStack;
 
@@ -56,9 +57,9 @@ public class ClassWeaponsGuiView extends ConfigurableInventoryGui {
     }
 
     @Override
-    protected String getTitle(CommandSender commandSender, GuiConfig guiConfig, String param) {
+    protected Component getTitle(CommandSender commandSender, GuiConfig guiConfig, String param) {
         ClassDefinition classDefinitionByName = classService.getClassDefinitionByName(param);
-        return getPrefix(guiConfig) + ChatColor.valueOf(classDefinitionByName.getPreferedColor()) + classDefinitionByName.getName() + " " + localizationService.translate(LocalizationKeys.WEAPONS);
+        return getPrefix(guiConfig).append(Component.text(classDefinitionByName.getName() + " " + localizationService.translate(LocalizationKeys.WEAPONS)).color(TextColor.fromHexString(classDefinitionByName.getPreferedColor())));
     }
 
     @Override

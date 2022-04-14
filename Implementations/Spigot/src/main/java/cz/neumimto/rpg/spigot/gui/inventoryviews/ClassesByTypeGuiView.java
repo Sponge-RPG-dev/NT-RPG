@@ -5,6 +5,7 @@ import com.google.auto.service.AutoService;
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.classes.ClassService;
 import cz.neumimto.rpg.spigot.gui.elements.GuiCommand;
+import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemStack;
 
@@ -50,8 +51,8 @@ public class ClassesByTypeGuiView extends ConfigurableInventoryGui {
     }
 
     @Override
-    protected String getTitle(CommandSender commandSender, GuiConfig guiConfig, String param) {
-        return getPrefix(guiConfig) + param;
+    protected Component getTitle(CommandSender commandSender, GuiConfig guiConfig, String param) {
+        return getPrefix(guiConfig).append(Component.text(param));
     }
 
     @Override

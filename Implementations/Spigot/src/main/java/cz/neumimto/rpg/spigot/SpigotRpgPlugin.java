@@ -38,6 +38,7 @@ import cz.neumimto.rpg.spigot.listeners.skillbinds.OnKeyPress;
 import cz.neumimto.rpg.spigot.packetwrapper.PacketHandler;
 import cz.neumimto.rpg.spigot.resources.SpigotGuiceModuleBuilder;
 import de.slikey.effectlib.EffectManager;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -73,6 +74,12 @@ public class SpigotRpgPlugin implements NtRpgBootstrap {
         return injector;
     }
 
+    private static BukkitAudiences bukkitAudiences;
+
+    public static BukkitAudiences getBukkitAudiences() {
+        return bukkitAudiences;
+    }
+
     @NotNull
     public File getDataFolder() {
         return dataFolder;
@@ -81,6 +88,7 @@ public class SpigotRpgPlugin implements NtRpgBootstrap {
     @Override
     public void enable(Data data) {
         plugin = (JavaPlugin) data.plugin();
+        bukkitAudiences = BukkitAudiences.create(getInstance());
         dataFolder = data.workingDir();
 
         Log.setLogger(data.logger());

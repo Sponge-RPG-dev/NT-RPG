@@ -8,7 +8,8 @@ import cz.neumimto.rpg.common.entity.players.classes.DependencyGraph;
 import cz.neumimto.rpg.common.localization.LocalizationKeys;
 import cz.neumimto.rpg.common.localization.LocalizationService;
 import cz.neumimto.rpg.spigot.gui.elements.GuiCommand;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.command.CommandSender;
 
 import javax.inject.Inject;
@@ -51,9 +52,12 @@ public class ClassDepedenciesGuiView extends ConfigurableInventoryGui {
     }
 
     @Override
-    protected String getTitle(CommandSender commandSender, GuiConfig guiConfig, String param) {
+    protected Component getTitle(CommandSender commandSender, GuiConfig guiConfig, String param) {
         ClassDefinition classDefinitionByName = classService.getClassDefinitionByName(param);
-        return getPrefix(guiConfig) + ChatColor.valueOf(classDefinitionByName.getPreferedColor()) + classDefinitionByName.getName() + " " + localizationService.translate(LocalizationKeys.CLASS_DEPENDENCIES);
+
+        return getPrefix(guiConfig)
+                .append(Component.text(classDefinitionByName.getName() + " " + localizationService.translate(LocalizationKeys.CLASS_DEPENDENCIES))
+                        .color(TextColor.fromHexString(classDefinitionByName.getPreferedColor())));
     }
 
     @Override

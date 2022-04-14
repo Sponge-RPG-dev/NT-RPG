@@ -9,6 +9,8 @@ import cz.neumimto.rpg.common.localization.LocalizationService;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
 import cz.neumimto.rpg.spigot.gui.elements.GuiCommand;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -80,8 +82,9 @@ public class WeaponGuiView extends ConfigurableInventoryGui {
     }
 
     @Override
-    protected String getTitle(CommandSender commandSender, GuiConfig guiConfig, String param) {
-        return getPrefix(guiConfig) + characterService.getCharacter((Player) commandSender).getName();
+    protected Component getTitle(CommandSender commandSender, GuiConfig guiConfig, String param) {
+        String name = characterService.getCharacter((Player) commandSender).getName();
+        return getPrefix(guiConfig).append(Component.text(name).color(NamedTextColor.DARK_GRAY));
     }
 
     public static ItemStack toItemStack(RpgItemType key, double damage) {

@@ -8,6 +8,8 @@ import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
 import cz.neumimto.rpg.spigot.gui.SpigotGuiHelper;
 import cz.neumimto.rpg.spigot.gui.elements.GuiCommand;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -57,8 +59,9 @@ public class CharacterGuiView extends ConfigurableInventoryGui {
     }
 
     @Override
-    protected String getTitle(CommandSender commandSender, GuiConfig guiConfig, String param) {
-        return getPrefix(guiConfig) + characterService.getCharacter((Player) commandSender).getName();
+    protected Component getTitle(CommandSender commandSender, GuiConfig guiConfig, String param) {
+        String name = characterService.getCharacter((Player) commandSender).getName();
+        return getPrefix(guiConfig).append(Component.text(name).color(NamedTextColor.DARK_GRAY));
     }
 
     @Override

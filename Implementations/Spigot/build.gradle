@@ -74,10 +74,10 @@ dependencies {
     compileOnly "io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT"
     compileOnly "ru.endlesscode.mimic:mimic-bukkit-api:" + project.mimic
 
-     compileOnly('net.Indyuce:MMOItems:' + project.mmoitems) {
-         exclude group: 'com.mojang', module: 'authlib'
-         exclude group: 'org.jetbrains', module: 'annotations'
-     }
+    compileOnly('net.Indyuce:MMOItems:' + project.mmoitems) {
+        exclude group: 'com.mojang', module: 'authlib'
+        exclude group: 'org.jetbrains', module: 'annotations'
+    }
 
     compileOnly('io.lumine:MythicLib-dist:' + project.mythiclib)
 
@@ -86,6 +86,8 @@ dependencies {
     compileOnly 'com.gitlab.SamB440:RPGRegions-2:' + project.rpgregions
 
     compileOnly 'com.github.oraxen:oraxen:-SNAPSHOT'
+
+    compileOnly 'net.kyori:adventure-platform-bukkit:4.1.0'
 }
 
 shadowJar {

@@ -16,13 +16,14 @@ import cz.neumimto.rpg.common.model.CharacterClass;
 import cz.neumimto.rpg.common.skills.*;
 import cz.neumimto.rpg.common.skills.tree.SkillTree;
 import cz.neumimto.rpg.spigot.Resourcepack;
+import cz.neumimto.rpg.spigot.bridges.DatapackManager;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.gui.elements.GuiCommand;
 import cz.neumimto.rpg.spigot.gui.elements.Icon;
-import cz.neumimto.rpg.spigot.bridges.DatapackManager;
 import cz.neumimto.rpg.spigot.skills.SpigotSkillService;
 import cz.neumimto.rpg.spigot.skills.SpigotSkillTreeInterfaceModel;
 import de.tr7zw.nbtapi.NBTItem;
+import net.kyori.adventure.text.Component;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -89,13 +90,13 @@ public class SpigotGuiHelper {
     }
 
     public static Inventory createInventoryTemplate(Player player, String title) {
-        title = DatapackManager.instance.resolveGlyphs(player, title);
-        return Bukkit.createInventory(player, 6 * 9, title);
+        Component titleC = DatapackManager.instance.resolveGlyphs(player, title);
+        return Bukkit.createInventory(player, 6 * 9, titleC);
     }
 
     public static Inventory createInventoryTemplate(String title) {
-        title = DatapackManager.instance.resolveGlyphs(null, title);
-        return Bukkit.createInventory(null, 6 * 9, title);
+        Component titleC = DatapackManager.instance.resolveGlyphs(null, title);
+        return Bukkit.createInventory(null, 6 * 9, titleC);
     }
 
     private static ItemStack button(Resourcepack.RPItem i, String name, String command) {

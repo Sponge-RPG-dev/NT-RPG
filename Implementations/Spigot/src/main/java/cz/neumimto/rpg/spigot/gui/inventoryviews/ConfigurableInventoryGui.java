@@ -4,6 +4,7 @@ import com.electronwill.nightconfig.core.CommentedConfig;
 import com.electronwill.nightconfig.core.conversion.ObjectConverter;
 import com.electronwill.nightconfig.core.file.FileConfig;
 import com.electronwill.nightconfig.hocon.HoconParser;
+import com.github.stefvanschie.inventoryframework.adventuresupport.ComponentHolder;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
@@ -12,6 +13,8 @@ import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.spigot.bridges.DatapackManager;
 import cz.neumimto.rpg.spigot.gui.elements.GuiCommand;
 import cz.neumimto.rpg.spigot.gui.elements.Icon;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -78,22 +81,21 @@ public abstract class ConfigurableInventoryGui extends GuiHelper {
         }
     }
 
-    protected String getTitle(CommandSender commandSender, GuiConfig guiConfig, String param) {
+    protected Component getTitle(CommandSender commandSender, GuiConfig guiConfig, String param) {
         if (guiConfig.translationkey != null) {
-            return getPrefix(guiConfig) + t(guiConfig.translationkey);
+            return getPrefix(guiConfig).append(Component.text(t(guiConfig.translationkey)).color(NamedTextColor.DARK_GRAY));
         } else {
-            return getPrefix(guiConfig) + guiConfig.name;
+            return getPrefix(guiConfig).append(Component.text(guiConfig.name).color(NamedTextColor.DARK_GRAY));
         }
     }
 
-    protected String getPrefix(GuiConfig guiConfig) {
-        return guiConfig.prefix == null ? "" : ChatColor.WHITE + DatapackManager.instance.resolveGlyphs(null, guiConfig.prefix);
+    protected Component getPrefix(GuiConfig guiConfig) {
+        return DatapackManager.instance.resolveGlyphs(null, guiConfig.prefix == null ? "" : ChatColor.WHITE + guiConfig.prefix);
     }
 
     protected ChestGui createPane(GuiConfig guiConfig, CommandSender commandSender, Map<String, List<GuiCommand>> data, String param) {
-        String title = getTitle(commandSender, guiConfig, param);
-        ChestGui chestGui = new ChestGui(6, title);
-
+        Component title = getTitle(commandSender, guiConfig, param);
+        ChestGui chestGui = new ChestGui(6, ComponentHolder.of(title));
 
         char[] alphabet = "abcdefghijklmnopqrstuvwxyz".toCharArray();
         int alphabetidx = 0;

@@ -76,11 +76,6 @@ public class CharacterAttributesGuiView extends ConfigurableInventoryGui {
     }
 
     @Override
-    protected String getTitle(CommandSender commandSender, GuiConfig guiConfig, String param) {
-        return getPrefix(guiConfig) + localizationService.translate(LocalizationKeys.ATTRIBUTES);
-    }
-
-    @Override
     public Map<String, List<GuiCommand>> getPaneData(CommandSender commandSender, String className, GuiConfig guiConfig) {
         Map<String, List<GuiCommand>> map = new HashMap<>();
 
