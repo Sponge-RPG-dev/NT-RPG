@@ -118,6 +118,7 @@ public final class SpigotRpg extends AbstractRpg {
         super.reloadMainPluginConfig();
     }
 
+
     @Override
     public void doImplSpecificreload() {
         SpigotGuiHelper.initInventories();

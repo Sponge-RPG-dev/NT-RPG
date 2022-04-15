@@ -20,6 +20,7 @@ import cz.neumimto.rpg.spigot.bridges.DatapackManager;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.gui.elements.GuiCommand;
 import cz.neumimto.rpg.spigot.gui.elements.Icon;
+import cz.neumimto.rpg.spigot.gui.inventoryviews.SkillTreeViewBuilder;
 import cz.neumimto.rpg.spigot.skills.SpigotSkillService;
 import cz.neumimto.rpg.spigot.skills.SpigotSkillTreeInterfaceModel;
 import de.tr7zw.nbtapi.NBTItem;
@@ -45,7 +46,6 @@ import static org.bukkit.event.entity.EntityDamageEvent.DamageCause.*;
 public class SpigotGuiHelper {
 
     static int[] inventoryIds;
-    private static int[] attributButtonSlots;
 
     public static ItemLoreFactory itemLoreFactory;
 
@@ -66,8 +66,6 @@ public class SpigotGuiHelper {
             ids.add(j);
         }
         inventoryIds = ids.stream().mapToInt(a -> a).toArray();
-
-        attributButtonSlots = new int[]{10, 11, 12, 13, 14, 15, 16, 36, 37, 38, 39, 40, 41, 42, 43, 45};
 
         damageTypeToItemStack.put(ENTITY_ATTACK, unclickableIcon(Material.STONE_SWORD, 354, "ENTITY_ATTACK"));
         damageTypeToItemStack.put(ENTITY_SWEEP_ATTACK, unclickableIcon(Material.STONE_SWORD, 354, "ENTITY_SWEEP_ATTACK"));
@@ -94,14 +92,8 @@ public class SpigotGuiHelper {
         return Bukkit.createInventory(player, 6 * 9, titleC);
     }
 
-    public static Inventory createInventoryTemplate(String title) {
-        Component titleC = DatapackManager.instance.resolveGlyphs(null, title);
-        return Bukkit.createInventory(null, 6 * 9, titleC);
-    }
-
-    private static ItemStack button(Resourcepack.RPItem i, String name, String command) {
-        LocalizationService localizationService = Rpg.get().getLocalizationService();
-        return button(i.mat, name, localizationService.translate(command), i.model);
+    public static ItemStack button(Resourcepack.RPItem item, String name, String command) {
+        return button(item.mat, name, command, item.model);
     }
 
 
@@ -232,20 +224,6 @@ public class SpigotGuiHelper {
         });
     }
 
-    public static Inventory createSkillTreeView(ISpigotCharacter character, SkillTree skillTree) {
-        Player player = character.getPlayer();
-        Inventory i = createInventoryTemplate(player, ChatColor.WHITE + "ꐡꐡꐟ\uF200ꐣꐣꐣꐣꐣ");// + Rpg.get().getLocalizationService().translate(LocalizationKeys.SKILLTREE));
-        fillSkillTreeViewInterface(i);
-        return i;
-    }
-
-    private static void fillSkillTreeViewInterface(Inventory i) {
-        i.setItem(17, blank());
-        i.setItem(26, button(Resourcepack.UP, "Up", "skilltree north"));
-        i.setItem(35, button(Resourcepack.DOWN, "Down", "skilltree south"));
-        i.setItem(44, button(Resourcepack.RIGHT, "Right", "skilltree west"));
-        i.setItem(53, button(Resourcepack.LEFT, "Left", "skilltree east"));
-    }
 
     public static Inventory drawSkillTreeViewData(Inventory i, ISpigotCharacter character) {
         SpigotSkillTreeViewModel skillTreeViewModel = character.getLastTimeInvokedSkillTreeView();
@@ -308,7 +286,7 @@ public class SpigotGuiHelper {
 
     private static ItemStack getIcon(ISpigotCharacter character, SpigotSkillTreeViewModel skillTreeViewModel, SkillTree skillTree, SpigotSkillService skillService, short id) {
         ItemStack itemStack;
-        SpigotSkillTreeInterfaceModel guiModelById = skillService.getGuiModelById(id);
+        SpigotSkillTreeInterfaceModel guiModelById = SkillTreeViewBuilder.getGuiModelById(id);
         if (guiModelById != null) {
             itemStack = guiModelById.toItemStack();
         } else {

@@ -7,10 +7,10 @@ import cz.neumimto.rpg.common.scripting.SkillScriptHandlers;
 import cz.neumimto.rpg.common.skills.SkillResult;
 import cz.neumimto.rpg.common.skills.SkillService;
 import cz.neumimto.rpg.common.skills.types.ScriptSkill;
-import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
-import cz.neumimto.rpg.spigot.effects.common.*;
 import cz.neumimto.rpg.spigot.bridges.DatapackManager;
-import org.bukkit.Material;
+import cz.neumimto.rpg.spigot.effects.common.*;
+import cz.neumimto.rpg.spigot.gui.inventoryviews.GuiConfig;
+import cz.neumimto.rpg.spigot.gui.inventoryviews.SkillTreeViewBuilder;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.block.BlockFace;
@@ -20,9 +20,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.File;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
 
 @Singleton
@@ -31,11 +29,11 @@ public class SpigotSkillService extends SkillService {
     @Inject
     private DatapackManager itemResolver;
 
-    private Map<Character, SpigotSkillTreeInterfaceModel> guiModelByCharacter;
 
-    private Map<Short, SpigotSkillTreeInterfaceModel> guiModelById;
 
     public static Consumer<NTScript.Builder> SPIGOT_SCRIPT_SCOPE;
+
+    private static GuiConfig skilltreeGuiConfig;;
 
     static {
         SPIGOT_SCRIPT_SCOPE = builder -> {
@@ -81,11 +79,6 @@ public class SpigotSkillService extends SkillService {
     }
 
 
-    public SpigotSkillService() {
-        guiModelByCharacter = new HashMap<>();
-        guiModelById = new HashMap<>();
-    }
-
     @Override
     public Consumer<NTScript.Builder> getNTSBuilderContext() {
         return SPIGOT_SCRIPT_SCOPE;
@@ -93,24 +86,6 @@ public class SpigotSkillService extends SkillService {
 
     @Override
     public void load() {
-        int i = 0;
-        if (!SpigotRpgPlugin.testEnv) {
-            for (String str : Rpg.get().getPluginConfig().SKILLTREE_GUI) {
-                String[] split = str.split(",");
-
-                short k = (short) (Short.MAX_VALUE - i);
-                Material material = Material.matchMaterial(split[1]);
-                material = material == null ? Material.STICK : material;
-
-                SpigotSkillTreeInterfaceModel model = new SpigotSkillTreeInterfaceModel(Integer.parseInt(split[2]),
-                        material, k);
-
-                guiModelById.put(k, model);
-                guiModelByCharacter.put(split[0].charAt(0), model);
-                i++;
-            }
-        }
-
         //java service provider bug
         ntScriptEngine.STL.addAll(Arrays.asList(
                 BleedingEffect.class,
@@ -130,6 +105,7 @@ public class SpigotSkillService extends SkillService {
         ));
 
         super.load();
+        skillTrees.putAll(skillTreeDao.getAll());
     }
 
     @Override
@@ -142,11 +118,6 @@ public class SpigotSkillService extends SkillService {
 
 
     @Override
-    public ISkillTreeInterfaceModel getGuiModelByCharacter(char c) {
-        return guiModelByCharacter.get(c);
-    }
-
-    @Override
     public ScriptSkill getSkillByHandlerType(SkillScriptHandlers instance) {
         if (instance instanceof SkillScriptHandlers.Targetted) {
             return new TargetedScriptSkill();
@@ -157,7 +128,14 @@ public class SpigotSkillService extends SkillService {
         return super.getSkillByHandlerType(instance);
     }
 
-    public SpigotSkillTreeInterfaceModel getGuiModelById(Short k) {
-        return guiModelById.get(k);
+    //todo fix this
+    @Override
+    public ISkillTreeInterfaceModel getGuiModelByCharacter(char c) {
+        return SkillTreeViewBuilder.getGuiModelByCharacter(c);
+    }
+
+    @Override
+    public void loadSkilltree(Runnable r) {
+        SkillTreeViewBuilder.loadLater(r);
     }
 }

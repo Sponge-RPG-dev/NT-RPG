@@ -15,7 +15,6 @@ import cz.neumimto.rpg.spigot.gui.elements.GuiCommand;
 import cz.neumimto.rpg.spigot.gui.elements.Icon;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -36,7 +35,7 @@ public abstract class ConfigurableInventoryGui extends GuiHelper {
 
     private final String fileName;
 
-    private GuiConfig guiConfig;
+    protected GuiConfig guiConfig;
 
     public ConfigurableInventoryGui(String fileName) {
         this.fileName = fileName;
@@ -64,7 +63,7 @@ public abstract class ConfigurableInventoryGui extends GuiHelper {
         reloadGuiConfig(getPath());
     }
 
-    private void reloadGuiConfig(Path path) {
+    protected void reloadGuiConfig(Path path) {
         if (!Files.exists(path)) {
             String assetAsString = assetService.getAssetAsString("gui/" + fileName);
 
@@ -90,7 +89,7 @@ public abstract class ConfigurableInventoryGui extends GuiHelper {
     }
 
     protected Component getPrefix(GuiConfig guiConfig) {
-        return DatapackManager.instance.resolveGlyphs(null, guiConfig.prefix == null ? "" : ChatColor.WHITE + guiConfig.prefix);
+        return DatapackManager.instance.resolveGlyphs(null, guiConfig.prefix == null ? "" : guiConfig.prefix);
     }
 
     protected ChestGui createPane(GuiConfig guiConfig, CommandSender commandSender, Map<String, List<GuiCommand>> data, String param) {
@@ -202,7 +201,7 @@ public abstract class ConfigurableInventoryGui extends GuiHelper {
     }
 
     @NotNull
-    private Path getPath() {
+    protected Path getPath() {
         return Paths.get(Rpg.get().getWorkingDirectory(), "guis/" + fileName);
     }
 

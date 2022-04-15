@@ -20,10 +20,6 @@ public class Resourcepack {
     static {
         rnd = new XORShiftRnd();
     }
-    public static RPItem UP = new RPItem(Material.STICK, 12345);
-    public static RPItem DOWN = new RPItem(Material.STICK, 12346);
-    public static RPItem LEFT = new RPItem(Material.STICK, 12347);
-    public static RPItem RIGHT = new RPItem(Material.STICK, 12348);
 
     private static final int FIRE_REMNANT = 12344;
     private static final int ICE_SPIKE_LARGE = 12349;

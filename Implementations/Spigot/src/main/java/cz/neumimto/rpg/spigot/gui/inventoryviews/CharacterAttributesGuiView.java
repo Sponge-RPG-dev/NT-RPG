@@ -12,6 +12,7 @@ import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
 import cz.neumimto.rpg.spigot.gui.elements.GuiCommand;
 import de.tr7zw.nbtapi.NBTItem;
+import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -63,6 +64,11 @@ public class CharacterAttributesGuiView extends ConfigurableInventoryGui {
         instance.clearCache(executor.getUniqueId());
     }
 
+    @Override
+    protected Component getTitle(CommandSender commandSender, GuiConfig guiConfig, String param) {
+        ISpigotCharacter character = characterService.getCharacter((Player) commandSender);
+        return getPrefix(guiConfig).append(Component.text(character.getName() + " " + localizationService.translate(LocalizationKeys.ATTRIBUTES)));
+    }
 
     @Override
     public void clearCache() {

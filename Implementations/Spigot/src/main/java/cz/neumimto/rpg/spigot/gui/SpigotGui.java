@@ -161,7 +161,7 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
             player.getSkillTreeViewLocation().put(skillTree.getId(), skillTreeViewModel);
             skillTreeViewModel.setSkillTree(skillTree);
         }
-        Inventory skillTreeInventoryViewTemplate = SpigotGuiHelper.createSkillTreeView(player, skillTree);
+        Inventory skillTreeInventoryViewTemplate = SkillTreeViewBuilder.instance.createSkillTreeView(player, skillTree);
         SpigotGuiHelper.drawSkillTreeViewData(skillTreeInventoryViewTemplate, player);
         player.getPlayer().openInventory(skillTreeInventoryViewTemplate);
     }

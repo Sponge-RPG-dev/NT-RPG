@@ -264,4 +264,5 @@ public class RpgTests implements RpgApi {
     public String getPlatform() {
         return "Test";
     }
+
 }

@@ -76,7 +76,6 @@ public abstract class SkillService {
     public void load() {
         skillTrees.clear();
         reloadSkills();
-        skillTrees.putAll(skillTreeDao.getAll());
     }
 
     public Map<String, ISkill> getSkills() {
@@ -338,6 +337,10 @@ public abstract class SkillService {
                 loadSkillDefinitionFile(urlClassLoader, confFile);
             }
         }
+
+    }
+
+    public void loadSkilltree(Runnable r) {
 
     }
 }

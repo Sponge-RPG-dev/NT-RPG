@@ -70,7 +70,6 @@ ntrpg_wis:
     textures:
       - ntrpg/attribute_wis.png
 
-
 char_armor:
   material: DIAMOND_CHESTPLATE
   excludeFromInventory: true
@@ -117,10 +116,227 @@ char_class_slot:
       - ntrpg/skilltree_red_slot
 
 classes_proffesion:
-  material: CRAFTING_TABLE
+  material: PAPER
   excludeFromInventory: true
   Pack:
     generate_model: true
-    parent_model: "block/generated"
+    parent_model: "block/cube_all"
     textures:
       - ntrpg/professions_button
+
+class_dependencies:
+  material: COAL
+  excludeFromInventory: true
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ntrpg/class_dependencies
+
+skill_tree:
+  material: BOOK
+  excludeFromInventory: true
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ntrpg/skill_tree
+
+attributes:
+  material: PAPER
+  excludeFromInventory: true
+  Pack:
+    generate_model: true
+    parent_model: "item/generated"
+    textures:
+      - ntrpg/attributes
+
+skilltree_mode_a:
+  material: PAPER
+  excludeFromInventory: true
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - ntrpg/mode_detailed
+
+skilltree_mode_b:
+  material: PAPER
+  excludeFromInventory: true
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - ntrpg/mode_fast
+
+skilltree_arrow_u:
+  material: PAPER
+  excludeFromInventory: true
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - ntrpg/arrow_up
+
+skilltree_arrow_d:
+  material: PAPER
+  excludeFromInventory: true
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - ntrpg/arrow_down
+
+skilltree_arrow_l:
+  material: PAPER
+  excludeFromInventory: true
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - ntrpg/arrow_left
+
+skilltree_arrow_r:
+  material: PAPER
+  excludeFromInventory: true
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - ntrpg/arrow_right
+
+ntrpg_skill_connection_horizontal:
+  material: PAPER
+  excludeFromInventory: true
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - ntrpg/skill_connection_horizontal
+
+ntrpg_skill_connection_vertical:
+  material: PAPER
+  excludeFromInventory: true
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - ntrpg/skill_connection_vertical
+
+ntrpg_skill_connection_arrow_left:
+  material: PAPER
+  excludeFromInventory: true
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - ntrpg/skill_connection_arrow_left
+
+ntrpg_skill_connection_arrow_right:
+  material: PAPER
+  excludeFromInventory: true
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - ntrpg/skill_connection_arrow_right
+
+ntrpg_skill_connection_arrow_up:
+  material: PAPER
+  excludeFromInventory: true
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - ntrpg/skill_connection_arrow_up
+
+ntrpg_skill_connection_arrow_down:
+  material: PAPER
+  excludeFromInventory: true
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - ntrpg/skill_connection_arrow_down
+
+ntrpg_skill_connection_cross:
+  material: PAPER
+  excludeFromInventory: true
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - ntrpg/skill_connection_cross
+
+ntrpg_skill_connection_down_left:
+  material: PAPER
+  excludeFromInventory: true
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - ntrpg/skill_connection_down_left
+
+ntrpg_skill_connection_up_left:
+  material: PAPER
+  excludeFromInventory: true
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - ntrpg/skill_connection_up_left
+
+ntrpg_skill_connection_down_right:
+  material: PAPER
+  excludeFromInventory: true
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - ntrpg/skill_connection_down_right
+
+ntrpg_skill_connection_up_right:
+  material: PAPER
+  excludeFromInventory: true
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - ntrpg/skill_connection_up_right
+
+ntrpg_skill_connection_t_no_down:
+  material: PAPER
+  excludeFromInventory: true
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - ntrpg/skill_connection_t_no_down
+
+ntrpg_skill_connection_t_no_up:
+  material: PAPER
+  excludeFromInventory: true
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - ntrpg/skill_connection_t_no_up
+
+ntrpg_skill_connection_t_no_right:
+  material: PAPER
+  excludeFromInventory: true
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - ntrpg/skill_connection_t_no_right
+
+ntrpg_skill_connection_t_no_left:
+  material: PAPER
+  excludeFromInventory: true
+  Pack:
+    generate_model: true
+    parent_model: "item/handheld"
+    textures:
+      - ntrpg/skill_connection_t_no_left
+

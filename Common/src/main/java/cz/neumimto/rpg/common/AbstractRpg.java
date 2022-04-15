@@ -285,6 +285,7 @@ public abstract class AbstractRpg implements RpgApi {
 
         getPropertyService().load();
 
+
         getSkillService().load();
         getClassService().load();
         getEffectService().load();

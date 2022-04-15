@@ -95,33 +95,39 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
         try {
             ConfigList asciiMap = config.getList("AsciiMap");
 
-            int length = ((ConfigList) asciiMap.get(0)).size();
-            int rows = asciiMap.size();
-            short[][] array = new short[rows][length];
-            int i = 0;
-            for (ConfigValue data : asciiMap) {
-                ConfigList row = (ConfigList) data;
-                int j = 0;
-                for (ConfigValue configValue : row) {
+            var r = new Runnable() {
+                @Override
+                public void run() {
+                    int length = ((ConfigList) asciiMap.get(0)).size();
+                    int rows = asciiMap.size();
+                    short[][] array = new short[rows][length];
+                    int i = 0;
+                    for (ConfigValue data : asciiMap) {
+                        ConfigList row = (ConfigList) data;
+                        int j = 0;
+                        for (ConfigValue configValue : row) {
 
-                    String c1 = configValue.unwrapped().toString();
-                    if (c1.equals("X")) {
-                        skillTree.setCenter(new Pair<>(i, j));
-                        j++;
-                        continue;
+                            String c1 = configValue.unwrapped().toString();
+                            if (c1.equals("X")) {
+                                skillTree.setCenter(new Pair<>(i, j));
+                                j++;
+                                continue;
+                            }
+                            ISkillTreeInterfaceModel guiModelByCharacter = skillService.getGuiModelByCharacter(c1.charAt(0));
+                            if (guiModelByCharacter != null) {
+                                array[i][j] = guiModelByCharacter.getId();
+                            }
+                            if (MathUtils.isNumeric(c1)) {
+                                array[i][j] = Short.parseShort(c1);
+                            }
+                            j++;
+                        }
+                        i++;
                     }
-                    ISkillTreeInterfaceModel guiModelByCharacter = skillService.getGuiModelByCharacter(c1.charAt(0));
-                    if (guiModelByCharacter != null) {
-                        array[i][j] = guiModelByCharacter.getId();
-                    }
-                    if (MathUtils.isNumeric(c1)) {
-                        array[i][j] = Short.parseShort(c1);
-                    }
-                    j++;
+                    skillTree.setSkillTreeMap(array);
                 }
-                i++;
-            }
-            skillTree.setSkillTreeMap(array);
+            };
+            skillService.loadSkilltree(r);
         } catch (ConfigException | ArrayIndexOutOfBoundsException ignored) {
             error("Could not read ascii map in the skilltree " + skillTree.getId(), ignored);
             skillTree.setSkillTreeMap(new short[][]{});

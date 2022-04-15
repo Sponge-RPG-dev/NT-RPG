@@ -17,6 +17,7 @@ dependencies {
 
     compileOnly "org.spigotmc:spigot-api:" + project.spigotapi
     api "co.aikar:acf-paper:" + project.acf
+    api 'net.kyori:adventure-platform-bukkit:4.1.0'
 
     testImplementation 'com.github.seeseemelk:MockBukkit-v1.17:1.7.0'
 }
