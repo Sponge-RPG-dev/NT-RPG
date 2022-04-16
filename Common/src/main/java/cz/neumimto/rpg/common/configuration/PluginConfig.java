@@ -112,29 +112,6 @@ public class PluginConfig {
     @Conversion(ItemDamageProcessorConverter.class)
     public ItemDamageProcessor ITEM_DAMAGE_PROCESSOR = new Sum();
 
-    //spigot only and once sponge moves its ass to 15.x
-    @Path("SKILLTREE_GUI")
-    public List<String> SKILLTREE_GUI = new ArrayList<String>() {{
-
-        add("-,minecraft:cobblestone,1"); //horizontal
-        add("I,minecraft:cobblestone,2"); //vertical
-        add("<,minecraft:cobblestone,3");
-        add(">,minecraft:cobblestone,4");
-        add("^,minecraft:cobblestone,5");
-        add("V,minecraft:cobblestone,6");
-        add("+,minecraft:cobblestone,7"); //cross
-        add("┐,minecraft:cobblestone,11");
-        add("┘,minecraft:cobblestone,12"); //duh
-        add("┌,minecraft:cobblestone,13");
-        add("└,minecraft:cobblestone,14");
-        add("┴,minecraft:cobblestone,15");
-        add("┬,minecraft:cobblestone,16");
-        add("┤,minecraft:cobblestone,17");
-        add("├,minecraft:cobblestone,18");
-
-        //    add("0,minecraft:gray_stained_glass_pane,19");//empty
-    }};
-
     @Path("CREATE_FIRST_CHAR_AFTER_LOGIN")
     public boolean CREATE_FIRST_CHAR_AFTER_LOGIN = true;
 
@@ -187,6 +164,38 @@ public class PluginConfig {
 
     @Path("DISABLED_HOOKS")
     public List<String> DISABLED_HOOKS = new ArrayList<>();
+
+    @Path("TEXT_MANABAR_PREFIX")
+    public String TEXT_MANABAR_PREFIX = "oraxen:ntrpg_split3";
+
+    @Path("TEXT_MANABAR_PREFIX_REPEAT")
+    public int TEXT_MANABAR_PREFIX_REPEAT = 15;
+
+    @Path("TEXT_MANABAR_ROWS")
+    public List<String> TEXT_MANABAR_ROWS = new ArrayList<>() {{
+           add("%oraxen_ntrpg_split3%                         %oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%");
+           add("%oraxen_ntrpg_split3%                         %oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana1%%oraxen_ntrpg_split3%");
+           add("%oraxen_ntrpg_split3%                         %oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%");
+           add("%oraxen_ntrpg_split3%                         %oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana1%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%");
+           add("%oraxen_ntrpg_split3%                         %oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%");
+           add("%oraxen_ntrpg_split3%                         %oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana1%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%");
+           add("%oraxen_ntrpg_split3%                         %oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%");
+           add("%oraxen_ntrpg_split3%                         %oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana1%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%");
+           add("%oraxen_ntrpg_split3%                         %oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%");
+           add("%oraxen_ntrpg_split3%                         %oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana1%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%");
+           add("%oraxen_ntrpg_split3%                         %oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%");
+           add("%oraxen_ntrpg_split3%                         %oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana1%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%");
+           add("%oraxen_ntrpg_split3%                         %oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%");
+           add("%oraxen_ntrpg_split3%                         %oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana1%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%");
+           add("%oraxen_ntrpg_split3%                         %oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%");
+           add("%oraxen_ntrpg_split3%                         %oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana1%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%");
+           add("%oraxen_ntrpg_split3%                         %oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%");
+           add("%oraxen_ntrpg_split3%                         %oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana1%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%");
+           add("%oraxen_ntrpg_split3%                         %oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%");
+           add("%oraxen_ntrpg_split3%                         %oraxen_ntrpg_mana1%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%");
+       }};
+
+
 
     private static class ItemDamageProcessorConverter implements Converter<ItemDamageProcessor, String> {
 
@@ -257,4 +266,8 @@ public class PluginConfig {
             return list;
         }
     }
+
+
+
+
 }
