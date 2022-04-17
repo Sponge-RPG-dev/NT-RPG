@@ -173,26 +173,6 @@ public abstract class PreloadCharacter<T, P extends IParty> implements IActiveCh
     }
 
     @Override
-    public IReservable getMana() {
-        return null;
-    }
-
-    @Override
-    public void setMana(IReservable mana) {
-
-    }
-
-    @Override
-    public IReservable getHealth() {
-        return null;
-    }
-
-    @Override
-    public void setHealth(IReservable health) {
-
-    }
-
-    @Override
     public int getAttributePoints() {
         return 0;
     }

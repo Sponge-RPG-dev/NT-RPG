@@ -3,6 +3,7 @@ package cz.neumimto.rpg.spigot;
 import com.google.inject.Injector;
 import cz.neumimto.rpg.common.AbstractRpg;
 import cz.neumimto.rpg.common.assets.AssetService;
+import cz.neumimto.rpg.common.resources.ResourceService;
 import cz.neumimto.rpg.common.utils.Console;
 import cz.neumimto.rpg.spigot.bridges.DatapackManager;
 import cz.neumimto.rpg.spigot.effects.common.def.ManaBarText;
@@ -35,6 +36,7 @@ public final class SpigotRpg extends AbstractRpg {
 
     @Inject
     private Injector injector;
+
 
     protected SpigotRpg(String workingDirectory, Executor syncExecutor) {
         super(workingDirectory);
@@ -162,6 +164,8 @@ public final class SpigotRpg extends AbstractRpg {
     public boolean isDisabledInWorld(World world) {
         return isDisabledInWorld(world.getName());
     }
+
+
 
     @Override
     public String getPlatform() {

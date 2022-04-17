@@ -1,7 +1,10 @@
 package cz.neumimto.rpg.spigot.effects.common.def;
 
 import cz.neumimto.rpg.common.effects.*;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.resources.Resource;
+import cz.neumimto.rpg.common.resources.ResourceService;
 import cz.neumimto.rpg.common.utils.MathUtils;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
@@ -24,15 +27,13 @@ public class ManaBarText extends EffectBase<Object> implements IEffectContainer<
                 .toList()
                 .toArray(Component[]::new);
     }
-/*
-    /title @a actionbar [{"text":"ꐦꐦꐦꐦꐦꐦꐦꐦꐦꐦꐦꐦꐦꐦ"},{"text":"ꐡꐩꐡꐩꐢꐩꐣꐩꐣꐩꐣꐩꐣꐩꐣꐩꐣꐩꐣꐩ"}]
-*/
-    protected IActiveCharacter character;
+
+    protected ActiveCharacter character;
     protected Player player;
 
     public ManaBarText(ISpigotCharacter consumer) {
         super(name, consumer);
-        this.character = consumer;
+        this.character = (ActiveCharacter) consumer;
         this.player = consumer.getPlayer();
         effectTypes.add(CoreEffectTypes.GUI);
         setPeriod(1000);
@@ -41,7 +42,8 @@ public class ManaBarText extends EffectBase<Object> implements IEffectContainer<
 
     @Override
     public void onTick(IEffect self) {
-        double percentage = MathUtils.getPercentage(character.getMana().getValue(), character.getMana().getMaxValue());
+        Resource mana = character.getResource(ResourceService.mana);
+        double percentage = MathUtils.getPercentage(mana.getValue(), mana.getMaxValue());
         percentage = percentage > 100 ? 100 : percentage;
         percentage = percentage < 0 ? 0 : percentage;
         Component stringg = ROWS[(int) Math.round(percentage / 5)];

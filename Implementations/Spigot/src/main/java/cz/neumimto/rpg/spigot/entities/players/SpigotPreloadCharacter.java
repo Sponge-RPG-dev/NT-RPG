@@ -2,6 +2,7 @@ package cz.neumimto.rpg.spigot.entities.players;
 
 import cz.neumimto.rpg.common.entity.players.PlayerNotInGameException;
 import cz.neumimto.rpg.common.entity.players.PreloadCharacter;
+import cz.neumimto.rpg.common.resources.Resource;
 import cz.neumimto.rpg.common.skills.ISkill;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.spigot.entities.ISpigotEntity;
@@ -33,6 +34,11 @@ public class SpigotPreloadCharacter extends PreloadCharacter<Player, SpigotParty
             throw new PlayerNotInGameException(String.format(
                     "Player object with uuid=%s has not been constructed yet. Calling PreloadCharacter.getCharacter in a wrong state", getUUID()), this);
         }
+    }
+
+    @Override
+    public Resource getResource(String name) {
+        return null;
     }
 
     @Override

@@ -72,6 +72,10 @@ public class ClassDefinition implements IEffectSourceProvider {
     @Conversion(ClassRpgItemTypeAdapter.class)
     protected Set<ClassItem> weapons = new HashSet<>();
 
+    @Path("Resources")
+    @Conversion(ClassRpgItemTypeAdapter.class)
+    protected List<ClassResource> classResources = new ArrayList<>();
+
     @Path("Attributes")
     @Conversion(AttributeMapAdapter.class)
     protected Map<AttributeConfig, Integer> startingAttributes = new HashMap<>();
@@ -290,6 +294,14 @@ public class ClassDefinition implements IEffectSourceProvider {
 
     public void setItemModel(Integer itemModel) {
         this.itemModel = itemModel;
+    }
+
+    public List<ClassResource> getClassResources() {
+        return classResources;
+    }
+
+    public void setClassResources(List<ClassResource> classResources) {
+        this.classResources = classResources;
     }
 
     @Override

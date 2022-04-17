@@ -97,8 +97,6 @@ public class CharactersExtension implements ParameterResolver {
         activeCharacter.getTransientAttributes().put(TestDictionary.AGI.getId(), 94);
         activeCharacter.getTransientAttributes().put(TestDictionary.STR.getId(), 5);
 
-        activeCharacter.setHealth(new TestPool());
-        activeCharacter.setMana(new TestPool());
 
         activeCharacter.setAttributesTransaction(new HashMap<>());
 

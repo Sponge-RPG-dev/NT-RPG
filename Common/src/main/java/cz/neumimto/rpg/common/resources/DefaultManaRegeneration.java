@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.common.effects.core;
+package cz.neumimto.rpg.common.resources;
 
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.effects.*;
@@ -42,13 +42,13 @@ public class DefaultManaRegeneration extends EffectBase {
 
     @Override
     public void onTick(IEffect self) {
-        double current = character.getMana().getValue();
-        double max = character.getMana().getMaxValue();
+        Resource mana = character.getResource(ResourceService.mana);
+        double current = mana.getValue();
+        double max = mana.getMaxValue();
         if (current >= max) {
             return;
         }
-        double regen = character.getMana().getRegen()
-                * Rpg.get().getEntityService().getEntityProperty(character, CommonProperties.mana_regen_mult);
+        double regen = mana.getTickChange();
 
         CharacterManaRegainEvent event = Rpg.get().getEventFactory().createEventInstance(CharacterManaRegainEvent.class);
         event.setTarget(character);
@@ -60,7 +60,7 @@ public class DefaultManaRegeneration extends EffectBase {
         current += event.getAmount();
         if (current > max) current = max;
 
-        event.getTarget().getMana().setValue(current);
+        event.getTarget().getResource(ResourceService.mana).setValue(current);
         Gui.displayMana(character);
     }
 

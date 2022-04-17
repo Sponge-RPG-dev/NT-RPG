@@ -5,6 +5,7 @@ import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.common.items.ItemService;
+import cz.neumimto.rpg.common.resources.ResourceService;
 import cz.neumimto.rpg.common.skills.ISkill;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
@@ -128,11 +129,11 @@ public class MMOItemsExpansion implements Listener {
         }
 
         public double getMana() {
-            return getCharacter().getMana().getValue();
+            return this.getCharacter().getResource(ResourceService.mana).getValue();
         }
 
         public void setMana(double value) {
-            this.getCharacter().getMana().setValue(value);
+            this.getCharacter().getResource(ResourceService.mana).setValue(value);
         }
 
         public double getStamina() {

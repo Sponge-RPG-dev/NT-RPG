@@ -13,30 +13,12 @@ import java.util.Map;
  */
 public class MobsConfig {
 
-    @Path("damage")
-    @Conversion(SDMap.class)
-    private Map<String, Double> damage;
-
     @Path("experiences")
     @Conversion(SDMap.class)
     private Map<String, Double> experiences;
 
-    @Path("health")
-    @Conversion(SDMap.class)
-    private Map<String, Double> health;
-
     public MobsConfig() {
-        this.damage = new HashMap<>();
         this.experiences = new HashMap<>();
-        this.health = new HashMap<>();
-    }
-
-    public Map<String, Double> getDamage() {
-        return damage;
-    }
-
-    public void setDamage(Map<String, Double> damage) {
-        this.damage = damage;
     }
 
     public Map<String, Double> getExperiences() {
@@ -47,13 +29,6 @@ public class MobsConfig {
         this.experiences = experiences;
     }
 
-    public Map<String, Double> getHealth() {
-        return health;
-    }
-
-    public void setHealth(Map<String, Double> health) {
-        this.health = health;
-    }
 
     private static class SDMap implements Converter<Map<String, Double>, Config> {
         @Override

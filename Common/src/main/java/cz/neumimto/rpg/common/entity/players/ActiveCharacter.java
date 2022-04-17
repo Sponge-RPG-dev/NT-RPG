@@ -15,6 +15,7 @@ import cz.neumimto.rpg.common.items.RpgItemType;
 import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.common.model.CharacterBase;
 import cz.neumimto.rpg.common.model.EquipedSlot;
+import cz.neumimto.rpg.common.resources.Resource;
 import cz.neumimto.rpg.common.skills.IPlayerSkillHandler;
 import cz.neumimto.rpg.common.skills.ISkill;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
@@ -57,9 +58,6 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
     private transient boolean invulnerable;
 
     private transient boolean isusingguimod;
-
-    private IReservable mana;
-    private IReservable health;
 
     private transient P party;
 
@@ -106,6 +104,8 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
     private Map<String, Integer> attrTransaction;
 
     private SkillTreeChangeObserver skillUpgradeObserver;
+
+    private Map<String, Resource> classResources = new HashMap<>();
 
     private transient Stack<String> guiCommands = new Stack<>();
 
@@ -246,26 +246,6 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
     @Override
     public double getCharacterPropertyWithoutLevel(int index) {
         return primaryProperties[index];
-    }
-
-    @Override
-    public IReservable getMana() {
-        return mana;
-    }
-
-    @Override
-    public void setMana(IReservable mana) {
-        this.mana = mana;
-    }
-
-    @Override
-    public IReservable getHealth() {
-        return health;
-    }
-
-    @Override
-    public void setHealth(IReservable health) {
-        this.health = health;
     }
 
     @Override
@@ -752,6 +732,11 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
     @Override
     public Stack<String> getGuiCommandHistory() {
         return guiCommands;
+    }
+
+    @Override
+    public Resource getResource(String name) {
+        return classResources.get(name);
     }
 
     @Override

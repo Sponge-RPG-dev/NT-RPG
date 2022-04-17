@@ -33,9 +33,6 @@ import java.util.*;
  */
 public class PluginConfig {
 
-    @Path("OVERRIDE_MOBS")
-    public boolean OVERRIDE_MOBS = false;
-
     @Path("COMBAT_TIME")
     public long COMBAT_TIME = 20000L;
 

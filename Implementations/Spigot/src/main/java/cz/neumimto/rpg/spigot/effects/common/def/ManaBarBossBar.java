@@ -2,6 +2,8 @@ package cz.neumimto.rpg.spigot.effects.common.def;
 
 import cz.neumimto.rpg.common.effects.*;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.resources.Resource;
+import cz.neumimto.rpg.common.resources.ResourceService;
 import cz.neumimto.rpg.common.utils.MathUtils;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import org.bukkit.Bukkit;
@@ -34,8 +36,9 @@ public class ManaBarBossBar extends EffectBase<Object> implements IEffectContain
 
     @Override
     public void notifyManaChange() {
-        double maxValue = character.getMana().getMaxValue();
-        double value = character.getMana().getValue();
+        Resource mana = character.getResource(ResourceService.mana);
+        double maxValue = mana.getMaxValue();
+        double value = mana.getValue();
         String title = ChatColor.BLUE.toString() + ChatColor.BOLD + "Mana" + ChatColor.GOLD + ": " + ChatColor.BLUE + value
                 + ChatColor.GOLD + " / " + ChatColor.BLUE + maxValue;
 

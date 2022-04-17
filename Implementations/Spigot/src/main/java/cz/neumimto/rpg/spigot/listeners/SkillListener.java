@@ -5,6 +5,8 @@ import cz.neumimto.rpg.common.ResourceLoader;
 import cz.neumimto.rpg.common.effects.EffectType;
 import cz.neumimto.rpg.common.entity.IReservable;
 import cz.neumimto.rpg.common.events.damage.DamageIEntityEarlyEvent;
+import cz.neumimto.rpg.common.resources.Resource;
+import cz.neumimto.rpg.common.resources.ResourceService;
 import cz.neumimto.rpg.spigot.effects.SpigotEffectService;
 import cz.neumimto.rpg.spigot.effects.common.ManaShieldEffect;
 import cz.neumimto.rpg.spigot.effects.common.Rage;
@@ -67,13 +69,13 @@ public class SkillListener implements IRpgListener {
                 event.setDamage(newDamage);
                 if (event.getTarget() instanceof ISpigotCharacter) {
                     ISpigotCharacter character = (ISpigotCharacter) event.getTarget();
-                    IReservable mana = character.getMana();
+                    Resource mana = character.getResource(ResourceService.mana);
                     double newMana = mana.getValue() - manaDamage;
                     if (newMana <= 0) {
                         newMana = 0;
                         effectService.removeEffect(manaShieldEffect, event.getTarget());
                     }
-                    character.getMana().setValue(newMana);
+                   mana.setValue(newMana);
                 }
             }
         }

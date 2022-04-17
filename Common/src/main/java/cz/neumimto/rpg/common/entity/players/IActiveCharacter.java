@@ -18,6 +18,7 @@ import cz.neumimto.rpg.common.items.RpgItemStack;
 import cz.neumimto.rpg.common.items.RpgItemType;
 import cz.neumimto.rpg.common.model.CharacterBase;
 import cz.neumimto.rpg.common.model.EquipedSlot;
+import cz.neumimto.rpg.common.resources.Resource;
 import cz.neumimto.rpg.common.skills.ISkill;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.skills.preprocessors.InterruptableSkillPreprocessor;
@@ -26,8 +27,9 @@ import cz.neumimto.rpg.common.skills.tree.SkillTreeSpecialization;
 import java.util.*;
 
 /**
- * Created by NeumimTo on 23.7.2015.
+ * Deprecated will be replaced with ActiveCharacter as base reference - soon in valve time units
  */
+@Deprecated
 public interface IActiveCharacter<T, P extends IParty> extends IEntity<T> {
 
     Map<String, PlayerClassData> getClasses();
@@ -70,11 +72,7 @@ public interface IActiveCharacter<T, P extends IParty> extends IEntity<T> {
 
     double getCharacterPropertyWithoutLevel(int index);
 
-    IReservable getMana();
-
-    void setMana(IReservable mana);
-
-    void setHealth(IReservable health);
+    Resource getResource(String name);
 
     int getAttributePoints();
 

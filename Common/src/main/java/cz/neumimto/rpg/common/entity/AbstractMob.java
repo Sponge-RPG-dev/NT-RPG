@@ -12,7 +12,6 @@ public abstract class AbstractMob<T> implements IMob<T> {
     protected double experiences;
     protected Map<String, IEffectContainer<Object, IEffect<Object>>> effectSet;
     protected Map<Integer, Double> properties;
-    protected IEntityResource entityHealth;
 
     public AbstractMob() {
         properties = new HashMap<Integer, Double>();
@@ -27,11 +26,6 @@ public abstract class AbstractMob<T> implements IMob<T> {
     @Override
     public void setExperiences(double experiences) {
         this.experiences = experiences;
-    }
-
-    @Override
-    public IEntityResource getHealth() {
-        return entityHealth;
     }
 
     @Override

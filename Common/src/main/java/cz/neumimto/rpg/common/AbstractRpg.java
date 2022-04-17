@@ -27,6 +27,7 @@ import cz.neumimto.rpg.common.localization.Arg;
 import cz.neumimto.rpg.common.localization.LocalizationService;
 import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.common.permissions.PermissionService;
+import cz.neumimto.rpg.common.resources.ResourceService;
 import cz.neumimto.rpg.common.scripting.NTScriptEngine;
 import cz.neumimto.rpg.common.skills.SkillService;
 import cz.neumimto.rpg.common.utils.FileUtils;
@@ -83,6 +84,8 @@ public abstract class AbstractRpg implements RpgApi {
     private Injector injector;
     @Inject
     private Gui gui;
+    @Inject
+    private ResourceService resourceService;
 
     protected Executor currentThreadExecutor;
 
@@ -309,6 +312,11 @@ public abstract class AbstractRpg implements RpgApi {
     }
 
     protected abstract Class getPluginClass();
+
+    @Override
+    public ResourceService getResourceService() {
+        return resourceService;
+    }
 
     @Override
     public Executor getSyncExecutor() {

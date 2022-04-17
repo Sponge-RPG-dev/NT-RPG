@@ -49,8 +49,4 @@ public class SpigotEntityService extends AbstractEntityService<LivingEntity, Spi
         }
     }
 
-    public double getMobDamage(LivingEntity entity) {
-        return getMobDamage(entity.getWorld().getName(), entity.getType().name());
-    }
-
 }

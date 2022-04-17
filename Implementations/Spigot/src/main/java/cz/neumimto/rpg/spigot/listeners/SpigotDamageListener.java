@@ -158,9 +158,6 @@ public class SpigotDamageListener extends AbstractDamageListener implements IRpg
             rpgItemStack = character.getMainHand();
         } else {
             LivingEntity attackerEntity = (LivingEntity) attacker.getEntity();
-            if (!pluginConfig.OVERRIDE_MOBS && entityService.handleMobDamage(attackerEntity.getWorld().getName(), attackerEntity.getUniqueId())) {
-                newdamage = entityService.getMobDamage(attackerEntity);
-            }
             if (attackerEntity instanceof HumanEntity) {
                 ItemStack itemStack = ((HumanEntity) attackerEntity).getItemInHand();
 
@@ -228,11 +225,7 @@ public class SpigotDamageListener extends AbstractDamageListener implements IRpg
             ISpigotCharacter c = (ISpigotCharacter) attacker;
             newdamage += spigotDamageService.getCharacterProjectileDamage(c, projectile.getType());
         } else if (attacker.getType() == IEntityType.MOB) {
-            LivingEntity attackerEntity = (LivingEntity) attacker.getEntity();
-            PluginConfig pluginConfig = Rpg.get().getPluginConfig();
-            if (!pluginConfig.OVERRIDE_MOBS && entityService.handleMobDamage(attackerEntity.getWorld().getName(), attackerEntity.getUniqueId())) {
-                newdamage = entityService.getMobDamage(attackerEntity);
-            }
+
         }
 
         SpigotEntityProjectileDamageEarlyEvent e = Rpg.get().getEventFactory().createEventInstance(SpigotEntityProjectileDamageEarlyEvent.class);

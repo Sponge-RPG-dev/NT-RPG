@@ -39,14 +39,6 @@ public class MythicalMobsExpansion implements Listener {
     public static class MythicalMobsHandler extends AbstractEntityService.EntityHandler<SpigotMob> {
 
         @Override
-        public SpigotMob initializeEntity(MobSettingsDao dao, SpigotMob iEntity, String dimName, String type) {
-            if (MythicMobs.inst().getAPIHelper().isMythicMob(iEntity.getUUID())) {
-                return iEntity;
-            }
-            return super.initializeEntity(dao, iEntity, dimName, type);
-        }
-
-        @Override
         public double getExperiences(MobSettingsDao dao, String dimName, String type, UUID uuid) {
             if (MythicMobs.inst().getAPIHelper().isMythicMob(uuid)) {
                 Entity entity = Bukkit.getServer().getEntity(uuid);
@@ -55,12 +47,5 @@ public class MythicalMobsExpansion implements Listener {
             }
             return super.getExperiences(dao, dimName, type, uuid);
         }
-
-        @Override
-        public boolean handleMobDamage(String dimension, UUID uuid) {
-            return !MythicMobs.inst().getAPIHelper().isMythicMob(uuid);
-        }
-
     }
-
 }
