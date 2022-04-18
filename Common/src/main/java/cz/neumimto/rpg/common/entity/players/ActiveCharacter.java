@@ -740,7 +740,12 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
     }
 
     @Override
-    public java.lang.String toString() {
+    public void addResource(String name, Resource resource) {
+        classResources.put(name, resource);
+    }
+
+    @Override
+    public String toString() {
         return "ActiveCharacter{" +
                 "uuid=" + pl +
                 " name=" + getName() +

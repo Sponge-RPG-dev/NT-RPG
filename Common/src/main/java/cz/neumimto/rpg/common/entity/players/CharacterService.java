@@ -39,7 +39,6 @@ import cz.neumimto.rpg.common.skills.tree.SkillTree;
 import cz.neumimto.rpg.common.skills.tree.SkillTreeSpecialization;
 import cz.neumimto.rpg.common.utils.ActionResult;
 import cz.neumimto.rpg.common.utils.DebugLevel;
-import cz.neumimto.rpg.common.utils.MathUtils;
 import cz.neumimto.rpg.common.utils.exceptions.MissingConfigurationException;
 
 import javax.inject.Inject;
@@ -495,6 +494,7 @@ public abstract class CharacterService<T extends IActiveCharacter> {
         }
         Set<CharacterClass> characterClasses = characterBase.getCharacterClasses();
 
+        resourceService.initializeForPlayer(activeCharacter);
         for (CharacterClass characterClass : characterClasses) {
             ClassDefinition classDef = classService.getClassDefinitionByName(characterClass.getName());
             if (classDef == null) {
@@ -507,17 +507,17 @@ public abstract class CharacterService<T extends IActiveCharacter> {
             if (classDef.getSkillTreeType() == SkillTreeType.AUTO && classDef.getSkillTree() != SkillTree.Default) {
                 classDef.getSkillTreeType().processCharacterInit(activeCharacter, playerClassData);
             }
+            resourceService.addResource((ActiveCharacter) activeCharacter, classDef);
         }
 
         inventoryService.initializeManagedSlots(activeCharacter);
+
 
         Set<PlayerSkillContext> skillData = resolveSkills(characterBase, activeCharacter);
         recalculateProperties(activeCharacter);
         for (PlayerSkillContext dt : skillData) {
             dt.getSkill().onCharacterInit(activeCharacter, dt.getLevel(), dt);
         }
-
-
         return activeCharacter;
     }
 

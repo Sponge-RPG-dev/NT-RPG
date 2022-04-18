@@ -13,12 +13,12 @@ import org.bukkit.plugin.java.annotation.plugin.author.Author;
 
 import java.io.File;
 
-@Plugin(name = "NT-RPG", version = "2.1.0-SNAPSHOT-13")
+@Plugin(name = "Ntrpg", version = "2.1.0-SNAPSHOT-13")
 @Description("Complete combat overhaul with classes and skills")
 @Author("NeumimTo")
 @Website("https://github.com/Sponge-RPG-dev/NT-RPG")
 @LogPrefix("NTRPG")
-@ApiVersion(ApiVersion.Target.v1_17)
+@ApiVersion(ApiVersion.Target.v1_18)
 @SoftDependsOn(
         value = {
                 @SoftDependency("PlaceholderAPI"),

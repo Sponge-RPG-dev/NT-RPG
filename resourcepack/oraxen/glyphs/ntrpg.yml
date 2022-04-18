@@ -28,6 +28,21 @@ ntrpg_mana2:
   ascent: 2
   height: 27
 
+ntrpg_rage0:
+  texture: ntrpg/rage0
+  ascent: 2
+  height: 27
+
+ntrpg_rage1:
+  texture: ntrpg/rage1
+  ascent: 2
+  height: 27
+
+ntrpg_rage2:
+  texture: ntrpg/rage2
+  ascent: 2
+  height: 27
+
 ntrpg_split1:
   texture: ntrpg/space_split
   ascent: -32768

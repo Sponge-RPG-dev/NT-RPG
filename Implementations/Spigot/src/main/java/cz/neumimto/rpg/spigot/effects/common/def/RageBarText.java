@@ -1,15 +1,12 @@
 package cz.neumimto.rpg.spigot.effects.common.def;
 
-import cz.neumimto.nts.annotations.ScriptMeta;
 import cz.neumimto.rpg.common.effects.*;
 import cz.neumimto.rpg.common.entity.IEffectConsumer;
-import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.resources.Resource;
 import cz.neumimto.rpg.common.resources.ResourceService;
 import cz.neumimto.rpg.common.utils.MathUtils;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 
@@ -18,10 +15,10 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.IntStream;
 
-@Generate(id = "name", description = "A component which displays mana in action bar")
-public class ManaBarText extends EffectBase<Object> implements IEffectContainer<Object, ManaBarText>, ManaBar {
+@Generate(id = "name", description = "A component which displays rage in action bar")
+public class RageBarText extends EffectBase<Object> implements IEffectContainer<Object, RageBarText> {
 
-    public static final String name = "ManaBarText";
+    public static final String name = "RageBarText";
 
     public static Component[] ROWS;
 
@@ -38,11 +35,11 @@ public class ManaBarText extends EffectBase<Object> implements IEffectContainer<
 
 
     @Generate.Constructor
-    public ManaBarText(IEffectConsumer consumer) {
+    public RageBarText(IEffectConsumer consumer) {
         this((IActiveCharacter) consumer);
     }
 
-    public ManaBarText(IActiveCharacter consumer) {
+    public RageBarText(IActiveCharacter consumer) {
         super(name, consumer);
         this.character = consumer;
         this.player = (Player) consumer.getEntity();
@@ -53,8 +50,8 @@ public class ManaBarText extends EffectBase<Object> implements IEffectContainer<
 
     @Override
     public void onTick(IEffect self) {
-        Resource mana = character.getResource(ResourceService.mana);
-        double percentage = MathUtils.getPercentage(mana.getValue(), mana.getMaxValue());
+        Resource rage = character.getResource(ResourceService.rage);
+        double percentage = MathUtils.getPercentage(rage.getValue(), rage.getMaxValue());
         percentage = percentage > 100 ? 100 : percentage;
         percentage = percentage < 0 ? 0 : percentage;
         Component stringg = ROWS[(int) Math.round(percentage / 5)];
@@ -70,12 +67,12 @@ public class ManaBarText extends EffectBase<Object> implements IEffectContainer<
     }
 
     @Override
-    public Set<ManaBarText> getEffects() {
+    public Set<RageBarText> getEffects() {
         return new HashSet<>(Collections.singletonList(this));
     }
 
     @Override
-    public ManaBarText getStackedValue() {
+    public RageBarText getStackedValue() {
         return this;
     }
 
@@ -85,21 +82,19 @@ public class ManaBarText extends EffectBase<Object> implements IEffectContainer<
     }
 
     @Override
-    public ManaBarText constructEffectContainer() {
+    public RageBarText constructEffectContainer() {
         return this;
     }
 
     @Override
-    public void stackEffect(ManaBarText v, IEffectSourceProvider effectSourceProvider) {
+    public void stackEffect(RageBarText v, IEffectSourceProvider effectSourceProvider) {
 
     }
 
-    @Override
-    public void notifyManaChange() {
+    public void notifyRageChange() {
         onTick(this);
     }
 
-    @Override
     public IEffect asEffect() {
         return this;
     }

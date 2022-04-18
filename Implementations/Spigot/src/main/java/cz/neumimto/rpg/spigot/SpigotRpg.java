@@ -7,6 +7,7 @@ import cz.neumimto.rpg.common.resources.ResourceService;
 import cz.neumimto.rpg.common.utils.Console;
 import cz.neumimto.rpg.spigot.bridges.DatapackManager;
 import cz.neumimto.rpg.spigot.effects.common.def.ManaBarText;
+import cz.neumimto.rpg.spigot.effects.common.def.RageBarText;
 import cz.neumimto.rpg.spigot.gui.SpigotGuiHelper;
 import cz.neumimto.rpg.spigot.gui.inventoryviews.ConfigurableInventoryGui;
 import net.kyori.adventure.text.Component;
@@ -150,6 +151,13 @@ public final class SpigotRpg extends AbstractRpg {
                     .toList()
                     .toArray(Component[]::new);
 
+            RageBarText.ROWS = getPluginConfig().TEXT_RAGEBAR_ROWS.stream()
+                    .map(a -> {
+                        Component prefixc = dm.resolveGlyphs(null, sb.toString());
+                        return prefixc.append(dm.resolveGlyphs(null, a));
+                    })
+                    .toList()
+                    .toArray(Component[]::new);
         }
     }
 

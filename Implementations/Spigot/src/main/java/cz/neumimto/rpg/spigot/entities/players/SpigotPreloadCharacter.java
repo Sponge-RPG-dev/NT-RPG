@@ -42,6 +42,11 @@ public class SpigotPreloadCharacter extends PreloadCharacter<Player, SpigotParty
     }
 
     @Override
+    public void addResource(String name, Resource resource) {
+
+    }
+
+    @Override
     public SpigotSkillTreeViewModel getLastTimeInvokedSkillTreeView() {
         return null;
     }

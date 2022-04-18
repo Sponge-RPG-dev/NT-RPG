@@ -68,8 +68,6 @@ public class ClassDefinitionDao {
 
                     result.setExperienceSources(expU);
                     set.add(result);
-
-
                 }
             }
         } catch (IOException e) {

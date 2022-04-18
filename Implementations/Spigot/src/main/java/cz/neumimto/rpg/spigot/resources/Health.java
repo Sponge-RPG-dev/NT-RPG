@@ -9,15 +9,16 @@ import java.util.UUID;
 
 public class Health extends Resource {
 
-    private UUID uuid;
+    UUID uuid;
 
-    public Health(IActiveCharacter character) {
+    public Health(UUID entity) {
         super("health");
-        uuid = character.getUUID();
+        uuid = entity;
     }
 
     @Override
     protected void setMaxValue(double maxValue) {
+        if (maxValue == 0) maxValue = 1;
         Bukkit.getServer().getPlayer(uuid).getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(maxValue);
     }
 

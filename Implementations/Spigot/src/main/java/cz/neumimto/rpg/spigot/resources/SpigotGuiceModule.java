@@ -20,6 +20,7 @@ import cz.neumimto.rpg.common.inventory.crafting.runewords.RWDao;
 import cz.neumimto.rpg.common.items.ItemService;
 import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.common.permissions.PermissionService;
+import cz.neumimto.rpg.common.resources.ResourceService;
 import cz.neumimto.rpg.common.skills.SkillService;
 import cz.neumimto.rpg.nms.NMSHandler;
 import cz.neumimto.rpg.nms.NMSHandlerAnyVersion;
@@ -81,6 +82,7 @@ public class SpigotGuiceModule extends AbstractRpgGuiceModule {
         map.put(ResourceLoader.class, SpigotResourceManager.class);
         map.put(RWDao.class, null);
         map.put(CharacterService.class, SpigotCharacterService.class);
+        map.put(ResourceService.class, SpigotResourceService.class);
 
         ServiceLoader<NMSHandler> load = ServiceLoader.load(NMSHandler.class, this.getClass().getClassLoader());
         for (NMSHandler nmsHandler : load) {

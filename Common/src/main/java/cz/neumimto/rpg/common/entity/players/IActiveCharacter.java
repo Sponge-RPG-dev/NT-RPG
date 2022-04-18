@@ -74,6 +74,8 @@ public interface IActiveCharacter<T, P extends IParty> extends IEntity<T> {
 
     Resource getResource(String name);
 
+    void addResource(String name, Resource resource);
+
     int getAttributePoints();
 
     void setAttributePoints(int attributePoints);
