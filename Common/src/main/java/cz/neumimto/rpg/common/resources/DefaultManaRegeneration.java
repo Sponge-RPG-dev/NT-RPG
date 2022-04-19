@@ -2,10 +2,9 @@ package cz.neumimto.rpg.common.resources;
 
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.effects.*;
-import cz.neumimto.rpg.common.entity.CommonProperties;
 import cz.neumimto.rpg.common.entity.IEffectConsumer;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.common.events.character.CharacterManaRegainEvent;
+import cz.neumimto.rpg.common.events.character.CharacterResourceChangeValueEvent;
 import cz.neumimto.rpg.common.gui.Gui;
 
 /**
@@ -50,18 +49,20 @@ public class DefaultManaRegeneration extends EffectBase {
         }
         double regen = mana.getTickChange();
 
-        CharacterManaRegainEvent event = Rpg.get().getEventFactory().createEventInstance(CharacterManaRegainEvent.class);
+        CharacterResourceChangeValueEvent event = Rpg.get().getEventFactory().createEventInstance(CharacterResourceChangeValueEvent.class);
         event.setTarget(character);
         event.setAmount(regen);
         event.setSource(this);
+        event.setType(ResourceService.mana);
 
         if (Rpg.get().postEvent(event)) return;
 
         current += event.getAmount();
         if (current > max) current = max;
 
-        event.getTarget().getResource(ResourceService.mana).setValue(current);
-        Gui.displayMana(character);
+        Resource resource = event.getTarget().getResource(event.getType());
+        resource.setValue(current);
+        Rpg.get().getResourceService().notifyChange(character, resource);
     }
 
     @Override

@@ -1,17 +1,28 @@
 package cz.neumimto.rpg.spigot.events.character;
 
 import cz.neumimto.rpg.common.IRpgElement;
-import cz.neumimto.rpg.common.events.character.CharacterManaRegainEvent;
+import cz.neumimto.rpg.common.events.character.CharacterResourceChangeValueEvent;
 import org.bukkit.event.HandlerList;
 
 /**
  * Created by NeumimTo on 9.8.2015.
  */
-public class SpigotCharacterManaRegainEvent extends AbstractCharacterEvent implements CharacterManaRegainEvent {
+public class SpigotCharacterResourceChangeValueEvent extends AbstractCharacterEvent implements CharacterResourceChangeValueEvent {
 
+    private String type;
     private double amount;
     private IRpgElement source;
     private boolean cancelled;
+
+    @Override
+    public String getType() {
+        return type;
+    }
+
+    @Override
+    public void setType(String type) {
+        this.type = type;
+    }
 
     @Override
     public double getAmount() {

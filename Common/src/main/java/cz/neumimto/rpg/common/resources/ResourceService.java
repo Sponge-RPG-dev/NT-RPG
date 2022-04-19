@@ -1,5 +1,7 @@
 package cz.neumimto.rpg.common.resources;
 
+import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.effects.IEffect;
 import cz.neumimto.rpg.common.entity.AbstractMob;
 import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
@@ -20,11 +22,27 @@ public abstract class ResourceService {
 
     protected Map<String, FactoryResource> registry = new HashMap<>();
 
+    protected Map<String, UiResourceTracker> guiRegistry = new HashMap<>();
+
     public ResourceService() {
         registry.put(mana, (character) -> new Resource(mana));
         registry.put(rage, (character) -> new Resource(rage));
         registry.put(health, this::getHpTracker);
    //     registry.put(stamina, this::getStaminaTracker);
+
+
+    }
+
+    public void reload() {
+
+    }
+
+    public Map<String, FactoryResource> getRegistry() {
+        return registry;
+    }
+
+    public Map<String, UiResourceTracker> getGuiRegistry() {
+        return guiRegistry;
     }
 
     protected abstract Resource getHpTracker(IActiveCharacter character);
@@ -75,9 +93,7 @@ public abstract class ResourceService {
         }
     }
 
-    public void initializeResources(ActiveCharacter character) {
-
-    }
+    public abstract void notifyChange(IActiveCharacter character, Resource resource);
 
     public abstract Resource initializeForAi(AbstractMob mob);
 

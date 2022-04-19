@@ -44,7 +44,7 @@ public class SpigotEventFactory extends EventFactoryImpl {
         super.registerProvider(CharacterChangeGroupEvent.class, SpigotCharacterChangeGroupEvent::new);
         super.registerProvider(CharacterGainedLevelEvent.class, SpigotCharacterGainedLevelEvent::new);
         super.registerProvider(CharacterInitializedEvent.class, SpigotCharacterInitializedEvent::new);
-        super.registerProvider(CharacterManaRegainEvent.class, SpigotCharacterManaRegainEvent::new);
+        super.registerProvider(CharacterResourceChangeValueEvent.class, SpigotCharacterResourceChangeValueEvent::new);
         super.registerProvider(CharacterSkillLearnAttemptEvent.class, SpigotCharacterSkillLearnAttemptEvent::new);
         super.registerProvider(CharacterSkillRefundAttemptEvent.class, SpigotCharacterSkillRefundAttemptEvent::new);
         super.registerProvider(CharacterSkillUpgradeEvent.class, SpigotCharacterSkillUpgradeEvent::new);
@@ -72,7 +72,7 @@ public class SpigotEventFactory extends EventFactoryImpl {
         super.registerProvider(SpigotCharacterChangeGroupEvent.class, SpigotCharacterChangeGroupEvent::new);
         super.registerProvider(SpigotCharacterGainedLevelEvent.class, SpigotCharacterGainedLevelEvent::new);
         super.registerProvider(SpigotCharacterInitializedEvent.class, SpigotCharacterInitializedEvent::new);
-        super.registerProvider(SpigotCharacterManaRegainEvent.class, SpigotCharacterManaRegainEvent::new);
+        super.registerProvider(SpigotCharacterResourceChangeValueEvent.class, SpigotCharacterResourceChangeValueEvent::new);
         super.registerProvider(SpigotCharacterSkillLearnAttemptEvent.class, SpigotCharacterSkillLearnAttemptEvent::new);
         super.registerProvider(SpigotCharacterSkillRefundAttemptEvent.class, SpigotCharacterSkillRefundAttemptEvent::new);
         super.registerProvider(SpigotCharacterSkillUpgradeEvent.class, SpigotCharacterSkillUpgradeEvent::new);

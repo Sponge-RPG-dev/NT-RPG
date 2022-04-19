@@ -121,17 +121,6 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
     }
 
     @Override
-    public void displayMana(ISpigotCharacter character) {
-        IEffectContainer<Object, ManaBarBossBar> barExpNotifier = character.getEffect(ManaBarBossBar.name);
-        ManaBar effect = (ManaBar) barExpNotifier;
-        if (effect == null) {
-            effect = Rpg.get().getPluginConfig().MANABAR_VERSION.equals("BOSSBAR") ? new ManaBarBossBar(character) : new ManaBarText(character);
-            effectService.addEffect(effect.asEffect(), InternalEffectSourceProvider.INSTANCE);
-        }
-        effect.notifyManaChange();
-    }
-
-    @Override
     public void sendCannotUseItemNotification(ISpigotCharacter character, String item, CannotUseItemReason reason) {
         if (reason == CannotUseItemReason.CONFIG) {
             character.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, translate(LocalizationKeys.CANNOT_USE_ITEM_CONFIGURATION_REASON));

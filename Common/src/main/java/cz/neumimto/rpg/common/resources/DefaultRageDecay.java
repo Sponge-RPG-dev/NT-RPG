@@ -4,6 +4,7 @@ import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.effects.*;
 import cz.neumimto.rpg.common.entity.IEffectConsumer;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.events.character.CharacterResourceChangeValueEvent;
 import cz.neumimto.rpg.common.gui.Gui;
 
 /**
@@ -42,13 +43,12 @@ public class DefaultRageDecay extends EffectBase {
     public void onTick(IEffect self) {
         Resource rage = character.getResource(ResourceService.rage);
         double current = rage.getValue();
-        double max = rage.getMaxValue();
         if (current <= 0) {
             return;
         }
         double regen = rage.getTickChange();
 
-        CharacterRageRegainEvent event = Rpg.get().getEventFactory().createEventInstance(CharacterRageRegainEvent.class);
+        CharacterResourceChangeValueEvent event = Rpg.get().getEventFactory().createEventInstance(CharacterResourceChangeValueEvent.class);
         event.setTarget(character);
         event.setAmount(regen);
         event.setSource(this);
@@ -58,8 +58,9 @@ public class DefaultRageDecay extends EffectBase {
         current -= event.getAmount();
         if (current < 0) current = 0;
 
-        event.getTarget().getResource(ResourceService.rage).setValue(current);
-        Gui.displayRage(character);
+        Resource resource = event.getTarget().getResource(event.getType());
+        resource.setValue(current);
+        Rpg.get().getResourceService().notifyChange(event.getTarget(), resource);
     }
 
     @Override

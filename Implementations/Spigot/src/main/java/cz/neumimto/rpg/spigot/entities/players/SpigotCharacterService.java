@@ -33,13 +33,6 @@ public class SpigotCharacterService extends CharacterService<ISpigotCharacter> {
     private ResourceService resourceService;
 
     @Override
-    protected ISpigotCharacter createCharacter(UUID player, CharacterBase characterBase) {
-        SpigotCharacter iActiveCharacter = new SpigotCharacter(player, characterBase, PropertyService.LAST_ID);
-        resourceService.initializeResources(iActiveCharacter);
-        return iActiveCharacter;
-    }
-
-    @Override
     protected void initSpellbook(ISpigotCharacter activeCharacter, String[][] spellbookPages) {
         activeCharacter.setSpellbook(new ItemStack[3][9]);
     }
