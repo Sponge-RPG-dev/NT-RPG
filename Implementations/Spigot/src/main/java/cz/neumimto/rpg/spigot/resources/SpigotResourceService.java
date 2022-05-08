@@ -1,43 +1,81 @@
 package cz.neumimto.rpg.spigot.resources;
 
+import com.electronwill.nightconfig.core.conversion.ObjectConverter;
+import com.electronwill.nightconfig.core.file.FileConfig;
+import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import cz.neumimto.rpg.common.Rpg;
-import cz.neumimto.rpg.common.effects.IEffect;
 import cz.neumimto.rpg.common.entity.AbstractMob;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.resources.Resource;
 import cz.neumimto.rpg.common.resources.ResourceService;
-import cz.neumimto.rpg.common.resources.UiResourceTracker;
-import org.bukkit.plugin.Plugin;
+import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
+import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitTask;
-import org.jetbrains.annotations.NotNull;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 @Singleton
 public class SpigotResourceService extends ResourceService {
 
+    @Inject
+    private Injector injector;
+    private Map<String, ResourceGui> guiRegistry = new HashMap<>();
+
+    private Set<Integer> tasks = new HashSet<>();
 
     public SpigotResourceService() {
         super();
-        guiRegistry.put(mana, new UiResourceTracker(true) {
-            @Override
-            public IEffect getOrCreateEffect(IActiveCharacter character, Resource resource) {
+        injector.getInstance(UIActionbarIcons.class);
+    }
 
-                effect = Rpg.get().getPluginConfig().RESOURCE_UI_DISPLAY_TYPE.equals("BOSSBAR") ? new ManaBarBossBar(character) : new ManaBarText(character);
+    @Override
+    public void reload() {
+        for (Integer id : tasks) {
+            Bukkit.getScheduler().cancelTask(id);
+        }
+        tasks.clear();
 
-                Rpg.get().getPluginConfig().
-                        IEffectContainer<Object, ManaBarBossBar> barExpNotifier = character.getEffect(ManaBarBossBar.name);
-                ManaBar effect = (ManaBar) barExpNotifier;
-                if (effect == null) {
-                    effectService.addEffect(effect.asEffect(), InternalEffectSourceProvider.INSTANCE);
-                }
-                effect.notifyManaChange();
-                return effect;
+        Path path = Paths.get(Rpg.get().getWorkingDirectory(), "Resources.conf");
+
+        ResourcesGui gui = null;
+        if (Files.exists(path)) {
+            try (FileConfig fc = FileConfig.of(path)) {
+                fc.load();
+                gui = new ObjectConverter().toObject(fc, ResourcesGui::new);
             }
-        });
+        }
 
-        guiRegistry.put(rage, new UiResourceTracker(true) {{
+        if (gui == null || gui.resources == null) {
+            return;
+        }
 
-        }});
+        for (ResourceGui resource : gui.resources) {
+            if (resource.enabled) {
+                switch (resource.type) {
+                    case "actionbar_icons":
+                        var uiActionbarIcons = new UIActionbarIcons(resource);
+                        injector.injectMembers(uiActionbarIcons);
+                        BukkitTask bukkitTask = Bukkit.getScheduler().runTask(SpigotRpgPlugin.getInstance(), uiActionbarIcons);
+                        tasks.add(bukkitTask.getTaskId());
+                        break;
+                    case "actionbar_papi_text":
+                        var papi = new UIActionbarPapiText(resource);
+                        injector.injectMembers(papi);
+                        BukkitTask bukkitTask2 = Bukkit.getScheduler().runTask(SpigotRpgPlugin.getInstance(), papi);
+                        tasks.add(bukkitTask2.getTaskId());
+                        break;
+                }
+            }
+        }
+
     }
 
     @Override
@@ -55,17 +93,5 @@ public class SpigotResourceService extends ResourceService {
         return new MobHealth(mob.getUUID());
     }
 
-    @Override
-    public void notifyChange(IActiveCharacter character, Resource resource) {
-        UiResourceTracker uiResourceTracker = guiRegistry.get(resource.getType());
-        if (uiResourceTracker == null) {
-            return;
-        }
-        if (uiResourceTracker.isEffectBased) {
-            IEffect effect = uiResourceTracker.getOrCreateEffect(character, resource);
-            effect.onTick(effect);
-        } else {
-            uiResourceTracker.runCustomTask(character, resource);
-        }
-    }
+
 }

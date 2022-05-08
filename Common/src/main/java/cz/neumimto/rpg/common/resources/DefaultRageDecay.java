@@ -42,6 +42,9 @@ public class DefaultRageDecay extends EffectBase {
     @Override
     public void onTick(IEffect self) {
         Resource rage = character.getResource(ResourceService.rage);
+        if (rage == null) {
+            return;
+        }
         double current = rage.getValue();
         if (current <= 0) {
             return;
@@ -60,7 +63,6 @@ public class DefaultRageDecay extends EffectBase {
 
         Resource resource = event.getTarget().getResource(event.getType());
         resource.setValue(current);
-        Rpg.get().getResourceService().notifyChange(event.getTarget(), resource);
     }
 
     @Override

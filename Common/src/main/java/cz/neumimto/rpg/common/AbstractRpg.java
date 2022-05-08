@@ -209,6 +209,8 @@ public abstract class AbstractRpg implements RpgApi {
             FileUtils.generateConfigFile(new PluginConfig(), properties);
         }
 
+        resourceService.reload();
+
         try (FileConfig fileConfig = FileConfig.of(properties.getPath())) {
             fileConfig.load();
             PluginConfig pluginConfig = new PluginConfig();

@@ -1011,11 +1011,6 @@ public abstract class CharacterService<T extends IActiveCharacter> {
         character.getSkillUpgradeObservers().processChange(attribute);
     }
 
-    /**
-     * sponge is creating new player object each time a player is (re)spawned @link https://github
-     * .com/SpongePowered/SpongeCommon/commit/384180f372fa233bcfc110a7385f43df2a85ef76
-     * character object is heavy, lets do not recreate its instance just reasign player and effect
-     */
     public void respawnCharacter(T character) {
         effectService.removeAllEffects(character);
 
@@ -1044,13 +1039,16 @@ public abstract class CharacterService<T extends IActiveCharacter> {
 
     public void gainMana(T character, double manaToAdd, IRpgElement source) {
         Resource mana = character.getResource(ResourceService.mana);
+        if (mana == null) {
+            return;
+        }
         double current = mana.getValue();
         double max = mana.getMaxValue();
         if (current >= max) {
             return;
         }
 
-        CharacterManaRegainEvent event = Rpg.get().getEventFactory().createEventInstance(CharacterManaRegainEvent.class);
+        CharacterResourceChangeValueEvent event = Rpg.get().getEventFactory().createEventInstance(CharacterResourceChangeValueEvent.class);
 
         event.setAmount(manaToAdd);
         event.setTarget(character);
@@ -1067,7 +1065,6 @@ public abstract class CharacterService<T extends IActiveCharacter> {
         if (current > max) current = max;
 
         event.getTarget().getResource(ResourceService.mana).setValue(current);
-        Gui.displayMana(character);
     }
 
     public ActionResult canGainClass(T character, ClassDefinition klass) {

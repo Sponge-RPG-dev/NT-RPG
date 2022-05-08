@@ -4,7 +4,6 @@ import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.configuration.ItemDamageProcessor;
 import cz.neumimto.rpg.common.effects.*;
 import cz.neumimto.rpg.common.entity.EntityHand;
-import cz.neumimto.rpg.common.entity.IReservable;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.common.entity.players.party.IParty;
@@ -737,6 +736,11 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
     @Override
     public Resource getResource(String name) {
         return classResources.get(name);
+    }
+
+    @Override
+    public void removeResource(String type) {
+        classResources.remove(type);
     }
 
     @Override

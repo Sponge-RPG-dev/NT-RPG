@@ -3,7 +3,6 @@ package cz.neumimto.rpg.common.skills.reagents;
 import cz.neumimto.rpg.common.entity.CommonProperties;
 import cz.neumimto.rpg.common.entity.EntityService;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.common.gui.Gui;
 import cz.neumimto.rpg.common.resources.Resource;
 import cz.neumimto.rpg.common.resources.ResourceService;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
@@ -28,7 +27,7 @@ public class ManaCast extends SkillCastMechanic {
     @Override
     public SkillResult processBefore(IActiveCharacter character, PlayerSkillContext context) {
         Resource mana = character.getResource(ResourceService.mana);
-        if (mana.getValue() < getManaRequired(character, context)) {
+        if (mana == null || mana.getValue() < getManaRequired(character, context)) {
             return SkillResult.NO_MANA;
         }
         return SkillResult.OK;
@@ -38,7 +37,6 @@ public class ManaCast extends SkillCastMechanic {
     public void processAfterSuccess(IActiveCharacter character, PlayerSkillContext context) {
         Resource mana = character.getResource(ResourceService.mana);
         mana.setValue(mana.getValue() - getManaRequired(character, context));
-        Gui.displayMana(character);
     }
 
     @Override

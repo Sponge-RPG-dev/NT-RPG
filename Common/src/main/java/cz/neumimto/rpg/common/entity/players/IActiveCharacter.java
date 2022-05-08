@@ -7,7 +7,6 @@ import cz.neumimto.rpg.common.effects.IEffectContainer;
 import cz.neumimto.rpg.common.entity.EntityHand;
 import cz.neumimto.rpg.common.entity.IEntity;
 import cz.neumimto.rpg.common.entity.IEntityType;
-import cz.neumimto.rpg.common.entity.IReservable;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.common.entity.players.party.IParty;
@@ -265,4 +264,6 @@ public interface IActiveCharacter<T, P extends IParty> extends IEntity<T> {
     SkillTreeChangeObserver getSkillUpgradeObservers();
 
     Stack<String> getGuiCommandHistory();
+
+    void removeResource(String type);
 }

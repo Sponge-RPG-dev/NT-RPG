@@ -42,6 +42,9 @@ public class DefaultManaRegeneration extends EffectBase {
     @Override
     public void onTick(IEffect self) {
         Resource mana = character.getResource(ResourceService.mana);
+        if (mana == null) {
+            return;
+        }
         double current = mana.getValue();
         double max = mana.getMaxValue();
         if (current >= max) {
@@ -62,7 +65,6 @@ public class DefaultManaRegeneration extends EffectBase {
 
         Resource resource = event.getTarget().getResource(event.getType());
         resource.setValue(current);
-        Rpg.get().getResourceService().notifyChange(character, resource);
     }
 
     @Override

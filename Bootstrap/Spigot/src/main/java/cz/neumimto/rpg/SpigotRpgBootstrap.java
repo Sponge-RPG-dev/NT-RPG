@@ -27,7 +27,8 @@ import java.io.File;
                 @SoftDependency("MMOItems"),
                 @SoftDependency("RPGRegions"),
                 @SoftDependency("Mimic"),
-                @SoftDependency("Oraxen")
+                @SoftDependency("Oraxen"),
+                @SoftDependency("ItemsAdder")
         }
 )
 @DependsOn(

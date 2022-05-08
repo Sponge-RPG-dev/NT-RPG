@@ -18,6 +18,7 @@ import cz.neumimto.rpg.persistence.flatfiles.FlatFilesModule;
 import cz.neumimto.rpg.spigot.bridges.HolographicDisplaysExpansion;
 import cz.neumimto.rpg.spigot.bridges.NtRpgPlaceholderExpansion;
 import cz.neumimto.rpg.spigot.bridges.denizen.DenizenHook;
+import cz.neumimto.rpg.spigot.bridges.itemsadder.ItemsAdderHook;
 import cz.neumimto.rpg.spigot.bridges.mimic.MimicHook;
 import cz.neumimto.rpg.spigot.bridges.mmoitems.MMOItemsExpansion;
 import cz.neumimto.rpg.spigot.bridges.mythicalmobs.MythicalMobsExpansion;
@@ -146,7 +147,6 @@ public class SpigotRpgPlugin implements NtRpgBootstrap {
             initSafely("PlaceholderAPI", () -> {
                 Log.info("PlaceholderAPI installed - registering NTRPG placeholders");
                 injector.getInstance(NtRpgPlaceholderExpansion.class).register();
-
             });
 
             initSafely("HolographicDisplays", () -> {
@@ -189,6 +189,11 @@ public class SpigotRpgPlugin implements NtRpgBootstrap {
             initSafely("Oraxen", () -> {
                 Log.info("Oraxen installed - any oraxen item can be accessed from ntrpg configs using format 'oraxen:my_custom_item'");
                 injector.getInstance(OraxenHook.class).init();
+            });
+
+            initSafely("ItemsAddder", () -> {
+                Log.info("ItemsAdder installed - any ia item can be accessed from ntrpg configs using format 'itemsadder:my_custom_item'");
+                injector.getInstance(ItemsAdderHook.class).init();
             });
 
             Rpg.get().registerListeners(injector.getInstance(OnKeyPress.class));

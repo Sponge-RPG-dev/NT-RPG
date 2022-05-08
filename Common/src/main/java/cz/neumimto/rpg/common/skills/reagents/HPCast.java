@@ -5,6 +5,7 @@ import cz.neumimto.rpg.common.entity.CommonProperties;
 import cz.neumimto.rpg.common.entity.EntityService;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.resources.Resource;
+import cz.neumimto.rpg.common.resources.ResourceService;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.skills.SkillData;
 import cz.neumimto.rpg.common.skills.SkillNodes;
@@ -29,7 +30,7 @@ public class HPCast extends SkillCastMechanic {
 
     @Override
     public SkillResult processBefore(IActiveCharacter character, PlayerSkillContext context) {
-        Resource health = character.getResource("health");
+        Resource health = character.getResource(ResourceService.health);
         if (health.getValue() < getHPCost(character, context)) {
             return SkillResult.NO_HP;
         }
@@ -38,7 +39,7 @@ public class HPCast extends SkillCastMechanic {
 
     @Override
     public void processAfterSuccess(IActiveCharacter character, PlayerSkillContext context) {
-        Resource health = character.getResource("health");
+        Resource health = character.getResource(ResourceService.health);
         double newHp = health.getValue() - getHPCost(character, context);
         if (newHp <= 0) {
             kill(character);
