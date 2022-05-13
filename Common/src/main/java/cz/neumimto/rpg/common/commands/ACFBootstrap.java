@@ -11,7 +11,6 @@ import cz.neumimto.rpg.common.effects.IGlobalEffect;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
-import cz.neumimto.rpg.common.inventory.runewords.RuneWord;
 import cz.neumimto.rpg.common.skills.ISkill;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.skills.SkillData;
@@ -132,20 +131,10 @@ public class ACFBootstrap {
                 Rpg.get().getCharacterService().getCharacter(c.getIssuer().getUniqueId()).getSkills().keySet()
         );
 
-        manager.getCommandCompletions().registerAsyncCompletion("socket-type", c ->
-                Rpg.get().getItemService().getSocketTypes().keySet()
-        );
 
         manager.getCommandCompletions().registerAsyncCompletion("runeword", c -> {
             return Collections.emptyList();
             //todo
-        });
-
-        manager.getCommandContexts().registerContext(RuneWord.class, c -> {
-            String firstArg = c.getFirstArg();
-            c.popFirstArg();
-            //todo
-            return new RuneWord();
         });
 
         manager.getCommandContexts().registerIssuerOnlyContext(IActiveCharacter.class, c -> {

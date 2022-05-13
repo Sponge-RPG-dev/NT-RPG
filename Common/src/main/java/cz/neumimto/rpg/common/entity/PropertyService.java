@@ -41,7 +41,6 @@ public class PropertyService {
     private Map<String, Integer> idMap = new HashMap<>();
     private Map<Integer, String> nameMap = new HashMap<>();
     private Map<Integer, Float> defaults = new HashMap<>();
-    private Set<Integer> damageRecalc = new HashSet<>();
     private Map<String, AttributeConfig> attributeMap = new HashMap<>();
 
     public int getLastId() {
@@ -123,14 +122,6 @@ public class PropertyService {
         }
         defaults.put(getIdByName(s), aFloat);
         info(" Property \"" + s + "\" default value is now " + aFloat + ". This change wont affect already joined players!");
-    }
-
-    public boolean updatingRequiresDamageRecalc(int propertyId) {
-        return damageRecalc.contains(propertyId);
-    }
-
-    public void addPropertyToRequiresDamageRecalc(int i) {
-        damageRecalc.add(i);
     }
 
     public void loadMaximalServerPropertyValues() {

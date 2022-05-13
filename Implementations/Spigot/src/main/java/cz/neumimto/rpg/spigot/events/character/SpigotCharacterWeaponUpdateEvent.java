@@ -4,22 +4,22 @@ import cz.neumimto.rpg.common.events.character.CharacterWeaponUpdateEvent;
 import cz.neumimto.rpg.common.items.RpgItemType;
 import org.bukkit.event.HandlerList;
 
-import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by NeumimTo on 10.10.2015.
  */
 public class SpigotCharacterWeaponUpdateEvent extends AbstractCharacterEvent implements CharacterWeaponUpdateEvent {
 
-    private Map<RpgItemType, Double> weapons;
+    private Set<RpgItemType> weapons;
 
     @Override
-    public Map<RpgItemType, Double> getAllowedWeapons() {
+    public Set<RpgItemType> getAllowedWeapons() {
         return weapons;
     }
 
     @Override
-    public void setWeapons(Map<RpgItemType, Double> weapons) {
+    public void setWeapons(Set<RpgItemType> weapons) {
         this.weapons = weapons;
     }
 

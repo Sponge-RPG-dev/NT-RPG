@@ -97,6 +97,11 @@ public class SpigotPreloadCharacter extends PreloadCharacter<Player, SpigotParty
     }
 
     @Override
+    public void removeResource(String type) {
+
+    }
+
+    @Override
     public Map<String, Integer> getAttributesTransaction() {
         return Collections.emptyMap();
     }

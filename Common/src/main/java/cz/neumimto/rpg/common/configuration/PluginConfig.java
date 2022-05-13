@@ -23,7 +23,6 @@ import com.electronwill.nightconfig.core.conversion.Converter;
 import com.electronwill.nightconfig.core.conversion.Path;
 import com.electronwill.nightconfig.core.conversion.PreserveNotNull;
 import com.typesafe.config.Optional;
-import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.common.utils.DebugLevel;
 
 import java.util.*;
@@ -63,9 +62,6 @@ public class PluginConfig {
     @Path("PLAYER_MAX_CHARS")
     public int PLAYER_MAX_CHARS = 5;
 
-    @Path("JJS_ARGS")
-    public String JJS_ARGS = "--optimistic-types=true";
-
     @Path("MANA_REGENERATION_RATE")
     public long MANA_REGENERATION_RATE = 1000;
 
@@ -102,15 +98,6 @@ public class PluginConfig {
 
     @Path("CLICK_COMBO_MAX_INVERVAL_BETWEEN_ACTIONS")
     public long CLICK_COMBO_MAX_INVERVAL_BETWEEN_ACTIONS = 1250;
-
-    @Path("CLASS_ITEM_DAMAGE_PROCESSOR")
-    @Conversion(ItemDamageProcessorConverter.class)
-    public ItemDamageProcessor CLASS_ITEM_DAMAGE_PROCESSOR = new Max();
-
-
-    @Path("ITEM_DAMAGE_PROCESSOR")
-    @Conversion(ItemDamageProcessorConverter.class)
-    public ItemDamageProcessor ITEM_DAMAGE_PROCESSOR = new Sum();
 
     @Path("CREATE_FIRST_CHAR_AFTER_LOGIN")
     public boolean CREATE_FIRST_CHAR_AFTER_LOGIN = true;
@@ -171,28 +158,6 @@ public class PluginConfig {
     @Path("TEXT_MANABAR_PREFIX_REPEAT")
     public int TEXT_MANABAR_PREFIX_REPEAT = 15;
 
-    private static class ItemDamageProcessorConverter implements Converter<ItemDamageProcessor, String> {
-
-        @Override
-        public String convertFromField(ItemDamageProcessor value) {
-            return value.getClass().getCanonicalName();
-        }
-
-        @Override
-        public ItemDamageProcessor convertToField(String value) {
-            if (value == null) {
-                Log.error("Unknown item damage processor definition - Could not find class " + value + ". SEtting to Max()");
-                return new Max();
-            }
-            try {
-                return (ItemDamageProcessor) Class.forName(value).newInstance();
-            } catch (Exception e) {
-            }
-            Log.error("Unknown item damage processor definition - Could not find class " + value + ". SEtting to Max()");
-            return new Max();
-        }
-    }
-
     private static class SetToListConverter implements Converter<Set, List> {
         @Override
         public Set convertToField(List value) {
@@ -240,8 +205,5 @@ public class PluginConfig {
             return list;
         }
     }
-
-
-
 
 }

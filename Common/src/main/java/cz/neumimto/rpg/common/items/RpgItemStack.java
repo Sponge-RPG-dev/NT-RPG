@@ -15,13 +15,6 @@ public interface RpgItemStack {
 
     Map<AttributeConfig, Integer> getMinimalAttributeRequirements();
 
-    default double getDamage() {
-        return getItemType().getDamage();
-    }
-
-    default double getArmor() {
-        return getItemType().getArmor();
-    }
 
     Map<AttributeConfig, Integer> getBonusAttributes();
 

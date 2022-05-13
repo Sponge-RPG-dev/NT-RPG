@@ -93,13 +93,11 @@ public interface IActiveCharacter<T, P extends IParty> extends IEntity<T> {
 
     boolean hasCooldown(String thing);
 
-    double getBaseWeaponDamage(RpgItemType type);
-
     Set<RpgItemType> getAllowedArmor();
 
     boolean canWear(RpgItemType armor);
 
-    Map<RpgItemType, Double> getAllowedWeapons();
+    Set<RpgItemType> getAllowedWeapons();
 
     Map<String, Double> getProjectileDamages();
 
@@ -149,14 +147,6 @@ public interface IActiveCharacter<T, P extends IParty> extends IEntity<T> {
 
     boolean canUse(RpgItemType weaponItemType, EntityHand h);
 
-    double getWeaponDamage();
-
-    void setWeaponDamage(double damage);
-
-    double getArmorValue();
-
-    void setArmorValue(double value);
-
     boolean hasPreferedDamageType();
 
     String getDamageType();
@@ -169,15 +159,6 @@ public interface IActiveCharacter<T, P extends IParty> extends IEntity<T> {
 
     void setInvulnerable(boolean b);
 
-    RpgItemStack getMainHand();
-
-    int getMainHandSlotId();
-
-    void setMainHand(RpgItemStack customItem, int slot);
-
-    RpgItemStack getOffHand();
-
-    void setOffHand(RpgItemStack customItem);
 
     @Override
     default IEntityType getType() {
@@ -232,14 +213,6 @@ public interface IActiveCharacter<T, P extends IParty> extends IEntity<T> {
             }
         }
     }
-
-    boolean requiresDamageRecalculation();
-
-    void setRequiresDamageRecalculation(boolean k);
-
-    int getLastHotbarSlotInteraction();
-
-    void setLastHotbarSlotInteraction(int last);
 
     void sendNotification(String message);
 

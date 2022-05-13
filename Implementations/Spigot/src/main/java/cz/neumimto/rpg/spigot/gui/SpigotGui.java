@@ -1,7 +1,6 @@
 package cz.neumimto.rpg.spigot.gui;
 
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
-import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.effects.*;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
@@ -14,9 +13,6 @@ import cz.neumimto.rpg.common.localization.LocalizationService;
 import cz.neumimto.rpg.common.model.CharacterBase;
 import cz.neumimto.rpg.common.skills.tree.SkillTree;
 import cz.neumimto.rpg.spigot.effects.common.def.BossBarExpNotifier;
-import cz.neumimto.rpg.spigot.effects.common.def.ManaBar;
-import cz.neumimto.rpg.spigot.effects.common.def.ManaBarBossBar;
-import cz.neumimto.rpg.spigot.effects.common.def.ManaBarText;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.gui.inventoryviews.*;
 import net.md_5.bungee.api.ChatColor;

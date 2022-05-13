@@ -23,11 +23,7 @@ import cz.neumimto.rpg.spigot.inventory.SpigotInventoryService;
 import cz.neumimto.rpg.spigot.inventory.SpigotItemService;
 import cz.neumimto.rpg.spigot.services.IRpgListener;
 import de.tr7zw.nbtapi.NBTItem;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
@@ -39,12 +35,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
-import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
@@ -140,28 +134,6 @@ public class SpigotInventoryListener implements IRpgListener {
         }
     }
 
-    @EventHandler
-    public void itemEquipEvent(InventoryCloseEvent event) {
-        if (spigotRpg.isDisabledInWorld(event.getPlayer())) {
-            return;
-        }
-        HumanEntity player = event.getPlayer();
-
-        if (player instanceof Player) {
-            Player p = (Player) player;
-            ISpigotCharacter character = spigotCharacterService.getCharacter(player.getUniqueId());
-
-            //player quits
-            if (character == null) {
-                return;
-            }
-
-            if (character.requiresDamageRecalculation()) {
-
-            }
-        }
-    }
-
 
     @EventHandler
     public void onItemDrop(PlayerDropItemEvent event) {
@@ -185,19 +157,6 @@ public class SpigotInventoryListener implements IRpgListener {
         NBTItem nbtItem = new NBTItem(itemDrop.getItemStack());
         if (nbtItem.hasKey(SpigotInventoryService.SKILLBIND)) {
             itemDrop.remove();
-        }
-
-        int selectedSlotIndex = player.getInventory().getHeldItemSlot();
-        Map<Class<?>, RpgInventory> managedInventory = character.getManagedInventory();
-        RpgInventory rpgInventory = managedInventory.get(PlayerInventory.class);
-        if (rpgInventory.getManagedSlots().containsKey(selectedSlotIndex)) {
-            ManagedSlot currentHand = rpgInventory.getManagedSlots().get(selectedSlotIndex);
-            Optional<RpgItemStack> content = currentHand.getContent();
-            content.ifPresent(i -> {
-                inventoryHandler.handleCharacterUnEquipActionPost(character, currentHand);
-                character.setRequiresDamageRecalculation(true);
-                character.setMainHand(null, -1);
-            });
         }
 
     }
@@ -266,7 +225,6 @@ public class SpigotInventoryListener implements IRpgListener {
             }
         }
 
-        character.setRequiresDamageRecalculation(true);
     }
 
 
@@ -303,74 +261,9 @@ public class SpigotInventoryListener implements IRpgListener {
                 }
             }
 
-            int last = character.getLastHotbarSlotInteraction();
 
-            if (last != selectedSlotIndex) {
-
-                boolean b = prepareItemInHand(player, character, itemStack, selectedSlotIndex, rpgItemType,
-                        event.getHand(), itemService, inventoryHandler);
-                event.setCancelled(b);
-            }
         }
 
-    }
-
-    public static boolean prepareItemInHand(Player player, ISpigotCharacter character, ItemStack itemStack,
-                                            int selectedSlotIndex, RpgItemType rpgItemType,
-                                            EquipmentSlot hand,
-                                            SpigotItemService itemService,
-                                            InventoryHandler inventoryHandler) {
-        Map<Class<?>, RpgInventory> managedInventory = character.getManagedInventory();
-        Map<Integer, ManagedSlot> managedSlots = managedInventory.get(PlayerInventory.class).getManagedSlots();
-
-        if (managedSlots.containsKey(selectedSlotIndex)) {
-
-            if (rpgItemType == null) {
-                Optional<RpgItemType> opt = itemService.getRpgItemType(itemStack);
-                if (opt.isPresent()) {
-                    rpgItemType = opt.get();
-                } else {
-                    character.setMainHand(null, selectedSlotIndex);
-                    character.setLastHotbarSlotInteraction(selectedSlotIndex);
-                    character.setRequiresDamageRecalculation(true);
-                    return false;
-                }
-            }
-            RpgItemStack rpgItemStack = itemService.getRpgItemStack(rpgItemType, itemStack);
-
-            ManagedSlot managedSlot = managedSlots.get(selectedSlotIndex);
-            if (inventoryHandler.handleCharacterEquipActionPre(character, managedSlot, rpgItemStack)) {
-                inventoryHandler.handleInventoryInitializationPost(character);
-                character.setLastHotbarSlotInteraction(selectedSlotIndex);
-                if (hand == EquipmentSlot.HAND) {
-                    character.setMainHand(rpgItemStack, selectedSlotIndex);
-                } else if (hand == EquipmentSlot.OFF_HAND) {
-                    character.setOffHand(rpgItemStack);
-                }
-                character.setRequiresDamageRecalculation(true);
-                return false;
-            } else {
-                if (player.getGameMode() != GameMode.CREATIVE) {
-
-                    if (hand == EquipmentSlot.HAND) {
-                        player.getInventory().setItemInMainHand(null);
-                    } else if (hand == EquipmentSlot.OFF_HAND) {
-                        player.getInventory().setItemInOffHand(null);
-                    }
-
-                    String message = Rpg.get().getLocalizationService().translate(LocalizationKeys.CANNOT_USE_ITEM_CONFIGURATION_REASON);
-                    BaseComponent c = TextComponent.fromLegacyText(ChatColor.RED + message)[0];
-                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, c);
-
-                    player.getWorld().dropItemNaturally(player.getLocation(), itemStack);
-
-                }
-                character.setLastHotbarSlotInteraction(-1);
-                character.setRequiresDamageRecalculation(true);
-                return true;
-            }
-        }
-        return false;
     }
 
     @EventHandler
@@ -380,7 +273,7 @@ public class SpigotInventoryListener implements IRpgListener {
         }
 
         for (Integer slotId : event.getInventorySlots()) {
-            if (inventoryService.isManagedInventory(PlayerInventory.class, slotId) || slotId == OFFHAND_SLOT_ID || (slotId >= 0 && slotId <= 8)) {
+            if (slotId == OFFHAND_SLOT_ID || (slotId >= 0 && slotId <= 8)) {
                 event.setResult(Event.Result.DENY);
             }
         }
@@ -437,7 +330,6 @@ public class SpigotInventoryListener implements IRpgListener {
                     //equip
                     if (inventoryHandler.handleCharacterEquipActionPre(character, managedSlot, rpgItemStackF)) {
                         inventoryHandler.handleCharacterEquipActionPost(character, managedSlot, rpgItemStackF);
-                        character.setRequiresDamageRecalculation(true);
                     } else {
                         event.setResult(Event.Result.DENY);
                         event.setCancelled(true);
@@ -450,7 +342,6 @@ public class SpigotInventoryListener implements IRpgListener {
                     RpgItemStack rpgItemStack = original.get();
                     if (inventoryHandler.handleCharacterUnEquipActionPre(character, managedSlot, rpgItemStack)) {
                         inventoryHandler.handleCharacterUnEquipActionPost(character, managedSlot);
-                        character.setRequiresDamageRecalculation(true);
                     }
                 }
             }
@@ -492,11 +383,8 @@ public class SpigotInventoryListener implements IRpgListener {
                         break;
                     }
                 }
-            } else {
-                character.setRequiresDamageRecalculation(true);
             }
         }
-
     }
 }
 

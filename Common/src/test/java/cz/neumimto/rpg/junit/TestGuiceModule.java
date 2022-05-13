@@ -39,7 +39,6 @@ import cz.neumimto.rpg.common.inventory.CharacterInventoryInteractionHandler;
 import cz.neumimto.rpg.common.inventory.InventoryHandler;
 import cz.neumimto.rpg.common.inventory.InventoryService;
 import cz.neumimto.rpg.common.inventory.TestInventoryService;
-import cz.neumimto.rpg.common.inventory.crafting.runewords.RWDao;
 import cz.neumimto.rpg.common.items.ItemService;
 import cz.neumimto.rpg.common.localization.LocalizationService;
 import cz.neumimto.rpg.common.localization.LocalizationServiceImpl;
@@ -116,7 +115,6 @@ public class TestGuiceModule extends AbstractModule {
         bind(InventoryService.class).to(TestInventoryService.class);
         bind(CharacterInventoryInteractionHandler.class).to(InventoryHandler.class);
         bind(ItemService.class).to(TestItemService.class);
-        bind(RWDao.class);
         bind(RpgApi.class).to(TestApiImpl.class);
 
         bind(PermissionService.class).to(TestPermissionService.class);

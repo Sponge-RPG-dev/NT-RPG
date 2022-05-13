@@ -4,13 +4,11 @@ import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.effects.IEffect;
 import cz.neumimto.rpg.common.effects.IEffectContainer;
 import cz.neumimto.rpg.common.entity.EntityHand;
-import cz.neumimto.rpg.common.entity.IReservable;
 import cz.neumimto.rpg.common.entity.PropertyService;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.common.entity.players.party.IParty;
 import cz.neumimto.rpg.common.inventory.RpgInventory;
-import cz.neumimto.rpg.common.items.RpgItemStack;
 import cz.neumimto.rpg.common.items.RpgItemType;
 import cz.neumimto.rpg.common.model.CharacterBase;
 import cz.neumimto.rpg.common.model.EquipedSlot;
@@ -87,10 +85,6 @@ public abstract class PreloadCharacter<T, P extends IParty> implements IActiveCh
         return 0;
     }
 
-    @Override
-    public double getBaseWeaponDamage(RpgItemType type) {
-        return 0;
-    }
 
     @Override
     public String getName() {
@@ -115,26 +109,6 @@ public abstract class PreloadCharacter<T, P extends IParty> implements IActiveCh
     @Override
     public boolean canUse(RpgItemType weaponItemType, EntityHand type) {
         return false;
-    }
-
-    @Override
-    public double getWeaponDamage() {
-        return 0;
-    }
-
-    @Override
-    public void setWeaponDamage(double damage) {
-
-    }
-
-    @Override
-    public double getArmorValue() {
-        return 0;
-    }
-
-    @Override
-    public void setArmorValue(double value) {
-
     }
 
     @Override
@@ -209,8 +183,8 @@ public abstract class PreloadCharacter<T, P extends IParty> implements IActiveCh
     }
 
     @Override
-    public Map<RpgItemType, Double> getAllowedWeapons() {
-        return Collections.emptyMap();
+    public Set<RpgItemType> getAllowedWeapons() {
+        return Collections.emptySet();
     }
 
     @Override
@@ -417,52 +391,7 @@ public abstract class PreloadCharacter<T, P extends IParty> implements IActiveCh
     }
 
     @Override
-    public RpgItemStack getMainHand() {
-        return null;
-    }
-
-    @Override
-    public void setMainHand(RpgItemStack customItem, int slot) {
-
-    }
-
-    @Override
-    public int getMainHandSlotId() {
-        return -1;
-    }
-
-    @Override
-    public RpgItemStack getOffHand() {
-        return null;
-    }
-
-    @Override
-    public void setOffHand(RpgItemStack customItem) {
-
-    }
-
-    @Override
     public void restartAttributeGuiSession() {
-
-    }
-
-    @Override
-    public boolean requiresDamageRecalculation() {
-        return false;
-    }
-
-    @Override
-    public void setRequiresDamageRecalculation(boolean k) {
-
-    }
-
-    @Override
-    public int getLastHotbarSlotInteraction() {
-        return 0;
-    }
-
-    @Override
-    public void setLastHotbarSlotInteraction(int last) {
 
     }
 

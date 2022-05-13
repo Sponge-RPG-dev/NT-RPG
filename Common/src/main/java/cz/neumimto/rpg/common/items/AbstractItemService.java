@@ -11,8 +11,6 @@ import cz.neumimto.rpg.common.entity.PropertyService;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
-import cz.neumimto.rpg.common.items.sockets.SocketType;
-import cz.neumimto.rpg.common.items.subtypes.ItemSubtype;
 import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.common.permissions.PermissionService;
 import cz.neumimto.rpg.common.utils.Wildcards;
@@ -29,9 +27,6 @@ public abstract class AbstractItemService implements ItemService {
 
     protected Map<String, RpgItemType> items = new HashMap<>();
     protected Map<String, ItemClass> weaponClassMap = new HashMap<>();
-    protected Map<String, SocketType> socketTypes = new HashMap<>();
-    protected Map<String, ItemMetaType> itemMetaTypes = new HashMap<>();
-    protected Map<String, ItemSubtype> itemSubtypes = new HashMap<>();
     protected Map<AttributeConfig, Integer> itemAttributesPlaceholder = new HashMap<>();
 
     @Inject
@@ -99,7 +94,6 @@ public abstract class AbstractItemService implements ItemService {
 
         if (!propertyService.exists(property)) {
             propertyService.registerProperty(property, val);
-            propertyService.addPropertyToRequiresDamageRecalc(propertyService.getIdByName(property));
         }
 
         if (property.endsWith("_mult")) {
@@ -111,19 +105,13 @@ public abstract class AbstractItemService implements ItemService {
     }
 
     @Override
-    public ClassItem createClassItemSpecification(RpgItemType key, Double value) {
-        value = Rpg.get().getPluginConfig().CLASS_ITEM_DAMAGE_PROCESSOR.get(value, key.getDamage());
-        return new ClassItemImpl(key, value, 0);
-    }
-
-    @Override
     public boolean checkItemType(IActiveCharacter character, RpgItemStack rpgItemStack) {
         RpgItemType itemType = rpgItemStack.getItemType();
 
         if (itemType.getItemClass() == ItemClass.ARMOR) {
             return character.getAllowedArmor().contains(itemType);
         } else {
-            return character.getAllowedWeapons().containsKey(itemType);
+            return character.getAllowedWeapons().contains(itemType);
         }
     }
 
@@ -299,20 +287,6 @@ public abstract class AbstractItemService implements ItemService {
         }
     }
 
-    @Override
-    public Map<String, SocketType> getSocketTypes() {
-        return socketTypes;
-    }
-
-    @Override
-    public Map<String, ItemMetaType> getItemMetaTypes() {
-        return itemMetaTypes;
-    }
-
-    @Override
-    public Map<String, ItemSubtype> getItemSubtypes() {
-        return itemSubtypes;
-    }
 
     public abstract Set<String> getAllItemIds();
 
@@ -324,7 +298,7 @@ public abstract class AbstractItemService implements ItemService {
         }
         return Wildcards.substract(itemId, getAllItemIds())
                 .stream()
-                .map(a -> new ItemString(a, i.damage, i.armor, i.variant, i.permission))
+                .map(a -> new ItemString(a, i.variant, i.permission))
                 .collect(Collectors.toList());
     }
 
@@ -332,9 +306,6 @@ public abstract class AbstractItemService implements ItemService {
     public void reload() {
         items.clear();
         weaponClassMap.clear();
-        socketTypes.clear();
-        itemMetaTypes.clear();
-        itemSubtypes.clear();
         itemAttributesPlaceholder.clear();
 
         load();

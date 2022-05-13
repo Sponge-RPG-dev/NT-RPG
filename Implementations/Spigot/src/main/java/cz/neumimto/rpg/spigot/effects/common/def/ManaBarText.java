@@ -1,15 +1,12 @@
 package cz.neumimto.rpg.spigot.effects.common.def;
 
-import cz.neumimto.nts.annotations.ScriptMeta;
 import cz.neumimto.rpg.common.effects.*;
 import cz.neumimto.rpg.common.entity.IEffectConsumer;
-import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.resources.Resource;
 import cz.neumimto.rpg.common.resources.ResourceService;
 import cz.neumimto.rpg.common.utils.MathUtils;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 
@@ -19,7 +16,7 @@ import java.util.Set;
 import java.util.stream.IntStream;
 
 @Generate(id = "name", description = "A component which displays mana in action bar")
-public class ManaBarText extends EffectBase<Object> implements IEffectContainer<Object, ManaBarText>, ManaBar {
+public class ManaBarText extends EffectBase<Object> implements IEffectContainer<Object, ManaBarText> {
 
     public static final String name = "ManaBarText";
 
@@ -94,13 +91,4 @@ public class ManaBarText extends EffectBase<Object> implements IEffectContainer<
 
     }
 
-    @Override
-    public void notifyManaChange() {
-        onTick(this);
-    }
-
-    @Override
-    public IEffect asEffect() {
-        return this;
-    }
 }

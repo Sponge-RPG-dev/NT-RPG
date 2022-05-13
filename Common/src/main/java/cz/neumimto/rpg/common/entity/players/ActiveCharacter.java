@@ -1,15 +1,12 @@
 package cz.neumimto.rpg.common.entity.players;
 
 import cz.neumimto.rpg.common.Rpg;
-import cz.neumimto.rpg.common.configuration.ItemDamageProcessor;
 import cz.neumimto.rpg.common.effects.*;
 import cz.neumimto.rpg.common.entity.EntityHand;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.common.entity.players.party.IParty;
 import cz.neumimto.rpg.common.inventory.RpgInventory;
-import cz.neumimto.rpg.common.items.ClassItem;
-import cz.neumimto.rpg.common.items.RpgItemStack;
 import cz.neumimto.rpg.common.items.RpgItemType;
 import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.common.model.CharacterBase;
@@ -27,7 +24,6 @@ import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
 
 import java.lang.ref.WeakReference;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 /**
@@ -65,16 +61,13 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
 
     private transient final Set<RpgItemType> allowedArmorIds = new HashSet<>();
 
-    private transient final Object2DoubleOpenHashMap<RpgItemType> allowedWeapons = new Object2DoubleOpenHashMap<>();
+    private transient final Set<RpgItemType> allowedWeapons = new HashSet<>();
     private transient final Object2DoubleOpenHashMap<String> projectileDamage = new Object2DoubleOpenHashMap<>(30);
     private final Object2LongOpenHashMap<String> cooldowns = new Object2LongOpenHashMap<>(10);
 
     private transient final Set<RpgItemType> allowedOffHandWeapons = new HashSet<>();
 
     private transient WeakReference<P> pendingPartyInvite = new WeakReference<>(null);
-    private transient double weaponDamage;
-    private transient double armorvalue;
-
     private transient String preferedDamageType = null;
 
     private transient final Map<String, Integer> transientAttributes = new HashMap<>();
@@ -89,14 +82,8 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
 
     private transient Map<Class<?>, RpgInventory> inventory;
 
-    private transient int mainHandSlotId;
-
-    private transient RpgItemStack offHand;
-    private transient RpgItemStack mainHand;
-
     private transient PlayerClassData primaryClass;
 
-    private boolean requiresDamageRecalculation;
     private int lastHotbarSlotInteraction = -1;
     private InterruptableSkillPreprocessor channeledSkill;
 
@@ -117,7 +104,6 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
         this.slotsToReinitialize = new ArrayList<>();
         this.denySlotInteractionArr = new HashSet<>();
         this.inventory = new HashMap<>();
-        this.requiresDamageRecalculation = true;
         this.attrTransaction = new HashMap<>();
         this.skillUpgradeObserver = new SkillTreeChangeObserver(this);
     }
@@ -286,30 +272,6 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
         return cooldowns.getOrDefault(thing, 0L) > System.currentTimeMillis();
     }
 
-    private void mergeWeapons(ClassDefinition g) {
-        mergeWeapons(g.getWeapons());
-        Set<ClassItem> offHandWeapons = g.getOffHandWeapons();
-        for (ClassItem e : offHandWeapons) {
-            allowedOffHandWeapons.add(e.getType());
-        }
-    }
-
-    private void mergeWeapons(Set<ClassItem> weapons) {
-        ItemDamageProcessor itemDamageProcessor = Rpg.get().getPluginConfig().CLASS_ITEM_DAMAGE_PROCESSOR;
-        for (ClassItem weapon : weapons) {
-            if (!allowedWeapons.containsKey(weapon.getType())) {
-                allowedWeapons.put(weapon.getType(), weapon.getDamage());
-            } else {
-                double dmg = itemDamageProcessor.get(allowedWeapons.getDouble(weapon.getType()), weapon.getDamage());
-                allowedWeapons.put(weapon.getType(), dmg);
-            }
-        }
-    }
-
-    @Override
-    public double getBaseWeaponDamage(RpgItemType weaponItemType) {
-        return allowedWeapons.getOrDefault(weaponItemType, 0);
-    }
 
     @Override
     public double getBaseProjectileDamage(String id) {
@@ -327,70 +289,28 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
         getProjectileDamages().clear();
 
 
-        Iterator<PlayerClassData> iterator = classes.values().iterator();
-        //put in first
-        if (iterator.hasNext()) {
-            PlayerClassData next = iterator.next();
-            ClassDefinition classDefinition = next.getClassDefinition();
-
-            Set<ClassItem> items = classDefinition.getWeapons();
-            for (ClassItem weapon : items) {
-                allowedWeapons.put(weapon.getType(), weapon.getDamage());
-            }
-
-            items = classDefinition.getOffHandWeapons();
-            for (ClassItem weapon : items) {
-                allowedOffHandWeapons.add(weapon.getType());
-            }
-
-            items = classDefinition.getAllowedArmor();
-            for (ClassItem weapon : items) {
-                allowedArmorIds.add(weapon.getType());
-            }
-
-            getProjectileDamages().putAll(classDefinition.getProjectileDamage());
+        for (PlayerClassData clazz : classes.values()) {
+            ClassDefinition classDefinition = clazz.getClassDefinition();
+            allowedOffHandWeapons.addAll(classDefinition.getOffHandWeapons());
+            allowedArmorIds.addAll(classDefinition.getAllowedArmor());
+            allowedWeapons.addAll(classDefinition.getWeapons());
         }
 
-        //calculate rest
-        while (iterator.hasNext()) {
-            PlayerClassData next = iterator.next();
-
-            ClassDefinition classDefinition = next.getClassDefinition();
-
-            //merge weapon sets
-            mergeWeapons(classDefinition);
-
-            //might be expensive on massive Skilltrees, eventually i could cache these types of skill in an extra collection
-            for (PlayerSkillContext playerSkillContext : getSkills().values()) {
-                if (playerSkillContext.getSkill().getType() == EffectSourceType.ITEM_ACCESS_SKILL) {
-                    ItemAccessSkill.ItemAccessSkillData skillData = (ItemAccessSkill.ItemAccessSkillData) playerSkillContext.getSkillData();
-                    Map<Integer, Set<ClassItem>> items = skillData.getItems();
-
-                    for (Map.Entry<Integer, Set<ClassItem>> ent : items.entrySet()) {
-                        if (ent.getKey() <= getLevel()) {
-                            mergeWeapons(ent.getValue());
+        for (PlayerSkillContext skillContext : getSkills().values()) {
+            if (skillContext.getSkill().getType() == EffectSourceType.ITEM_ACCESS_SKILL) {
+                ItemAccessSkill.ItemAccessSkillData skillData = (ItemAccessSkill.ItemAccessSkillData) skillContext.getSkillData();
+                Map<Integer, Set<RpgItemType>> items = skillData.getItems();
+                for (Map.Entry<Integer, Set<RpgItemType>> ent : items.entrySet()) {
+                    if (ent.getKey() <= getLevel()) {
+                        for (RpgItemType rpgItemType : ent.getValue()) {
+                            //todo somehow distinguish, maybe in config of item access skill specify slot
+                            allowedWeapons.add(rpgItemType);
+                            allowedOffHandWeapons.add(rpgItemType);
+                            allowedArmorIds.add(rpgItemType);
                         }
                     }
                 }
             }
-            allowedArmorIds.addAll(classDefinition
-                    .getAllowedArmor()
-                    .stream()
-                    .map(ClassItem::getType)
-                    .collect(Collectors.toSet()));
-
-
-            Map<String, Double> projectileDamage = classDefinition.getProjectileDamage();
-            for (Map.Entry<String, Double> entityType : projectileDamage.entrySet()) {
-                Double aDouble = getProjectileDamages().get(entityType.getKey());
-                if (aDouble == null) {
-                    getProjectileDamages().put(entityType.getKey(), entityType.getValue());
-                } else {
-                    double v = Rpg.get().getPluginConfig().CLASS_ITEM_DAMAGE_PROCESSOR.get(aDouble, entityType.getValue());
-                    getProjectileDamages().put(entityType.getKey(), v);
-                }
-            }
-
         }
         return this;
     }
@@ -408,7 +328,7 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
     @Override
     public boolean canUse(RpgItemType weaponItemType, EntityHand h) {
         if (h == EntityHand.MAIN) {
-            return allowedWeapons.containsKey(weaponItemType);
+            return allowedWeapons.contains(weaponItemType);
         } else {
             return allowedOffHandWeapons.contains(weaponItemType);
         }
@@ -416,7 +336,7 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
 
 
     @Override
-    public Map<RpgItemType, Double> getAllowedWeapons() {
+    public Set<RpgItemType> getAllowedWeapons() {
         return allowedWeapons;
     }
 
@@ -526,26 +446,6 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
     }
 
     @Override
-    public double getWeaponDamage() {
-        return weaponDamage;
-    }
-
-    @Override
-    public void setWeaponDamage(double damage) {
-        weaponDamage = damage;
-    }
-
-    @Override
-    public double getArmorValue() {
-        return armorvalue;
-    }
-
-    @Override
-    public void setArmorValue(double value) {
-        armorvalue = value;
-    }
-
-    @Override
     public boolean hasPreferedDamageType() {
         return preferedDamageType != null;
     }
@@ -637,32 +537,6 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
     }
 
     @Override
-    public RpgItemStack getMainHand() {
-        return mainHand;
-    }
-
-    @Override
-    public int getMainHandSlotId() {
-        return mainHandSlotId;
-    }
-
-    @Override
-    public void setMainHand(RpgItemStack customItem, int slot) {
-        this.mainHand = customItem;
-        this.mainHandSlotId = slot;
-    }
-
-    @Override
-    public RpgItemStack getOffHand() {
-        return offHand;
-    }
-
-    @Override
-    public void setOffHand(RpgItemStack customItem) {
-        this.offHand = customItem;
-    }
-
-    @Override
     public double getExperienceBonusFor(String name, String type) {
         double exp = 0;
         for (PlayerClassData playerClassData : getClasses().values()) {
@@ -674,26 +548,6 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
     @Override
     public void restartAttributeGuiSession() {
         attributeSession.clear();
-    }
-
-    @Override
-    public boolean requiresDamageRecalculation() {
-        return requiresDamageRecalculation;
-    }
-
-    @Override
-    public void setRequiresDamageRecalculation(boolean k) {
-        this.requiresDamageRecalculation = k;
-    }
-
-    @Override
-    public int getLastHotbarSlotInteraction() {
-        return lastHotbarSlotInteraction;
-    }
-
-    @Override
-    public void setLastHotbarSlotInteraction(int last) {
-        lastHotbarSlotInteraction = last;
     }
 
     @Override

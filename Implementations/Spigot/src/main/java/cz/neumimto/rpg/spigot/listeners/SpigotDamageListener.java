@@ -26,18 +26,16 @@ import cz.neumimto.rpg.spigot.events.damage.SpigotEntityWeaponDamageEarlyEvent;
 import cz.neumimto.rpg.spigot.inventory.SpigotItemService;
 import cz.neumimto.rpg.spigot.services.IRpgListener;
 import org.bukkit.block.Block;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
-import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.projectiles.ProjectileSource;
 
 import javax.inject.Inject;
-import java.util.Optional;
 
 @Singleton
 @AutoService({IRpgListener.class})
@@ -133,41 +131,7 @@ public class SpigotDamageListener extends AbstractDamageListener implements IRpg
         double newdamage = event.getDamage();
 
         RpgItemStack rpgItemStack = null;
-        if (attacker.getType() == IEntityType.CHARACTER) {
-            ISpigotCharacter character = (ISpigotCharacter) attacker;
-            Player player = character.getPlayer();
-            PlayerInventory inventory = player.getInventory();
 
-            int last = character.getLastHotbarSlotInteraction();
-            int selectedSlotIndex = inventory.getHeldItemSlot();
-            if (last != selectedSlotIndex) {
-                SpigotInventoryListener.prepareItemInHand(player, character, player.getItemInHand(),
-                        selectedSlotIndex, null, EquipmentSlot.HAND, itemService, inventoryHandler);
-            }
-
-            if (character.requiresDamageRecalculation()) {
-                Player entity = (Player) attacker.getEntity();
-                ItemStack itemInMainHand = entity.getInventory().getItemInMainHand();
-                RpgItemStack futureMainHand = itemService.getRpgItemStack(itemInMainHand).orElse(null);
-                character.setMainHand(futureMainHand, entity.getInventory().getHeldItemSlot());
-                RpgItemStack mainHand = character.getMainHand();
-                spigotDamageService.recalculateCharacterWeaponDamage(character, mainHand);
-                character.setRequiresDamageRecalculation(false);
-            }
-            newdamage = character.getWeaponDamage();
-            rpgItemStack = character.getMainHand();
-        } else {
-            LivingEntity attackerEntity = (LivingEntity) attacker.getEntity();
-            if (attackerEntity instanceof HumanEntity) {
-                ItemStack itemStack = ((HumanEntity) attackerEntity).getItemInHand();
-
-                Optional<RpgItemStack> rpgItemStack1 = itemService.getRpgItemStack(itemStack);
-                if (rpgItemStack1.isPresent()) {
-                    rpgItemStack = rpgItemStack1.get();
-                }
-
-            }
-        }
         newdamage *= spigotDamageService.getDamageHandler().getEntityDamageMult(attacker, event.getCause().name());
 
         IEntityWeaponDamageEarlyEvent e = Rpg.get().getEventFactory().createEventInstance(SpigotEntityWeaponDamageEarlyEvent.class);

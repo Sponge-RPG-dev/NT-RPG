@@ -23,6 +23,7 @@ import cz.neumimto.rpg.common.events.EventFactoryService;
 import cz.neumimto.rpg.common.events.character.*;
 import cz.neumimto.rpg.common.gui.Gui;
 import cz.neumimto.rpg.common.inventory.InventoryService;
+import cz.neumimto.rpg.common.items.RpgItemType;
 import cz.neumimto.rpg.common.localization.Arg;
 import cz.neumimto.rpg.common.localization.LocalizationKeys;
 import cz.neumimto.rpg.common.localization.LocalizationService;
@@ -205,7 +206,7 @@ public abstract class CharacterService<T extends IActiveCharacter> {
     }
 
     public void updateWeaponRestrictions(T character) {
-        Map weapons = character.getAllowedWeapons();
+        Set<RpgItemType> weapons = character.getAllowedWeapons();
         CharacterWeaponUpdateEvent event = eventFactoryService.createEventInstance(CharacterWeaponUpdateEvent.class);
         event.setWeapons(weapons);
         event.setTarget(character);
@@ -324,7 +325,6 @@ public abstract class CharacterService<T extends IActiveCharacter> {
 
         invalidateCaches(character);
         inventoryService.initializeCharacterInventory(character);
-        damageService.recalculateCharacterWeaponDamage(character);
 
         CharacterInitializedEvent event = Rpg.get().getEventFactory().createEventInstance(CharacterInitializedEvent.class);
         event.setTarget(character);
@@ -984,7 +984,6 @@ public abstract class CharacterService<T extends IActiveCharacter> {
             character.getSkillUpgradeObservers().processChange(entry.getKey());
         }
 
-        character.setRequiresDamageRecalculation(true);
         base.setAttributePointsSpent(base.getAttributePointsSpent() + requiredAP);
         return ActionResult.ok();
     }
@@ -1019,7 +1018,6 @@ public abstract class CharacterService<T extends IActiveCharacter> {
             character.getTransientAttributes().put(string, 0);
         }
 
-        character.setRequiresDamageRecalculation(true);
         Map<String, PlayerClassData> classes = character.getClasses();
         for (PlayerClassData nClass : classes.values()) {
             applyGlobalEffects(character, nClass.getClassDefinition());
@@ -1296,8 +1294,6 @@ public abstract class CharacterService<T extends IActiveCharacter> {
         character.addProperty(propertyId, value);
         if (propertyId == CommonProperties.walk_speed) {
             entityService.updateWalkSpeed(character);
-        } else if (propertyService.updatingRequiresDamageRecalc(propertyId)) {
-            damageService.recalculateCharacterWeaponDamage(character);
         }
     }
 
@@ -1317,7 +1313,6 @@ public abstract class CharacterService<T extends IActiveCharacter> {
         }
 
         recalculateProperties(character);
-        character.setRequiresDamageRecalculation(true);
         base.setAttributePointsSpent(0);
         base.setAttributePoints(attributePoints);
     }

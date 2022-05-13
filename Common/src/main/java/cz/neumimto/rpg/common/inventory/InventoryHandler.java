@@ -88,7 +88,6 @@ public class InventoryHandler implements CharacterInventoryInteractionHandler {
         Map<Class<?>, RpgInventory> managedInventories = character.getManagedInventory();
 
         for (RpgInventory managedInventory : managedInventories.values()) {
-            character.setRequiresDamageRecalculation(true);
 
             for (ManagedSlot managedSlot : managedInventory.getManagedSlots().values()) {
                 Optional<RpgItemStack> content = managedSlot.getContent();
