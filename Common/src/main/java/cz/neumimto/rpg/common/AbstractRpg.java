@@ -209,7 +209,6 @@ public abstract class AbstractRpg implements RpgApi {
             FileUtils.generateConfigFile(new PluginConfig(), properties);
         }
 
-        resourceService.reload();
 
         try (FileConfig fileConfig = FileConfig.of(properties.getPath())) {
             fileConfig.load();
@@ -296,6 +295,7 @@ public abstract class AbstractRpg implements RpgApi {
         getEffectService().load();
         getEffectService().startEffectScheduler();
         getDamageService().init();
+        getResourceService().reload();
 
         List<BaseCommand> commands = new ArrayList<>();
         for (Class commandClass : commandClasses) {

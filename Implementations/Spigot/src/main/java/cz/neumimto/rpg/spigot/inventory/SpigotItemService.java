@@ -71,7 +71,7 @@ public class SpigotItemService extends AbstractItemService {
     protected Optional<RpgItemType> createRpgItemType(ItemString parsed, ItemClass wClass) {
         Material type = Material.matchMaterial(parsed.itemId);
         if (type == null) {
-            Log.error(" - Not Managed ItemType " + parsed.itemId);
+            Log.debug(" - Not Managed ItemType " + parsed.itemId);
             return Optional.empty();
         }
 
@@ -89,23 +89,7 @@ public class SpigotItemService extends AbstractItemService {
                     getItemEffects(nbtItem),
                     getItemBonusAttributes(nbtItem),
                     getItemMinimalAttributeRequirements(nbtItem),
-                    getClassRequirements(nbtItem),
-                    getItemData(nbtItem));
-        }
-
-        protected Map<String, Double> getItemData(NBTItem nbtItem) {
-            NBTCompoundList attributes = nbtItem.getCompoundList("AttributeModifiers");
-            if (attributes == null || attributes.isEmpty()) {
-                return Collections.emptyMap();
-            }
-            Map<String, Double> data = new HashMap<>();
-            for (NBTListCompound attribute : attributes) {
-                if (attribute.getString("AttributeName").equals("generic.attackDamage")) {
-                    double amount = attribute.getDouble("Amount");
-                    data.put(DAMAGE_KEY, amount);
-                }
-            }
-            return data;
+                    getClassRequirements(nbtItem));
         }
 
         protected Map<IGlobalEffect, EffectParams> getItemEffects(NBTItem nbtItem) {
@@ -153,11 +137,4 @@ public class SpigotItemService extends AbstractItemService {
         }
     }
 
-    public SpigotItemHandler getItemHandler() {
-        return itemHandler;
-    }
-
-    public void setItemHandler(SpigotItemHandler itemHandler) {
-        this.itemHandler = itemHandler;
-    }
 }

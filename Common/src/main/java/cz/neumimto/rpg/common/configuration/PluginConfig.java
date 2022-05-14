@@ -39,7 +39,7 @@ public class PluginConfig {
     public boolean REMOVE_PLAYERDATA_AFTER_PERMABAN = false;
 
     @Path("DEBUG")
-    public DebugLevel DEBUG = DebugLevel.BALANCE;
+    public DebugLevel DEBUG = DebugLevel.NONE;
 
     @Path("PLAYER_AUTO_CHOOSE_LAST_PLAYED_CHAR")
     public boolean PLAYER_AUTO_CHOOSE_LAST_PLAYED_CHAR = true;

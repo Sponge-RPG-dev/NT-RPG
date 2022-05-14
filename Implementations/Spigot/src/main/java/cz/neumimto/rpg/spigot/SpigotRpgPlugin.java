@@ -94,6 +94,15 @@ public class SpigotRpgPlugin implements NtRpgBootstrap {
 
         Log.setLogger(data.logger());
 
+        String header = """
+                  _   _ _______   _____  _____   _____\s
+                 | \\ | |__   __| |  __ \\|  __ \\ / ____|
+                 |  \\| |  | |    | |__) | |__) | |  __\s
+                 | . ` |  | |    |  _  /|  ___/| | |_ |
+                 | |\\  |  | |    | | \\ \\| |    | |__| |
+                 |_| \\_|  |_|    |_|  \\_\\_|     \\_____|
+                """;
+        Log.info(header);
         if (!getDataFolder().exists()) {
             getDataFolder().mkdir();
         }

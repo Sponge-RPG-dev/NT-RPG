@@ -21,6 +21,10 @@ public class ResourceGui {
     public static class Display {
         @Path("Resource")
         public String resource;
+
+        @Path("Empty")
+        public String empty;
+
         @Path("BarArray")
         public List<String> array;
     }

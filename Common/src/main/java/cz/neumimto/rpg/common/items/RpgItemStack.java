@@ -20,5 +20,4 @@ public interface RpgItemStack {
 
     Map<ClassDefinition, Integer> getClassRequirements();
 
-    Map<String, Double> getItemData();
 }

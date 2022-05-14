@@ -88,6 +88,11 @@ public abstract class ResourceService {
 
     public void initializeForPlayer(IActiveCharacter activeCharacter) {
        activeCharacter.addResource(health, getHpTracker(activeCharacter));
+       activeCharacter.addResource(rage, getHpTracker(activeCharacter));
+
+        for (Map.Entry<String, FactoryResource> e : registry.entrySet()) {
+            activeCharacter.addResource(e.getKey(), e.getValue().createFor(activeCharacter));
+        }
     }
 
     public abstract Resource initializeForAi(AbstractMob mob);

@@ -10,7 +10,7 @@ import cz.neumimto.rpg.common.gui.Gui;
 /**
  * Created by NeumimTo on 9.8.2015.
  */
-@Generate(id = "name", description = "A component which enables rage regeneration")
+@Generate(id = "name", description = "A component which enables rage decay")
 public class DefaultRageDecay extends EffectBase {
 
     public static final String name = "DefaultRageRegen";

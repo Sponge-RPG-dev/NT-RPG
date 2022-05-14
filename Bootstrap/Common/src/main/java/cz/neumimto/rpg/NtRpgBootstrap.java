@@ -9,8 +9,6 @@ public interface NtRpgBootstrap {
     record Data(Object plugin, File workingDir, CommandManager commandManager, Logger logger) {
     }
 
-    ;
-
     void enable(Data data);
 
     void disable();

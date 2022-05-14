@@ -31,11 +31,6 @@ public class SpigotResourceService extends ResourceService {
 
     private Set<Integer> tasks = new HashSet<>();
 
-    public SpigotResourceService() {
-        super();
-        injector.getInstance(UIActionbarIcons.class);
-    }
-
     @Override
     public void reload() {
         for (Integer id : tasks) {
@@ -60,18 +55,18 @@ public class SpigotResourceService extends ResourceService {
         for (ResourceGui resource : gui.resources) {
             if (resource.enabled) {
                 switch (resource.type) {
-                    case "actionbar_icons":
+                    case "actionbar_icons" -> {
                         var uiActionbarIcons = new UIActionbarIcons(resource);
                         injector.injectMembers(uiActionbarIcons);
                         BukkitTask bukkitTask = Bukkit.getScheduler().runTask(SpigotRpgPlugin.getInstance(), uiActionbarIcons);
                         tasks.add(bukkitTask.getTaskId());
-                        break;
-                    case "actionbar_papi_text":
+                    }
+                    case "actionbar_papi_text" -> {
                         var papi = new UIActionbarPapiText(resource);
                         injector.injectMembers(papi);
                         BukkitTask bukkitTask2 = Bukkit.getScheduler().runTask(SpigotRpgPlugin.getInstance(), papi);
                         tasks.add(bukkitTask2.getTaskId());
-                        break;
+                    }
                 }
             }
         }

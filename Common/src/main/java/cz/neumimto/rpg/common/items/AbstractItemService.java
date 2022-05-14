@@ -85,7 +85,7 @@ public abstract class AbstractItemService implements ItemService {
     public void registerRpgItemType(RpgItemType rpgItemType) {
         rpgItemType.getItemClass().getItems().add(rpgItemType);
         items.put(rpgItemType.getKey(), rpgItemType);
-        info("   - Added managed Item " + rpgItemType.getItemClass().getName() + "/" + rpgItemType.getKey());
+        debug("   - Added managed Item " + rpgItemType.getItemClass().getName() + "/" + rpgItemType.getKey());
     }
 
     @Override
@@ -153,7 +153,7 @@ public abstract class AbstractItemService implements ItemService {
 
     @Override
     public void loadItemGroups(Config config) {
-        info("Loading Weapon configuration");
+        debug("Loading Weapon configuration");
         if (config.hasPath("ItemGroups")) {
             List<? extends Config> itemGroups = config.getConfigList("ItemGroups");
             loadWeaponGroups(itemGroups, null);
@@ -161,7 +161,7 @@ public abstract class AbstractItemService implements ItemService {
             Log.error("Missing ItemGroups section");
         }
 
-        info("Loading Armor configuration");
+        debug("Loading Armor configuration");
         if (config.hasPath("Armor")) {
             for (String armor : config.getStringList("Armor")) {
                 ItemString parse = ItemString.parse(armor);
@@ -174,7 +174,7 @@ public abstract class AbstractItemService implements ItemService {
             Log.error("Missing Armor section");
         }
 
-        info("Loading Shields configuration");
+        debug("Loading Shields configuration");
         if (config.hasPath("Shields")) {
             for (String shield : config.getStringList("Shields")) {
                 ItemString parse = ItemString.parse(shield);
@@ -188,7 +188,7 @@ public abstract class AbstractItemService implements ItemService {
             Log.error("Missing Shields section");
         }
 
-        info("Loading Projectiles configuration");
+        debug("Loading Projectiles configuration");
         if (config.hasPath("Projectiles")) {
             List<? extends Config> projectiles = config.getConfigList("Projectiles");
             loadWeaponGroups(projectiles, ItemClass.PROJECTILES);
@@ -202,7 +202,7 @@ public abstract class AbstractItemService implements ItemService {
             String weaponClass;
             try {
                 weaponClass = itemGroup.getString("Class");
-                info(" - Loading WeaponClass " + weaponClass);
+                debug(" - Loading WeaponClass " + weaponClass);
                 ItemClass weapons = new ItemClass(weaponClass);
                 weapons.setParent(parent);
                 if (parent != null) {
@@ -219,7 +219,7 @@ public abstract class AbstractItemService implements ItemService {
 
     private void loadItemGroupsItems(Config itemGroup, String weaponClass, ItemClass weapons) {
         try {
-            info("  - Reading \"Items\" config section" + weaponClass);
+            debug("  - Reading \"Items\" config section" + weaponClass);
             List<String> items = itemGroup.getStringList("Items");
             for (String item : items) {
                 ItemString parse = ItemString.parse(item);
@@ -248,7 +248,7 @@ public abstract class AbstractItemService implements ItemService {
                 registerProperty(weapons, property.toLowerCase());
             }
         } catch (ConfigException e) {
-            warn("Properties configuration section not found, skipping");
+            debug("Properties configuration section not found, skipping");
         }
     }
 

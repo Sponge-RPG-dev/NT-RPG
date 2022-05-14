@@ -37,7 +37,7 @@ public class ClassRpgItemTypeAdapter implements Converter<Set<RpgItemType>, List
                         RpgItemType rpgItemType1 = rpgItemType.get();
                         fromConfig.add(rpgItemType1);
                     } else {
-                        Log.error("- Not managed item type " + RpgItemType.KEY_BUILDER.apply(parsed.itemId, parsed.variant));
+                        Log.debug("- Not managed item type " + RpgItemType.KEY_BUILDER.apply(parsed.itemId, parsed.variant));
                     }
                 }
             }
