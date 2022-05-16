@@ -15,6 +15,7 @@ import cz.neumimto.rpg.common.entity.players.PreloadCharacter;
 import cz.neumimto.rpg.common.gui.Gui;
 import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.persistence.flatfiles.FlatFilesModule;
+import cz.neumimto.rpg.spigot.bridges.DatapackManager;
 import cz.neumimto.rpg.spigot.bridges.HolographicDisplaysExpansion;
 import cz.neumimto.rpg.spigot.bridges.NtRpgPlaceholderExpansion;
 import cz.neumimto.rpg.spigot.bridges.denizen.DenizenHook;
@@ -34,12 +35,13 @@ import cz.neumimto.rpg.spigot.gui.SpellbookListener;
 import cz.neumimto.rpg.spigot.gui.SpigotGui;
 import cz.neumimto.rpg.spigot.gui.SpigotGuiHelper;
 import cz.neumimto.rpg.spigot.gui.SpigotSkillTreeViewModel;
-import cz.neumimto.rpg.spigot.bridges.DatapackManager;
 import cz.neumimto.rpg.spigot.listeners.skillbinds.OnKeyPress;
 import cz.neumimto.rpg.spigot.packetwrapper.PacketHandler;
 import cz.neumimto.rpg.spigot.resources.SpigotGuiceModuleBuilder;
 import de.slikey.effectlib.EffectManager;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -51,7 +53,11 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static net.kyori.adventure.text.Component.*;
+import static net.kyori.adventure.text.format.NamedTextColor.*;
 
 @AutoService(NtRpgBootstrap.class)
 public class SpigotRpgPlugin implements NtRpgBootstrap {
@@ -94,15 +100,32 @@ public class SpigotRpgPlugin implements NtRpgBootstrap {
 
         Log.setLogger(data.logger());
 
-        String header = """
-                  _   _ _______   _____  _____   _____\s
-                 | \\ | |__   __| |  __ \\|  __ \\ / ____|
-                 |  \\| |  | |    | |__) | |__) | |  __\s
-                 | . ` |  | |    |  _  /|  ___/| | |_ |
-                 | |\\  |  | |    | | \\ \\| |    | |__| |
-                 |_| \\_|  |_|    |_|  \\_\\_|     \\_____|
-                """;
-        Log.info(header);
+        Function<String, Component> colorInput = s -> {
+            TextComponent.Builder builder = text();
+            for (char c : s.toCharArray()) {
+                switch (c) {
+                    case ' ':
+                        builder.append(text(" "));
+                        break;
+                    case '█':
+                        builder.append(text(c).color(GOLD));
+                        break;
+                    default:
+                        builder.append(text(c).color(DARK_GRAY));
+                }
+            }
+            return builder.build();
+        };
+
+        Bukkit.getConsoleSender().sendMessage(empty());
+        Bukkit.getConsoleSender().sendMessage(colorInput.apply(" ███╗   ████████████████╗██████╗ ██████╗ "));
+        Bukkit.getConsoleSender().sendMessage(colorInput.apply(" ████╗  ██╚══██╔══██╔══████╔══████╔════╝ "));
+        Bukkit.getConsoleSender().sendMessage(colorInput.apply(" ██╔██╗ ██║  ██║  ██████╔██████╔██║  ███╗"));
+        Bukkit.getConsoleSender().sendMessage(colorInput.apply(" ██║╚██╗██║  ██║  ██╔══████╔═══╝██║   ██║"));
+        Bukkit.getConsoleSender().sendMessage(colorInput.apply(" ██║ ╚████║  ██║  ██║  ████║    ╚██████╔╝"));
+        Bukkit.getConsoleSender().sendMessage(colorInput.apply(" ╚═╝  ╚═══╝  ╚═╝  ╚═╝  ╚═╚═╝     ╚═════╝ "));
+        Bukkit.getConsoleSender().sendMessage(empty());
+
         if (!getDataFolder().exists()) {
             getDataFolder().mkdir();
         }

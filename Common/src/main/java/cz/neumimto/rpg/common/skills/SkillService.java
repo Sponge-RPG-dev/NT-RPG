@@ -192,7 +192,7 @@ public abstract class SkillService {
                 Class<? extends SkillScriptHandlers> generate = ntScriptEngine.prepareCompiler(getNTSBuilderContext(), c)
                         .compile(scriptSkillModel.script);
                 if (generate == null) {
-                    Log.error("Unable to generate script " + scriptSkillModel.id);
+                    Log.error("Skill - " + scriptSkillModel.id + " Unable to generate script " + scriptSkillModel.id);
                 }
                 SkillScriptHandlers instance = injector.getInstance(generate);
                 ScriptSkill ss = getSkillByHandlerType(instance);

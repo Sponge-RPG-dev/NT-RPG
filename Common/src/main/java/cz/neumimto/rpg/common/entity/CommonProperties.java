@@ -21,9 +21,6 @@ public class CommonProperties implements IPropertyContainer {
     @Property(name = "cooldown_reduce_mult", default_ = 1)
     public static int cooldown_reduce_mult;
 
-    @Property(name = "weapon_damage_bonus")
-    public static int weapon_damage_bonus;
-
     @Property(name = "walk_speed", default_ = 0.1f)
     public static int walk_speed;
 
@@ -42,9 +39,4 @@ public class CommonProperties implements IPropertyContainer {
     @Property(name = "all_skills_bonus")
     public static int all_skills_bonus;
 
-    @Property(name = "projectile_damage_bonus", default_ = 1)
-    public static int projectile_damage_bonus;
-
-    @Property(name = "arrow_damage_mult", default_ = 1)
-    public static int arrow_damage_mult;
 }

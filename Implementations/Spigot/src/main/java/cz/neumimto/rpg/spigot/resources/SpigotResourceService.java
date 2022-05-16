@@ -58,13 +58,14 @@ public class SpigotResourceService extends ResourceService {
                     case "actionbar_icons" -> {
                         var uiActionbarIcons = new UIActionbarIcons(resource);
                         injector.injectMembers(uiActionbarIcons);
-                        BukkitTask bukkitTask = Bukkit.getScheduler().runTask(SpigotRpgPlugin.getInstance(), uiActionbarIcons);
+                        BukkitTask bukkitTask = Bukkit.getScheduler().runTaskTimer(SpigotRpgPlugin.getInstance(), uiActionbarIcons,
+                                0L, resource.refreshRate);
                         tasks.add(bukkitTask.getTaskId());
                     }
                     case "actionbar_papi_text" -> {
                         var papi = new UIActionbarPapiText(resource);
                         injector.injectMembers(papi);
-                        BukkitTask bukkitTask2 = Bukkit.getScheduler().runTask(SpigotRpgPlugin.getInstance(), papi);
+                        BukkitTask bukkitTask2 = Bukkit.getScheduler().runTaskTimer(SpigotRpgPlugin.getInstance(), papi, 0L, resource.refreshRate);
                         tasks.add(bukkitTask2.getTaskId());
                     }
                 }

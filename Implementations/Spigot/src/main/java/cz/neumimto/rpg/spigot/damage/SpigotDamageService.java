@@ -5,7 +5,6 @@ import cz.neumimto.rpg.common.damage.DamageService;
 import cz.neumimto.rpg.common.entity.CommonProperties;
 import cz.neumimto.rpg.common.entity.EntityService;
 import cz.neumimto.rpg.common.entity.IEntity;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.spigot.entities.ISpigotEntity;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import org.bukkit.entity.EntityType;
@@ -83,18 +82,6 @@ public class SpigotDamageService extends DamageService<ISpigotCharacter, LivingE
 
     public DamageCause damageTypeById(String damageType) {
         return DamageCause.valueOf(damageType);
-    }
-
-    public double getCharacterProjectileDamage(IActiveCharacter character, EntityType type) {
-        if (character.isStub() || type == null) {
-            return 1;
-        }
-        double base = character.getBaseProjectileDamage(type.name())
-                + entityService.getEntityProperty(character, CommonProperties.projectile_damage_bonus);
-        if (type == EntityType.SPECTRAL_ARROW || type == EntityType.ARROW) {
-            base *= entityService.getEntityProperty(character, CommonProperties.arrow_damage_mult);
-        }
-        return base;
     }
 
     public boolean damage(LivingEntity attacker, LivingEntity target, DamageCause cause, double damage, boolean knockback) {

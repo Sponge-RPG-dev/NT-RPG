@@ -1,6 +1,5 @@
 package cz.neumimto.rpg.spigot.resources;
 
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.resources.Resource;
 import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;

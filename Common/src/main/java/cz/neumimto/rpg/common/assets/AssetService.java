@@ -11,10 +11,10 @@ public abstract class AssetService {
     public abstract void copyToFile(String s, Path toPath);
 
     public void copyDefaultClasses(Path path) {
-        Path root = path.resolve("skilltrees/");
+        Path skilltrees = path.resolve("skilltrees/");
         try {
-            if (!root.toFile().exists()) {
-                Files.createDirectory(root);
+            if (!skilltrees.toFile().exists()) {
+                Files.createDirectory(skilltrees);
             }
             path = path.resolve("classes/");
             if (!path.toFile().exists()) {
@@ -31,8 +31,8 @@ public abstract class AssetService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        copyToFileIfMissing("defaults/skilltrees/magetree.conf", root.resolve("magetree.conf"));
-        copyToFileIfMissing("defaults/skilltrees/warriortree.conf", root.resolve("warriortree.conf"));
+        copyToFileIfMissing("defaults/skilltrees/magetree.conf", skilltrees.resolve("magetree.conf"));
+        copyToFileIfMissing("defaults/skilltrees/warriortree.conf", skilltrees.resolve("warriortree.conf"));
         copyToFileIfMissing("defaults/classes/primary_classes/Apprentice.conf", path.resolve("primary/Apprentice.conf"));
         copyToFileIfMissing("defaults/classes/primary_classes/Rogue.conf", path.resolve("primary/Rogue.conf"));
         copyToFileIfMissing("defaults/classes/primary_classes/Warrior.conf", path.resolve("primary/Warrior.conf"));

@@ -18,7 +18,6 @@ import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
 import cz.neumimto.rpg.spigot.entities.ISpigotEntity;
 import cz.neumimto.rpg.spigot.entities.ProjectileCache;
 import cz.neumimto.rpg.spigot.entities.SpigotEntityService;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import cz.neumimto.rpg.spigot.events.damage.SpigotEntityProjectileDamageEarlyEvent;
 import cz.neumimto.rpg.spigot.events.damage.SpigotEntitySkillDamageEarlyEvent;
@@ -107,11 +106,10 @@ public class SpigotDamageListener extends AbstractDamageListener implements IRpg
                         target.setSkillOrEffectDamageCause(skill.getSkill());
                     }
                     return;
-                } else {
-                    event.setDamage(0);
                 }
                 processProjectileDamageEarly(event, attacker, target, projectile);
             }
+            return;
         } else {
             if (!(attackerEntity instanceof LivingEntity)) {
                 return;
@@ -185,12 +183,6 @@ public class SpigotDamageListener extends AbstractDamageListener implements IRpg
 
     private void processProjectileDamageEarly(EntityDamageByEntityEvent event, IEntity attacker, IEntity target, Projectile projectile) {
         double newdamage = event.getDamage();
-        if (attacker.getType() == IEntityType.CHARACTER) {
-            ISpigotCharacter c = (ISpigotCharacter) attacker;
-            newdamage += spigotDamageService.getCharacterProjectileDamage(c, projectile.getType());
-        } else if (attacker.getType() == IEntityType.MOB) {
-
-        }
 
         SpigotEntityProjectileDamageEarlyEvent e = Rpg.get().getEventFactory().createEventInstance(SpigotEntityProjectileDamageEarlyEvent.class);
         e.setTarget(target);
