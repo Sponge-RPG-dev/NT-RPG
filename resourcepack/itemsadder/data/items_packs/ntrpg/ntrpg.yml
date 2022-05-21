@@ -1,0 +1,325 @@
+info:
+  namespace: ntrpg
+font_images:
+  ntrpg_mana0:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "mana0"
+    y_position: 2
+
+  ntrpg_mana5:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "mana5"
+    y_position: 2
+
+  ntrpg_mana10:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "mana10"
+    y_position: 2
+
+  ntrpg_mana15:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "mana15"
+    y_position: 2
+
+  ntrpg_mana20:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "mana20"
+    y_position: 2
+
+  ntrpg_mana25:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "mana25"
+    y_position: 2
+
+  ntrpg_mana30:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "mana30"
+    y_position: 2
+
+  ntrpg_mana35:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "mana35"
+    y_position: 2
+
+  ntrpg_mana40:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "mana40"
+    y_position: 2
+
+  ntrpg_mana45:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "mana45"
+    y_position: 2
+
+  ntrpg_mana50:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "mana50"
+    y_position: 2
+
+  ntrpg_mana55:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "mana55"
+    y_position: 2
+
+  ntrpg_mana60:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "mana60"
+    y_position: 2
+
+  ntrpg_mana65:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "mana65"
+    y_position: 2
+
+  ntrpg_mana70:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "mana70"
+    y_position: 2
+
+  ntrpg_mana75:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "mana75"
+    y_position: 2
+
+  ntrpg_mana80:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "mana80"
+    y_position: 2
+
+  ntrpg_mana85:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "mana85"
+    y_position: 2
+
+  ntrpg_mana90:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "mana90"
+    y_position: 2
+
+  ntrpg_mana95:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "mana95"
+    y_position: 2
+
+  ntrpg_mana100:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "mana100"
+    y_position: 2
+
+  ntrpg_mana1:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "mana1"
+    y_position: 2
+
+  ntrpg_mana2:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "mana2"
+    y_position: 2
+
+  ntrpg_rage0:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "rage0"
+    y_position: 2
+
+  ntrpg_rage5:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "rage5"
+    y_position: 2
+
+  ntrpg_rage10:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "rage10"
+    y_position: 2
+
+  ntrpg_rage15:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "rage15"
+    y_position: 2
+
+  ntrpg_rage20:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "rage20"
+    y_position: 2
+
+  ntrpg_rage25:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "rage25"
+    y_position: 2
+
+  ntrpg_rage30:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "rage30"
+    y_position: 2
+
+  ntrpg_rage35:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "rage35"
+    y_position: 2
+
+  ntrpg_rage40:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "rage40"
+    y_position: 2
+
+  ntrpg_rage45:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "rage45"
+    y_position: 2
+
+  ntrpg_rage50:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "rage50"
+    y_position: 2
+
+  ntrpg_rage55:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "rage55"
+    y_position: 2
+
+  ntrpg_rage60:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "rage60"
+    y_position: 2
+
+  ntrpg_rage65:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "rage65"
+    y_position: 2
+
+  ntrpg_rage70:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "rage70"
+    y_position: 2
+
+  ntrpg_rage75:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "rage75"
+    y_position: 2
+
+  ntrpg_rage80:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "rage80"
+    y_position: 2
+
+  ntrpg_rage85:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "rage85"
+    y_position: 2
+
+  ntrpg_rage90:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "rage90"
+    y_position: 2
+
+  ntrpg_rage95:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "rage95"
+    y_position: 2
+
+  ntrpg_rage100:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "rage100"
+    y_position: 2
+
+  ntrpg_bar_empty:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "bar_empty"
+    y_position: 2
+
+  ntrpg_menu_background:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "gui_layout_basic.png"
+    ascent: 20
+    height: 228
