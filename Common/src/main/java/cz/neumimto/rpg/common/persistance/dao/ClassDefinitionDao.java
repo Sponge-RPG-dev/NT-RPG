@@ -70,7 +70,7 @@ public class ClassDefinitionDao {
                     set.add(result);
                 }
             }
-        } catch (IOException e) {
+        } catch (IOException | IllegalArgumentException e) {
             error("Could not read class file: ", e);
         }
         return set;

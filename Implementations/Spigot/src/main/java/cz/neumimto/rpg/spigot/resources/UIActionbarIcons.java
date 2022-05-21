@@ -1,37 +1,25 @@
 package cz.neumimto.rpg.spigot.resources;
 
-import cz.neumimto.rpg.common.entity.players.CharacterService;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.resources.Resource;
-import cz.neumimto.rpg.common.resources.ResourceService;
 import cz.neumimto.rpg.common.utils.MathUtils;
 import cz.neumimto.rpg.spigot.bridges.DatapackManager;
-import cz.neumimto.rpg.spigot.gui.GlyphResolver;
+import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import net.kyori.adventure.text.Component;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
-import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
-public class UIActionbarIcons implements Runnable {
+public class UIActionbarIcons implements Consumer<ISpigotCharacter> {
 
-    @Inject
-    private CharacterService<IActiveCharacter> characterService;
-
-    @Inject
-    private ResourceService resourceService;
-
-    @Inject
-    private GlyphResolver glyphResolver;
-
-    Map<String, Component[]> resource = new HashMap<>();
-
-    Map<String, Component> resourceEmpty = new HashMap<>();
+    static Map<String, Component[]> resource = new HashMap<>();
 
     public static String[] resTypes;
 
-    public UIActionbarIcons(ResourceGui resourceGui) {
+
+    public static void init(ResourceGui resourceGui) {
         resTypes = new String[resourceGui.display.size()];
 
         int i =0;
@@ -41,33 +29,37 @@ public class UIActionbarIcons implements Runnable {
                     .map(a -> DatapackManager.instance.resolveGlyphs(null, a))
                     .toList()
                     .toArray(Component[]::new);
-            this.resource.put(resTypes[i], collect);
-            resourceEmpty.put(display.resource, Component.text(glyphResolver.resolve(null,display.empty)));
+            resource.put(resTypes[i], collect);
             i++;
         }
 
     }
 
     @Override
-    public void run() {
-        for (IActiveCharacter character : characterService.getCharacters()) {
-            Player player = (Player) character.getEntity();
+    public void accept(ISpigotCharacter character) {
+        Player player =  character.getEntity();
 
-            Component c = Component.empty();
-            for (String resType : resTypes) {
-
-                Resource resource = character.getResource(resType);
-                if (resource.getMaxValue() == 0) {
-                    c.append(this.resourceEmpty.get(resType));
-                }
-                double percentage = MathUtils.getPercentage(resource.getValue(), resource.getMaxValue());
-                percentage = percentage > 100 ? 100 : percentage;
-                percentage = percentage < 0 ? 0 : percentage;
-                Component r = this.resource.get(resource.getType())[(int) Math.round(percentage / 5)];
-                c.append(r);
-            }
-            player.sendActionBar(c);
+        if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) {
+            return;
         }
+        if (player.getRemainingAir() != player.getMaximumAir()) {
+            return;
+        }
+
+        Component c = Component.empty();
+        for (String resType : resTypes) {
+
+            Resource characterRes = character.getResource(resType);
+            if (characterRes.getMaxValue() == 0) {
+                continue;
+            }
+            double percentage = MathUtils.getPercentage(characterRes.getValue(), characterRes.getMaxValue());
+            percentage = percentage > 100 ? 100 : percentage;
+            percentage = percentage < 0 ? 0 : percentage;
+            Component r = resource.get(characterRes.getType())[(int) Math.round(percentage / 5)];
+            c = c.append(r);
+        }
+        player.sendActionBar(c);
     }
 
 }

@@ -28,7 +28,8 @@ import java.io.File;
                 @SoftDependency("RPGRegions"),
                 @SoftDependency("Mimic"),
                 @SoftDependency("Oraxen"),
-                @SoftDependency("ItemsAdder")
+                @SoftDependency("ItemsAdder"),
+                @SoftDependency("Denizen")
         }
 )
 @DependsOn(

@@ -136,9 +136,6 @@ public class PluginConfig {
     @Path("SPELLBOOK_ROTATION_COOLDOWN")
     public long SPELLBOOK_COOLDOWN = 1000L;
 
-    @Path("RESOURCE_UI_DISPLAY_TYPE")
-    public String RESOURCE_UI_DISPLAY_TYPE = "ACTIONBAR";
-
     @Path("SKILL_SETTINGS_ICONS")
     @Conversion(SSIConverter.class)
     public Map<String, ItemString> SKILL_SETTINGS_ICONS = new HashMap<String, ItemString>() {{
@@ -151,12 +148,6 @@ public class PluginConfig {
 
     @Path("DISABLED_HOOKS")
     public List<String> DISABLED_HOOKS = new ArrayList<>();
-
-    @Path("TEXT_MANABAR_PREFIX")
-    public String TEXT_MANABAR_PREFIX = "oraxen:ntrpg_split3";
-
-    @Path("TEXT_MANABAR_PREFIX_REPEAT")
-    public int TEXT_MANABAR_PREFIX_REPEAT = 15;
 
     private static class SetToListConverter implements Converter<Set, List> {
         @Override

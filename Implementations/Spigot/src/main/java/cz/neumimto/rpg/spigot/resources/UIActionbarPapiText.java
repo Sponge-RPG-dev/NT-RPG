@@ -1,24 +1,16 @@
 package cz.neumimto.rpg.spigot.resources;
 
-import cz.neumimto.rpg.common.entity.players.CharacterService;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.common.resources.ResourceService;
+import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 
-import javax.inject.Inject;
+import java.util.function.Consumer;
 
-public class UIActionbarPapiText implements Runnable {
+public class UIActionbarPapiText implements Consumer<ISpigotCharacter> {
 
-    @Inject
-    private CharacterService<IActiveCharacter> characterService;
-
-    @Inject
-    private ResourceService resourceService;
-
-    public UIActionbarPapiText(ResourceGui resourceGui) {
+    public static void init(ResourceGui resourceGui) {
     }
 
     @Override
-    public void run() {
+    public void accept(ISpigotCharacter character) {
 
     }
 }

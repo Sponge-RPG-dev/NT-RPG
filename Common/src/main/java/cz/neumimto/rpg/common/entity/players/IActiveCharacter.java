@@ -239,4 +239,7 @@ public interface IActiveCharacter<T, P extends IParty> extends IEntity<T> {
     Stack<String> getGuiCommandHistory();
 
     void removeResource(String type);
+
+    void updateResourceUIHandler();
+
 }

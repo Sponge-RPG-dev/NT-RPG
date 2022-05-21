@@ -292,7 +292,7 @@ public class AdminCommands extends BaseCommand {
         }
 
         if (reloadGuis) {
-
+            Rpg.get().getResourceService().reload();
         }
 
         doImplSpecificReload();

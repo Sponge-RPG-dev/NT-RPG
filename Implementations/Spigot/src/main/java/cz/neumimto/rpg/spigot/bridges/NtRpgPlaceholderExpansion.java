@@ -27,7 +27,7 @@ public class NtRpgPlaceholderExpansion extends PlaceholderExpansion {
     private PluginConfig pluginConfig;
 
     @Inject
-    private ResourceService resourceService;
+    private ResourceService resourceService;;
 
     @Override
     public String getIdentifier() {
@@ -57,6 +57,7 @@ public class NtRpgPlaceholderExpansion extends PlaceholderExpansion {
     @Override
     public boolean register() {
         DatapackManager.setGlyphResolver(PlaceholderAPI::setPlaceholders);
+        resourceService.reload();
         return super.register();
     }
 

@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 public class SpigotPreloadCharacter extends PreloadCharacter<Player, SpigotParty> implements ISpigotCharacter {
 
@@ -147,4 +148,13 @@ public class SpigotPreloadCharacter extends PreloadCharacter<Player, SpigotParty
     }
 
 
+    @Override
+    public void setResourceUIHandler(Consumer<ISpigotCharacter> handler) {
+
+    }
+
+    @Override
+    public void updateResourceUIHandler() {
+
+    }
 }

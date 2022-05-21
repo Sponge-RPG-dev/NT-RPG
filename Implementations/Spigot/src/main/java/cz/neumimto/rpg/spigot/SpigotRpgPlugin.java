@@ -44,6 +44,10 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.server.PluginEnableEvent;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.jetbrains.annotations.NotNull;
@@ -60,7 +64,7 @@ import static net.kyori.adventure.text.Component.*;
 import static net.kyori.adventure.text.format.NamedTextColor.*;
 
 @AutoService(NtRpgBootstrap.class)
-public class SpigotRpgPlugin implements NtRpgBootstrap {
+public class SpigotRpgPlugin implements NtRpgBootstrap, Listener {
 
     private static JavaPlugin plugin;
 
@@ -97,6 +101,8 @@ public class SpigotRpgPlugin implements NtRpgBootstrap {
         plugin = (JavaPlugin) data.plugin();
         bukkitAudiences = BukkitAudiences.create(getInstance());
         dataFolder = data.workingDir();
+
+        Bukkit.getPluginManager().registerEvents(this, (Plugin) data.plugin());
 
         Log.setLogger(data.logger());
 
@@ -176,58 +182,6 @@ public class SpigotRpgPlugin implements NtRpgBootstrap {
 
             injector.getInstance(DatapackManager.class).init();
 
-            initSafely("PlaceholderAPI", () -> {
-                Log.info("PlaceholderAPI installed - registering NTRPG placeholders");
-                injector.getInstance(NtRpgPlaceholderExpansion.class).register();
-            });
-
-            initSafely("HolographicDisplays", () -> {
-                Log.info("HolographicDisplays installed - NTRPG will use it for some extra guis");
-                HolographicDisplaysExpansion hde = injector.getInstance(HolographicDisplaysExpansion.class);
-                hde.init();
-                Bukkit.getPluginManager().registerEvents(hde, getInstance());
-            });
-
-            initSafely("MMOItems", () ->{
-                Log.info("MMOItems installed - Provided hook for Power system and some stuff");
-                MMOItemsExpansion mmie = injector.getInstance(MMOItemsExpansion.class);
-                mmie.init(injector.getInstance(SpigotCharacterService.class));
-                Bukkit.getPluginManager().registerEvents(mmie, getInstance());
-            });
-
-            initSafely("MythicMobs", () -> {
-                Log.info("MMOItems installed - Provided hook for Power system and some stuff");
-                MythicalMobsExpansion mme = injector.getInstance(MythicalMobsExpansion.class);
-                mme.init(injector.getInstance(SpigotEntityService.class));
-                Bukkit.getPluginManager().registerEvents(mme, getInstance());
-            });
-
-            initSafely("RPGRegions", () -> {
-                Log.info("RPGRegions installed - registering experience extension");
-                RpgRegionsClassExpReward.init();
-            });
-
-            initSafely("Mimic", () -> {
-                Log.info("Mimic installed - registering level and class systems");
-                MimicHook mimicHook = injector.getInstance(MimicHook.class);
-                mimicHook.init(plugin);
-            });
-
-            initSafely("Denizen", () -> {
-                Log.info("Denizen installed - enabling denizen skill scripting extension");
-                DenizenHook.init(plugin);
-            });
-
-            initSafely("Oraxen", () -> {
-                Log.info("Oraxen installed - any oraxen item can be accessed from ntrpg configs using format 'oraxen:my_custom_item'");
-                injector.getInstance(OraxenHook.class).init();
-            });
-
-            initSafely("ItemsAddder", () -> {
-                Log.info("ItemsAdder installed - any ia item can be accessed from ntrpg configs using format 'itemsadder:my_custom_item'");
-                injector.getInstance(ItemsAdderHook.class).init();
-            });
-
             Rpg.get().registerListeners(injector.getInstance(OnKeyPress.class));
             PacketHandler.init();
             new SpigotSkillTreeViewModel(); //just to call static block
@@ -250,8 +204,63 @@ public class SpigotRpgPlugin implements NtRpgBootstrap {
 
     }
 
-    public static void initSafely(String name, Runnable r) {
-        if (!Bukkit.getPluginManager().isPluginEnabled(name)) {
+    @EventHandler
+    public void pluginEnabledEvent(PluginEnableEvent event) {
+        initSafely(event,"PlaceholderAPI", () -> {
+            Log.info("PlaceholderAPI installed - registering NTRPG placeholders");
+            injector.getInstance(NtRpgPlaceholderExpansion.class).register();
+        });
+
+        initSafely(event, "HolographicDisplays", () -> {
+            Log.info("HolographicDisplays installed - NTRPG will use it for some extra guis");
+            HolographicDisplaysExpansion hde = injector.getInstance(HolographicDisplaysExpansion.class);
+            hde.init();
+            Bukkit.getPluginManager().registerEvents(hde, getInstance());
+        });
+
+        initSafely(event, "MMOItems", () ->{
+            Log.info("MMOItems installed - Provided hook for Power system and some stuff");
+            MMOItemsExpansion mmie = injector.getInstance(MMOItemsExpansion.class);
+            mmie.init(injector.getInstance(SpigotCharacterService.class));
+            Bukkit.getPluginManager().registerEvents(mmie, getInstance());
+        });
+
+        initSafely(event, "MythicMobs", () -> {
+            Log.info("MythicMobs installed - Provided hook for Power system and some stuff");
+            MythicalMobsExpansion mme = injector.getInstance(MythicalMobsExpansion.class);
+            mme.init(injector.getInstance(SpigotEntityService.class));
+            Bukkit.getPluginManager().registerEvents(mme, getInstance());
+        });
+
+        initSafely(event, "RPGRegions", () -> {
+            Log.info("RPGRegions installed - registering experience extension");
+            RpgRegionsClassExpReward.init();
+        });
+
+        initSafely(event, "Mimic", () -> {
+            Log.info("Mimic installed - registering level and class systems");
+            MimicHook mimicHook = injector.getInstance(MimicHook.class);
+            mimicHook.init(plugin);
+        });
+
+        initSafely(event, "Denizen", () -> {
+            Log.info("Denizen installed - enabling denizen skill scripting extension");
+            DenizenHook.init(plugin);
+        });
+
+        initSafely(event, "Oraxen", () -> {
+            Log.info("Oraxen installed - any oraxen item can be accessed from ntrpg configs using format 'oraxen:my_custom_item'");
+            injector.getInstance(OraxenHook.class).init();
+        });
+
+        initSafely(event, "ItemsAdder", () -> {
+             Log.info("ItemsAdder installed - any ia item can be accessed from ntrpg configs using format 'itemsadder:my_custom_item'");
+            injector.getInstance(ItemsAdderHook.class).init();
+        });
+    }
+
+    public static void initSafely(PluginEnableEvent event, String name, Runnable r) {
+        if (!event.getPlugin().getName().equalsIgnoreCase(name)) {
             return;
         }
         if (Rpg.get().getPluginConfig().DISABLED_HOOKS

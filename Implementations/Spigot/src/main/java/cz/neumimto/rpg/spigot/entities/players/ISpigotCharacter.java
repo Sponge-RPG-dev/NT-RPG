@@ -10,6 +10,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.Map;
 import java.util.Stack;
+import java.util.function.Consumer;
 
 public interface ISpigotCharacter extends IActiveCharacter<Player, SpigotParty>, ISpigotEntity<Player>, IEntity<Player> {
 
@@ -32,4 +33,7 @@ public interface ISpigotCharacter extends IActiveCharacter<Player, SpigotParty>,
     void setSpellbookPage(int page);
 
     Stack<String> getGuiCommandHistory();
+
+    void setResourceUIHandler(Consumer<ISpigotCharacter> handler);
+
 }
