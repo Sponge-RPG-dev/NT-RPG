@@ -6,13 +6,17 @@ import cz.neumimto.rpg.spigot.bridges.DatapackManager;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import net.kyori.adventure.text.Component;
 import org.bukkit.GameMode;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityAirChangeEvent;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class UIActionbarIcons implements Consumer<ISpigotCharacter> {
+public class UIActionbarIcons implements Consumer<ISpigotCharacter>, Listener {
 
     static Map<String, Component[]> resource = new HashMap<>();
 
@@ -62,4 +66,16 @@ public class UIActionbarIcons implements Consumer<ISpigotCharacter> {
         player.sendActionBar(c);
     }
 
+
+    @EventHandler
+    public void onAirChange(EntityAirChangeEvent event) {
+        Entity e = event.getEntity();
+        if (e instanceof Player player) {
+            if (player.getRemainingAir() != player.getMaximumAir()) {
+                return;
+            } else {
+                player.sendActionBar(Component.empty());
+            }
+        }
+    }
 }
