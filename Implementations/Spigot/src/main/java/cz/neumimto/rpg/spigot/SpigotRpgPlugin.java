@@ -20,6 +20,7 @@ import cz.neumimto.rpg.spigot.bridges.HolographicDisplaysExpansion;
 import cz.neumimto.rpg.spigot.bridges.NtRpgPlaceholderExpansion;
 import cz.neumimto.rpg.spigot.bridges.denizen.DenizenHook;
 import cz.neumimto.rpg.spigot.bridges.itemsadder.ItemsAdderHook;
+import cz.neumimto.rpg.spigot.bridges.luckperms.LuckpermsExpansion;
 import cz.neumimto.rpg.spigot.bridges.mimic.MimicHook;
 import cz.neumimto.rpg.spigot.bridges.mmoitems.MMOItemsExpansion;
 import cz.neumimto.rpg.spigot.bridges.mythicalmobs.MythicalMobsExpansion;
@@ -256,6 +257,11 @@ public class SpigotRpgPlugin implements NtRpgBootstrap, Listener {
         initSafely(event, "ItemsAdder", () -> {
              Log.info("ItemsAdder installed - any ia item can be accessed from ntrpg configs using format 'itemsadder:my_custom_item'");
             injector.getInstance(ItemsAdderHook.class).init();
+        });
+
+        initSafely(event, "LuckPerms", () -> {
+            Log.info("LuckPerms installed - registering additional permission contexts'");
+            injector.getInstance(LuckpermsExpansion.class).init();
         });
     }
 

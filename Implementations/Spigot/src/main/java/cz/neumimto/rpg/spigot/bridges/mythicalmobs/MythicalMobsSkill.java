@@ -7,7 +7,11 @@ import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import io.lumine.mythic.lib.damage.DamageType;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.skills.Skill;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MythicalMobsSkill extends ActiveSkill<ISpigotCharacter> {
 
@@ -27,7 +31,12 @@ public class MythicalMobsSkill extends ActiveSkill<ISpigotCharacter> {
     public SkillResult cast(ISpigotCharacter character, PlayerSkillContext skillContext) {
         Player player = character.getPlayer();
         float power = (float) skillContext.getCachedComputedSkillSettings().getDouble("power");
-        boolean casted = MythicMobs.inst().getAPIHelper().castSkill(player, mmSkill.getInternalName(), power);
+
+        List<Entity> targets = new ArrayList<>();
+        targets.add(player);
+
+        boolean casted = MythicMobs.inst().getAPIHelper().castSkill(player, mmSkill.getInternalName(), player, player.getLocation(), targets, null, power);
+
         return casted ? SkillResult.OK : SkillResult.CANCELLED;
     }
 

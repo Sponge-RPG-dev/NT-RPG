@@ -85,6 +85,8 @@ dependencies {
 
     compileOnly 'com.gitlab.SamB440:RPGRegions-2:' + project.rpgregions
 
+    compileOnly 'net.luckperms:api:5.4'
+
     compileOnly 'com.github.oraxen:oraxen:-SNAPSHOT'
     compileOnly 'net.kyori:adventure-platform-bukkit:4.1.0'
     compileOnly 'com.github.LoneDev6:API-ItemsAdder:3.1.0b'
