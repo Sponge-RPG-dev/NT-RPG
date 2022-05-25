@@ -12,19 +12,19 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class GainManaMechanic implements ISkillCastMechanic, ValidatedMechanic {
+public class GainRageMechanic implements ISkillCastMechanic, ValidatedMechanic {
 
     @Inject
     private CharacterService characterService;
 
     @Override
     public boolean isValidForContext(SkillData skillData) {
-        return isValid(skillData, "gain_mana");
+        return isValid(skillData, "gain_rage");
     }
 
     @Override
     public void processAfterSuccess(IActiveCharacter character, PlayerSkillContext context) {
-        double f = context.getFloatNodeValue("gain_mana");
-        characterService.gainResource(character, f, context.getSkill(), ResourceService.mana);
+        double f = context.getFloatNodeValue("gain_rage");
+        characterService.gainResource(character, f, context.getSkill(), ResourceService.rage);
     }
 }

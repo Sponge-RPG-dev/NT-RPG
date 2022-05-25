@@ -54,7 +54,8 @@ public class UIActionbarIcons implements Consumer<ISpigotCharacter>, Listener {
         for (String resType : resTypes) {
 
             Resource characterRes = character.getResource(resType);
-            if (characterRes.getMaxValue() == 0) {
+
+            if (characterRes == null || characterRes.getMaxValue() == 0) {
                 continue;
             }
             double percentage = MathUtils.getPercentage(characterRes.getValue(), characterRes.getMaxValue());

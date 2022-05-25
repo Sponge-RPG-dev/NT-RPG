@@ -25,10 +25,11 @@ import cz.neumimto.rpg.spigot.skills.SpigotSkillService;
 import cz.neumimto.rpg.spigot.skills.SpigotSkillTreeInterfaceModel;
 import de.tr7zw.nbtapi.NBTItem;
 import net.kyori.adventure.text.Component;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -200,21 +201,21 @@ public class SpigotGuiHelper {
 
 
             for (CharacterBase base : playersCharacters) {
-                ComponentBuilder builder = new ComponentBuilder("[")
-                        .color(net.md_5.bungee.api.ChatColor.YELLOW);
+                var builder = Component.text("[").color(NamedTextColor.YELLOW);
                 if (base.getName().equalsIgnoreCase(currentlyCreated.getName())) {
-                    builder.append("*").color(net.md_5.bungee.api.ChatColor.RED);
+                    builder = builder.append(Component.text("*").color(NamedTextColor.RED));
                 } else {
-                    builder.append("SELECT").event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/character switch " + base.getName()))
-                            .color(net.md_5.bungee.api.ChatColor.GREEN);
+                    builder = builder.append(Component.text("SELECT")
+                                    .color(NamedTextColor.GREEN)
+                                    .clickEvent(ClickEvent.runCommand("/char switch " + base.getName())));
                 }
 
-                builder.append("] ").color(net.md_5.bungee.api.ChatColor.YELLOW)
-                        .append(base.getName() + " ").color(net.md_5.bungee.api.ChatColor.GOLD)
-                        .append(base.getCharacterClasses().stream().map(CharacterClass::getName).collect(Collectors.joining(", ")))
-                        .color(net.md_5.bungee.api.ChatColor.GRAY);
+                builder = builder.append(Component.text("] ")).color(NamedTextColor.YELLOW)
+                        .append(Component.text(base.getName() + " ")).color(NamedTextColor.GOLD)
+                        .append(Component.text(base.getCharacterClasses().stream().map(CharacterClass::getName).collect(Collectors.joining(", ")))
+                        .color(NamedTextColor.GRAY));
 
-                player.spigot().sendMessage(builder.create());
+                player.sendMessage(builder);
             }
 
 
@@ -310,7 +311,7 @@ public class SpigotGuiHelper {
         List<String> lore;
 
         ISkill skill = skillData.getSkill();
-        ChatColor nameColor = getSkillTextColor(character, skill, skillData, skillTree);
+        TextColor nameColor = getSkillTextColor(character, skill, skillData, skillTree);
 
         List<String> fromCache = model.getFromCache(skill);
 
@@ -344,7 +345,7 @@ public class SpigotGuiHelper {
 
     public static ItemStack toItemStack(ISpigotCharacter character, PlayerSkillContext skillContext) {
         SkillData skillData = skillContext.getSkillData();
-        List<String> lore = itemLoreFactory.toLore(character, skillData, ChatColor.GREEN);
+        List<String> lore = itemLoreFactory.toLore(character, skillData, NamedTextColor.GREEN);
 
         ItemStack itemStack = DatapackManager.instance.findById(skillData.getIcon());
         createSkillIconItemStack(itemStack, skillData, lore);
@@ -394,13 +395,13 @@ public class SpigotGuiHelper {
         return nbtItem.getItem();
     }
 
-    private static ChatColor getSkillTextColor(IActiveCharacter character, ISkill skill, SkillData skillData, SkillTree skillTree) {
+    private static TextColor getSkillTextColor(IActiveCharacter character, ISkill skill, SkillData skillData, SkillTree skillTree) {
         if (character.hasSkill(skillData.getSkillId())) {
-            return ChatColor.GREEN;
+            return NamedTextColor.GREEN;
         }
         Collection<PlayerClassData> values = character.getClasses().values();
         Optional<PlayerClassData> first = values.stream().filter(a -> a.getClassDefinition().getSkillTree() == skillTree).findFirst();
-        return first.filter(playerClassData -> Rpg.get().getCharacterService().canLearnSkill(character, playerClassData.getClassDefinition(), skill).isOk()).map(playerClassData -> ChatColor.GRAY).orElse(ChatColor.RED);
+        return first.filter(playerClassData -> Rpg.get().getCharacterService().canLearnSkill(character, playerClassData.getClassDefinition(), skill).isOk()).map(playerClassData -> NamedTextColor.GRAY).orElse(NamedTextColor.RED);
     }
 
     public static String formatPropertyValue(Float value) {

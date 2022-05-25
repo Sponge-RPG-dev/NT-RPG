@@ -20,6 +20,7 @@ import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.common.events.skill.SkillPostUsageEvent;
 import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.common.model.CharacterBase;
+import cz.neumimto.rpg.common.resources.Resource;
 import cz.neumimto.rpg.common.skills.*;
 import cz.neumimto.rpg.common.skills.tree.SkillTree;
 import cz.neumimto.rpg.common.utils.ActionResult;
@@ -161,6 +162,18 @@ public class AdminCommands extends BaseCommand {
             executor.sendMessage(actionResult.getMessage());
         }
     }
+
+    @CommandCompletion("@players @resource")
+    @Subcommand("set-resource")
+    public void setResource(CommandIssuer executor, OnlineOtherPlayer target, String resource, double value) {
+        Resource resource1 = target.character.getResource(resource);
+        if (resource1 == null) {
+            return;
+        }
+        resource1.setValue(Math.min(resource1.getMaxValue(), value));
+        executor.sendMessage(Rpg.get().getLocalizationService().translate("resource.set.ok"));
+    }
+
 
     @CommandCompletion("@players @classtypes @nothing")
     @Subcommand("add-unique-skillpoint")

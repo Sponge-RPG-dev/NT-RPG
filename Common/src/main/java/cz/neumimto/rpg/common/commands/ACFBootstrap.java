@@ -88,6 +88,10 @@ public class ACFBootstrap {
                 Rpg.get().getClassService().getClasses().keySet()
         );
 
+        manager.getCommandCompletions().registerAsyncCompletion("resource", c ->
+                Rpg.get().getResourceService().getRegistry().keySet()
+        );
+
         manager.getCommandCompletions().registerAsyncCompletion("class", c ->
                 Rpg.get().getClassService().getClassDefinitions().stream()
                         .filter(a -> c.getIssuer().hasPermission("ntrpg.class." + a.getName().toLowerCase()))

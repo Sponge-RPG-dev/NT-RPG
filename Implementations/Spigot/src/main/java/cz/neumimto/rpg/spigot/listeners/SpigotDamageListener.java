@@ -8,13 +8,18 @@ import cz.neumimto.rpg.common.configuration.PluginConfig;
 import cz.neumimto.rpg.common.damage.AbstractDamageListener;
 import cz.neumimto.rpg.common.entity.IEntity;
 import cz.neumimto.rpg.common.entity.IEntityType;
+import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.events.damage.IEntityWeaponDamageEarlyEvent;
 import cz.neumimto.rpg.common.inventory.InventoryHandler;
 import cz.neumimto.rpg.common.items.RpgItemStack;
+import cz.neumimto.rpg.common.resources.Resource;
+import cz.neumimto.rpg.common.resources.ResourceService;
 import cz.neumimto.rpg.common.skills.ISkill;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.spigot.SpigotRpg;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
+import cz.neumimto.rpg.spigot.effects.common.DefaultRageDecay;
+import cz.neumimto.rpg.spigot.effects.common.model.DefaultRageDecayModel;
 import cz.neumimto.rpg.spigot.entities.ISpigotEntity;
 import cz.neumimto.rpg.spigot.entities.ProjectileCache;
 import cz.neumimto.rpg.spigot.entities.SpigotEntityService;
@@ -147,8 +152,40 @@ public class SpigotDamageListener extends AbstractDamageListener implements IRpg
             event.setCancelled(true);
             return;
         }
-
         event.setDamage(e.getDamage());
+
+        processRageGain((IEntity) e.getTarget(), e.getDamager());
+    }
+
+    public static void processRageGain(IEntity target, IEntity damager) {
+        if (target.hasEffect(DefaultRageDecay.name) && target instanceof IActiveCharacter a) {
+            Resource resource = a.getResource(ResourceService.rage);
+            if (resource.getMaxValue() == 0) {
+                return;
+            }
+
+            DefaultRageDecay effect = (DefaultRageDecay) target.getEffect(DefaultRageDecay.name);
+            DefaultRageDecayModel value = effect.getValue();
+            if (damager.getType() == IEntityType.CHARACTER) {
+                Rpg.get().getCharacterService().gainResource(a,value.damage_taken_from_players,effect,ResourceService.rage);
+            } else {
+                Rpg.get().getCharacterService().gainResource(a,value.damage_taken_from_mobs,effect,ResourceService.rage);
+            }
+        }
+        if (damager.hasEffect(DefaultRageDecay.name) && damager instanceof IActiveCharacter a) {
+            Resource resource = a.getResource(ResourceService.rage);
+            if (resource.getMaxValue() == 0) {
+                return;
+            }
+
+            DefaultRageDecay effect = (DefaultRageDecay) target.getEffect(DefaultRageDecay.name);
+            DefaultRageDecayModel value = effect.getValue();
+            if (damager.getType() == IEntityType.CHARACTER) {
+                Rpg.get().getCharacterService().gainResource(a,value.damage_dealt_to_players,effect,ResourceService.rage);
+            } else {
+                Rpg.get().getCharacterService().gainResource(a,value.damage_dealt_to_mobs,effect,ResourceService.rage);
+            }
+        }
     }
 
     private void processSkillDamageEarly(EntityDamageByEntityEvent event, ISkill skill, IEntity attacker, ISpigotEntity target) {
@@ -167,6 +204,7 @@ public class SpigotDamageListener extends AbstractDamageListener implements IRpg
         e.setTarget(target);
         e.setDamage(newdamage);
         e.setSkill(skill);
+        e.setDamager(attacker);
 
         if (Rpg.get().postEvent(e)) {
             event.setCancelled(true);
@@ -179,12 +217,15 @@ public class SpigotDamageListener extends AbstractDamageListener implements IRpg
         }
 
         event.setDamage(e.getDamage());
+
+        processRageGain(target, attacker);
     }
 
     private void processProjectileDamageEarly(EntityDamageByEntityEvent event, IEntity attacker, IEntity target, Projectile projectile) {
         double newdamage = event.getDamage();
 
         SpigotEntityProjectileDamageEarlyEvent e = Rpg.get().getEventFactory().createEventInstance(SpigotEntityProjectileDamageEarlyEvent.class);
+        e.setDamager(attacker);
         e.setTarget(target);
         e.setDamage(newdamage);
         e.setProjectile(projectile);
@@ -198,6 +239,7 @@ public class SpigotDamageListener extends AbstractDamageListener implements IRpg
             event.setCancelled(true);
             return;
         }
+        processRageGain(attacker, e.getTarget());
 
         event.setDamage(e.getDamage());
     }

@@ -1,4 +1,4 @@
-package cz.neumimto.rpg.common.resources;
+package cz.neumimto.rpg.spigot.effects.common;
 
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.effects.*;
@@ -6,19 +6,25 @@ import cz.neumimto.rpg.common.entity.IEffectConsumer;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.events.character.CharacterResourceChangeValueEvent;
 import cz.neumimto.rpg.common.gui.Gui;
+import cz.neumimto.rpg.common.resources.Resource;
+import cz.neumimto.rpg.common.resources.ResourceService;
+import cz.neumimto.rpg.spigot.effects.common.model.DefaultRageDecayModel;
 
 /**
  * Created by NeumimTo on 9.8.2015.
  */
 @Generate(id = "name", description = "A component which enables rage decay")
-public class DefaultRageDecay extends EffectBase {
+public class DefaultRageDecay extends EffectBase<DefaultRageDecayModel> {
 
     public static final String name = "DefaultRageRegen";
     private IActiveCharacter character;
 
-    public DefaultRageDecay(IEffectConsumer character) {
+    @Generate.Constructor
+    public DefaultRageDecay(IEffectConsumer character, long duration, @Generate.Model DefaultRageDecayModel model) {
         super(name, character);
         this.character = (IActiveCharacter) character;
+        setValue(model);
+        setDuration(duration);
         setPeriod(Rpg.get().getPluginConfig().RAGE_DECAY_RATE);
         setDuration(-1);
         addEffectType(CoreEffectTypes.RAGE_DECAY);
@@ -63,6 +69,7 @@ public class DefaultRageDecay extends EffectBase {
 
         Resource resource = event.getTarget().getResource(event.getType());
         resource.setValue(current);
+        character.updateResourceUIHandler();
     }
 
     @Override

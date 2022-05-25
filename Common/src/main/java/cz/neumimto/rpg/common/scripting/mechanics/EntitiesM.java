@@ -36,11 +36,12 @@ public class EntitiesM implements NTScriptProxy {
     }
 
     @Handler
-    @Function("regain_mana")
-    public void regain_mana(@NamedParam("e|entity") IActiveCharacter target,
+    @Function("add_mana")
+    public void add_resource(@NamedParam("e|entity") IActiveCharacter target,
                             @NamedParam("a|amount") float amount,
+                             @NamedParam("r|resource") String resource,
                             @NamedParam("s|source") IRpgElement skill) {
-        characterService.gainMana(target, amount, skill);
+        characterService.gainResource(target, amount, skill, resource);
     }
 
 

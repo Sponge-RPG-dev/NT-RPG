@@ -1035,13 +1035,13 @@ public abstract class CharacterService<T extends IActiveCharacter> {
         return playerDao.markCharacterForRemoval(player, charName);
     }
 
-    public void gainMana(T character, double manaToAdd, IRpgElement source) {
-        Resource mana = character.getResource(ResourceService.mana);
-        if (mana == null) {
+    public void gainResource(T character, double manaToAdd, IRpgElement source, String resource) {
+        Resource resOrigin = character.getResource(resource);
+        if (resOrigin == null) {
             return;
         }
-        double current = mana.getValue();
-        double max = mana.getMaxValue();
+        double current = resOrigin.getValue();
+        double max = resOrigin.getMaxValue();
         if (current >= max) {
             return;
         }
@@ -1062,7 +1062,8 @@ public abstract class CharacterService<T extends IActiveCharacter> {
         current += event.getAmount();
         if (current > max) current = max;
 
-        event.getTarget().getResource(ResourceService.mana).setValue(current);
+        Resource r = event.getTarget().getResource(event.getType());
+        r.setValue(Math.min(current, r.getMaxValue()));
     }
 
     public ActionResult canGainClass(T character, ClassDefinition klass) {

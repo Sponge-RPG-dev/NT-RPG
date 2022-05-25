@@ -3,7 +3,6 @@ package cz.neumimto.rpg.spigot.listeners;
 import com.google.auto.service.AutoService;
 import cz.neumimto.rpg.common.ResourceLoader;
 import cz.neumimto.rpg.common.effects.EffectType;
-import cz.neumimto.rpg.common.entity.IReservable;
 import cz.neumimto.rpg.common.events.damage.DamageIEntityEarlyEvent;
 import cz.neumimto.rpg.common.resources.Resource;
 import cz.neumimto.rpg.common.resources.ResourceService;
@@ -50,7 +49,9 @@ public class SkillListener implements IRpgListener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
     public void onDamageSkillEarly(SpigotEntitySkillDamageEarlyEvent event) {
         processManaEffect(event);
+
     }
+
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
     public void onDamageWeaponEarly(SpigotEntityWeaponDamageEarlyEvent event) {

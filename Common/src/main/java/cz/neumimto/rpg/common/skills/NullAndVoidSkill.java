@@ -13,6 +13,6 @@ public class NullAndVoidSkill extends ActiveSkill {
 
     @Override
     public SkillResult onPreUse(Object character, PlayerSkillContext esi) {
-        return SkillResult.CANCELLED;
+        return SkillResult.OK   ;
     }
 }
