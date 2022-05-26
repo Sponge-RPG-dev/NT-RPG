@@ -36,7 +36,7 @@ public class EntitiesM implements NTScriptProxy {
     }
 
     @Handler
-    @Function("add_mana")
+    @Function("gain_resource")
     public void add_resource(@NamedParam("e|entity") IActiveCharacter target,
                             @NamedParam("a|amount") float amount,
                              @NamedParam("r|resource") String resource,

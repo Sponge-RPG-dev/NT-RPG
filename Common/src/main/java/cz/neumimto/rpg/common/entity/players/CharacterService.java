@@ -10,7 +10,6 @@ import cz.neumimto.rpg.common.damage.DamageService;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.effects.IEffectContainer;
 import cz.neumimto.rpg.common.effects.core.ClickComboActionComponent;
-import cz.neumimto.rpg.common.effects.core.CombatEffect;
 import cz.neumimto.rpg.common.entity.CommonProperties;
 import cz.neumimto.rpg.common.entity.EntityService;
 import cz.neumimto.rpg.common.entity.PropertyService;
@@ -306,7 +305,6 @@ public abstract class CharacterService<T extends IActiveCharacter> {
         info("Initializing character " + character.getCharacterBase().getName());
         String msg = localizationService.translate(LocalizationKeys.CHARACTER_INITIALIZED, arg("character", character.getName()));
         character.sendMessage(msg);
-        addDefaultEffects(character);
         Set<BaseCharacterAttribute> baseCharacterAttribute = character.getCharacterBase().getBaseCharacterAttribute();
 
         for (BaseCharacterAttribute at : baseCharacterAttribute) {
@@ -1025,8 +1023,6 @@ public abstract class CharacterService<T extends IActiveCharacter> {
 
         character.getResource(ResourceService.mana).setValue(0);
 
-        addDefaultEffects(character);
-
         inventoryService.initializeCharacterInventory(character);
     }
 
@@ -1048,6 +1044,7 @@ public abstract class CharacterService<T extends IActiveCharacter> {
 
         CharacterResourceChangeValueEvent event = Rpg.get().getEventFactory().createEventInstance(CharacterResourceChangeValueEvent.class);
 
+        event.setType(resource);
         event.setAmount(manaToAdd);
         event.setTarget(character);
         event.setSource(source);
@@ -1064,6 +1061,7 @@ public abstract class CharacterService<T extends IActiveCharacter> {
 
         Resource r = event.getTarget().getResource(event.getType());
         r.setValue(Math.min(current, r.getMaxValue()));
+        event.getTarget().updateResourceUIHandler();
     }
 
     public ActionResult canGainClass(T character, ClassDefinition klass) {
@@ -1316,10 +1314,6 @@ public abstract class CharacterService<T extends IActiveCharacter> {
         recalculateProperties(character);
         base.setAttributePointsSpent(0);
         base.setAttributePoints(attributePoints);
-    }
-
-    public void addDefaultEffects(T character) {
-        effectService.addEffect(new CombatEffect(character, Rpg.get().getPluginConfig().COMBAT_TIME));
     }
 
     public boolean processUserAction(IActiveCharacter character, UserActionType userActionType) {

@@ -24,7 +24,7 @@ public class Resource {
 
     public void setMaxValue(String source, double maxValue) {
         maxValSource.put(source, maxValue);
-        setMaxValue(maxValSource.values().stream().mapToDouble(value1 -> value1.doubleValue()).sum());
+        setMaxValue(maxValSource.values().stream().mapToDouble(value1 -> value1).sum());
     }
 
     protected void setMaxValue(double maxValue) {
@@ -47,8 +47,8 @@ public class Resource {
     }
 
     public void setTickChange(String source, double tickChange) {
-        tickChangeSource.put(source, maxValue);
-        this.tickChange = tickChangeSource.values().stream().mapToDouble(value1 -> value1.doubleValue()).sum();
+        tickChangeSource.put(source, tickChange);
+        this.tickChange = tickChangeSource.values().stream().mapToDouble(value1 -> value1).sum();
     }
 
     public String getType() {

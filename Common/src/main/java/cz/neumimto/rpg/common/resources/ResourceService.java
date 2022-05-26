@@ -63,6 +63,7 @@ public abstract class ResourceService {
     public void removeResource(IActiveCharacter activeCharacter, ClassResource classResource, String source) {
         Resource resource = activeCharacter.getResource(classResource.type);
         resource.setMaxValue(source, 0);
+        resource.setTickChange(classResource.type, 0);
         if (resource.getMaxValue() == 0) {
             activeCharacter.removeResource(classResource.type);
             return;
@@ -70,7 +71,6 @@ public abstract class ResourceService {
         if (resource.getValue() > resource.getMaxValue()) {
             resource.setValue(resource.getMaxValue());
         }
-        resource.setTickChange(classResource.type, classResource.tickChange);
     }
 
     public void addResource(IActiveCharacter activeCharacter, ClassResource classResource, String source) {
@@ -79,11 +79,11 @@ public abstract class ResourceService {
             resource = registry.get(classResource.type).createFor(activeCharacter);
             activeCharacter.addResource(classResource.type, resource);
         }
-        resource.setMaxValue(source, classResource.baseValue);
+        resource.setMaxValue(source, resource.getMaxValue() + classResource.baseValue);
+        resource.setTickChange(classResource.type, classResource.tickChange);
         if (resource.getValue() > resource.getMaxValue()) {
             resource.setValue(resource.getMaxValue());
         }
-        resource.setTickChange(classResource.type, classResource.tickChange);
     }
 
     public void initializeForPlayer(IActiveCharacter activeCharacter) {

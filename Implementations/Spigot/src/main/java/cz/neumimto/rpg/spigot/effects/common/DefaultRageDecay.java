@@ -14,9 +14,9 @@ import cz.neumimto.rpg.spigot.effects.common.model.DefaultRageDecayModel;
  * Created by NeumimTo on 9.8.2015.
  */
 @Generate(id = "name", description = "A component which enables rage decay")
-public class DefaultRageDecay extends EffectBase<DefaultRageDecayModel> {
+public class DefaultRageDecay extends UnstackableEffectBase<DefaultRageDecayModel> {
 
-    public static final String name = "DefaultRageRegen";
+    public static final String name = "DefaultRageDecay";
     private IActiveCharacter character;
 
     @Generate.Constructor
@@ -52,7 +52,7 @@ public class DefaultRageDecay extends EffectBase<DefaultRageDecayModel> {
             return;
         }
         double current = rage.getValue();
-        if (current <= 0) {
+        if (current <= 0 || rage.getMaxValue() == 0) {
             return;
         }
         double regen = rage.getTickChange();
@@ -61,6 +61,7 @@ public class DefaultRageDecay extends EffectBase<DefaultRageDecayModel> {
         event.setTarget(character);
         event.setAmount(regen);
         event.setSource(this);
+        event.setType(ResourceService.rage);
 
         if (Rpg.get().postEvent(event)) return;
 

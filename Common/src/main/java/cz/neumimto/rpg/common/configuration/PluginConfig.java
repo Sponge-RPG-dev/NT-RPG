@@ -65,8 +65,8 @@ public class PluginConfig {
     @Path("MANA_REGENERATION_RATE")
     public long MANA_REGENERATION_RATE = 1000;
 
-    @Path("RAGE_REGENERATION_RATE")
-    public long RAGE_DECAY_RATE = 1000;
+    @Path("RAGE_DECAY_RATE")
+    public long RAGE_DECAY_RATE = 2500;
 
     @Path("ALLOW_COMBAT_FOR_CHARACTERLESS_PLAYERS")
     public boolean ALLOW_COMBAT_FOR_CHARACTERLESS_PLAYERS = true;

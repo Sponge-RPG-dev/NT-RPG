@@ -81,10 +81,6 @@ public class TestCharacterService extends CharacterService<TestCharacter> {
         throw new RuntimeException("assignPlayerToCharacter Not implemeneted");
     }
 
-    @Override
-    public void addDefaultEffects(TestCharacter character) {
-
-    }
 
     @Override
     public int canCreateNewCharacter(UUID uniqueId, String name) {
