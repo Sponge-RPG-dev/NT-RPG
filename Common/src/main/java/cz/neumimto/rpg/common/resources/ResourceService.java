@@ -7,6 +7,7 @@ import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.entity.players.classes.ClassResource;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -17,22 +18,13 @@ public abstract class ResourceService {
 
     public static final String health = "health";
     public static final String stamina = "stamina";
-
-    protected Map<String, FactoryResource> registry = new HashMap<>();
-
-
-    public ResourceService() {
-        registry.put(mana, (character) -> new Resource(mana));
-        registry.put(rage, (character) -> new Resource(rage));
-        registry.put(health, this::getHpTracker);
-   //     registry.put(stamina, this::getStaminaTracker);
-    }
+    protected Set<ResourceDefinition> registry = new HashSet<>();
 
     public void reload() {
 
     }
 
-    public Map<String, FactoryResource> getRegistry() {
+    public Set<ResourceDefinition> getRegistry() {
         return registry;
     }
 
@@ -73,9 +65,14 @@ public abstract class ResourceService {
         }
     }
 
+    protected Resource fromDefinition(ResourceDefinition resourceDefinition) {
+        return new Resource(resourceDefinition.name, resourceDefinition);
+    }
+
     public void addResource(IActiveCharacter activeCharacter, ClassResource classResource, String source) {
         Resource resource = activeCharacter.getResource(classResource.type);
         if (resource == null) {
+            resource = new Resource()
             resource = registry.get(classResource.type).createFor(activeCharacter);
             activeCharacter.addResource(classResource.type, resource);
         }

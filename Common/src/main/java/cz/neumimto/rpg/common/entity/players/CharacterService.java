@@ -988,7 +988,7 @@ public abstract class CharacterService<T extends IActiveCharacter> {
 
 
     public ActionResult addAttribute(T character, AttributeConfig attribute) {
-        return addAttribute(character, new HashMap<AttributeConfig, Integer>() {{
+        return addAttribute(character, new HashMap<>() {{
             put(attribute, 1);
         }});
     }
@@ -1027,7 +1027,7 @@ public abstract class CharacterService<T extends IActiveCharacter> {
     }
 
 
-    public int markCharacterForRemoval(UUID player, java.lang.String charName) {
+    public int markCharacterForRemoval(UUID player, String charName) {
         return playerDao.markCharacterForRemoval(player, charName);
     }
 

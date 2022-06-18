@@ -9,6 +9,7 @@ import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.entity.AbstractMob;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.resources.Resource;
+import cz.neumimto.rpg.common.resources.ResourceDefinition;
 import cz.neumimto.rpg.common.resources.ResourceService;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
@@ -73,29 +74,36 @@ public class SpigotResourceService extends ResourceService {
         }
 
 
-        if (gui == null || gui.resources == null) {
+        if (gui == null) {
             return;
         }
 
-
-        Optional<ResourceGui> first = gui.resources.stream().filter(a -> a.enabled).findFirst();
-        if (first.isPresent()) {
-            ResourceGui resourceGui = first.get();
-            if (resourceGui.refreshRate > 0) {
-                BukkitTask bukkitTask = Bukkit.getScheduler().runTaskTimer(SpigotRpgPlugin.getInstance(),
-                        refreshTask,
-                        0L, resourceGui.refreshRate);
-                tasks.add(bukkitTask.getTaskId());
+        if (gui.resourcesConfig != null) {
+            for (ResourceDefinition resourceDefinition : gui.resourcesConfig) {
+                getRegistry().add(resourceDefinition);
             }
+        }
 
-            switch (resourceGui.type) {
-                case "actionbar_icons" -> {
-                    UIActionbarIcons.init(resourceGui);
-                    uihandlerfactory = UIActionbarIcons::new;
+        if (gui.resources != null) {
+            Optional<ResourceGui> first = gui.resources.stream().filter(a -> a.enabled).findFirst();
+            if (first.isPresent()) {
+                ResourceGui resourceGui = first.get();
+                if (resourceGui.refreshRate > 0) {
+                    BukkitTask bukkitTask = Bukkit.getScheduler().runTaskTimer(SpigotRpgPlugin.getInstance(),
+                            refreshTask,
+                            0L, resourceGui.refreshRate);
+                    tasks.add(bukkitTask.getTaskId());
                 }
-                case "actionbar_papi_text" -> {
-                    UIActionbarPapiText.init(resourceGui);
-                    uihandlerfactory = UIActionbarPapiText::new;
+
+                switch (resourceGui.type) {
+                    case "actionbar_icons" -> {
+                        UIActionbarIcons.init(resourceGui);
+                        uihandlerfactory = UIActionbarIcons::new;
+                    }
+                    case "actionbar_papi_text" -> {
+                        UIActionbarPapiText.init(resourceGui);
+                        uihandlerfactory = UIActionbarPapiText::new;
+                    }
                 }
             }
         }
@@ -120,7 +128,7 @@ public class SpigotResourceService extends ResourceService {
 
     @Override
     protected Resource getStaminaTracker(IActiveCharacter character) {
-        return null;
+        return null ;
     }
 
     @Override
