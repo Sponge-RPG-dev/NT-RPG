@@ -4,9 +4,9 @@ import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.skills.SkillResult;
 import cz.neumimto.rpg.common.skills.types.ActiveSkill;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import io.lumine.mythic.api.skills.Skill;
+import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.mythic.lib.damage.DamageType;
-import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.lumine.xikage.mythicmobs.skills.Skill;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
@@ -15,7 +15,7 @@ import java.util.List;
 
 public class MythicalMobsSkill extends ActiveSkill<ISpigotCharacter> {
 
-    protected MythicMobs mm;
+    protected MythicBukkit mm;
     protected Skill mmSkill;
 
     public MythicalMobsSkill() {
@@ -24,7 +24,7 @@ public class MythicalMobsSkill extends ActiveSkill<ISpigotCharacter> {
 
     @Override
     public void init() {
-        mm = MythicMobs.inst();
+        mm = MythicBukkit.inst();
     }
 
     @Override
@@ -35,7 +35,7 @@ public class MythicalMobsSkill extends ActiveSkill<ISpigotCharacter> {
         List<Entity> targets = new ArrayList<>();
         targets.add(player);
 
-        boolean casted = MythicMobs.inst().getAPIHelper().castSkill(player, mmSkill.getInternalName(), player, player.getLocation(), targets, null, power);
+        boolean casted = MythicBukkit.inst().getAPIHelper().castSkill(player, mmSkill.getInternalName(), player, player.getLocation(), targets, null, power);
 
         return casted ? SkillResult.OK : SkillResult.CANCELLED;
     }

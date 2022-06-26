@@ -81,7 +81,7 @@ dependencies {
 
     compileOnly('io.lumine:MythicLib-dist:' + project.mythiclib)
 
-    compileOnly 'io.lumine.xikage:MythicMobs:' + project.mythicmobs
+    compileOnly 'io.lumine:Mythic:' + project.mythicmobs
 
     compileOnly 'com.gitlab.SamB440:RPGRegions-2:' + project.rpgregions
 

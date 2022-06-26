@@ -4,8 +4,8 @@ import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.common.skills.ISkill;
 import cz.neumimto.rpg.common.skills.SkillConfigLoader;
 import cz.neumimto.rpg.common.utils.DebugLevel;
-import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.lumine.xikage.mythicmobs.skills.Skill;
+import io.lumine.mythic.api.skills.Skill;
+import io.lumine.mythic.bukkit.MythicBukkit;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -19,7 +19,7 @@ public class MythicalMobsWrapperFactory {
 
         Log.info("Found MythicMobs " + abilities.size() + " skills generating ntrpg skills, !! its not guaranteed all of these skills will work flawlessly ingame");
 
-        Collection<Skill> skills = MythicMobs.inst().getSkillManager().getSkills();
+        Collection<Skill> skills = MythicBukkit.inst().getSkillManager().getSkills();
 
         for (Skill skill : skills) {
             list.add(generateSkill(skill, skillConfigLoader));

@@ -854,6 +854,21 @@ public abstract class CharacterService<T extends IActiveCharacter> {
     }
 
     public void addExperiences(T character, double exp, String source) {
+
+        CharacterGainedExperiencesEvent event = eventFactoryService.createEventInstance(CharacterGainedExperiencesEvent.class);
+        event.setCharacter(character);
+        event.setExp(exp);
+        event.setExpSource(source);
+
+        if (Rpg.get().postEvent(event)) {
+            return;
+        }
+
+        character = (T) event.getCharacter();
+        exp = event.getExp();
+        source = event.getExpSource();
+
+
         Map<String, PlayerClassData> classes = character.getClasses();
         for (Map.Entry<String, PlayerClassData> entry : classes.entrySet()) {
             PlayerClassData value = entry.getValue();
@@ -874,7 +889,9 @@ public abstract class CharacterService<T extends IActiveCharacter> {
         }
 
         int level = aClass.getLevel();
-        if (exp > 0) exp = exp * entityService.getEntityProperty(character, CommonProperties.experiences_mult);
+        if (exp > 0) {
+            exp = exp * entityService.getEntityProperty(character, CommonProperties.experiences_mult);
+        }
 
         double lvlexp = aClass.getExperiencesFromLevel();
 

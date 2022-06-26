@@ -67,6 +67,7 @@ public class SpigotEventFactory extends EventFactoryImpl {
         super.registerProvider(SkillFinishedEvent.class, SpigotSkillFinishedEvent::new);
         super.registerProvider(SkillPreUsageEvent.class, SpigotSkillPreUsageEvent::new);
         super.registerProvider(SkillTargetAttemptEvent.class, SpigotSkillTargetAttemptEvent::new);
+        super.registerProvider(CharacterGainedExperiencesEvent.class, SpigotCharacterGainedExperiencesEvent::new);
         //by impl
         super.registerProvider(SpigotCharacterAttributeChange.class, SpigotCharacterAttributeChange::new);
         super.registerProvider(SpigotCharacterChangeGroupEvent.class, SpigotCharacterChangeGroupEvent::new);
@@ -96,6 +97,7 @@ public class SpigotEventFactory extends EventFactoryImpl {
         super.registerProvider(SpigotSkillTargetAttemptEvent.class, SpigotSkillTargetAttemptEvent::new);
         super.registerProvider(SpigotEntityProjectileDamageLateEvent.class, SpigotEntityProjectileDamageLateEvent::new);
         super.registerProvider(SpigotEntityProjectileDamageEarlyEvent.class, SpigotEntityProjectileDamageEarlyEvent::new);
+        super.registerProvider(SpigotCharacterGainedExperiencesEvent.class, SpigotCharacterGainedExperiencesEvent::new);
 
     }
 }

@@ -72,7 +72,7 @@ public abstract class ResourceService {
     public void addResource(IActiveCharacter activeCharacter, ClassResource classResource, String source) {
         Resource resource = activeCharacter.getResource(classResource.type);
         if (resource == null) {
-            resource = new Resource()
+            resource = new Resource();
             resource = registry.get(classResource.type).createFor(activeCharacter);
             activeCharacter.addResource(classResource.type, resource);
         }
