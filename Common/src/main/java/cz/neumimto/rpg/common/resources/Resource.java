@@ -11,12 +11,14 @@ public class Resource {
     private double maxValue;
     private double value;
     private double tickChange;
-
+    private final ResourceDefinition resourceDefinition;
     private final String type;
 
-    public Resource(String type) {
-        this.type = type;
+    public Resource(ResourceDefinition resourceDefinition) {
+        this.type = resourceDefinition.type;
+        this.resourceDefinition = resourceDefinition;
     }
+
 
     public double getMaxValue() {
         return maxValue;

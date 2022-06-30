@@ -16,6 +16,9 @@ public class ResourceDefinition {
     @Path("CombatRegen")
     public boolean combatRegen;
 
+    @Path("RegenRate")
+    public long regenRate;
+
     public static class Types {
         public static String HEALTH = "health";
         public static String STAMINA = "stamina";

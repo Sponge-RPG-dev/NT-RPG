@@ -19,6 +19,7 @@ include ':Generator',
         ':Common-Persistence-Test',
         ':Spigot-NMS',
         ':Spigot-118',
+        ':Spigot-119',
         ':Spigot'
 
 include ':Bootstrap-Common'
@@ -33,6 +34,7 @@ project(':Common-Persistence-Test').projectDir = file('Peristence/Common-Tests')
 project(':Spigot').projectDir = file('Implementations/Spigot')
 project(':Spigot-NMS').projectDir = file('Implementations/Spigot-Lib/NMS')
 project(':Spigot-118').projectDir = file('Implementations/Spigot-Lib/1.18')
+project(':Spigot-119').projectDir = file('Implementations/Spigot-Lib/1.19')
 
 project(':Bootstrap-Common').projectDir = file('Bootstrap/Common')
 project(':Bootstrap-Spigot').projectDir = file('Bootstrap/Spigot')

@@ -1,3 +1,8 @@
+import org.gradle.api.internal.tasks.DefaultTaskOutputs
+
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
+
 plugins {
     id 'java-library'
     id 'com.github.johnrengelman.shadow' version '7.0.0'
@@ -83,6 +88,11 @@ dependencies {
 
     compileOnly 'io.lumine:Mythic:' + project.mythicmobs
 
+    //compileOnly 'io.lumine:Mythic-API:' + project.mythicmobs
+    compileOnly 'io.lumine:Mythic-Plugin:' + project.mythicmobs
+    compileOnly 'io.lumine:Mythic-Dist:' + project.mythicmobs
+    compileOnly 'io.lumine:LumineUtils:1.16.1-SNAPSHOT'
+
     compileOnly 'com.gitlab.SamB440:RPGRegions-2:' + project.rpgregions
 
     compileOnly 'net.luckperms:api:5.4'
@@ -111,46 +121,52 @@ shadowJar {
     mergeServiceFiles()
 }
 
-
-import org.gradle.api.internal.tasks.DefaultTaskOutputs
-
-import java.nio.file.Files
-import java.nio.file.StandardCopyOption
-
 task copyNMSImpl {
     Project spigot = project(":Spigot")
-    if (spigot.file("lib-cp/Spigot-118-1.0.0-SNAPSHOT.jar").exists()) {
-        return;
-    }
-    DefaultTaskOutputs output = project(':Spigot-118').jar.outputs
-    boolean found = false;
-    for (File file : output.getFiles()) {
-        for (File f : file.getParentFile().listFiles(new FilenameFilter() {
-            @Override
-            boolean accept(File directory, String name) {
-                if (name.endsWith("dev.jar") || name.endsWith("sources.jar")) {
-                    return false
+    var map = new HashMap<String, String>();
+    map.put(':Spigot-119',"Spigot-119-1.0.0-SNAPSHOT.jar");
+    map.put(':Spigot-118',"Spigot-118-1.0.0-SNAPSHOT.jar");
+
+    def set = map.entrySet();
+    for (Map.Entry<String,String> impl : set) {
+        if (spigot.file(impl.value).exists()) {
+            return;
+        }
+
+        DefaultTaskOutputs output = project(impl.key).jar.outputs
+
+        boolean found = false;
+        for (File file : output.getFiles()) {
+            for (File f : file.getParentFile().listFiles(new FilenameFilter() {
+                @Override
+                boolean accept(File directory, String name) {
+                    if (name.endsWith("dev.jar") || name.endsWith("sources.jar")) {
+                        return false
+                    }
+                    return true;
                 }
-                return true;
+            })) {
+                var p = spigot.file("lib-cp/").toPath().resolve(f.getName())
+                var v = f.exists();
+                try {
+                    Files.copy(f.toPath(), p, StandardCopyOption.REPLACE_EXISTING);
+                } catch (Exception e) {
+                    e.printStackTrace()
+                }
+                found = true;
+                break;
             }
-        })) {
-            var p = spigot.file("lib-cp/").toPath().resolve(f.getName())
-            var v = f.exists();
-            try {
-                Files.copy(f.toPath(), p, StandardCopyOption.REPLACE_EXISTING);
-            } catch (Exception e) {
-                e.printStackTrace()
-            }
-            found = true;
             break;
         }
-        break;
     }
+
+
 }
 
 shadowJar.dependsOn copyNMSImpl
 build.dependsOn shadowJar
 build.mustRunAfter tasks.getByPath(':Common:build')
 build.mustRunAfter tasks.getByPath(':Spigot-118:build')
+build.mustRunAfter tasks.getByPath(':Spigot-119:build')
 build.mustRunAfter tasks.getByPath(':FlatFiles-Persistence:build')
 

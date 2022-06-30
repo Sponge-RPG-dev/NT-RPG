@@ -10,8 +10,6 @@ public class ResourceGui {
     public boolean enabled;
     @Path("Type")
     public String type;
-    @Path("Pattern")
-    public String pattern;
     @Path("Display")
     public List<Display> display;
     @Path("RefreshRate")

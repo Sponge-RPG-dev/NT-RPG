@@ -62,12 +62,6 @@ public class PluginConfig {
     @Path("PLAYER_MAX_CHARS")
     public int PLAYER_MAX_CHARS = 5;
 
-    @Path("MANA_REGENERATION_RATE")
-    public long MANA_REGENERATION_RATE = 1000;
-
-    @Path("RAGE_DECAY_RATE")
-    public long RAGE_DECAY_RATE = 2500;
-
     @Path("ALLOW_COMBAT_FOR_CHARACTERLESS_PLAYERS")
     public boolean ALLOW_COMBAT_FOR_CHARACTERLESS_PLAYERS = true;
 

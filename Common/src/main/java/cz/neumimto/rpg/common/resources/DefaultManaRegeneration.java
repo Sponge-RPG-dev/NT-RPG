@@ -19,7 +19,11 @@ public class DefaultManaRegeneration extends EffectBase {
     public DefaultManaRegeneration(IEffectConsumer character) {
         super(name, character);
         this.character = (IActiveCharacter) character;
-        setPeriod(Rpg.get().getPluginConfig().MANA_REGENERATION_RATE);
+        setPeriod(Rpg.get().getResourceService()
+                .getRegistry()
+                .stream()
+                .filter(a->a.name.equalsIgnoreCase(ResourceService.mana))
+                .findFirst().get().regenRate);
         setDuration(-1);
         addEffectType(CoreEffectTypes.MANA_REGEN);
     }

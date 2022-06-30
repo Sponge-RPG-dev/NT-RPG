@@ -6,10 +6,7 @@ import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.entity.players.classes.ClassResource;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public abstract class ResourceService {
 
@@ -20,17 +17,15 @@ public abstract class ResourceService {
     public static final String stamina = "stamina";
     protected Set<ResourceDefinition> registry = new HashSet<>();
 
-    public void reload() {
-
-    }
+    public void reload() {}
 
     public Set<ResourceDefinition> getRegistry() {
         return registry;
     }
 
-    protected abstract Resource getHpTracker(IActiveCharacter character);
+    protected abstract Resource getHpTracker(IActiveCharacter character, ResourceDefinition resourceDefinition);
 
-    protected abstract Resource getStaminaTracker(IActiveCharacter character);
+    protected abstract Resource getStaminaTracker(IActiveCharacter character, ResourceDefinition resourceDefinition);
 
     public void removeResource(ActiveCharacter activeCharacter, ClassDefinition klass) {
         Set<ClassResource> classResources = klass.getClassResources();
@@ -65,15 +60,11 @@ public abstract class ResourceService {
         }
     }
 
-    protected Resource fromDefinition(ResourceDefinition resourceDefinition) {
-        return new Resource(resourceDefinition.name, resourceDefinition);
-    }
-
     public void addResource(IActiveCharacter activeCharacter, ClassResource classResource, String source) {
         Resource resource = activeCharacter.getResource(classResource.type);
         if (resource == null) {
-            resource = new Resource();
-            resource = registry.get(classResource.type).createFor(activeCharacter);
+            ResourceDefinition def = registry.stream().filter(a -> a.type.equalsIgnoreCase(classResource.type)).findAny().get();
+            resource = new Resource(def);
             activeCharacter.addResource(classResource.type, resource);
         }
         resource.setMaxValue(source, resource.getMaxValue() + classResource.baseValue);
@@ -84,11 +75,14 @@ public abstract class ResourceService {
     }
 
     public void initializeForPlayer(IActiveCharacter activeCharacter) {
-       activeCharacter.addResource(health, getHpTracker(activeCharacter));
-       activeCharacter.addResource(rage, getHpTracker(activeCharacter));
-
-        for (Map.Entry<String, FactoryResource> e : registry.entrySet()) {
-            activeCharacter.addResource(e.getKey(), e.getValue().createFor(activeCharacter));
+        for (ResourceDefinition resourceDefinition : registry) {
+            if (resourceDefinition.type.equalsIgnoreCase(health)) {
+                activeCharacter.addResource(health, getHpTracker(activeCharacter, resourceDefinition));
+            } else if (resourceDefinition.type.equalsIgnoreCase(stamina)) {
+                activeCharacter.addResource(stamina, getStaminaTracker(activeCharacter, resourceDefinition));
+            } else {
+                activeCharacter.addResource(resourceDefinition.name, new Resource(resourceDefinition));
+            }
         }
     }
 

@@ -1,6 +1,7 @@
 package cz.neumimto.rpg.spigot.resources;
 
 import cz.neumimto.rpg.common.resources.Resource;
+import cz.neumimto.rpg.common.resources.ResourceDefinition;
 import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
 
@@ -10,8 +11,8 @@ public class Health extends Resource {
 
     UUID uuid;
 
-    public Health(UUID entity) {
-        super("health");
+    public Health(UUID entity, ResourceDefinition resourceDefinition) {
+        super(resourceDefinition);
         uuid = entity;
     }
 

@@ -111,10 +111,10 @@ public class SpigotResourceService extends ResourceService {
 
     @Override
     public void initializeForPlayer(IActiveCharacter activeCharacter) {
-        super.initializeForPlayer(activeCharacter);
         if (!init){
             init();
         }
+        super.initializeForPlayer(activeCharacter);
         if (uihandlerfactory != null) {
             Consumer<ISpigotCharacter> resHandler = uihandlerfactory.get();
             ((ISpigotCharacter)activeCharacter).setResourceUIHandler(resHandler);
@@ -122,18 +122,18 @@ public class SpigotResourceService extends ResourceService {
     }
 
     @Override
-    protected Resource getHpTracker(IActiveCharacter character) {
-        return new Health(character.getUUID());
+    protected Resource getHpTracker(IActiveCharacter character, ResourceDefinition resourceDefinition) {
+        return new Health(character.getUUID(), resourceDefinition);
     }
 
     @Override
-    protected Resource getStaminaTracker(IActiveCharacter character) {
+    protected Resource getStaminaTracker(IActiveCharacter character, ResourceDefinition resourceDefinition) {
         return null ;
     }
 
     @Override
     public Resource initializeForAi(AbstractMob mob) {
-        return new MobHealth(mob.getUUID());
+        return null;
     }
 
 
