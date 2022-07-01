@@ -1,12 +1,7 @@
 package cz.neumimto.rpg.spigot;
 
-import co.aikar.commands.ACFBukkitUtil;
-import co.aikar.commands.CommandIssuer;
-import co.aikar.commands.CommandManager;
-import co.aikar.commands.InvalidCommandArgument;
-import com.google.auto.service.AutoService;
+import co.aikar.commands.*;
 import com.google.inject.Injector;
-import cz.neumimto.rpg.NtRpgBootstrap;
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.commands.*;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
@@ -48,10 +43,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginEnableEvent;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -61,11 +54,12 @@ import java.util.concurrent.Executors;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static net.kyori.adventure.text.Component.*;
-import static net.kyori.adventure.text.format.NamedTextColor.*;
+import static net.kyori.adventure.text.Component.empty;
+import static net.kyori.adventure.text.Component.text;
+import static net.kyori.adventure.text.format.NamedTextColor.DARK_GRAY;
+import static net.kyori.adventure.text.format.NamedTextColor.GOLD;
 
-@AutoService(NtRpgBootstrap.class)
-public class SpigotRpgPlugin implements NtRpgBootstrap, Listener {
+public class SpigotRpgPlugin extends JavaPlugin implements Listener {
 
     private static JavaPlugin plugin;
 
@@ -92,20 +86,16 @@ public class SpigotRpgPlugin implements NtRpgBootstrap, Listener {
         return bukkitAudiences;
     }
 
-    @NotNull
-    public File getDataFolder() {
-        return dataFolder;
-    }
 
     @Override
-    public void enable(Data data) {
-        plugin = (JavaPlugin) data.plugin();
+    public void onEnable() {
+        plugin = this;
         bukkitAudiences = BukkitAudiences.create(getInstance());
-        dataFolder = data.workingDir();
+        dataFolder = getDataFolder();
 
-        Bukkit.getPluginManager().registerEvents(this, (Plugin) data.plugin());
+        Bukkit.getPluginManager().registerEvents(this, this);
 
-        Log.setLogger(data.logger());
+        Log.setLogger(getLogger());
 
         Function<String, Component> colorInput = s -> {
             TextComponent.Builder builder = text();
@@ -142,7 +132,7 @@ public class SpigotRpgPlugin implements NtRpgBootstrap, Listener {
         final BukkitScheduler scheduler = Bukkit.getScheduler();
         SpigotRpg spigotRpg = new SpigotRpg(workingDirPath.toString(), command -> scheduler.runTask(SpigotRpgPlugin.getInstance(), command));
 
-        CommandManager manager = data.commandManager();
+        CommandManager manager = new PaperCommandManager(this);
 
         manager.getCommandContexts().registerContext(OnlineOtherPlayer.class, c -> {
             CommandIssuer issuer = c.getIssuer();

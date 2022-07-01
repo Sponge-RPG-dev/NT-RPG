@@ -1,3 +1,7 @@
+plugins {
+    id "de.undercouch.download" version "5.1.0"
+}
+
 subprojects {
     apply plugin: 'java-library'
 
@@ -72,4 +76,9 @@ subprojects {
     tasks.named("jar") {
         duplicatesStrategy(DuplicatesStrategy.INCLUDE)
     }
+}
+
+task downloadFile(type: Download) {
+    src "https://api.purpurmc.org/v2/purpur/1.19/latest/download"
+    dest new File(getRootDir().toPath().resolve("server-spigot").toFile(), 'server.jar')
 }

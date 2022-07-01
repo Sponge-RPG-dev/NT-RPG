@@ -10,9 +10,6 @@ public class ResourceDefinition {
     @Path("Type")
     public String type;
 
-    @Path("ItemsAdderHook")
-    public boolean itemsAdderHook;
-
     @Path("CombatRegen")
     public boolean combatRegen;
 

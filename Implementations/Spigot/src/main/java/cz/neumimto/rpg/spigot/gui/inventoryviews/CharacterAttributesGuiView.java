@@ -7,11 +7,11 @@ import cz.neumimto.rpg.common.configuration.AttributeConfig;
 import cz.neumimto.rpg.common.localization.Arg;
 import cz.neumimto.rpg.common.localization.LocalizationKeys;
 import cz.neumimto.rpg.common.localization.LocalizationService;
+import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.bridges.DatapackManager;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
 import cz.neumimto.rpg.spigot.gui.elements.GuiCommand;
-import de.tr7zw.nbtapi.NBTItem;
 import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.HumanEntity;
@@ -23,6 +23,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.Metadatable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -108,12 +110,13 @@ public class CharacterAttributesGuiView extends ConfigurableInventoryGui {
         if (event.getCurrentItem() == null) {
             return;
         }
-
-        NBTItem nbtItem = new NBTItem(event.getCurrentItem());
-        String attrId = nbtItem.getString("ntrpg-attribute");
-        if (attrId == null) {
+        String attrId = null;
+        if (event.getCurrentItem() instanceof Metadatable m) {
+             attrId = m.getMetadata("ntrpg-attribute").get(0).asString();
+        } else {
             return;
         }
+
 
         ClickType click = event.getClick();
         HumanEntity whoClicked = event.getWhoClicked();
@@ -165,9 +168,10 @@ public class CharacterAttributesGuiView extends ConfigurableInventoryGui {
         itemMeta.setDisplayName(" ");
         itemStack.setItemMeta(itemMeta);
 
-        NBTItem nbtItem = new NBTItem(itemStack);
-        nbtItem.setString("ntrpg-attribute", attId);
-        return nbtItem.getItem();
+        if (itemStack instanceof Metadatable m) {
+            m.setMetadata("ntrpg-attribute", new FixedMetadataValue(SpigotRpgPlugin.getInstance(), attId));
+        }
+        return itemStack;
     }
 
     public void refreshClicked(Player player, Inventory inventory, ItemStack itemStack) {

@@ -16,7 +16,7 @@ public class ItemsAdderDatabase implements NamespacedItemDatabase {
     public ItemStack findById(String id) {
         CustomStack instance = CustomStack.getInstance(id);
 
-        if (instance != null) {
+        if (instance == null) {
             Log.error("Unable to find ItemsAdder item " + id);
             return new ItemStack(Material.BARRIER);
         }

@@ -8,12 +8,12 @@ import cz.neumimto.rpg.common.localization.LocalizationKeys;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.services.IRpgListener;
-import de.tr7zw.nbtapi.NBTItem;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.Metadatable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -140,16 +140,17 @@ public class SpellbookListener implements IRpgListener {
             for (int rows = 0; rows < 9; rows++) {
                 int slotId = columns * rows;
                 ItemStack item = topInventory.getItem(slotId);
-                NBTItem nbtItem = new NBTItem(item);
-                if (nbtItem.hasKey("ntrpg.spellbook-empty")) {
-                    character.getSpellbook()[columns][rows] = null;
-                    character.getCharacterBase().getSpellbookPages()[columns][rows] = null;
-                } else {
-                    String skillName = nbtItem.getString("ntrpg.spellbook.learnedspell");
-                    PlayerSkillContext playerSkillContext = character.getSkillsByName().get(skillName);
+                if (item instanceof Metadatable m) {
+                    if (m.hasMetadata("ntrpg.spellbook-empty")) {
+                        character.getSpellbook()[columns][rows] = null;
+                        character.getCharacterBase().getSpellbookPages()[columns][rows] = null;
+                    } else {
+                        String skillName = m.getMetadata("ntrpg.spellbook.learnedspell").get(0).asString();
+                        PlayerSkillContext playerSkillContext = character.getSkillsByName().get(skillName);
 
-                    character.getSpellbook()[columns][rows] = item;
-                    character.getCharacterBase().getSpellbookPages()[columns][rows] = playerSkillContext.getSkillData().getSkillId();
+                        character.getSpellbook()[columns][rows] = item;
+                        character.getCharacterBase().getSpellbookPages()[columns][rows] = playerSkillContext.getSkillData().getSkillId();
+                    }
                 }
             }
         }
