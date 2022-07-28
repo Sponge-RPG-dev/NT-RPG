@@ -6,6 +6,9 @@ import cz.neumimto.rpg.common.resources.Resource;
 import cz.neumimto.rpg.common.resources.ResourceDefinition;
 import cz.neumimto.rpg.common.resources.ResourceService;
 
+import javax.inject.Singleton;
+
+@Singleton
 public class TestResourceService extends ResourceService {
     @Override
     protected Resource getHpTracker(IActiveCharacter character, ResourceDefinition resourceDefinition) {

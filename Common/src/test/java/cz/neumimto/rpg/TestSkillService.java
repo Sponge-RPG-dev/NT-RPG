@@ -10,7 +10,6 @@ import cz.neumimto.rpg.junit.TestDictionary;
 import javax.inject.Singleton;
 import java.io.File;
 import java.util.List;
-import java.util.function.Consumer;
 
 @Singleton
 public class TestSkillService extends SkillService {
@@ -48,11 +47,6 @@ public class TestSkillService extends SkillService {
                 t.printStackTrace();
             }
         }, c);
-    }
-
-    @Override
-    public Consumer<NTScript.Builder> getNTSBuilderContext() {
-        return null;
     }
 
     @Override

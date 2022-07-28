@@ -71,7 +71,9 @@ public abstract class SkillService {
         Stream.of(SkillType.values()).forEach(this::registerSkillType);
     }
 
-    public abstract Consumer<NTScript.Builder> getNTSBuilderContext();
+    public Consumer<NTScript.Builder> getNTSBuilderContext() {
+        return builder -> {};
+    }
 
     public void load() {
         skillTrees.clear();

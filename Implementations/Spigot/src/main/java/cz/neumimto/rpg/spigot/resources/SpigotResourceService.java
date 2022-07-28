@@ -17,10 +17,11 @@ import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitTask;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -49,10 +50,7 @@ public class SpigotResourceService extends ResourceService {
     @Override
     public void reload() {
         init = false;
-        Path path = Paths.get(Rpg.get().getWorkingDirectory(), "Resources.conf");
-        if (!Files.exists(path)) {
-            assetService.copyToFile("Resources.conf", path);
-        }
+        super.reload();
     }
 
     //Initialize lazily, which makes it sure its initialized after ia/oraxen & papi if installed

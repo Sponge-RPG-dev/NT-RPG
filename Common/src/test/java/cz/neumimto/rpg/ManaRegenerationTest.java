@@ -10,6 +10,7 @@ import cz.neumimto.rpg.common.events.EventFactoryService;
 import cz.neumimto.rpg.common.gui.Gui;
 import cz.neumimto.rpg.common.gui.IPlayerMessage;
 import cz.neumimto.rpg.common.resources.DefaultManaRegeneration;
+import cz.neumimto.rpg.common.resources.ResourceDefinition;
 import cz.neumimto.rpg.common.resources.ResourceService;
 import cz.neumimto.rpg.junit.CharactersExtension;
 import cz.neumimto.rpg.junit.CharactersExtension.Stage;
@@ -49,33 +50,52 @@ public class ManaRegenerationTest {
     private EventFactoryService eventFactoryService;
 
     @Inject
+    private ResourceService resourceService;
+
+    @Inject
     private RpgApi rpgApi;
 
     @BeforeEach
     public void before() {
         new RpgTest(rpgApi);
-        new Gui(vanillaMessaging);}
+        new Gui(vanillaMessaging);
+
+        resourceService.reload();
+        resourceService.getRegistry().add(new ResourceDefinition() {{
+            name = ResourceService.mana;
+            regenRate = 1;
+            type = ResourceService.mana;
+        }});
+    }
 
     @Test
     public void testManaRegen(@Stage(READY) IActiveCharacter character) {
-       DefaultManaRegeneration defaultManaRegeneration = new DefaultManaRegeneration(character);
+        DefaultManaRegeneration defaultManaRegeneration = new DefaultManaRegeneration(character);
 
-       iEffectService.addEffect(defaultManaRegeneration);
+        iEffectService.addEffect(defaultManaRegeneration);
 
-       iEffectService.schedule(); //put into main loop
+        iEffectService.schedule(); //put into main loop
 
-       Assertions.assertEquals(character.getResource(ResourceService.mana).getValue(), 50.0);
-       iEffectService.schedule();
-       Assertions.assertEquals(character.getResource(ResourceService.mana).getValue(), 51.0);
+        resourceService.initializeForPlayer(character);
+        character.getResource(ResourceService.mana).setMaxValue("test", 100);
+        character.getResource(ResourceService.mana).setTickChange("test", 1);
 
-       for (int i = 0; i < 100; i++) {
-           iEffectService.schedule();
-           try {
-               Thread.sleep(2);
-           } catch (InterruptedException e) {
-               e.printStackTrace();
-           }
-       }
-       Assertions.assertEquals(character.getResource(ResourceService.mana).getValue(), 100.0);
+        Assertions.assertEquals(character.getResource(ResourceService.mana).getValue(), 0);
+
+        character.getResource(ResourceService.mana).setValue(50);
+
+        Assertions.assertEquals(character.getResource(ResourceService.mana).getValue(), 50.0);
+        iEffectService.schedule();
+        Assertions.assertEquals(character.getResource(ResourceService.mana).getValue(), 51.0);
+
+        for (int i = 0; i < 100; i++) {
+            iEffectService.schedule();
+            try {
+                Thread.sleep(2);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        Assertions.assertEquals(character.getResource(ResourceService.mana).getValue(), 100.0);
     }
 }

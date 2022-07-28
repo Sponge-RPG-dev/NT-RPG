@@ -43,51 +43,72 @@ import static net.bytebuddy.dynamic.loading.ClassLoadingStrategy.Default.INJECTI
  * Multiple classes are generated
  * <p>
  * Assume input
+ * <pre>
+ * {@code
  * {
- * Id: Test
- * Fields: [
- * Num: numeric
- * ]
- * OnApply: """
- *
- * @effect.Num=50 RETURN
- * """
+ *   Id: Test
+ *   Fields: [
+ *     Num: numeric
+ *   ]
+ *   OnApply: """
+ *   @effect.Num=50 RETURN
+ *   """
  * }
+ * }
+ * </pre>
+
  * Generates
  * <p>
  * 1) Effect base class
- * @SimpleName("Test") public class Test{timestamp} extends UnstackableEffect {
- * public double Num;
- * public static Handler onApply;
- * <p>
- * public void onApply(IEffect var1) {
- * if (onApply != null) {
- * onApply.run(this);
+ *
+ * <pre>
+ * {@code
+ *   @SimpleName("Test")
+ *   public class Test{timestamp} extends UnstackableEffect {
+ *     public double Num;
+ *     public static Handler onApply;
+ *
+ *   public void onApply(IEffect var1) {
+ *     if (onApply != null) {
+ *       onApply.run(this);
+ *     }
+ *   }
+ *
+ *   @ScriptTarget
+ *   public Test{timestamp}() {
+ *     super.effectName = "Test";
+ *   }
  * }
- * <p>
  * }
- * @ScriptTarget public Test1637495972021() {
- * super.effectName = "Test";
- * }
- * }
- * <p>
+ * </pre>
  * 2) Handler proxy but with concrete generic type
- * <p>
- * public interface Handler{timestamp} extends Handler<Test{timestamp}> {
- * @ScriptTarget void run(@NamedParam("effect") Test{timestamp} var1);
+ * <pre>
+ * {@code
+ *   public interface Handler{timestamp} extends Handler<Test{timestamp}> {
+ *   @ScriptTarget
+ *   void run(@NamedParam("effect") Test{timestamp} var1);
  * }
- * <p>
+ * }
+ * </pre>
  * 3) OnApply method as implementation of proxy interface from step 2
- * @Singleton public class HandlerTest{timestamp} implements HandlerTest{timestamp} {
- * public void run(Test{timestamp} var1) {
- * var1.Num = 50.0D;
+ * <pre>
+ * {@code
+ *   @Singleton
+ *   public class HandlerTest{timestamp} implements HandlerTest{timestamp} {
+ *     public void run(Test{timestamp} var1) {
+ *     var1.Num = 50.0D;
+ *   }
  * }
  * }
- * <p>
+ * </pre>
+ *
  * This proxy implementation is also automatically initialized with guice injector and its reference is injected into the static field
- * <p>
- * Test{timestamp}.OnApply = injector.newInstance(HandlerTest{timestamp}.class)
- * <p>
+ *
+ * <pre>
+ * {@code
+ *   Test{timestamp}.OnApply = injector.newInstance(HandlerTest{timestamp}.class)
+ * }
+ * </pre>
  * The timestamps are part of all classnames to ensure easy reloading at runtime, im not reimplementing osgi, just throw away old refs
  */
 public class EffectScriptGenerator {
@@ -147,7 +168,8 @@ public class EffectScriptGenerator {
                                     }))
                             )))
                     )
-                    .annotateMethod(AnnotationDescription.Builder.ofType(ScriptMeta.Handler.class).build());
+                    .annotateMethod(AnnotationDescription.Builder.ofType(ScriptMeta.Handler.class).build(),
+                            AnnotationDescription.Builder.ofType(ScriptMeta.ScriptTarget.class).build());
 
             if (model.onApply != null && !model.onApply.isBlank()) {
                 bb = generateMethodBody("onApply", bb);

@@ -33,7 +33,6 @@ public class JdbcPlayerDaoTest {
     }
 
     @Test
-    @Disabled
     public void test() {
         CharacterBase characterBase = TestHelper.createCharacterBase();
         CharacterBase loadded = null;
