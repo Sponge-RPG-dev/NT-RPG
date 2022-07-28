@@ -1,10 +1,12 @@
 package cz.neumimto.rpg.common.impl;
 
 import cz.neumimto.rpg.common.configuration.ItemString;
-import cz.neumimto.rpg.common.items.*;
+import cz.neumimto.rpg.common.items.AbstractItemService;
+import cz.neumimto.rpg.common.items.ItemClass;
+import cz.neumimto.rpg.common.items.RpgItemType;
+import cz.neumimto.rpg.common.items.TestItemType;
 
 import javax.inject.Singleton;
-import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 
@@ -21,7 +23,4 @@ public class TestItemService extends AbstractItemService {
         return null;
     }
 
-    public RpgItemStack getRpgItemStack(RpgItemType type) {
-        return new RpgItemStackImpl(type, Collections.emptyMap(), Collections.emptyMap(), Collections.emptyMap(), Collections.emptyMap(), Collections.emptyMap());
-    }
 }

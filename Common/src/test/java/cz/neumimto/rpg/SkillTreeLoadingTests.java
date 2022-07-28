@@ -81,7 +81,6 @@ public class SkillTreeLoadingTests {
         Assertions.assertEquals(description.size(), 1);
         Assertions.assertEquals(description.get(0), "Contextualized Description: " + testCharacter.getUUID().toString());
 
-//
         //SkillCost invokeCost = sd.getInvokeCost();
         //Assertions.assertNotNull(invokeCost);
         //SkillItemCost cost = invokeCost.getItemCost().iterator().next();

@@ -29,16 +29,6 @@ public class TestEntityService implements EntityService<TestCharacter> {
     }
 
     @Override
-    public double getMobDamage(String dimension, String type) {
-        return 0;
-    }
-
-    @Override
-    public boolean handleMobDamage(String dimension, UUID uuid) {
-        return false;
-    }
-
-    @Override
     public double getExperiences(String dimension, String type, UUID uuid) {
         return 0;
     }

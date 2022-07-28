@@ -15,7 +15,7 @@ import javax.inject.Singleton;
 
 @ExtendWith({GuiceExtension.class, NtRpgExtension.class})
 @IncludeModule(TestGuiceModule.class)
-class ScríptParserTests {
+class ScriptParserTests {
 
     @Inject
     private SkillService skillService;
@@ -41,7 +41,7 @@ class ScríptParserTests {
                        END
                        RETURN CANCELLED
                 """;
-
+        model.handlerId = "nts";
         skillService.skillDefinitionToSkill(model, this.getClass().getClassLoader());
 
     }
@@ -66,6 +66,7 @@ class ScríptParserTests {
                        END
                        RETURN CANCELLED
                 """;
+        model.handlerId = "nts";
         skillService.skillDefinitionToSkill(model, this.getClass().getClassLoader());
     }
 
@@ -89,6 +90,7 @@ class ScríptParserTests {
                        END
                        RETURN CANCELLED
                 """;
+        model.handlerId = "nts";
         skillService.skillDefinitionToSkill(model, this.getClass().getClassLoader());
     }
 

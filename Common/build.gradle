@@ -28,7 +28,7 @@ dependencies {
     api 'net.bytebuddy:byte-buddy:' + project.bytebuddy
     //api 'com.github.Sponge-RPG-dev:NT-Script:28394a3fc9'
     compileOnly "co.aikar:acf-core:" + project.acf
-
+    testImplementation "co.aikar:acf-core:" + project.acf
 }
 
 shadowJar {

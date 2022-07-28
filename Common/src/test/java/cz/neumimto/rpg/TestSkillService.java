@@ -15,7 +15,6 @@ import java.util.function.Consumer;
 @Singleton
 public class TestSkillService extends SkillService {
 
-    @Override
     public NTScript getNtScriptCompilerFor(Class c) {
         return ntScriptEngine.prepareCompiler(builder -> {
             try {

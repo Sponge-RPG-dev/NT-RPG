@@ -1,7 +1,6 @@
 package cz.neumimto.rpg;
 
 import cz.neumimto.rpg.common.entity.players.CharacterService;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.common.model.CharacterBase;
 import cz.neumimto.rpg.junit.NtRpgExtension;
@@ -21,7 +20,7 @@ import java.util.UUID;
 public class CharacterBaseInitTest {
 
     @Inject
-    CharacterService<IActiveCharacter> characterService;
+    CharacterService characterService;
 
     @Test
     public void testInitialization() {

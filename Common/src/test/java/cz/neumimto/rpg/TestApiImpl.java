@@ -20,6 +20,7 @@ import cz.neumimto.rpg.common.items.ItemService;
 import cz.neumimto.rpg.common.localization.Arg;
 import cz.neumimto.rpg.common.localization.LocalizationService;
 import cz.neumimto.rpg.common.permissions.PermissionService;
+import cz.neumimto.rpg.common.resources.ResourceService;
 import cz.neumimto.rpg.common.scripting.NTScriptEngine;
 import cz.neumimto.rpg.common.skills.SkillService;
 import cz.neumimto.rpg.entity.TestEntityService;
@@ -87,6 +88,9 @@ public class TestApiImpl implements RpgApi {
 
     @Inject
     private Injector injector;
+
+    @Inject
+    private ResourceService resourceService;
 
     public static List<Object> listeners = new ArrayList<>();
 
@@ -289,5 +293,10 @@ public class TestApiImpl implements RpgApi {
     @Override
     public String getPlatform() {
         return "Test";
+    }
+
+    @Override
+    public ResourceService getResourceService() {
+        return resourceService;
     }
 }
