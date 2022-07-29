@@ -11,6 +11,8 @@ import java.util.List;
 
 public class NMSHandler {
 
+    public NMSHandler() {}
+
     public List<String> getVersion() {
         return Collections.emptyList();
     }

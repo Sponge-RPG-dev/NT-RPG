@@ -16,12 +16,12 @@ import cz.neumimto.rpg.common.localization.LocalizationService;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.skills.SkillService;
 import cz.neumimto.rpg.spigot.SpigotRpg;
-import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
 import cz.neumimto.rpg.spigot.gui.SpellbookListener;
 import cz.neumimto.rpg.spigot.inventory.SpigotInventoryService;
 import cz.neumimto.rpg.spigot.inventory.SpigotItemService;
+import cz.neumimto.rpg.spigot.items.RPGItemMetadataKeys;
 import cz.neumimto.rpg.spigot.services.IRpgListener;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -41,13 +41,13 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.metadata.MetadataValue;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.Metadatable;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -93,49 +93,50 @@ public class SpigotInventoryListener implements IRpgListener {
         //System.out.println(event.getInventory().getType());
         //System.out.println(event.getSlotType());
 
-        if (currentItem != null && currentItem.getType() != Material.AIR && currentItem instanceof Metadatable meta) {
-            
-            if (meta.hasMetadata("ntrpg.item-command")) {
+        if (currentItem != null && currentItem.getType() != Material.AIR) {
+            ItemMeta meta = currentItem.getItemMeta();
+            if (meta == null) {
+                return;
+            }
+
+            PersistentDataContainer pdc = meta.getPersistentDataContainer();
+            if (pdc.has(RPGItemMetadataKeys.COMMAND)) {
+                final String command = pdc.get(RPGItemMetadataKeys.COMMAND, PersistentDataType.STRING);
                 Rpg.get().scheduleSyncLater(() -> {
-                    List<MetadataValue> metadata = meta.getMetadata("ntrpg.item-command");
-                    String command = metadata.get(0).asString();
                     Bukkit.dispatchCommand(whoClicked, command);
                 });
                 event.setResult(Event.Result.DENY);
             }
-            if (meta.hasMetadata("ntrpg.item-iface")) {
+            if (pdc.has(RPGItemMetadataKeys.IFACE)) {
                 event.setResult(Event.Result.DENY);
             }
             //spellbook commands
-            if (meta.hasMetadata("ntrpg.spellbook.learnedspell")) {
-                List<MetadataValue> value = meta.getMetadata("ntrpg.spellbook.learnedspell");
-                String skillName = value.get(0).asString();
+            if (pdc.has(RPGItemMetadataKeys.LEARNED_SPELL)) {
+                String skillName = pdc.get(RPGItemMetadataKeys.LEARNED_SPELL, PersistentDataType.STRING);
 
                 ISpigotCharacter character = spigotCharacterService.getCharacter(whoClicked.getUniqueId());
                 PlayerSkillContext playerSkillContext = character.getSkillsByName().get(skillName);
                 ItemStack skillbind = inventoryService.createSkillbind(playerSkillContext.getSkillData());
 
-                if (skillbind instanceof Metadatable m) {
-                    m.setMetadata("ntrpg.spellbook.learnedspell.bindicon",
-                            new FixedMetadataValue(SpigotRpgPlugin.getInstance(), true));
-                }
+                skillbind.getItemMeta().getPersistentDataContainer().set(RPGItemMetadataKeys.BINDICON, PersistentDataType.BYTE, (byte) 1);
                 event.setCursor(skillbind);
                 event.setResult(Event.Result.DENY);
             }
-            if (meta.hasMetadata("ntrpg.spellbook.learnedspell.bindicon")) {
+            if (pdc.has(RPGItemMetadataKeys.BINDICON)) {
                 event.setCurrentItem(SpellbookListener.createEmptySlot());
                 event.setCursor(null);
                 event.setResult(Event.Result.DENY);
             }
-            if (meta.hasMetadata("ntrpg.spellbook-empty")) {
+            if (pdc.has(RPGItemMetadataKeys.SPELLBOOKEMPTY)) {
                 ItemStack cursor = event.getCursor();
                 if (cursor.getType() == Material.AIR) {
                     event.setResult(Event.Result.DENY);
                     return;
                 }
 
-                if (cursor instanceof Metadatable m) {
-                    if (m.hasMetadata("ntrpg.spellbook.learnedspell.bindicon")) {
+                ItemMeta itemMeta = cursor.getItemMeta();
+                if (itemMeta != null) {
+                    if (itemMeta.getPersistentDataContainer().has(RPGItemMetadataKeys.BINDICON)) {
                         event.setCurrentItem(cursor);
                         event.setCursor(null);
                     }

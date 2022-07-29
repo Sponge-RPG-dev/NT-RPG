@@ -10,6 +10,7 @@ import org.junit.jupiter.api.*;
 import java.util.Optional;
 import java.util.logging.Logger;
 
+@Disabled
 public class JdbcPlayerDaoTest {
 
     private static JdbcPlayerDao jdbcPlayerDao;

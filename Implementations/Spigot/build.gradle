@@ -54,8 +54,6 @@ dependencies {
     api project(':FlatFiles-Persistence')
     api project(":Spigot-NMS")
 
-    // api 'com.github.stefvanschie.inventoryframework:IF:' + project.if
-
     compileOnly 'io.papermc.paper:paper-api:' + project.spigotapi
 
     compileOnly"com.denizenscript:denizen:1.2.3-SNAPSHOT"
@@ -96,9 +94,12 @@ dependencies {
     compileOnly 'net.luckperms:api:5.4'
 
     compileOnly 'com.github.oraxen:oraxen:-SNAPSHOT'
-    compileOnly 'net.kyori:adventure-platform-bukkit:4.1.0'
+    compileOnly 'net.kyori:adventure-platform-bukkit:4.1.1'
     compileOnly 'com.github.LoneDev6:API-ItemsAdder:3.1.0b'
 
+    testImplementation 'com.github.seeseemelk:MockBukkit-v1.19:2.29.0'
+    testImplementation "co.aikar:acf-paper:" + project.acf
+    testImplementation 'com.github.stefvanschie.inventoryframework:IF:' + project.if
 }
 
 shadowJar {

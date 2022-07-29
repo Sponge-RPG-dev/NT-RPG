@@ -83,9 +83,11 @@ public class SpigotGuiceModule extends AbstractRpgGuiceModule {
         map.put(ResourceService.class, SpigotResourceService.class);
 
         ServiceLoader<NMSHandler> load = ServiceLoader.load(NMSHandler.class, this.getClass().getClassLoader());
-        for (NMSHandler nmsHandler : load) {
-            if (nmsHandler.getVersion().contains(minecraftVersion)) {
-                map.put(NMSHandler.class, nmsHandler.getClass());
+        if (!SpigotRpgPlugin.testEnv) {
+            for (NMSHandler nmsHandler : load) {
+                if (nmsHandler.getVersion().contains(minecraftVersion)) {
+                    map.put(NMSHandler.class, nmsHandler.getClass());
+                }
             }
         }
         if (!map.containsKey(NMSHandler.class)) {

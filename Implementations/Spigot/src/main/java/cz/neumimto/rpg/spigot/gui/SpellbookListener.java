@@ -7,13 +7,16 @@ import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.common.localization.LocalizationKeys;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.items.RPGItemMetadataKeys;
 import cz.neumimto.rpg.spigot.services.IRpgListener;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.metadata.Metadatable;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -124,7 +127,7 @@ public class SpellbookListener implements IRpgListener {
     }
 
     public static ItemStack createEmptySlot() {
-        return SpigotGuiHelper.unclickableInterface(emptySlotMaterial(), 12345, "ntrpg.spellbook-empty");
+        return SpigotGuiHelper.unclickableInterface(emptySlotMaterial(), 12345, RPGItemMetadataKeys.BINDICON);
     }
 
     private static Material emptySlotMaterial() {
@@ -140,17 +143,20 @@ public class SpellbookListener implements IRpgListener {
             for (int rows = 0; rows < 9; rows++) {
                 int slotId = columns * rows;
                 ItemStack item = topInventory.getItem(slotId);
-                if (item instanceof Metadatable m) {
-                    if (m.hasMetadata("ntrpg.spellbook-empty")) {
-                        character.getSpellbook()[columns][rows] = null;
-                        character.getCharacterBase().getSpellbookPages()[columns][rows] = null;
-                    } else {
-                        String skillName = m.getMetadata("ntrpg.spellbook.learnedspell").get(0).asString();
-                        PlayerSkillContext playerSkillContext = character.getSkillsByName().get(skillName);
+                ItemMeta itemMeta = item.getItemMeta();
+                if (itemMeta == null) {
+                    continue;
+                }
+                PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();
+                if (pdc.has(RPGItemMetadataKeys.SPELLBOOKEMPTY)) {
+                    character.getSpellbook()[columns][rows] = null;
+                    character.getCharacterBase().getSpellbookPages()[columns][rows] = null;
+                } else {
+                    String skillName = pdc.get(RPGItemMetadataKeys.LEARNED_SPELL, PersistentDataType.STRING);
+                    PlayerSkillContext playerSkillContext = character.getSkillsByName().get(skillName);
 
-                        character.getSpellbook()[columns][rows] = item;
-                        character.getCharacterBase().getSpellbookPages()[columns][rows] = playerSkillContext.getSkillData().getSkillId();
-                    }
+                    character.getSpellbook()[columns][rows] = item;
+                    character.getCharacterBase().getSpellbookPages()[columns][rows] = playerSkillContext.getSkillData().getSkillId();
                 }
             }
         }

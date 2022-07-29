@@ -32,14 +32,15 @@ public class SpigotTests {
     static SpigotRpgPlugin plugin;
 
     static ClassService classService;
-    static CharacterService<ISpigotCharacter> characterService;
+    static CharacterService characterService;
     static PluginConfig pluginConfig;
     static Executor executor;
 
     @BeforeAll
     public static void setUp() {
         server = MockBukkit.mock();
-        plugin = (SpigotRpgPlugin) MockBukkit.load(SpigotRpgPlugin.class);
+        SpigotRpgPlugin.testEnv = true;
+        plugin = MockBukkit.load(SpigotRpgPlugin.class);
         classService = Rpg.get().getClassService();
         characterService = Rpg.get().getCharacterService();
         executor = Executors.newSingleThreadExecutor();
@@ -96,7 +97,7 @@ public class SpigotTests {
         // select primary class
         playerMock.performCommand("char choose class warrior");
         Wait.mainThread(500);
-        ISpigotCharacter character = characterService.getCharacter(playerMock.getUniqueId());
+        ISpigotCharacter character = (ISpigotCharacter) characterService.getCharacter(playerMock.getUniqueId());
         Assertions.assertTrue(character.getClasses().containsKey("warrior"));
 
         // add level
