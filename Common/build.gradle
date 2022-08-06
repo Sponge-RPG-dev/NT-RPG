@@ -9,11 +9,10 @@ version = project.subp_version
 dependencies {
     annotationProcessor project(':Generator')
 
-
-    api 'com.electronwill.night-config:hocon:' + project.nightconfig
-    api 'com.electronwill.night-config:json:' + project.nightconfig
-    api 'com.scireum:parsii:' + project.parsii
-    api('com.google.inject:guice:' + project.guice) {
+    api 'com.electronwill.night-config:hocon:3.6.5'
+    api 'com.electronwill.night-config:json:3.6.5'
+    api 'com.scireum:parsii:4.0'
+    api('com.google.inject:guice:5.0.1') {
         exclude group: "com.google.guava", module: "guava"
     }
 
@@ -25,10 +24,9 @@ dependencies {
     implementation fileTree(dir: 'lib-cp', include: '*.jar')
     compileOnly fileTree(dir: 'lib', include: '*.jar')
 
-    api 'net.bytebuddy:byte-buddy:' + project.bytebuddy
-    //api 'com.github.Sponge-RPG-dev:NT-Script:28394a3fc9'
-    compileOnly "co.aikar:acf-core:" + project.acf
-    testImplementation "co.aikar:acf-core:" + project.acf
+    api 'net.bytebuddy:byte-buddy:1.12.1'
+    compileOnly "co.aikar:acf-core:0.5.1-SNAPSHOT"
+    testImplementation "co.aikar:acf-core:0.5.1-SNAPSHOT"
 }
 
 shadowJar {

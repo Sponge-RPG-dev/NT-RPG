@@ -60,16 +60,16 @@ subprojects {
         compileOnly 'com.google.auto.service:auto-service:1.0'
         annotationProcessor 'com.google.auto.service:auto-service:1.0'
 
-        compileOnly 'it.unimi.dsi:fastutil:' + project.fastutil
-        compileOnly 'com.google.code.gson:gson:' + project.gson
+        compileOnly 'it.unimi.dsi:fastutil:8.2.1'
+        compileOnly 'com.google.code.gson:gson:2.8.5'
 
-        testImplementation 'org.junit.jupiter:junit-jupiter-api:' + project.junit5
-        testImplementation 'org.junit.jupiter:junit-jupiter-engine:' + project.junit5
-        testImplementation 'org.junit.jupiter:junit-jupiter-params:' + project.junit5
+        testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.0'
+        testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.9.0'
+        testImplementation 'org.junit.jupiter:junit-jupiter-params:5.9.0'
         testImplementation 'com.github.JeffreyFalgout:junit5-extensions:junit5-extensions-1.2.1'
-        testImplementation 'it.unimi.dsi:fastutil:' + project.fastutil
+        testImplementation 'it.unimi.dsi:fastutil:8.2.1'
         //// https://mvnrepository.com/artifact/com.google.code.gson/gson
-        testImplementation 'com.google.code.gson:gson:' + project.gson
+        testImplementation 'com.google.code.gson:gson:2.8.5'
 
     }
 

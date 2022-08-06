@@ -54,42 +54,42 @@ dependencies {
     api project(':FlatFiles-Persistence')
     api project(":Spigot-NMS")
 
-    compileOnly 'io.papermc.paper:paper-api:' + project.spigotapi
+    compileOnly 'io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT'
 
     compileOnly"com.denizenscript:denizen:1.2.3-SNAPSHOT"
-    compileOnly("org.spigotmc:plugin-annotations:" + project.pluginannotations) {
+    compileOnly("org.spigotmc:plugin-annotations:1.2.3-SNAPSHOT") {
         exclude group: "org.bukkit", module: "bukkit"
     }
 
-    compileOnly("com.comphenix.protocol:ProtocolLib:" + project.protocollib) {
+    compileOnly("com.comphenix.protocol:ProtocolLib:4.7.0") {
         exclude group: "com.comphenix.executors", module: "BukkitExecutors"
     }
 
-    api 'com.elmakers.mine.bukkit:EffectLib:' + project.effectlib
-    api 'com.github.stefvanschie.inventoryframework:IF:' + project.if
+    api 'com.elmakers.mine.bukkit:EffectLib:9.4'
+    api 'com.github.stefvanschie.inventoryframework:IF:0.10.6'
     api 'net.kyori:adventure-platform-bukkit:4.1.1'
 
 
     //  compileOnly 'placeholderapi.me.clip:placeholderapi:' + project.papi
-    compileOnly 'com.gmail.filoghost.holographicdisplays:holographicdisplays-api:' + project.hdisplays
-    compileOnly "co.aikar:acf-paper:" + project.acf
-    compileOnly "io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT"
-    compileOnly "ru.endlesscode.mimic:mimic-bukkit-api:" + project.mimic
+    compileOnly 'com.gmail.filoghost.holographicdisplays:holographicdisplays-api:2.4.9'
+    compileOnly "co.aikar:acf-paper:0.5.1-SNAPSHOT"
+    compileOnly "io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT"
+    compileOnly "ru.endlesscode.mimic:mimic-bukkit-api:0.8.0"
 
-    compileOnly('net.Indyuce:MMOItems:' + project.mmoitems) {
+    compileOnly('net.Indyuce:MMOItems:6.7.3') {
         exclude group: 'com.mojang', module: 'authlib'
         exclude group: 'org.jetbrains', module: 'annotations'
     }
-    compileOnly('io.lumine:MythicLib-dist:' + project.mythiclib)
+    compileOnly('io.lumine:MythicLib-dist:1.4')
 
-    compileOnly 'io.lumine:Mythic:' + project.mythicmobs
+    compileOnly 'io.lumine:Mythic:5.1.0-SNAPSHOT'
 
     //compileOnly 'io.lumine:Mythic-API:' + project.mythicmobs
-    compileOnly 'io.lumine:Mythic-Plugin:' + project.mythicmobs
-    compileOnly 'io.lumine:Mythic-Dist:' + project.mythicmobs
+    compileOnly 'io.lumine:Mythic-Plugin:5.1.0-SNAPSHOT'
+    compileOnly 'io.lumine:Mythic-Dist:5.1.0-SNAPSHOT'
     compileOnly 'io.lumine:LumineUtils:1.16.1-SNAPSHOT'
 
-    compileOnly 'com.gitlab.SamB440:RPGRegions-2:' + project.rpgregions
+    compileOnly 'com.gitlab.SamB440:RPGRegions-2:9e46ca8d'
 
     compileOnly 'net.luckperms:api:5.4'
 
@@ -98,8 +98,8 @@ dependencies {
     compileOnly 'com.github.LoneDev6:API-ItemsAdder:3.1.0b'
 
     testImplementation 'com.github.seeseemelk:MockBukkit-v1.19:2.29.0'
-    testImplementation "co.aikar:acf-paper:" + project.acf
-    testImplementation 'com.github.stefvanschie.inventoryframework:IF:' + project.if
+    testImplementation "co.aikar:acf-paper:0.5.1-SNAPSHOT"
+    testImplementation 'com.github.stefvanschie.inventoryframework:IF:0.10.6'
 }
 
 shadowJar {
