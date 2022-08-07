@@ -28,7 +28,6 @@ import cz.neumimto.rpg.spigot.skills.SpigotSkillTreeInterfaceModel;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -322,7 +321,7 @@ public class SpigotGuiHelper {
         List<String> lore;
 
         ISkill skill = skillData.getSkill();
-        TextColor nameColor = getSkillTextColor(character, skill, skillData, skillTree);
+        ChatColor nameColor = getSkillTextColor(character, skill, skillData, skillTree);
 
         List<String> fromCache = model.getFromCache(skill);
 
@@ -356,7 +355,7 @@ public class SpigotGuiHelper {
 
     public static ItemStack toItemStack(ISpigotCharacter character, PlayerSkillContext skillContext) {
         SkillData skillData = skillContext.getSkillData();
-        List<String> lore = itemLoreFactory.toLore(character, skillData, NamedTextColor.GREEN);
+        List<String> lore = itemLoreFactory.toLore(character, skillData, ChatColor.GREEN);
 
         ItemStack itemStack = DatapackManager.instance.findById(skillData.getIcon());
         createSkillIconItemStack(itemStack, skillData, lore);
@@ -406,13 +405,13 @@ public class SpigotGuiHelper {
         return md;
     }
 
-    private static TextColor getSkillTextColor(IActiveCharacter character, ISkill skill, SkillData skillData, SkillTree skillTree) {
+    private static ChatColor getSkillTextColor(IActiveCharacter character, ISkill skill, SkillData skillData, SkillTree skillTree) {
         if (character.hasSkill(skillData.getSkillId())) {
-            return NamedTextColor.GREEN;
+            return ChatColor.GREEN;
         }
         Collection<PlayerClassData> values = character.getClasses().values();
         Optional<PlayerClassData> first = values.stream().filter(a -> a.getClassDefinition().getSkillTree() == skillTree).findFirst();
-        return first.filter(playerClassData -> Rpg.get().getCharacterService().canLearnSkill(character, playerClassData.getClassDefinition(), skill).isOk()).map(playerClassData -> NamedTextColor.GRAY).orElse(NamedTextColor.RED);
+        return first.filter(playerClassData -> Rpg.get().getCharacterService().canLearnSkill(character, playerClassData.getClassDefinition(), skill).isOk()).map(playerClassData -> ChatColor.GRAY).orElse(ChatColor.RED);
     }
 
     public static String formatPropertyValue(Float value) {

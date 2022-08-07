@@ -114,5 +114,7 @@ public interface RpgApi {
 
     String getPlatform();
 
+    void initServices();
+
     ResourceService getResourceService();
 }

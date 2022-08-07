@@ -68,11 +68,10 @@ dependencies {
     api 'com.elmakers.mine.bukkit:EffectLib:9.4'
     api 'com.github.stefvanschie.inventoryframework:IF:0.10.6'
     api 'net.kyori:adventure-platform-bukkit:4.1.1'
-
+    api "co.aikar:acf-paper:0.5.1-SNAPSHOT"
 
     //  compileOnly 'placeholderapi.me.clip:placeholderapi:' + project.papi
     compileOnly 'com.gmail.filoghost.holographicdisplays:holographicdisplays-api:2.4.9'
-    compileOnly "co.aikar:acf-paper:0.5.1-SNAPSHOT"
     compileOnly "io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT"
     compileOnly "ru.endlesscode.mimic:mimic-bukkit-api:0.8.0"
 
@@ -167,3 +166,17 @@ build.mustRunAfter tasks.getByPath(':Spigot-118:build')
 build.mustRunAfter tasks.getByPath(':Spigot-119:build')
 build.mustRunAfter tasks.getByPath(':FlatFiles-Persistence:build')
 
+tasks {
+    runServer {
+        minecraftVersion("1.18.2")
+    }
+}
+
+task dlPlugins {
+    var pluginsFileDir = file("$rootDir/Implementations/Spigot/run/plugins/")
+    download.run {
+        src "https://github.com/dmulloy2/ProtocolLib/releases/download/4.8.0/ProtocolLib.jar"
+        dest new File(pluginsFileDir, "ProtocolLib.jar")
+        overwrite true
+    }
+}

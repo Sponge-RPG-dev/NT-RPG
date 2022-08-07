@@ -25,12 +25,12 @@ dependencies {
     compileOnly fileTree(dir: 'lib', include: '*.jar')
 
     api 'net.bytebuddy:byte-buddy:1.12.1'
-    compileOnly "co.aikar:acf-core:0.5.1-SNAPSHOT"
+    api "co.aikar:acf-core:0.5.1-SNAPSHOT"
     testImplementation "co.aikar:acf-core:0.5.1-SNAPSHOT"
 }
 
 shadowJar {
-    // relocate 'co.aikar.commands', 'cz.neumimto.acf'
+    relocate 'co.aikar.commands', 'co.aikar.commands'
 }
 
 build.dependsOn shadowJar

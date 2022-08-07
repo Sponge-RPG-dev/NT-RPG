@@ -207,7 +207,6 @@ public class AdminCommands extends BaseCommand {
         }
     }
 
-
     @Subcommand("reload")
     public void reload(@Optional @Default("a") String arg) {
         boolean reloadAll = arg.equalsIgnoreCase("a");

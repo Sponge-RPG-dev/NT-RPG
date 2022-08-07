@@ -10,7 +10,6 @@ import cz.neumimto.rpg.common.localization.LocalizationKeys;
 import cz.neumimto.rpg.common.localization.LocalizationService;
 import cz.neumimto.rpg.common.skills.*;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
-import net.kyori.adventure.text.format.TextColor;
 import net.md_5.bungee.api.ChatColor;
 
 import java.util.*;
@@ -96,7 +95,7 @@ public class ItemLoreFactory {
         return list;
     }
 
-    public List<String> toLore(ISpigotCharacter character, SkillData skillData, TextColor nameColor) {
+    public List<String> toLore(ISpigotCharacter character, SkillData skillData, org.bukkit.ChatColor nameColor) {
         ISkill skill = skillData.getSkill();
         List<String> lore = new ArrayList<>();
         if (skillData.useDescriptionOnly()) {

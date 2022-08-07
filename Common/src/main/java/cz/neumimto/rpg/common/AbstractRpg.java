@@ -282,9 +282,30 @@ public abstract class AbstractRpg implements RpgApi {
             Log.error("Could not read localizations in locale " + locale.toString() + " - " + e.getMessage());
         }
 
+        List<BaseCommand> commands = new ArrayList<>();
+        for (Class commandClass : commandClasses) {
+            Object instance = injector.getInstance(commandClass);
+            commands.add((BaseCommand) instance);
+        }
+
+        initServices();
+
+
+        ACFBootstrap.initializeACF(((CommandManager) commandManager), commands);
+
+        for (RpgAddon rpgAddon : rpgAddons) {
+            rpgAddon.processStageLate(injector);
+        }
+
+        doImplSpecificreload();
+    }
+
+    @Override
+    public void initServices() {
+        getEventFactory().registerEventProviders();
+
         getItemService().load();
         getInventoryService().load();
-        getEventFactory().registerEventProviders();
         getExperienceService().load();
 
         getPropertyService().load();
@@ -296,21 +317,6 @@ public abstract class AbstractRpg implements RpgApi {
         getEffectService().startEffectScheduler();
         getDamageService().init();
         getResourceService().reload();
-
-        List<BaseCommand> commands = new ArrayList<>();
-        for (Class commandClass : commandClasses) {
-            Object instance = injector.getInstance(commandClass);
-            commands.add((BaseCommand) instance);
-        }
-
-
-        ACFBootstrap.initializeACF(((CommandManager) commandManager), commands);
-
-        for (RpgAddon rpgAddon : rpgAddons) {
-            rpgAddon.processStageLate(injector);
-        }
-
-        doImplSpecificreload();
     }
 
     protected abstract Class getPluginClass();
