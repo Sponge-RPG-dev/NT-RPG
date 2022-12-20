@@ -18,8 +18,8 @@ import net.minecraft.world.entity.projectile.WitherSkull;
 import org.bukkit.Bukkit;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_19_R1.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_19_R1.event.CraftEventFactory;
+import org.bukkit.craftbukkit.v1_19_R2.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_19_R2.event.CraftEventFactory;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -198,7 +198,7 @@ public class NMSHandler extends cz.neumimto.rpg.nms.NMSHandler {
             case WITHER:
                 return DamageSource.WITHER;
             case FALLING_BLOCK:
-                return DamageSource.FALLING_BLOCK;
+                return DamageSource.fallingBlock(attackingEntity);
             case THORNS:
                 if (attackingEntity == null) {
                     return DamageSource.GENERIC;

@@ -66,7 +66,7 @@ dependencies {
     }
 
     api 'com.elmakers.mine.bukkit:EffectLib:9.4'
-    api 'com.github.stefvanschie.inventoryframework:IF:0.10.6'
+    api 'com.github.stefvanschie.inventoryframework:IF:0.10.8'
     api 'net.kyori:adventure-platform-bukkit:4.1.1'
     api "co.aikar:acf-paper:0.5.1-SNAPSHOT"
 
@@ -96,9 +96,10 @@ dependencies {
     compileOnly 'net.kyori:adventure-platform-bukkit:4.1.1'
     compileOnly 'com.github.LoneDev6:API-ItemsAdder:3.1.0b'
 
-    testImplementation 'com.github.seeseemelk:MockBukkit-v1.19:2.29.0'
+    testImplementation 'com.github.seeseemelk:MockBukkit-v1.19:2.141.0'
     testImplementation "co.aikar:acf-paper:0.5.1-SNAPSHOT"
-    testImplementation 'com.github.stefvanschie.inventoryframework:IF:0.10.6'
+    testImplementation 'com.github.stefvanschie:IF:0.10.8'
+    testImplementation 'commons-lang:commons-lang:2.6'
 }
 
 shadowJar {

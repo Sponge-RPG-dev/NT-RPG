@@ -17,13 +17,15 @@ import cz.neumimto.rpg.common.skills.SkillData;
 import cz.neumimto.rpg.common.skills.tree.SkillTree;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import org.bukkit.Bukkit;
+import org.bukkit.permissions.PermissionAttachment;
 import org.junit.jupiter.api.*;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-@Disabled
 public class SpigotTests {
 
     static ServerMock server;
@@ -90,6 +92,14 @@ public class SpigotTests {
     public void player_test_common_stuff() {
 
         PlayerMock playerMock = preparePlayer();
+
+        HashMap<UUID, PermissionAttachment> perms = new HashMap<UUID, PermissionAttachment>();
+        PermissionAttachment permissionAttachment = playerMock.addAttachment(SpigotRpgPlugin.getInstance());
+        perms.put(playerMock.getUniqueId(), permissionAttachment);
+        permissionAttachment.setPermission("ntrpg.class.warrior", true);
+
+
+        playerMock.addAttachment(plugin, "ntrpg.player.char", true);
         playerMock.addAttachment(plugin, "ntrpg.class.warrior", true);
 
         // select primary class

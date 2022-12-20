@@ -465,7 +465,7 @@ public class SpigotGuiHelper {
 
     public static void createSkillDetailInventoryView(ISpigotCharacter character, SkillTree tree, SkillData skillData) {
         String back = Rpg.get().getLocalizationService().translate(LocalizationKeys.BACK);
-        ChestGui gui = new ChestGui(6, skillData.getSkillName());
+        ChestGui gui = new ChestGui(6, skillData.getSkillName(), SpigotRpgPlugin.getInstance());
         StaticPane background = new StaticPane(0, 0, 9, 6);
         gui.addPane(background);
 

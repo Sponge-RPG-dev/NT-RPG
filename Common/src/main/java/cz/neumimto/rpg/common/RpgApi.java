@@ -114,7 +114,23 @@ public interface RpgApi {
 
     String getPlatform();
 
-    void initServices();
+    default void initServices() {
+        getEventFactory().registerEventProviders();
+
+        getItemService().load();
+        getInventoryService().load();
+        getExperienceService().load();
+
+        getPropertyService().load();
+
+
+        getSkillService().load();
+        getClassService().load();
+        getEffectService().load();
+        getEffectService().startEffectScheduler();
+        getDamageService().init();
+        getResourceService().reload();
+    }
 
     ResourceService getResourceService();
 }

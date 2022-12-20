@@ -7,6 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
@@ -18,7 +19,7 @@ public class GuiCommand extends GuiItem {
             e.setCancelled(true);
             Bukkit.getScheduler().scheduleSyncDelayedTask(SpigotRpgPlugin.getInstance(),
                     () -> Bukkit.dispatchCommand(viewer, command), 1);
-        });
+        }, SpigotRpgPlugin.getInstance());
     }
 
     public GuiCommand(@NotNull ItemStack item, @NotNull String command) {
@@ -27,16 +28,16 @@ public class GuiCommand extends GuiItem {
             HumanEntity whoClicked = e.getWhoClicked();
             Bukkit.getScheduler().scheduleSyncDelayedTask(SpigotRpgPlugin.getInstance(),
                     () -> Bukkit.dispatchCommand(whoClicked, command), 1);
-        });
+        }, SpigotRpgPlugin.getInstance());
     }
 
     public GuiCommand(@NotNull ItemStack item) {
         super(item, e -> {
             e.setCancelled(true);
-        });
+        }, SpigotRpgPlugin.getInstance());
     }
 
     public GuiCommand(@NotNull ItemStack item, Consumer<InventoryClickEvent> listener) {
-        super(item, listener);
+        super(item, listener, SpigotRpgPlugin.getInstance());
     }
 }

@@ -53,7 +53,7 @@ public class Icicle extends ActiveSkill<ISpigotCharacter> {
         org.bukkit.entity.Snowball snowball = (org.bukkit.entity.Snowball) world.spawnEntity(p.getEyeLocation().clone().add(p.getLocation().getDirection()), EntityType.SNOWBALL);
         snowball.setVelocity(p.getLocation().getDirection().multiply(skillContext.getFloatNodeValue(SkillNodes.VELOCITY)));
         snowball.setShooter(p);
-        snowball.setBounce(true);
+
 
         ItemStack itemStack = new ItemStack(Material.STICK);
         ItemMeta itemMeta = itemStack.getItemMeta();
