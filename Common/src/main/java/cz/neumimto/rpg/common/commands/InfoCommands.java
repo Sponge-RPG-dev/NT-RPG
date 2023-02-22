@@ -33,10 +33,10 @@ public class InfoCommands extends BaseCommand {
     public void showClassesCommand(IActiveCharacter character, @Optional String type) {
         if (type == null) {
             Gui.sendClassTypes(character);
-            character.getGuiCommandHistory().add("nt-rpg:ninfo classes");
+            character.getGuiCommandHistory().add("Ntrpg:ninfo classes");
         } else {
             Gui.sendClassesByType(character, type);
-            character.getGuiCommandHistory().add("nt-rpg:ninfo classes " + type);
+            character.getGuiCommandHistory().add("Ntrpg:ninfo classes " + type);
         }
     }
 
@@ -45,14 +45,14 @@ public class InfoCommands extends BaseCommand {
     @CommandPermission("ntrpg.info.class")
     public void showClassCommand(IActiveCharacter character, ClassDefinition classDefinition, @Optional String back) {
         Gui.showClassInfo(character, classDefinition);
-        character.getGuiCommandHistory().add("nt-rpg:ninfo class " + classDefinition.getName());
+        character.getGuiCommandHistory().add("Ntrpg:ninfo class " + classDefinition.getName());
     }
 
     @Subcommand("character")
     @CommandPermission("ntrpg.info.player.characters.other")
     public void showOtherPlayerCharacterCommand(IActiveCharacter character, OnlineOtherPlayer target) {
         Gui.showCharacterInfo(character, target.character);
-        character.getGuiCommandHistory().add("nt-rpg:ninfo character ");
+        character.getGuiCommandHistory().add("Ntrpg:ninfo character ");
     }
 
     @Subcommand("character")
@@ -117,13 +117,13 @@ public class InfoCommands extends BaseCommand {
     @Subcommand("class-dependencies")
     public void displayClassDependencies(IActiveCharacter character, ClassDefinition classDefinition) {
         Gui.displayClassDependencies(character, classDefinition);
-        character.getGuiCommandHistory().add("nt-rpg:ninfo class-dependencies " + classDefinition.getName());
+        character.getGuiCommandHistory().add("Ntrpg:ninfo class-dependencies " + classDefinition.getName());
     }
 
     @Subcommand("class-attributes")
     @CommandCompletion("@class-any")
     public void classAttributes(IActiveCharacter character, ClassDefinition classDefinition) {
         Gui.displayClassAttributes(character, classDefinition);
-        character.getGuiCommandHistory().add("nt-rpg:ninfo class-attributes " + classDefinition.getName());
+        character.getGuiCommandHistory().add("Ntrpg:ninfo class-attributes " + classDefinition.getName());
     }
 }

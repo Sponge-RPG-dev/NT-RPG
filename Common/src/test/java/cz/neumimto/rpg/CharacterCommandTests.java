@@ -83,7 +83,7 @@ public class CharacterCommandTests {
     @Test
     public void testAddExpCommand(@Stage(READY) IActiveCharacter iActiveCharacter) {
         ClassDefinition classDefinition = new ClassDefinition("test", Rpg.get().getPluginConfig().CLASS_TYPES.keySet().iterator().next());
-        //    characterCommands.chooseCharacterClass(iActiveCharacter, classDefinition);
+        characterCommands.chooseCharacterClass(iActiveCharacter, classDefinition);
         Assertions.assertTrue(iActiveCharacter.getClasses().containsKey("test"));
     }
 
@@ -94,7 +94,7 @@ public class CharacterCommandTests {
         String i = iterator.next();
         ClassDefinition classDefinition = new ClassDefinition("test", i);
         Rpg.get().getPluginConfig().RESPECT_CLASS_SELECTION_ORDER = true;
-        //    characterCommands.chooseCharacterClass(iActiveCharacter, classDefinition);
+        characterCommands.chooseCharacterClass(iActiveCharacter, classDefinition);
         Assertions.assertFalse(iActiveCharacter.getClasses().containsKey("test"));
     }
 

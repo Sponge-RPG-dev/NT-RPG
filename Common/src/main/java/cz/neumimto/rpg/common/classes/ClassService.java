@@ -109,6 +109,7 @@ public class ClassService {
             Log.info("No classes found in classes folder, loading classes from within ntrpg.jar");
             loadFrom = assetService.getTempWorkingDir();
             assetService.copyDefaultClasses(loadFrom);
+            loadFrom = loadFrom.resolve("classes/");
         } else {
             loadFrom = classDefinitionDao.getClassDirectory();
         }

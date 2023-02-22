@@ -20,15 +20,13 @@ public class RpgItemStackImpl implements RpgItemStack {
                             Map<IGlobalEffect, EffectParams> enchantments,
                             Map<AttributeConfig, Integer> bonusAttributes,
                             Map<AttributeConfig, Integer> minimalAttributeRequirements,
-                            Map<ClassDefinition, Integer> classRequirements,
-                            Map<String, Double> itemData
+                            Map<ClassDefinition, Integer> classRequirements
     ) {
         this.rpgItemType = rpgItemType;
         this.enchantments = enchantments;
         this.bonusAttributes = bonusAttributes;
         this.minimalAttributeRequirements = minimalAttributeRequirements;
         this.classRequirements = classRequirements;
-        this.itemData = itemData;
     }
 
     @Override
@@ -56,10 +54,6 @@ public class RpgItemStackImpl implements RpgItemStack {
         return classRequirements;
     }
 
-    @Override
-    public Map<String, Double> getItemData() {
-        return itemData;
-    }
 
     @Override
     public String toString() {

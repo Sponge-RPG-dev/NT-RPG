@@ -18,6 +18,7 @@ import cz.neumimto.rpg.common.items.ItemService;
 import cz.neumimto.rpg.common.localization.Arg;
 import cz.neumimto.rpg.common.localization.LocalizationService;
 import cz.neumimto.rpg.common.permissions.PermissionService;
+import cz.neumimto.rpg.common.resources.ResourceService;
 import cz.neumimto.rpg.common.scripting.NTScriptEngine;
 import cz.neumimto.rpg.common.skills.SkillService;
 
@@ -112,4 +113,24 @@ public interface RpgApi {
     void doImplSpecificreload();
 
     String getPlatform();
+
+    default void initServices() {
+        getEventFactory().registerEventProviders();
+
+        getItemService().load();
+        getInventoryService().load();
+        getExperienceService().load();
+
+        getPropertyService().load();
+
+
+        getSkillService().load();
+        getClassService().load();
+        getEffectService().load();
+        getEffectService().startEffectScheduler();
+        getDamageService().init();
+        getResourceService().reload();
+    }
+
+    ResourceService getResourceService();
 }

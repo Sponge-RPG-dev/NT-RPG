@@ -39,7 +39,6 @@ import cz.neumimto.rpg.common.inventory.CharacterInventoryInteractionHandler;
 import cz.neumimto.rpg.common.inventory.InventoryHandler;
 import cz.neumimto.rpg.common.inventory.InventoryService;
 import cz.neumimto.rpg.common.inventory.TestInventoryService;
-import cz.neumimto.rpg.common.inventory.crafting.runewords.RWDao;
 import cz.neumimto.rpg.common.items.ItemService;
 import cz.neumimto.rpg.common.localization.LocalizationService;
 import cz.neumimto.rpg.common.localization.LocalizationServiceImpl;
@@ -49,12 +48,14 @@ import cz.neumimto.rpg.common.persistance.dao.ClassDefinitionDao;
 import cz.neumimto.rpg.common.persistance.dao.ICharacterClassDao;
 import cz.neumimto.rpg.common.persistance.dao.IPersistenceHandler;
 import cz.neumimto.rpg.common.persistance.dao.IPlayerDao;
+import cz.neumimto.rpg.common.resources.ResourceService;
 import cz.neumimto.rpg.common.skills.SkillService;
 import cz.neumimto.rpg.common.skills.reagents.Cooldown;
 import cz.neumimto.rpg.common.skills.reagents.HPCast;
 import cz.neumimto.rpg.common.skills.reagents.ManaCast;
 import cz.neumimto.rpg.effects.TestEffectService;
 import cz.neumimto.rpg.entity.TestEntityService;
+import cz.neumimto.rpg.entity.TestResourceService;
 import cz.neumimto.rpg.model.TestPersistanceHandler;
 import cz.neumimto.rpg.persistence.InMemoryPlayerStorage;
 import cz.neumimto.rpg.skills.reagents.CooldownTest;
@@ -98,7 +99,7 @@ public class TestGuiceModule extends AbstractModule {
         bind(EntityService.class).to(TestEntityService.class);
         bind(MobSettingsDao.class).to(TestMobSettingsDao.class);
         bind(ExperienceDAO.class);
-
+        bind(ResourceService.class).to(TestResourceService.class);
 
         bind(IPlayerMessage.class).toProvider(() -> {
             try {
@@ -116,7 +117,6 @@ public class TestGuiceModule extends AbstractModule {
         bind(InventoryService.class).to(TestInventoryService.class);
         bind(CharacterInventoryInteractionHandler.class).to(InventoryHandler.class);
         bind(ItemService.class).to(TestItemService.class);
-        bind(RWDao.class);
         bind(RpgApi.class).to(TestApiImpl.class);
 
         bind(PermissionService.class).to(TestPermissionService.class);

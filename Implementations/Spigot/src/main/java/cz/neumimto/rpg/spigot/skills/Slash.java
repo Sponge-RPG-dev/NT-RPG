@@ -47,7 +47,7 @@ public class Slash extends TargetedEntitySkill {
         double weaponDamageMult = info.getDoubleNodeValue(SkillNodes.MULTIPLIER);
         double max = info.getDoubleNodeValue(SkillNodes.MAX);
 
-        double damage = Math.min(max, weaponDamageMult * source.getWeaponDamage());
+        double damage = Math.min(max, weaponDamageMult * 1);
 
         if (damage > 0) {
             damageService.damageEntity(target, damage);

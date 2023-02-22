@@ -23,7 +23,6 @@ import com.electronwill.nightconfig.core.conversion.Converter;
 import com.electronwill.nightconfig.core.conversion.Path;
 import com.electronwill.nightconfig.core.conversion.PreserveNotNull;
 import com.typesafe.config.Optional;
-import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.common.utils.DebugLevel;
 
 import java.util.*;
@@ -33,9 +32,6 @@ import java.util.*;
  */
 public class PluginConfig {
 
-    @Path("OVERRIDE_MOBS")
-    public boolean OVERRIDE_MOBS = false;
-
     @Path("COMBAT_TIME")
     public long COMBAT_TIME = 20000L;
 
@@ -43,7 +39,7 @@ public class PluginConfig {
     public boolean REMOVE_PLAYERDATA_AFTER_PERMABAN = false;
 
     @Path("DEBUG")
-    public DebugLevel DEBUG = DebugLevel.BALANCE;
+    public DebugLevel DEBUG = DebugLevel.NONE;
 
     @Path("PLAYER_AUTO_CHOOSE_LAST_PLAYED_CHAR")
     public boolean PLAYER_AUTO_CHOOSE_LAST_PLAYED_CHAR = true;
@@ -65,12 +61,6 @@ public class PluginConfig {
 
     @Path("PLAYER_MAX_CHARS")
     public int PLAYER_MAX_CHARS = 5;
-
-    @Path("JJS_ARGS")
-    public String JJS_ARGS = "--optimistic-types=true";
-
-    @Path("MANA_REGENERATION_RATE")
-    public long MANA_REGENERATION_RATE = 1000;
 
     @Path("ALLOW_COMBAT_FOR_CHARACTERLESS_PLAYERS")
     public boolean ALLOW_COMBAT_FOR_CHARACTERLESS_PLAYERS = true;
@@ -102,15 +92,6 @@ public class PluginConfig {
 
     @Path("CLICK_COMBO_MAX_INVERVAL_BETWEEN_ACTIONS")
     public long CLICK_COMBO_MAX_INVERVAL_BETWEEN_ACTIONS = 1250;
-
-    @Path("CLASS_ITEM_DAMAGE_PROCESSOR")
-    @Conversion(ItemDamageProcessorConverter.class)
-    public ItemDamageProcessor CLASS_ITEM_DAMAGE_PROCESSOR = new Max();
-
-
-    @Path("ITEM_DAMAGE_PROCESSOR")
-    @Conversion(ItemDamageProcessorConverter.class)
-    public ItemDamageProcessor ITEM_DAMAGE_PROCESSOR = new Sum();
 
     @Path("CREATE_FIRST_CHAR_AFTER_LOGIN")
     public boolean CREATE_FIRST_CHAR_AFTER_LOGIN = true;
@@ -149,9 +130,6 @@ public class PluginConfig {
     @Path("SPELLBOOK_ROTATION_COOLDOWN")
     public long SPELLBOOK_COOLDOWN = 1000L;
 
-    @Path("MANABAR_VERSION")
-    public String MANABAR_VERSION = "BOSSBAR";
-
     @Path("SKILL_SETTINGS_ICONS")
     @Conversion(SSIConverter.class)
     public Map<String, ItemString> SKILL_SETTINGS_ICONS = new HashMap<String, ItemString>() {{
@@ -164,60 +142,6 @@ public class PluginConfig {
 
     @Path("DISABLED_HOOKS")
     public List<String> DISABLED_HOOKS = new ArrayList<>();
-
-    @Path("TEXT_MANABAR_PREFIX")
-    public String TEXT_MANABAR_PREFIX = "oraxen:ntrpg_split3";
-
-    @Path("TEXT_MANABAR_PREFIX_REPEAT")
-    public int TEXT_MANABAR_PREFIX_REPEAT = 15;
-
-    @Path("TEXT_MANABAR_ROWS")
-    public List<String> TEXT_MANABAR_ROWS = new ArrayList<>() {{
-           add("%oraxen_ntrpg_split3%                         %oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%");
-           add("%oraxen_ntrpg_split3%                         %oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana1%%oraxen_ntrpg_split3%");
-           add("%oraxen_ntrpg_split3%                         %oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%");
-           add("%oraxen_ntrpg_split3%                         %oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana1%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%");
-           add("%oraxen_ntrpg_split3%                         %oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%");
-           add("%oraxen_ntrpg_split3%                         %oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana1%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%");
-           add("%oraxen_ntrpg_split3%                         %oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%");
-           add("%oraxen_ntrpg_split3%                         %oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana1%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%");
-           add("%oraxen_ntrpg_split3%                         %oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%");
-           add("%oraxen_ntrpg_split3%                         %oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana1%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%");
-           add("%oraxen_ntrpg_split3%                         %oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%");
-           add("%oraxen_ntrpg_split3%                         %oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana1%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%");
-           add("%oraxen_ntrpg_split3%                         %oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%");
-           add("%oraxen_ntrpg_split3%                         %oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana1%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%");
-           add("%oraxen_ntrpg_split3%                         %oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%");
-           add("%oraxen_ntrpg_split3%                         %oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana1%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%");
-           add("%oraxen_ntrpg_split3%                         %oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%");
-           add("%oraxen_ntrpg_split3%                         %oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana1%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%");
-           add("%oraxen_ntrpg_split3%                         %oraxen_ntrpg_mana0%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%");
-           add("%oraxen_ntrpg_split3%                         %oraxen_ntrpg_mana1%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%%oraxen_ntrpg_mana2%%oraxen_ntrpg_split3%");
-       }};
-
-
-
-    private static class ItemDamageProcessorConverter implements Converter<ItemDamageProcessor, String> {
-
-        @Override
-        public String convertFromField(ItemDamageProcessor value) {
-            return value.getClass().getCanonicalName();
-        }
-
-        @Override
-        public ItemDamageProcessor convertToField(String value) {
-            if (value == null) {
-                Log.error("Unknown item damage processor definition - Could not find class " + value + ". SEtting to Max()");
-                return new Max();
-            }
-            try {
-                return (ItemDamageProcessor) Class.forName(value).newInstance();
-            } catch (Exception e) {
-            }
-            Log.error("Unknown item damage processor definition - Could not find class " + value + ". SEtting to Max()");
-            return new Max();
-        }
-    }
 
     private static class SetToListConverter implements Converter<Set, List> {
         @Override
@@ -266,8 +190,5 @@ public class PluginConfig {
             return list;
         }
     }
-
-
-
 
 }

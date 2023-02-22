@@ -1,14 +1,19 @@
 package cz.neumimto.rpg.spigot.entities;
 
+import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.entity.AbstractMob;
+import cz.neumimto.rpg.common.entity.IEntityResource;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.party.IParty;
+import cz.neumimto.rpg.common.resources.Resource;
 import cz.neumimto.rpg.common.skills.ISkill;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Tameable;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class SpigotMob extends AbstractMob<LivingEntity> implements ISpigotEntity<LivingEntity> {
@@ -16,9 +21,18 @@ public class SpigotMob extends AbstractMob<LivingEntity> implements ISpigotEntit
     private LivingEntity entity;
     private ISkill soedc;
 
+    private Map<String, Resource> resourceMap = new HashMap<>();
+
     public SpigotMob(LivingEntity entity) {
         this.entity = entity;
-        this.entityHealth = new SpigotEntityHealth(entity);
+    }
+
+    @Override
+    public Resource getResource(String resource) {
+        if (!resourceMap.containsKey(resource)) {
+            resourceMap.put(resource, Rpg.get().getResourceService().initializeForAi(this));
+        }
+        return resourceMap.get(resource);
     }
 
     @Override
@@ -53,7 +67,6 @@ public class SpigotMob extends AbstractMob<LivingEntity> implements ISpigotEntit
 
     @Override
     public void detach() {
-        this.entityHealth = null;
         this.entity = null;
     }
 

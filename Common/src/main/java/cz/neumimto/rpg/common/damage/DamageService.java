@@ -5,8 +5,6 @@ import cz.neumimto.rpg.common.configuration.PluginConfig;
 import cz.neumimto.rpg.common.entity.EntityService;
 import cz.neumimto.rpg.common.entity.IEntity;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.common.items.ItemService;
-import cz.neumimto.rpg.common.items.RpgItemStack;
 import cz.neumimto.rpg.common.items.RpgItemType;
 
 import javax.inject.Inject;
@@ -28,7 +26,7 @@ public abstract class DamageService<W extends IActiveCharacter, T, E extends IEn
         if (type == null) {
             return 1; //todo unarmed
         }
-        double base = character.getBaseWeaponDamage(type);
+        double base = 0;
 
         for (Integer i : type.getItemClass().getProperties()) {
             base += entityService.getEntityProperty(character, i);
@@ -44,32 +42,6 @@ public abstract class DamageService<W extends IActiveCharacter, T, E extends IEn
         return base;
     }
 
-    public void recalculateCharacterWeaponDamage(IActiveCharacter character) {
-        if (character.isStub()) {
-            return;
-        }
-        RpgItemStack mainHand = character.getMainHand();
-        recalculateCharacterWeaponDamage(character, mainHand);
-    }
-
-    public void recalculateCharacterWeaponDamage(IActiveCharacter character, RpgItemStack mainHand) {
-        if (mainHand == null) {
-            character.setWeaponDamage(1); //todo unarmed
-        } else {
-            recalculateCharacterWeaponDamage(character, mainHand.getItemType());
-            Double damage = mainHand.getItemData().get(ItemService.DAMAGE_KEY);
-            if (damage != null) {
-                double damageF = pluginConfig.ITEM_DAMAGE_PROCESSOR.get(character.getWeaponDamage(), damage);
-                character.setWeaponDamage(damageF);
-            }
-        }
-    }
-
-    public void recalculateCharacterWeaponDamage(IActiveCharacter character, RpgItemType type) {
-        double damage = getCharacterItemDamage(character, type);
-        // damage += character.getMainHand().getDamage() + character.getOffHand().getDamage();
-        character.setWeaponDamage(damage);
-    }
 
     public boolean canDamage(W caster, T l) {
         return damageHandler.canDamage(caster, l);

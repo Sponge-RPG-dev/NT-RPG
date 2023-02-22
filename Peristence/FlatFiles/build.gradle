@@ -7,5 +7,5 @@ dependencies {
     //compileOnly 'com.google.inject:guice:4.2.2'
 
     testImplementation project(':Common-Persistence-Test')
-
+    testImplementation project(':Common')
 }

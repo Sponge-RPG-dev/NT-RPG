@@ -9,6 +9,8 @@ import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.common.events.EventFactoryService;
 import cz.neumimto.rpg.common.localization.LocalizationService;
+import cz.neumimto.rpg.common.resources.Resource;
+import cz.neumimto.rpg.common.resources.ResourceDefinition;
 import cz.neumimto.rpg.common.skills.*;
 import cz.neumimto.rpg.common.skills.types.ActiveSkill;
 import cz.neumimto.rpg.junit.CharactersExtension;
@@ -120,7 +122,9 @@ public class SkillExecutionTests {
         skillData.setSkill(testSkill);
         playerSkillContext.setSkillData(skillData);
         character.addSkill("test", playerSkillContext);
-
+        character.addResource("health", new Resource(new ResourceDefinition()));
+        character.getResource("health").setMaxValue("test", 10);
+        character.getResource("health").setValue(10);
         skillService.executeSkill(character, character.getSkill("test"));
         Assertions.assertFalse(hadRun);
     }

@@ -4,13 +4,13 @@ import com.google.inject.Injector;
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
-import cz.neumimto.rpg.common.items.ItemService;
+import cz.neumimto.rpg.common.resources.Resource;
+import cz.neumimto.rpg.common.resources.ResourceService;
 import cz.neumimto.rpg.common.skills.ISkill;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
 import cz.neumimto.rpg.spigot.events.character.SpigotCharacterGainedLevelEvent;
 import cz.neumimto.rpg.spigot.inventory.SpigotItemService;
-import de.tr7zw.nbtapi.NBTItem;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
@@ -20,7 +20,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import javax.inject.Inject;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class MMOItemsExpansion implements Listener {
 
@@ -46,8 +49,6 @@ public class MMOItemsExpansion implements Listener {
                 min = next.getValue().getOrder();
             }
         }
-        spigotItemService.setItemHandler(new MMOItemStackRpgHandler());
-
 
         reloadMMOItemSkills();
     }
@@ -128,11 +129,19 @@ public class MMOItemsExpansion implements Listener {
         }
 
         public double getMana() {
-            return getCharacter().getMana().getValue();
+            Resource resource = this.getCharacter().getResource(ResourceService.mana);
+            if (resource == null) {
+                return 0;
+            }
+            return resource.getValue();
         }
 
         public void setMana(double value) {
-            this.getCharacter().getMana().setValue(value);
+            Resource resource = this.getCharacter().getResource(ResourceService.mana);
+            if (resource == null) {
+                return;
+            }
+            resource.setValue(value);
         }
 
         public double getStamina() {
@@ -145,16 +154,5 @@ public class MMOItemsExpansion implements Listener {
 
     }
 
-    public static class MMOItemStackRpgHandler extends SpigotItemService.SpigotItemHandler {
-        @Override
-        protected Map<String, Double> getItemData(NBTItem nbtItem) {
-            Map<String, Double> map = new HashMap<>();
-            Double mmoitems_attack_damage = nbtItem.getDouble("MMOITEMS_ATTACK_DAMAGE");
-            if (mmoitems_attack_damage != null) {
-                map.put(ItemService.DAMAGE_KEY, mmoitems_attack_damage);
-            }
-            return map;
-        }
-    }
 
 }

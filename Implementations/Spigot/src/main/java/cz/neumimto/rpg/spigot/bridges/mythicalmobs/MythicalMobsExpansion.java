@@ -7,14 +7,14 @@ import cz.neumimto.rpg.common.skills.ISkill;
 import cz.neumimto.rpg.spigot.entities.SpigotEntityService;
 import cz.neumimto.rpg.spigot.entities.SpigotMob;
 import cz.neumimto.rpg.spigot.skills.SpigotSkillService;
-import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
+import io.lumine.mythic.bukkit.MythicBukkit;
+import io.lumine.mythic.core.mobs.ActiveMob;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Listener;
 
 import javax.inject.Inject;
-import java.util.List;
+import java.util.Collection;
 import java.util.UUID;
 
 public class MythicalMobsExpansion implements Listener {
@@ -28,7 +28,7 @@ public class MythicalMobsExpansion implements Listener {
     public void init(SpigotEntityService spigotEntityService) {
         spigotEntityService.setEntityHandler(new MythicalMobsHandler());
 
-        List<ISkill> iSkills = MythicalMobsWrapperFactory.generateSkills(MythicMobs.inst().getSkillManager().getSkills());
+        Collection<ISkill> iSkills = MythicalMobsWrapperFactory.generateSkills(MythicBukkit.inst().getSkillManager().getSkills());
         for (ISkill iSkill : iSkills) {
             injector.injectMembers(iSkill);
             spigotSkillService.registerAdditionalCatalog(iSkill);
@@ -39,28 +39,13 @@ public class MythicalMobsExpansion implements Listener {
     public static class MythicalMobsHandler extends AbstractEntityService.EntityHandler<SpigotMob> {
 
         @Override
-        public SpigotMob initializeEntity(MobSettingsDao dao, SpigotMob iEntity, String dimName, String type) {
-            if (MythicMobs.inst().getAPIHelper().isMythicMob(iEntity.getUUID())) {
-                return iEntity;
-            }
-            return super.initializeEntity(dao, iEntity, dimName, type);
-        }
-
-        @Override
         public double getExperiences(MobSettingsDao dao, String dimName, String type, UUID uuid) {
-            if (MythicMobs.inst().getAPIHelper().isMythicMob(uuid)) {
+            if (MythicBukkit.inst().getAPIHelper().isMythicMob(uuid)) {
                 Entity entity = Bukkit.getServer().getEntity(uuid);
-                ActiveMob mythicMobInstance = MythicMobs.inst().getAPIHelper().getMythicMobInstance(entity);
+                ActiveMob mythicMobInstance = MythicBukkit.inst().getAPIHelper().getMythicMobInstance(entity);
                 return mythicMobInstance.getType().getConfig().getDouble("ntrpg.experiences", 0);
             }
             return super.getExperiences(dao, dimName, type, uuid);
         }
-
-        @Override
-        public boolean handleMobDamage(String dimension, UUID uuid) {
-            return !MythicMobs.inst().getAPIHelper().isMythicMob(uuid);
-        }
-
     }
-
 }

@@ -22,13 +22,13 @@ import javax.inject.Inject;
  */
 public class Sample extends ActiveSkill {
     @Inject
-    public ScríptParserTests.TargettedEntity TargettedEntity;
+    public ScriptParserTests.TargettedEntity TargettedEntity;
     @Inject
-    public ScríptParserTests.Exists Exists;
+    public ScriptParserTests.Exists Exists;
     @Inject
-    public ScríptParserTests.DamageEntity DamageEntity;
+    public ScriptParserTests.DamageEntity DamageEntity;
     @Inject
-    public ScríptParserTests.A A;
+    public ScriptParserTests.A A;
 
     @Override
     public SkillResult cast(IActiveCharacter character, PlayerSkillContext info) {

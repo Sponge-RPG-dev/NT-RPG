@@ -83,10 +83,6 @@ public class Gui {
         getMessageTypeOf(target).displayGroupWeapon(g, target);
     }
 
-    public static void displayMana(IActiveCharacter character) {
-        getMessageTypeOf(character).displayMana(character);
-    }
-
     public static void displayCurrentClicks(IActiveCharacter character, String combo) {
         getMessageTypeOf(character).displayCurrentClicks(character, combo);
     }

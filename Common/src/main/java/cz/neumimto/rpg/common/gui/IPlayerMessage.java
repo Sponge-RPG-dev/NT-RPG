@@ -42,8 +42,6 @@ public interface IPlayerMessage<T extends IActiveCharacter> {
 
     void displayGroupWeapon(ClassDefinition g, T target);
 
-    void displayMana(T character);
-
     void sendCannotUseItemNotification(T character, String item, CannotUseItemReason reason);
 
     void openSkillTreeMenu(T player);

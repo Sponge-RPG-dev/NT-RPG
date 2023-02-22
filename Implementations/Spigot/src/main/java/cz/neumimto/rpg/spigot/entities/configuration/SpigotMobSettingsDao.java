@@ -32,9 +32,7 @@ public class SpigotMobSettingsDao extends MobSettingsDao {
             MobsConfig overWorldMobConfig = new MobsConfig();
 
             for (EntityType livingEntity : livingEntities) {
-                overWorldMobConfig.getDamage().put(livingEntity.name(), 10D);
                 overWorldMobConfig.getExperiences().put(livingEntity.name(), 10D);
-                overWorldMobConfig.getHealth().put(livingEntity.name(), 10D);
             }
 
             List<World> worlds = Bukkit.getWorlds();
@@ -42,9 +40,8 @@ public class SpigotMobSettingsDao extends MobSettingsDao {
                 rootMobConfig.getDimmensions().put(w.getName(), overWorldMobConfig);
             }
             FileUtils.generateConfigFile(rootMobConfig, properties);
-
-
         }
         return loadFile(properties.toPath());
     }
+
 }

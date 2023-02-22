@@ -1,11 +1,11 @@
 package cz.neumimto.rpg.spigot.entities.players;
 
 import cz.neumimto.rpg.common.entity.PropertyService;
-import cz.neumimto.rpg.common.entity.players.CharacterMana;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.gui.Gui;
 import cz.neumimto.rpg.common.model.CharacterBase;
+import cz.neumimto.rpg.common.resources.ResourceService;
 import cz.neumimto.rpg.common.skills.ISkill;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
@@ -18,6 +18,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.UUID;
 
@@ -26,17 +27,17 @@ import static cz.neumimto.rpg.common.logging.Log.info;
 @Singleton
 public class SpigotCharacterService extends CharacterService<ISpigotCharacter> {
 
-    @Override
-    protected ISpigotCharacter createCharacter(UUID player, CharacterBase characterBase) {
-        SpigotCharacter iActiveCharacter = new SpigotCharacter(player, characterBase, PropertyService.LAST_ID);
-        iActiveCharacter.setMana(new CharacterMana(iActiveCharacter));
-        iActiveCharacter.setHealth(new SpigotCharacterHealth(iActiveCharacter));
-        return iActiveCharacter;
-    }
+    @Inject
+    private ResourceService resourceService;
 
     @Override
     protected void initSpellbook(ISpigotCharacter activeCharacter, String[][] spellbookPages) {
         activeCharacter.setSpellbook(new ItemStack[3][9]);
+    }
+
+    @Override
+    protected SpigotCharacter createCharacter(UUID player, CharacterBase characterBase) {
+        return new SpigotCharacter(player, characterBase, PropertyService.LAST_ID);
     }
 
     @Override
@@ -64,6 +65,7 @@ public class SpigotCharacterService extends CharacterService<ISpigotCharacter> {
     public int canCreateNewCharacter(UUID uniqueId, String name) {
         return 0;
     }
+
 
 
     @Override

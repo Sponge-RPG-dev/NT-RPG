@@ -95,7 +95,7 @@ public class ItemLoreFactory {
         return list;
     }
 
-    public List<String> toLore(ISpigotCharacter character, SkillData skillData, ChatColor nameColor) {
+    public List<String> toLore(ISpigotCharacter character, SkillData skillData, org.bukkit.ChatColor nameColor) {
         ISkill skill = skillData.getSkill();
         List<String> lore = new ArrayList<>();
         if (skillData.useDescriptionOnly()) {

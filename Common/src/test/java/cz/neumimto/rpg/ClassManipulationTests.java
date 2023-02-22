@@ -43,7 +43,7 @@ public class ClassManipulationTests {
     ClassDefinition ps3;
 
     @Inject
-    CharacterService<IActiveCharacter> characterService;
+    CharacterService characterService;
 
     @Inject
     private RpgApi rpgApi;

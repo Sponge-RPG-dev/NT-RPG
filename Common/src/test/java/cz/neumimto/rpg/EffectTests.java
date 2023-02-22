@@ -117,6 +117,8 @@ public class EffectTests {
     public void test_Effect_Expirable_stackable_single_instance() {
         effect = (TickableEffect) makeEffectStackable(effect);
         effect.setPeriod(0);
+        effect.setPeriod(1);
+        effect.setDuration(10000);
         effectService.addEffect(effect, InternalEffectSourceProvider.INSTANCE);
         effectService.schedule();
         effectService.schedule();
@@ -124,7 +126,7 @@ public class EffectTests {
         Assertions.assertNotSame(effect, character.getEffect(effect.getName()));
 
         Mockito.verify(effect, Mockito.times(1)).onApply(any());
-        Mockito.verify(effect, Mockito.times(0)).onTick(any());
+        Mockito.verify(effect, Mockito.times(1)).onTick(any());
         Mockito.verify(effect, Mockito.times(0)).onRemove(any());
 
         Mockito.when(effect.getExpireTime()).thenReturn(0L);
@@ -138,19 +140,15 @@ public class EffectTests {
 
     @Test
     public void test_Effect_Expirable_stackable() {
-        IEffect effect = this.effect;
-        TickableEffect test = createEffectMock("testEffect");
-        processEffectStacking(effect, test);
-    }
-
-
-    private void processEffectStacking(IEffect first, IEffect test) {
-        first = makeEffectStackable(first);
+        IEffect first = makeEffectStackable(this.effect);
+        Mockito.when(first.getExpireTime()).thenReturn(System.currentTimeMillis() + 100000L);
 
         effectService.addEffect(first, InternalEffectSourceProvider.INSTANCE);
+
         Assertions.assertNotNull(character.getEffect(first.getName()));
         Assertions.assertNotSame(first, character.getEffect(first.getName()));
-        Assertions.assertTrue(character.getEffect("testEffect").getStackedValue().equals(1D));
+        Assertions.assertEquals(1D, character.getEffect("testEffect").getStackedValue());
+
         effectService.schedule();
 
         Mockito.verify(first, Mockito.times(1)).onApply(any());
@@ -158,7 +156,9 @@ public class EffectTests {
         Mockito.verify(first, Mockito.times(0)).onRemove(any());
 
 
-        test = makeEffectStackable(test);
+        IEffect test = createEffectMock("testEffect");
+        makeEffectStackable(test);
+        Mockito.when(test.getExpireTime()).thenReturn(System.currentTimeMillis() + 100000L);
 
         effectService.addEffect(test, InternalEffectSourceProvider.INSTANCE);
         Mockito.verify(test, Mockito.times(1)).onApply(any());

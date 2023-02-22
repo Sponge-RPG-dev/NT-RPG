@@ -197,7 +197,7 @@ public class GlobalEffectAnnotationProcessor extends AbstractProcessor {
                             DeclaredType declaredType = (DeclaredType) varModel.asType();
                             TypeElement fieldTypeElement = (TypeElement) declaredType.asElement();
                             List<? extends Element> enclosedElements = fieldTypeElement.getEnclosedElements();
-                            Map<String, String> elements = new HashMap<>();
+                            Map<String, Set<String>> elements = new HashMap<>();
 
                             String modelMapperFor = mirror.toString();
                             String modelSimpleName = ((DeclaredType) mirror).asElement().getSimpleName().toString();
@@ -206,7 +206,12 @@ public class GlobalEffectAnnotationProcessor extends AbstractProcessor {
                                     TypeMirror typeMirror = enclosedElement.asType();
                                     String className = typeMirror.toString();
                                     String modelfieldName = enclosedElement.toString();
-                                    elements.put(className, modelfieldName);
+                                    Set<String> fields = elements.get(className);
+                                    if (fields == null) {
+                                        fields = new HashSet<>();
+                                    }
+                                    fields.add(modelfieldName);
+                                    elements.put(className, fields);
                                 }
                             }
                             generateModelMapper(modelSimpleName, modelMapperFor, elements, element);
@@ -225,19 +230,21 @@ public class GlobalEffectAnnotationProcessor extends AbstractProcessor {
         return true;
     }
 
-    private void generateModelMapper(String modelSimpleName, String mapperFor, Map<String, String> elements, Element e) {
+    private void generateModelMapper(String modelSimpleName, String mapperFor, Map<String, Set<String>> elements, Element e) {
         String _modelTemplate = modelTemplate;
         _modelTemplate = _modelTemplate.replaceAll("%stype%", modelSimpleName);
         _modelTemplate = _modelTemplate.replaceAll("%type%", mapperFor);
         _modelTemplate = _modelTemplate.replaceAll("%type%", mapperFor);
 
         StringBuilder stringBuilder = new StringBuilder();
-        for (Map.Entry<String, String> a : elements.entrySet()) {
-            String mapperFunc = javaTypes.get(a.getKey()).replaceAll("%field%", a.getValue());
-            stringBuilder.append(
-                    modelField.replaceAll("%field%", a.getValue())
-                            .replaceAll("%map%", mapperFunc));
-            stringBuilder.append(";\n");
+        for (Map.Entry<String, Set<String>> a : elements.entrySet()) {
+            for (String field : a.getValue()) {
+                String mapperFunc = javaTypes.get(a.getKey()).replaceAll("%field%", field);
+                stringBuilder.append(
+                        modelField.replaceAll("%field%", field)
+                                .replaceAll("%map%", mapperFunc));
+                stringBuilder.append(";\n");
+            }
         }
         _modelTemplate = _modelTemplate.replaceAll("%it%", stringBuilder.toString());
 

@@ -1,0 +1,17 @@
+main: cz.neumimto.rpg.spigot.SpigotRpgPlugin
+name: Ntrpg
+prefix: Ntrpg
+version: 2.1.0-SNAPSHOT
+author: NeumimTo
+depend: [ProtocolLib]
+softdepend:
+  -  PlaceholderAPI
+  -  HolographicDisplays
+  -  MythicMobs
+  -  MMOItems
+  -  RPGRegions
+  -  Mimic
+  -  Oraxen
+  -  ItemsAdder
+  -  Denizen
+api-version: 1.18

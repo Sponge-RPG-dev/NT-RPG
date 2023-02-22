@@ -5,7 +5,7 @@ import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.events.character.TargetCharacterEvent;
 import cz.neumimto.rpg.spigot.events.AbstractNEvent;
 
-abstract class AbstractCharacterEvent extends AbstractNEvent implements TargetCharacterEvent {
+public abstract class AbstractCharacterEvent extends AbstractNEvent implements TargetCharacterEvent {
 
     private IActiveCharacter target;
 

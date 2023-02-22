@@ -28,6 +28,10 @@ public class Log {
         }
     }
 
+    public static void debug(String message) {
+        info(message, DebugLevel.DEVELOP);
+    }
+
     public static void warn(String message) {
         logger.log(Level.WARNING, message);
     }

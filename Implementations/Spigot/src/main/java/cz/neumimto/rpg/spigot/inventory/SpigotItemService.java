@@ -1,6 +1,5 @@
 package cz.neumimto.rpg.spigot.inventory;
 
-import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.configuration.AttributeConfig;
 import cz.neumimto.rpg.common.configuration.ItemString;
 import cz.neumimto.rpg.common.effects.EffectParams;
@@ -11,9 +10,6 @@ import cz.neumimto.rpg.common.items.*;
 import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.spigot.bridges.DatapackManager;
 import cz.neumimto.rpg.spigot.items.SpigotRpgItemType;
-import de.tr7zw.nbtapi.NBTCompoundList;
-import de.tr7zw.nbtapi.NBTItem;
-import de.tr7zw.nbtapi.NBTListCompound;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -55,27 +51,18 @@ public class SpigotItemService extends AbstractItemService {
     }
 
     public Optional<RpgItemStack> getRpgItemStack(ItemStack itemStack) {
-        return getRpgItemType(itemStack).map(a -> {
-            NBTItem nbtItem = new NBTItem(itemStack);
-            return itemHandler.getItemStack(a, nbtItem);
-        });
-    }
-
-
-    public RpgItemStack getRpgItemStack(RpgItemType type, ItemStack itemStack) {
-        NBTItem nbtItem = new NBTItem(itemStack);
-        return itemHandler.getItemStack(type, nbtItem);
+        return getRpgItemType(itemStack).map(a -> itemHandler.getItemStack(a, itemStack));
     }
 
     @Override
     protected Optional<RpgItemType> createRpgItemType(ItemString parsed, ItemClass wClass) {
         Material type = Material.matchMaterial(parsed.itemId);
         if (type == null) {
-            Log.error(" - Not Managed ItemType " + parsed.itemId);
+            Log.debug(" - Not Managed ItemType " + parsed.itemId);
             return Optional.empty();
         }
 
-        return Optional.of(new SpigotRpgItemType(type.getKey().toString(), parsed.variant, wClass, parsed.damage, parsed.armor, type, parsed.permission));
+        return Optional.of(new SpigotRpgItemType(type.getKey().toString(), parsed.variant, wClass, type, parsed.permission));
     }
 
     @Override
@@ -84,80 +71,43 @@ public class SpigotItemService extends AbstractItemService {
     }
 
     public static class SpigotItemHandler {
-        public RpgItemStack getItemStack(RpgItemType a, NBTItem nbtItem) {
+        public RpgItemStack getItemStack(RpgItemType a, ItemStack is) {
             return new RpgItemStackImpl(a,
-                    getItemEffects(nbtItem),
-                    getItemBonusAttributes(nbtItem),
-                    getItemMinimalAttributeRequirements(nbtItem),
-                    getClassRequirements(nbtItem),
-                    getItemData(nbtItem));
+                    getItemEffects(is),
+                    getItemBonusAttributes(is),
+                    getItemMinimalAttributeRequirements(is),
+                    getClassRequirements(is));
         }
 
-        protected Map<String, Double> getItemData(NBTItem nbtItem) {
-            NBTCompoundList attributes = nbtItem.getCompoundList("AttributeModifiers");
-            if (attributes == null || attributes.isEmpty()) {
-                return Collections.emptyMap();
-            }
-            Map<String, Double> data = new HashMap<>();
-            for (NBTListCompound attribute : attributes) {
-                if (attribute.getString("AttributeName").equals("generic.attackDamage")) {
-                    double amount = attribute.getDouble("Amount");
-                    data.put(DAMAGE_KEY, amount);
-                }
-            }
-            return data;
-        }
-
-        protected Map<IGlobalEffect, EffectParams> getItemEffects(NBTItem nbtItem) {
-            NBTCompoundList compoundList = nbtItem.getCompoundList(EFFECTS);
-            if (compoundList == null) {
-                return Collections.emptyMap();
-            }
+        protected Map<IGlobalEffect, EffectParams> getItemEffects(ItemStack nbtItem) {
             Map<IGlobalEffect, EffectParams> map = new HashMap<>();
-            for (int i = 0; i < compoundList.size(); i++) {
-                NBTListCompound nbtListCompound = compoundList.get(i);
-                for (String key : nbtListCompound.getKeys()) {
-
-                }
-            }
             return map;
         }
 
-        protected Map<ClassDefinition, Integer> getClassRequirements(NBTItem nbtItem) {
+        protected Map<ClassDefinition, Integer> getClassRequirements(ItemStack nbtItem) {
             return Collections.emptyMap();
         }
 
-        protected Map<AttributeConfig, Integer> getItemBonusAttributes(NBTItem nbtItem) {
+        protected Map<AttributeConfig, Integer> getItemBonusAttributes(ItemStack nbtItem) {
             return Collections.emptyMap();
         }
 
-        protected Map<AttributeConfig, Integer> getItemMinimalAttributeRequirements(NBTItem nbtItem) {
-            NBTCompoundList compoundList = nbtItem.getCompoundList(ATTRIBTUES_REQUIREMENTS);
-            if (compoundList == null) {
-                return Collections.emptyMap();
-            }
+        protected Map<AttributeConfig, Integer> getItemMinimalAttributeRequirements(ItemStack nbtItem) {
             Map<AttributeConfig, Integer> map = new HashMap<>();
-            for (NBTListCompound nbtListCompound : compoundList) {
-                for (String key : nbtListCompound.getKeys()) {
-                    int integer = nbtListCompound.getInteger(key);
-                    Optional<AttributeConfig> attributeById = Rpg.get().getPropertyService().getAttributeById(key);
-                    if (attributeById.isPresent()) {
-                        AttributeConfig attr = attributeById.get();
-                        map.put(attr, integer);
-                    } else {
-                        Log.warn("Discovered an unknown attribute on an intemstack " + key);
-                    }
-                }
-            }
+            //for (NBTListCompound nbtListCompound : compoundList) {
+            //    for (String key : nbtListCompound.getKeys()) {
+            //        int integer = nbtListCompound.getInteger(key);
+            //        Optional<AttributeConfig> attributeById = Rpg.get().getPropertyService().getAttributeById(key);
+            //        if (attributeById.isPresent()) {
+            //            AttributeConfig attr = attributeById.get();
+            //            map.put(attr, integer);
+            //        } else {
+            //            Log.warn("Discovered an unknown attribute on an intemstack " + key);
+            //        }
+            //    }
+            //}
             return map;
         }
     }
 
-    public SpigotItemHandler getItemHandler() {
-        return itemHandler;
-    }
-
-    public void setItemHandler(SpigotItemHandler itemHandler) {
-        this.itemHandler = itemHandler;
-    }
 }

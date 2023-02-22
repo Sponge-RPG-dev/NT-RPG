@@ -6,7 +6,7 @@ import cz.neumimto.rpg.common.configuration.adapters.*;
 import cz.neumimto.rpg.common.effects.*;
 import cz.neumimto.rpg.common.entity.players.leveling.ILevelProgression;
 import cz.neumimto.rpg.common.entity.players.leveling.SkillTreeType;
-import cz.neumimto.rpg.common.items.ClassItem;
+import cz.neumimto.rpg.common.items.RpgItemType;
 import cz.neumimto.rpg.common.skills.tree.SkillTree;
 
 import java.util.*;
@@ -48,7 +48,7 @@ public class ClassDefinition implements IEffectSourceProvider {
 
     @Path("AllowedArmor")
     @Conversion(ClassRpgItemTypeAdapter.class)
-    protected Set<ClassItem> allowedArmor = new HashSet<>();
+    protected Set<RpgItemType> allowedArmor = new HashSet<>();
 
     @Path("Permissions")
     @Conversion(ClassPermissionAdapter.class)
@@ -70,7 +70,11 @@ public class ClassDefinition implements IEffectSourceProvider {
 
     @Path("Weapons")
     @Conversion(ClassRpgItemTypeAdapter.class)
-    protected Set<ClassItem> weapons = new HashSet<>();
+    protected Set<RpgItemType> weapons = new HashSet<>();
+
+    @Path("Resources")
+    @Conversion(ClassResourceAdapter.class)
+    protected Set<ClassResource> classResources = new HashSet<>();
 
     @Path("Attributes")
     @Conversion(AttributeMapAdapter.class)
@@ -82,7 +86,7 @@ public class ClassDefinition implements IEffectSourceProvider {
 
     @Path("Offhand")
     @Conversion(ClassRpgItemTypeAdapter.class)
-    protected Set<ClassItem> offHandWeapons = new HashSet<>();
+    protected Set<RpgItemType> offHandWeapons = new HashSet<>();
 
     @Path("Experiences")
     @Conversion(DimExperiencesAdapter.class)
@@ -142,15 +146,15 @@ public class ClassDefinition implements IEffectSourceProvider {
         return showsInMenu;
     }
 
-    public Set<ClassItem> getAllowedArmor() {
+    public Set<RpgItemType> getAllowedArmor() {
         return allowedArmor;
     }
 
-    public Set<ClassItem> getWeapons() {
+    public Set<RpgItemType> getWeapons() {
         return weapons;
     }
 
-    public Set<ClassItem> getOffHandWeapons() {
+    public Set<RpgItemType> getOffHandWeapons() {
         return offHandWeapons;
     }
 
@@ -290,6 +294,14 @@ public class ClassDefinition implements IEffectSourceProvider {
 
     public void setItemModel(Integer itemModel) {
         this.itemModel = itemModel;
+    }
+
+    public Set<ClassResource> getClassResources() {
+        return classResources;
+    }
+
+    public void setClassResources(Set<ClassResource> classResources) {
+        this.classResources = classResources;
     }
 
     @Override

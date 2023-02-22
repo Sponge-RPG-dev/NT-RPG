@@ -6,7 +6,6 @@ import cz.neumimto.rpg.common.configuration.AttributeConfig;
 import cz.neumimto.rpg.common.entity.PropertyService;
 import cz.neumimto.rpg.common.entity.TestCharacter;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.items.ItemService;
 import cz.neumimto.rpg.common.items.RpgItemStack;
 import cz.neumimto.rpg.common.items.RpgItemStackImpl;
@@ -80,19 +79,19 @@ class InventoryHandlerTest {
 
         return Stream.of(
                 //May use - allowed weapon, slot matches
-                Arguments.of(new RpgItemStackImpl(TestDictionary.ITEM_TYPE_WEAPON_1, Collections.emptyMap(), Collections.emptyMap(), Collections.emptyMap(), Collections.emptyMap(), Collections.emptyMap()), 1, true),
+                Arguments.of(new RpgItemStackImpl(TestDictionary.ITEM_TYPE_WEAPON_1, Collections.emptyMap(), Collections.emptyMap(), Collections.emptyMap(), Collections.emptyMap()), 1, true),
 
                 //May use - allowed armor, slot matches
-                Arguments.of(new RpgItemStackImpl(TestDictionary.ARMOR_TYPE_1, Collections.emptyMap(), Collections.emptyMap(), Collections.emptyMap(), Collections.emptyMap(), Collections.emptyMap()), 0, true),
+                Arguments.of(new RpgItemStackImpl(TestDictionary.ARMOR_TYPE_1, Collections.emptyMap(), Collections.emptyMap(), Collections.emptyMap(), Collections.emptyMap()), 0, true),
 
                 //Maynot use - item in allowed but checked against a in wrong slot.
-                Arguments.of(new RpgItemStackImpl(TestDictionary.ARMOR_TYPE_1, Collections.emptyMap(), Collections.emptyMap(), Collections.emptyMap(), Collections.emptyMap(), Collections.emptyMap()), 1, false),
+                Arguments.of(new RpgItemStackImpl(TestDictionary.ARMOR_TYPE_1, Collections.emptyMap(), Collections.emptyMap(), Collections.emptyMap(), Collections.emptyMap()), 1, false),
 
                 //May not use - The slot wont accept weapon class
-                Arguments.of(new RpgItemStackImpl(TestDictionary.ITEM_TYPE_WEAPON_2, Collections.emptyMap(), Collections.emptyMap(), Collections.emptyMap(), Collections.emptyMap(), Collections.emptyMap()), 0, false),
+                Arguments.of(new RpgItemStackImpl(TestDictionary.ITEM_TYPE_WEAPON_2, Collections.emptyMap(), Collections.emptyMap(), Collections.emptyMap(), Collections.emptyMap()), 0, false),
 
                 //May not use - The slot accepts weapon class, but character cannot use such item type
-                Arguments.of(new RpgItemStackImpl(TestDictionary.ITEM_TYPE_WEAPON_2, Collections.emptyMap(), Collections.emptyMap(), Collections.emptyMap(), Collections.emptyMap(), Collections.emptyMap()), 1, false),
+                Arguments.of(new RpgItemStackImpl(TestDictionary.ITEM_TYPE_WEAPON_2, Collections.emptyMap(), Collections.emptyMap(), Collections.emptyMap(), Collections.emptyMap()), 1, false),
 
                 //May not use - allowed weapon, slot matches, not enough str
                 Arguments.of(new RpgItemStackImpl(TestDictionary.ITEM_TYPE_WEAPON_1, Collections.emptyMap(), new HashMap<AttributeConfig, Integer>() {{
@@ -100,46 +99,46 @@ class InventoryHandlerTest {
                     put(TestDictionary.AGI, 0);
                 }}, new HashMap<AttributeConfig, Integer>() {{
                     put(TestDictionary.STR, 60);
-                }}, Collections.emptyMap(), Collections.emptyMap()), 1, false),
+                }}, Collections.emptyMap()), 1, false),
 
                 //May use - allowed weapon, slot matches, enough str and agi
                 Arguments.of(new RpgItemStackImpl(TestDictionary.ITEM_TYPE_WEAPON_1, Collections.emptyMap(), new HashMap<AttributeConfig, Integer>() {{
                     put(TestDictionary.STR, 5);
                     put(TestDictionary.AGI, 5);
-                }}, Collections.emptyMap(), Collections.emptyMap(), Collections.emptyMap()), 1, true),
+                }}, Collections.emptyMap(), Collections.emptyMap()), 1, true),
 
                 //May not use - allowed weapon, slot matches, enough str and agi, not enough class level
                 Arguments.of(new RpgItemStackImpl(TestDictionary.ITEM_TYPE_WEAPON_1, Collections.emptyMap(),
-                        new HashMap<AttributeConfig, Integer>() {{
+                        new HashMap<>() {{
                             put(TestDictionary.STR, 5);
                             put(TestDictionary.AGI, 5);
                         }},
                         Collections.emptyMap(),
-                        new HashMap<ClassDefinition, Integer>() {{
+                        new HashMap<>() {{
                             put(TestDictionary.CLASS_PRIMARY, 10);
-                        }}, Collections.emptyMap()), 1, false),
+                        }}), 1, false),
 
                 //May use - allowed weapon, slot matches, enough str and agi, enough class and level
                 Arguments.of(new RpgItemStackImpl(TestDictionary.ITEM_TYPE_WEAPON_1, Collections.emptyMap(),
-                        new HashMap<AttributeConfig, Integer>() {{
+                        new HashMap<>() {{
                             put(TestDictionary.STR, 5);
                             put(TestDictionary.AGI, 5);
                         }},
                         Collections.emptyMap(),
-                        new HashMap<ClassDefinition, Integer>() {{
+                        new HashMap<>() {{
                             put(TestDictionary.CLASS_PRIMARY, 1);
-                        }}, Collections.emptyMap()), 1, true),
+                        }}), 1, true),
 
                 //May not use - allowed weapon, slot matches, enough str and agi, no specified class
                 Arguments.of(new RpgItemStackImpl(TestDictionary.ITEM_TYPE_WEAPON_1, Collections.emptyMap(),
-                        new HashMap<AttributeConfig, Integer>() {{
+                        new HashMap<>() {{
                             put(TestDictionary.STR, 5);
                             put(TestDictionary.AGI, 5);
                         }},
                         Collections.emptyMap(),
-                        new HashMap<ClassDefinition, Integer>() {{
+                        new HashMap<>() {{
                             put(TestDictionary.CLASS_TERTIARY, 5);
-                        }}, Collections.emptyMap()), 1, false)
+                        }}), 1, false)
         );
 
     }
@@ -153,7 +152,7 @@ class InventoryHandlerTest {
         Map<AttributeConfig, Integer> minimalRequirements = new HashMap<>();
         minimalRequirements.put(TestDictionary.STR, 2);
 
-        RpgItemStackImpl rpgItemStack = new RpgItemStackImpl(TestDictionary.ARMOR_TYPE_1, Collections.emptyMap(), Collections.emptyMap(), minimalRequirements, Collections.emptyMap(), Collections.emptyMap());
+        RpgItemStackImpl rpgItemStack = new RpgItemStackImpl(TestDictionary.ARMOR_TYPE_1, Collections.emptyMap(), Collections.emptyMap(), minimalRequirements, Collections.emptyMap());
         managedSlot.setContent(rpgItemStack);
         managedSlots.put(0, managedSlot);
 
@@ -162,7 +161,7 @@ class InventoryHandlerTest {
         RpgItemStackImpl future = new RpgItemStackImpl(TestDictionary.ARMOR_TYPE_1, Collections.emptyMap(), new HashMap<AttributeConfig, Integer>() {{
             put(TestDictionary.STR, 0);
         }},
-                minimalRequirements, Collections.emptyMap(), Collections.emptyMap());
+        minimalRequirements, Collections.emptyMap());
 
         boolean mayUse = itemService.checkItemAttributeRequirements(character, future);
         Assertions.assertTrue(mayUse);
@@ -177,7 +176,7 @@ class InventoryHandlerTest {
         minimalRequirements.put(TestDictionary.STR, 2);
 
         RpgItemStackImpl rpgItemStack = new RpgItemStackImpl(TestDictionary.ARMOR_TYPE_1, Collections.emptyMap(), Collections.emptyMap(),
-                minimalRequirements, Collections.emptyMap(), Collections.emptyMap());
+                minimalRequirements, Collections.emptyMap());
         managedSlot.setContent(rpgItemStack);
         managedSlots.put(0, managedSlot);
 
@@ -189,7 +188,7 @@ class InventoryHandlerTest {
                     put(TestDictionary.STR, 0);
                     put(TestDictionary.AGI, 0);
                 }},
-                minimalRequirements, Collections.emptyMap(), Collections.emptyMap());
+                minimalRequirements, Collections.emptyMap());
 
         boolean mayUse = itemService.checkItemAttributeRequirements(character, future);
         Assertions.assertFalse(mayUse);
@@ -203,7 +202,7 @@ class InventoryHandlerTest {
         Map<AttributeConfig, Integer> minimalRequirements = new HashMap<>();
         minimalRequirements.put(TestDictionary.STR, 2);
 
-        RpgItemStackImpl rpgItemStack = new RpgItemStackImpl(TestDictionary.ARMOR_TYPE_1, Collections.emptyMap(), Collections.emptyMap(), minimalRequirements, Collections.emptyMap(), Collections.emptyMap());
+        RpgItemStackImpl rpgItemStack = new RpgItemStackImpl(TestDictionary.ARMOR_TYPE_1, Collections.emptyMap(), Collections.emptyMap(), minimalRequirements, Collections.emptyMap());
         managedSlot.setContent(rpgItemStack);
         managedSlots.put(0, managedSlot);
 
@@ -213,7 +212,7 @@ class InventoryHandlerTest {
 
         Map<AttributeConfig, Integer> bonusAttributes = new HashMap<>();
         bonusAttributes.put(TestDictionary.STR, 5);
-        RpgItemStackImpl future = new RpgItemStackImpl(TestDictionary.ARMOR_TYPE_1, Collections.emptyMap(), bonusAttributes, minimalRequirements, Collections.emptyMap(), Collections.emptyMap());
+        RpgItemStackImpl future = new RpgItemStackImpl(TestDictionary.ARMOR_TYPE_1, Collections.emptyMap(), bonusAttributes, minimalRequirements, Collections.emptyMap());
 
         boolean mayUse = itemService.checkItemAttributeRequirements(character, future);
         Assertions.assertFalse(mayUse);

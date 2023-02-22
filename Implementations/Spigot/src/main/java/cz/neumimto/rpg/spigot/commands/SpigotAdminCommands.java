@@ -15,8 +15,6 @@ import cz.neumimto.rpg.common.entity.EntityService;
 import cz.neumimto.rpg.common.entity.PropertyService;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
-import cz.neumimto.rpg.common.items.ClassItem;
 import cz.neumimto.rpg.common.items.ItemClass;
 import cz.neumimto.rpg.common.items.RpgItemType;
 import cz.neumimto.rpg.spigot.inventory.SpigotItemService;
@@ -130,17 +128,6 @@ public class SpigotAdminCommands extends BaseCommand {
         IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
         executor.sendMessage(ChatColor.RED + "Damage: " + damageService.getCharacterItemDamage(character, fromItemStack));
         executor.sendMessage(ChatColor.RED + "Details: ");
-        executor.sendMessage(ChatColor.GRAY + " - From Item: " + character.getBaseWeaponDamage(fromItemStack));
-
-        Collection<PlayerClassData> values = character.getClasses().values();
-        for (PlayerClassData value : values) {
-            Set<ClassItem> weapons = value.getClassDefinition().getWeapons();
-            for (ClassItem weapon : weapons) {
-                if (weapon.getType() == fromItemStack) {
-                    executor.sendMessage(ChatColor.GRAY + "  - From Class: " + weapon.getDamage());
-                }
-            }
-        }
 
 
         executor.sendMessage(ChatColor.GRAY + " - From ItemClass: ");

@@ -8,16 +8,18 @@ import cz.neumimto.rpg.common.inventory.RpgInventory;
 import cz.neumimto.rpg.common.items.RpgItemStack;
 import cz.neumimto.rpg.common.model.EquipedSlot;
 import cz.neumimto.rpg.common.skills.SkillData;
+import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.gui.inventoryviews.ConfigurableInventoryGui;
 import cz.neumimto.rpg.spigot.persistance.SpigotEquipedSlot;
-import de.tr7zw.nbtapi.NBTItem;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.Metadatable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -103,9 +105,12 @@ public class SpigotInventoryService extends AbstractInventoryService<ISpigotChar
             itemMeta.setCustomModelData(skillData.getModelId());
         }
         itemStack.setItemMeta(itemMeta);
-        NBTItem nbtItem = new NBTItem(itemStack);
-        nbtItem.setString(SKILLBIND, skillData.getSkillId());
-        return nbtItem.getItem();
+
+
+        if (itemStack instanceof Metadatable m) {
+            m.setMetadata(SKILLBIND, new FixedMetadataValue(SpigotRpgPlugin.getInstance(), skillData.getSkillId()));
+        }
+        return itemStack;
     }
 
     @Override
@@ -143,10 +148,11 @@ public class SpigotInventoryService extends AbstractInventoryService<ISpigotChar
                 player.getInventory().setItem(i, itemStacks[i]);
                 continue;
             }
-            NBTItem nbtItem = new NBTItem(item);
-            String skillName = nbtItem.getString(SKILLBIND);
-            if (!skillName.isEmpty()) {
-                player.getInventory().setItem(i, itemStacks[i]);
+            if (item instanceof Metadatable m) {
+                String skillName = m.getMetadata(SKILLBIND).get(0).asString();
+                if (!skillName.isEmpty()) {
+                    player.getInventory().setItem(i, itemStacks[i]);
+                }
             }
         }
         character.setSpellbookPage(page++);

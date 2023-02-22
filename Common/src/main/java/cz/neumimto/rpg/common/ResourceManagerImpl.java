@@ -75,7 +75,7 @@ public class ResourceManagerImpl implements ResourceLoader {
 
     protected void loadPropertyContainerClass(Class<?> clazz) {
         DebugLevel debugLevel = Rpg.get().getPluginConfig().DEBUG;
-        info("Found Property container class" + clazz.getName(), debugLevel);
+        info("Found Property container class " + clazz.getName(), debugLevel);
         propertyService.processContainer(clazz);
     }
 

@@ -4,8 +4,8 @@ import com.google.auto.service.AutoService;
 import cz.neumimto.rpg.common.ResourceLoader;
 import cz.neumimto.rpg.common.entity.IEntity;
 import cz.neumimto.rpg.common.entity.IEntityType;
-import cz.neumimto.rpg.common.entity.IReservable;
-import cz.neumimto.rpg.common.entity.players.CharacterMana;
+import cz.neumimto.rpg.common.resources.Resource;
+import cz.neumimto.rpg.common.resources.ResourceService;
 import cz.neumimto.rpg.common.skills.ISkill;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.skills.SkillNodes;
@@ -39,8 +39,8 @@ public class Battery extends TargetedEntitySkill {
             return SkillResult.CANCELLED;
         }
         ISpigotCharacter targetChar = (ISpigotCharacter) target;
-        IReservable mana = targetChar.getMana();
-        if (mana instanceof CharacterMana) {
+        Resource mana = targetChar.getResource(ResourceService.mana);
+        if (mana != null && mana.getType().equals(ResourceService.mana)) {
             mana.setValue(mana.getValue() + info.getDoubleNodeValue(SkillNodes.AMOUNT));
 
             CircularYIncrementingEffect circleEffect = new CircularYIncrementingEffect(SpigotRpgPlugin.getEffectManager());

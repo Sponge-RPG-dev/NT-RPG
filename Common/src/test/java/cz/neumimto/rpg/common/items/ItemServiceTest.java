@@ -40,7 +40,7 @@ public class ItemServiceTest {
     public void getItemTypesByWeaponClassUnknown() {
         registerWeaponClassSubClassesExists();
 
-        RpgItemTypeImpl rpgItemType = new RpgItemTypeImpl("testItem", "testModel", null, 0D, 0D, null);
+        RpgItemTypeImpl rpgItemType = new RpgItemTypeImpl("testItem", "testModel", null,  null);
         itemService.getWeaponClassByName("test").get().getItems().add(rpgItemType);
     }
 
@@ -82,7 +82,6 @@ public class ItemServiceTest {
                 Assertions.assertEquals(1, subClass.getProperties().size());
                 Assertions.assertEquals(1, subClass.getPropertiesMults().size());
                 for (RpgItemType item : subClass.getItems()) {
-                    Assertions.assertTrue(item.getDamage() > 0);
                     cFound = true;
                 }
             }
@@ -92,7 +91,6 @@ public class ItemServiceTest {
                 Assertions.assertEquals(1, subClass.getProperties().size());
                 Assertions.assertEquals(1, subClass.getPropertiesMults().size());
                 for (RpgItemType item : subClass.getItems()) {
-                    Assertions.assertTrue(item.getDamage() > 0);
                     bFound = true;
                 }
             }

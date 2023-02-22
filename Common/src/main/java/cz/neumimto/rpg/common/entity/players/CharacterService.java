@@ -10,7 +10,6 @@ import cz.neumimto.rpg.common.damage.DamageService;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.effects.IEffectContainer;
 import cz.neumimto.rpg.common.effects.core.ClickComboActionComponent;
-import cz.neumimto.rpg.common.effects.core.CombatEffect;
 import cz.neumimto.rpg.common.entity.CommonProperties;
 import cz.neumimto.rpg.common.entity.EntityService;
 import cz.neumimto.rpg.common.entity.PropertyService;
@@ -23,6 +22,7 @@ import cz.neumimto.rpg.common.events.EventFactoryService;
 import cz.neumimto.rpg.common.events.character.*;
 import cz.neumimto.rpg.common.gui.Gui;
 import cz.neumimto.rpg.common.inventory.InventoryService;
+import cz.neumimto.rpg.common.items.RpgItemType;
 import cz.neumimto.rpg.common.localization.Arg;
 import cz.neumimto.rpg.common.localization.LocalizationKeys;
 import cz.neumimto.rpg.common.localization.LocalizationService;
@@ -32,12 +32,13 @@ import cz.neumimto.rpg.common.permissions.PermissionService;
 import cz.neumimto.rpg.common.persistance.dao.ICharacterClassDao;
 import cz.neumimto.rpg.common.persistance.dao.IPersistenceHandler;
 import cz.neumimto.rpg.common.persistance.dao.IPlayerDao;
+import cz.neumimto.rpg.common.resources.Resource;
+import cz.neumimto.rpg.common.resources.ResourceService;
 import cz.neumimto.rpg.common.skills.*;
 import cz.neumimto.rpg.common.skills.tree.SkillTree;
 import cz.neumimto.rpg.common.skills.tree.SkillTreeSpecialization;
 import cz.neumimto.rpg.common.utils.ActionResult;
 import cz.neumimto.rpg.common.utils.DebugLevel;
-import cz.neumimto.rpg.common.utils.MathUtils;
 import cz.neumimto.rpg.common.utils.exceptions.MissingConfigurationException;
 
 import javax.inject.Inject;
@@ -81,6 +82,8 @@ public abstract class CharacterService<T extends IActiveCharacter> {
     private IPersistenceHandler persistanceHandler;
     @Inject
     private PermissionService permissionService;
+    @Inject
+    private ResourceService resourceService;
 
     protected abstract void scheduleNextTick(Runnable r);
 
@@ -202,7 +205,7 @@ public abstract class CharacterService<T extends IActiveCharacter> {
     }
 
     public void updateWeaponRestrictions(T character) {
-        Map weapons = character.getAllowedWeapons();
+        Set<RpgItemType> weapons = character.getAllowedWeapons();
         CharacterWeaponUpdateEvent event = eventFactoryService.createEventInstance(CharacterWeaponUpdateEvent.class);
         event.setWeapons(weapons);
         event.setTarget(character);
@@ -302,7 +305,6 @@ public abstract class CharacterService<T extends IActiveCharacter> {
         info("Initializing character " + character.getCharacterBase().getName());
         String msg = localizationService.translate(LocalizationKeys.CHARACTER_INITIALIZED, arg("character", character.getName()));
         character.sendMessage(msg);
-        addDefaultEffects(character);
         Set<BaseCharacterAttribute> baseCharacterAttribute = character.getCharacterBase().getBaseCharacterAttribute();
 
         for (BaseCharacterAttribute at : baseCharacterAttribute) {
@@ -321,7 +323,6 @@ public abstract class CharacterService<T extends IActiveCharacter> {
 
         invalidateCaches(character);
         inventoryService.initializeCharacterInventory(character);
-        damageService.recalculateCharacterWeaponDamage(character);
 
         CharacterInitializedEvent event = Rpg.get().getEventFactory().createEventInstance(CharacterInitializedEvent.class);
         event.setTarget(character);
@@ -341,41 +342,6 @@ public abstract class CharacterService<T extends IActiveCharacter> {
             return;
         }
         effectService.applyGlobalEffectsAsEnchantments(p.getEffects(), character, p);
-    }
-
-    /**
-     * updates maximal mana from character properties
-     *
-     * @param character
-     */
-    public void updateMaxMana(T character) {
-        double max_mana = entityService.getEntityProperty(character, CommonProperties.max_mana);
-        double reserved = entityService.getEntityProperty(character, CommonProperties.reserved_mana);
-        double reservedMult = entityService.getEntityProperty(character, CommonProperties.reserved_mana_multiplier);
-        double maxval = max_mana - (reserved * reservedMult);
-        if (maxval <= 0) {
-            maxval = 0;
-        }
-        character.getMana().setMaxValue(maxval);
-    }
-
-    /**
-     * Updates maximal health from character properties
-     *
-     * @param character
-     */
-    public void updateMaxHealth(T character) {
-        double max_health = entityService.getEntityProperty(character, CommonProperties.max_health);
-        double reserved = entityService.getEntityProperty(character, CommonProperties.reserved_health);
-        double reservedMult = entityService.getEntityProperty(character, CommonProperties.reserved_health_multiplier);
-        double maxval = max_health - (reserved * reservedMult);
-        if (maxval <= 0) {
-            maxval = 1;
-        }
-        if (Rpg.get().getPluginConfig().DEBUG.isBalance()) {
-            info("Setting max health of " + character.getName() + " to " + maxval);
-        }
-        character.getHealth().setMaxValue(maxval);
     }
 
     public IActiveCharacter removeCachedWrapper(UUID uuid) {
@@ -412,8 +378,6 @@ public abstract class CharacterService<T extends IActiveCharacter> {
         updateWeaponRestrictions(activeCharacter);
         updateAttributes(activeCharacter);
         entityService.updateWalkSpeed(activeCharacter);
-        updateMaxHealth(activeCharacter);
-        updateMaxMana(activeCharacter);
     }
 
     private void updateAttributes(T activeCharacter) {
@@ -528,6 +492,7 @@ public abstract class CharacterService<T extends IActiveCharacter> {
         }
         Set<CharacterClass> characterClasses = characterBase.getCharacterClasses();
 
+        resourceService.initializeForPlayer(activeCharacter);
         for (CharacterClass characterClass : characterClasses) {
             ClassDefinition classDef = classService.getClassDefinitionByName(characterClass.getName());
             if (classDef == null) {
@@ -540,17 +505,17 @@ public abstract class CharacterService<T extends IActiveCharacter> {
             if (classDef.getSkillTreeType() == SkillTreeType.AUTO && classDef.getSkillTree() != SkillTree.Default) {
                 classDef.getSkillTreeType().processCharacterInit(activeCharacter, playerClassData);
             }
+            resourceService.addResource((ActiveCharacter) activeCharacter, classDef);
         }
 
         inventoryService.initializeManagedSlots(activeCharacter);
+
 
         Set<PlayerSkillContext> skillData = resolveSkills(characterBase, activeCharacter);
         recalculateProperties(activeCharacter);
         for (PlayerSkillContext dt : skillData) {
             dt.getSkill().onCharacterInit(activeCharacter, dt.getLevel(), dt);
         }
-
-
         return activeCharacter;
     }
 
@@ -856,20 +821,6 @@ public abstract class CharacterService<T extends IActiveCharacter> {
         return 1;
     }
 
-    /**
-     * Sets new max hp value
-     *
-     * @param character
-     * @param newHealht
-     */
-    public void characterSetMaxHealth(T character, float newHealht) {
-        double health = character.getHealth().getValue();
-        double max = character.getHealth().getMaxValue();
-        double percent = MathUtils.getPercentage(health, max);
-        character.getHealth().setMaxValue(newHealht);
-        character.getHealth().setValue(newHealht / percent);
-    }
-
     public void characterAddSkillPoints(T character, ClassDefinition clazz, int skillpoint) {
         CharacterClass cc = character.getCharacterBase().getCharacterClass(clazz);
         cc.setSkillPoints(cc.getSkillPoints() + skillpoint);
@@ -903,6 +854,21 @@ public abstract class CharacterService<T extends IActiveCharacter> {
     }
 
     public void addExperiences(T character, double exp, String source) {
+
+        CharacterGainedExperiencesEvent event = eventFactoryService.createEventInstance(CharacterGainedExperiencesEvent.class);
+        event.setCharacter(character);
+        event.setExp(exp);
+        event.setExpSource(source);
+
+        if (Rpg.get().postEvent(event)) {
+            return;
+        }
+
+        character = (T) event.getCharacter();
+        exp = event.getExp();
+        source = event.getExpSource();
+
+
         Map<String, PlayerClassData> classes = character.getClasses();
         for (Map.Entry<String, PlayerClassData> entry : classes.entrySet()) {
             PlayerClassData value = entry.getValue();
@@ -923,7 +889,9 @@ public abstract class CharacterService<T extends IActiveCharacter> {
         }
 
         int level = aClass.getLevel();
-        if (exp > 0) exp = exp * entityService.getEntityProperty(character, CommonProperties.experiences_mult);
+        if (exp > 0) {
+            exp = exp * entityService.getEntityProperty(character, CommonProperties.experiences_mult);
+        }
 
         double lvlexp = aClass.getExperiencesFromLevel();
 
@@ -1031,14 +999,13 @@ public abstract class CharacterService<T extends IActiveCharacter> {
             character.getSkillUpgradeObservers().processChange(entry.getKey());
         }
 
-        character.setRequiresDamageRecalculation(true);
         base.setAttributePointsSpent(base.getAttributePointsSpent() + requiredAP);
         return ActionResult.ok();
     }
 
 
     public ActionResult addAttribute(T character, AttributeConfig attribute) {
-        return addAttribute(character, new HashMap<AttributeConfig, Integer>() {{
+        return addAttribute(character, new HashMap<>() {{
             put(attribute, 1);
         }});
     }
@@ -1058,11 +1025,6 @@ public abstract class CharacterService<T extends IActiveCharacter> {
         character.getSkillUpgradeObservers().processChange(attribute);
     }
 
-    /**
-     * sponge is creating new player object each time a player is (re)spawned @link https://github
-     * .com/SpongePowered/SpongeCommon/commit/384180f372fa233bcfc110a7385f43df2a85ef76
-     * character object is heavy, lets do not recreate its instance just reasign player and effect
-     */
     public void respawnCharacter(T character) {
         effectService.removeAllEffects(character);
 
@@ -1071,32 +1033,35 @@ public abstract class CharacterService<T extends IActiveCharacter> {
             character.getTransientAttributes().put(string, 0);
         }
 
-        character.setRequiresDamageRecalculation(true);
         Map<String, PlayerClassData> classes = character.getClasses();
         for (PlayerClassData nClass : classes.values()) {
             applyGlobalEffects(character, nClass.getClassDefinition());
         }
 
-        character.getMana().setValue(0);
-        addDefaultEffects(character);
+        character.getResource(ResourceService.mana).setValue(0);
 
         inventoryService.initializeCharacterInventory(character);
     }
 
 
-    public int markCharacterForRemoval(UUID player, java.lang.String charName) {
+    public int markCharacterForRemoval(UUID player, String charName) {
         return playerDao.markCharacterForRemoval(player, charName);
     }
 
-    public void gainMana(T character, double manaToAdd, IRpgElement source) {
-        double current = character.getMana().getValue();
-        double max = character.getMana().getMaxValue();
+    public void gainResource(T character, double manaToAdd, IRpgElement source, String resource) {
+        Resource resOrigin = character.getResource(resource);
+        if (resOrigin == null) {
+            return;
+        }
+        double current = resOrigin.getValue();
+        double max = resOrigin.getMaxValue();
         if (current >= max) {
             return;
         }
 
-        CharacterManaRegainEvent event = Rpg.get().getEventFactory().createEventInstance(CharacterManaRegainEvent.class);
+        CharacterResourceChangeValueEvent event = Rpg.get().getEventFactory().createEventInstance(CharacterResourceChangeValueEvent.class);
 
+        event.setType(resource);
         event.setAmount(manaToAdd);
         event.setTarget(character);
         event.setSource(source);
@@ -1111,8 +1076,9 @@ public abstract class CharacterService<T extends IActiveCharacter> {
         current += event.getAmount();
         if (current > max) current = max;
 
-        character.getMana().setValue(current);
-        Gui.displayMana(character);
+        Resource r = event.getTarget().getResource(event.getType());
+        r.setValue(Math.min(current, r.getMaxValue()));
+        event.getTarget().updateResourceUIHandler();
     }
 
     public ActionResult canGainClass(T character, ClassDefinition klass) {
@@ -1188,8 +1154,9 @@ public abstract class CharacterService<T extends IActiveCharacter> {
         return cc;
     }
 
-    public void removeBaseClass(CharacterBase characterBase, ClassDefinition klass) {
+    public void removeBaseClass(T character, CharacterBase characterBase, ClassDefinition klass) {
         characterBase.getCharacterClasses().removeIf(next -> next.getName().equals(klass.getName()));
+        resourceService.removeResource((ActiveCharacter) character, klass);
     }
 
     public ActionResult removeClassFromSlot(T character, String slot) {
@@ -1198,7 +1165,7 @@ public abstract class CharacterService<T extends IActiveCharacter> {
         if (playerClassData == null) {
             return ActionResult.ok();
         }
-        removeBaseClass(characterBase, playerClassData.getClassDefinition());
+        removeBaseClass(character, characterBase, playerClassData.getClassDefinition());
         character.removeClass(playerClassData.getClassDefinition());
 
         invalidateCaches(character);
@@ -1228,9 +1195,9 @@ public abstract class CharacterService<T extends IActiveCharacter> {
         PlayerClassData classByType = character.getClassByType(klass.getClassType());
         if (classByType != null) {
             character.removeClass(classByType.getClassDefinition());
-            removeBaseClass(characterBase, classByType.getClassDefinition());
+            removeBaseClass(character, characterBase, classByType.getClassDefinition());
         }
-        removeBaseClass(characterBase, klass);
+        removeBaseClass(character, characterBase, klass);
 
         CharacterClass cc = addNewBaseClass(characterBase, klass);
 
@@ -1244,6 +1211,7 @@ public abstract class CharacterService<T extends IActiveCharacter> {
         scheduleNextTick(() -> {
             recalculateProperties(character);
             permissionService.addPermissions(character, playerClassData);
+            resourceService.addResource((ActiveCharacter) character, klass);
             scheduleNextTick(() -> {
                 recalculateSecondaryPropertiesOnly(character);
                 applyGlobalEffects(character, klass);
@@ -1340,14 +1308,8 @@ public abstract class CharacterService<T extends IActiveCharacter> {
 
     public void changePropertyValue(T character, int propertyId, float value) {
         character.addProperty(propertyId, value);
-        if (propertyId == CommonProperties.max_health) {
-            updateMaxHealth(character);
-        } else if (propertyId == CommonProperties.max_mana) {
-            updateMaxMana(character);
-        } else if (propertyId == CommonProperties.walk_speed) {
+        if (propertyId == CommonProperties.walk_speed) {
             entityService.updateWalkSpeed(character);
-        } else if (propertyService.updatingRequiresDamageRecalc(propertyId)) {
-            damageService.recalculateCharacterWeaponDamage(character);
         }
     }
 
@@ -1367,13 +1329,8 @@ public abstract class CharacterService<T extends IActiveCharacter> {
         }
 
         recalculateProperties(character);
-        character.setRequiresDamageRecalculation(true);
         base.setAttributePointsSpent(0);
         base.setAttributePoints(attributePoints);
-    }
-
-    public void addDefaultEffects(T character) {
-        effectService.addEffect(new CombatEffect(character, Rpg.get().getPluginConfig().COMBAT_TIME));
     }
 
     public boolean processUserAction(IActiveCharacter character, UserActionType userActionType) {

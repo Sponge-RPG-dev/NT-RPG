@@ -71,9 +71,9 @@ public class WeaponGuiView extends ConfigurableInventoryGui {
         List<GuiCommand> list = new ArrayList<>();
         if (commandSender instanceof Player player) {
             ISpigotCharacter character = characterService.getCharacter(player);
-            var weapons = character.getAllowedWeapons();
-            for (Map.Entry<RpgItemType, Double> e : weapons.entrySet()) {
-                ItemStack itemStack = toItemStack(e.getKey(), e.getValue());
+            Set<RpgItemType> weapons = character.getAllowedWeapons();
+            for (RpgItemType e : weapons) {
+                ItemStack itemStack = toItemStack(e);
                 list.add(new GuiCommand(itemStack));
             }
         }
@@ -87,7 +87,7 @@ public class WeaponGuiView extends ConfigurableInventoryGui {
         return getPrefix(guiConfig).append(Component.text(name).color(NamedTextColor.DARK_GRAY));
     }
 
-    public static ItemStack toItemStack(RpgItemType key, double damage) {
+    public static ItemStack toItemStack(RpgItemType key) {
         Material material = Material.matchMaterial(key.getId());
         List<String> lore = new ArrayList<>();
         ItemStack is = new ItemStack(material);
@@ -95,10 +95,7 @@ public class WeaponGuiView extends ConfigurableInventoryGui {
         LocalizationService localizationService = Rpg.get().getLocalizationService();
         String translate = localizationService.translate(LocalizationKeys.ITEM_CLASS);
         lore.add(ChatColor.GRAY + translate + ": " + ChatColor.GREEN + key.getItemClass().getName());
-        if (damage != 0) {
-            translate = localizationService.translate(LocalizationKeys.ITEM_DAMAGE);
-            lore.add(ChatColor.GRAY + translate + ": " + ChatColor.RED + damage);
-        }
+
         if (Rpg.get().getPluginConfig().DEBUG.isBalance() && key.getModelId() != null && !key.getModelId().isEmpty()) {
             lore.add(ChatColor.DARK_GRAY + "DEBUG:: CustomModelData:" + key.getModelId());
         }

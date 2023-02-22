@@ -4,7 +4,7 @@ import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.google.auto.service.AutoService;
 import cz.neumimto.rpg.common.classes.ClassService;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
-import cz.neumimto.rpg.common.items.ClassItem;
+import cz.neumimto.rpg.common.items.RpgItemType;
 import cz.neumimto.rpg.common.localization.LocalizationService;
 import cz.neumimto.rpg.spigot.gui.elements.GuiCommand;
 import net.kyori.adventure.text.Component;
@@ -67,10 +67,10 @@ public class ClassArmorGuiView extends ConfigurableInventoryGui {
         List<GuiCommand> list = new ArrayList<>();
 
         ClassDefinition classDefinitionByName = classService.getClassDefinitionByName(className);
-        Set<ClassItem> weapons = classDefinitionByName.getAllowedArmor();
+        Set<RpgItemType> weapons = classDefinitionByName.getAllowedArmor();
 
-        for (ClassItem weapon : weapons) {
-            ItemStack itemStack = toItemStack(weapon.getType(), 0);
+        for (RpgItemType weapon : weapons) {
+            ItemStack itemStack = toItemStack(weapon);
             list.add(new GuiCommand(itemStack));
         }
 

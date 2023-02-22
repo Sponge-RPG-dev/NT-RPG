@@ -20,6 +20,7 @@ import cz.neumimto.rpg.common.localization.Arg;
 import cz.neumimto.rpg.common.localization.LocalizationService;
 import cz.neumimto.rpg.common.model.EquipedSlot;
 import cz.neumimto.rpg.common.permissions.PermissionService;
+import cz.neumimto.rpg.common.resources.ResourceService;
 import cz.neumimto.rpg.common.scripting.NTScriptEngine;
 import cz.neumimto.rpg.common.skills.SkillService;
 
@@ -263,6 +264,11 @@ public class RpgTests implements RpgApi {
     @Override
     public String getPlatform() {
         return "Test";
+    }
+
+    @Override
+    public ResourceService getResourceService() {
+        return null;
     }
 
 }
