@@ -501,7 +501,6 @@ public abstract class CharacterService<T extends IActiveCharacter> {
             }
             PlayerClassData playerClassData = new PlayerClassData(classDef, characterClass);
             activeCharacter.addClass(playerClassData);
-            permissionService.addAllPermissions(activeCharacter, playerClassData);
             if (classDef.getSkillTreeType() == SkillTreeType.AUTO && classDef.getSkillTree() != SkillTree.Default) {
                 classDef.getSkillTreeType().processCharacterInit(activeCharacter, playerClassData);
             }
@@ -911,7 +910,6 @@ public abstract class CharacterService<T extends IActiveCharacter> {
             }
             gotLevel = true;
 
-            permissionService.addPermissions(character, aClass);
             if (!aClass.takesExp()) {
                 break;
             }
@@ -1171,7 +1169,6 @@ public abstract class CharacterService<T extends IActiveCharacter> {
         invalidateCaches(character);
 
         recalculateProperties(character);
-        permissionService.removePermissions(character, playerClassData);
 
         recalculateSecondaryPropertiesOnly(character);
         removeGlobalEffects(character, playerClassData.getClassDefinition());
@@ -1210,7 +1207,6 @@ public abstract class CharacterService<T extends IActiveCharacter> {
 
         scheduleNextTick(() -> {
             recalculateProperties(character);
-            permissionService.addPermissions(character, playerClassData);
             resourceService.addResource((ActiveCharacter) character, klass);
             scheduleNextTick(() -> {
                 recalculateSecondaryPropertiesOnly(character);

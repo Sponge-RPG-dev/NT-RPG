@@ -228,7 +228,7 @@ public abstract class AbstractRpg implements RpgApi {
 
     @Override
     public void init(Path workingDirPath, Object commandManager,
-                     Class[] commandClasses, RpgAddon defaultStorageImpl,
+                     Collection commandClasses, RpgAddon defaultStorageImpl,
                      BiFunction<Map, Map<Class<?>, ?>, Module> fnInjProv,
                      Consumer<Injector> injectorc) {
         reloadMainPluginConfig();
@@ -282,16 +282,14 @@ public abstract class AbstractRpg implements RpgApi {
             Log.error("Could not read localizations in locale " + locale.toString() + " - " + e.getMessage());
         }
 
-        List<BaseCommand> commands = new ArrayList<>();
-        for (Class commandClass : commandClasses) {
-            Object instance = injector.getInstance(commandClass);
-            commands.add((BaseCommand) instance);
+        for (Object commandClass : commandClasses) {
+            injector.injectMembers(commandClass);
         }
 
         initServices();
 
 
-        ACFBootstrap.initializeACF(((CommandManager) commandManager), commands);
+
 
         for (RpgAddon rpgAddon : rpgAddons) {
             rpgAddon.processStageLate(injector);

@@ -61,7 +61,7 @@ dependencies {
         exclude group: "org.bukkit", module: "bukkit"
     }
 
-    compileOnly("com.comphenix.protocol:ProtocolLib:4.7.0") {
+    compileOnly("com.comphenix.protocol:ProtocolLib:5.0.0-SNAPSHOT") {
         exclude group: "com.comphenix.executors", module: "BukkitExecutors"
     }
 
@@ -92,11 +92,15 @@ dependencies {
 
     compileOnly 'net.luckperms:api:5.4'
 
-    compileOnly 'com.github.oraxen:oraxen:-SNAPSHOT'
+    compileOnly('com.github.oraxen:oraxen:-SNAPSHOT') {
+        exclude group: "*", module: "*"
+    }
     compileOnly 'net.kyori:adventure-platform-bukkit:4.1.1'
-    compileOnly 'com.github.LoneDev6:API-ItemsAdder:3.1.0b'
+    compileOnly 'com.github.LoneDev6:API-ItemsAdder:3.2.5'
 
-    testImplementation 'com.github.seeseemelk:MockBukkit-v1.19:2.141.0'
+    //compileOnly 'javax.inject:javax.inject:1'
+
+    testImplementation 'com.github.seeseemelk:MockBukkit-v1.19:2.145.0'
     testImplementation "co.aikar:acf-paper:0.5.1-SNAPSHOT"
     testImplementation 'com.github.stefvanschie:IF:0.10.8'
     testImplementation 'commons-lang:commons-lang:2.6'
@@ -106,16 +110,10 @@ shadowJar {
     archiveFileName = "NT-RPG-${p_spigot_version}.jar"
     libsDirName = '../../../server-spigot/plugins'
 
-    relocate 'com.electronwill', 'rpgshaded.com.electronwill'
-    //todo  relocate 'com.github.stefvanschie', 'rpgshaded.com.github.stefvanschie'
-    relocate 'com.google.inject', 'rpgshaded.com.google.inject'
-    relocate 'com.squareup.javapoet', 'rpgshaded.com.squareup.javapoet'
-    relocate 'com.typesafe.config', 'rpgshaded.com.typesafe.config'
-    relocate 'javax.inject', 'rpgshaded.javax.inject'
-    //  relocate 'net.bytebuddy', 'rpgshaded.net.bytebuddy'
-    relocate 'org.aopalliance', 'rpgshaded.org.aopalliance'
-    relocate 'org.codehaus', 'rpgshaded.org.codehaus'
-    relocate 'de.slikey.effectlib', 'rpgshaded.de.slikey.effectlib'
+
+    //relocate 'co.aikar', 'rpgshaded.co.aikar'
+    relocate 'com.github.stefvanschie', 'rpgshaded.com.github.stefvanschie'
+    relocate 'de.slikey', 'rpgshaded.de.slikey'
 
     mergeServiceFiles()
 }
@@ -169,7 +167,7 @@ build.mustRunAfter tasks.getByPath(':FlatFiles-Persistence:build')
 
 tasks {
     runServer {
-        minecraftVersion("1.18.2")
+        minecraftVersion("1.19.3")
     }
 }
 

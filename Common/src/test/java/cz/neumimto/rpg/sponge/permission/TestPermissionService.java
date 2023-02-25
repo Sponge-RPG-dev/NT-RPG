@@ -18,16 +18,6 @@ public class TestPermissionService implements PermissionService {
     }
 
     @Override
-    public void addAllPermissions(IActiveCharacter character, PlayerClassData classDefinition) {
-
-    }
-
-    @Override
-    public void addPermissions(IActiveCharacter character, PlayerClassData classDefinition) {
-
-    }
-
-    @Override
     public void addPermissions(IActiveCharacter character, Collection perms) {
 
     }

@@ -4,7 +4,6 @@ package cz.neumimto.rpg.spigot.packetwrapper;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
-import com.comphenix.protocol.reflect.IntEnum;
 import cz.neumimto.rpg.spigot.skills.utils.AbstractPacket;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
@@ -12,7 +11,7 @@ import org.bukkit.entity.Entity;
 public class WrapperPlayServerAnimation extends AbstractPacket {
     public static final PacketType TYPE = PacketType.Play.Server.ANIMATION;
 
-    public static class Animations extends IntEnum {
+    public static class Animations {
         public static final int SWING_ARM = 0;
         public static final int DAMAGE_ANIMATION = 1;
         public static final int LEAVE_BED = 2;

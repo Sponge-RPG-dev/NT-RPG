@@ -9,28 +9,15 @@ version = project.subp_version
 dependencies {
     annotationProcessor project(':Generator')
 
-    api 'com.electronwill.night-config:hocon:3.6.5'
-    api 'com.electronwill.night-config:json:3.6.5'
-    api 'com.scireum:parsii:4.0'
-    api('com.google.inject:guice:5.0.1') {
-        exclude group: "com.google.guava", module: "guava"
-    }
-
     //api 'com.github.Sponge-Rpg-Dev:NT-Script:73c0166687'
 
     api fileTree(dir: 'lib-cp', include: '*.jar') //why the fuck is jitpack being retarded on java 16 projects
-    api 'org.antlr:antlr4-runtime:4.9.2'
 
     implementation fileTree(dir: 'lib-cp', include: '*.jar')
     compileOnly fileTree(dir: 'lib', include: '*.jar')
 
-    api 'net.bytebuddy:byte-buddy:1.12.1'
     api "co.aikar:acf-core:0.5.1-SNAPSHOT"
     testImplementation "co.aikar:acf-core:0.5.1-SNAPSHOT"
-}
-
-shadowJar {
-    relocate 'co.aikar.commands', 'co.aikar.commands'
 }
 
 build.dependsOn shadowJar

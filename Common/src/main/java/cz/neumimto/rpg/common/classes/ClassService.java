@@ -5,8 +5,6 @@ import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.damage.DamageService;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
-import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
-import cz.neumimto.rpg.common.entity.players.classes.PlayerClassPermission;
 import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.common.permissions.PermissionService;
 import cz.neumimto.rpg.common.persistance.dao.ClassDefinitionDao;
@@ -73,34 +71,6 @@ public class ClassService {
             }
         }
         return defs;
-    }
-
-    public Set<String> getPermissionsToRemove(IActiveCharacter character, ClassDefinition toBeReplaced) {
-        Set<String> intersection = new HashSet<>();
-
-        Set<String> toBeRemoved = new HashSet<>();
-        Map<String, PlayerClassData> map = character.getClasses();
-        for (PlayerClassData nClass : map.values()) {
-            ClassDefinition configClass = nClass.getClassDefinition();
-            if (configClass == toBeReplaced) {
-                for (PlayerClassPermission pgp : configClass.getPermissions()) {
-                    if (pgp.getLevel() <= character.getLevel()) {
-                        toBeRemoved.addAll(pgp.getPermissions());
-                    }
-                }
-            } else {
-                for (PlayerClassPermission playerClassPermission : configClass.getPermissions()) {
-                    if (playerClassPermission.getLevel() <= character.getLevel()) {
-                        intersection.addAll(playerClassPermission.getPermissions());
-                    }
-                }
-            }
-        }
-
-        intersection.removeIf(next -> !toBeRemoved.contains(next));
-
-        toBeRemoved.removeAll(intersection);
-        return toBeRemoved;
     }
 
     public void load() {
