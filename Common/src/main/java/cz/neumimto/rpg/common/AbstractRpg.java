@@ -27,6 +27,7 @@ import cz.neumimto.rpg.common.localization.Arg;
 import cz.neumimto.rpg.common.localization.LocalizationService;
 import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.common.permissions.PermissionService;
+import cz.neumimto.rpg.common.resources.ResourceService;
 import cz.neumimto.rpg.common.scripting.NTScriptEngine;
 import cz.neumimto.rpg.common.skills.SkillService;
 import cz.neumimto.rpg.common.utils.FileUtils;
@@ -83,6 +84,8 @@ public abstract class AbstractRpg implements RpgApi {
     private Injector injector;
     @Inject
     private Gui gui;
+    @Inject
+    private ResourceService resourceService;
 
     protected Executor currentThreadExecutor;
 
@@ -206,6 +209,7 @@ public abstract class AbstractRpg implements RpgApi {
             FileUtils.generateConfigFile(new PluginConfig(), properties);
         }
 
+
         try (FileConfig fileConfig = FileConfig.of(properties.getPath())) {
             fileConfig.load();
             PluginConfig pluginConfig = new PluginConfig();
@@ -224,7 +228,7 @@ public abstract class AbstractRpg implements RpgApi {
 
     @Override
     public void init(Path workingDirPath, Object commandManager,
-                     Class[] commandClasses, RpgAddon defaultStorageImpl,
+                     Collection commandClasses, RpgAddon defaultStorageImpl,
                      BiFunction<Map, Map<Class<?>, ?>, Module> fnInjProv,
                      Consumer<Injector> injectorc) {
         reloadMainPluginConfig();
@@ -278,28 +282,14 @@ public abstract class AbstractRpg implements RpgApi {
             Log.error("Could not read localizations in locale " + locale.toString() + " - " + e.getMessage());
         }
 
-        getItemService().load();
-        getInventoryService().load();
-        getEventFactory().registerEventProviders();
-        getExperienceService().load();
-
-        getPropertyService().load();
-
-
-        getSkillService().load();
-        getClassService().load();
-        getEffectService().load();
-        getEffectService().startEffectScheduler();
-        getDamageService().init();
-
-        List<BaseCommand> commands = new ArrayList<>();
-        for (Class commandClass : commandClasses) {
-            Object instance = injector.getInstance(commandClass);
-            commands.add((BaseCommand) instance);
+        for (Object commandClass : commandClasses) {
+            injector.injectMembers(commandClass);
         }
 
+        initServices();
 
-        ACFBootstrap.initializeACF(((CommandManager) commandManager), commands);
+
+
 
         for (RpgAddon rpgAddon : rpgAddons) {
             rpgAddon.processStageLate(injector);
@@ -309,6 +299,11 @@ public abstract class AbstractRpg implements RpgApi {
     }
 
     protected abstract Class getPluginClass();
+
+    @Override
+    public ResourceService getResourceService() {
+        return resourceService;
+    }
 
     @Override
     public Executor getSyncExecutor() {

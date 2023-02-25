@@ -68,11 +68,9 @@ public class ClassDefinitionDao {
 
                     result.setExperienceSources(expU);
                     set.add(result);
-
-
                 }
             }
-        } catch (IOException e) {
+        } catch (IOException | IllegalArgumentException e) {
             error("Could not read class file: ", e);
         }
         return set;

@@ -34,7 +34,7 @@ public class CharacterCommands extends BaseCommand {
     @Default
     public void menu(IActiveCharacter character) {
         Gui.displayCharacterMenu(character);
-        character.getGuiCommandHistory().add("nt-rpg:char");
+        character.getGuiCommandHistory().add("Ntrpg:char");
     }
 
     @Subcommand("list")
@@ -57,19 +57,19 @@ public class CharacterCommands extends BaseCommand {
     @Subcommand("attributes")
     public void attributes(IActiveCharacter character) {
         Gui.displayCharacterAttributes(character);
-        character.getGuiCommandHistory().add("nt-rpg:attributes");
+        character.getGuiCommandHistory().add("Ntrpg:attributes");
     }
 
     @Subcommand("weapons")
     public void weapons(IActiveCharacter character, @Default("0") int page) {
         Gui.displayCharacterWeapons(character, page);
-        character.getGuiCommandHistory().add("nt-rpg:char weapons " + page);
+        character.getGuiCommandHistory().add("Ntrpg:char weapons " + page);
     }
 
     @Subcommand("armor")
     public void armor(IActiveCharacter character, @Default("0") int page) {
         Gui.displayCharacterArmor(character, page);
-        character.getGuiCommandHistory().add("nt-rpg:char armor " + page);
+        character.getGuiCommandHistory().add("Ntrpg:char armor " + page);
     }
 
     @Subcommand("healthscale")
@@ -96,7 +96,7 @@ public class CharacterCommands extends BaseCommand {
     @Subcommand("spellbook")
     public void spellbookCommand(IActiveCharacter character) {
         Gui.displaySpellbook(character);
-        character.getGuiCommandHistory().add("nt-rpg:char spellbook");
+        character.getGuiCommandHistory().add("Ntrpg:char spellbook");
     }
 
 

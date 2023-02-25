@@ -61,7 +61,7 @@ public class NTScriptEngine {
                 .withEnum(SkillResult.class)
                 .debugOutput(Rpg.get().getWorkingDirectory() + File.separator + "/compiled-scripts")
                 .add(getStl())
-                .logging(Log::warn)
+                .logging(Log::debug)
                 .package_("cz.neumimto.rpg.script.skills")
                 .setClassNamePattern(type.getSimpleName());
 

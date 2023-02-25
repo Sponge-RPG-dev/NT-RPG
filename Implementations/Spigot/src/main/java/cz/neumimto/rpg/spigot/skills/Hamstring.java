@@ -46,7 +46,7 @@ public class Hamstring extends TargetedEntitySkill {
 
         double k = skillContext.getDoubleNodeValue("weapon-damage-mult");
         if (k > 0) {
-            double damage = source.getWeaponDamage() * k;
+            double damage = 1 * k;
             LivingEntity entity = (LivingEntity) target.getEntity();
             entity.damage(damage, source.getEntity());
         }

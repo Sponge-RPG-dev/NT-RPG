@@ -8,10 +8,6 @@ public interface RpgItemType {
 
     ItemClass getItemClass();
 
-    double getDamage();
-
-    double getArmor();
-
     String getId();
 
     String getModelId();

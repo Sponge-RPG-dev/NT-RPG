@@ -4,11 +4,8 @@ import com.google.inject.Injector;
 import cz.neumimto.rpg.common.AbstractRpg;
 import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.utils.Console;
-import cz.neumimto.rpg.spigot.bridges.DatapackManager;
-import cz.neumimto.rpg.spigot.effects.common.def.ManaBarText;
 import cz.neumimto.rpg.spigot.gui.SpigotGuiHelper;
 import cz.neumimto.rpg.spigot.gui.inventoryviews.ConfigurableInventoryGui;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -35,6 +32,7 @@ public final class SpigotRpg extends AbstractRpg {
 
     @Inject
     private Injector injector;
+
 
     protected SpigotRpg(String workingDirectory, Executor syncExecutor) {
         super(workingDirectory);
@@ -131,24 +129,6 @@ public final class SpigotRpg extends AbstractRpg {
                         e.printStackTrace();
                      }
                 });
-        List<String> textManabar = getPluginConfig().TEXT_MANABAR_ROWS;
-        if (textManabar != null) {
-            DatapackManager dm = DatapackManager.instance;
-
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < getPluginConfig().TEXT_MANABAR_PREFIX_REPEAT; i++) {
-                sb.append(getPluginConfig().TEXT_MANABAR_PREFIX);
-            }
-
-            ManaBarText.ROWS = getPluginConfig().TEXT_MANABAR_ROWS.stream()
-                    .map(a -> {
-                        Component prefixc = dm.resolveGlyphs(null, sb.toString());
-                        return prefixc.append(dm.resolveGlyphs(null, a));
-                    })
-                    .toList()
-                    .toArray(Component[]::new);
-
-        }
     }
 
     public boolean isDisabledInWorld(Entity entity) {
@@ -162,6 +142,8 @@ public final class SpigotRpg extends AbstractRpg {
     public boolean isDisabledInWorld(World world) {
         return isDisabledInWorld(world.getName());
     }
+
+
 
     @Override
     public String getPlatform() {

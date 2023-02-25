@@ -4,6 +4,8 @@ import cz.neumimto.rpg.common.configuration.PluginConfig;
 import cz.neumimto.rpg.common.entity.PropertyService;
 import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.common.entity.players.leveling.ILevelProgression;
+import cz.neumimto.rpg.common.resources.Resource;
+import cz.neumimto.rpg.common.resources.ResourceService;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
@@ -23,6 +25,9 @@ public class NtRpgPlaceholderExpansion extends PlaceholderExpansion {
 
     @Inject
     private PluginConfig pluginConfig;
+
+    @Inject
+    private ResourceService resourceService;;
 
     @Override
     public String getIdentifier() {
@@ -52,12 +57,14 @@ public class NtRpgPlaceholderExpansion extends PlaceholderExpansion {
     @Override
     public boolean register() {
         DatapackManager.setGlyphResolver(PlaceholderAPI::setPlaceholders);
+        resourceService.reload();
         return super.register();
     }
 
     /**
      * ntrpg_character_name - returns character name
-     * ntrpg_character_property_((property)) - returns character property value (ei max health, max mana, mana regen, fire resistance etc...)
+     * ntrpg_character_property_((property)) - returns character property value (ei max fire resistance etc...)
+*    * ntrpg_character_resource_((type))_((max|value)) - returns character property value (ei max fire resistance etc...)
      * ntrpg_character_class_((class_type)) - returns name of character class of specific type - (ntrpg_character_class_Race - returns name of character race, or null if player has none)
      * ntrpg_character_class_level_((class_type)) - returns level of character class of specific type - (ntrpg_character_class_level_Race - returns level of character race, or null player do not have that class)
      * ntrpg_character_class_exp_((class_type)) - returns experiences of character class of specific type from the begging of the level - (ntrpg_character_class_level_Race - returns level of character race, or null player do not have that class)
@@ -78,6 +85,21 @@ public class NtRpgPlaceholderExpansion extends PlaceholderExpansion {
 
         if (identifier.startsWith("character_")) {
             String substring = identifier.substring(10);
+            if (substring.startsWith("resource_")) {
+                substring = substring.substring(9);
+                String[] s = substring.split("_");
+                Resource resource = character.getResource(s[0]);
+                if (resource == null) {
+                    return "invalid resource";
+                }
+                String resProp = s[1];
+                if ("value".equals(resProp)) {
+                    return String.valueOf(resource.getValue());
+                }
+                if ("max".equals(resProp)) {
+                    return String.valueOf(resource.getMaxValue());
+                }
+            }
             if (substring.startsWith("property_")) {
                 substring = substring.substring(9);
                 int idByName = propertyService.getIdByName(substring);

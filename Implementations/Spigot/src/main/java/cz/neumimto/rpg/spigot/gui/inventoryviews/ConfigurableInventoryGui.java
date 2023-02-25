@@ -10,11 +10,13 @@ import com.github.stefvanschie.inventoryframework.pane.PatternPane;
 import com.github.stefvanschie.inventoryframework.pane.util.Pattern;
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.assets.AssetService;
+import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.bridges.DatapackManager;
 import cz.neumimto.rpg.spigot.gui.elements.GuiCommand;
 import cz.neumimto.rpg.spigot.gui.elements.Icon;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.apache.commons.lang.Validate;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -94,7 +96,7 @@ public abstract class ConfigurableInventoryGui extends GuiHelper {
 
     protected ChestGui createPane(GuiConfig guiConfig, CommandSender commandSender, Map<String, List<GuiCommand>> data, String param) {
         Component title = getTitle(commandSender, guiConfig, param);
-        ChestGui chestGui = new ChestGui(6, ComponentHolder.of(title));
+        ChestGui chestGui = new ChestGui(6, ComponentHolder.of(title), SpigotRpgPlugin.getInstance());
 
         char[] alphabet = "abcdefghijklmnopqrstuvwxyz".toCharArray();
         int alphabetidx = 0;

@@ -71,7 +71,9 @@ public abstract class SkillService {
         Stream.of(SkillType.values()).forEach(this::registerSkillType);
     }
 
-    public abstract Consumer<NTScript.Builder> getNTSBuilderContext();
+    public Consumer<NTScript.Builder> getNTSBuilderContext() {
+        return builder -> {};
+    }
 
     public void load() {
         skillTrees.clear();
@@ -139,7 +141,7 @@ public abstract class SkillService {
                     + " null");
             return;
         }
-        info("registering skill " + extraCatalog.getId(), DebugLevel.DEVELOP);
+        debug("registering skill " + extraCatalog.getId());
         extraCatalog.init();
 
         skills.put(extraCatalog.getId().toLowerCase(), extraCatalog);
@@ -184,15 +186,15 @@ public abstract class SkillService {
 
                 if (c == null) {
                     c = SkillScriptHandlers.Active.class;
-                    Log.info("Unknown SuperType " + scriptSkillModel.superType);
+                    Log.debug("Unknown SuperType " + scriptSkillModel.superType);
                 }
 
-                Log.info("Compiling nts script " + scriptSkillModel.id + " as " + c.getSimpleName());
+                Log.debug("Compiling nts script " + scriptSkillModel.id + " as " + c.getSimpleName());
 
                 Class<? extends SkillScriptHandlers> generate = ntScriptEngine.prepareCompiler(getNTSBuilderContext(), c)
                         .compile(scriptSkillModel.script);
                 if (generate == null) {
-                    Log.error("Unable to generate script " + scriptSkillModel.id);
+                    Log.error("Skill - " + scriptSkillModel.id + " Unable to generate script " + scriptSkillModel.id);
                 }
                 SkillScriptHandlers instance = injector.getInstance(generate);
                 ScriptSkill ss = getSkillByHandlerType(instance);
@@ -299,21 +301,21 @@ public abstract class SkillService {
     public void loadSkillDefinitions(ClassLoader urlClassLoader, SkillsDefinition definition) {
         if (definition.effects != null) {
             definition.effects.stream()
-                    .peek(a -> Log.info("Compiling Effect " + a.id))
+                    .peek(a -> Log.debug("Compiling Effect " + a.id))
                     .map(a -> EffectScriptGenerator.from(a, urlClassLoader))
                     .filter(Objects::nonNull)
                     .forEach(a -> Rpg.get().getScriptEngine().STL.add(a));
         }
         if (definition.skills != null) {
             definition.skills.stream()
-                    .peek(a -> Log.info("Compiling Skill " + a.id))
+                    .peek(a -> Log.debug("Compiling Skill " + a.id))
                     .map(a -> skillDefinitionToSkill(a, urlClassLoader))
                     .filter(Objects::nonNull)
                     .forEach(this::registerAdditionalCatalog);
         }
         if (definition.listeners != null) {
             definition.listeners.stream()
-                    .peek(a -> Log.info("Compiling Listener " + a.id))
+                    .peek(a -> Log.debug("Compiling Listener " + a.id))
                     .map(a -> ListenerScriptGenerator.from(a, urlClassLoader))
                     .filter(Objects::nonNull)
                     .map(a -> injector.getInstance(a))

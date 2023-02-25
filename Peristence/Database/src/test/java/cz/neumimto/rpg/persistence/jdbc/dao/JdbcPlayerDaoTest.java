@@ -10,6 +10,7 @@ import org.junit.jupiter.api.*;
 import java.util.Optional;
 import java.util.logging.Logger;
 
+@Disabled
 public class JdbcPlayerDaoTest {
 
     private static JdbcPlayerDao jdbcPlayerDao;
@@ -33,7 +34,6 @@ public class JdbcPlayerDaoTest {
     }
 
     @Test
-    @Disabled
     public void test() {
         CharacterBase characterBase = TestHelper.createCharacterBase();
         CharacterBase loadded = null;

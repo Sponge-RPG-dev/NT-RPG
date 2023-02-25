@@ -14,6 +14,7 @@ public class SkillConfigLoaders {
     static SkillConfigLoader ITEM_ACCESS = new SkillConfigLoader("item-access", ItemAccessSkill.class);
     static SkillConfigLoader ATTRIBUTE = new SkillConfigLoader("attribute", CharacterAttributeSkill.class);
     static SkillConfigLoader PROPERTY = new SkillConfigLoader("property", PropertySkill.class);
+    static SkillConfigLoader RESOURCE = new SkillConfigLoader("resource", ResourceSkill.class);
     static SkillConfigLoader EXECUTE_COMMAND = new SkillConfigLoader("command", CommandSkill.class);
     static SkillConfigLoader WRAPPER = new SkillConfigLoader("wrapper", WrappedSkill.class);
     static SkillConfigLoader REPEATING = new SkillConfigLoader("repeating", RepeatingSkill.class);
@@ -31,6 +32,7 @@ public class SkillConfigLoaders {
         register(WRAPPER);
         register(REPEATING);
         register(UPGRADE);
+        register(RESOURCE);
     }
 
     public static Optional<SkillConfigLoader> getById(String id) {

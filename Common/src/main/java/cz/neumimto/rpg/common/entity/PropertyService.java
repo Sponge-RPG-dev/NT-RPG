@@ -23,6 +23,7 @@ import java.text.Collator;
 import java.util.*;
 import java.util.function.Supplier;
 
+import static cz.neumimto.rpg.common.logging.Log.debug;
 import static cz.neumimto.rpg.common.logging.Log.info;
 
 @Singleton
@@ -41,7 +42,6 @@ public class PropertyService {
     private Map<String, Integer> idMap = new HashMap<>();
     private Map<Integer, String> nameMap = new HashMap<>();
     private Map<Integer, Float> defaults = new HashMap<>();
-    private Set<Integer> damageRecalc = new HashSet<>();
     private Map<String, AttributeConfig> attributeMap = new HashMap<>();
 
     public int getLastId() {
@@ -49,7 +49,7 @@ public class PropertyService {
     }
 
     public void registerProperty(String name, int id) {
-        info("A new property " + name + "; assigned id: " + id, Rpg.get().getPluginConfig().DEBUG);
+        debug("A new property " + name + "; assigned id: " + id);
         idMap.put(name, id);
         nameMap.put(id, name);
     }
@@ -80,6 +80,7 @@ public class PropertyService {
 
     public void processContainer(Class<?> container) {
         int value;
+        int i = 0;
         for (Field f : container.getDeclaredFields()) {
             if (f.isAnnotationPresent(Property.class)) {
                 Property p = f.getAnnotation(Property.class);
@@ -92,12 +93,14 @@ public class PropertyService {
                 }
                 if (!p.name().trim().equalsIgnoreCase("")) {
                     registerProperty(p.name(), value);
+                    i++;
                 }
                 if (p.default_() != 0f) {
                     registerDefaultValue(value, p.default_());
                 }
             }
         }
+        info("Registered " + i + " properties");
     }
 
     public float getDefault(Integer key) {
@@ -125,14 +128,6 @@ public class PropertyService {
         info(" Property \"" + s + "\" default value is now " + aFloat + ". This change wont affect already joined players!");
     }
 
-    public boolean updatingRequiresDamageRecalc(int propertyId) {
-        return damageRecalc.contains(propertyId);
-    }
-
-    public void addPropertyToRequiresDamageRecalc(int i) {
-        damageRecalc.add(i);
-    }
-
     public void loadMaximalServerPropertyValues() {
         Path path = Paths.get(Rpg.get().getWorkingDirectory(), "max_server_property_values.properties");
 
@@ -157,8 +152,8 @@ public class PropertyService {
                 Object o = properties.get(s);
                 if (o == null) {
                     missing.add(s);
-                    info("Missing property \"" + Console.GREEN + s + Console.RESET + "\" in the file max_server_property_values.properties");
-                    info(" - Appending the file and setting its default value to 1000; You might want to reconfigure that file.");
+                    debug("Missing property \"" + Console.GREEN + s + Console.RESET + "\" in the file max_server_property_values.properties");
+                    debug(" - Appending the file and setting its default value to 1000; You might want to reconfigure that file.");
                     maxValues[getIdByName(s)] = 1000f;
                 } else {
                     maxValues[getIdByName(s)] = Float.parseFloat(o.toString());

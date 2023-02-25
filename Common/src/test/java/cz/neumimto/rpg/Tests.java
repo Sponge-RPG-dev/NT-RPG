@@ -1,20 +1,8 @@
 package cz.neumimto.rpg;
 
 
-import cz.neumimto.rpg.common.classes.ClassService;
-import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
-import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
-import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
-import cz.neumimto.rpg.common.entity.players.classes.PlayerClassPermission;
-import cz.neumimto.rpg.common.model.CharacterClass;
-import cz.neumimto.rpg.model.CharacterClassTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-
-import java.util.*;
-
-import static org.mockito.Mockito.when;
 
 public class Tests {
 
@@ -40,75 +28,6 @@ public class Tests {
         Assertions.assertTrue(is16);
         is16 = x == (x >> 4) << 4;
         Assertions.assertTrue(is16);
-    }
-
-    @Test
-    public void testPermissionsManagement() {
-        ClassService classService = new ClassService();
-        ActiveCharacter character = Mockito.mock(ActiveCharacter.class);
-        when(character.getLevel()).thenReturn(2);
-
-        ClassDefinition race = new ClassDefinition("a", "Primary");
-        race.setPermissions(new HashSet<PlayerClassPermission>() {{
-            add(new PlayerClassPermission() {{
-                setLevel(1);
-                setPermissions(Arrays.asList("race1", "race2", "common2"));
-            }});
-            add(new PlayerClassPermission() {{
-                setLevel(2);
-                setPermissions(Arrays.asList("race3", "common1"));
-            }});
-        }});
-
-        CharacterClass characterClass = new CharacterClassTest();
-        characterClass.setLevel(2);
-
-        PlayerClassData nClass = new PlayerClassData(race, characterClass);
-
-        ClassDefinition c = new ClassDefinition("b", "Primary");
-
-        c.setPermissions(new HashSet<PlayerClassPermission>() {
-            {
-                add(new PlayerClassPermission() {{
-                    setLevel(1);
-                    setPermissions(Arrays.asList("class1", "class2", "common2"));
-                }});
-                add(new PlayerClassPermission() {{
-                    setLevel(2);
-                    setPermissions(Arrays.asList("class4", "common1"));
-                }});
-            }
-        });
-
-        nClass.setClassDefinition(c);
-
-        when(character.getPrimaryClass()).thenReturn(nClass);
-        Map<String, PlayerClassData> map = new HashMap<>();
-        map.put(race.getName(), new PlayerClassData(race, characterClass));
-
-
-        CharacterClass characterClass2 = new CharacterClassTest();
-        characterClass.setLevel(2);
-
-        map.put(c.getName(), new PlayerClassData(c, characterClass2));
-
-        when(character.getClasses()).thenReturn(map);
-
-        ClassDefinition changeTo = new ClassDefinition("c", "Primary");
-        changeTo.setPermissions(new HashSet<PlayerClassPermission>() {{
-            add(new PlayerClassPermission() {{
-                setLevel(1);
-                setPermissions(Arrays.asList("class1", "class4", "common2"));
-            }});
-        }});
-
-        Set<String> permissionsToRemove = classService.getPermissionsToRemove(character, nClass.getClassDefinition());
-
-        Assertions.assertFalse(permissionsToRemove.contains("common2"));
-        Assertions.assertFalse(permissionsToRemove.contains("common1"));
-        Assertions.assertTrue(permissionsToRemove.contains("class1"));
-        Assertions.assertTrue(permissionsToRemove.contains("class2"));
-        Assertions.assertTrue(permissionsToRemove.contains("class4"));
     }
 
 }

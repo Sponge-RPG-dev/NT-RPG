@@ -17,12 +17,12 @@ import cz.neumimto.rpg.common.skills.SkillData;
 import cz.neumimto.rpg.common.skills.tree.SkillTree;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import org.bukkit.Bukkit;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.bukkit.permissions.PermissionAttachment;
+import org.junit.jupiter.api.*;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -32,14 +32,16 @@ public class SpigotTests {
     static SpigotRpgPlugin plugin;
 
     static ClassService classService;
-    static CharacterService<ISpigotCharacter> characterService;
+    static CharacterService characterService;
     static PluginConfig pluginConfig;
     static Executor executor;
 
     @BeforeAll
     public static void setUp() {
         server = MockBukkit.mock();
-        plugin = (SpigotRpgPlugin) MockBukkit.load(SpigotRpgPlugin.class);
+        SpigotRpgPlugin.testEnv = true;
+
+        plugin = MockBukkit.load(SpigotRpgPlugin.class);
         classService = Rpg.get().getClassService();
         characterService = Rpg.get().getCharacterService();
         executor = Executors.newSingleThreadExecutor();
@@ -91,12 +93,15 @@ public class SpigotTests {
     public void player_test_common_stuff() {
 
         PlayerMock playerMock = preparePlayer();
+        Assertions.assertFalse(characterService.getCharacter(playerMock.getUniqueId()) instanceof PreloadCharacter);
+
+        playerMock.addAttachment(plugin, "ntrpg.player.char", true);
         playerMock.addAttachment(plugin, "ntrpg.class.warrior", true);
 
         // select primary class
         playerMock.performCommand("char choose class warrior");
         Wait.mainThread(500);
-        ISpigotCharacter character = characterService.getCharacter(playerMock.getUniqueId());
+        ISpigotCharacter character = (ISpigotCharacter) characterService.getCharacter(playerMock.getUniqueId());
         Assertions.assertTrue(character.getClasses().containsKey("warrior"));
 
         // add level

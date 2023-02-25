@@ -233,7 +233,7 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
             info.setMaxSkillLevel(c.getInt("MaxSkillLevel"));
         } catch (ConfigException e) {
             info.setMaxSkillLevel(1);
-            warn("Missing \"MaxSkillLevel\" node for a skill \"" + info.getSkillId() + "\", setting to 1");
+            debug("Missing \"MaxSkillLevel\" node for a skill \"" + info.getSkillId() + "\", setting to 1");
         }
         try {
             String combination = c.getString("Combination");
@@ -261,14 +261,14 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
             info.setMinPlayerLevel(c.getInt("MinPlayerLevel"));
         } catch (ConfigException e) {
             info.setMinPlayerLevel(1);
-            warn("Missing \"MinPlayerLevel\" node for a skill \"" + info.getSkillId() + "\", setting to 1");
+            debug("Missing \"MinPlayerLevel\" node for a skill \"" + info.getSkillId() + "\", setting to 1");
         }
 
         try {
             info.setLevelGap(c.getInt("LevelGap"));
         } catch (ConfigException e) {
             info.setLevelGap(0);
-            warn("Missing \"LevelGap\" node for a skill \"" + info.getSkillId() + "\", setting to 1");
+            debug("Missing \"LevelGap\" node for a skill \"" + info.getSkillId() + "\", setting to 1");
         }
 
         ISkillNodeDescription skillNodeDescription = null;
@@ -362,7 +362,7 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
         String id = info.getSkill().getId();
         try {
             info.setSkillName(c.getString("Name"));
-            info(" - Alternate name defined for skill " + id + " > " + info.getSkillName());
+            debug(" - Alternate name defined for skill " + id + " > " + info.getSkillName());
             Rpg.get().getSkillService().registerSkillAlternateName(info.getSkillName(), info.getSkill());
         } catch (ConfigException missing) {
             info.setSkillName(id);
@@ -389,7 +389,7 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
 
                         continue;
                     }
-                    Log.warn("Skill Upgrade for " + info.getSkillName() + " missing SkillSettings, skipping");
+                    Log.debug("Skill Upgrade for " + info.getSkillName() + " missing SkillSettings, skipping");
                     continue;
                 }
                 Log.warn("Skill Upgrade for " + info.getSkillName() + " missing SkillId, skipping");
@@ -415,7 +415,7 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
             loadSkillSettings(skillSettings, settings);
             addRequiredIfMissing(skillSettings);
         } catch (ConfigException ignored) {
-            warn(" - missing SkillSettings section " + info.getSkillId());
+            debug(" - missing SkillSettings section " + info.getSkillId());
         }
         info.setSkillSettings(skillSettings);
 
@@ -429,7 +429,7 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
                 if (!skillSettings.hasNode(key)) {
                     String val2 = defaultSkillSettings.getNodes().get(key);
                     skillSettings.addExpression(key, value);
-                    warn(" - Missing settings node " + key + " for a skill " + info.getSkillId() + " - inherited from default: " + value + " / " + val2);
+                    debug(" - Missing settings node " + key + " for a skill " + info.getSkillId() + " - inherited from default: " + value + " / " + val2);
                 }
             }
         }

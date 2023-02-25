@@ -7,7 +7,6 @@ import cz.neumimto.rpg.common.effects.IEffectContainer;
 import cz.neumimto.rpg.common.entity.EntityHand;
 import cz.neumimto.rpg.common.entity.IEntity;
 import cz.neumimto.rpg.common.entity.IEntityType;
-import cz.neumimto.rpg.common.entity.IReservable;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.common.entity.players.party.IParty;
@@ -18,6 +17,7 @@ import cz.neumimto.rpg.common.items.RpgItemStack;
 import cz.neumimto.rpg.common.items.RpgItemType;
 import cz.neumimto.rpg.common.model.CharacterBase;
 import cz.neumimto.rpg.common.model.EquipedSlot;
+import cz.neumimto.rpg.common.resources.Resource;
 import cz.neumimto.rpg.common.skills.ISkill;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.skills.preprocessors.InterruptableSkillPreprocessor;
@@ -26,8 +26,9 @@ import cz.neumimto.rpg.common.skills.tree.SkillTreeSpecialization;
 import java.util.*;
 
 /**
- * Created by NeumimTo on 23.7.2015.
+ * Deprecated will be replaced with ActiveCharacter as base reference - soon in valve time units
  */
+@Deprecated
 public interface IActiveCharacter<T, P extends IParty> extends IEntity<T> {
 
     Map<String, PlayerClassData> getClasses();
@@ -70,11 +71,9 @@ public interface IActiveCharacter<T, P extends IParty> extends IEntity<T> {
 
     double getCharacterPropertyWithoutLevel(int index);
 
-    IReservable getMana();
+    Resource getResource(String name);
 
-    void setMana(IReservable mana);
-
-    void setHealth(IReservable health);
+    void addResource(String name, Resource resource);
 
     int getAttributePoints();
 
@@ -94,13 +93,11 @@ public interface IActiveCharacter<T, P extends IParty> extends IEntity<T> {
 
     boolean hasCooldown(String thing);
 
-    double getBaseWeaponDamage(RpgItemType type);
-
     Set<RpgItemType> getAllowedArmor();
 
     boolean canWear(RpgItemType armor);
 
-    Map<RpgItemType, Double> getAllowedWeapons();
+    Set<RpgItemType> getAllowedWeapons();
 
     Map<String, Double> getProjectileDamages();
 
@@ -150,14 +147,6 @@ public interface IActiveCharacter<T, P extends IParty> extends IEntity<T> {
 
     boolean canUse(RpgItemType weaponItemType, EntityHand h);
 
-    double getWeaponDamage();
-
-    void setWeaponDamage(double damage);
-
-    double getArmorValue();
-
-    void setArmorValue(double value);
-
     boolean hasPreferedDamageType();
 
     String getDamageType();
@@ -170,15 +159,6 @@ public interface IActiveCharacter<T, P extends IParty> extends IEntity<T> {
 
     void setInvulnerable(boolean b);
 
-    RpgItemStack getMainHand();
-
-    int getMainHandSlotId();
-
-    void setMainHand(RpgItemStack customItem, int slot);
-
-    RpgItemStack getOffHand();
-
-    void setOffHand(RpgItemStack customItem);
 
     @Override
     default IEntityType getType() {
@@ -234,14 +214,6 @@ public interface IActiveCharacter<T, P extends IParty> extends IEntity<T> {
         }
     }
 
-    boolean requiresDamageRecalculation();
-
-    void setRequiresDamageRecalculation(boolean k);
-
-    int getLastHotbarSlotInteraction();
-
-    void setLastHotbarSlotInteraction(int last);
-
     void sendNotification(String message);
 
     default PlayerClassData getClassByName(String name) {
@@ -265,4 +237,9 @@ public interface IActiveCharacter<T, P extends IParty> extends IEntity<T> {
     SkillTreeChangeObserver getSkillUpgradeObservers();
 
     Stack<String> getGuiCommandHistory();
+
+    void removeResource(String type);
+
+    void updateResourceUIHandler();
+
 }

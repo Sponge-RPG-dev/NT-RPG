@@ -67,7 +67,6 @@ public class AttributeTests {
         Assertions.assertTrue(i.isOk());
         Assertions.assertEquals(iActiveCharacter.getAttributePoints(), 0);
         Assertions.assertEquals(iActiveCharacter.getCharacterBase().getAttributePointsSpent(), 2);
-        Assertions.assertTrue(iActiveCharacter.requiresDamageRecalculation());
 
         characterService.putInSaveQueue(iActiveCharacter.getCharacterBase());
     }

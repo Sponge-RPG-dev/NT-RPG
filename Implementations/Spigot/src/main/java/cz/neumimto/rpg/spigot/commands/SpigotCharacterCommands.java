@@ -14,7 +14,7 @@ import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
 import cz.neumimto.rpg.spigot.gui.SpigotGui;
 import cz.neumimto.rpg.spigot.gui.inventoryviews.CharacterAttributesGuiView;
-import de.tr7zw.nbtapi.NBTItem;
+import cz.neumimto.rpg.spigot.items.RPGItemMetadataKeys;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -101,8 +101,7 @@ public class SpigotCharacterCommands extends BaseCommand {
 
     private boolean isBlank(ItemStack item) {
         if (item.getType() == Material.YELLOW_STAINED_GLASS_PANE) {
-            NBTItem nbtItem = new NBTItem(item);
-            return nbtItem.hasKey("ntrpg.spellbook-empty");
+            return item.getItemMeta().getPersistentDataContainer().has(RPGItemMetadataKeys.SPELLBOOKEMPTY);
         }
         return false;
     }

@@ -64,6 +64,9 @@ public class SpigotAssetService extends AssetService {
                     String fileName = a.getFileName();
                     copyToFileIfMissing("gui/" + fileName, root.resolve(fileName));
                 });
+
+
+        copyToFileIfMissing("gui/Resources.conf", root.resolve("Resources.conf"));
     }
 
 }

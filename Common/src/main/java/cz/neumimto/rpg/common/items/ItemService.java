@@ -4,8 +4,6 @@ import com.typesafe.config.Config;
 import cz.neumimto.rpg.common.configuration.AttributeConfig;
 import cz.neumimto.rpg.common.configuration.ItemString;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.common.items.sockets.SocketType;
-import cz.neumimto.rpg.common.items.subtypes.ItemSubtype;
 
 import java.util.*;
 
@@ -14,10 +12,6 @@ public interface ItemService {
     String DAMAGE_KEY = "dam";
 
     void load();
-
-    Map<String, ItemMetaType> getItemMetaTypes();
-
-    Map<String, ItemSubtype> getItemSubtypes();
 
     List<ItemString> parsePotentialItemStringWildcard(ItemString i);
 
@@ -43,8 +37,6 @@ public interface ItemService {
 
     void registerProperty(ItemClass itemClass, String property);
 
-    ClassItem createClassItemSpecification(RpgItemType key, Double value);
-
     void loadItemGroups(Config c);
 
     boolean checkItemType(IActiveCharacter character, RpgItemStack rpgItemStack);
@@ -54,8 +46,6 @@ public interface ItemService {
     boolean checkItemClassRequirements(IActiveCharacter character, RpgItemStack rpgItemStack);
 
     void registerItemAttributes(Collection<AttributeConfig> attributes);
-
-    Map<String, SocketType> getSocketTypes();
 
     boolean checkItemPermission(IActiveCharacter character, RpgItemStack rpgItemStack);
 }

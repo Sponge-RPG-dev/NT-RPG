@@ -2,6 +2,7 @@ package cz.neumimto.rpg.common.skills.mech.precast;
 
 import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.resources.ResourceService;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.skills.SkillData;
 import cz.neumimto.rpg.common.skills.mech.ValidatedMechanic;
@@ -24,6 +25,6 @@ public class GainManaMechanic implements ISkillCastMechanic, ValidatedMechanic {
     @Override
     public void processAfterSuccess(IActiveCharacter character, PlayerSkillContext context) {
         double f = context.getFloatNodeValue("gain_mana");
-        characterService.gainMana(character, f, context.getSkill());
+        characterService.gainResource(character, f, context.getSkill(), ResourceService.mana);
     }
 }

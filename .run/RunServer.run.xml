@@ -1,10 +1,11 @@
 <component name="ProjectRunConfigurationManager">
-    <configuration default="false" name="RunServer" type="JarApplication">
-        <option name="JAR_PATH" value="$PROJECT_DIR$/server-spigot/server.jar"/>
-        <option name="PROGRAM_PARAMETERS" value="nogui"/>
-        <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/server-spigot"/>
-        <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true"/>
-        <option name="ALTERNATIVE_JRE_PATH" value="16"/>
-        <method v="2"/>
-    </configuration>
+  <configuration default="false" name="RunServer" type="JarApplication">
+    <option name="JAR_PATH" value="$PROJECT_DIR$/server-spigot/server.jar" />
+    <option name="VM_PARAMETERS" value="--add-modules=jdk.incubator.vector" />
+    <option name="PROGRAM_PARAMETERS" value="nogui" />
+    <option name="WORKING_DIRECTORY" value="C:\Users\aasdq\IdeaProjects\NT-RPG\server-spigot" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+    <option name="ALTERNATIVE_JRE_PATH" value="17" />
+    <method v="2" />
+  </configuration>
 </component>

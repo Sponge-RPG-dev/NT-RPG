@@ -16,26 +16,31 @@ import cz.neumimto.rpg.common.model.CharacterClass;
 import cz.neumimto.rpg.common.skills.*;
 import cz.neumimto.rpg.common.skills.tree.SkillTree;
 import cz.neumimto.rpg.spigot.Resourcepack;
+import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.bridges.DatapackManager;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.gui.elements.GuiCommand;
 import cz.neumimto.rpg.spigot.gui.elements.Icon;
 import cz.neumimto.rpg.spigot.gui.inventoryviews.SkillTreeViewBuilder;
+import cz.neumimto.rpg.spigot.items.RPGItemMetadataKeys;
 import cz.neumimto.rpg.spigot.skills.SpigotSkillService;
 import cz.neumimto.rpg.spigot.skills.SpigotSkillTreeInterfaceModel;
-import de.tr7zw.nbtapi.NBTItem;
 import net.kyori.adventure.text.Component;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.Metadatable;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -103,8 +108,7 @@ public class SpigotGuiHelper {
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         itemMeta.setDisplayName(name);
         itemStack.setItemMeta(itemMeta);
-        NBTItem nbti = new NBTItem(itemStack);
-        return nbti.getItem();
+        return itemStack;
     }
 
     public static ItemStack button(Material material, String name, String command, Integer data) {
@@ -115,10 +119,10 @@ public class SpigotGuiHelper {
         if (data != null) {
             itemMeta.setCustomModelData(data);
         }
+        itemMeta.getPersistentDataContainer().set(RPGItemMetadataKeys.COMMAND, PersistentDataType.STRING, command);
         itemStack.setItemMeta(itemMeta);
-        NBTItem nbti = new NBTItem(itemStack);
-        nbti.setString("ntrpg.item-command", command);
-        return nbti.getItem();
+
+        return itemStack;
     }
 
     public static ItemStack item(Material material, String nameKey, Integer data) {
@@ -147,24 +151,31 @@ public class SpigotGuiHelper {
     }
 
     public static ItemStack unclickableIcon(ItemStack itemStack) {
-        NBTItem nbti = new NBTItem(itemStack);
-        nbti.setBoolean("ntrpg.item-iface", true);
-        return nbti.getItem();
+        itemStack.editMeta(itemMeta -> {
+            var key = new NamespacedKey(SpigotRpgPlugin.getInstance(), "ntrpg.item-iface");
+            itemMeta.getPersistentDataContainer().set(key, PersistentDataType.BYTE, (byte)1);
+        });
+        return itemStack;
     }
 
-    public static ItemStack unclickableIcon(ItemStack itemStack, String tag) {
-        NBTItem nbti = new NBTItem(itemStack);
-        nbti.setBoolean("ntrpg.item-iface", true);
-        nbti.setBoolean(tag, true);
-        return nbti.getItem();
+    public static ItemStack unclickableIcon(ItemStack itemStack, NamespacedKey tag) {
+        itemStack.editMeta(itemMeta -> {
+            itemMeta.getPersistentDataContainer().set(tag, PersistentDataType.BYTE, (byte)1);
+        });
+        return itemStack;
     }
 
-    public static ItemStack unclickableIcon(Material itemStack, int model, String name) {
-        ItemStack itemStack1 = new ItemStack(itemStack);
-        NBTItem nbti = new NBTItem(itemStack1);
-        nbti.setBoolean("ntrpg.item-iface", true);
-        nbti.setString("display", name);
-        return nbti.getItem();
+    public static ItemStack unclickableIcon(Material material, int model, String name) {
+        ItemStack itemStack = new ItemStack(material);
+
+        itemStack.editMeta(itemMeta -> {
+            itemMeta.setCustomModelData(model);
+            itemMeta.setDisplayName(name);
+            var key = new NamespacedKey(SpigotRpgPlugin.getInstance(), "ntrpg.item-iface");
+            itemMeta.getPersistentDataContainer().set(key, PersistentDataType.BYTE, (byte)1);
+        });
+
+        return itemStack;
     }
 
     public static ItemStack unclickableInterface(Material material, int model) {
@@ -185,11 +196,11 @@ public class SpigotGuiHelper {
         itemStack.setItemMeta(itemMeta);
     }
 
-    public static ItemStack unclickableInterface(Material material, int model, String tag) {
+    public static ItemStack unclickableInterface(Material material, int model, NamespacedKey tag) {
         return unclickableInterface(new ItemStack(material), model, tag);
     }
 
-    public static ItemStack unclickableInterface(ItemStack itemStack, int model, String tag) {
+    public static ItemStack unclickableInterface(ItemStack itemStack, int model, NamespacedKey tag) {
         setUnclickableInterfaceItemMeta(itemStack, model);
         return unclickableIcon(itemStack, tag);
     }
@@ -200,21 +211,21 @@ public class SpigotGuiHelper {
 
 
             for (CharacterBase base : playersCharacters) {
-                ComponentBuilder builder = new ComponentBuilder("[")
-                        .color(net.md_5.bungee.api.ChatColor.YELLOW);
+                var builder = Component.text("[").color(NamedTextColor.YELLOW);
                 if (base.getName().equalsIgnoreCase(currentlyCreated.getName())) {
-                    builder.append("*").color(net.md_5.bungee.api.ChatColor.RED);
+                    builder = builder.append(Component.text("*").color(NamedTextColor.RED));
                 } else {
-                    builder.append("SELECT").event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/character switch " + base.getName()))
-                            .color(net.md_5.bungee.api.ChatColor.GREEN);
+                    builder = builder.append(Component.text("SELECT")
+                                    .color(NamedTextColor.GREEN)
+                                    .clickEvent(ClickEvent.runCommand("/char switch " + base.getName())));
                 }
 
-                builder.append("] ").color(net.md_5.bungee.api.ChatColor.YELLOW)
-                        .append(base.getName() + " ").color(net.md_5.bungee.api.ChatColor.GOLD)
-                        .append(base.getCharacterClasses().stream().map(CharacterClass::getName).collect(Collectors.joining(", ")))
-                        .color(net.md_5.bungee.api.ChatColor.GRAY);
+                builder = builder.append(Component.text("] ")).color(NamedTextColor.YELLOW)
+                        .append(Component.text(base.getName() + " ")).color(NamedTextColor.GOLD)
+                        .append(Component.text(base.getCharacterClasses().stream().map(CharacterClass::getName).collect(Collectors.joining(", ")))
+                        .color(NamedTextColor.GRAY));
 
-                player.spigot().sendMessage(builder.create());
+                player.sendMessage(builder);
             }
 
 
@@ -324,10 +335,10 @@ public class SpigotGuiHelper {
         ItemStack itemStack = DatapackManager.instance.findById(skillData.getIcon());
         createSkillIconItemStack(itemStack, skillData, lore);
 
-        NBTItem nbtItem = new NBTItem(itemStack);
-
-        nbtItem.setString("ntrpg.item-command", "skilltree skill " + skillData.getSkillName());
-        return nbtItem.getItem();
+        itemStack.editMeta(itemMeta -> {
+            itemMeta.getPersistentDataContainer().set(RPGItemMetadataKeys.COMMAND, PersistentDataType.STRING, "skilltree skill " + skillData.getSkillName());
+        });
+        return itemStack;
     }
 
     private static void createSkillIconItemStack(ItemStack itemStack, SkillData skillData, List<String> lore) {
@@ -349,9 +360,10 @@ public class SpigotGuiHelper {
         ItemStack itemStack = DatapackManager.instance.findById(skillData.getIcon());
         createSkillIconItemStack(itemStack, skillData, lore);
 
-        NBTItem nbtItem = new NBTItem(itemStack);
-        nbtItem.setString("ntrpg.spellbook.learnedspell", skillData.getSkillName());
-        return nbtItem.getItem();
+        Metadatable metadatable = (Metadatable) itemStack;
+        metadatable.setMetadata("ntrpg.spellbook.learnedspell",
+                new FixedMetadataValue(SpigotRpgPlugin.getInstance(), skillData.getSkillName()));
+        return itemStack;
     }
 
     private static ItemStack interactiveModeToitemStack(ISpigotCharacter character, SkillTreeViewModel.InteractiveMode interactiveMode) {
@@ -384,14 +396,13 @@ public class SpigotGuiHelper {
             lore.add(ChatColor.GREEN + "SP: " + ChatColor.RESET + ChatColor.BOLD + sp);
         }
 
-        ItemMeta itemMeta = md.getItemMeta();
-        itemMeta.setDisplayName(interactiveModeName);
-        itemMeta.setLore(lore);
-        itemMeta.setCustomModelData(1234);
-        md.setItemMeta(itemMeta);
-        NBTItem nbtItem = new NBTItem(md);
-        nbtItem.setString("ntrpg.item-command", "skilltree mode");
-        return nbtItem.getItem();
+        md.editMeta(itemMeta -> {
+            itemMeta.setDisplayName(interactiveModeName);
+            itemMeta.setLore(lore);
+            itemMeta.setCustomModelData(1234);
+            itemMeta.getPersistentDataContainer().set(RPGItemMetadataKeys.COMMAND, PersistentDataType.STRING, "skilltree mode");
+        });
+        return md;
     }
 
     private static ChatColor getSkillTextColor(IActiveCharacter character, ISkill skill, SkillData skillData, SkillTree skillTree) {
@@ -449,12 +460,12 @@ public class SpigotGuiHelper {
     }
 
     public static ItemStack createEmptySlot() {
-        return SpigotGuiHelper.unclickableInterface(Material.WHITE_STAINED_GLASS_PANE, 12345, "ntrpg.skillbook.emptyslot");
+        return SpigotGuiHelper.unclickableInterface(Material.WHITE_STAINED_GLASS_PANE, 12345, RPGItemMetadataKeys.SPELLBOOKEMPTY);
     }
 
     public static void createSkillDetailInventoryView(ISpigotCharacter character, SkillTree tree, SkillData skillData) {
         String back = Rpg.get().getLocalizationService().translate(LocalizationKeys.BACK);
-        ChestGui gui = new ChestGui(6, skillData.getSkillName());
+        ChestGui gui = new ChestGui(6, skillData.getSkillName(), SpigotRpgPlugin.getInstance());
         StaticPane background = new StaticPane(0, 0, 9, 6);
         gui.addPane(background);
 

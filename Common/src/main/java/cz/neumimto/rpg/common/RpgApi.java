@@ -18,14 +18,12 @@ import cz.neumimto.rpg.common.items.ItemService;
 import cz.neumimto.rpg.common.localization.Arg;
 import cz.neumimto.rpg.common.localization.LocalizationService;
 import cz.neumimto.rpg.common.permissions.PermissionService;
+import cz.neumimto.rpg.common.resources.ResourceService;
 import cz.neumimto.rpg.common.scripting.NTScriptEngine;
 import cz.neumimto.rpg.common.skills.SkillService;
 
 import java.nio.file.Path;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.Executor;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -100,7 +98,7 @@ public interface RpgApi {
 
     void scheduleSyncLater(long millis, Runnable runnable);
 
-    void init(Path workingDirPath, Object commandManager, Class[] commandClasses, RpgAddon defaultStorageImpl,
+    void init(Path workingDirPath, Object commandManager, Collection commandClasses, RpgAddon defaultStorageImpl,
               BiFunction<Map, Map<Class<?>, ?>, Module> fnInjProv, Consumer<Injector> injectorc);
 
     Executor getSyncExecutor();
@@ -112,4 +110,24 @@ public interface RpgApi {
     void doImplSpecificreload();
 
     String getPlatform();
+
+    default void initServices() {
+        getEventFactory().registerEventProviders();
+
+        getItemService().load();
+        getInventoryService().load();
+        getExperienceService().load();
+
+        getPropertyService().load();
+
+
+        getSkillService().load();
+        getClassService().load();
+        getEffectService().load();
+        getEffectService().startEffectScheduler();
+        getDamageService().init();
+        getResourceService().reload();
+    }
+
+    ResourceService getResourceService();
 }

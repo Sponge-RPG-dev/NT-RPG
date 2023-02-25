@@ -7,7 +7,6 @@ import cz.neumimto.rpg.common.effects.EffectSourceType;
 import cz.neumimto.rpg.common.effects.IEffectSource;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.inventory.InventoryService;
-import cz.neumimto.rpg.common.items.ClassItem;
 import cz.neumimto.rpg.common.items.ItemService;
 import cz.neumimto.rpg.common.items.RpgItemType;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
@@ -93,9 +92,7 @@ public class ItemAccessSkill extends AbstractSkill<IActiveCharacter> {
                     ItemString parsed = ItemString.parse(allowedWeapon);
                     Optional<RpgItemType> type = itemService.getRpgItemType(parsed.itemId, parsed.variant);
                     if (type.isPresent()) {
-                        ClassItem citem = itemService.createClassItemSpecification(type.get(), parsed.damage);
-
-                        data.addItemType(level, citem);
+                        data.addItemType(level, type.get());
                     }
                 }
             }
@@ -111,22 +108,22 @@ public class ItemAccessSkill extends AbstractSkill<IActiveCharacter> {
 
     public class ItemAccessSkillData extends SkillData {
 
-        private Map<Integer, Set<ClassItem>> items = new HashMap<>();
+        private Map<Integer, Set<RpgItemType>> items = new HashMap<>();
 
         public ItemAccessSkillData(String skill) {
             super(skill);
         }
 
-        public Map<Integer, Set<ClassItem>> getItems() {
+        public Map<Integer, Set<RpgItemType>> getItems() {
             return items;
         }
 
-        public void setItems(Map<Integer, Set<ClassItem>> items) {
+        public void setItems(Map<Integer, Set<RpgItemType>> items) {
             this.items = items;
         }
 
-        public void addItemType(Integer level, ClassItem item) {
-            Set<ClassItem> set = items.get(level);
+        public void addItemType(Integer level, RpgItemType item) {
+            Set<RpgItemType> set = items.get(level);
             if (set == null) {
                 set = new HashSet<>();
                 set.add(item);

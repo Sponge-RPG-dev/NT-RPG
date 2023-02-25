@@ -1,3 +1,8 @@
+import org.gradle.api.internal.tasks.DefaultTaskOutputs
+
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
+
 plugins {
     id 'java-library'
     id 'com.github.johnrengelman.shadow' version '7.0.0'
@@ -48,100 +53,108 @@ dependencies {
     api project(':Common')
     api project(':FlatFiles-Persistence')
     api project(":Spigot-NMS")
-    compileOnly project(':Bootstrap-Common')
 
-    api 'de.tr7zw:item-nbt-api-plugin:' + project.nbtapi
-
-    // api 'com.github.stefvanschie.inventoryframework:IF:' + project.if
-
-    compileOnly 'io.papermc.paper:paper-api:' + project.spigotapi
+    compileOnly 'io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT'
 
     compileOnly"com.denizenscript:denizen:1.2.3-SNAPSHOT"
-    compileOnly("org.spigotmc:plugin-annotations:" + project.pluginannotations) {
+    compileOnly("org.spigotmc:plugin-annotations:1.2.3-SNAPSHOT") {
         exclude group: "org.bukkit", module: "bukkit"
     }
 
-    compileOnly("com.comphenix.protocol:ProtocolLib:" + project.protocollib) {
+    compileOnly("com.comphenix.protocol:ProtocolLib:5.0.0-SNAPSHOT") {
         exclude group: "com.comphenix.executors", module: "BukkitExecutors"
     }
 
-    api 'com.elmakers.mine.bukkit:EffectLib:' + project.effectlib
-
+    api 'com.elmakers.mine.bukkit:EffectLib:9.4'
+    api 'com.github.stefvanschie.inventoryframework:IF:0.10.8'
+    api 'net.kyori:adventure-platform-bukkit:4.1.1'
+    api "co.aikar:acf-paper:0.5.1-SNAPSHOT"
 
     //  compileOnly 'placeholderapi.me.clip:placeholderapi:' + project.papi
-    compileOnly 'com.gmail.filoghost.holographicdisplays:holographicdisplays-api:' + project.hdisplays
-    compileOnly "co.aikar:acf-paper:" + project.acf
-    compileOnly "io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT"
-    compileOnly "ru.endlesscode.mimic:mimic-bukkit-api:" + project.mimic
+    compileOnly 'com.gmail.filoghost.holographicdisplays:holographicdisplays-api:2.4.9'
+    compileOnly "io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT"
+    compileOnly "ru.endlesscode.mimic:mimic-bukkit-api:0.8.0"
 
-    compileOnly('net.Indyuce:MMOItems:' + project.mmoitems) {
+    compileOnly('net.Indyuce:MMOItems:6.7.3') {
         exclude group: 'com.mojang', module: 'authlib'
         exclude group: 'org.jetbrains', module: 'annotations'
     }
+    compileOnly('io.lumine:MythicLib-dist:1.4')
 
-    compileOnly('io.lumine:MythicLib-dist:' + project.mythiclib)
+    compileOnly 'io.lumine:Mythic:5.1.0-SNAPSHOT'
 
-    compileOnly 'io.lumine.xikage:MythicMobs:' + project.mythicmobs
+    //compileOnly 'io.lumine:Mythic-API:' + project.mythicmobs
+    compileOnly 'io.lumine:Mythic-Plugin:5.1.0-SNAPSHOT'
+    compileOnly 'io.lumine:Mythic-Dist:5.1.0-SNAPSHOT'
+    compileOnly 'io.lumine:LumineUtils:1.16.1-SNAPSHOT'
 
-    compileOnly 'com.gitlab.SamB440:RPGRegions-2:' + project.rpgregions
+    compileOnly 'com.gitlab.SamB440:RPGRegions-2:9e46ca8d'
 
-    compileOnly 'com.github.oraxen:oraxen:-SNAPSHOT'
-    compileOnly 'net.kyori:adventure-platform-bukkit:4.1.0'
+    compileOnly 'net.luckperms:api:5.4'
 
+    compileOnly('com.github.oraxen:oraxen:-SNAPSHOT') {
+        exclude group: "*", module: "*"
+    }
+    compileOnly 'net.kyori:adventure-platform-bukkit:4.1.1'
+    compileOnly 'com.github.LoneDev6:API-ItemsAdder:3.2.5'
+
+    //compileOnly 'javax.inject:javax.inject:1'
+
+    testImplementation 'com.github.seeseemelk:MockBukkit-v1.19:2.145.0'
+    testImplementation "co.aikar:acf-paper:0.5.1-SNAPSHOT"
+    testImplementation 'com.github.stefvanschie:IF:0.10.8'
+    testImplementation 'commons-lang:commons-lang:2.6'
 }
 
 shadowJar {
-    archiveFileName = "NT-RPG-Spigot-16.x-${p_spigot_version}.jar"
+    archiveFileName = "NT-RPG-${p_spigot_version}.jar"
+    libsDirName = '../../../server-spigot/plugins'
 
-    relocate 'com.electronwill', 'rpgshaded.com.electronwill'
-    //todo  relocate 'com.github.stefvanschie', 'rpgshaded.com.github.stefvanschie'
-    relocate 'com.google.inject', 'rpgshaded.com.google.inject'
-    relocate 'com.squareup.javapoet', 'rpgshaded.com.squareup.javapoet'
-    relocate 'com.typesafe.config', 'rpgshaded.com.typesafe.config'
-    relocate 'javax.inject', 'rpgshaded.javax.inject'
-    //  relocate 'net.bytebuddy', 'rpgshaded.net.bytebuddy'
-    relocate 'org.aopalliance', 'rpgshaded.org.aopalliance'
-    relocate 'org.codehaus', 'rpgshaded.org.codehaus'
-    relocate 'de.slikey.effectlib', 'rpgshaded.de.slikey.effectlib'
-    relocate 'de.tr7zw', 'rpgshaded.de.tr7zw'
+
+    //relocate 'co.aikar', 'rpgshaded.co.aikar'
+    relocate 'com.github.stefvanschie', 'rpgshaded.com.github.stefvanschie'
+    relocate 'de.slikey', 'rpgshaded.de.slikey'
 
     mergeServiceFiles()
 }
 
-
-import org.gradle.api.internal.tasks.DefaultTaskOutputs
-
-import java.nio.file.Files
-import java.nio.file.StandardCopyOption
-
 task copyNMSImpl {
     Project spigot = project(":Spigot")
-    if (spigot.file("lib-cp/Spigot-118-1.0.0-SNAPSHOT.jar").exists()) {
-        return;
-    }
-    DefaultTaskOutputs output = project(':Spigot-118').jar.outputs
-    boolean found = false;
-    for (File file : output.getFiles()) {
-        for (File f : file.getParentFile().listFiles(new FilenameFilter() {
-            @Override
-            boolean accept(File directory, String name) {
-                if (name.endsWith("dev.jar") || name.endsWith("sources.jar")) {
-                    return false
+    var map = new HashMap<String, String>();
+    map.put(':Spigot-119',"Spigot-119-1.0.0-SNAPSHOT.jar");
+    map.put(':Spigot-118',"Spigot-118-1.0.0-SNAPSHOT.jar");
+
+    def set = map.entrySet();
+    for (Map.Entry<String,String> impl : set) {
+        if (spigot.file(impl.value).exists()) {
+            return;
+        }
+
+        DefaultTaskOutputs output = project(impl.key).jar.outputs
+
+        boolean found = false;
+        for (File file : output.getFiles()) {
+            for (File f : file.getParentFile().listFiles(new FilenameFilter() {
+                @Override
+                boolean accept(File directory, String name) {
+                    if (name.endsWith("dev.jar") || name.endsWith("sources.jar")) {
+                        return false
+                    }
+                    return true;
                 }
-                return true;
+            })) {
+                var p = spigot.file("lib-cp/").toPath().resolve(f.getName())
+                var v = f.exists();
+                try {
+                    Files.copy(f.toPath(), p, StandardCopyOption.REPLACE_EXISTING);
+                } catch (Exception e) {
+                    e.printStackTrace()
+                }
+                found = true;
+                break;
             }
-        })) {
-            var p = spigot.file("lib-cp/").toPath().resolve(f.getName())
-            var v = f.exists();
-            try {
-                Files.copy(f.toPath(), p, StandardCopyOption.REPLACE_EXISTING);
-            } catch (Exception e) {
-                e.printStackTrace()
-            }
-            found = true;
             break;
         }
-        break;
     }
 }
 
@@ -149,5 +162,20 @@ shadowJar.dependsOn copyNMSImpl
 build.dependsOn shadowJar
 build.mustRunAfter tasks.getByPath(':Common:build')
 build.mustRunAfter tasks.getByPath(':Spigot-118:build')
+build.mustRunAfter tasks.getByPath(':Spigot-119:build')
 build.mustRunAfter tasks.getByPath(':FlatFiles-Persistence:build')
 
+tasks {
+    runServer {
+        minecraftVersion("1.19.3")
+    }
+}
+
+task dlPlugins {
+    var pluginsFileDir = file("$rootDir/Implementations/Spigot/run/plugins/")
+    download.run {
+        src "https://github.com/dmulloy2/ProtocolLib/releases/download/4.8.0/ProtocolLib.jar"
+        dest new File(pluginsFileDir, "ProtocolLib.jar")
+        overwrite true
+    }
+}
