@@ -15,6 +15,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import javax.inject.Inject;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Function;
@@ -34,6 +35,9 @@ class CharacaterCalculator implements ContextCalculator<Player> {
     @Override
     public void calculate(@NonNull Player target, @NonNull ContextConsumer consumer) {
         var character = characterService.getCharacter(target);
+        if (character == null) {
+            return;
+        }
         for (Calculator calculator : calculators) {
             calculator.function.apply(character).forEach(v -> consumer.accept(calculator.context, v));
         }

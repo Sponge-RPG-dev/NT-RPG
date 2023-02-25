@@ -51,6 +51,7 @@ import org.bukkit.plugin.java.JavaPluginLoader;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -59,6 +60,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static net.kyori.adventure.text.Component.empty;
 import static net.kyori.adventure.text.Component.text;
@@ -106,11 +108,41 @@ public class SpigotRpgPlugin extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
-        plugin = this;
-        bukkitAudiences = BukkitAudiences.create(getInstance());
-        dataFolder = getDataFolder();
-        CommandManager manager = new PaperCommandManager(this);
+        List<BaseCommand> commandClasses = Stream.of(
+                new SpigotAdminCommands(),
+                new AdminCommands(),
+                new CharacterCommands(),
+                new CastCommand(),
+                new SpigotCharacterCommands(),
+                new InfoCommands(),
+                new PartyCommands(),
+                new SkillCommands(),
+                new ClassesComand(),
+                new SkilltreeCommands(),
+                new SpigotSkillBindCommands())
+            .toList();
 
+        if (plugin == null) {
+            plugin = this;
+            bukkitAudiences = BukkitAudiences.create(getInstance());
+            dataFolder = getDataFolder();
+            CommandManager manager = new PaperCommandManager(this);
+            manager.getCommandContexts().registerContext(OnlineOtherPlayer.class, c -> {
+                CommandIssuer issuer = c.getIssuer();
+                String lookup = c.popFirstArg();
+                boolean allowMissing = c.isOptional();
+                Player player = ACFBukkitUtil.findPlayerSmart(issuer, lookup);
+                if (player == null) {
+                    if (allowMissing) {
+                        return null;
+                    }
+                    throw new InvalidCommandArgument(false);
+                }
+                return new OnlineOtherPlayer(Rpg.get().getCharacterService().getCharacter(player.getUniqueId()));
+            });
+
+            ACFBootstrap.initializeACF(manager, commandClasses);
+        }
         /*
           ItemsAdder.getAllItems returns null, despite plugin being already enabled at this point.
         */
@@ -121,6 +153,7 @@ public class SpigotRpgPlugin extends JavaPlugin implements Listener {
             Bukkit.getPluginManager().registerEvents(iaCallbackListener, this);
             return;
         }
+
 
         Bukkit.getPluginManager().registerEvents(this, this);
 
@@ -161,37 +194,7 @@ public class SpigotRpgPlugin extends JavaPlugin implements Listener {
         final BukkitScheduler scheduler = Bukkit.getScheduler();
         SpigotRpg spigotRpg = new SpigotRpg(workingDirPath.toString(), command -> scheduler.runTask(SpigotRpgPlugin.getInstance(), command));
 
-
-        manager.getCommandContexts().registerContext(OnlineOtherPlayer.class, c -> {
-            CommandIssuer issuer = c.getIssuer();
-            String lookup = c.popFirstArg();
-            boolean allowMissing = c.isOptional();
-            Player player = ACFBukkitUtil.findPlayerSmart(issuer, lookup);
-            if (player == null) {
-                if (allowMissing) {
-                    return null;
-                }
-                throw new InvalidCommandArgument(false);
-            }
-            return new OnlineOtherPlayer(Rpg.get().getCharacterService().getCharacter(player.getUniqueId()));
-        });
-
-
-
-        spigotRpg.init(getDataFolder().toPath(), manager, new Class[]{
-                SpigotAdminCommands.class,
-                AdminCommands.class,
-                CharacterCommands.class,
-                CastCommand.class,
-                SpigotCharacterCommands.class,
-                InfoCommands.class,
-                PartyCommands.class,
-                SkillCommands.class,
-                ClassesComand.class,
-                SkilltreeCommands.class,
-                SpigotSkillBindCommands.class
-
-        }, new FlatFilesModule(), (bindings, providers) -> new SpigotGuiceModuleBuilder().setNtRpgPlugin(this).setSpigotRpg(spigotRpg).setExtraBindings(bindings).setProviders(providers).setMinecraftVersion(Bukkit.getServer().getMinecraftVersion()).createSpigotGuiceModule(),
+        spigotRpg.init(getDataFolder().toPath(), null, commandClasses, new FlatFilesModule(), (bindings, providers) -> new SpigotGuiceModuleBuilder().setNtRpgPlugin(this).setSpigotRpg(spigotRpg).setExtraBindings(bindings).setProviders(providers).setMinecraftVersion(Bukkit.getServer().getMinecraftVersion()).createSpigotGuiceModule(),
                 injector -> {
 
             SpigotRpgPlugin.injector = injector;

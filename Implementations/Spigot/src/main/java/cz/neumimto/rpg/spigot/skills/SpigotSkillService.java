@@ -26,14 +26,7 @@ import java.util.function.Consumer;
 @Singleton
 public class SpigotSkillService extends SkillService {
 
-    @Inject
-    private DatapackManager itemResolver;
-
-
-
     public static Consumer<NTScript.Builder> SPIGOT_SCRIPT_SCOPE;
-
-    private static GuiConfig skilltreeGuiConfig;;
 
     static {
         SPIGOT_SCRIPT_SCOPE = builder -> {

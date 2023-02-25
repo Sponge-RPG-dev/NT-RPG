@@ -4,8 +4,6 @@ import com.electronwill.nightconfig.core.Config;
 import com.electronwill.nightconfig.core.conversion.Converter;
 import com.electronwill.nightconfig.core.conversion.ObjectConverter;
 import cz.neumimto.rpg.common.entity.players.classes.ClassResource;
-import cz.neumimto.rpg.common.entity.players.classes.PlayerClassPermission;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;

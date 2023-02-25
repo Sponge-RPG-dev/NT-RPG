@@ -50,10 +50,6 @@ public class ClassDefinition implements IEffectSourceProvider {
     @Conversion(ClassRpgItemTypeAdapter.class)
     protected Set<RpgItemType> allowedArmor = new HashSet<>();
 
-    @Path("Permissions")
-    @Conversion(ClassPermissionAdapter.class)
-    protected Set<PlayerClassPermission> permissions;
-
     @Path("PropertiesLevelBonus")
     @Conversion(PropertiesArrayAdapter.class)
     protected float[] propLevelBonus;
@@ -127,7 +123,6 @@ public class ClassDefinition implements IEffectSourceProvider {
         this.type = classType;
         this.classDefinitionDependencyGraph = new DependencyGraph(this);
         this.experienceSourceSet = new HashSet<>();
-        this.permissions = new TreeSet<>();
     }
 
     public String getName() {
@@ -156,14 +151,6 @@ public class ClassDefinition implements IEffectSourceProvider {
 
     public Set<RpgItemType> getOffHandWeapons() {
         return offHandWeapons;
-    }
-
-    public Set<PlayerClassPermission> getPermissions() {
-        return Collections.unmodifiableSet(permissions);
-    }
-
-    public void setPermissions(Set<PlayerClassPermission> permissions) {
-        this.permissions = new TreeSet<>(permissions);
     }
 
     public float[] getPropLevelBonus() {

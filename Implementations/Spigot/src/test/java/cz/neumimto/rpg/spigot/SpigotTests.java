@@ -40,6 +40,7 @@ public class SpigotTests {
     public static void setUp() {
         server = MockBukkit.mock();
         SpigotRpgPlugin.testEnv = true;
+
         plugin = MockBukkit.load(SpigotRpgPlugin.class);
         classService = Rpg.get().getClassService();
         characterService = Rpg.get().getCharacterService();
@@ -92,12 +93,7 @@ public class SpigotTests {
     public void player_test_common_stuff() {
 
         PlayerMock playerMock = preparePlayer();
-
-        HashMap<UUID, PermissionAttachment> perms = new HashMap<UUID, PermissionAttachment>();
-        PermissionAttachment permissionAttachment = playerMock.addAttachment(SpigotRpgPlugin.getInstance());
-        perms.put(playerMock.getUniqueId(), permissionAttachment);
-        permissionAttachment.setPermission("ntrpg.class.warrior", true);
-
+        Assertions.assertFalse(characterService.getCharacter(playerMock.getUniqueId()) instanceof PreloadCharacter);
 
         playerMock.addAttachment(plugin, "ntrpg.player.char", true);
         playerMock.addAttachment(plugin, "ntrpg.class.warrior", true);
