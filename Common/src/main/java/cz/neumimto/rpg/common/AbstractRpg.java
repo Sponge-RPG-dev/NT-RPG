@@ -268,7 +268,6 @@ public abstract class AbstractRpg implements RpgApi {
             return;
         }
         injectorc.accept(injector);
-        File file = FileUtils.getPluginFile(getPluginClass());
 
         for (RpgAddon rpgAddon : rpgAddons) {
             rpgAddon.processStageEarly(injector);
@@ -286,16 +285,6 @@ public abstract class AbstractRpg implements RpgApi {
             injector.injectMembers(commandClass);
         }
 
-        initServices();
-
-
-
-
-        for (RpgAddon rpgAddon : rpgAddons) {
-            rpgAddon.processStageLate(injector);
-        }
-
-        doImplSpecificreload();
     }
 
     protected abstract Class getPluginClass();

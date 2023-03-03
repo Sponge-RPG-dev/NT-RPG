@@ -1,0 +1,632 @@
+info:
+  namespace: ntrpg
+font_images:
+  ntrpg_mana0:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "mana0"
+    y_position: 2
+
+  ntrpg_mana5:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "mana5"
+    y_position: 2
+
+  ntrpg_mana10:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "mana10"
+    y_position: 2
+
+  ntrpg_mana15:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "mana15"
+    y_position: 2
+
+  ntrpg_mana20:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "mana20"
+    y_position: 2
+
+  ntrpg_mana25:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "mana25"
+    y_position: 2
+
+  ntrpg_mana30:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "mana30"
+    y_position: 2
+
+  ntrpg_mana35:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "mana35"
+    y_position: 2
+
+  ntrpg_mana40:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "mana40"
+    y_position: 2
+
+  ntrpg_mana45:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "mana45"
+    y_position: 2
+
+  ntrpg_mana50:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "mana50"
+    y_position: 2
+
+  ntrpg_mana55:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "mana55"
+    y_position: 2
+
+  ntrpg_mana60:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "mana60"
+    y_position: 2
+
+  ntrpg_mana65:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "mana65"
+    y_position: 2
+
+  ntrpg_mana70:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "mana70"
+    y_position: 2
+
+  ntrpg_mana75:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "mana75"
+    y_position: 2
+
+  ntrpg_mana80:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "mana80"
+    y_position: 2
+
+  ntrpg_mana85:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "mana85"
+    y_position: 2
+
+  ntrpg_mana90:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "mana90"
+    y_position: 2
+
+  ntrpg_mana95:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "mana95"
+    y_position: 2
+
+  ntrpg_mana100:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "mana100"
+    y_position: 2
+
+  ntrpg_mana1:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "mana1"
+    y_position: 2
+
+  ntrpg_mana2:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "mana2"
+    y_position: 2
+
+  ntrpg_rage0:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "rage0"
+    y_position: 2
+
+  ntrpg_rage5:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "rage5"
+    y_position: 2
+
+  ntrpg_rage10:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "rage10"
+    y_position: 2
+
+  ntrpg_rage15:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "rage15"
+    y_position: 2
+
+  ntrpg_rage20:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "rage20"
+    y_position: 2
+
+  ntrpg_rage25:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "rage25"
+    y_position: 2
+
+  ntrpg_rage30:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "rage30"
+    y_position: 2
+
+  ntrpg_rage35:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "rage35"
+    y_position: 2
+
+  ntrpg_rage40:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "rage40"
+    y_position: 2
+
+  ntrpg_rage45:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "rage45"
+    y_position: 2
+
+  ntrpg_rage50:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "rage50"
+    y_position: 2
+
+  ntrpg_rage55:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "rage55"
+    y_position: 2
+
+  ntrpg_rage60:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "rage60"
+    y_position: 2
+
+  ntrpg_rage65:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "rage65"
+    y_position: 2
+
+  ntrpg_rage70:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "rage70"
+    y_position: 2
+
+  ntrpg_rage75:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "rage75"
+    y_position: 2
+
+  ntrpg_rage80:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "rage80"
+    y_position: 2
+
+  ntrpg_rage85:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "rage85"
+    y_position: 2
+
+  ntrpg_rage90:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "rage90"
+    y_position: 2
+
+  ntrpg_rage95:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "rage95"
+    y_position: 2
+
+  ntrpg_rage100:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "rage100"
+    y_position: 2
+
+ # ntrpg_bar_empty:
+ #   permission: "ntrpg.fonts.ignore"
+ #   show_in_gui: false
+ #   suggest_in_command: false
+ #   path: "bar_empty"
+ #   y_position: 2
+
+  ntrpg_menu_background:
+    permission: "ntrpg.fonts.ignore"
+    show_in_gui: false
+    suggest_in_command: false
+    path: "gui_layout_basic.png"
+    y_position: 19
+    scale_ratio: 228
+
+
+items:
+  ntrpg_back:
+    display-name: Back
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - ntrpg:back_button.png
+
+  ntrpg_confirm:
+    display-name: Confirm
+    resource:
+      material: DIAMOND
+      generate: true
+      textures:
+        - ntrpg:confirm_button.png
+
+  ntrpg_agi:
+    display-name: Agility
+    resource:
+      material: LEATHER_BOOTS
+      generate: true
+      textures:
+        - ntrpg:attribute_agi.png
+
+  ntrpg_con:
+    display-name: Constitution
+    resource:
+      material: STONE
+      generate: true
+      textures:
+        - ntrpg:attribute_con.png
+
+  ntrpg_dex:
+    display-name: Dexterity
+    resource:
+      material: FEATHER
+      generate: true
+      textures:
+        - ntrpg:attribute_dex.png
+
+  ntrpg_int:
+    display-name: Intelligence
+    resource:
+      material: BOOK
+      generate: true
+      textures:
+        - ntrpg:attribute_int.png
+
+  ntrpg_str:
+    display-name: Strength
+    resource:
+      material: IRON_AXE
+      generate: true
+      textures:
+        - ntrpg:attribute_str.png
+
+  ntrpg_wis:
+    display-name: Wisdom
+    resource:
+      material: POTION
+      generate: true
+      textures:
+        - ntrpg:attribute_wis.png
+
+  char_armor:
+    display-name: Armor
+    resource:
+      material: DIAMOND_CHESTPLATE
+      generate: true
+      textures:
+        - ntrpg:allowed_armor.png
+
+  char_weapons:
+    display-name: Weapons
+    resource:
+      material: DIAMOND_SWORD
+      generate: true
+      textures:
+        - ntrpg:allowed_weapons.png
+
+  char_attributes:
+    display-name: Weapons
+    resource:
+      material: APPLE
+      generate: true
+      textures:
+        - ntrpg:attributes.png
+
+  char_spellbook:
+    display-name: Spellbook
+    resource:
+      material: BOOK
+      generate: true
+      textures:
+        - ntrpg:mode_fast.png
+
+  char_class_slot:
+    display-name: Empty Class Slot
+    resource:
+      material: RED_STAINED_GLASS_PANE
+      generate: true
+      textures:
+        - ntrpg:skilltree_red_slot.png
+
+  classes_proffesion:
+    display-name: Professions
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - ntrpg:professions_button.png
+
+  class_dependencies:
+    display-name: Class Dependencies
+    resource:
+      material: COAL
+      generate: true
+      textures:
+        - ntrpg:class_dependencies.png
+
+  skill_tree:
+    display-name: Skilltree
+    resource:
+      material: OAK_SAPLING
+      generate: true
+      textures:
+        - ntrpg:skill_tree.png
+
+  attributes:
+    display-name: Attributes
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - ntrpg:attributes.png
+
+  skilltree_mode_a:
+    display-name: Skilltree mode A
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - ntrpg:mode_detailed.png
+
+  skilltree_mode_b:
+    display-name: Skilltree mode B
+    resource:
+      material: PAPER
+      generate: true
+      textures:
+        - ntrpg:mode_fast.png
+
+  skilltree_arrow_u:
+    display-name: ^
+    resource:
+      material: STICK
+      generate: true
+      textures:
+        - ntrpg:arrow_up.png
+
+  skilltree_arrow_d:
+    display-name: V
+    resource:
+      material: STICK
+      generate: true
+      textures:
+        - ntrpg:arrow_down.png
+
+  skilltree_arrow_l:
+    display-name: <
+    resource:
+      material: STICK
+      generate: true
+      textures:
+        - ntrpg:arrow_left.png
+
+  skilltree_arrow_r:
+    display-name: >
+    resource:
+      material: STICK
+      generate: true
+      textures:
+        - ntrpg:arrow_right.png
+
+  ntrpg_skill_connection_horizontal:
+    display-name: "|"
+    resource:
+      material: STICK
+      generate: true
+      textures:
+        - ntrpg:skill_connection_horizontal.png
+
+  ntrpg_skill_connection_vertical:
+    display-name: "-"
+    resource:
+      material: STICK
+      generate: true
+      textures:
+        - ntrpg:skill_connection_vertical.png
+
+  ntrpg_skill_connection_arrow_left:
+    display-name: <-
+    resource:
+      material: STICK
+      generate: true
+      textures:
+        - ntrpg:skill_connection_arrow_left.png
+
+  ntrpg_skill_connection_arrow_right:
+    display-name: ->
+    resource:
+      material: STICK
+      generate: true
+      textures:
+        - ntrpg:skill_connection_arrow_right.png
+
+  ntrpg_skill_connection_arrow_up:
+    display-name: ^
+    resource:
+      material: STICK
+      generate: true
+      textures:
+        - ntrpg:skill_connection_arrow_up.png
+
+  ntrpg_skill_connection_arrow_down:
+    display-name: V
+    resource:
+      material: STICK
+      generate: true
+      textures:
+        - ntrpg:skill_connection_arrow_down.png
+
+  ntrpg_skill_connection_cross:
+    display-name: X
+    resource:
+      material: STICK
+      generate: true
+      textures:
+        - ntrpg:skill_connection_cross.png
+
+  ntrpg_skill_connection_down_left:
+    display-name: <V
+    resource:
+      material: STICK
+      generate: true
+      textures:
+        - ntrpg:skill_connection_down_left.png
+
+  ntrpg_skill_connection_up_left:
+    display-name: <^
+    resource:
+      material: STICK
+      generate: true
+      textures:
+        - ntrpg:skill_connection_up_left.png
+
+  ntrpg_skill_connection_down_right:
+    display-name: V>
+    resource:
+      material: STICK
+      generate: true
+      textures:
+        - ntrpg:skill_connection_down_right.png
+
+  ntrpg_skill_connection_up_right:
+    display-name: ^>
+    resource:
+      material: STICK
+      generate: true
+      textures:
+        - ntrpg:skill_connection_up_right.png
+
+  ntrpg_skill_connection_t_no_down:
+    display-name: T^
+    resource:
+      material: STICK
+      generate: true
+      textures:
+        - ntrpg:skill_connection_t_no_down.png
+
+  ntrpg_skill_connection_t_no_up:
+    display-name: TV
+    resource:
+      material: STICK
+      generate: true
+      textures:
+        - ntrpg:skill_connection_t_no_up.png
+
+  ntrpg_skill_connection_t_no_right:
+    display-name: T<
+    resource:
+      material: STICK
+      generate: true
+      textures:
+        - ntrpg:skill_connection_t_no_right.png
+
+  ntrpg_skill_connection_t_no_left:
+    display-name: T>
+    resource:
+      material: STICK
+      generate: true
+      textures:
+        - ntrpg:skill_connection_t_no_left.png
+

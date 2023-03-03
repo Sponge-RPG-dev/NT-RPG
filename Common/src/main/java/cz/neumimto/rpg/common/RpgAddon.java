@@ -11,8 +11,5 @@ public interface RpgAddon {
     default void processStageEarly(Injector injector) {
     }
 
-    default void processStageLate(Injector injector) {
-    }
-
     Map<Class<?>, ?> getProviders(Map<String, Object> implementationScope);
 }

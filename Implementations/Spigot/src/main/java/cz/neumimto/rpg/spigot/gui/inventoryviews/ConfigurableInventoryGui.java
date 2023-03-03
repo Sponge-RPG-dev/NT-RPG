@@ -16,7 +16,6 @@ import cz.neumimto.rpg.spigot.gui.elements.GuiCommand;
 import cz.neumimto.rpg.spigot.gui.elements.Icon;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import org.apache.commons.lang.Validate;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

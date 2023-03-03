@@ -6,7 +6,7 @@ import java.nio.file.StandardCopyOption
 plugins {
     id 'java-library'
     id 'com.github.johnrengelman.shadow' version '7.0.0'
-    id "xyz.jpenilla.run-paper" version "1.0.4"
+    id "xyz.jpenilla.run-paper" version "2.0.1"
 }
 
 repositories {
@@ -50,11 +50,12 @@ dependencies {
 
     annotationProcessor project(':Generator')
 
+    compileOnly 'io.papermc.paper:paper-api:1.19.3-R0.1-SNAPSHOT'
+
     api project(':Common')
     api project(':FlatFiles-Persistence')
     api project(":Spigot-NMS")
 
-    compileOnly 'io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT'
 
     compileOnly"com.denizenscript:denizen:1.2.3-SNAPSHOT"
     compileOnly("org.spigotmc:plugin-annotations:1.2.3-SNAPSHOT") {
@@ -110,8 +111,8 @@ shadowJar {
     archiveFileName = "NT-RPG-${p_spigot_version}.jar"
     libsDirName = '../../../server-spigot/plugins'
 
-
-    //relocate 'co.aikar', 'rpgshaded.co.aikar'
+    relocate 'co.aikar.commands', 'rpgshaded.acf'
+    relocate 'co.aikar.locales', 'rpgshaded.locales'
     relocate 'com.github.stefvanschie', 'rpgshaded.com.github.stefvanschie'
     relocate 'de.slikey', 'rpgshaded.de.slikey'
 
@@ -159,7 +160,9 @@ task copyNMSImpl {
 }
 
 shadowJar.dependsOn copyNMSImpl
+
 build.dependsOn shadowJar
+
 build.mustRunAfter tasks.getByPath(':Common:build')
 build.mustRunAfter tasks.getByPath(':Spigot-118:build')
 build.mustRunAfter tasks.getByPath(':Spigot-119:build')
@@ -168,14 +171,5 @@ build.mustRunAfter tasks.getByPath(':FlatFiles-Persistence:build')
 tasks {
     runServer {
         minecraftVersion("1.19.3")
-    }
-}
-
-task dlPlugins {
-    var pluginsFileDir = file("$rootDir/Implementations/Spigot/run/plugins/")
-    download.run {
-        src "https://github.com/dmulloy2/ProtocolLib/releases/download/4.8.0/ProtocolLib.jar"
-        dest new File(pluginsFileDir, "ProtocolLib.jar")
-        overwrite true
     }
 }

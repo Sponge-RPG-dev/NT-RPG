@@ -25,10 +25,7 @@ import cz.neumimto.rpg.common.scripting.NTScriptEngine;
 import cz.neumimto.rpg.common.skills.SkillService;
 
 import java.nio.file.Path;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.Executor;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -236,8 +233,7 @@ public class RpgTests implements RpgApi {
     }
 
     @Override
-    public void init(Path workingDirPath, Object commandManager, Class[] commandClasses, RpgAddon defaultStorageImpl,
-                     BiFunction<Map, Map<Class<?>, ?>, Module> fnInjProv, Consumer<com.google.inject.Injector> injectorc) {
+    public void init(Path workingDirPath, Object commandManager, Collection commandClasses, RpgAddon defaultStorageImpl, BiFunction<Map, Map<Class<?>, ?>, Module> fnInjProv, Consumer<Injector> injectorc) {
 
     }
 

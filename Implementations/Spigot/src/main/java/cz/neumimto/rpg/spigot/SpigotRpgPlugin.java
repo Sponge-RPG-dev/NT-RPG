@@ -69,11 +69,11 @@ import static net.kyori.adventure.text.format.NamedTextColor.GOLD;
 
 public class SpigotRpgPlugin extends JavaPlugin implements Listener {
 
-    private static JavaPlugin plugin;
+    private static SpigotRpgPlugin plugin;
 
     private static EffectManager effectManager;
 
-    public static JavaPlugin getInstance() {
+    public static SpigotRpgPlugin getInstance() {
         return plugin;
     }
 
@@ -108,6 +108,11 @@ public class SpigotRpgPlugin extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
+
+        Log.setLogger(getLogger());
+
+        ascii();
+
         List<BaseCommand> commandClasses = Stream.of(
                 new SpigotAdminCommands(),
                 new AdminCommands(),
@@ -122,68 +127,30 @@ public class SpigotRpgPlugin extends JavaPlugin implements Listener {
                 new SpigotSkillBindCommands())
             .toList();
 
-        if (plugin == null) {
-            plugin = this;
-            bukkitAudiences = BukkitAudiences.create(getInstance());
-            dataFolder = getDataFolder();
-            CommandManager manager = new PaperCommandManager(this);
-            manager.getCommandContexts().registerContext(OnlineOtherPlayer.class, c -> {
-                CommandIssuer issuer = c.getIssuer();
-                String lookup = c.popFirstArg();
-                boolean allowMissing = c.isOptional();
-                Player player = ACFBukkitUtil.findPlayerSmart(issuer, lookup);
-                if (player == null) {
-                    if (allowMissing) {
-                        return null;
-                    }
-                    throw new InvalidCommandArgument(false);
+        plugin = this;
+        bukkitAudiences = BukkitAudiences.create(getInstance());
+        dataFolder = getDataFolder();
+        CommandManager manager = new PaperCommandManager(this);
+        manager.getCommandContexts().registerContext(OnlineOtherPlayer.class, c -> {
+            CommandIssuer issuer = c.getIssuer();
+            String lookup = c.popFirstArg();
+            boolean allowMissing = c.isOptional();
+            Player player = ACFBukkitUtil.findPlayerSmart(issuer, lookup);
+            if (player == null) {
+                if (allowMissing) {
+                    return null;
                 }
-                return new OnlineOtherPlayer(Rpg.get().getCharacterService().getCharacter(player.getUniqueId()));
-            });
+                throw new InvalidCommandArgument(false);
+            }
+            return new OnlineOtherPlayer(Rpg.get().getCharacterService().getCharacter(player.getUniqueId()));
+        });
 
-            ACFBootstrap.initializeACF(manager, commandClasses);
-        }
-        /*
-          ItemsAdder.getAllItems returns null, despite plugin being already enabled at this point.
-        */
-        Plugin itemsAdder = Bukkit.getPluginManager().getPlugin("ItemsAdder");
-        if (itemsAdder != null && itemsAdder.isEnabled() && iaCallbackListener == null) {
-            iaCallbackListener = new ItemsAdderIsRetarded();
-            getLogger().info("Itemsadder found, ntrpg has to postpone initialization until ia loads all items.");
-            Bukkit.getPluginManager().registerEvents(iaCallbackListener, this);
-            return;
-        }
+        ACFBootstrap.initializeACF(manager, commandClasses);
 
+        effectManager = new EffectManager(getInstance());
 
         Bukkit.getPluginManager().registerEvents(this, this);
 
-        Log.setLogger(getLogger());
-
-        Function<String, Component> colorInput = s -> {
-            TextComponent.Builder builder = text();
-            for (char c : s.toCharArray()) {
-                switch (c) {
-                    case ' ':
-                        builder.append(text(" "));
-                        break;
-                    case '█':
-                        builder.append(text(c).color(GOLD));
-                        break;
-                    default:
-                        builder.append(text(c).color(DARK_GRAY));
-                }
-            }
-            return builder.build();
-        };
-
-        Bukkit.getConsoleSender().sendMessage(empty());
-        Bukkit.getConsoleSender().sendMessage(colorInput.apply(" ███╗   ████████████████╗██████╗ ██████╗ "));
-        Bukkit.getConsoleSender().sendMessage(colorInput.apply(" ████╗  ██╚══██╔══██╔══████╔══████╔════╝ "));
-        Bukkit.getConsoleSender().sendMessage(colorInput.apply(" ██╔██╗ ██║  ██║  ██████╔██████╔██║  ███╗"));
-        Bukkit.getConsoleSender().sendMessage(colorInput.apply(" ██║╚██╗██║  ██║  ██╔══████╔═══╝██║   ██║"));
-        Bukkit.getConsoleSender().sendMessage(colorInput.apply(" ██║ ╚████║  ██║  ██║  ████║    ╚██████╔╝"));
-        Bukkit.getConsoleSender().sendMessage(colorInput.apply(" ╚═╝  ╚═══╝  ╚═╝  ╚═╝  ╚═╚═╝     ╚═════╝ "));
-        Bukkit.getConsoleSender().sendMessage(empty());
 
         if (!getDataFolder().exists()) {
             getDataFolder().mkdir();
@@ -217,20 +184,37 @@ public class SpigotRpgPlugin extends JavaPlugin implements Listener {
 
         });
 
+        /*
+          ItemsAdder.getAllItems returns null, despite plugin being already enabled at this point.
+        */
+        Plugin itemsAdder = Bukkit.getPluginManager().getPlugin("ItemsAdder");
+        if (itemsAdder != null && itemsAdder.isEnabled() && iaCallbackListener == null) {
+            iaCallbackListener = new ItemsAdderIsRetarded();
+            getLogger().info("Itemsadder found, ntrpg has to postpone initialization until ia loads all items.");
+            Bukkit.getPluginManager().registerEvents(iaCallbackListener, this);
+            return;
+        }
+
+        loadOrIAInstalled();
+
+    }
+
+    public void loadOrIAInstalled() {
+
+        Rpg.get().initServices();
+
+        Rpg.get().doImplSpecificreload();
+
         if (!testEnv) {
             Resourcepack.init();
             SpellbookListener.initBtns();
             SpigotGuiHelper.initInventories();
         }
 
-        effectManager = new EffectManager(getInstance());
-        Rpg.get().getSyncExecutor();
-
         Collection<? extends Player> onlinePlayers = Bukkit.getServer().getOnlinePlayers();
         for (Player onlinePlayer : onlinePlayers) {
             Rpg.get().getCharacterService().loadPlayerData(onlinePlayer.getUniqueId(), onlinePlayer.getName());
         }
-
     }
 
     @EventHandler
@@ -338,5 +322,33 @@ public class SpigotRpgPlugin extends JavaPlugin implements Listener {
         if (getEffectManager() != null) {
             getEffectManager().disposeOnTermination();
         }
+    }
+
+    private static void ascii() {
+        Function<String, Component> colorInput = s -> {
+            TextComponent.Builder builder = text();
+            for (char c : s.toCharArray()) {
+                switch (c) {
+                    case ' ':
+                        builder.append(text(" "));
+                        break;
+                    case '█':
+                        builder.append(text(c).color(GOLD));
+                        break;
+                    default:
+                        builder.append(text(c).color(DARK_GRAY));
+                }
+            }
+            return builder.build();
+        };
+
+        Bukkit.getConsoleSender().sendMessage(empty());
+        Bukkit.getConsoleSender().sendMessage(colorInput.apply(" ███╗   ████████████████╗██████╗ ██████╗ "));
+        Bukkit.getConsoleSender().sendMessage(colorInput.apply(" ████╗  ██╚══██╔══██╔══████╔══████╔════╝ "));
+        Bukkit.getConsoleSender().sendMessage(colorInput.apply(" ██╔██╗ ██║  ██║  ██████╔██████╔██║  ███╗"));
+        Bukkit.getConsoleSender().sendMessage(colorInput.apply(" ██║╚██╗██║  ██║  ██╔══████╔═══╝██║   ██║"));
+        Bukkit.getConsoleSender().sendMessage(colorInput.apply(" ██║ ╚████║  ██║  ██║  ████║    ╚██████╔╝"));
+        Bukkit.getConsoleSender().sendMessage(colorInput.apply(" ╚═╝  ╚═══╝  ╚═╝  ╚═╝  ╚═╚═╝     ╚═════╝ "));
+        Bukkit.getConsoleSender().sendMessage(empty());
     }
 }

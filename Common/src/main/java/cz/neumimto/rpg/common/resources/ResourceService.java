@@ -64,6 +64,9 @@ public abstract class ResourceService {
 
     public void removeResource(IActiveCharacter activeCharacter, ClassResource classResource, String source) {
         Resource resource = activeCharacter.getResource(classResource.type);
+        if (resource == null) {
+            return;
+        }
         resource.setMaxValue(source, 0);
         resource.setTickChange(classResource.type, 0);
         if (resource.getMaxValue() == 0) {
