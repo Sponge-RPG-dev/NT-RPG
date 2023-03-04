@@ -16,6 +16,7 @@ import cz.neumimto.rpg.common.localization.LocalizationService;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.skills.SkillService;
 import cz.neumimto.rpg.spigot.SpigotRpg;
+import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
 import cz.neumimto.rpg.spigot.gui.SpellbookListener;
@@ -26,6 +27,7 @@ import cz.neumimto.rpg.spigot.services.IRpgListener;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Item;
@@ -166,12 +168,11 @@ public class SpigotInventoryListener implements IRpgListener {
 */
 
         Item itemDrop = event.getItemDrop();
-        if (itemDrop.getItemStack() instanceof Metadatable m) {
-            if (m.hasMetadata(SpigotInventoryService.SKILLBIND)) {
+        var key = new NamespacedKey(SpigotRpgPlugin.getInstance(), SpigotInventoryService.SKILLBIND);
+        ItemMeta itemMeta = itemDrop.getItemStack().getItemMeta();
+        if (itemMeta.getPersistentDataContainer().has(key, PersistentDataType.STRING)) {
                 itemDrop.remove();
-            }
         }
-
     }
 
     @EventHandler(ignoreCancelled = false)

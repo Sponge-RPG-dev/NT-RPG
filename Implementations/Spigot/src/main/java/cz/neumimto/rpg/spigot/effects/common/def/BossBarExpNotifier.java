@@ -75,6 +75,8 @@ public class BossBarExpNotifier extends EffectBase<Object> implements IEffectCon
             Audience player = SpigotRpgPlugin.getBukkitAudiences().player(character.getPlayer());
             player.showBossBar(serverBossBar);
             sessionWrapper.displayed = true;
+            setLastTickTime(System.currentTimeMillis());
+
         }
     }
 

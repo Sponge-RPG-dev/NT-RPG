@@ -13,6 +13,7 @@ import cz.neumimto.rpg.common.skills.reagents.ISkillCastMechanic;
 
 import javax.inject.Inject;
 import java.util.Arrays;
+import java.util.ServiceLoader;
 
 @SuppressWarnings("unchecked")
 public class SkillExecutor implements ISkillExecutor {
@@ -32,20 +33,19 @@ public class SkillExecutor implements ISkillExecutor {
         skillCost = new ISkillCastMechanic[0];
         conditions = new ISkillCondition[0];
 
-        for (Key<?> key : injector.getAllBindings().keySet()) {
-            if (ISkillCondition.class.isAssignableFrom(key.getTypeLiteral().getRawType())) {
-                ISkillCondition skillCondition = (ISkillCondition) injector.getInstance(key);
-                if (skillCondition.isValidForContext(skillData)) {
-                    conditions = push(conditions, skillCondition);
-                }
-            }
-            if (ISkillCastMechanic.class.isAssignableFrom(key.getTypeLiteral().getRawType())) {
-                ISkillCastMechanic m = (ISkillCastMechanic) injector.getInstance(key);
-                if (m.isValidForContext(skillData)) {
-                    skillCost = push(skillCost, m);
-                }
-            }
-        }
+        ServiceLoader.load(ISkillCondition.class, getClass().getClassLoader())
+                .stream()
+                .map(ServiceLoader.Provider::type)
+                .map(injector::getInstance)
+                .filter(a->a.isValidForContext(skillData))
+                .forEach(a-> conditions = push(conditions, a));
+
+        ServiceLoader.load(ISkillCastMechanic.class, getClass().getClassLoader())
+                .stream()
+                .map(ServiceLoader.Provider::type)
+                .map(injector::getInstance)
+                .filter(a->a.isValidForContext(skillData))
+                .forEach(a-> skillCost = push(skillCost, a));
 
         return this;
     }

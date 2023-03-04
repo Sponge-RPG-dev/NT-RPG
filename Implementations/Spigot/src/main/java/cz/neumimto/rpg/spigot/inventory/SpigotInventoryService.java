@@ -14,12 +14,15 @@ import cz.neumimto.rpg.spigot.gui.inventoryviews.ConfigurableInventoryGui;
 import cz.neumimto.rpg.spigot.persistance.SpigotEquipedSlot;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.Metadatable;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -31,7 +34,7 @@ import java.util.UUID;
 @Singleton
 public class SpigotInventoryService extends AbstractInventoryService<ISpigotCharacter> {
 
-    public static final String SKILLBIND = "ntrpg.skillbind";
+    public static final String SKILLBIND = "skillbind";
 
     @Inject
     private InventoryHandler inventoryHandler;
@@ -104,12 +107,12 @@ public class SpigotInventoryService extends AbstractInventoryService<ISpigotChar
         if (skillData.getModelId() != null) {
             itemMeta.setCustomModelData(skillData.getModelId());
         }
+
+        var key = new NamespacedKey(SpigotRpgPlugin.getInstance(), SKILLBIND);
+        itemMeta.getPersistentDataContainer().set(key, PersistentDataType.STRING, skillData.getSkillId());
+
         itemStack.setItemMeta(itemMeta);
 
-
-        if (itemStack instanceof Metadatable m) {
-            m.setMetadata(SKILLBIND, new FixedMetadataValue(SpigotRpgPlugin.getInstance(), skillData.getSkillId()));
-        }
         return itemStack;
     }
 
@@ -148,11 +151,11 @@ public class SpigotInventoryService extends AbstractInventoryService<ISpigotChar
                 player.getInventory().setItem(i, itemStacks[i]);
                 continue;
             }
-            if (item instanceof Metadatable m) {
-                String skillName = m.getMetadata(SKILLBIND).get(0).asString();
-                if (!skillName.isEmpty()) {
-                    player.getInventory().setItem(i, itemStacks[i]);
-                }
+            var key = new NamespacedKey(SpigotRpgPlugin.getInstance(), SKILLBIND);
+            ItemMeta itemMeta = item.getItemMeta();
+            if (itemMeta.getPersistentDataContainer().has(key, PersistentDataType.STRING)) {
+                String skillId = itemMeta.getPersistentDataContainer().get(key, PersistentDataType.STRING);
+                player.getInventory().setItem(i, itemStacks[i]);
             }
         }
         character.setSpellbookPage(page++);

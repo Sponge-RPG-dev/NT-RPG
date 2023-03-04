@@ -30,46 +30,55 @@ public class SpigotComboListener implements IRpgListener {
 
     @EventHandler
     public void onRMBClick(PlayerInteractEvent e) {
+        if (e.getPlayer().getGameMode() == GameMode.CREATIVE || e.getPlayer().getGameMode() == GameMode.SPECTATOR) {
+            return;
+        }
         if (spigotRpg.isDisabledInWorld(e.getPlayer())) {
             return;
         }
-        if (e.getPlayer().getGameMode() == GameMode.SURVIVAL) {
-            IActiveCharacter character = characterService.getCharacter(e.getPlayer());
-            e.setCancelled(characterService.processUserAction(character, UserActionType.R));
-        }
+        IActiveCharacter character = characterService.getCharacter(e.getPlayer());
+        e.setCancelled(characterService.processUserAction(character, UserActionType.R));
+
     }
 
     @EventHandler
     public void onLMBClick(PlayerInteractEntityEvent e) {
+        if (e.getPlayer().getGameMode() == GameMode.CREATIVE || e.getPlayer().getGameMode() == GameMode.SPECTATOR) {
+            return;
+        }
         if (spigotRpg.isDisabledInWorld(e.getPlayer())) {
             return;
         }
-        if (e.getPlayer().getGameMode() == GameMode.SURVIVAL) {
-            IActiveCharacter character = characterService.getCharacter(e.getPlayer());
-            e.setCancelled(characterService.processUserAction(character, UserActionType.L));
-        }
+        IActiveCharacter character = characterService.getCharacter(e.getPlayer());
+        e.setCancelled(characterService.processUserAction(character, UserActionType.L));
+
     }
 
     @EventHandler
     public void onQPress(PlayerDropItemEvent e) {
+        if (e.getPlayer().getGameMode() == GameMode.CREATIVE || e.getPlayer().getGameMode() == GameMode.SPECTATOR) {
+            return;
+        }
         if (spigotRpg.isDisabledInWorld(e.getPlayer())) {
             return;
         }
-        if (e.getPlayer().getGameMode() == GameMode.SURVIVAL) {
-            IActiveCharacter character = characterService.getCharacter(e.getPlayer());
-            e.setCancelled(characterService.processUserAction(character, UserActionType.Q));
-        }
+
+        IActiveCharacter character = characterService.getCharacter(e.getPlayer());
+        e.setCancelled(characterService.processUserAction(character, UserActionType.Q));
+
     }
 
     @EventHandler
     public void onInventoryOpen(InventoryOpenEvent e) {
+        if (e.getPlayer().getGameMode() == GameMode.CREATIVE || e.getPlayer().getGameMode() == GameMode.SPECTATOR) {
+            return;
+        }
         if (spigotRpg.isDisabledInWorld(e.getPlayer())) {
             return;
         }
-        if (e.getPlayer().getGameMode() == GameMode.SURVIVAL) {
-            IActiveCharacter character = characterService.getCharacter(e.getPlayer().getUniqueId());
-            e.setCancelled(characterService.processUserAction(character, UserActionType.E));
-        }
+        IActiveCharacter character = characterService.getCharacter(e.getPlayer().getUniqueId());
+        e.setCancelled(characterService.processUserAction(character, UserActionType.E));
+
     }
 
 }

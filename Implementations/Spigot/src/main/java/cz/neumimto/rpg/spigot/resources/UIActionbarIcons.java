@@ -61,7 +61,7 @@ public class UIActionbarIcons implements Consumer<ISpigotCharacter>, Listener {
             double percentage = MathUtils.getPercentage(characterRes.getValue(), characterRes.getMaxValue());
             percentage = percentage > 100 ? 100 : percentage;
             percentage = percentage < 0 ? 0 : percentage;
-            Component r = resource.get(characterRes.getType())[(int) Math.round(percentage / 5)];
+            Component r = resource.get(resType)[(int) Math.round(percentage / 5)];
             c = c.append(r);
         }
         player.sendActionBar(c);

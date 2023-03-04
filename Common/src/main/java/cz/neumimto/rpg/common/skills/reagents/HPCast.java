@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.common.skills.reagents;
 
+import com.google.auto.service.AutoService;
 import cz.neumimto.rpg.common.damage.DamageService;
 import cz.neumimto.rpg.common.entity.CommonProperties;
 import cz.neumimto.rpg.common.entity.EntityService;
@@ -15,6 +16,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
+@AutoService(ISkillCastMechanic.class)
 public class HPCast extends SkillCastMechanic {
 
     @Inject

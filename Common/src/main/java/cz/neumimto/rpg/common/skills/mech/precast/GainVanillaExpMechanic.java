@@ -1,5 +1,6 @@
 package cz.neumimto.rpg.common.skills.mech.precast;
 
+import com.google.auto.service.AutoService;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
@@ -11,6 +12,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
+@AutoService(ISkillCastMechanic.class)
 public class GainVanillaExpMechanic implements ISkillCastMechanic, ValidatedMechanic {
 
     @Inject
