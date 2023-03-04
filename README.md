@@ -2,6 +2,8 @@
 
 A new rpg plugin for Spigot
 
+Downloads - https://modrinth.com/plugin/nt-rpg
+
 Discord server - There are two discords you can contact me for support
 
 - https://discord.gg/EVATNNn (much larger community, for various types of plugins)
