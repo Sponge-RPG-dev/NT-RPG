@@ -76,7 +76,7 @@ public class SkillListener implements IRpgListener {
                         newMana = 0;
                         effectService.removeEffect(manaShieldEffect, event.getTarget());
                     }
-                   mana.setValue(newMana);
+                    mana.setValue(newMana);
                 }
             }
         }

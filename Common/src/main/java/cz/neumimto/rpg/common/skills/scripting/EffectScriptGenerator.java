@@ -56,7 +56,7 @@ import static net.bytebuddy.dynamic.loading.ClassLoadingStrategy.Default.INJECTI
  * }
  * }
  * </pre>
-
+ * <p>
  * Generates
  * <p>
  * 1) Effect base class
@@ -101,7 +101,7 @@ import static net.bytebuddy.dynamic.loading.ClassLoadingStrategy.Default.INJECTI
  * }
  * }
  * </pre>
- *
+ * <p>
  * This proxy implementation is also automatically initialized with guice injector and its reference is injected into the static field
  *
  * <pre>

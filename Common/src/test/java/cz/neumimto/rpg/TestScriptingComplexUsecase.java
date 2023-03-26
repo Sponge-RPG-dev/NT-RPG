@@ -8,6 +8,7 @@ import cz.neumimto.rpg.common.entity.TestCharacter;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.logging.Log;
+import cz.neumimto.rpg.common.persistance.model.CharacterBase;
 import cz.neumimto.rpg.common.skills.ISkill;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.skills.SkillsDefinition;
@@ -16,7 +17,6 @@ import cz.neumimto.rpg.common.skills.scripting.ScriptEffectModel;
 import cz.neumimto.rpg.common.skills.scripting.ScriptListenerModel;
 import cz.neumimto.rpg.common.skills.scripting.ScriptSkillModel;
 import cz.neumimto.rpg.junit.TestGuiceModule;
-import cz.neumimto.rpg.model.CharacterBaseTest;
 import name.falgout.jeffrey.testing.junit.guice.GuiceExtension;
 import name.falgout.jeffrey.testing.junit.guice.IncludeModule;
 import org.junit.jupiter.api.Assertions;
@@ -118,7 +118,7 @@ public class TestScriptingComplexUsecase {
 
         ActiveScriptSkill iSkill = (ActiveScriptSkill) byId.get();
 
-        TestCharacter testCharacter = new TestCharacter(UUID.randomUUID(), new CharacterBaseTest(), 0);
+        TestCharacter testCharacter = new TestCharacter(UUID.randomUUID(), new CharacterBase(), 0);
         PlayerSkillContext playerSkillContext = new PlayerSkillContext(new ClassDefinition("", ""), iSkill, testCharacter);
         iSkill.cast(testCharacter, playerSkillContext);
 

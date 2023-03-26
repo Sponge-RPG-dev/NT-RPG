@@ -15,7 +15,6 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import javax.inject.Inject;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Function;
@@ -57,7 +56,7 @@ class CharacaterCalculator implements ContextCalculator<Player> {
     public void registerContexts() {
 
         registerContext("ntrpg:has-class",
-                c -> c.getClasses().values().stream().map(a->a.getClassDefinition().getName()).collect(Collectors.toSet()),
+                c -> c.getClasses().values().stream().map(a -> a.getClassDefinition().getName()).collect(Collectors.toSet()),
                 () -> classService.getClasses().values().stream().map(ClassDefinition::getName).collect(Collectors.toSet()));
 
 
@@ -76,6 +75,8 @@ class CharacaterCalculator implements ContextCalculator<Player> {
         calculators.add(new Calculator(context, calculator, suggestions));
     }
 
-    record Calculator(String context, Function<ISpigotCharacter, Iterable<String>> function, Supplier<Iterable<String>> suggestions){}
+    record Calculator(String context, Function<ISpigotCharacter, Iterable<String>> function,
+                      Supplier<Iterable<String>> suggestions) {
+    }
 
 }

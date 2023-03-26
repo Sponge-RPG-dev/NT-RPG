@@ -11,7 +11,6 @@ import cz.neumimto.rpg.common.gui.Gui;
 import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.persistence.flatfiles.FlatFilesModule;
 import cz.neumimto.rpg.spigot.bridges.DatapackManager;
-import cz.neumimto.rpg.spigot.bridges.HolographicDisplaysExpansion;
 import cz.neumimto.rpg.spigot.bridges.NtRpgPlaceholderExpansion;
 import cz.neumimto.rpg.spigot.bridges.denizen.DenizenHook;
 import cz.neumimto.rpg.spigot.bridges.itemsadder.ItemsAdderHook;
@@ -51,7 +50,6 @@ import org.bukkit.plugin.java.JavaPluginLoader;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -83,7 +81,7 @@ public class SpigotRpgPlugin extends JavaPlugin implements Listener {
     public static boolean testEnv;
     private File dataFolder;
     private static Injector injector;
-    
+
     public static List<String> activeHooks = new ArrayList<>();
 
     public SpigotRpgPlugin() {
@@ -114,18 +112,18 @@ public class SpigotRpgPlugin extends JavaPlugin implements Listener {
         ascii();
 
         List<BaseCommand> commandClasses = Stream.of(
-                new SpigotAdminCommands(),
-                new AdminCommands(),
-                new CharacterCommands(),
-                new CastCommand(),
-                new SpigotCharacterCommands(),
-                new InfoCommands(),
-                new PartyCommands(),
-                new SkillCommands(),
-                new ClassesComand(),
-                new SkilltreeCommands(),
-                new SpigotSkillBindCommands())
-            .toList();
+                        new SpigotAdminCommands(),
+                        new AdminCommands(),
+                        new CharacterCommands(),
+                        new CastCommand(),
+                        new SpigotCharacterCommands(),
+                        new InfoCommands(),
+                        new PartyCommands(),
+                        new SkillCommands(),
+                        new ClassesComand(),
+                        new SkilltreeCommands(),
+                        new SpigotSkillBindCommands())
+                .toList();
 
         plugin = this;
         bukkitAudiences = BukkitAudiences.create(getInstance());
@@ -164,25 +162,25 @@ public class SpigotRpgPlugin extends JavaPlugin implements Listener {
         spigotRpg.init(getDataFolder().toPath(), null, commandClasses, new FlatFilesModule(), (bindings, providers) -> new SpigotGuiceModuleBuilder().setNtRpgPlugin(this).setSpigotRpg(spigotRpg).setExtraBindings(bindings).setProviders(providers).setMinecraftVersion(Bukkit.getServer().getMinecraftVersion()).createSpigotGuiceModule(),
                 injector -> {
 
-            SpigotRpgPlugin.injector = injector;
-            injector.injectMembers(spigotRpg);
-            new RpgImpl(spigotRpg);
+                    SpigotRpgPlugin.injector = injector;
+                    injector.injectMembers(spigotRpg);
+                    new RpgImpl(spigotRpg);
 
-            injector.getInstance(DatapackManager.class).init();
+                    injector.getInstance(DatapackManager.class).init();
 
-            for (Plugin pl : Bukkit.getPluginManager().getPlugins()) {
-                initThirdpartyHooks(pl.getName());
-            }
+                    for (Plugin pl : Bukkit.getPluginManager().getPlugins()) {
+                        initThirdpartyHooks(pl.getName());
+                    }
 
-            injector.getInstance(Gui.class).setVanillaMessaging(injector.getInstance(SpigotGui.class));
-            injector.getInstance(SpigotMobSettingsDao.class).load();
+                    injector.getInstance(Gui.class).setVanillaMessaging(injector.getInstance(SpigotGui.class));
+                    injector.getInstance(SpigotMobSettingsDao.class).load();
 
 
-            Rpg.get().registerListeners(injector.getInstance(OnKeyPress.class));
-            PacketHandler.init();
-            new SpigotSkillTreeViewModel(); //just to call static block
+                    Rpg.get().registerListeners(injector.getInstance(OnKeyPress.class));
+                    PacketHandler.init();
+                    new SpigotSkillTreeViewModel(); //just to call static block
 
-        });
+                });
 
         /*
           ItemsAdder.getAllItems returns null, despite plugin being already enabled at this point.
@@ -223,19 +221,12 @@ public class SpigotRpgPlugin extends JavaPlugin implements Listener {
     }
 
     public void initThirdpartyHooks(String pluginName) {
-        initSafely(pluginName,"PlaceholderAPI", () -> {
+        initSafely(pluginName, "PlaceholderAPI", () -> {
             Log.info("PlaceholderAPI installed - registering NTRPG placeholders");
             injector.getInstance(NtRpgPlaceholderExpansion.class).register();
         });
 
-        initSafely(pluginName, "HolographicDisplays", () -> {
-            Log.info("HolographicDisplays installed - NTRPG will use it for some extra guis");
-            HolographicDisplaysExpansion hde = injector.getInstance(HolographicDisplaysExpansion.class);
-            hde.init();
-            Bukkit.getPluginManager().registerEvents(hde, getInstance());
-        });
-
-        initSafely(pluginName, "MMOItems", () ->{
+        initSafely(pluginName, "MMOItems", () -> {
             Log.info("MMOItems installed - Provided hook for Power system and some stuff");
             MMOItemsExpansion mmie = injector.getInstance(MMOItemsExpansion.class);
             mmie.init(injector.getInstance(SpigotCharacterService.class));
@@ -271,8 +262,8 @@ public class SpigotRpgPlugin extends JavaPlugin implements Listener {
         });
 
         initSafely(pluginName, "ItemsAdder", () -> {
-             Log.info("ItemsAdder installed - any ia item can be accessed from ntrpg configs using format 'itemsadder:my_custom_item'");
-             injector.getInstance(ItemsAdderHook.class).init();
+            Log.info("ItemsAdder installed - any ia item can be accessed from ntrpg configs using format 'itemsadder:my_custom_item'");
+            injector.getInstance(ItemsAdderHook.class).init();
         });
 
         initSafely(pluginName, "LuckPerms", () -> {
@@ -280,7 +271,7 @@ public class SpigotRpgPlugin extends JavaPlugin implements Listener {
             injector.getInstance(LuckpermsExpansion.class).init();
         });
     }
-    
+
     public static void initSafely(String pluginName, String name, Runnable r) {
         if (!pluginName.equalsIgnoreCase(name)) {
             return;

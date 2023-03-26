@@ -8,13 +8,12 @@ import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
-import cz.neumimto.rpg.common.model.CharacterClass;
+import cz.neumimto.rpg.common.persistance.model.CharacterClass;
 import cz.neumimto.rpg.common.utils.ActionResult;
 import cz.neumimto.rpg.junit.CharactersExtension;
 import cz.neumimto.rpg.junit.CharactersExtension.Stage;
 import cz.neumimto.rpg.junit.NtRpgExtension;
 import cz.neumimto.rpg.junit.TestGuiceModule;
-import cz.neumimto.rpg.model.CharacterClassTest;
 import name.falgout.jeffrey.testing.junit.guice.GuiceExtension;
 import name.falgout.jeffrey.testing.junit.guice.IncludeModule;
 import org.junit.jupiter.api.Assertions;
@@ -89,7 +88,7 @@ public class ClassManipulationTests {
 
     @Test
     public void may_not_select_same_type() {
-        CharacterClass characterClass = new CharacterClassTest();
+        CharacterClass characterClass = new CharacterClass();
         PlayerClassData playerClassData = new PlayerClassData(pc1, characterClass);
         character.addClass(playerClassData);
         pc2.getClassDependencyGraph().getConflicts().clear();
@@ -116,7 +115,7 @@ public class ClassManipulationTests {
     @Test
     public void select_secondary_class() {
         Rpg.get().getPluginConfig().RESPECT_CLASS_SELECTION_ORDER = true;
-        CharacterClass characterClass = new CharacterClassTest();
+        CharacterClass characterClass = new CharacterClass();
         Map<String, PlayerClassData> classes = character.getClasses();
         classes.clear();
         PlayerClassData playerClassData = new PlayerClassData(pc1, characterClass);

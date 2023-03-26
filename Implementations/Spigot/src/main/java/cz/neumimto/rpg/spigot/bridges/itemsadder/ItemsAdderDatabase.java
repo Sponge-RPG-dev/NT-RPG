@@ -26,7 +26,7 @@ public class ItemsAdderDatabase implements NamespacedItemDatabase {
     @Override
     public Collection<String> getAll() {
         return ItemsAdder.getAllItems().stream()
-                .map(a->"itemsadder:"+a.getId())
+                .map(a -> "itemsadder:" + a.getId())
                 .collect(Collectors.toSet());
     }
 

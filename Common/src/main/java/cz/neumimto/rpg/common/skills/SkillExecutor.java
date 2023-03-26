@@ -2,7 +2,6 @@ package cz.neumimto.rpg.common.skills;
 
 
 import com.google.inject.Injector;
-import com.google.inject.Key;
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.events.EventFactoryService;
@@ -37,15 +36,15 @@ public class SkillExecutor implements ISkillExecutor {
                 .stream()
                 .map(ServiceLoader.Provider::type)
                 .map(injector::getInstance)
-                .filter(a->a.isValidForContext(skillData))
-                .forEach(a-> conditions = push(conditions, a));
+                .filter(a -> a.isValidForContext(skillData))
+                .forEach(a -> conditions = push(conditions, a));
 
         ServiceLoader.load(ISkillCastMechanic.class, getClass().getClassLoader())
                 .stream()
                 .map(ServiceLoader.Provider::type)
                 .map(injector::getInstance)
-                .filter(a->a.isValidForContext(skillData))
-                .forEach(a-> skillCost = push(skillCost, a));
+                .filter(a -> a.isValidForContext(skillData))
+                .forEach(a -> skillCost = push(skillCost, a));
 
         return this;
     }

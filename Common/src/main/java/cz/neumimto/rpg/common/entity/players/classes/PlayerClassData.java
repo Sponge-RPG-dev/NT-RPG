@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.common.entity.players.classes;
 
 import cz.neumimto.rpg.common.entity.players.leveling.ILevelProgression;
-import cz.neumimto.rpg.common.model.CharacterClass;
+import cz.neumimto.rpg.common.persistance.model.CharacterClass;
 
 /**
  * Created by NeumimTo on 28.7.2015.

@@ -4,7 +4,7 @@ import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.gui.SkillTreeViewModel;
 import cz.neumimto.rpg.common.logging.Log;
-import cz.neumimto.rpg.common.model.CharacterBase;
+import cz.neumimto.rpg.common.persistance.model.CharacterBase;
 
 import java.util.Collections;
 import java.util.Map;

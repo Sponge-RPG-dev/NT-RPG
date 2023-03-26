@@ -4,8 +4,8 @@ import cz.neumimto.rpg.common.entity.PropertyService;
 import cz.neumimto.rpg.common.entity.TestCharacter;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.common.model.CharacterBase;
-import cz.neumimto.rpg.common.model.CharacterSkill;
+import cz.neumimto.rpg.common.persistance.model.CharacterBase;
+import cz.neumimto.rpg.common.persistance.model.CharacterSkill;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 
 import javax.inject.Singleton;
@@ -47,7 +47,7 @@ public class TestCharacterService extends CharacterService<TestCharacter> {
 
     @Override
     public TestCharacter buildDummyChar(UUID uuid) {
-        return new TestCharacter(uuid, createCharacterBase(), PropertyService.LAST_ID) {
+        return new TestCharacter(uuid, new CharacterBase(), PropertyService.LAST_ID) {
 
             @Override
             public boolean isStub() {

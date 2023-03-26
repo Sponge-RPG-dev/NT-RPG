@@ -11,15 +11,14 @@ import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.common.entity.players.leveling.Linear;
 import cz.neumimto.rpg.common.gui.Gui;
 import cz.neumimto.rpg.common.gui.IPlayerMessage;
-import cz.neumimto.rpg.common.model.CharacterBase;
-import cz.neumimto.rpg.common.model.CharacterClass;
+import cz.neumimto.rpg.common.persistance.model.CharacterBase;
+import cz.neumimto.rpg.common.persistance.model.CharacterClass;
 import cz.neumimto.rpg.effects.TestEffectFloat;
 import cz.neumimto.rpg.effects.TestEffectFloatGlobal;
 import cz.neumimto.rpg.junit.CharactersExtension;
 import cz.neumimto.rpg.junit.CharactersExtension.Stage;
 import cz.neumimto.rpg.junit.NtRpgExtension;
 import cz.neumimto.rpg.junit.TestGuiceModule;
-import cz.neumimto.rpg.model.CharacterClassTest;
 import name.falgout.jeffrey.testing.junit.guice.GuiceExtension;
 import name.falgout.jeffrey.testing.junit.guice.IncludeModule;
 import org.junit.jupiter.api.Assertions;
@@ -86,7 +85,7 @@ public class AdminCommandTests {
             e.printStackTrace();
         }
 
-        CharacterClass jpaCharacterClass = new CharacterClassTest();
+        CharacterClass jpaCharacterClass = new CharacterClass();
         jpaCharacterClass.setLevel(0);
         jpaCharacterClass.setExperiences(0);
         PlayerClassData data = new PlayerClassData(classDefinition, jpaCharacterClass) {

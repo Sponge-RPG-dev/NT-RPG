@@ -112,7 +112,7 @@ public class CharacterAttributesGuiView extends ConfigurableInventoryGui {
         }
         String attrId = null;
         if (event.getCurrentItem() instanceof Metadatable m) {
-             attrId = m.getMetadata("ntrpg-attribute").get(0).asString();
+            attrId = m.getMetadata("ntrpg-attribute").get(0).asString();
         } else {
             return;
         }

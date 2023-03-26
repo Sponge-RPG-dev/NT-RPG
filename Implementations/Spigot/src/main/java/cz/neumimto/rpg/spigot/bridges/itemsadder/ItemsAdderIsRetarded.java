@@ -14,7 +14,7 @@ public class ItemsAdderIsRetarded implements Listener {
     public void onItemsAdderRetarded(ItemsAdderLoadDataEvent event) {
         if (event.getCause() == ItemsAdderLoadDataEvent.Cause.FIRST_LOAD) {
             SpigotRpgPlugin.getInstance().loadOrIAInstalled();
-        } else if (event.getCause() == ItemsAdderLoadDataEvent.Cause.RELOAD){
+        } else if (event.getCause() == ItemsAdderLoadDataEvent.Cause.RELOAD) {
             Rpg.get().getInjector().getInstance(AdminCommands.class).reload("a");
         }
     }

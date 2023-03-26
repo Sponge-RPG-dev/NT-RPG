@@ -38,10 +38,10 @@ public class TestDictionary {
 
     public void reset() {
         WEAPON_CLASS_1 = new ItemClass("weaponclass1");
-        ITEM_TYPE_WEAPON_1 = new RpgItemTypeImpl("weapon1", null, WEAPON_CLASS_1,  null);
+        ITEM_TYPE_WEAPON_1 = new RpgItemTypeImpl("weapon1", null, WEAPON_CLASS_1, null);
         WEAPON_CLASS_2 = new ItemClass("weaponclass2");
-        ITEM_TYPE_WEAPON_2 = new RpgItemTypeImpl("weapon2", null, WEAPON_CLASS_2,  null);
-        ARMOR_TYPE_1 = new RpgItemTypeImpl("armor1", null, ItemClass.ARMOR,  null);
+        ITEM_TYPE_WEAPON_2 = new RpgItemTypeImpl("weapon2", null, WEAPON_CLASS_2, null);
+        ARMOR_TYPE_1 = new RpgItemTypeImpl("armor1", null, ItemClass.ARMOR, null);
 
 
         WEAPON_CLASS_1.getItems().add(ITEM_TYPE_WEAPON_1);

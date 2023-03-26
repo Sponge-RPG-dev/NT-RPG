@@ -52,7 +52,7 @@ public class SkillContextTag implements ObjectTag {
 
     @Override
     public String identify() {
-        return "skillContext@"+context.getSkill().getId() + ","+character.getUUID();
+        return "skillContext@" + context.getSkill().getId() + "," + character.getUUID();
     }
 
     @Fetchable("skillContext")

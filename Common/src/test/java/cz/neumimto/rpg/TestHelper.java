@@ -2,9 +2,8 @@ package cz.neumimto.rpg;
 
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.logging.Log;
-import cz.neumimto.rpg.common.model.CharacterClass;
+import cz.neumimto.rpg.common.persistance.model.CharacterClass;
 import cz.neumimto.rpg.common.skills.ISkill;
-import cz.neumimto.rpg.model.CharacterClassTest;
 import org.mockito.Mockito;
 import sun.misc.Unsafe;
 
@@ -32,7 +31,7 @@ public class TestHelper {
 
 
     public static CharacterClass createCharacterClass() throws Exception {
-        CharacterClass characterClass = new CharacterClassTest();
+        CharacterClass characterClass = new CharacterClass();
         characterClass.setId(1L);
         characterClass.setName("testClassDef");
         return characterClass;

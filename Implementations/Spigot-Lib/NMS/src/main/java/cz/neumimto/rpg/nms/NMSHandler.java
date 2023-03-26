@@ -11,17 +11,18 @@ import java.util.List;
 
 public class NMSHandler {
 
-    public NMSHandler() {}
+    public NMSHandler() {
+    }
 
     public List<String> getVersion() {
         return Collections.emptyList();
     }
 
     public EntityDamageEvent handleEntityDamageEvent(LivingEntity target,
-                                                              LivingEntity damager,
-                                                              EntityDamageEvent.DamageCause source,
-                                                              double damage,
-                                                              double knockbackPower) {
+                                                     LivingEntity damager,
+                                                     EntityDamageEvent.DamageCause source,
+                                                     double damage,
+                                                     double knockbackPower) {
 
         return new EntityDamageEvent(damager, EntityDamageEvent.DamageCause.CONTACT, damage);
     }

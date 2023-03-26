@@ -27,7 +27,8 @@ public class NtRpgPlaceholderExpansion extends PlaceholderExpansion {
     private PluginConfig pluginConfig;
 
     @Inject
-    private ResourceService resourceService;;
+    private ResourceService resourceService;
+    ;
 
     @Override
     public String getIdentifier() {
@@ -64,7 +65,7 @@ public class NtRpgPlaceholderExpansion extends PlaceholderExpansion {
     /**
      * ntrpg_character_name - returns character name
      * ntrpg_character_property_((property)) - returns character property value (ei max fire resistance etc...)
-*    * ntrpg_character_resource_((type))_((max|value)) - returns character property value (ei max fire resistance etc...)
+     * * ntrpg_character_resource_((type))_((max|value)) - returns character property value (ei max fire resistance etc...)
      * ntrpg_character_class_((class_type)) - returns name of character class of specific type - (ntrpg_character_class_Race - returns name of character race, or null if player has none)
      * ntrpg_character_class_level_((class_type)) - returns level of character class of specific type - (ntrpg_character_class_level_Race - returns level of character race, or null player do not have that class)
      * ntrpg_character_class_exp_((class_type)) - returns experiences of character class of specific type from the begging of the level - (ntrpg_character_class_level_Race - returns level of character race, or null player do not have that class)

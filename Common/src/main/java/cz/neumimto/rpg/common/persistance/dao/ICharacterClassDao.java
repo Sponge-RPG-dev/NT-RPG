@@ -1,6 +1,7 @@
 package cz.neumimto.rpg.common.persistance.dao;
 
-import cz.neumimto.rpg.common.model.CharacterClass;
+
+import cz.neumimto.rpg.common.persistance.model.CharacterClass;
 
 public interface ICharacterClassDao {
 

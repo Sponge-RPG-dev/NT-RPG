@@ -1,9 +1,6 @@
 package cz.neumimto.rpg.common.persistance.model;
 
-import cz.neumimto.rpg.common.model.CharacterBase;
-import cz.neumimto.rpg.common.model.CharacterClass;
-
-public class CharacterClassImpl extends TimestampEntityImpl implements CharacterClass {
+public class CharacterClass extends TimestampEntity {
 
     private Long classId;
     private double experiences;
@@ -14,77 +11,61 @@ public class CharacterClassImpl extends TimestampEntityImpl implements Character
 
     private CharacterBase characterBase;
 
-    @Override
     public Long getId() {
         return classId;
     }
 
-    @Override
     public void setId(Long id) {
         this.classId = id;
     }
 
-    @Override
     public CharacterBase getCharacterBase() {
         return characterBase;
     }
 
-    @Override
     public void setCharacterBase(CharacterBase characterBase) {
         this.characterBase = characterBase;
     }
 
-    @Override
     public double getExperiences() {
         return experiences;
     }
 
-    @Override
     public void setExperiences(double experiences) {
         this.experiences = experiences;
     }
 
-    @Override
     public String getName() {
         return name;
     }
 
-    @Override
     public void setName(String name) {
         this.name = name;
     }
 
-    @Override
     public int getSkillPoints() {
         return skillPoints;
     }
 
-    @Override
     public void setSkillPoints(int skillPoints) {
         this.skillPoints = skillPoints;
     }
 
-    @Override
     public int getUsedSkillPoints() {
         return usedSkillPoints;
     }
 
-    @Override
     public void setUsedSkillPoints(int usedSkillPoints) {
         this.usedSkillPoints = usedSkillPoints;
     }
 
-
-    @Override
     public int getLevel() {
         return level;
     }
 
-    @Override
     public void setLevel(int level) {
         this.level = level;
     }
-
 
     @Override
     public boolean equals(Object o) {
@@ -95,7 +76,7 @@ public class CharacterClassImpl extends TimestampEntityImpl implements Character
             return false;
         }
 
-        CharacterClassImpl that = (CharacterClassImpl) o;
+        CharacterClass that = (CharacterClass) o;
 
         return name.equals(that.name);
 

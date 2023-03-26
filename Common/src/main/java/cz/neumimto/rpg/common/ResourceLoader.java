@@ -39,6 +39,6 @@ public interface ResourceLoader {
 
     @Retention(RetentionPolicy.RUNTIME)
     @interface ListenerClass {
-
+        String value() default "";
     }
 }

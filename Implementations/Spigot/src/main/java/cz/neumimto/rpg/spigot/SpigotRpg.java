@@ -127,7 +127,7 @@ public final class SpigotRpg extends AbstractRpg {
                         a.reloadGuiConfig();
                     } catch (Exception e) {
                         e.printStackTrace();
-                     }
+                    }
                 });
     }
 
@@ -142,7 +142,6 @@ public final class SpigotRpg extends AbstractRpg {
     public boolean isDisabledInWorld(World world) {
         return isDisabledInWorld(world.getName());
     }
-
 
 
     @Override

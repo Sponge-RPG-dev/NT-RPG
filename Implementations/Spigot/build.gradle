@@ -50,14 +50,14 @@ dependencies {
 
     annotationProcessor project(':Generator')
 
-    compileOnly 'io.papermc.paper:paper-api:1.19.3-R0.1-SNAPSHOT'
+    compileOnly 'io.papermc.paper:paper-api:1.19.4-R0.1-SNAPSHOT'
 
     api project(':Common')
     api project(':FlatFiles-Persistence')
     api project(":Spigot-NMS")
 
 
-    compileOnly"com.denizenscript:denizen:1.2.3-SNAPSHOT"
+    compileOnly "com.denizenscript:denizen:1.2.3-SNAPSHOT"
     compileOnly("org.spigotmc:plugin-annotations:1.2.3-SNAPSHOT") {
         exclude group: "org.bukkit", module: "bukkit"
     }
@@ -72,7 +72,6 @@ dependencies {
     api "co.aikar:acf-paper:0.5.1-SNAPSHOT"
 
     //  compileOnly 'placeholderapi.me.clip:placeholderapi:' + project.papi
-    compileOnly 'com.gmail.filoghost.holographicdisplays:holographicdisplays-api:2.4.9'
     compileOnly "io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT"
     compileOnly "ru.endlesscode.mimic:mimic-bukkit-api:0.8.0"
 
@@ -109,7 +108,6 @@ dependencies {
 
 shadowJar {
     archiveFileName = "NT-RPG-${p_spigot_version}.jar"
-    libsDirName = '../../../server-spigot/plugins'
 
     relocate 'co.aikar.commands', 'rpgshaded.acf'
     relocate 'co.aikar.locales', 'rpgshaded.locales'
@@ -122,11 +120,11 @@ shadowJar {
 task copyNMSImpl {
     Project spigot = project(":Spigot")
     var map = new HashMap<String, String>();
-    map.put(':Spigot-119',"Spigot-119-1.0.0-SNAPSHOT.jar");
-    map.put(':Spigot-118',"Spigot-118-1.0.0-SNAPSHOT.jar");
+    map.put(':Spigot-119', "Spigot-119-1.0.0-SNAPSHOT.jar");
+    map.put(':Spigot-118', "Spigot-118-1.0.0-SNAPSHOT.jar");
 
     def set = map.entrySet();
-    for (Map.Entry<String,String> impl : set) {
+    for (Map.Entry<String, String> impl : set) {
         if (spigot.file(impl.value).exists()) {
             return;
         }
@@ -170,6 +168,6 @@ build.mustRunAfter tasks.getByPath(':FlatFiles-Persistence:build')
 
 tasks {
     runServer {
-        minecraftVersion("1.19.3")
+        minecraftVersion("1.19.4")
     }
 }

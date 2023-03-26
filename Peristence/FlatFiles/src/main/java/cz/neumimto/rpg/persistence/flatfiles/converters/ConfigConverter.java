@@ -3,11 +3,12 @@ package cz.neumimto.rpg.persistence.flatfiles.converters;
 import com.electronwill.nightconfig.core.Config;
 import com.electronwill.nightconfig.core.file.FileConfig;
 import cz.neumimto.rpg.common.Rpg;
-import cz.neumimto.rpg.common.model.*;
-import cz.neumimto.rpg.common.persistance.model.BaseCharacterAttributeImpl;
-import cz.neumimto.rpg.common.persistance.model.CharacterBaseImpl;
-import cz.neumimto.rpg.common.persistance.model.CharacterClassImpl;
-import cz.neumimto.rpg.common.persistance.model.CharacterSkillImpl;
+import cz.neumimto.rpg.common.model.DateKeyPair;
+import cz.neumimto.rpg.common.model.EquipedSlot;
+import cz.neumimto.rpg.common.persistance.model.BaseCharacterAttribute;
+import cz.neumimto.rpg.common.persistance.model.CharacterBase;
+import cz.neumimto.rpg.common.persistance.model.CharacterClass;
+import cz.neumimto.rpg.common.persistance.model.CharacterSkill;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -210,7 +211,7 @@ public class ConfigConverter {
     }
 
     public static CharacterBase fromConfig(FileConfig config) {
-        CharacterBase characterBase = new CharacterBaseImpl();
+        CharacterBase characterBase = new CharacterBase();
         characterBase.setUuid(UUID.fromString(config.get(UUID_)));
 
         characterBase.setName(config.get(NAME));
@@ -301,7 +302,7 @@ public class ConfigConverter {
     }
 
     private static BaseCharacterAttribute attributeFromConfig(Config config, CharacterBase character) {
-        BaseCharacterAttribute attribute = new BaseCharacterAttributeImpl();
+        BaseCharacterAttribute attribute = new BaseCharacterAttribute();
 
         attribute.setName(config.get(ATTRIBUTE_NAME));
         attribute.setLevel(config.get(ATTRIBUTE_LEVEL));
@@ -312,7 +313,7 @@ public class ConfigConverter {
     }
 
     private static CharacterClass classFromConfig(Config config, CharacterBase character) {
-        CharacterClass characterClass = new CharacterClassImpl();
+        CharacterClass characterClass = new CharacterClass();
 
         characterClass.setName(config.get(CLASS_NAME));
         characterClass.setExperiences(((Number) config.get(CLASS_EXPERIENCES)).doubleValue());
@@ -326,7 +327,7 @@ public class ConfigConverter {
     }
 
     private static CharacterSkill skillFromConfig(Config config, CharacterBase character) {
-        CharacterSkill characterSkill = new CharacterSkillImpl();
+        CharacterSkill characterSkill = new CharacterSkill();
         characterSkill.setCharacterBase(character);
 
         characterSkill.setCatalogId(config.get(SKILL_ID));

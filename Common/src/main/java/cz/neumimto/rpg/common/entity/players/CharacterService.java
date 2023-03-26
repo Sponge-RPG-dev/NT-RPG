@@ -27,11 +27,15 @@ import cz.neumimto.rpg.common.localization.Arg;
 import cz.neumimto.rpg.common.localization.LocalizationKeys;
 import cz.neumimto.rpg.common.localization.LocalizationService;
 import cz.neumimto.rpg.common.logging.Log;
-import cz.neumimto.rpg.common.model.*;
+import cz.neumimto.rpg.common.model.DateKeyPair;
 import cz.neumimto.rpg.common.permissions.PermissionService;
 import cz.neumimto.rpg.common.persistance.dao.ICharacterClassDao;
 import cz.neumimto.rpg.common.persistance.dao.IPersistenceHandler;
 import cz.neumimto.rpg.common.persistance.dao.IPlayerDao;
+import cz.neumimto.rpg.common.persistance.model.BaseCharacterAttribute;
+import cz.neumimto.rpg.common.persistance.model.CharacterBase;
+import cz.neumimto.rpg.common.persistance.model.CharacterClass;
+import cz.neumimto.rpg.common.persistance.model.CharacterSkill;
 import cz.neumimto.rpg.common.resources.Resource;
 import cz.neumimto.rpg.common.resources.ResourceService;
 import cz.neumimto.rpg.common.skills.*;
@@ -179,7 +183,7 @@ public abstract class CharacterService<T extends IActiveCharacter> {
      * @return Initialized CharacterBase in the default state, The entity is not persisted yet
      */
     public CharacterBase createCharacterBase(String name, UUID uuid, String playerName) {
-        CharacterBase characterBase = createCharacterBase();
+        CharacterBase characterBase = new CharacterBase();
         characterBase.setName(name);
         characterBase.setUuid(uuid);
         characterBase.setLastKnownPlayerName(playerName);
@@ -198,10 +202,6 @@ public abstract class CharacterService<T extends IActiveCharacter> {
         characterBase.setMarkedForRemoval(false);
 
         return characterBase;
-    }
-
-    protected final CharacterBase createCharacterBase() {
-        return persistanceHandler.createCharacterBase();
     }
 
     public void updateWeaponRestrictions(T character) {
@@ -983,7 +983,7 @@ public abstract class CharacterService<T extends IActiveCharacter> {
                 }
             }
             if (!found) {
-                BaseCharacterAttribute attr = persistanceHandler.createCharacterAttribute();
+                BaseCharacterAttribute attr = new BaseCharacterAttribute();
                 attr.setName(entry.getKey().getId());
                 attr.setLevel(entry.getValue());
                 attr.setCharacterBase(base);
@@ -1140,7 +1140,7 @@ public abstract class CharacterService<T extends IActiveCharacter> {
 
 
     public CharacterClass addNewBaseClass(CharacterBase characterBase, ClassDefinition klass) {
-        CharacterClass cc = persistanceHandler.createCharacterClass();
+        CharacterClass cc = new CharacterClass();
         cc.setName(klass.getName());
         cc.setCharacterBase(characterBase);
         cc.setExperiences(0D);
@@ -1277,7 +1277,7 @@ public abstract class CharacterService<T extends IActiveCharacter> {
         SkillTree skillTree = classDef.getSkillTree();
         einfo.setSkillData(skillTree.getSkills().get(skill.getId()));
 
-        CharacterSkill skill1 = persistanceHandler.createCharacterSkill();
+        CharacterSkill skill1 = new CharacterSkill();
         skill1.setLevel(1);
         skill1.setCharacterBase(character.getCharacterBase());
         skill1.setFromClass(clazz);

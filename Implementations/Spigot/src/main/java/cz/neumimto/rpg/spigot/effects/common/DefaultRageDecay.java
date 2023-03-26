@@ -28,7 +28,7 @@ public class DefaultRageDecay extends UnstackableEffectBase<DefaultRageDecayMode
         setPeriod(Rpg.get().getResourceService()
                 .getRegistry()
                 .stream()
-                .filter(a->a.name.equalsIgnoreCase(ResourceService.rage))
+                .filter(a -> a.name.equalsIgnoreCase(ResourceService.rage))
                 .findFirst().get().regenRate);
         setDuration(-1);
         addEffectType(CoreEffectTypes.RAGE_DECAY);

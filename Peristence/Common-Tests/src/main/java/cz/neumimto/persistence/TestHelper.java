@@ -1,17 +1,18 @@
 package cz.neumimto.persistence;
 
-import cz.neumimto.rpg.common.model.*;
-import cz.neumimto.rpg.common.persistance.model.BaseCharacterAttributeImpl;
-import cz.neumimto.rpg.common.persistance.model.CharacterBaseImpl;
-import cz.neumimto.rpg.common.persistance.model.CharacterClassImpl;
-import cz.neumimto.rpg.common.persistance.model.CharacterSkillImpl;
+import cz.neumimto.rpg.common.model.DateKeyPair;
+import cz.neumimto.rpg.common.model.EquipedSlot;
+import cz.neumimto.rpg.common.persistance.model.BaseCharacterAttribute;
+import cz.neumimto.rpg.common.persistance.model.CharacterBase;
+import cz.neumimto.rpg.common.persistance.model.CharacterClass;
+import cz.neumimto.rpg.common.persistance.model.CharacterSkill;
 
 import java.util.*;
 
 public class TestHelper {
 
-    public static CharacterBaseImpl createCharacterBase() {
-        CharacterBaseImpl characterBase = new CharacterBaseImpl();
+    public static CharacterBase createCharacterBase() {
+        CharacterBase characterBase = new CharacterBase();
         characterBase.setId(null);
         characterBase.setAttributePoints(1);
         characterBase.setAttributePointsSpent(2);
@@ -40,12 +41,12 @@ public class TestHelper {
 
     public static void addAttributes(CharacterBase characterBase) {
         Set<BaseCharacterAttribute> attributes = new HashSet<>();
-        BaseCharacterAttributeImpl i = new BaseCharacterAttributeImpl();
+        BaseCharacterAttribute i = new BaseCharacterAttribute();
         i.setCharacterBase(characterBase);
         i.setLevel(5);
         i.setName("str");
         attributes.add(i);
-        i = new BaseCharacterAttributeImpl();
+        i = new BaseCharacterAttribute();
         i.setCharacterBase(characterBase);
         i.setLevel(0);
         i.setName("agi");
@@ -55,7 +56,7 @@ public class TestHelper {
 
     public static void addClasses(CharacterBase characterBase) {
         Set<CharacterClass> classes = new HashSet<>();
-        CharacterClass characterClass = new CharacterClassImpl();
+        CharacterClass characterClass = new CharacterClass();
         characterClass.setCharacterBase(characterBase);
         characterClass.setExperiences(50.5);
         characterClass.setName("CLass1");
@@ -64,7 +65,7 @@ public class TestHelper {
         characterClass.setCreated(new Date());
         characterClass.setUpdated(new Date());
         classes.add(characterClass);
-        characterClass = new CharacterClassImpl();
+        characterClass = new CharacterClass();
         characterClass.setCharacterBase(characterBase);
         characterClass.setExperiences(100);
         characterClass.setName("CLass2");
@@ -74,7 +75,7 @@ public class TestHelper {
         characterClass.setUpdated(new Date());
         characterBase.setCharacterClasses(classes);
 
-        CharacterSkill characterSkill = new CharacterSkillImpl();
+        CharacterSkill characterSkill = new CharacterSkill();
         characterSkill.setCharacterBase(characterBase);
         characterSkill.setCooldown(Long.MAX_VALUE);
         characterSkill.setLevel(1);

@@ -4,14 +4,13 @@ import cz.neumimto.rpg.common.configuration.AttributeConfig;
 import cz.neumimto.rpg.common.entity.PropertyService;
 import cz.neumimto.rpg.common.entity.TestCharacter;
 import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
-import cz.neumimto.rpg.common.model.CharacterBase;
+import cz.neumimto.rpg.common.persistance.model.CharacterBase;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.skills.SkillData;
 import cz.neumimto.rpg.common.skills.SkillSettings;
 import cz.neumimto.rpg.junit.NtRpgExtension;
 import cz.neumimto.rpg.junit.TestDictionary;
 import cz.neumimto.rpg.junit.TestGuiceModule;
-import cz.neumimto.rpg.model.CharacterBaseTest;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import name.falgout.jeffrey.testing.junit.guice.GuiceExtension;
 import name.falgout.jeffrey.testing.junit.guice.IncludeModule;
@@ -64,7 +63,7 @@ public class TestSkillExecutorChain {
         skillData.setSkillSettings(skillSettings);
 
 
-        CharacterBase characterBase = new CharacterBaseTest();
+        CharacterBase characterBase = new CharacterBase();
         HashMap<Object, Object> objectObjectHashMap = new HashMap<>();
         objectObjectHashMap.put(str.getId(), 3);
 

@@ -14,7 +14,8 @@ public class TestEventFactory extends EventFactoryImpl {
 
         try {
             return proxyType.getConstructor().newInstance();
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                 NoSuchMethodException e) {
             e.printStackTrace();
         }
         throw new RuntimeException("Cannot initiate Event Proxy ");

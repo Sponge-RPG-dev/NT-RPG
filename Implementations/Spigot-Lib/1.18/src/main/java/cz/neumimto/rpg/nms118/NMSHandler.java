@@ -30,7 +30,8 @@ import java.util.List;
 @AutoService(cz.neumimto.rpg.nms.NMSHandler.class)
 public class NMSHandler extends cz.neumimto.rpg.nms.NMSHandler {
 
-    public NMSHandler() {}
+    public NMSHandler() {
+    }
 
     @Override
     public List<String> getVersion() {

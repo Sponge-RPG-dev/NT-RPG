@@ -167,9 +167,9 @@ public class SpigotDamageListener extends AbstractDamageListener implements IRpg
             DefaultRageDecay effect = (DefaultRageDecay) target.getEffect(DefaultRageDecay.name);
             DefaultRageDecayModel value = effect.getValue();
             if (damager.getType() == IEntityType.CHARACTER) {
-                Rpg.get().getCharacterService().gainResource(a,value.damage_taken_from_players,effect,ResourceService.rage);
+                Rpg.get().getCharacterService().gainResource(a, value.damage_taken_from_players, effect, ResourceService.rage);
             } else {
-                Rpg.get().getCharacterService().gainResource(a,value.damage_taken_from_mobs,effect,ResourceService.rage);
+                Rpg.get().getCharacterService().gainResource(a, value.damage_taken_from_mobs, effect, ResourceService.rage);
             }
         }
         if (damager.hasEffect(DefaultRageDecay.name) && damager instanceof IActiveCharacter a) {
@@ -181,9 +181,9 @@ public class SpigotDamageListener extends AbstractDamageListener implements IRpg
             DefaultRageDecay effect = (DefaultRageDecay) target.getEffect(DefaultRageDecay.name);
             DefaultRageDecayModel value = effect.getValue();
             if (damager.getType() == IEntityType.CHARACTER) {
-                Rpg.get().getCharacterService().gainResource(a,value.damage_dealt_to_players,effect,ResourceService.rage);
+                Rpg.get().getCharacterService().gainResource(a, value.damage_dealt_to_players, effect, ResourceService.rage);
             } else {
-                Rpg.get().getCharacterService().gainResource(a,value.damage_dealt_to_mobs,effect,ResourceService.rage);
+                Rpg.get().getCharacterService().gainResource(a, value.damage_dealt_to_mobs, effect, ResourceService.rage);
             }
         }
     }

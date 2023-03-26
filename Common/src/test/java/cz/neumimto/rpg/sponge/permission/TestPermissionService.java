@@ -1,7 +1,6 @@
 package cz.neumimto.rpg.sponge.permission;
 
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.common.permissions.PermissionService;
 
 import javax.inject.Singleton;

@@ -38,9 +38,9 @@ public class EntitiesM implements NTScriptProxy {
     @Handler
     @Function("gain_resource")
     public void add_resource(@NamedParam("e|entity") IActiveCharacter target,
-                            @NamedParam("a|amount") float amount,
+                             @NamedParam("a|amount") float amount,
                              @NamedParam("r|resource") String resource,
-                            @NamedParam("s|source") IRpgElement skill) {
+                             @NamedParam("s|source") IRpgElement skill) {
         characterService.gainResource(target, amount, skill, resource);
     }
 

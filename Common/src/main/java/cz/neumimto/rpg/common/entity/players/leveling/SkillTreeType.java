@@ -10,7 +10,7 @@ import cz.neumimto.rpg.common.events.character.CharacterGainedLevelEvent;
 import cz.neumimto.rpg.common.localization.Arg;
 import cz.neumimto.rpg.common.localization.LocalizationKeys;
 import cz.neumimto.rpg.common.logging.Log;
-import cz.neumimto.rpg.common.model.CharacterSkill;
+import cz.neumimto.rpg.common.persistance.model.CharacterSkill;
 import cz.neumimto.rpg.common.skills.ISkill;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.skills.SkillData;

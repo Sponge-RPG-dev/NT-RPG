@@ -3,7 +3,6 @@ package cz.neumimto.rpg.spigot.resources;
 import cz.neumimto.rpg.common.AbstractRpgGuiceModule;
 import cz.neumimto.rpg.common.ResourceLoader;
 import cz.neumimto.rpg.common.assets.AssetService;
-import cz.neumimto.rpg.common.bytecode.ClassGenerator;
 import cz.neumimto.rpg.common.damage.DamageService;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.entity.EntityService;
@@ -66,7 +65,6 @@ public class SpigotGuiceModule extends AbstractRpgGuiceModule {
         map.put(SkillService.class, SpigotSkillService.class);
         map.put(PartyService.class, SpigotPartyService.class);
         map.put(IPlayerMessage.class, SpigotGui.class);
-        map.put(ClassGenerator.class, SpigotClassGenerator.class);
         map.put(DamageService.class, SpigotDamageService.class);
         map.put(EffectService.class, SpigotEffectService.class);
         map.put(EntityService.class, SpigotEntityService.class);

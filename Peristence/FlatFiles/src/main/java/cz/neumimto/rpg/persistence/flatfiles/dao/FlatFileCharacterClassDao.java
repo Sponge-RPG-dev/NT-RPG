@@ -1,9 +1,9 @@
 package cz.neumimto.rpg.persistence.flatfiles.dao;
 
 import com.google.auto.service.AutoService;
-import cz.neumimto.rpg.common.model.CharacterClass;
 import cz.neumimto.rpg.common.persistance.dao.ICharacterClassDao;
 import cz.neumimto.rpg.common.persistance.dao.IPlayerDao;
+import cz.neumimto.rpg.common.persistance.model.CharacterClass;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

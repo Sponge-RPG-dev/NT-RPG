@@ -17,12 +17,9 @@ import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.metadata.MetadataValue;
-import org.bukkit.metadata.Metadatable;
 import org.bukkit.persistence.PersistentDataType;
 
 import javax.inject.Inject;
-import java.util.List;
 
 public class OnKeyPress implements Listener {
 

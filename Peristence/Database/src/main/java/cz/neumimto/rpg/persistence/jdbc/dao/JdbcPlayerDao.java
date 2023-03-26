@@ -1,14 +1,11 @@
 package cz.neumimto.rpg.persistence.jdbc.dao;
 
 import cz.neumimto.rpg.common.logging.Log;
-import cz.neumimto.rpg.common.model.CharacterBase;
-import cz.neumimto.rpg.common.model.CharacterClass;
-import cz.neumimto.rpg.common.model.CharacterSkill;
-import cz.neumimto.rpg.common.model.TimestampEntity;
 import cz.neumimto.rpg.common.persistance.dao.IPlayerDao;
-import cz.neumimto.rpg.common.persistance.model.CharacterBaseImpl;
-import cz.neumimto.rpg.common.persistance.model.CharacterClassImpl;
-import cz.neumimto.rpg.common.persistance.model.CharacterSkillImpl;
+import cz.neumimto.rpg.common.persistance.model.CharacterBase;
+import cz.neumimto.rpg.common.persistance.model.CharacterClass;
+import cz.neumimto.rpg.common.persistance.model.CharacterSkill;
+import cz.neumimto.rpg.common.persistance.model.TimestampEntity;
 import cz.neumimto.rpg.persistence.jdbc.NamedPreparedStatement;
 import cz.neumimto.rpg.persistence.jdbc.converters.EquipedSlot2Json;
 
@@ -37,14 +34,14 @@ public class JdbcPlayerDao implements IPlayerDao {
 
     @Override
     public List getPlayersCharacters(UUID uuid) {
-        List<CharacterBaseImpl> list = new ArrayList<>();
+        List<CharacterBase> list = new ArrayList<>();
 
         try (Connection con = dataSource.getConnection()) {
             try (PreparedStatement pst = con.prepareStatement(FIND_CHARS)) {
                 pst.setString(0, uuid.toString());
                 try (ResultSet rs = pst.executeQuery()) {
                     while (rs.next()) {
-                        CharacterBaseImpl characterBase = new CharacterBaseImpl();
+                        CharacterBase characterBase = new CharacterBase();
                         loadCharacterBase(characterBase, rs);
                         list.add(characterBase);
                     }
@@ -54,8 +51,8 @@ public class JdbcPlayerDao implements IPlayerDao {
             Log.error("Could not retrieve Players characters from database", s);
         }
 
-        for (CharacterBaseImpl characterBase : list) {
-            List<CharacterClassImpl> characterClassImpls = loadClasses(uuid, characterBase);
+        for (CharacterBase characterBase : list) {
+            List<CharacterClass> characterClassImpls = loadClasses(uuid, characterBase);
             loadSkills(uuid, characterBase, characterClassImpls);
         }
 
@@ -64,7 +61,7 @@ public class JdbcPlayerDao implements IPlayerDao {
 
     @Override
     public CharacterBase getLastPlayed(UUID uuid) {
-        CharacterBaseImpl characterBase = new CharacterBaseImpl();
+        CharacterBase characterBase = new CharacterBase();
 
         try (Connection con = dataSource.getConnection()) {
             try (PreparedStatement pst = con.prepareStatement(FIND_CHAR)) {
@@ -79,7 +76,7 @@ public class JdbcPlayerDao implements IPlayerDao {
             Log.error("Could not retrieve last played character from database", s);
         }
 
-        List<CharacterClassImpl> characterClasses = loadClasses(uuid, characterBase);
+        List<CharacterClass> characterClasses = loadClasses(uuid, characterBase);
         loadSkills(uuid, characterBase, characterClasses);
 
 
@@ -87,14 +84,14 @@ public class JdbcPlayerDao implements IPlayerDao {
         return characterBase;
     }
 
-    protected List<CharacterClassImpl> loadClasses(UUID uuid, CharacterBaseImpl characterBase) {
-        List<CharacterClassImpl> characterClasses = new ArrayList<>();
+    protected List<CharacterClass> loadClasses(UUID uuid, CharacterBase characterBase) {
+        List<CharacterClass> characterClasses = new ArrayList<>();
         try (Connection con = dataSource.getConnection();
              PreparedStatement pst = con.prepareStatement(FIND_CLASSES_BY_CHAR)) {
             pst.setString(1, uuid.toString());
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
-                    CharacterClassImpl characterClass = loadCharacterClass(characterBase, rs);
+                    CharacterClass characterClass = loadCharacterClass(characterBase, rs);
                     characterClasses.add(characterClass);
                 }
             }
@@ -105,14 +102,14 @@ public class JdbcPlayerDao implements IPlayerDao {
         return characterClasses;
     }
 
-    protected List<CharacterSkillImpl> loadSkills(UUID uuid, CharacterBaseImpl characterBase, List<CharacterClassImpl> characterClasses) {
-        List<CharacterSkillImpl> characterSkills = new ArrayList<>();
+    protected List<CharacterSkill> loadSkills(UUID uuid, CharacterBase characterBase, List<CharacterClass> characterClasses) {
+        List<CharacterSkill> characterSkills = new ArrayList<>();
         try (Connection con = dataSource.getConnection()) {
             try (PreparedStatement pst = con.prepareStatement(FIND_SKILLS)) {
                 pst.setString(0, uuid.toString());
                 try (ResultSet rs = pst.executeQuery()) {
                     while (rs.next()) {
-                        CharacterSkillImpl characterSkill = loadCharacterSkills(characterBase, characterClasses, rs);
+                        CharacterSkill characterSkill = loadCharacterSkills(characterBase, characterClasses, rs);
                         characterSkills.add(characterSkill);
                     }
                 }
@@ -124,8 +121,8 @@ public class JdbcPlayerDao implements IPlayerDao {
         return characterSkills;
     }
 
-    private CharacterSkillImpl loadCharacterSkills(CharacterBaseImpl characterBase, List<CharacterClassImpl> characterClasses, ResultSet rs) throws SQLException {
-        CharacterSkillImpl characterSkill = new CharacterSkillImpl();
+    private CharacterSkill loadCharacterSkills(CharacterBase characterBase, List<CharacterClass> characterClasses, ResultSet rs) throws SQLException {
+        CharacterSkill characterSkill = new CharacterSkill();
         characterSkill.setCatalogId(rs.getString("catalog_id"));
         characterSkill.setCooldown(rs.getLong("cooldown"));
         characterSkill.setId(rs.getLong("skill_id"));
@@ -134,7 +131,7 @@ public class JdbcPlayerDao implements IPlayerDao {
 
 
         long classId = rs.getLong("class_id");
-        for (CharacterClassImpl characterClass : characterClasses) {
+        for (CharacterClass characterClass : characterClasses) {
             if (characterClass.getId() == classId) {
                 characterSkill.setFromClass(characterClass);
                 break;
@@ -144,8 +141,8 @@ public class JdbcPlayerDao implements IPlayerDao {
         return characterSkill;
     }
 
-    private CharacterClassImpl loadCharacterClass(CharacterBaseImpl characterBase, ResultSet rs) throws SQLException {
-        CharacterClassImpl characterClass = new CharacterClassImpl();
+    private CharacterClass loadCharacterClass(CharacterBase characterBase, ResultSet rs) throws SQLException {
+        CharacterClass characterClass = new CharacterClass();
         characterClass.setCharacterBase(characterBase);
         characterClass.setId(rs.getLong("class_id"));
         characterClass.setExperiences(rs.getDouble("experiences"));
@@ -156,7 +153,7 @@ public class JdbcPlayerDao implements IPlayerDao {
         return characterClass;
     }
 
-    private void loadCharacterBase(CharacterBaseImpl characterBase, ResultSet rs) throws SQLException {
+    private void loadCharacterBase(CharacterBase characterBase, ResultSet rs) throws SQLException {
         characterBase.setId(rs.getLong("character_id"));
         characterBase.setUuid(UUID.fromString(rs.getString("uuid")));
         characterBase.setName(rs.getString("name"));
@@ -182,7 +179,7 @@ public class JdbcPlayerDao implements IPlayerDao {
 
     @Override
     public CharacterBase getCharacter(UUID uuid, String name) {
-        CharacterBaseImpl characterBase = new CharacterBaseImpl();
+        CharacterBase characterBase = new CharacterBase();
         try (Connection con = dataSource.getConnection()) {
             try (PreparedStatement pst = con.prepareStatement(FIND_CHAR_BY_NAME)) {
                 pst.setString(1, uuid.toString());
@@ -197,8 +194,8 @@ public class JdbcPlayerDao implements IPlayerDao {
             throw new CannotFetchCharacterBaseSQL();
         }
 
-        List<CharacterClassImpl> characterClasses = loadClasses(uuid, characterBase);
-        List<CharacterSkillImpl> characterSkills = loadSkills(uuid, characterBase, characterClasses);
+        List<CharacterClass> characterClasses = loadClasses(uuid, characterBase);
+        List<CharacterSkill> characterSkills = loadSkills(uuid, characterBase, characterClasses);
 
         characterBase.setCharacterClasses(new HashSet<>(characterClasses));
         characterBase.setCharacterSkills(new HashSet<>(characterSkills));

@@ -4,7 +4,7 @@ import cz.neumimto.rpg.common.entity.PropertyService;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.gui.Gui;
-import cz.neumimto.rpg.common.model.CharacterBase;
+import cz.neumimto.rpg.common.persistance.model.CharacterBase;
 import cz.neumimto.rpg.common.resources.ResourceService;
 import cz.neumimto.rpg.common.skills.ISkill;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
@@ -65,7 +65,6 @@ public class SpigotCharacterService extends CharacterService<ISpigotCharacter> {
     public int canCreateNewCharacter(UUID uniqueId, String name) {
         return 0;
     }
-
 
 
     @Override

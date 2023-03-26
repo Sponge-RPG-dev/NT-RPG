@@ -13,7 +13,6 @@ import cz.neumimto.rpg.common.ResourceManagerImpl;
 import cz.neumimto.rpg.common.RpgApi;
 import cz.neumimto.rpg.common.TestPartyService;
 import cz.neumimto.rpg.common.assets.AssetService;
-import cz.neumimto.rpg.common.bytecode.ClassGenerator;
 import cz.neumimto.rpg.common.classes.ClassService;
 import cz.neumimto.rpg.common.configuration.SkillTreeDao;
 import cz.neumimto.rpg.common.configuration.SkillTreeLoaderImpl;
@@ -60,10 +59,8 @@ import cz.neumimto.rpg.model.TestPersistanceHandler;
 import cz.neumimto.rpg.persistence.InMemoryPlayerStorage;
 import cz.neumimto.rpg.skills.reagents.CooldownTest;
 import cz.neumimto.rpg.sponge.permission.TestPermissionService;
-import net.bytebuddy.dynamic.DynamicType;
 
 import java.lang.reflect.Proxy;
-import java.lang.reflect.Type;
 
 public class TestGuiceModule extends AbstractModule {
 
@@ -80,18 +77,6 @@ public class TestGuiceModule extends AbstractModule {
         bind(ClassDefinitionDao.class);
         bind(IPlayerDao.class).to(InMemoryPlayerStorage.class);
         bind(ExperienceService.class).to(TestExperienceService.class);
-        bind(ClassGenerator.class).toProvider(() -> new ClassGenerator() {
-            @Override
-            public Type getListenerSubclass() {
-                return null;
-            }
-
-            @Override
-            public DynamicType.Builder<Object> visitImplSpecAnnListener(DynamicType.Builder.MethodDefinition.ReceiverTypeDefinition<Object> classBuilder, Object object) {
-                return null;
-            }
-
-        });
         bind(ClassService.class);
         bind(ResourceLoader.class).to(ResourceManagerImpl.class);
         bind(DamageService.class).to(TestDamageService.class);

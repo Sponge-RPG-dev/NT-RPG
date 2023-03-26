@@ -89,7 +89,7 @@ public class ACFBootstrap {
         );
 
         manager.getCommandCompletions().registerAsyncCompletion("resource", c ->
-                Rpg.get().getResourceService().getRegistry().stream().map(a->a.name).collect(Collectors.toList())
+                Rpg.get().getResourceService().getRegistry().stream().map(a -> a.name).collect(Collectors.toList())
         );
 
         manager.getCommandCompletions().registerAsyncCompletion("class", c ->

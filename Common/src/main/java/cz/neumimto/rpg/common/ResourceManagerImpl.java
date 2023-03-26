@@ -1,7 +1,6 @@
 package cz.neumimto.rpg.common;
 
 import com.google.inject.Injector;
-import cz.neumimto.rpg.common.bytecode.ClassGenerator;
 import cz.neumimto.rpg.common.classes.ClassService;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.effects.IGlobalEffect;
@@ -43,8 +42,6 @@ public class ResourceManagerImpl implements ResourceLoader {
     private EffectService effectService;
     @Inject
     private PropertyService propertyService;
-    @Inject
-    private ClassGenerator classGenerator;
     @Inject
     private LocalizationService localizationService;
 

@@ -15,8 +15,8 @@ import cz.neumimto.rpg.common.localization.Arg;
 import cz.neumimto.rpg.common.localization.LocalizationKeys;
 import cz.neumimto.rpg.common.localization.LocalizationService;
 import cz.neumimto.rpg.common.logging.Log;
-import cz.neumimto.rpg.common.model.CharacterBase;
 import cz.neumimto.rpg.common.permissions.PermissionService;
+import cz.neumimto.rpg.common.persistance.model.CharacterBase;
 import cz.neumimto.rpg.common.skills.tree.SkillTree;
 import cz.neumimto.rpg.common.utils.ActionResult;
 

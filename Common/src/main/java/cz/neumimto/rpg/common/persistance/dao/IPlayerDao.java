@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.common.persistance.dao;
 
-import cz.neumimto.rpg.common.model.CharacterBase;
-import cz.neumimto.rpg.common.model.CharacterSkill;
+import cz.neumimto.rpg.common.persistance.model.CharacterBase;
+import cz.neumimto.rpg.common.persistance.model.CharacterSkill;
 
 import java.util.List;
 import java.util.UUID;

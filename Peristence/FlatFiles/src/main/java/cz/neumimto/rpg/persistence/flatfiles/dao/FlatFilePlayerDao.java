@@ -3,9 +3,9 @@ package cz.neumimto.rpg.persistence.flatfiles.dao;
 import com.electronwill.nightconfig.core.file.FileConfig;
 import com.google.auto.service.AutoService;
 import cz.neumimto.rpg.common.Rpg;
-import cz.neumimto.rpg.common.model.CharacterBase;
-import cz.neumimto.rpg.common.model.CharacterSkill;
 import cz.neumimto.rpg.common.persistance.dao.IPlayerDao;
+import cz.neumimto.rpg.common.persistance.model.CharacterBase;
+import cz.neumimto.rpg.common.persistance.model.CharacterSkill;
 import cz.neumimto.rpg.persistence.flatfiles.converters.ConfigConverter;
 
 import java.io.IOException;

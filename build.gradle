@@ -97,8 +97,3 @@ subprojects {
         testImplementation.extendsFrom compileOnly
     }
 }
-
-task downloadFile(type: Download) {
-    src "https://api.purpurmc.org/v2/purpur/1.19/latest/download"
-    dest new File(getRootDir().toPath().resolve("server-spigot").toFile(), 'server.jar')
-}

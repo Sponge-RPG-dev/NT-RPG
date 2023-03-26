@@ -67,7 +67,7 @@ public class ClassAttributesGuiView extends ConfigurableInventoryGui {
     @Override
     protected Component getTitle(CommandSender commandSender, GuiConfig guiConfig, String param) {
         ClassDefinition classDefinitionByName = classService.getClassDefinitionByName(param);
-        return getPrefix(guiConfig).append(Component.text(classDefinitionByName.getName() + " " + localizationService.translate(LocalizationKeys.ATTRIBUTES)).color(TextColor.fromHexString(classDefinitionByName.getPreferedColor()))) ;
+        return getPrefix(guiConfig).append(Component.text(classDefinitionByName.getName() + " " + localizationService.translate(LocalizationKeys.ATTRIBUTES)).color(TextColor.fromHexString(classDefinitionByName.getPreferedColor())));
     }
 
     @Override

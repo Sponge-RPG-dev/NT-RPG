@@ -22,7 +22,7 @@ public class DefaultManaRegeneration extends EffectBase {
         setPeriod(Rpg.get().getResourceService()
                 .getRegistry()
                 .stream()
-                .filter(a->a.name.equalsIgnoreCase(ResourceService.mana))
+                .filter(a -> a.name.equalsIgnoreCase(ResourceService.mana))
                 .findFirst().get().regenRate);
         setDuration(-1);
         addEffectType(CoreEffectTypes.MANA_REGEN);

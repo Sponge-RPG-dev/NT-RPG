@@ -1,8 +1,6 @@
-package cz.neumimto.rpg.spigot.bridges;
+package cz.neumimto.rpg.spigot.features;
 
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
-import com.gmail.filoghost.holographicdisplays.api.VisibilityManager;
+import cz.neumimto.rpg.common.ResourceLoader;
 import cz.neumimto.rpg.common.entity.IEntity;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.localization.LocalizationService;
@@ -14,22 +12,29 @@ import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
 import cz.neumimto.rpg.spigot.events.skill.SpigotSkillPostUsageEvent;
 import cz.neumimto.rpg.spigot.utils.VectorUtils;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.Display;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.UUID;
 
-public class HolographicDisplaysExpansion implements Listener {
+@ResourceLoader.ListenerClass(HologramsExpansion.SKILLCAST_HOLOGRAMS)
+public class HologramsExpansion implements Listener {
+
+    public static final String SKILLCAST_HOLOGRAMS = "skillcast_holograms";
 
     @Inject
     private SkillService skillService;
@@ -40,39 +45,12 @@ public class HolographicDisplaysExpansion implements Listener {
     @Inject
     private LocalizationService localizationService;
 
-    private static Map<Hologram, Long> holograms = new HashMap<>();
-    private static Map<String, String> colors = new HashMap<>();
-
+    private static Map<UUID, Long> holograms = new HashMap<>();
     private static Vector[] displayLocs;
     private static XORShiftRnd rnd = new XORShiftRnd();
 
     static {
-        put(EntityDamageEvent.DamageCause.FIRE, ChatColor.RED);
-        put(EntityDamageEvent.DamageCause.LAVA, ChatColor.RED);
-        put(EntityDamageEvent.DamageCause.FIRE_TICK, ChatColor.RED);
-
-        put(EntityDamageEvent.DamageCause.SUFFOCATION, ChatColor.BLUE);
-        put(EntityDamageEvent.DamageCause.DROWNING, ChatColor.BLUE);
-        put(EntityDamageEvent.DamageCause.LIGHTNING, ChatColor.YELLOW);
-
-        put(EntityDamageEvent.DamageCause.MAGIC, ChatColor.DARK_AQUA);
-
-        put(EntityDamageEvent.DamageCause.VOID, ChatColor.DARK_PURPLE);
-        put(EntityDamageEvent.DamageCause.WITHER, ChatColor.BLACK);
-
-        put(EntityDamageEvent.DamageCause.LIGHTNING, ChatColor.YELLOW);
-
-        put(EntityDamageEvent.DamageCause.POISON, ChatColor.GREEN);
-
-        put(EntityDamageEvent.DamageCause.POISON, ChatColor.GREEN);
-        put(EntityDamageEvent.DamageCause.ENTITY_ATTACK, ChatColor.GRAY);
-        put(EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK, ChatColor.GRAY);
-
         displayLocs = VectorUtils.circle(new Vector[20], 2);
-    }
-
-    private static void put(EntityDamageEvent.DamageCause damageCause, ChatColor chatColor) {
-        colors.put(damageCause.toString(), chatColor.toString());
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = false)
@@ -82,13 +60,11 @@ public class HolographicDisplaysExpansion implements Listener {
         IEntity caster = event.getCaster();
         Entity entity = (Entity) caster.getEntity();
 
-        String s = colors.get(damageType);
-        if (s == null) {
-            s = ChatColor.WHITE.toString();
-        }
-
         Location location = entity.getLocation().add(0, entity.getHeight() + 0.1, 0).add(getLocation());
-        Hologram hologram = HologramsAPI.createHologram(SpigotRpgPlugin.getInstance(), location);
+        Display hologram = location.getWorld().spawn(location, Display.class);
+        hologram.setViewRange(16 * 3);
+        hologram.setBillboard(Display.Billboard.CENTER);
+
         //todo in future when entitis are able to casts spells
         IActiveCharacter c = (IActiveCharacter) caster;
         PlayerSkillContext info = c.getSkillInfo(skill.getId());
@@ -100,10 +76,19 @@ public class HolographicDisplaysExpansion implements Listener {
         if (skillName == null) {
             skillName = info.getSkill().getId();
         }
-        hologram.insertTextLine(0, ChatColor.BOLD + s + skillName);
-        VisibilityManager visiblityManager = hologram.getVisibilityManager();
-        visiblityManager.setVisibleByDefault(true);
-        holograms.put(hologram, System.currentTimeMillis() + 2500L);
+        hologram.customName(Component.text(skillName));
+        holograms.put(hologram.getUniqueId(), System.currentTimeMillis() + 2500L);
+    }
+
+    @EventHandler
+    public void onChunkUnload(ChunkUnloadEvent event) {
+        @NotNull Entity[] entities = event.getChunk().getEntities();
+        for (Entity entity : entities) {
+            if (holograms.containsKey(entity.getUniqueId())) {
+                holograms.remove(entity.getUniqueId());
+                entity.remove();
+            }
+        }
     }
 
     public void init() {
@@ -112,12 +97,16 @@ public class HolographicDisplaysExpansion implements Listener {
 
             @Override
             public void run() {
-                Iterator<Map.Entry<Hologram, Long>> iterator = holograms.entrySet().iterator();
+                Iterator<Map.Entry<UUID, Long>> iterator = holograms.entrySet().iterator();
                 while (iterator.hasNext()) {
-                    Map.Entry<Hologram, Long> next = iterator.next();
-                    Hologram key = next.getKey();
+                    Map.Entry<UUID, Long> next = iterator.next();
+                    UUID key = next.getKey();
                     if (next.getValue() < System.currentTimeMillis()) {
-                        key.delete();
+                        Entity entity = Bukkit.getServer().getEntity(key);
+                        if (entity != null) {
+                            entity.remove();
+                        }
+                        iterator.remove();
                     }
                 }
             }

@@ -26,7 +26,7 @@ public class UIActionbarIcons implements Consumer<ISpigotCharacter>, Listener {
     public static void init(ResourceGui resourceGui) {
         resTypes = new String[resourceGui.display.size()];
 
-        int i =0;
+        int i = 0;
         for (ResourceGui.Display display : resourceGui.display) {
             resTypes[i] = display.resource;
             Component[] collect = display.array.stream()
@@ -41,7 +41,7 @@ public class UIActionbarIcons implements Consumer<ISpigotCharacter>, Listener {
 
     @Override
     public void accept(ISpigotCharacter character) {
-        Player player =  character.getEntity();
+        Player player = character.getEntity();
 
         if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) {
             return;

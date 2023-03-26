@@ -3,8 +3,8 @@ package cz.neumimto.rpg.persistence.jdbc.dao;
 import cz.neumimto.persistence.TestHelper;
 import cz.neumimto.rpg.common.RpgTests;
 import cz.neumimto.rpg.common.logging.Log;
-import cz.neumimto.rpg.common.model.CharacterBase;
-import cz.neumimto.rpg.common.model.CharacterClass;
+import cz.neumimto.rpg.common.persistance.model.CharacterBase;
+import cz.neumimto.rpg.common.persistance.model.CharacterClass;
 import org.junit.jupiter.api.*;
 
 import java.util.Optional;

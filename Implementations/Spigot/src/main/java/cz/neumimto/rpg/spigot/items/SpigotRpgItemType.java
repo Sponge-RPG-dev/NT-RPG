@@ -8,7 +8,7 @@ public class SpigotRpgItemType extends RpgItemTypeImpl {
 
     private final Material material;
 
-    public SpigotRpgItemType(String id, String modelName, ItemClass itemClass,Material material, String permission) {
+    public SpigotRpgItemType(String id, String modelName, ItemClass itemClass, Material material, String permission) {
         super(id, modelName, itemClass, permission);
         this.material = material;
     }

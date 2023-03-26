@@ -5,11 +5,10 @@ import cz.neumimto.rpg.common.effects.InternalEffectSourceProvider;
 import cz.neumimto.rpg.common.effects.stacking.DoubleEffectStackingStrategy;
 import cz.neumimto.rpg.common.entity.TestCharacter;
 import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
-import cz.neumimto.rpg.common.model.CharacterBase;
+import cz.neumimto.rpg.common.persistance.model.CharacterBase;
 import cz.neumimto.rpg.effects.TestEffectService;
 import cz.neumimto.rpg.junit.NtRpgExtension;
 import cz.neumimto.rpg.junit.TestGuiceModule;
-import cz.neumimto.rpg.model.CharacterBaseTest;
 import name.falgout.jeffrey.testing.junit.guice.GuiceExtension;
 import name.falgout.jeffrey.testing.junit.guice.IncludeModule;
 import org.junit.jupiter.api.Assertions;
@@ -41,7 +40,7 @@ public class EffectTests {
     @BeforeEach
     public void before() {
         processedEffects = effectService.getEffects();
-        characterBase = new CharacterBaseTest();
+        characterBase = new CharacterBase();
         character = new TestCharacter(UUID.randomUUID(), characterBase, 1);
 
         effect = createEffectMock("testEffect");

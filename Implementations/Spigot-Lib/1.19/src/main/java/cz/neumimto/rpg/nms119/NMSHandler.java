@@ -4,6 +4,7 @@ import com.google.auto.service.AutoService;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.NeutralMob;
@@ -18,8 +19,7 @@ import net.minecraft.world.entity.projectile.WitherSkull;
 import org.bukkit.Bukkit;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_19_R2.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_19_R2.event.CraftEventFactory;
+import org.bukkit.craftbukkit.v1_19_R3.entity.CraftLivingEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -32,7 +32,7 @@ public class NMSHandler extends cz.neumimto.rpg.nms.NMSHandler {
 
     @Override
     public List<String> getVersion() {
-        return List.of("1.19.1");
+        return List.of("1.19.4");
     }
 
     @Override
@@ -112,7 +112,7 @@ public class NMSHandler extends cz.neumimto.rpg.nms.NMSHandler {
         el.setHealth((float) newHealth);
         el.hurtMarked = el.getRandom().nextDouble() >= el.getAttributeValue(Attributes.KNOCKBACK_RESISTANCE);
 
-        DamageSource dmgSource = dmgSourceFromCause(source, ed);
+        DamageSource dmgSource = dmgSourceFromCause(el.damageSources(), source, ed);
         if (el.isDeadOrDying()) {
             el.die(dmgSource);
         } else {
@@ -137,87 +137,87 @@ public class NMSHandler extends cz.neumimto.rpg.nms.NMSHandler {
         return event;
     }
 
-    private static DamageSource dmgSourceFromCause(EntityDamageEvent.DamageCause damageCause,
-                                                   net.minecraft.world.entity.Entity attackingEntity) {
+    private static DamageSource dmgSourceFromCause(DamageSources damageSources, EntityDamageEvent.DamageCause damageCause,
+                                                   Entity attackingEntity) {
         switch (damageCause) {
             case CONTACT:
-                return DamageSource.CACTUS;
+                return damageSources.cactus();
             case ENTITY_ATTACK:
                 if (attackingEntity instanceof Player p) {
-                    return DamageSource.playerAttack(p);
+                    return damageSources.playerAttack(p);
                 }
-                return DamageSource.mobAttack((net.minecraft.world.entity.LivingEntity) attackingEntity);
+                return damageSources.mobAttack((net.minecraft.world.entity.LivingEntity) attackingEntity);
             case ENTITY_SWEEP_ATTACK:
                 if (attackingEntity instanceof Player p) {
-                    return DamageSource.playerAttack(p).sweep();
+                    return damageSources.playerAttack(p).sweep();
                 }
-                return DamageSource.mobAttack((net.minecraft.world.entity.LivingEntity) attackingEntity).sweep();
+                return damageSources.mobAttack((net.minecraft.world.entity.LivingEntity) attackingEntity).sweep();
 
             case PROJECTILE:
                 if (attackingEntity instanceof Projectile projectile) {
                     EntityType entityType = projectile.getType();
                     if (entityType == EntityType.TRIDENT) {
-                        return DamageSource.trident(attackingEntity, projectile);
+                        return damageSources.trident(attackingEntity, projectile);
                     } else if (entityType == EntityType.ARROW || entityType == EntityType.SPECTRAL_ARROW) {
-                        return DamageSource.arrow((Arrow) attackingEntity, projectile.getOwner());
+                        return damageSources.arrow((Arrow) attackingEntity, projectile.getOwner());
                     } else if (entityType == EntityType.SNOWBALL || entityType == EntityType.EGG ||
                             entityType == EntityType.ENDER_PEARL || entityType == EntityType.POTION) {
-                        return DamageSource.indirectMobAttack(attackingEntity, (net.minecraft.world.entity.LivingEntity) projectile.getOwner());
+                        return damageSources.mobProjectile(attackingEntity, (net.minecraft.world.entity.LivingEntity) projectile.getOwner());
                     } else if (entityType == EntityType.FIREWORK_ROCKET) {
-                        return DamageSource.fireworks((FireworkRocketEntity) attackingEntity, projectile);
+                        return damageSources.fireworks((FireworkRocketEntity) attackingEntity, projectile);
                     } else if (entityType == EntityType.WITHER_SKULL) {
-                        return DamageSource.witherSkull((WitherSkull) attackingEntity, projectile);
+                        return damageSources.witherSkull((WitherSkull) attackingEntity, projectile);
                     }
-                    return DamageSource.indirectMobAttack(projectile, (net.minecraft.world.entity.LivingEntity) projectile.getOwner());
+                    return damageSources.mobProjectile(projectile, (net.minecraft.world.entity.LivingEntity) projectile.getOwner());
                 }
-                return DamageSource.GENERIC;
+                return damageSources.generic();
             case SUFFOCATION:
-                return DamageSource.IN_WALL;
+                return damageSources.inWall();
             case FALL:
-                return DamageSource.FALL;
+                return damageSources.fall();
             case FIRE:
-                return DamageSource.IN_FIRE;
+                return damageSources.inFire();
             case FIRE_TICK:
-                return DamageSource.ON_FIRE;
+                return damageSources.onFire();
             case MELTING:
-                return CraftEventFactory.MELTING;
+                return damageSources.melting;
             case LAVA:
-                return DamageSource.LAVA;
+                return damageSources.lava();
             case DROWNING:
-                return DamageSource.DROWN;
+                return damageSources.drown();
             case VOID:
-                return DamageSource.OUT_OF_WORLD;
+                return damageSources.outOfWorld();
             case LIGHTNING:
-                return DamageSource.LIGHTNING_BOLT;
+                return damageSources.lightningBolt();
             case STARVATION:
-                return DamageSource.STARVE;
+                return damageSources.starve();
             case POISON:
-                return CraftEventFactory.POISON;
+                return damageSources.poison;
             case MAGIC:
-                return DamageSource.MAGIC;
+                return damageSources.magic();
             case WITHER:
-                return DamageSource.WITHER;
+                return damageSources.wither();
             case FALLING_BLOCK:
-                return DamageSource.fallingBlock(attackingEntity);
+                return damageSources.fallingBlock(attackingEntity);
             case THORNS:
                 if (attackingEntity == null) {
-                    return DamageSource.GENERIC;
+                    return damageSources.generic();
                 }
-                return DamageSource.thorns(attackingEntity);
+                return damageSources.thorns(attackingEntity);
             case DRAGON_BREATH:
-                return DamageSource.DRAGON_BREATH;
+                return damageSources.dragonBreath();
             case CUSTOM:
-                return DamageSource.GENERIC;
+                return damageSources.generic();
             case FLY_INTO_WALL:
-                return DamageSource.FLY_INTO_WALL;
+                return damageSources.flyIntoWall();
             case HOT_FLOOR:
-                return DamageSource.HOT_FLOOR;
+                return damageSources.hotFloor();
             case CRAMMING:
-                return DamageSource.CRAMMING;
+                return damageSources.cramming();
             case DRYOUT:
-                return DamageSource.DRY_OUT;
+                return damageSources.dryOut();
         }
-        return DamageSource.GENERIC;
+        return damageSources.generic();
     }
 
 

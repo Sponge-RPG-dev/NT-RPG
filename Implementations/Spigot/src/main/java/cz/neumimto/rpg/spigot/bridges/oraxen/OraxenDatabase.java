@@ -30,7 +30,7 @@ public class OraxenDatabase implements NamespacedItemDatabase {
     @Override
     public Collection<String> getAll() {
         return Stream.of(OraxenItems.getItemNames())
-                .map(a->"oraxen:"+a)
+                .map(a -> "oraxen:" + a)
                 .collect(Collectors.toSet());
     }
 }

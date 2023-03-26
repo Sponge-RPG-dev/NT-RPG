@@ -1,14 +1,11 @@
 package cz.neumimto.rpg.common;
 
-import co.aikar.commands.BaseCommand;
-import co.aikar.commands.CommandManager;
 import com.electronwill.nightconfig.core.conversion.ObjectConverter;
 import com.electronwill.nightconfig.core.file.FileConfig;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import cz.neumimto.rpg.common.classes.ClassService;
-import cz.neumimto.rpg.common.commands.ACFBootstrap;
 import cz.neumimto.rpg.common.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.common.configuration.PluginConfig;
 import cz.neumimto.rpg.common.damage.DamageService;

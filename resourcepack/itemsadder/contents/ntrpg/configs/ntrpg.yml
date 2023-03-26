@@ -309,12 +309,12 @@ font_images:
     path: "rage100"
     y_position: 2
 
- # ntrpg_bar_empty:
- #   permission: "ntrpg.fonts.ignore"
- #   show_in_gui: false
- #   suggest_in_command: false
- #   path: "bar_empty"
- #   y_position: 2
+  # ntrpg_bar_empty:
+  #   permission: "ntrpg.fonts.ignore"
+  #   show_in_gui: false
+  #   suggest_in_command: false
+  #   path: "bar_empty"
+  #   y_position: 2
 
   ntrpg_menu_background:
     permission: "ntrpg.fonts.ignore"

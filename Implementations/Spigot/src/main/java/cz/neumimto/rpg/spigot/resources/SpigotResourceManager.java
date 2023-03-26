@@ -18,6 +18,12 @@ public class SpigotResourceManager extends ResourceManagerImpl {
     public void loadServices() {
         super.loadServices();
         load(IRpgListener.class, getClass().getClassLoader()).forEach(a -> {
+            ListenerClass annotation = a.getClass().getAnnotation(ListenerClass.class);
+            if (annotation != null
+                    && !annotation.value().isBlank()
+                    && !Rpg.get().getPluginConfig().FEATURES.contains(annotation.value())) {
+                return;
+            }
             injector.injectMembers(a);
             Rpg.get().registerListeners(a);
         });

@@ -67,19 +67,6 @@ public class SpigotDamageService extends DamageService<ISpigotCharacter, LivingE
     public void init() {
     }
 
-    public String getColorByDamage(Double damage) {
-        if (doubleColorMap.size() != colorScale.length) {
-            return "§c";
-        }
-        String val = "§c";
-        for (Map.Entry<Double, String> aDouble : doubleColorMap.entrySet()) {
-            if (damage <= aDouble.getKey() || aDouble.getValue().equals(colorScale[colorScale.length - 1])) {
-                val = aDouble.getValue();
-            }
-        }
-        return val;
-    }
-
     public DamageCause damageTypeById(String damageType) {
         return DamageCause.valueOf(damageType);
     }

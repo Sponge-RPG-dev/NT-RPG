@@ -161,7 +161,7 @@ class InventoryHandlerTest {
         RpgItemStackImpl future = new RpgItemStackImpl(TestDictionary.ARMOR_TYPE_1, Collections.emptyMap(), new HashMap<AttributeConfig, Integer>() {{
             put(TestDictionary.STR, 0);
         }},
-        minimalRequirements, Collections.emptyMap());
+                minimalRequirements, Collections.emptyMap());
 
         boolean mayUse = itemService.checkItemAttributeRequirements(character, future);
         Assertions.assertTrue(mayUse);

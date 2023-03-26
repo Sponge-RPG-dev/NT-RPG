@@ -64,11 +64,11 @@ public class BossBarExpNotifier extends EffectBase<Object> implements IEffectCon
 
 
             if (serverBossBar == null) {
-                serverBossBar = BossBar.bossBar(title,0, BossBar.Color.BLUE, BossBar.Overlay.NOTCHED_10);
+                serverBossBar = BossBar.bossBar(title, 0, BossBar.Color.BLUE, BossBar.Overlay.NOTCHED_10);
 
                 sessionWrapper.serverBossBar = serverBossBar;
             } else {
-                serverBossBar.progress((float)progress);
+                serverBossBar.progress((float) progress);
                 serverBossBar.name(title);
             }
 
@@ -82,7 +82,7 @@ public class BossBarExpNotifier extends EffectBase<Object> implements IEffectCon
 
     @Override
     public void onTick(IEffect self) {
-        Audience player = SpigotRpgPlugin.getBukkitAudiences().player(((ISpigotCharacter)getConsumer()).getPlayer());
+        Audience player = SpigotRpgPlugin.getBukkitAudiences().player(((ISpigotCharacter) getConsumer()).getPlayer());
 
         for (SessionWrapper sessionWrapper : bossBarMap.values()) {
             if (sessionWrapper.serverBossBar != null) {

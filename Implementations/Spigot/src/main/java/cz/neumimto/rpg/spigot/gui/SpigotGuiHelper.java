@@ -11,8 +11,8 @@ import cz.neumimto.rpg.common.gui.SkillTreeViewModel;
 import cz.neumimto.rpg.common.localization.LocalizationKeys;
 import cz.neumimto.rpg.common.localization.LocalizationService;
 import cz.neumimto.rpg.common.logging.Log;
-import cz.neumimto.rpg.common.model.CharacterBase;
-import cz.neumimto.rpg.common.model.CharacterClass;
+import cz.neumimto.rpg.common.persistance.model.CharacterBase;
+import cz.neumimto.rpg.common.persistance.model.CharacterClass;
 import cz.neumimto.rpg.common.skills.*;
 import cz.neumimto.rpg.common.skills.tree.SkillTree;
 import cz.neumimto.rpg.spigot.Resourcepack;
@@ -153,14 +153,14 @@ public class SpigotGuiHelper {
     public static ItemStack unclickableIcon(ItemStack itemStack) {
         itemStack.editMeta(itemMeta -> {
             var key = new NamespacedKey(SpigotRpgPlugin.getInstance(), "ntrpg.item-iface");
-            itemMeta.getPersistentDataContainer().set(key, PersistentDataType.BYTE, (byte)1);
+            itemMeta.getPersistentDataContainer().set(key, PersistentDataType.BYTE, (byte) 1);
         });
         return itemStack;
     }
 
     public static ItemStack unclickableIcon(ItemStack itemStack, NamespacedKey tag) {
         itemStack.editMeta(itemMeta -> {
-            itemMeta.getPersistentDataContainer().set(tag, PersistentDataType.BYTE, (byte)1);
+            itemMeta.getPersistentDataContainer().set(tag, PersistentDataType.BYTE, (byte) 1);
         });
         return itemStack;
     }
@@ -172,7 +172,7 @@ public class SpigotGuiHelper {
             itemMeta.setCustomModelData(model);
             itemMeta.setDisplayName(name);
             var key = new NamespacedKey(SpigotRpgPlugin.getInstance(), "ntrpg.item-iface");
-            itemMeta.getPersistentDataContainer().set(key, PersistentDataType.BYTE, (byte)1);
+            itemMeta.getPersistentDataContainer().set(key, PersistentDataType.BYTE, (byte) 1);
         });
 
         return itemStack;
@@ -216,14 +216,14 @@ public class SpigotGuiHelper {
                     builder = builder.append(Component.text("*").color(NamedTextColor.RED));
                 } else {
                     builder = builder.append(Component.text("SELECT")
-                                    .color(NamedTextColor.GREEN)
-                                    .clickEvent(ClickEvent.runCommand("/char switch " + base.getName())));
+                            .color(NamedTextColor.GREEN)
+                            .clickEvent(ClickEvent.runCommand("/char switch " + base.getName())));
                 }
 
                 builder = builder.append(Component.text("] ")).color(NamedTextColor.YELLOW)
                         .append(Component.text(base.getName() + " ")).color(NamedTextColor.GOLD)
                         .append(Component.text(base.getCharacterClasses().stream().map(CharacterClass::getName).collect(Collectors.joining(", ")))
-                        .color(NamedTextColor.GRAY));
+                                .color(NamedTextColor.GRAY));
 
                 player.sendMessage(builder);
             }

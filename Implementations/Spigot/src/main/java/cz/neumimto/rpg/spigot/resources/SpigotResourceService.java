@@ -54,7 +54,7 @@ public class SpigotResourceService extends ResourceService {
     }
 
     //Initialize lazily, which makes it sure its initialized after ia/oraxen & papi if installed
-    public void init () {
+    public void init() {
         init = true;
         for (Integer id : tasks) {
             Bukkit.getScheduler().cancelTask(id);
@@ -109,13 +109,13 @@ public class SpigotResourceService extends ResourceService {
 
     @Override
     public void initializeForPlayer(IActiveCharacter activeCharacter) {
-        if (!init){
+        if (!init) {
             init();
         }
         super.initializeForPlayer(activeCharacter);
         if (uihandlerfactory != null) {
             Consumer<ISpigotCharacter> resHandler = uihandlerfactory.get();
-            ((ISpigotCharacter)activeCharacter).setResourceUIHandler(resHandler);
+            ((ISpigotCharacter) activeCharacter).setResourceUIHandler(resHandler);
         }
     }
 
@@ -126,7 +126,7 @@ public class SpigotResourceService extends ResourceService {
 
     @Override
     protected Resource getStaminaTracker(IActiveCharacter character, ResourceDefinition resourceDefinition) {
-        return null ;
+        return null;
     }
 
     @Override

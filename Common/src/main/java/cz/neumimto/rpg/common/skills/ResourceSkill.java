@@ -1,7 +1,5 @@
 package cz.neumimto.rpg.common.skills;
 
-import com.electronwill.nightconfig.core.UnmodifiableConfig;
-import com.electronwill.nightconfig.core.conversion.ObjectConverter;
 import com.electronwill.nightconfig.core.conversion.Path;
 import com.typesafe.config.Config;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;

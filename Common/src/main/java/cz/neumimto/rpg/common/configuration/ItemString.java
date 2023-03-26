@@ -25,7 +25,7 @@ public final class ItemString {
                 String k = data[i].toLowerCase();
                 if (k.startsWith("model=")) {
                     model = k.substring(6);
-                }  else if (k.startsWith("permission=")) {
+                } else if (k.startsWith("permission=")) {
                     permission = k.substring(11);
                 } else {
                     Log.warn("Could not parse item " + string);

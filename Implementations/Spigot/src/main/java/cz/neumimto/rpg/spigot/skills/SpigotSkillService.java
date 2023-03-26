@@ -7,16 +7,13 @@ import cz.neumimto.rpg.common.scripting.SkillScriptHandlers;
 import cz.neumimto.rpg.common.skills.SkillResult;
 import cz.neumimto.rpg.common.skills.SkillService;
 import cz.neumimto.rpg.common.skills.types.ScriptSkill;
-import cz.neumimto.rpg.spigot.bridges.DatapackManager;
 import cz.neumimto.rpg.spigot.effects.common.*;
-import cz.neumimto.rpg.spigot.gui.inventoryviews.GuiConfig;
 import cz.neumimto.rpg.spigot.gui.inventoryviews.SkillTreeViewBuilder;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.block.BlockFace;
 import org.bukkit.util.Vector;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.File;
 import java.util.Arrays;

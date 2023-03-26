@@ -125,6 +125,11 @@ public class PluginConfig {
     @Path("DISABLED_HOOKS")
     public List<String> DISABLED_HOOKS = new ArrayList<>();
 
+    @Path("FEATURES")
+    public List<String> FEATURES = new ArrayList<>() {{
+        add("skillcast_holograms");
+    }};
+
     private static class SetToListConverter implements Converter<Set, List> {
         @Override
         public Set convertToField(List value) {

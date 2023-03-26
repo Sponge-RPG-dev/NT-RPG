@@ -11,7 +11,7 @@ repositories {
 }
 
 dependencies {
-    paperDevBundle("1.19.3-R0.1-SNAPSHOT")
+    paperDevBundle("1.19.4-R0.1-SNAPSHOT")
     compileOnly(project(":Spigot-NMS"))
 }
 

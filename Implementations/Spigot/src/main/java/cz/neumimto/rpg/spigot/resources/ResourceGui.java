@@ -2,7 +2,6 @@ package cz.neumimto.rpg.spigot.resources;
 
 import com.electronwill.nightconfig.core.conversion.Path;
 import com.typesafe.config.Optional;
-import cz.neumimto.rpg.common.effects.model.mappers.SingleValueModelMapper;
 
 import java.util.List;
 

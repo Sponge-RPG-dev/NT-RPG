@@ -44,7 +44,6 @@ import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.metadata.Metadatable;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
@@ -171,7 +170,7 @@ public class SpigotInventoryListener implements IRpgListener {
         var key = new NamespacedKey(SpigotRpgPlugin.getInstance(), SpigotInventoryService.SKILLBIND);
         ItemMeta itemMeta = itemDrop.getItemStack().getItemMeta();
         if (itemMeta.getPersistentDataContainer().has(key, PersistentDataType.STRING)) {
-                itemDrop.remove();
+            itemDrop.remove();
         }
     }
 

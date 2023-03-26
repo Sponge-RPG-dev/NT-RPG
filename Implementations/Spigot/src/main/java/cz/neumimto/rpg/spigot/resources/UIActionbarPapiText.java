@@ -23,11 +23,11 @@ public class UIActionbarPapiText implements Consumer<ISpigotCharacter> {
 
     @Override
     public void accept(ISpigotCharacter character) {
-       Player player =  character.getEntity();
+        Player player = character.getEntity();
 
-       if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) {
-           return;
-       }
+        if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) {
+            return;
+        }
 
         Component component = datapackManager.resolveGlyphs(player, pattern);
         player.sendActionBar(component);

@@ -72,7 +72,8 @@ public abstract class SkillService {
     }
 
     public Consumer<NTScript.Builder> getNTSBuilderContext() {
-        return builder -> {};
+        return builder -> {
+        };
     }
 
     public void load() {

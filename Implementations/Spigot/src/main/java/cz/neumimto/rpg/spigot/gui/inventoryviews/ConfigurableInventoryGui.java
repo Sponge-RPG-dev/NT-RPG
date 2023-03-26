@@ -155,7 +155,7 @@ public abstract class ConfigurableInventoryGui extends GuiHelper {
                     pane.bindItem(maskKez, new GuiCommand(i(maskConfig), onClick.command.replaceAll("%ui_param%", param), commandSender));
                 }
             } else {
-                if (!maskConfig.id.toLowerCase().contains("minecraft:air") ) {
+                if (!maskConfig.id.toLowerCase().contains("minecraft:air")) {
                     pane.bindItem(maskKez, new Icon(i(maskConfig)));
                 }
             }

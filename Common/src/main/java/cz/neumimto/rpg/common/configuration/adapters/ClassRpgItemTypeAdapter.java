@@ -27,7 +27,7 @@ public class ClassRpgItemTypeAdapter implements Converter<Set<RpgItemType>, List
                 String clazz = data[1];
                 Set<RpgItemType> itemTypes = Rpg.get().getItemService().getItemTypesByWeaponClass(clazz);
                 for (RpgItemType itemType : itemTypes) {
-                     fromWeaponClass.add(itemType);
+                    fromWeaponClass.add(itemType);
                 }
             } else {
                 ItemString origin = ItemString.parse(s);
