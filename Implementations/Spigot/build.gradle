@@ -39,6 +39,13 @@ repositories {
     maven {
         url = "https://repo.citizensnpcs.co"
     }
+
+    maven {
+        url = "https://repo.extendedclip.com/content/repositories/placeholderapi/"
+        content {
+            includeGroupByRegex "(me\\.clip)"
+        }
+    }
 }
 
 group = 'cz.neumimto.rpg'
@@ -57,6 +64,7 @@ dependencies {
     api project(":Spigot-NMS")
 
 
+
     compileOnly "com.denizenscript:denizen:1.2.3-SNAPSHOT"
     compileOnly("org.spigotmc:plugin-annotations:1.2.3-SNAPSHOT") {
         exclude group: "org.bukkit", module: "bukkit"
@@ -67,12 +75,12 @@ dependencies {
     }
 
     api 'com.elmakers.mine.bukkit:EffectLib:9.4'
-    api 'com.github.stefvanschie.inventoryframework:IF:0.10.8'
-    api 'net.kyori:adventure-platform-bukkit:4.1.1'
+    api 'com.github.stefvanschie.inventoryframework:IF:0.10.9'
+  //  api 'net.kyori:adventure-platform-bukkit:4.1.1'
     api "co.aikar:acf-paper:0.5.1-SNAPSHOT"
 
-    //  compileOnly 'placeholderapi.me.clip:placeholderapi:' + project.papi
-    compileOnly "io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT"
+    compileOnly 'me.clip:placeholderapi:2.9.2'
+    compileOnly "io.papermc.paper:paper-api:1.19.4-R0.1-SNAPSHOT"
     compileOnly "ru.endlesscode.mimic:mimic-bukkit-api:0.8.0"
 
     compileOnly('net.Indyuce:MMOItems:6.7.3') {
@@ -84,10 +92,9 @@ dependencies {
     compileOnly 'io.lumine:Mythic:5.1.0-SNAPSHOT'
 
     //compileOnly 'io.lumine:Mythic-API:' + project.mythicmobs
-    compileOnly 'io.lumine:Mythic-Plugin:5.1.0-SNAPSHOT'
-    compileOnly 'io.lumine:Mythic-Dist:5.1.0-SNAPSHOT'
-    compileOnly 'io.lumine:LumineUtils:1.16.1-SNAPSHOT'
-
+    compileOnly 'io.lumine:Mythic-Plugin:5.2.3'
+    compileOnly 'io.lumine:Mythic-Dist:5.2.3'
+    compileOnly 'io.lumine:LumineUtils:1.19-SNAPSHOT'
     compileOnly 'com.gitlab.SamB440:RPGRegions-2:9e46ca8d'
 
     compileOnly 'net.luckperms:api:5.4'
@@ -102,7 +109,7 @@ dependencies {
 
     testImplementation 'com.github.seeseemelk:MockBukkit-v1.19:2.145.0'
     testImplementation "co.aikar:acf-paper:0.5.1-SNAPSHOT"
-    testImplementation 'com.github.stefvanschie:IF:0.10.8'
+    testImplementation 'com.github.stefvanschie:IF:0.10.9'
     testImplementation 'commons-lang:commons-lang:2.6'
 }
 
