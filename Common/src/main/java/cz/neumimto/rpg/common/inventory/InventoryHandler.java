@@ -5,10 +5,12 @@ import cz.neumimto.rpg.common.effects.EffectParams;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.effects.IGlobalEffect;
 import cz.neumimto.rpg.common.effects.InternalEffectSourceProvider;
+import cz.neumimto.rpg.common.entity.EntityHand;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.items.ItemService;
 import cz.neumimto.rpg.common.items.RpgItemStack;
+import cz.neumimto.rpg.common.permissions.PermissionService;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -31,13 +33,16 @@ public class InventoryHandler implements CharacterInventoryInteractionHandler {
     @Inject
     private CharacterService characterService;
 
+    @Inject
+    private PermissionService permissionService;
+
     @Override
     public boolean handleCharacterEquipActionPre(IActiveCharacter character, ManagedSlot managedSlot, RpgItemStack rpgItemStack) {
         return isValidItemForSlot(managedSlot, rpgItemStack) &&
-                itemService.checkItemType(character, rpgItemStack) &&
+                permissionService.hasPermission(character, rpgItemStack.getItemType().getPermission()) &&
                 itemService.checkItemAttributeRequirements(character, rpgItemStack) &&
                 itemService.checkItemClassRequirements(character, rpgItemStack) &&
-                itemService.checkItemPermission(character, rpgItemStack);
+                itemService.checkItemPermission(character, rpgItemStack, EntityHand.OFF.name());
     }
 
     @Override

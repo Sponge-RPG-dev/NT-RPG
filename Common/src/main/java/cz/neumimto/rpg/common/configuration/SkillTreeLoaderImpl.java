@@ -34,7 +34,7 @@ import static cz.neumimto.rpg.common.logging.Log.*;
  */
 //todo use nightconfig
 @Singleton
-public class SkillTreeLoaderImpl implements SkillTreeDao {
+public class SkillTreeLoaderImpl {
 
     @Inject
     private SkillService skillService;
@@ -51,7 +51,6 @@ public class SkillTreeLoaderImpl implements SkillTreeDao {
     @Inject
     private AssetService assetService;
 
-    @Override
     public Map<String, SkillTree> getAll() {
         Path dir = Paths.get(Rpg.get().getWorkingDirectory());
         FileUtils.createDirectoryIfNotExists(dir);

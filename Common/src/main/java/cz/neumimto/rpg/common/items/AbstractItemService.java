@@ -105,17 +105,6 @@ public abstract class AbstractItemService implements ItemService {
     }
 
     @Override
-    public boolean checkItemType(IActiveCharacter character, RpgItemStack rpgItemStack) {
-        RpgItemType itemType = rpgItemStack.getItemType();
-
-        if (itemType.getItemClass() == ItemClass.ARMOR) {
-            return character.getAllowedArmor().contains(itemType);
-        } else {
-            return character.getAllowedWeapons().contains(itemType);
-        }
-    }
-
-    @Override
     public boolean checkItemAttributeRequirements(IActiveCharacter character, RpgItemStack rpgItemStack) {
         Collection<AttributeConfig> attributes = propertyService.getAttributes().values();
         Map<AttributeConfig, Integer> inventoryRequirements = new HashMap<>();
@@ -312,7 +301,7 @@ public abstract class AbstractItemService implements ItemService {
     }
 
     @Override
-    public boolean checkItemPermission(IActiveCharacter character, RpgItemStack rpgItemStack) {
+    public boolean checkItemPermission(IActiveCharacter character, RpgItemStack rpgItemStack, String permSuffix) {
         String permission = rpgItemStack.getItemType().getPermission();
         if (permission == null) {
             return true;

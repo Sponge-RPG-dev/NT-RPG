@@ -52,15 +52,13 @@ public abstract class AbstractInventoryService<T extends IActiveCharacter> imple
                 ManagedSlot slot = null;
                 if (value.equals(offhandId)) {
                     slot = new FilteredManagedSlotImpl(value,
-                            item -> itemService.checkItemPermission(activeCharacter, item) && activeCharacter.canUse(item.getItemType(), EntityHand.OFF));
+                            item -> itemService.checkItemPermission(activeCharacter, item, EntityHand.OFF.name()));
                 } else if (armorIds.contains(value)) {
                     slot = new FilteredManagedSlotImpl(value,
-                            item -> itemService.checkItemPermission(activeCharacter, item) && activeCharacter.canWear(item.getItemType()));
+                            item -> itemService.checkItemPermission(activeCharacter, item, "armor"));
                 } else if (value >= 0 && value < 9) {
                     slot = new FilteredManagedSlotImpl(value, item
-                            -> itemService.checkItemPermission(activeCharacter, item) && activeCharacter.canUse(item.getItemType(), EntityHand.MAIN));
-                    //                           || item.getItemType().getItemClass() == ItemClass.ARMOR
-                    //                         || item.getItemType().getItemClass() == ItemClass.SHIELD);
+                            -> itemService.checkItemPermission(activeCharacter, item, EntityHand.MAIN.name()));
                 }
                 rpgInventory.getManagedSlots().put(value, slot);
             }

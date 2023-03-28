@@ -1,13 +1,59 @@
 package cz.neumimto.rpg.spigot.permissions;
 
+import cz.neumimto.rpg.common.classes.ClassService;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
+import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
+import cz.neumimto.rpg.common.items.RpgItemType;
 import cz.neumimto.rpg.common.permissions.PermissionService;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
+import cz.neumimto.rpg.spigot.bridges.luckperms.LuckpermsExpansion;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import net.luckperms.api.context.ContextSet;
+import net.luckperms.api.model.group.Group;
+import net.luckperms.api.model.group.GroupManager;
+import net.luckperms.api.model.user.User;
+import net.luckperms.api.node.types.InheritanceNode;
+import net.luckperms.api.node.types.PermissionNode;
 import org.bukkit.entity.Player;
 
+import javax.inject.Inject;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class SpigotPermissionService implements PermissionService<ISpigotCharacter> {
+
+    private static final String CLASS_PERM_PREFIX = "ntrpg_internal_class_";
+    @Inject
+    private ClassService classService;
+
+    private String getGroupForClass(ClassDefinition c) {
+        return CLASS_PERM_PREFIX + c.getName();
+    }
+
+    public void init() {
+        GroupManager groupManager = LuckpermsExpansion.luckPerms.getGroupManager();
+        groupManager.getLoadedGroups()
+                .forEach(group -> {
+                    if (group.getName().startsWith(CLASS_PERM_PREFIX)) {
+                        groupManager.deleteGroup(group).join();
+                    }
+                });
+
+        classService.getClasses().values().forEach(classDefinition -> {
+            String gName = getGroupForClass(classDefinition);
+
+            groupManager.modifyGroup(gName, group -> {
+                        classDefinition.getAllowedArmor().forEach(item -> group.transientData().add(PermissionNode.builder(item.getPermission()).build()));
+                        classDefinition.getWeapons().forEach(item -> group.transientData().add(PermissionNode.builder(item.getPermission()).build()));
+                        classDefinition.getOffHandWeapons().forEach(item -> group.transientData().add(PermissionNode.builder(item.getPermission()+"_1").build()));
+                    })
+                    .join();
+        });
+
+    }
 
     @Override
     public boolean hasPermission(ISpigotCharacter character, String value) {
@@ -30,4 +76,14 @@ public class SpigotPermissionService implements PermissionService<ISpigotCharact
         }
     }
 
+    @Override
+    public void refreshPermGroups(ISpigotCharacter tpActiveCharacter) {
+        User user = LuckpermsExpansion.luckPerms.getUserManager().getUser(tpActiveCharacter.getUUID());
+        user.transientData().clear(node -> node instanceof InheritanceNode i && i.getGroupName().startsWith(CLASS_PERM_PREFIX));
+        Map<String, PlayerClassData> classes = tpActiveCharacter.getClasses();
+        for (Map.Entry<String, PlayerClassData> e : classes.entrySet()) {
+            String group = getGroupForClass(e.getValue().getClassDefinition());
+            user.transientData().add(InheritanceNode.builder(group).build());
+        }
+    }
 }

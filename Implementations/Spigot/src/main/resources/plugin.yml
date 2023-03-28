@@ -14,7 +14,7 @@ softdepend:
   - Oraxen
   - ItemsAdder
   - Denizen
-api-version: 1.18
+api-version: 1.19
 libraries:
   - 'net.bytebuddy:byte-buddy:1.12.1'
   #  - 'com.github.stefvanschie.inventoryframework:IF:0.10.8'

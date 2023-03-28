@@ -3,16 +3,16 @@ package cz.neumimto.rpg.spigot.listeners;
 import com.google.auto.service.AutoService;
 import cz.neumimto.rpg.common.ResourceLoader;
 import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.entity.EntityHand;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.gui.Gui;
 import cz.neumimto.rpg.common.inventory.InventoryHandler;
 import cz.neumimto.rpg.common.inventory.ManagedSlot;
 import cz.neumimto.rpg.common.inventory.RpgInventory;
-import cz.neumimto.rpg.common.items.ItemClass;
 import cz.neumimto.rpg.common.items.RpgItemStack;
-import cz.neumimto.rpg.common.items.RpgItemType;
 import cz.neumimto.rpg.common.localization.LocalizationKeys;
 import cz.neumimto.rpg.common.localization.LocalizationService;
+import cz.neumimto.rpg.common.permissions.PermissionService;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.skills.SkillService;
 import cz.neumimto.rpg.spigot.SpigotRpg;
@@ -77,6 +77,9 @@ public class SpigotInventoryListener implements IRpgListener {
 
     @Inject
     private SpigotRpg spigotRpg;
+
+    @Inject
+    private PermissionService permissionService;
 
     private static final int OFFHAND_SLOT_ID = 40;
 
@@ -240,42 +243,37 @@ public class SpigotInventoryListener implements IRpgListener {
 
     }
 
-
     @EventHandler
-    public void onHotbarInteract(PlayerInteractEvent event) {
-        if (spigotRpg.isDisabledInWorld(event.getPlayer())) {
+    public void onPlayerInteract(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        if (event.getAction() == Action.PHYSICAL) {
             return;
         }
-        Player player = event.getPlayer();
         if (player.getGameMode() == GameMode.CREATIVE) {
             return;
         }
+        ItemStack itemStack = event.getItem();
+        if (itemStack == null) {
+            return;
+        }
+        if (spigotRpg.isDisabledInWorld(event.getPlayer())) {
+            return;
+        }
+
         ISpigotCharacter character = spigotCharacterService.getCharacter(player);
         if (character.isStub()) {
             return;
         }
 
-        ItemStack itemStack = event.getItem();
-        PlayerInventory inventory = player.getInventory();
+        itemService.getRpgItemType(itemStack).ifPresent(rpgItemType -> {
+            if (!player.hasPermission(rpgItemType.getPermission())) {
+                ItemStack item = player.getInventory().getItem(event.getHand());
+                player.getInventory().setItem(event.getHand(), null);
+                player.getLocation().getWorld().dropItemNaturally(player.getLocation(), item);
 
-        int selectedSlotIndex = inventory.getHeldItemSlot();
-
-        if (itemStack != null) {
-
-            RpgItemType rpgItemType = null;
-            if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                Optional<RpgItemType> optType = itemService.getRpgItemType(itemStack);
-                if (optType.isPresent()) {
-                    rpgItemType = optType.get();
-                    if (rpgItemType.getItemClass() == ItemClass.ARMOR) {
-                        event.setCancelled(true);
-                        return;
-                    }
-                }
+                event.setCancelled(true);
             }
-
-
-        }
+        });
 
     }
 
@@ -380,14 +378,17 @@ public class SpigotInventoryListener implements IRpgListener {
         if (itemStack.isPresent()) {
             RpgItemStack rpgItemStack = itemStack.get();
 
-            boolean canUse = itemService.checkItemType(character, rpgItemStack) &&
+            boolean canUse = permissionService.hasPermission(character, rpgItemStack.getItemType().getPermission()) &&
                     itemService.checkItemAttributeRequirements(character, rpgItemStack) &&
                     itemService.checkItemClassRequirements(character, rpgItemStack) &&
-                    itemService.checkItemPermission(character, rpgItemStack);
+                    itemService.checkItemPermission(character, rpgItemStack, EntityHand.MAIN.name());
 
             if (!canUse) {
                 int size = inventory.getSize();
                 for (int i = 8; i < size - 1; i++) {
+                    if (i == player.getInventory().getHeldItemSlot()) {
+                        continue;
+                    }
                     ItemStack item1 = inventory.getItem(i);
                     if (item1 == null) {
                         inventory.setItem(i, itemStackToBePickedUp);

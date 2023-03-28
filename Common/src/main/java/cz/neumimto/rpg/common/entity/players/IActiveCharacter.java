@@ -93,10 +93,6 @@ public interface IActiveCharacter<T, P extends IParty> extends IEntity<T> {
 
     boolean hasCooldown(String thing);
 
-    Set<RpgItemType> getAllowedArmor();
-
-    boolean canWear(RpgItemType armor);
-
     Set<RpgItemType> getAllowedWeapons();
 
     Map<String, Double> getProjectileDamages();
@@ -144,8 +140,6 @@ public interface IActiveCharacter<T, P extends IParty> extends IEntity<T> {
     P getPendingPartyInvite();
 
     void setPendingPartyInvite(P party);
-
-    boolean canUse(RpgItemType weaponItemType, EntityHand h);
 
     boolean hasPreferedDamageType();
 

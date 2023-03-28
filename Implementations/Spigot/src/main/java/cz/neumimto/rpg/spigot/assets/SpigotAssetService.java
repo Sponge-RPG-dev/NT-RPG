@@ -66,7 +66,7 @@ public class SpigotAssetService extends AssetService {
                 });
 
 
-        copyToFileIfMissing("gui/Resources.conf", root.resolve("Resources.conf"));
+        copyToFileIfMissing("Resources.conf", root.resolve("Resources.conf"));
     }
 
 }

@@ -1,6 +1,8 @@
 package cz.neumimto.rpg.common.permissions;
 
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.party.IParty;
 
 import java.util.Collection;
 
@@ -12,4 +14,5 @@ public interface PermissionService<T extends IActiveCharacter> {
 
     void addPermissions(T character, Collection<String> perms);
 
+    void refreshPermGroups(T tpActiveCharacter);
 }

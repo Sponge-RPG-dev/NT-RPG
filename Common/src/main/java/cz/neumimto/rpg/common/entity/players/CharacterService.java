@@ -204,22 +204,6 @@ public abstract class CharacterService<T extends IActiveCharacter> {
         return characterBase;
     }
 
-    public void updateWeaponRestrictions(T character) {
-        Set<RpgItemType> weapons = character.getAllowedWeapons();
-        CharacterWeaponUpdateEvent event = eventFactoryService.createEventInstance(CharacterWeaponUpdateEvent.class);
-        event.setWeapons(weapons);
-        event.setTarget(character);
-        Rpg.get().postEvent(event);
-    }
-
-    public void updateArmorRestrictions(T character) {
-        Set allowedArmor = character.getAllowedArmor();
-        EventCharacterArmorPostUpdate event = eventFactoryService.createEventInstance(EventCharacterArmorPostUpdate.class);
-        event.setArmor(allowedArmor);
-        event.setTarget(character);
-        Rpg.get().postEvent(event);
-    }
-
 
     /**
      * Gets list of player's character
@@ -374,8 +358,7 @@ public abstract class CharacterService<T extends IActiveCharacter> {
 
     public void invalidateCaches(final T activeCharacter) {
         activeCharacter.updateItemRestrictions();
-        updateArmorRestrictions(activeCharacter);
-        updateWeaponRestrictions(activeCharacter);
+        permissionService.refreshPermGroups(activeCharacter);
         updateAttributes(activeCharacter);
         entityService.updateWalkSpeed(activeCharacter);
     }

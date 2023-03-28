@@ -3,6 +3,8 @@ package cz.neumimto.rpg.common.configuration;
 import cz.neumimto.rpg.common.logging.Log;
 
 public final class ItemString {
+    public static final String permPrefix = "ntrpg.useitem.";
+
     public final String itemId;
     public final String variant;
     public final String permission;
@@ -32,6 +34,9 @@ public final class ItemString {
                 }
             }
         }
+        if (permission == null) {
+            permission = permPrefix + id.replaceAll(":",".");
+        }
         return new ItemString(id.toLowerCase(), model, permission);
     }
 
@@ -41,10 +46,4 @@ public final class ItemString {
         return Integer.parseInt(variant);
     }
 
-    public static class InvalidItemStringException extends RuntimeException {
-
-        private InvalidItemStringException(String s) {
-            super(s);
-        }
-    }
 }

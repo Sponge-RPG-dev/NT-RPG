@@ -83,8 +83,6 @@ public class CharactersExtension implements ParameterResolver {
                 weaponClass -> weaponClass.getItemType().getItemClass() == TestDictionary.WEAPON_CLASS_1);
 
 
-        activeCharacter.getAllowedWeapons().add(TestDictionary.ITEM_TYPE_WEAPON_1);
-        activeCharacter.getAllowedArmor().add(TestDictionary.ARMOR_TYPE_1);
         activeCharacter.getManagedInventory().put(Object.class, new RpgInventoryImpl());
         activeCharacter.getManagedInventory().get(Object.class).getManagedSlots().put(managedSlot.getId(), managedSlot);
         activeCharacter.getManagedInventory().get(Object.class).getManagedSlots().put(filteredSlot.getId(), filteredSlot);

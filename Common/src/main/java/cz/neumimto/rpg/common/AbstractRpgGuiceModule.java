@@ -2,8 +2,6 @@ package cz.neumimto.rpg.common;
 
 import com.google.inject.AbstractModule;
 import cz.neumimto.rpg.common.classes.ClassService;
-import cz.neumimto.rpg.common.configuration.SkillTreeDao;
-import cz.neumimto.rpg.common.configuration.SkillTreeLoaderImpl;
 import cz.neumimto.rpg.common.entity.PropertyService;
 import cz.neumimto.rpg.common.exp.ExperienceDAO;
 import cz.neumimto.rpg.common.gui.Gui;
@@ -18,7 +16,6 @@ public class AbstractRpgGuiceModule extends AbstractModule {
 
     protected <T> Map<Class<T>, Class<? extends T>> getBindings() {
         Map map = new HashMap<>();
-        map.put(SkillTreeDao.class, SkillTreeLoaderImpl.class);
         map.put(PropertyService.class, null);
         map.put(ClassService.class, null);
         map.put(ClassDefinitionDao.class, null);

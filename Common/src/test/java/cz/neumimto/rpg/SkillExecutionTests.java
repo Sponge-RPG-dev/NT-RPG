@@ -1,7 +1,6 @@
 package cz.neumimto.rpg;
 
 import com.google.inject.Injector;
-import cz.neumimto.rpg.common.configuration.SkillTreeDao;
 import cz.neumimto.rpg.common.entity.CommonProperties;
 import cz.neumimto.rpg.common.entity.EntityService;
 import cz.neumimto.rpg.common.entity.PropertyService;
@@ -31,9 +30,6 @@ import static cz.neumimto.rpg.junit.CharactersExtension.Stage.Stages.READY;
 @ExtendWith({NtRpgExtension.class, GuiceExtension.class, CharactersExtension.class})
 @IncludeModule(TestGuiceModule.class)
 public class SkillExecutionTests {
-
-    @Inject
-    private SkillTreeDao skillTreeDao;
 
     @Inject
     private SkillService skillService;

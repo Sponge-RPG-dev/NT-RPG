@@ -58,14 +58,8 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
 
     private transient Map<String, IEffectContainer<Object, IEffect<Object>>> effects = new HashMap<>();
     private final IPlayerSkillHandler skills;
-
-    private transient final Set<RpgItemType> allowedArmorIds = new HashSet<>();
-
-    private transient final Set<RpgItemType> allowedWeapons = new HashSet<>();
     private transient final Object2DoubleOpenHashMap<String> projectileDamage = new Object2DoubleOpenHashMap<>(30);
     private final Object2LongOpenHashMap<String> cooldowns = new Object2LongOpenHashMap<>(10);
-
-    private transient final Set<RpgItemType> allowedOffHandWeapons = new HashSet<>();
 
     private transient WeakReference<P> pendingPartyInvite = new WeakReference<>(null);
     private transient String preferedDamageType = null;
@@ -283,18 +277,9 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
 
         Log.info("Updating item restrictions " + getName());
 
-        allowedWeapons.clear();
-        allowedOffHandWeapons.clear();
-        allowedArmorIds.clear();
+        Rpg.get().getPermissionService().refreshPermGroups(this);
+
         getProjectileDamages().clear();
-
-
-        for (PlayerClassData clazz : classes.values()) {
-            ClassDefinition classDefinition = clazz.getClassDefinition();
-            allowedOffHandWeapons.addAll(classDefinition.getOffHandWeapons());
-            allowedArmorIds.addAll(classDefinition.getAllowedArmor());
-            allowedWeapons.addAll(classDefinition.getWeapons());
-        }
 
         for (PlayerSkillContext skillContext : getSkills().values()) {
             if (skillContext.getSkill().getType() == EffectSourceType.ITEM_ACCESS_SKILL) {
@@ -313,31 +298,6 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
             }
         }
         return this;
-    }
-
-    @Override
-    public Set<RpgItemType> getAllowedArmor() {
-        return allowedArmorIds;
-    }
-
-    @Override
-    public boolean canWear(RpgItemType armor) {
-        return getAllowedArmor().contains(armor);
-    }
-
-    @Override
-    public boolean canUse(RpgItemType weaponItemType, EntityHand h) {
-        if (h == EntityHand.MAIN) {
-            return allowedWeapons.contains(weaponItemType);
-        } else {
-            return allowedOffHandWeapons.contains(weaponItemType);
-        }
-    }
-
-
-    @Override
-    public Set<RpgItemType> getAllowedWeapons() {
-        return allowedWeapons;
     }
 
     @Override

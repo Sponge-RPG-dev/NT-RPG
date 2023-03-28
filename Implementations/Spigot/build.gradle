@@ -76,7 +76,7 @@ dependencies {
 
     api 'com.elmakers.mine.bukkit:EffectLib:9.4'
     api 'com.github.stefvanschie.inventoryframework:IF:0.10.9'
-  //  api 'net.kyori:adventure-platform-bukkit:4.1.1'
+    api 'net.kyori:adventure-platform-bukkit:4.3.0'
     api "co.aikar:acf-paper:0.5.1-SNAPSHOT"
 
     compileOnly 'me.clip:placeholderapi:2.9.2'
@@ -114,7 +114,6 @@ dependencies {
 }
 
 shadowJar {
-    archiveFileName = "NT-RPG-${p_spigot_version}.jar"
 
     relocate 'co.aikar.commands', 'rpgshaded.acf'
     relocate 'co.aikar.locales', 'rpgshaded.locales'

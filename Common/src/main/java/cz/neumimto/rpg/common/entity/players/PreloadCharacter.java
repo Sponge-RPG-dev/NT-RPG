@@ -107,11 +107,6 @@ public abstract class PreloadCharacter<T, P extends IParty> implements IActiveCh
     }
 
     @Override
-    public boolean canUse(RpgItemType weaponItemType, EntityHand type) {
-        return false;
-    }
-
-    @Override
     public boolean hasPreferedDamageType() {
         return false;
     }
@@ -171,16 +166,6 @@ public abstract class PreloadCharacter<T, P extends IParty> implements IActiveCh
         return true;
     }
 
-
-    @Override
-    public Set<RpgItemType> getAllowedArmor() {
-        return Collections.emptySet();
-    }
-
-    @Override
-    public boolean canWear(RpgItemType armor) {
-        return false;
-    }
 
     @Override
     public Set<RpgItemType> getAllowedWeapons() {

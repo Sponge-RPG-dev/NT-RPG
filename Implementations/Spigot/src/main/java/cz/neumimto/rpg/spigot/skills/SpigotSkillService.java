@@ -95,7 +95,7 @@ public class SpigotSkillService extends SkillService {
         ));
 
         super.load();
-        skillTrees.putAll(skillTreeDao.getAll());
+        skillTrees.putAll(skillTreeLoader.getAll());
     }
 
     @Override

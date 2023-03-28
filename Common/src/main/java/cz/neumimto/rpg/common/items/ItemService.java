@@ -39,13 +39,11 @@ public interface ItemService {
 
     void loadItemGroups(Config c);
 
-    boolean checkItemType(IActiveCharacter character, RpgItemStack rpgItemStack);
-
     boolean checkItemAttributeRequirements(IActiveCharacter character, RpgItemStack rpgItemStack);
 
     boolean checkItemClassRequirements(IActiveCharacter character, RpgItemStack rpgItemStack);
 
     void registerItemAttributes(Collection<AttributeConfig> attributes);
 
-    boolean checkItemPermission(IActiveCharacter character, RpgItemStack rpgItemStack);
+    boolean checkItemPermission(IActiveCharacter character, RpgItemStack rpgItemStack, String permSuffix);
 }

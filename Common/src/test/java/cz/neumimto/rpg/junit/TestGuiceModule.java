@@ -14,8 +14,6 @@ import cz.neumimto.rpg.common.RpgApi;
 import cz.neumimto.rpg.common.TestPartyService;
 import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.classes.ClassService;
-import cz.neumimto.rpg.common.configuration.SkillTreeDao;
-import cz.neumimto.rpg.common.configuration.SkillTreeLoaderImpl;
 import cz.neumimto.rpg.common.damage.DamageService;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.entity.EntityService;
@@ -66,7 +64,6 @@ public class TestGuiceModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(SkillTreeDao.class).to(SkillTreeLoaderImpl.class);
         bind(EffectService.class).to(TestEffectService.class);
         bind(SkillService.class).to(TestSkillService.class);
         bind(PropertyService.class).to(TestPropertyService.class);

@@ -11,7 +11,7 @@ import cz.neumimto.nts.NTScript;
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.classes.ClassService;
-import cz.neumimto.rpg.common.configuration.SkillTreeDao;
+import cz.neumimto.rpg.common.configuration.SkillTreeLoaderImpl;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.gui.ISkillTreeInterfaceModel;
 import cz.neumimto.rpg.common.logging.Log;
@@ -51,7 +51,7 @@ public abstract class SkillService {
     protected Map<String, ISkillType> skillTypes = new HashMap<>();
 
     @Inject
-    protected SkillTreeDao skillTreeDao;
+    protected SkillTreeLoaderImpl skillTreeLoader;
 
     @Inject
     protected ClassService classService;
