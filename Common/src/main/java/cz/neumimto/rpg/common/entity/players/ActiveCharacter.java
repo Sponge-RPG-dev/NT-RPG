@@ -24,6 +24,7 @@ import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
 
 import java.lang.ref.WeakReference;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -66,10 +67,6 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
 
     private transient final Map<String, Integer> transientAttributes = new HashMap<>();
 
-    private transient List<Integer> slotsToReinitialize;
-
-    private Set<EquipedSlot> denySlotInteractionArr;
-
     private Set<SkillTreeSpecialization> specs = new HashSet<>();
 
     private transient Map<String, Integer> attributeSession = new HashMap<>();
@@ -78,7 +75,6 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
 
     private transient PlayerClassData primaryClass;
 
-    private int lastHotbarSlotInteraction = -1;
     private InterruptableSkillPreprocessor channeledSkill;
 
     private Map<String, Integer> attrTransaction;
@@ -95,8 +91,6 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
         this.secondaryProperties = new double[propertyCount];
         this.base = base;
         this.skills = new PlayerSkillHandlers.SHARED();
-        this.slotsToReinitialize = new ArrayList<>();
-        this.denySlotInteractionArr = new HashSet<>();
         this.inventory = new HashMap<>();
         this.attrTransaction = new HashMap<>();
         this.skillUpgradeObserver = new SkillTreeChangeObserver(this);
@@ -287,12 +281,9 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
                 Map<Integer, Set<RpgItemType>> items = skillData.getItems();
                 for (Map.Entry<Integer, Set<RpgItemType>> ent : items.entrySet()) {
                     if (ent.getKey() <= getLevel()) {
-                        for (RpgItemType rpgItemType : ent.getValue()) {
-                            //todo somehow distinguish, maybe in config of item access skill specify slot
-                            allowedWeapons.add(rpgItemType);
-                            allowedOffHandWeapons.add(rpgItemType);
-                            allowedArmorIds.add(rpgItemType);
-                        }
+                        Collection<String> collect = ent.getValue().stream().map(RpgItemType::getPermission).toList();
+                        //todo somehow distinguish, maybe in config of item access skill specify slot
+                        Rpg.get().getPermissionService().addPermissions(this, collect);
                     }
                 }
             }
@@ -452,16 +443,6 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
     }
 
     @Override
-    public List<Integer> getSlotsToReinitialize() {
-        return slotsToReinitialize;
-    }
-
-    @Override
-    public void setSlotsToReinitialize(List<Integer> slotsToReinitialize) {
-        this.slotsToReinitialize = slotsToReinitialize;
-    }
-
-    @Override
     public boolean isFriendlyTo(IActiveCharacter character) {
         if (character == this) {
             return true;
@@ -489,11 +470,6 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
     @Override
     public Set<SkillTreeSpecialization> getSkillTreeSpecialization() {
         return Collections.unmodifiableSet(specs);
-    }
-
-    @Override
-    public Set<EquipedSlot> getSlotsCannotBeEquiped() {
-        return denySlotInteractionArr;
     }
 
     @Override

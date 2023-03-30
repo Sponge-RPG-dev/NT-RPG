@@ -38,6 +38,7 @@ import de.slikey.effectlib.EffectManager;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
+import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -67,6 +68,7 @@ import static net.kyori.adventure.text.format.NamedTextColor.GOLD;
 
 public class SpigotRpgPlugin extends JavaPlugin implements Listener {
 
+    private static LuckPerms luckPerms;
     private static SpigotRpgPlugin plugin;
 
     private static EffectManager effectManager;
@@ -79,7 +81,6 @@ public class SpigotRpgPlugin extends JavaPlugin implements Listener {
 
     //Disable inventories due to nbtapi
     public static boolean testEnv;
-    private File dataFolder;
     private static Injector injector;
 
     public static List<String> activeHooks = new ArrayList<>();
@@ -104,8 +105,14 @@ public class SpigotRpgPlugin extends JavaPlugin implements Listener {
 
     private ItemsAdderIsRetarded iaCallbackListener/*?*/;
 
+    public static LuckPerms getLuckPerms() {
+        return luckPerms;
+    }
+
     @Override
     public void onEnable() {
+
+        luckPerms = Bukkit.getServer().getServicesManager().load(LuckPerms.class);
 
         Log.setLogger(getLogger());
 
@@ -341,5 +348,14 @@ public class SpigotRpgPlugin extends JavaPlugin implements Listener {
         Bukkit.getConsoleSender().sendMessage(colorInput.apply(" ██║ ╚████║  ██║  ██║  ████║    ╚██████╔╝"));
         Bukkit.getConsoleSender().sendMessage(colorInput.apply(" ╚═╝  ╚═══╝  ╚═╝  ╚═╝  ╚═╚═╝     ╚═════╝ "));
         Bukkit.getConsoleSender().sendMessage(empty());
+    }
+
+    private static boolean isFolia() {
+        try {
+            Class.forName("io.papermc.paper.threadedregions.RegionisedServer");
+            return true;
+        } catch (ClassNotFoundException e) {
+            return true;
+        }
     }
 }

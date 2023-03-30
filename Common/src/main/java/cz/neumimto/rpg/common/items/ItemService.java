@@ -46,4 +46,6 @@ public interface ItemService {
     void registerItemAttributes(Collection<AttributeConfig> attributes);
 
     boolean checkItemPermission(IActiveCharacter character, RpgItemStack rpgItemStack, String permSuffix);
+
+    Set<RpgItemType> filterAllowedItems(IActiveCharacter playerId, Set<String> itemClass);
 }

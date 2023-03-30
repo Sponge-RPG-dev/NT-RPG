@@ -93,8 +93,6 @@ public interface IActiveCharacter<T, P extends IParty> extends IEntity<T> {
 
     boolean hasCooldown(String thing);
 
-    Set<RpgItemType> getAllowedWeapons();
-
     Map<String, Double> getProjectileDamages();
 
     CharacterBase getCharacterBase();
@@ -169,10 +167,6 @@ public interface IActiveCharacter<T, P extends IParty> extends IEntity<T> {
 
     boolean hasClass(ClassDefinition configClass);
 
-    List<Integer> getSlotsToReinitialize();
-
-    void setSlotsToReinitialize(List<Integer> slotsToReinitialize);
-
     void addSkillTreeSpecialization(SkillTreeSpecialization specialization);
 
     void removeSkillTreeSpecialization(SkillTreeSpecialization specialization);
@@ -180,8 +174,6 @@ public interface IActiveCharacter<T, P extends IParty> extends IEntity<T> {
     boolean hasSkillTreeSpecialization(SkillTreeSpecialization specialization);
 
     Set<SkillTreeSpecialization> getSkillTreeSpecialization();
-
-    Set<EquipedSlot> getSlotsCannotBeEquiped();
 
     double getExperienceBonusFor(String dimmension, String type);
 

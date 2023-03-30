@@ -1,16 +1,11 @@
 package cz.neumimto.rpg.spigot.permissions;
 
 import cz.neumimto.rpg.common.classes.ClassService;
-import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
-import cz.neumimto.rpg.common.items.RpgItemType;
 import cz.neumimto.rpg.common.permissions.PermissionService;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
-import cz.neumimto.rpg.spigot.bridges.luckperms.LuckpermsExpansion;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
-import net.luckperms.api.context.ContextSet;
-import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.group.GroupManager;
 import net.luckperms.api.model.user.User;
 import net.luckperms.api.node.types.InheritanceNode;
@@ -19,9 +14,7 @@ import org.bukkit.entity.Player;
 
 import javax.inject.Inject;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 public class SpigotPermissionService implements PermissionService<ISpigotCharacter> {
 
@@ -34,7 +27,7 @@ public class SpigotPermissionService implements PermissionService<ISpigotCharact
     }
 
     public void init() {
-        GroupManager groupManager = LuckpermsExpansion.luckPerms.getGroupManager();
+        GroupManager groupManager = SpigotRpgPlugin.getLuckPerms().getGroupManager();
         groupManager.getLoadedGroups()
                 .forEach(group -> {
                     if (group.getName().startsWith(CLASS_PERM_PREFIX)) {
@@ -78,7 +71,7 @@ public class SpigotPermissionService implements PermissionService<ISpigotCharact
 
     @Override
     public void refreshPermGroups(ISpigotCharacter tpActiveCharacter) {
-        User user = LuckpermsExpansion.luckPerms.getUserManager().getUser(tpActiveCharacter.getUUID());
+        User user = SpigotRpgPlugin.getLuckPerms().getUserManager().getUser(tpActiveCharacter.getUUID());
         user.transientData().clear(node -> node instanceof InheritanceNode i && i.getGroupName().startsWith(CLASS_PERM_PREFIX));
         Map<String, PlayerClassData> classes = tpActiveCharacter.getClasses();
         for (Map.Entry<String, PlayerClassData> e : classes.entrySet()) {

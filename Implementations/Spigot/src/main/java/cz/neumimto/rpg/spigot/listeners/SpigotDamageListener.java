@@ -5,7 +5,6 @@ import com.google.inject.Singleton;
 import cz.neumimto.rpg.common.ResourceLoader;
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.configuration.PluginConfig;
-import cz.neumimto.rpg.common.damage.AbstractDamageListener;
 import cz.neumimto.rpg.common.entity.IEntity;
 import cz.neumimto.rpg.common.entity.IEntityType;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
@@ -44,7 +43,7 @@ import javax.inject.Inject;
 @Singleton
 @AutoService({IRpgListener.class})
 @ResourceLoader.ListenerClass
-public class SpigotDamageListener extends AbstractDamageListener implements IRpgListener {
+public class SpigotDamageListener implements IRpgListener {
 
     @Inject
     private SpigotEntityService entityService;

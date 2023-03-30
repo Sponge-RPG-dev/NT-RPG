@@ -308,6 +308,14 @@ public abstract class AbstractItemService implements ItemService {
         }
         return permissionService.hasPermission(character, permission);
     }
+
+    @Override
+    public Set<RpgItemType> filterAllowedItems(IActiveCharacter character, Set<String> itemClass) {
+        return items.values().stream()
+                .filter(a->itemClass.contains(a.getItemClass().getName()))
+                .filter(a->permissionService.hasPermission(character, a.getPermission()))
+                .collect(Collectors.toSet());
+    }
 }
 
 

@@ -166,12 +166,6 @@ public abstract class PreloadCharacter<T, P extends IParty> implements IActiveCh
         return true;
     }
 
-
-    @Override
-    public Set<RpgItemType> getAllowedWeapons() {
-        return Collections.emptySet();
-    }
-
     @Override
     public Map<String, Double> getProjectileDamages() {
         return Collections.emptyMap();
@@ -319,16 +313,6 @@ public abstract class PreloadCharacter<T, P extends IParty> implements IActiveCh
         return false;
     }
 
-    @Override
-    public List<Integer> getSlotsToReinitialize() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public void setSlotsToReinitialize(List<Integer> slotsToReinitialize) {
-
-    }
-
 
     @Override
     public boolean isDetached() {
@@ -367,11 +351,6 @@ public abstract class PreloadCharacter<T, P extends IParty> implements IActiveCh
 
     @Override
     public Set<SkillTreeSpecialization> getSkillTreeSpecialization() {
-        return Collections.emptySet();
-    }
-
-    @Override
-    public Set<EquipedSlot> getSlotsCannotBeEquiped() {
         return Collections.emptySet();
     }
 
