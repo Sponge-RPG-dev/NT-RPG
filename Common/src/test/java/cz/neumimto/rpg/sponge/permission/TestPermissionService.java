@@ -17,6 +17,11 @@ public class TestPermissionService implements PermissionService {
     }
 
     @Override
+    public void refreshPermGroups(IActiveCharacter tpActiveCharacter) {
+
+    }
+
+    @Override
     public void addPermissions(IActiveCharacter character, Collection perms) {
 
     }

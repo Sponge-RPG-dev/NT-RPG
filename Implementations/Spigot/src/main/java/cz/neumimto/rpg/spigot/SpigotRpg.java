@@ -129,6 +129,7 @@ public final class SpigotRpg extends AbstractRpg {
                         e.printStackTrace();
                     }
                 });
+        getPermissionService().init();
     }
 
     public boolean isDisabledInWorld(Entity entity) {

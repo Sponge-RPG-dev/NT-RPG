@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.spigot.resources;
 
 import com.google.inject.Injector;
-import cz.neumimto.rpg.common.ResourceManagerImpl;
+import cz.neumimto.rpg.common.ResourceLoader;
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.spigot.services.IRpgListener;
 
@@ -9,7 +9,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class SpigotResourceManager extends ResourceManagerImpl {
+public class SpigotResourceLoader extends ResourceLoader {
 
     @Inject
     private Injector injector;

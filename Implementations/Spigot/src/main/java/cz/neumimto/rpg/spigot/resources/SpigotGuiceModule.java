@@ -76,7 +76,7 @@ public class SpigotGuiceModule extends AbstractRpgGuiceModule {
         map.put(PermissionService.class, SpigotPermissionService.class);
         map.put(EventFactoryService.class, SpigotEventFactory.class);
         map.put(CharacterInventoryInteractionHandler.class, InventoryHandler.class);
-        map.put(ResourceLoader.class, SpigotResourceManager.class);
+        map.put(ResourceLoader.class, SpigotResourceLoader.class);
         map.put(CharacterService.class, SpigotCharacterService.class);
         map.put(ResourceService.class, SpigotResourceService.class);
 

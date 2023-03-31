@@ -5,7 +5,6 @@ import cz.neumimto.rpg.common.RpgApi;
 import cz.neumimto.rpg.common.classes.ClassService;
 import cz.neumimto.rpg.common.entity.PropertyService;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
-import cz.neumimto.rpg.common.items.ItemService;
 import cz.neumimto.rpg.junit.NtRpgExtension;
 import cz.neumimto.rpg.junit.TestDictionary;
 import cz.neumimto.rpg.junit.TestGuiceModule;

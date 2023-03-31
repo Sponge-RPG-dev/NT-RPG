@@ -22,7 +22,6 @@ import cz.neumimto.rpg.common.events.EventFactoryService;
 import cz.neumimto.rpg.common.events.character.*;
 import cz.neumimto.rpg.common.gui.Gui;
 import cz.neumimto.rpg.common.inventory.InventoryService;
-import cz.neumimto.rpg.common.items.RpgItemType;
 import cz.neumimto.rpg.common.localization.Arg;
 import cz.neumimto.rpg.common.localization.LocalizationKeys;
 import cz.neumimto.rpg.common.localization.LocalizationService;
@@ -59,13 +58,13 @@ import static cz.neumimto.rpg.common.logging.Log.warn;
  */
 public abstract class CharacterService<T extends IActiveCharacter> {
 
+    protected Map<UUID, T> characters;
     @Inject
     protected IPlayerDao playerDao;
     @Inject
     protected InventoryService inventoryService;
     @Inject
     protected EffectService effectService;
-    protected Map<UUID, T> characters = new HashMap<>();
     @Inject
     private SkillService skillService;
     @Inject

@@ -19,6 +19,10 @@ public class TestCharacterService extends CharacterService<TestCharacter> {
 
     private Map<UUID, TestCharacter> characterMap = new HashMap<>();
 
+    public TestCharacterService() {
+        super(characters);
+    }
+
 
     @Override
     protected boolean hasCharacter(UUID uniqueId) {

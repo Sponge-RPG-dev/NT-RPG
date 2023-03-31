@@ -206,14 +206,14 @@ public class SpigotGui implements IPlayerMessage<ISpigotCharacter> {
     @Override
     public void displayCharacterArmor(ISpigotCharacter character, int page) {
         Player player = character.getPlayer();
-        ChestGui chestGui = WeaponGuiView.get(player);
+        ChestGui chestGui = ArmorGuiView.get(player);
         chestGui.show(player);
     }
 
     @Override
     public void displayCharacterWeapons(ISpigotCharacter character, int page) {
         Player player = character.getPlayer();
-        ChestGui chestGui = ArmorGuiView.get(player);
+        ChestGui chestGui = WeaponGuiView.get(player);
         chestGui.show(player);
     }
 

@@ -266,7 +266,7 @@ public class TestApiImpl implements RpgApi {
     }
 
     @Override
-    public void init(Path workingDirPath, Object commandManager, Class[] commandClasses, RpgAddon defaultStorageImpl, BiFunction<Map, Map<Class<?>, ?>, Module> fnInjProv, Consumer<Injector> injectorc) {
+    public void init(Path workingDirPath, Object commandManager, Collection commandClasses, RpgAddon defaultStorageImpl, BiFunction<Map, Map<Class<?>, ?>, Module> fnInjProv, Consumer<Injector> injectorc) {
 
     }
 

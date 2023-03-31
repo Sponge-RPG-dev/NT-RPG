@@ -15,7 +15,7 @@ import cz.neumimto.rpg.spigot.bridges.NtRpgPlaceholderExpansion;
 import cz.neumimto.rpg.spigot.bridges.denizen.DenizenHook;
 import cz.neumimto.rpg.spigot.bridges.itemsadder.ItemsAdderHook;
 import cz.neumimto.rpg.spigot.bridges.itemsadder.ItemsAdderIsRetarded;
-import cz.neumimto.rpg.spigot.bridges.luckperms.LuckpermsExpansion;
+import cz.neumimto.rpg.spigot.features.LuckpermsExpansion;
 import cz.neumimto.rpg.spigot.bridges.mimic.MimicHook;
 import cz.neumimto.rpg.spigot.bridges.mmoitems.MMOItemsExpansion;
 import cz.neumimto.rpg.spigot.bridges.mythicalmobs.MythicalMobsExpansion;
@@ -134,7 +134,6 @@ public class SpigotRpgPlugin extends JavaPlugin implements Listener {
 
         plugin = this;
         bukkitAudiences = BukkitAudiences.create(getInstance());
-        dataFolder = getDataFolder();
         CommandManager manager = new PaperCommandManager(this);
         manager.getCommandContexts().registerContext(OnlineOtherPlayer.class, c -> {
             CommandIssuer issuer = c.getIssuer();
@@ -350,7 +349,7 @@ public class SpigotRpgPlugin extends JavaPlugin implements Listener {
         Bukkit.getConsoleSender().sendMessage(empty());
     }
 
-    private static boolean isFolia() {
+    public static boolean isFolia() {
         try {
             Class.forName("io.papermc.paper.threadedregions.RegionisedServer");
             return true;

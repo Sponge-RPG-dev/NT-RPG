@@ -3,12 +3,17 @@ package cz.neumimto.rpg.spigot.gui.inventoryviews;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.google.auto.service.AutoService;
 import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.gui.Gui;
+import cz.neumimto.rpg.common.items.ItemClass;
 import cz.neumimto.rpg.common.items.RpgItemType;
 import cz.neumimto.rpg.common.localization.LocalizationKeys;
 import cz.neumimto.rpg.common.localization.LocalizationService;
+import cz.neumimto.rpg.common.permissions.PermissionService;
 import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
 import cz.neumimto.rpg.spigot.gui.elements.GuiCommand;
+import cz.neumimto.rpg.spigot.inventory.SpigotInventoryService;
+import cz.neumimto.rpg.spigot.inventory.SpigotItemService;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.md_5.bungee.api.ChatColor;
@@ -34,6 +39,12 @@ public class ArmorGuiView extends ConfigurableInventoryGui {
 
     @Inject
     private LocalizationService localizationService;
+
+    @Inject
+    private SpigotItemService spigotItemService;
+
+    @Inject
+    private PermissionService permissionService;
 
     private static ArmorGuiView instance;
 
@@ -76,11 +87,8 @@ public class ArmorGuiView extends ConfigurableInventoryGui {
         List<GuiCommand> list = new ArrayList<>();
         if (commandSender instanceof Player player) {
             ISpigotCharacter character = characterService.getCharacter(player);
-            Set<RpgItemType> allowedArmor = character.getAllowedArmor();
-            for (RpgItemType rpgItemType : allowedArmor) {
-                ItemStack itemStack = toItemStack(rpgItemType);
-                list.add(new GuiCommand(itemStack));
-            }
+            spigotItemService.filterAllowedItems(character, Set.of(ItemClass.ARMOR))
+                            .forEach(a->list.add(new GuiCommand(toItemStack(a))));
         }
         map.put("Armor", list);
         return map;

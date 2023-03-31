@@ -3,6 +3,7 @@ package cz.neumimto.rpg.spigot.gui.inventoryviews;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.google.auto.service.AutoService;
 import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.items.ItemClass;
 import cz.neumimto.rpg.common.items.ItemService;
 import cz.neumimto.rpg.common.items.RpgItemType;
 import cz.neumimto.rpg.common.localization.LocalizationKeys;
@@ -23,6 +24,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @Singleton
 @AutoService(ConfigurableInventoryGui.class)
@@ -74,13 +77,16 @@ public class WeaponGuiView extends ConfigurableInventoryGui {
         List<GuiCommand> list = new ArrayList<>();
         if (commandSender instanceof Player player) {
             ISpigotCharacter character = characterService.getCharacter(player);
-            Set<RpgItemType> weapons = itemService.filterAllowedItems(character, Set.of());
-            for (RpgItemType e : weapons) {
-                ItemStack itemStack = toItemStack(e);
-                list.add(new GuiCommand(itemStack));
-            }
+
+            Set<ItemClass> itemClasses = itemService.getItemClasses()
+                    .stream()
+                    .filter(ItemClass::isWeapon)
+                    .collect(Collectors.toSet());
+
+            itemService.filterAllowedItems(character, itemClasses)
+                    .forEach(a-> list.add(new GuiCommand(toItemStack(a))));
         }
-        map.put("Weapons", list);
+         map.put("Weapon", list);
         return map;
     }
 

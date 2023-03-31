@@ -20,7 +20,9 @@ import org.bukkit.inventory.ItemStack;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.HashMap;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static cz.neumimto.rpg.common.logging.Log.info;
 
@@ -29,6 +31,14 @@ public class SpigotCharacterService extends CharacterService<ISpigotCharacter> {
 
     @Inject
     private ResourceService resourceService;
+
+    public SpigotCharacterService() {
+        if (SpigotRpgPlugin.isFolia()) {
+            characters = new ConcurrentHashMap<>();
+        } else {
+            characters = new HashMap<>();
+        }
+    }
 
     @Override
     protected void initSpellbook(ISpigotCharacter activeCharacter, String[][] spellbookPages) {

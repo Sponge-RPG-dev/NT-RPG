@@ -1,6 +1,7 @@
-package cz.neumimto.rpg.spigot.bridges.luckperms;
+package cz.neumimto.rpg.spigot.features;
 
 
+import cz.neumimto.rpg.common.ResourceLoader;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.events.SpigotCharacterGainedExperiencesEvent;
 import net.luckperms.api.cacheddata.CachedMetaData;
@@ -16,18 +17,14 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
+@ResourceLoader.ListenerClass(LuckpermsExpansion.LUCKPERMS_EXPMULT)
 public class LuckpermsExpansion implements Listener {
 
-    private ContextManager contextManager;
+    public static final String LUCKPERMS_EXPMULT = "luckperms_expmulat";
 
-    @Inject
-    private CharacaterCalculator characaterCalculator;
-
-    private final List<ContextCalculator<Player>> registeredCalculators = new ArrayList<>();
 
     public void init() {
-        this.contextManager = SpigotRpgPlugin.getLuckPerms().getContextManager();
-        this.characaterCalculator.registerContexts();
+
     }
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)

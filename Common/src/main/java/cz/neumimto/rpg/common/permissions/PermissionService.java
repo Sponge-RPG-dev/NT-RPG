@@ -8,6 +8,8 @@ import java.util.Collection;
 
 public interface PermissionService<T extends IActiveCharacter> {
 
+    void init();
+
     boolean hasPermission(T character, String value);
 
     void removePermissions(T character, Collection<String> perms);

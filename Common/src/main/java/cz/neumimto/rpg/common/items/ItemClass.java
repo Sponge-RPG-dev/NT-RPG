@@ -23,6 +23,11 @@ public class ItemClass {
         ACCESSORY.properties = Collections.emptySet();
         ACCESSORY.propertiesMults = Collections.emptySet();
         ACCESSORY.subClass = Collections.emptySet();
+
+        ARMOR.isWeapon = false;
+        SHIELD.isWeapon = false;
+        PROJECTILES.isWeapon = false;
+        ACCESSORY.isWeapon = false;
     }
 
     private final String name;
@@ -36,6 +41,8 @@ public class ItemClass {
     private Set<Integer> properties = new HashSet<>();
 
     private Set<Integer> propertiesMults = new HashSet<>();
+
+    private boolean isWeapon = true;
 
     public ItemClass(String name) {
         this.name = name;
@@ -79,6 +86,10 @@ public class ItemClass {
 
     public Set<Integer> getPropertiesMults() {
         return propertiesMults;
+    }
+
+    public boolean isWeapon() {
+        return isWeapon;
     }
 
     @Override

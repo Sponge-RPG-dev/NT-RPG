@@ -19,7 +19,7 @@ import javax.inject.Singleton;
 import java.util.*;
 
 @Singleton
-public class SpigotItemService extends AbstractItemService {
+public class SpigotItemService extends ItemService {
 
     public static final String EFFECTS = "ntrpg.effects";
     public static final String CLASS_REQUIREMENTS = "ntrpg.class-req";
