@@ -12,8 +12,6 @@ import cz.neumimto.rpg.common.entity.players.parties.PartyService;
 import cz.neumimto.rpg.common.events.EventFactoryService;
 import cz.neumimto.rpg.common.exp.ExperienceService;
 import cz.neumimto.rpg.common.gui.IPlayerMessage;
-import cz.neumimto.rpg.common.inventory.CharacterInventoryInteractionHandler;
-import cz.neumimto.rpg.common.inventory.InventoryHandler;
 import cz.neumimto.rpg.common.inventory.InventoryService;
 import cz.neumimto.rpg.common.items.ItemService;
 import cz.neumimto.rpg.common.logging.Log;
@@ -75,7 +73,6 @@ public class SpigotGuiceModule extends AbstractRpgGuiceModule {
         map.put(AssetService.class, SpigotAssetService.class);
         map.put(PermissionService.class, SpigotPermissionService.class);
         map.put(EventFactoryService.class, SpigotEventFactory.class);
-        map.put(CharacterInventoryInteractionHandler.class, InventoryHandler.class);
         map.put(ResourceLoader.class, SpigotResourceLoader.class);
         map.put(CharacterService.class, SpigotCharacterService.class);
         map.put(ResourceService.class, SpigotResourceService.class);

@@ -9,12 +9,6 @@ public interface InventoryService<T extends IActiveCharacter> {
 
     void reload();
 
-    void initializeManagedSlots(T activeCharacter);
-
-    boolean isManagedInventory(Class aClass, int slotId);
-
-    void initializeCharacterInventory(T character);
-
     EquipedSlot createEquipedSlot(String className, int slotId);
 
     void invalidateGUICaches(T cc);

@@ -72,41 +72,7 @@ public class SpigotItemService extends ItemService {
 
     public static class SpigotItemHandler {
         public RpgItemStack getItemStack(RpgItemType a, ItemStack is) {
-            return new RpgItemStackImpl(a,
-                    getItemEffects(is),
-                    getItemBonusAttributes(is),
-                    getItemMinimalAttributeRequirements(is),
-                    getClassRequirements(is));
-        }
-
-        protected Map<IGlobalEffect, EffectParams> getItemEffects(ItemStack nbtItem) {
-            Map<IGlobalEffect, EffectParams> map = new HashMap<>();
-            return map;
-        }
-
-        protected Map<ClassDefinition, Integer> getClassRequirements(ItemStack nbtItem) {
-            return Collections.emptyMap();
-        }
-
-        protected Map<AttributeConfig, Integer> getItemBonusAttributes(ItemStack nbtItem) {
-            return Collections.emptyMap();
-        }
-
-        protected Map<AttributeConfig, Integer> getItemMinimalAttributeRequirements(ItemStack nbtItem) {
-            Map<AttributeConfig, Integer> map = new HashMap<>();
-            //for (NBTListCompound nbtListCompound : compoundList) {
-            //    for (String key : nbtListCompound.getKeys()) {
-            //        int integer = nbtListCompound.getInteger(key);
-            //        Optional<AttributeConfig> attributeById = Rpg.get().getPropertyService().getAttributeById(key);
-            //        if (attributeById.isPresent()) {
-            //            AttributeConfig attr = attributeById.get();
-            //            map.put(attr, integer);
-            //        } else {
-            //            Log.warn("Discovered an unknown attribute on an intemstack " + key);
-            //        }
-            //    }
-            //}
-            return map;
+            return new RpgItemStackImpl(a);
         }
     }
 

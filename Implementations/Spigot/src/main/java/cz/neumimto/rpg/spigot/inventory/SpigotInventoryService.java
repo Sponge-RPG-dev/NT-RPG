@@ -2,9 +2,6 @@ package cz.neumimto.rpg.spigot.inventory;
 
 import com.google.inject.Injector;
 import cz.neumimto.rpg.common.inventory.AbstractInventoryService;
-import cz.neumimto.rpg.common.inventory.InventoryHandler;
-import cz.neumimto.rpg.common.inventory.ManagedSlot;
-import cz.neumimto.rpg.common.inventory.RpgInventory;
 import cz.neumimto.rpg.common.items.RpgItemStack;
 import cz.neumimto.rpg.common.model.EquipedSlot;
 import cz.neumimto.rpg.common.skills.SkillData;
@@ -32,9 +29,6 @@ import java.util.UUID;
 public class SpigotInventoryService extends AbstractInventoryService<ISpigotCharacter> {
 
     public static final String SKILLBIND = "skillbind";
-
-    @Inject
-    private InventoryHandler inventoryHandler;
 
     @Inject
     private SpigotItemService itemService;
@@ -111,29 +105,6 @@ public class SpigotInventoryService extends AbstractInventoryService<ISpigotChar
         itemStack.setItemMeta(itemMeta);
 
         return itemStack;
-    }
-
-    @Override
-    public void initializeCharacterInventory(ISpigotCharacter character) {
-        if (inventoryHandler.handleInventoryInitializationPre(character)) {
-            fillInventory(character);
-            inventoryHandler.handleInventoryInitializationPost(character);
-        }
-    }
-
-    private void fillInventory(ISpigotCharacter character) {
-        Map<Class<?>, RpgInventory> managedInventory = character.getManagedInventory();
-        Player player = character.getPlayer();
-        for (RpgInventory rInv : managedInventory.values()) {
-            for (Map.Entry<Integer, ManagedSlot> rInvE : rInv.getManagedSlots().entrySet()) {
-                int index = rInvE.getKey();
-                ItemStack itemStack = player.getInventory().getItem(index);
-                if (itemStack != null) {
-                    Optional<RpgItemStack> rpgItemStack = itemService.getRpgItemStack(itemStack);
-                    rpgItemStack.ifPresent(stack -> rInvE.getValue().setContent(stack));
-                }
-            }
-        }
     }
 
     public void rotatePlayerSpellbook(Player player, ISpigotCharacter character) {

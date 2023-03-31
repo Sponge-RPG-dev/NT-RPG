@@ -305,7 +305,6 @@ public abstract class CharacterService<T extends IActiveCharacter> {
         }
 
         invalidateCaches(character);
-        inventoryService.initializeCharacterInventory(character);
 
         CharacterInitializedEvent event = Rpg.get().getEventFactory().createEventInstance(CharacterInitializedEvent.class);
         event.setTarget(character);
@@ -488,8 +487,6 @@ public abstract class CharacterService<T extends IActiveCharacter> {
             }
             resourceService.addResource((ActiveCharacter) activeCharacter, classDef);
         }
-
-        inventoryService.initializeManagedSlots(activeCharacter);
 
 
         Set<PlayerSkillContext> skillData = resolveSkills(characterBase, activeCharacter);
@@ -905,10 +902,6 @@ public abstract class CharacterService<T extends IActiveCharacter> {
         CharacterClass characterClass = aClass.getCharacterClass();
         characterClass.setExperiences(newcurrentexp);
 
-        if (gotLevel) {
-            inventoryService.initializeCharacterInventory(character);
-        }
-
         Gui.showExpChange(character, aClass.getClassDefinition().getName(), exp);
 
         CompletableFuture.runAsync(() -> {
@@ -1020,7 +1013,6 @@ public abstract class CharacterService<T extends IActiveCharacter> {
 
         character.getResource(ResourceService.mana).setValue(0);
 
-        inventoryService.initializeCharacterInventory(character);
     }
 
 

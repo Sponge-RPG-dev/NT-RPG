@@ -3,14 +3,10 @@ package cz.neumimto.rpg.common.entity.players;
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.effects.IEffect;
 import cz.neumimto.rpg.common.effects.IEffectContainer;
-import cz.neumimto.rpg.common.entity.EntityHand;
 import cz.neumimto.rpg.common.entity.PropertyService;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.common.entity.players.party.IParty;
-import cz.neumimto.rpg.common.inventory.RpgInventory;
-import cz.neumimto.rpg.common.items.RpgItemType;
-import cz.neumimto.rpg.common.model.EquipedSlot;
 import cz.neumimto.rpg.common.persistance.model.CharacterBase;
 import cz.neumimto.rpg.common.skills.ISkill;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
@@ -357,11 +353,6 @@ public abstract class PreloadCharacter<T, P extends IParty> implements IActiveCh
     @Override
     public void restartAttributeGuiSession() {
 
-    }
-
-    @Override
-    public Map<Class<?>, RpgInventory> getManagedInventory() {
-        return Collections.emptyMap();
     }
 
     @Override

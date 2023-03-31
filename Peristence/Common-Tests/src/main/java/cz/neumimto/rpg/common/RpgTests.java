@@ -173,21 +173,6 @@ public class RpgTests implements RpgApi {
             }
 
             @Override
-            public void initializeManagedSlots(IActiveCharacter activeCharacter) {
-
-            }
-
-            @Override
-            public boolean isManagedInventory(Class aClass, int slotId) {
-                return false;
-            }
-
-            @Override
-            public void initializeCharacterInventory(IActiveCharacter character) {
-
-            }
-
-            @Override
             public EquipedSlot createEquipedSlot(String className, int slotId) {
                 return new TestHelper.EquipedSlotImpl(slotId);
             }

@@ -4,18 +4,12 @@ import cz.neumimto.rpg.common.configuration.AttributeConfig;
 import cz.neumimto.rpg.common.effects.EffectType;
 import cz.neumimto.rpg.common.effects.IEffect;
 import cz.neumimto.rpg.common.effects.IEffectContainer;
-import cz.neumimto.rpg.common.entity.EntityHand;
 import cz.neumimto.rpg.common.entity.IEntity;
 import cz.neumimto.rpg.common.entity.IEntityType;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.common.entity.players.party.IParty;
 import cz.neumimto.rpg.common.gui.SkillTreeViewModel;
-import cz.neumimto.rpg.common.inventory.ManagedSlot;
-import cz.neumimto.rpg.common.inventory.RpgInventory;
-import cz.neumimto.rpg.common.items.RpgItemStack;
-import cz.neumimto.rpg.common.items.RpgItemType;
-import cz.neumimto.rpg.common.model.EquipedSlot;
 import cz.neumimto.rpg.common.persistance.model.CharacterBase;
 import cz.neumimto.rpg.common.resources.Resource;
 import cz.neumimto.rpg.common.skills.ISkill;
@@ -54,8 +48,6 @@ public interface IActiveCharacter<T, P extends IParty> extends IEntity<T> {
         }
         return false;
     }
-
-    Map<Class<?>, RpgInventory> getManagedInventory();
 
     P getParty();
 
@@ -180,25 +172,6 @@ public interface IActiveCharacter<T, P extends IParty> extends IEntity<T> {
     void addClass(PlayerClassData playerClassData);
 
     void restartAttributeGuiSession();
-
-    default void getMinimalInventoryRequirements(Map<AttributeConfig, Integer> seed) {
-
-        Map<Class<?>, RpgInventory> managedInventory = getManagedInventory();
-        for (RpgInventory inv : managedInventory.values()) {
-
-            for (ManagedSlot value : inv.getManagedSlots().values()) {
-                Optional<RpgItemStack> content = value.getContent();
-                if (content.isPresent()) {
-                    RpgItemStack rpgItemStack = content.get();
-                    Map<AttributeConfig, Integer> minimalAttributeRequirements = rpgItemStack.getMinimalAttributeRequirements();
-
-                    for (Map.Entry<AttributeConfig, Integer> entry : minimalAttributeRequirements.entrySet()) {
-                        seed.compute(entry.getKey(), (attribute, integer) -> Math.max(integer, entry.getValue()));
-                    }
-                }
-            }
-        }
-    }
 
     void sendNotification(String message);
 

@@ -50,7 +50,6 @@ public abstract class PassiveSkill extends AbstractSkill<IActiveCharacter> {
     }
 
     protected void update(IActiveCharacter IActiveCharacter) {
-        inventoryService.initializeCharacterInventory(IActiveCharacter);
         PlayerSkillContext skill = IActiveCharacter.getSkill(getId());
         effectService.removeEffect(relevantEffectName, IActiveCharacter, this);
         applyEffect(skill, IActiveCharacter);

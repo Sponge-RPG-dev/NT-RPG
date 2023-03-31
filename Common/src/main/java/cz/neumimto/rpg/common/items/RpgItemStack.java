@@ -11,13 +11,5 @@ public interface RpgItemStack {
 
     RpgItemType getItemType();
 
-    Map<IGlobalEffect, EffectParams> getEnchantments();
-
-    Map<AttributeConfig, Integer> getMinimalAttributeRequirements();
-
-
-    Map<AttributeConfig, Integer> getBonusAttributes();
-
-    Map<ClassDefinition, Integer> getClassRequirements();
 
 }

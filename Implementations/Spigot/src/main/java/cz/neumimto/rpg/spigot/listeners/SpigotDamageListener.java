@@ -9,7 +9,6 @@ import cz.neumimto.rpg.common.entity.IEntity;
 import cz.neumimto.rpg.common.entity.IEntityType;
 import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
 import cz.neumimto.rpg.common.events.damage.IEntityWeaponDamageEarlyEvent;
-import cz.neumimto.rpg.common.inventory.InventoryHandler;
 import cz.neumimto.rpg.common.items.RpgItemStack;
 import cz.neumimto.rpg.common.resources.Resource;
 import cz.neumimto.rpg.common.resources.ResourceService;
@@ -59,9 +58,6 @@ public class SpigotDamageListener implements IRpgListener {
 
     @Inject
     private SpigotRpg spigotRpg;
-
-    @Inject
-    private InventoryHandler inventoryHandler;
 
     @EventHandler
     public void projectileHitBlockEvent(ProjectileHitEvent event) {

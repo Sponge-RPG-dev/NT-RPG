@@ -2,14 +2,11 @@ package cz.neumimto.rpg.common.entity.players;
 
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.effects.*;
-import cz.neumimto.rpg.common.entity.EntityHand;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.common.entity.players.party.IParty;
-import cz.neumimto.rpg.common.inventory.RpgInventory;
 import cz.neumimto.rpg.common.items.RpgItemType;
 import cz.neumimto.rpg.common.logging.Log;
-import cz.neumimto.rpg.common.model.EquipedSlot;
 import cz.neumimto.rpg.common.persistance.model.CharacterBase;
 import cz.neumimto.rpg.common.resources.Resource;
 import cz.neumimto.rpg.common.skills.IPlayerSkillHandler;
@@ -24,7 +21,6 @@ import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
 
 import java.lang.ref.WeakReference;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 /**
@@ -71,8 +67,6 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
 
     private transient Map<String, Integer> attributeSession = new HashMap<>();
 
-    private transient Map<Class<?>, RpgInventory> inventory;
-
     private transient PlayerClassData primaryClass;
 
     private InterruptableSkillPreprocessor channeledSkill;
@@ -91,7 +85,6 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
         this.secondaryProperties = new double[propertyCount];
         this.base = base;
         this.skills = new PlayerSkillHandlers.SHARED();
-        this.inventory = new HashMap<>();
         this.attrTransaction = new HashMap<>();
         this.skillUpgradeObserver = new SkillTreeChangeObserver(this);
     }
@@ -115,12 +108,6 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
     public boolean isSilenced() {
         return channeledSkill == null && hasEffectType(CommonEffectTypes.SILENCE);
     }
-
-    @Override
-    public Map<Class<?>, RpgInventory> getManagedInventory() {
-        return inventory;
-    }
-
 
     @Override
     @SuppressWarnings("unchecked")

@@ -100,30 +100,6 @@ public abstract class ItemService {
         }
     }
 
-    public boolean checkItemAttributeRequirements(IActiveCharacter character, RpgItemStack rpgItemStack) {
-        Collection<AttributeConfig> attributes = propertyService.getAttributes().values();
-        Map<AttributeConfig, Integer> inventoryRequirements = new HashMap<>();
-        for (AttributeConfig attribute : attributes) {
-            inventoryRequirements.put(attribute, 0);
-        }
-        character.getMinimalInventoryRequirements(inventoryRequirements);
-
-        Map<AttributeConfig, Integer> bonusAttributes = rpgItemStack.getBonusAttributes();
-
-        for (Map.Entry<AttributeConfig, Integer> entry : rpgItemStack.getMinimalAttributeRequirements().entrySet()) {
-            AttributeConfig key = entry.getKey();
-            Integer value = entry.getValue();
-            Integer requirement = inventoryRequirements.get(key);
-
-            Integer bonus = bonusAttributes.getOrDefault(entry.getKey(), 0);
-            if (character.getAttributeValue(key) - bonus < Math.max(value, requirement)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
     public void load() {
         File f = Paths.get(Rpg.get().getWorkingDirectory()).resolve("ItemGroups.conf").toFile();
         if (!f.exists()) {
@@ -247,20 +223,6 @@ public abstract class ItemService {
 
     protected abstract Optional<RpgItemType> createRpgItemType(ItemString parsed, ItemClass weapons);
 
-    public boolean checkItemClassRequirements(IActiveCharacter character, RpgItemStack rpgItemStack) {
-        for (Map.Entry<ClassDefinition, Integer> entry : rpgItemStack.getClassRequirements().entrySet()) {
-
-            PlayerClassData playerClassData = character.getClassByName(entry.getKey().getName());
-            if (playerClassData == null) {
-                return false;
-            }
-            if (playerClassData.getLevel() < entry.getValue()) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     public void registerItemAttributes(Collection<AttributeConfig> attributes) {
         for (AttributeConfig attribute : attributes) {
             itemAttributesPlaceholder.put(attribute, 0);
@@ -290,6 +252,9 @@ public abstract class ItemService {
     }
 
     public boolean checkItemPermission(IActiveCharacter character, RpgItemStack rpgItemStack, String permSuffix) {
+        if (rpgItemStack == null) {
+            return true;
+        }
         return checkItemPermission(character, rpgItemStack.getItemType(), permSuffix);
     }
 
