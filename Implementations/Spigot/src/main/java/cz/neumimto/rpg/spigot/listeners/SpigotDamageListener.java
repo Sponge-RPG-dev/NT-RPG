@@ -28,16 +28,16 @@ import cz.neumimto.rpg.spigot.events.damage.SpigotEntityWeaponDamageEarlyEvent;
 import cz.neumimto.rpg.spigot.inventory.SpigotItemService;
 import cz.neumimto.rpg.spigot.services.IRpgListener;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Projectile;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.projectiles.ProjectileSource;
 
 import javax.inject.Inject;
+import java.util.Optional;
 
 @Singleton
 @AutoService({IRpgListener.class})
@@ -121,7 +121,19 @@ public class SpigotDamageListener implements IRpgListener {
             processSkillDamageEarly(event, target.skillOrEffectDamageCause(), attacker, target);
             target.setSkillOrEffectDamageCause(null);
         } else {
-            processWeaponDamageEarly(event, event.getCause(), attacker, target);
+            if (attackerEntity instanceof HumanEntity ae) {
+                IEntity iEntity = entityService.get(ae);
+                if (iEntity.getType() == IEntityType.CHARACTER) {
+                    Optional<RpgItemStack> rpgItemStack = itemService.getRpgItemStack(ae.getInventory().getItemInMainHand());
+                    if (rpgItemStack.isPresent()) {
+                        if (!itemService.checkItemPermission((ActiveCharacter) iEntity, rpgItemStack.get(), EquipmentSlot.HAND.name())) {
+                            event.setCancelled(true);
+                            return;
+                        }
+                    }
+                }
+                processWeaponDamageEarly(event, event.getCause(), attacker, target);
+            }
         }
     }
 
