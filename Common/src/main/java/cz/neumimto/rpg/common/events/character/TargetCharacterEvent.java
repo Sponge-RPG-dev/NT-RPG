@@ -1,15 +1,15 @@
 package cz.neumimto.rpg.common.events.character;
 
 
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 
 /**
- * Base event for when a {@link IActiveCharacter} is a target.
+ * Base event for when a {@link ActiveCharacter} is a target.
  */
 public interface TargetCharacterEvent {
 
-    IActiveCharacter getTarget();
+    ActiveCharacter getTarget();
 
-    void setTarget(IActiveCharacter target);
+    void setTarget(ActiveCharacter target);
 
 }

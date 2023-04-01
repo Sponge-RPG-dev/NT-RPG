@@ -7,7 +7,7 @@ import cz.neumimto.rpg.common.effects.Generate;
 import cz.neumimto.rpg.common.effects.IEffect;
 import cz.neumimto.rpg.common.effects.IEffectContainer;
 import cz.neumimto.rpg.common.entity.IEffectConsumer;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.gui.Gui;
 import cz.neumimto.rpg.common.localization.LocalizationKeys;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
@@ -31,7 +31,7 @@ public class ClickComboActionComponent extends EffectBase implements IEffectCont
 
     private boolean notifyIfCancelled;
 
-    private IActiveCharacter character;
+    private ActiveCharacter character;
 
     private long lastTimeUsed;
 
@@ -41,10 +41,10 @@ public class ClickComboActionComponent extends EffectBase implements IEffectCont
 
     @Generate.Constructor
     public ClickComboActionComponent(IEffectConsumer t) {
-        this((IActiveCharacter) t);
+        this((ActiveCharacter) t);
     }
 
-    private ClickComboActionComponent(IActiveCharacter t) {
+    private ClickComboActionComponent(ActiveCharacter t) {
         super(name, t);
         character = t;
         PluginConfig pluginConfig = Rpg.get().getPluginConfig();
@@ -148,7 +148,7 @@ public class ClickComboActionComponent extends EffectBase implements IEffectCont
         return combination == null ? "" : combination.toString();
     }
 
-    public IActiveCharacter getCharacter() {
+    public ActiveCharacter getCharacter() {
         return character;
     }
 

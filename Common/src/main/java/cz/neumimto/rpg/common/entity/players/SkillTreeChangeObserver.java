@@ -12,11 +12,11 @@ import java.util.Set;
 
 public class SkillTreeChangeObserver {
 
-    private IActiveCharacter character;
+    private ActiveCharacter character;
 
     private Map<String, Set<String>> candidates = new HashMap<>();
 
-    public SkillTreeChangeObserver(IActiveCharacter character) {
+    public SkillTreeChangeObserver(ActiveCharacter character) {
         this.character = character;
     }
 

@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.common.commands;
 
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.common.gui.Gui;
@@ -28,7 +28,7 @@ public class SkillsCommandFacade {
     private SkillService skillService;
 
     //todo this entire process may be done async
-    public void processSkillAction(IActiveCharacter character, ISkill skill, SkillAction action, String flagData) {
+    public void processSkillAction(ActiveCharacter character, ISkill skill, SkillAction action, String flagData) {
         if (action == null) {
             executeSkill(character, skill);
             return;
@@ -50,7 +50,7 @@ public class SkillsCommandFacade {
         }
     }
 
-    public void executeSkill(IActiveCharacter character, String skillId) {
+    public void executeSkill(ActiveCharacter character, String skillId) {
         PlayerSkillContext info = character.getSkillInfo(skillId);
         if (info == PlayerSkillContext.EMPTY || info == null) {
             Arg arg = Arg.arg("skill", skillId);
@@ -62,11 +62,11 @@ public class SkillsCommandFacade {
         skillService.executeSkill(character, info);
     }
 
-    public void executeSkill(IActiveCharacter character, ISkill skill) {
+    public void executeSkill(ActiveCharacter character, ISkill skill) {
         executeSkill(character, skill.getId());
     }
 
-    public void learnSkill(IActiveCharacter character, ISkill skill, ClassDefinition aClass) {
+    public void learnSkill(ActiveCharacter character, ISkill skill, ClassDefinition aClass) {
         if (aClass.getSkillTree() != null) {
             Map<String, PlayerClassData> classes = character.getClasses();
             PlayerClassData playerClassData = classes.get(aClass.getName().toLowerCase());
@@ -77,7 +77,7 @@ public class SkillsCommandFacade {
         }
     }
 
-    public void refundSkill(IActiveCharacter character, ISkill skill, ClassDefinition aClass) {
+    public void refundSkill(ActiveCharacter character, ISkill skill, ClassDefinition aClass) {
         if (aClass.getSkillTree() != null) {
             Map<String, PlayerClassData> classes = character.getClasses();
             PlayerClassData playerClassData = classes.get(aClass.getName());
@@ -88,7 +88,7 @@ public class SkillsCommandFacade {
         }
     }
 
-    public void upgradeSkill(IActiveCharacter character, ISkill skill, ClassDefinition aClass) {
+    public void upgradeSkill(ActiveCharacter character, ISkill skill, ClassDefinition aClass) {
         if (aClass.getSkillTree() != null) {
             Map<String, PlayerClassData> classes = character.getClasses();
             PlayerClassData playerClassData = classes.get(aClass.getName().toLowerCase());
@@ -99,7 +99,7 @@ public class SkillsCommandFacade {
         }
     }
 
-    public void openSkillTreeCommand(IActiveCharacter character, ClassDefinition classDefinition) {
+    public void openSkillTreeCommand(ActiveCharacter character, ClassDefinition classDefinition) {
         if (classDefinition == null) {
             PlayerClassData primaryClass = character.getPrimaryClass();
             if (primaryClass == null) {

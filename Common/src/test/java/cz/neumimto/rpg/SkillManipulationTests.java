@@ -4,7 +4,7 @@ import cz.neumimto.rpg.common.configuration.PluginConfig;
 import cz.neumimto.rpg.common.entity.TestCharacter;
 import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.common.events.EventFactoryService;
@@ -307,7 +307,7 @@ public class SkillManipulationTests {
     }
 
     @Test
-    public void mayLearnSkills_multiclass_different_levels(@Stage(READY) IActiveCharacter character) {
+    public void mayLearnSkills_multiclass_different_levels(@Stage(READY) ActiveCharacter character) {
         PlayerClassData primary = character.getClassByType("Primary");
         PlayerClassData secondary = character.getClassByType("Secondary");
         secondary.setLevel(5);

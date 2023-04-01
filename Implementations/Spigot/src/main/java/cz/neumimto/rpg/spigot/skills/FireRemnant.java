@@ -15,7 +15,7 @@ import cz.neumimto.rpg.common.skills.types.ActiveSkill;
 import cz.neumimto.rpg.nms.NMSHandler;
 import cz.neumimto.rpg.spigot.Resourcepack;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import de.slikey.effectlib.effect.SphereEffect;
 import de.slikey.effectlib.util.DynamicLocation;
 import org.bukkit.Color;
@@ -31,7 +31,7 @@ import javax.inject.Inject;
 
 @AutoService(ISkill.class)
 @ResourceLoader.Skill("ntrpg:fire_remnant")
-public class FireRemnant extends ActiveSkill<ISpigotCharacter> {
+public class FireRemnant extends ActiveSkill<SpigotCharacter> {
 
     @Inject
     private EffectService effectService;
@@ -52,7 +52,7 @@ public class FireRemnant extends ActiveSkill<ISpigotCharacter> {
     }
 
     @Override
-    public SkillResult cast(ISpigotCharacter character, PlayerSkillContext ctx) {
+    public SkillResult cast(SpigotCharacter character, PlayerSkillContext ctx) {
         FireRemnantEffect effect = (FireRemnantEffect) character.getEffect(FireRemnantEffect.name);
         if (effect == null) {
             Player player = character.getPlayer();

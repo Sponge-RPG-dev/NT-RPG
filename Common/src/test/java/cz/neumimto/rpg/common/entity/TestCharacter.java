@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.common.entity;
 
 import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.gui.SkillTreeViewModel;
 import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.common.persistance.model.CharacterBase;
@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.UUID;
 
-public class TestCharacter extends ActiveCharacter<UUID, TestParty> implements IActiveCharacter<UUID, TestParty> {
+public class TestCharacter extends ActiveCharacter<UUID, TestParty> implements ActiveCharacter<UUID, TestParty> {
 
 
     public TestCharacter(UUID uuid, CharacterBase base, int propertyCount) {

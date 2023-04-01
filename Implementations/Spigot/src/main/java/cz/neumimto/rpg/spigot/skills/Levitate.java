@@ -6,14 +6,14 @@ import cz.neumimto.rpg.common.effects.IEffect;
 import cz.neumimto.rpg.common.skills.ISkill;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.skills.ToggleableSkill;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 
 import javax.inject.Singleton;
 
 @Singleton
 @AutoService(ISkill.class)
 @ResourceLoader.Skill("ntrpg:levitate")
-public class Levitate extends ToggleableSkill<ISpigotCharacter> {
+public class Levitate extends ToggleableSkill<SpigotCharacter> {
 
     @Override
     public String getEffectName() {
@@ -21,7 +21,7 @@ public class Levitate extends ToggleableSkill<ISpigotCharacter> {
     }
 
     @Override
-    public IEffect constructEffect(ISpigotCharacter character, PlayerSkillContext info) {
+    public IEffect constructEffect(SpigotCharacter character, PlayerSkillContext info) {
         return null;
     }
 }

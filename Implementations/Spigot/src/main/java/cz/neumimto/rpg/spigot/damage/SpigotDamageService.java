@@ -6,7 +6,7 @@ import cz.neumimto.rpg.common.entity.CommonProperties;
 import cz.neumimto.rpg.common.entity.EntityService;
 import cz.neumimto.rpg.common.entity.IEntity;
 import cz.neumimto.rpg.spigot.entities.ISpigotEntity;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Tameable;
@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 @Singleton
-public class SpigotDamageService extends DamageService<ISpigotCharacter, LivingEntity, ISpigotEntity<LivingEntity>> {
+public class SpigotDamageService extends DamageService<SpigotCharacter, LivingEntity, ISpigotEntity<LivingEntity>> {
 
     private Map<Double, String> doubleColorMap = new TreeMap<>();
 
@@ -51,7 +51,7 @@ public class SpigotDamageService extends DamageService<ISpigotCharacter, LivingE
                     return false;
                 }
             }
-            return super.canDamage((ISpigotCharacter) damaged, damaged);
+            return super.canDamage((SpigotCharacter) damaged, damaged);
         } else {
             if (damaged instanceof Tameable t) {
                 if (t.getOwner() != null && t.getOwner().equals(entity)) {
@@ -89,10 +89,10 @@ public class SpigotDamageService extends DamageService<ISpigotCharacter, LivingE
         return true;
     }
 
-    public static class SpigotDamageHandler extends DamageHandler<ISpigotCharacter, LivingEntity> {
+    public static class SpigotDamageHandler extends DamageHandler<SpigotCharacter, LivingEntity> {
 
         @Override
-        public boolean canDamage(ISpigotCharacter damager, LivingEntity l) {
+        public boolean canDamage(SpigotCharacter damager, LivingEntity l) {
             if (damager.getEntity() == l || l.getHealth() <= 0 || l.isDead() || l.isInvulnerable()) {
                 return false;
             }

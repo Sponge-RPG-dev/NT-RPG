@@ -3,13 +3,13 @@ package cz.neumimto.rpg.persistence.flatfiles.converters;
 import cz.neumimto.persistence.TestHelper;
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.RpgTests;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.inventory.AbstractInventoryService;
 import cz.neumimto.rpg.common.inventory.InventoryService;
-import cz.neumimto.rpg.common.model.CharacterClass;
 import cz.neumimto.rpg.common.model.DateKeyPair;
 import cz.neumimto.rpg.common.model.EquipedSlot;
 import cz.neumimto.rpg.common.persistance.model.CharacterBase;
+import cz.neumimto.rpg.common.persistance.model.CharacterClass;
 import cz.neumimto.rpg.persistence.flatfiles.dao.FlatFilePlayerDao;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -30,10 +30,7 @@ class ConfigConverterTest {
             public InventoryService getInventoryService() {
                 return new AbstractInventoryService() {
 
-                    @Override
-                    public void initializeCharacterInventory(IActiveCharacter character) {
 
-                    }
 
                     @Override
                     public EquipedSlot createEquipedSlot(String className, int slotId) {
@@ -41,7 +38,7 @@ class ConfigConverterTest {
                     }
 
                     @Override
-                    public void invalidateGUICaches(IActiveCharacter cc) {
+                    public void invalidateGUICaches(ActiveCharacter cc) {
 
                     }
                 };
@@ -58,7 +55,7 @@ class ConfigConverterTest {
         FlatFilePlayerDao flatFilePlayerDao = new FlatFilePlayerDao();
         flatFilePlayerDao.create(characterBase);
 
-        cz.neumimto.rpg.common.persistance.CharacterBase loadded = flatFilePlayerDao.getCharacter(characterBase.getUuid(), characterBase.getName());
+        CharacterBase loadded = flatFilePlayerDao.getCharacter(characterBase.getUuid(), characterBase.getName());
 
         Assertions.assertEquals(characterBase.getAttributePoints(), loadded.getAttributePoints());
         Assertions.assertEquals(characterBase.getAttributePointsSpent(), loadded.getAttributePointsSpent());

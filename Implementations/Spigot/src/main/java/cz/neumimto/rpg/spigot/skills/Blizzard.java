@@ -9,7 +9,7 @@ import cz.neumimto.rpg.common.skills.SkillResult;
 import cz.neumimto.rpg.common.skills.tree.SkillType;
 import cz.neumimto.rpg.common.skills.types.ActiveSkill;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import de.slikey.effectlib.effect.CloudEffect;
 import de.slikey.effectlib.util.RandomUtils;
 import org.bukkit.Location;
@@ -21,7 +21,7 @@ import javax.inject.Singleton;
 @Singleton
 @AutoService(ISkill.class)
 @ResourceLoader.Skill("ntrpg:blizzard")
-public class Blizzard extends ActiveSkill<ISpigotCharacter> {
+public class Blizzard extends ActiveSkill<SpigotCharacter> {
 
     @Override
     public void init() {
@@ -36,7 +36,7 @@ public class Blizzard extends ActiveSkill<ISpigotCharacter> {
     }
 
     @Override
-    public SkillResult cast(ISpigotCharacter character, PlayerSkillContext skillContext) {
+    public SkillResult cast(SpigotCharacter character, PlayerSkillContext skillContext) {
         int duration = skillContext.getIntNodeValue(SkillNodes.DURATION);
 
         CloudEffect cloudEffect = new CloudEffect(SpigotRpgPlugin.getEffectManager()) {

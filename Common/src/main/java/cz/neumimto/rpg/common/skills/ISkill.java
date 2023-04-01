@@ -6,7 +6,7 @@ import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.effects.EffectSourceType;
 import cz.neumimto.rpg.common.effects.IEffectSource;
 import cz.neumimto.rpg.common.effects.IEffectSourceProvider;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.skills.tree.SkillTree;
 import cz.neumimto.rpg.common.skills.utils.SkillLoadingErrors;
 
@@ -21,15 +21,15 @@ public interface ISkill<T> extends IEffectSourceProvider, IRpgElement {
 
     void init();
 
-    void skillLearn(IActiveCharacter character, PlayerSkillContext context);
+    void skillLearn(ActiveCharacter character, PlayerSkillContext context);
 
-    void skillUpgrade(IActiveCharacter character, int level, PlayerSkillContext context);
+    void skillUpgrade(ActiveCharacter character, int level, PlayerSkillContext context);
 
-    void skillRefund(IActiveCharacter character, PlayerSkillContext context);
+    void skillRefund(ActiveCharacter character, PlayerSkillContext context);
 
     SkillSettings getDefaultSkillSettings();
 
-    void onCharacterInit(IActiveCharacter c, int level, PlayerSkillContext context);
+    void onCharacterInit(ActiveCharacter c, int level, PlayerSkillContext context);
 
     SkillResult onPreUse(T character, PlayerSkillContext esi);
 

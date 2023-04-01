@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.common.skills.scripting;
 
 import cz.neumimto.rpg.common.Rpg;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.localization.Arg;
 import cz.neumimto.rpg.common.skills.ISkillNodeDescription;
 
@@ -20,7 +20,7 @@ public class ScriptedSkillNodeDescription implements ISkillNodeDescription {
 
 
     @Override
-    public List<String> getDescription(IActiveCharacter character) {
+    public List<String> getDescription(ActiveCharacter character) {
         SimpleBindings simpleBindings = new SimpleBindings();
         simpleBindings.put("character", character);
         Arg arg = new Arg();

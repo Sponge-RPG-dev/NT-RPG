@@ -4,7 +4,7 @@ import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.google.auto.service.AutoService;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
 import cz.neumimto.rpg.spigot.gui.SpigotGuiHelper;
 import cz.neumimto.rpg.spigot.gui.elements.GuiCommand;
@@ -69,7 +69,7 @@ public class CharacterGuiView extends ConfigurableInventoryGui {
         Map<String, List<GuiCommand>> map = new HashMap<>();
         List<GuiCommand> list = new ArrayList<>();
 
-        ISpigotCharacter character = characterService.getCharacter(((Player) commandSender).getUniqueId());
+        SpigotCharacter character = characterService.getCharacter(((Player) commandSender).getUniqueId());
 
         for (PlayerClassData classData : character.getClasses().values()) {
             ClassDefinition classDefinition = classData.getClassDefinition();

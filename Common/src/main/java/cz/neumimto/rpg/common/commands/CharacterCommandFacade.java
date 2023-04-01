@@ -5,7 +5,7 @@ import cz.neumimto.rpg.common.classes.ClassService;
 import cz.neumimto.rpg.common.configuration.AttributeConfig;
 import cz.neumimto.rpg.common.entity.PropertyService;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.entity.players.parties.PartyService;
 import cz.neumimto.rpg.common.gui.Gui;
@@ -52,7 +52,7 @@ public class CharacterCommandFacade {
     @Inject
     private InventoryService inventoryService;
 
-    public void commandCommitAttribute(IActiveCharacter character) {
+    public void commandCommitAttribute(ActiveCharacter character) {
         Map<String, Integer> attributesTransaction = character.getAttributesTransaction();
         Map<AttributeConfig, Integer> map = new HashMap<>();
         for (Map.Entry<String, Integer> entry : attributesTransaction.entrySet()) {
@@ -94,7 +94,7 @@ public class CharacterCommandFacade {
 
                 Executor executor = Rpg.get().getSyncExecutor();
                 executor.execute(() -> {
-                    IActiveCharacter character = characterService.getCharacter(uuid);
+                    ActiveCharacter character = characterService.getCharacter(uuid);
                     Gui.sendListOfCharacters(character, characterBase);
                 });
             }
@@ -105,7 +105,7 @@ public class CharacterCommandFacade {
     }
 
 
-    public void commandSwitchCharacter(IActiveCharacter current, String nameNext, Consumer<Runnable> syncCallback) {
+    public void commandSwitchCharacter(ActiveCharacter current, String nameNext, Consumer<Runnable> syncCallback) {
         if (current != null && current.getName().equalsIgnoreCase(nameNext)) {
             current.sendMessage(localizationService.translate(LocalizationKeys.ALREADY_CURRENT_CHARACTER));
             return;
@@ -117,7 +117,7 @@ public class CharacterCommandFacade {
             boolean b = false;
             for (CharacterBase playersCharacter : playersCharacters) {
                 if (playersCharacter.getName().equalsIgnoreCase(nameNext)) {
-                    IActiveCharacter character = characterService.createActiveCharacter(uuid, playersCharacter);
+                    ActiveCharacter character = characterService.createActiveCharacter(uuid, playersCharacter);
                     syncCallback.accept(new CommandSyncCallback(character, this));
                     b = true;
                     //Update characterbase#updated, so next time plazer logs it it will autoselect this character,
@@ -135,7 +135,7 @@ public class CharacterCommandFacade {
         });
     }
 
-    public void openSKillTreeMenu(IActiveCharacter character, ClassDefinition classDefinition) {
+    public void openSKillTreeMenu(ActiveCharacter character, ClassDefinition classDefinition) {
         SkillTree skillTree = classDefinition.getSkillTree();
         if (skillTree == SkillTree.Default || skillTree == null) {
             character.sendMessage("Unknown class, or the class has no skilltree defined");
@@ -157,10 +157,10 @@ public class CharacterCommandFacade {
     }
 
     private static class CommandSyncCallback implements Runnable {
-        private final IActiveCharacter character;
+        private final ActiveCharacter character;
         private CharacterCommandFacade facade;
 
-        private CommandSyncCallback(IActiveCharacter character, CharacterCommandFacade facade) {
+        private CommandSyncCallback(ActiveCharacter character, CharacterCommandFacade facade) {
             this.character = character;
             this.facade = facade;
         }

@@ -5,8 +5,7 @@ import com.google.inject.Injector;
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.commands.*;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
-import cz.neumimto.rpg.common.entity.players.PreloadCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.gui.Gui;
 import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.persistence.flatfiles.FlatFilesModule;
@@ -308,10 +307,10 @@ public class SpigotRpgPlugin extends JavaPlugin implements Listener {
 
     public void disable() {
         executor.shutdown();
-        CharacterService<IActiveCharacter> characterService = Rpg.get().getCharacterService();
-        Collection<IActiveCharacter> characters = characterService.getCharacters();
-        for (IActiveCharacter character : characters) {
-            if (character instanceof PreloadCharacter) {
+        CharacterService<ActiveCharacter> characterService = Rpg.get().getCharacterService();
+        Collection<ActiveCharacter> characters = characterService.getCharacters();
+        for (ActiveCharacter character : characters) {
+            if (character.isStub()) {
                 continue;
             }
             characterService.save(character.getCharacterBase());
@@ -354,7 +353,7 @@ public class SpigotRpgPlugin extends JavaPlugin implements Listener {
             Class.forName("io.papermc.paper.threadedregions.RegionisedServer");
             return true;
         } catch (ClassNotFoundException e) {
-            return true;
+            return false;
         }
     }
 }

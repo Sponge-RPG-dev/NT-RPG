@@ -3,7 +3,7 @@ package cz.neumimto.rpg.common.skills.tree;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
 import cz.neumimto.rpg.common.Rpg;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.localization.Arg;
 import cz.neumimto.rpg.common.localization.LocalizationKeys;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
@@ -32,24 +32,24 @@ public class SkillTreeSpecialization extends PassiveSkill {
     }
 
     @Override
-    public void skillLearn(IActiveCharacter IActiveCharacter, PlayerSkillContext context) {
+    public void skillLearn(ActiveCharacter ActiveCharacter, PlayerSkillContext context) {
         if (Rpg.get().getPluginConfig().PLAYER_CHOOSED_SKILLTREE_SPECIALIZATION_GLOBAL_MESSAGE) {
             Rpg.get().broadcastLocalizableMessage(LocalizationKeys.PLAYER_CHOOSED_SKILLTREE_PATH_GLOBAL_MESSAGE_CONTENT,
-                    Arg.arg(PLAYER, IActiveCharacter.getName())
-                            .with("character", IActiveCharacter.getName())
+                    Arg.arg(PLAYER, ActiveCharacter.getName())
+                            .with("character", ActiveCharacter.getName())
                             .with("path", context.getSkillData().getSkillName()));
 
         }
-        onCharacterInit(IActiveCharacter, 1, context);
+        onCharacterInit(ActiveCharacter, 1, context);
     }
 
     @Override
-    public void applyEffect(PlayerSkillContext info, IActiveCharacter character) {
+    public void applyEffect(PlayerSkillContext info, ActiveCharacter character) {
 
     }
 
     @Override
-    public void onCharacterInit(IActiveCharacter c, int level, PlayerSkillContext context) {
+    public void onCharacterInit(ActiveCharacter c, int level, PlayerSkillContext context) {
         super.onCharacterInit(c, level, context);
         PlayerSkillContext skillInfo = c.getSkillInfo(this);
         SkillData skillData = skillInfo.getSkillData();
@@ -69,7 +69,7 @@ public class SkillTreeSpecialization extends PassiveSkill {
     }
 
     @Override
-    public void skillRefund(IActiveCharacter c, PlayerSkillContext context) {
+    public void skillRefund(ActiveCharacter c, PlayerSkillContext context) {
         SkillData skillData = context.getSkillData();
         SkillPathData pdata = (SkillPathData) skillData;
 

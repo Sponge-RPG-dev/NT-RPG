@@ -1,6 +1,7 @@
 package cz.neumimto.rpg.spigot.events.party;
 
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.party.IParty;
 import cz.neumimto.rpg.common.events.party.PartyEvent;
 import cz.neumimto.rpg.spigot.events.AbstractNEvent;
@@ -9,7 +10,7 @@ import org.bukkit.event.Cancellable;
 public abstract class SpigotAbstractPartyEvent extends AbstractNEvent implements PartyEvent, Cancellable {
 
     private IParty party;
-    private IActiveCharacter character;
+    private ActiveCharacter character;
     private boolean cancelled;
 
     @Override
@@ -23,12 +24,12 @@ public abstract class SpigotAbstractPartyEvent extends AbstractNEvent implements
     }
 
     @Override
-    public IActiveCharacter getCharacter() {
+    public ActiveCharacter getCharacter() {
         return character;
     }
 
     @Override
-    public void setCharacter(IActiveCharacter character) {
+    public void setCharacter(ActiveCharacter character) {
         this.character = character;
     }
 

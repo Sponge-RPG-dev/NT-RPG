@@ -1,10 +1,10 @@
 package cz.neumimto.rpg.common.skills;
 
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 
 public interface ISkillExecutor {
 
     ISkillExecutor init(SkillData skillData);
 
-    SkillResult execute(IActiveCharacter character, PlayerSkillContext playerSkillContext);
+    SkillResult execute(ActiveCharacter character, PlayerSkillContext playerSkillContext);
 }

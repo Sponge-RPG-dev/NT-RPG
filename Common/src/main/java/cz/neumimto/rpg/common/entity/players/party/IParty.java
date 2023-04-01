@@ -1,11 +1,11 @@
 package cz.neumimto.rpg.common.entity.players.party;
 
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 
 import java.util.Set;
 import java.util.UUID;
 
-public interface IParty<T extends IActiveCharacter> {
+public interface IParty<T extends ActiveCharacter> {
     void addPlayer(T character);
 
     T getLeader();

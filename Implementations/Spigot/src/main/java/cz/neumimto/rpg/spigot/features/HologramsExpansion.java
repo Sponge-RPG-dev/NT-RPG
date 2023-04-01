@@ -2,7 +2,7 @@ package cz.neumimto.rpg.spigot.features;
 
 import cz.neumimto.rpg.common.ResourceLoader;
 import cz.neumimto.rpg.common.entity.IEntity;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.localization.LocalizationService;
 import cz.neumimto.rpg.common.skills.ISkill;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
@@ -66,7 +66,7 @@ public class HologramsExpansion implements Listener {
         hologram.setBillboard(Display.Billboard.CENTER);
 
         //todo in future when entitis are able to casts spells
-        IActiveCharacter c = (IActiveCharacter) caster;
+        ActiveCharacter c = (ActiveCharacter) caster;
         PlayerSkillContext info = c.getSkillInfo(skill.getId());
         if (info == null) {
             return; //nadmin / contextless

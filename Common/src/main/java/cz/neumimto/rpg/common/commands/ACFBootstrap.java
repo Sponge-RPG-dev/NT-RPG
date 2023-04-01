@@ -8,7 +8,7 @@ import co.aikar.locales.MessageKey;
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.configuration.AttributeConfig;
 import cz.neumimto.rpg.common.effects.IGlobalEffect;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.common.skills.ISkill;
@@ -73,7 +73,7 @@ public class ACFBootstrap {
         //may not be async as playercontext changes at any time
         manager.getCommandCompletions().registerCompletion("learnedskill", c -> {
             UUID uuid = c.getIssuer().getUniqueId();
-            IActiveCharacter character = Rpg.get().getCharacterService().getCharacter(uuid);
+            ActiveCharacter character = Rpg.get().getCharacterService().getCharacter(uuid);
             Map<String, PlayerSkillContext> skills = character.getSkillsByName();
             return skills.keySet();
         });
@@ -125,10 +125,10 @@ public class ACFBootstrap {
 
         manager.getCommandCompletions().registerCompletion("party-current", c -> {
             UUID uniqueId = c.getIssuer().getUniqueId();
-            Set<IActiveCharacter> players = Rpg.get().getCharacterService().getCharacter(uniqueId)
+            Set<ActiveCharacter> players = Rpg.get().getCharacterService().getCharacter(uniqueId)
                     .getParty()
                     .getPlayers();
-            return players.stream().map(IActiveCharacter::getPlayerAccountName).collect(Collectors.toList());
+            return players.stream().map(ActiveCharacter::getPlayerAccountName).collect(Collectors.toList());
         });
 
         manager.getCommandCompletions().registerAsyncCompletion("learned-skill", c ->
@@ -141,7 +141,7 @@ public class ACFBootstrap {
             //todo
         });
 
-        manager.getCommandContexts().registerIssuerOnlyContext(IActiveCharacter.class, c -> {
+        manager.getCommandContexts().registerIssuerOnlyContext(ActiveCharacter.class, c -> {
             UUID uniqueId = c.getIssuer().getUniqueId();
             return Rpg.get().getCharacterService().getCharacter(uniqueId);
         });
@@ -153,7 +153,7 @@ public class ACFBootstrap {
 
         manager.getCommandCompletions().registerAsyncCompletion("@skillbook", c -> {
             UUID uuid = c.getIssuer().getUniqueId();
-            IActiveCharacter character = Rpg.get().getCharacterService().getCharacter(uuid);
+            ActiveCharacter character = Rpg.get().getCharacterService().getCharacter(uuid);
             Map<String, PlayerSkillContext> skills = character.getSkillsByName();
             Set<String> set = new HashSet<>(skills.keySet());
             set.add("-");
@@ -162,7 +162,7 @@ public class ACFBootstrap {
 
         manager.getCommandContexts().registerIssuerAwareContext(ISkill[].class, c -> {
             UUID uuid = c.getIssuer().getUniqueId();
-            IActiveCharacter character = Rpg.get().getCharacterService().getCharacter(uuid);
+            ActiveCharacter character = Rpg.get().getCharacterService().getCharacter(uuid);
             int i = 0;
             while (!c.isLastArg()) {
                 String s = c.popFirstArg();

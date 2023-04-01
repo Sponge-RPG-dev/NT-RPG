@@ -11,7 +11,7 @@ import cz.neumimto.rpg.common.skills.SkillResult;
 import cz.neumimto.rpg.common.skills.tree.SkillType;
 import cz.neumimto.rpg.spigot.effects.common.Maim;
 import cz.neumimto.rpg.spigot.effects.common.model.SlowModel;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageEvent;
 
@@ -35,7 +35,7 @@ public class Hamstring extends TargetedEntitySkill {
     }
 
     @Override
-    public SkillResult castOn(IEntity target, ISpigotCharacter source, PlayerSkillContext skillContext) {
+    public SkillResult castOn(IEntity target, SpigotCharacter source, PlayerSkillContext skillContext) {
         long duration = skillContext.getLongNodeValue(SkillNodes.DURATION);
         int i = skillContext.getIntNodeValue(SkillNodes.AMPLIFIER);
         SlowModel slowModel = new SlowModel();

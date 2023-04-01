@@ -1,21 +1,21 @@
 package cz.neumimto.rpg.spigot.events.character;
 
 
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.events.character.TargetCharacterEvent;
 import cz.neumimto.rpg.spigot.events.AbstractNEvent;
 
 public abstract class AbstractCharacterEvent extends AbstractNEvent implements TargetCharacterEvent {
 
-    private IActiveCharacter target;
+    private ActiveCharacter target;
 
     @Override
-    public IActiveCharacter getTarget() {
+    public ActiveCharacter getTarget() {
         return target;
     }
 
     @Override
-    public void setTarget(IActiveCharacter target) {
+    public void setTarget(ActiveCharacter target) {
         this.target = target;
     }
 

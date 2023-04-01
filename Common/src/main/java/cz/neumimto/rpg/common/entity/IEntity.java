@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.common.entity;
 
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.resources.Resource;
 
 import java.util.UUID;
@@ -16,7 +16,7 @@ public interface IEntity<T> extends IEffectConsumer {
 
     Resource getResource(String resource);
 
-    boolean isFriendlyTo(IActiveCharacter character);
+    boolean isFriendlyTo(ActiveCharacter character);
 
     T getEntity();
 }

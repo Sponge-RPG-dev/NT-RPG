@@ -2,12 +2,12 @@ package cz.neumimto.rpg.common.skills;
 
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.effects.IEffect;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.skills.types.ActiveSkill;
 
 import javax.inject.Inject;
 
-public abstract class ToggleableSkill<T extends IActiveCharacter> extends ActiveSkill<T> {
+public abstract class ToggleableSkill<T extends ActiveCharacter> extends ActiveSkill<T> {
 
     @Inject
     private EffectService effectService;

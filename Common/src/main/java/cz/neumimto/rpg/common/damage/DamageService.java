@@ -4,12 +4,12 @@ import cz.neumimto.rpg.common.classes.ClassService;
 import cz.neumimto.rpg.common.configuration.PluginConfig;
 import cz.neumimto.rpg.common.entity.EntityService;
 import cz.neumimto.rpg.common.entity.IEntity;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.items.RpgItemType;
 
 import javax.inject.Inject;
 
-public abstract class DamageService<W extends IActiveCharacter, T, E extends IEntity<T>> {
+public abstract class DamageService<W extends ActiveCharacter, T, E extends IEntity<T>> {
 
     @Inject
     protected EntityService entityService;
@@ -22,7 +22,7 @@ public abstract class DamageService<W extends IActiveCharacter, T, E extends IEn
 
     protected DamageHandler<W, T> damageHandler;
 
-    public double getCharacterItemDamage(IActiveCharacter character, RpgItemType type) {
+    public double getCharacterItemDamage(ActiveCharacter character, RpgItemType type) {
         if (type == null) {
             return 1; //todo unarmed
         }
@@ -59,7 +59,7 @@ public abstract class DamageService<W extends IActiveCharacter, T, E extends IEn
 
     public abstract void init();
 
-    public abstract static class DamageHandler<W extends IActiveCharacter, T> {
+    public abstract static class DamageHandler<W extends ActiveCharacter, T> {
 
         public abstract boolean canDamage(W damager, T damaged);
 

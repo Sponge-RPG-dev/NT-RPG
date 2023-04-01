@@ -6,7 +6,7 @@ import com.google.gson.JsonObject;
 import cz.neumimto.rpg.common.scripting.mechanics.NTScriptProxy;
 import cz.neumimto.rpg.spigot.SpigotRpg;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.advancement.Advancement;
@@ -30,7 +30,7 @@ public class ToastMechanic implements NTScriptProxy {
     @Inject
     private SpigotRpg rpgApi;
 
-    public void sendToPlayer(ISpigotCharacter character,
+    public void sendToPlayer(SpigotCharacter character,
                              String message,
                              String icon,
                              String nbt,

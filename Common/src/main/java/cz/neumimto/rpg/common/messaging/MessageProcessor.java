@@ -1,9 +1,9 @@
 package cz.neumimto.rpg.common.messaging;
 
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 
 @FunctionalInterface
 public interface MessageProcessor {
 
-    void sendMessage(IActiveCharacter character, String message);
+    void sendMessage(ActiveCharacter character, String message);
 }

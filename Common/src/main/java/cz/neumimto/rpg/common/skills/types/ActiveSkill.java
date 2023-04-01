@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.common.skills.types;
 
 import com.google.inject.Inject;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.inventory.InventoryService;
 import cz.neumimto.rpg.common.localization.LocalizationKeys;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
@@ -13,7 +13,7 @@ import cz.neumimto.rpg.common.skills.tree.SkillType;
 /**
  * Created by NeumimTo on 26.7.2015.
  */
-public abstract class ActiveSkill<T extends IActiveCharacter> extends AbstractSkill<T> implements IActiveSkill<T> {
+public abstract class ActiveSkill<T extends ActiveCharacter> extends AbstractSkill<T> implements IActiveSkill<T> {
 
     @Inject
     private InventoryService inventoryService;

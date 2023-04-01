@@ -4,7 +4,7 @@ import com.google.auto.service.AutoService;
 import cz.neumimto.rpg.common.ResourceLoader;
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.entity.EntityHand;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.gui.Gui;
 import cz.neumimto.rpg.common.inventory.CannotUseItemReason;
 import cz.neumimto.rpg.common.items.RpgItemStack;
@@ -15,7 +15,7 @@ import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.skills.SkillService;
 import cz.neumimto.rpg.spigot.SpigotRpg;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
 import cz.neumimto.rpg.spigot.gui.SpellbookListener;
 import cz.neumimto.rpg.spigot.gui.SpigotGui;
@@ -118,7 +118,7 @@ public class SpigotInventoryListener implements IRpgListener {
             if (pdc.has(RPGItemMetadataKeys.LEARNED_SPELL)) {
                 String skillName = pdc.get(RPGItemMetadataKeys.LEARNED_SPELL, PersistentDataType.STRING);
 
-                ISpigotCharacter character = spigotCharacterService.getCharacter(whoClicked.getUniqueId());
+                SpigotCharacter character = spigotCharacterService.getCharacter(whoClicked.getUniqueId());
                 PlayerSkillContext playerSkillContext = character.getSkillsByName().get(skillName);
                 ItemStack skillbind = inventoryService.createSkillbind(playerSkillContext.getSkillData());
 
@@ -159,7 +159,7 @@ public class SpigotInventoryListener implements IRpgListener {
             return;
         }
         Player player = event.getPlayer();
-        IActiveCharacter character = spigotCharacterService.getCharacter(player);
+        ActiveCharacter character = spigotCharacterService.getCharacter(player);
         if (character.isStub()) {
             return;
         }
@@ -193,7 +193,7 @@ public class SpigotInventoryListener implements IRpgListener {
 
         Player player = event.getPlayer();
 
-        ISpigotCharacter character = spigotCharacterService.getCharacter(player);
+        SpigotCharacter character = spigotCharacterService.getCharacter(player);
         if (character.isStub()) {
             return;
         }
@@ -252,7 +252,7 @@ public class SpigotInventoryListener implements IRpgListener {
             return;
         }
 
-        ISpigotCharacter character = spigotCharacterService.getCharacter(player);
+        SpigotCharacter character = spigotCharacterService.getCharacter(player);
         if (character.isStub()) {
             return;
         }
@@ -291,7 +291,7 @@ public class SpigotInventoryListener implements IRpgListener {
             return;
         }
         Player player = (Player) event.getEntity();
-        ISpigotCharacter character = spigotCharacterService.getCharacter(player.getUniqueId());
+        SpigotCharacter character = spigotCharacterService.getCharacter(player.getUniqueId());
         Item item = event.getItem();
 
         PlayerInventory inventory = player.getInventory();

@@ -7,7 +7,7 @@ import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.common.resources.Resource;
 import cz.neumimto.rpg.common.resources.ResourceService;
 import cz.neumimto.rpg.common.skills.ISkill;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
 import cz.neumimto.rpg.spigot.events.character.SpigotCharacterGainedLevelEvent;
 import cz.neumimto.rpg.spigot.inventory.SpigotItemService;
@@ -89,14 +89,14 @@ public class MMOItemsExpansion implements Listener {
 
     public static class MMOItemsCharacter extends RPGPlayer {
         private final UUID uuid;
-        private ISpigotCharacter character;
+        private SpigotCharacter character;
 
         public MMOItemsCharacter(PlayerData playerData, UUID uuid) {
             super(playerData);
             this.uuid = uuid;
         }
 
-        private ISpigotCharacter getCharacter() {
+        private SpigotCharacter getCharacter() {
             if (character == null) {
                 //todo remove
                 character = characterService.getCharacter(uuid);
@@ -105,7 +105,7 @@ public class MMOItemsExpansion implements Listener {
         }
 
         public int getLevel() {
-            ISpigotCharacter character = getCharacter();
+            SpigotCharacter character = getCharacter();
             if (character == null) {
                 return 0;
             }
@@ -117,7 +117,7 @@ public class MMOItemsExpansion implements Listener {
         }
 
         public String getClassName() {
-            ISpigotCharacter character = getCharacter();
+            SpigotCharacter character = getCharacter();
             if (character == null) {
                 return "";
             }

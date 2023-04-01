@@ -4,10 +4,10 @@ import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.skills.SkillNodes;
 import cz.neumimto.rpg.common.skills.SkillResult;
 import cz.neumimto.rpg.common.skills.types.ActiveSkill;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import cz.neumimto.rpg.spigot.skills.utils.Beam;
 
-public abstract class BeamSkill extends ActiveSkill<ISpigotCharacter> {
+public abstract class BeamSkill extends ActiveSkill<SpigotCharacter> {
 
     protected Beam.OnTick onTick;
     protected Beam.OnEntityHit onEntityHit;
@@ -22,7 +22,7 @@ public abstract class BeamSkill extends ActiveSkill<ISpigotCharacter> {
     }
 
     @Override
-    public SkillResult cast(ISpigotCharacter character, PlayerSkillContext info) {
+    public SkillResult cast(SpigotCharacter character, PlayerSkillContext info) {
         long tick = info.getLongNodeValue("beam-tick-period");
         new Beam(character,
                 step,

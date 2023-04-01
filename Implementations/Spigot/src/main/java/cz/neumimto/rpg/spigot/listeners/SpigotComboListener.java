@@ -4,7 +4,7 @@ import com.google.auto.service.AutoService;
 import com.google.inject.Singleton;
 import cz.neumimto.rpg.common.ResourceLoader;
 import cz.neumimto.rpg.common.entity.UserActionType;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.spigot.SpigotRpg;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
 import cz.neumimto.rpg.spigot.services.IRpgListener;
@@ -36,7 +36,7 @@ public class SpigotComboListener implements IRpgListener {
         if (spigotRpg.isDisabledInWorld(e.getPlayer())) {
             return;
         }
-        IActiveCharacter character = characterService.getCharacter(e.getPlayer());
+        ActiveCharacter character = characterService.getCharacter(e.getPlayer());
         e.setCancelled(characterService.processUserAction(character, UserActionType.R));
 
     }
@@ -49,7 +49,7 @@ public class SpigotComboListener implements IRpgListener {
         if (spigotRpg.isDisabledInWorld(e.getPlayer())) {
             return;
         }
-        IActiveCharacter character = characterService.getCharacter(e.getPlayer());
+        ActiveCharacter character = characterService.getCharacter(e.getPlayer());
         e.setCancelled(characterService.processUserAction(character, UserActionType.L));
 
     }
@@ -63,7 +63,7 @@ public class SpigotComboListener implements IRpgListener {
             return;
         }
 
-        IActiveCharacter character = characterService.getCharacter(e.getPlayer());
+        ActiveCharacter character = characterService.getCharacter(e.getPlayer());
         e.setCancelled(characterService.processUserAction(character, UserActionType.Q));
 
     }
@@ -76,7 +76,7 @@ public class SpigotComboListener implements IRpgListener {
         if (spigotRpg.isDisabledInWorld(e.getPlayer())) {
             return;
         }
-        IActiveCharacter character = characterService.getCharacter(e.getPlayer().getUniqueId());
+        ActiveCharacter character = characterService.getCharacter(e.getPlayer().getUniqueId());
         e.setCancelled(characterService.processUserAction(character, UserActionType.E));
 
     }

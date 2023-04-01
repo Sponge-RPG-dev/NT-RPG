@@ -2,7 +2,7 @@ package cz.neumimto.rpg.common.commands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -17,7 +17,7 @@ public class ClassesComand extends BaseCommand {
 
     @Default
     @CommandCompletion("@classtypes")
-    public void classes(IActiveCharacter issuer, @Optional String type) {
+    public void classes(ActiveCharacter issuer, @Optional String type) {
         infoCommands.showClassesCommand(issuer, type);
     }
 }

@@ -8,7 +8,7 @@ import cz.neumimto.rpg.common.items.ItemService;
 import cz.neumimto.rpg.common.items.RpgItemType;
 import cz.neumimto.rpg.common.localization.LocalizationKeys;
 import cz.neumimto.rpg.common.localization.LocalizationService;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
 import cz.neumimto.rpg.spigot.gui.elements.GuiCommand;
 import net.kyori.adventure.text.Component;
@@ -76,7 +76,7 @@ public class WeaponGuiView extends ConfigurableInventoryGui {
         Map<String, List<GuiCommand>> map = new HashMap<>();
         List<GuiCommand> list = new ArrayList<>();
         if (commandSender instanceof Player player) {
-            ISpigotCharacter character = characterService.getCharacter(player);
+            SpigotCharacter character = characterService.getCharacter(player);
 
             Set<ItemClass> itemClasses = itemService.getItemClasses()
                     .stream()

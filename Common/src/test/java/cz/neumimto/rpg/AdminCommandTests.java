@@ -5,7 +5,7 @@ import cz.neumimto.rpg.common.commands.AdminCommands;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.effects.IGlobalEffect;
 import cz.neumimto.rpg.common.entity.CommonProperties;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.common.entity.players.leveling.Linear;
@@ -53,16 +53,16 @@ public class AdminCommandTests {
     }
 
     @Test
-    public void testAddEffectCommand(@Stage(READY) IActiveCharacter iActiveCharacter) {
+    public void testAddEffectCommand(@Stage(READY) ActiveCharacter ActiveCharacter) {
         effectService.registerGlobalEffect(new TestEffectFloatGlobal());
 
         IGlobalEffect globalEffect = effectService.getGlobalEffect(TestEffectFloat.name);
-        abstractAdminCommand.commandAddEffectToPlayer("10", globalEffect, 2000, iActiveCharacter);
-        Assertions.assertTrue(iActiveCharacter.hasEffect(TestEffectFloat.name));
+        abstractAdminCommand.commandAddEffectToPlayer("10", globalEffect, 2000, ActiveCharacter);
+        Assertions.assertTrue(ActiveCharacter.hasEffect(TestEffectFloat.name));
     }
 
     @Test
-    public void testAddExpCommand(@Stage(READY) IActiveCharacter iActiveCharacter) {
+    public void testAddExpCommand(@Stage(READY) ActiveCharacter ActiveCharacter) {
         ClassDefinition classDefinition = new ClassDefinition("test", "test");
 
 
@@ -94,30 +94,30 @@ public class AdminCommandTests {
                 return true;
             }
         };
-        iActiveCharacter.addClass(data);
+        ActiveCharacter.addClass(data);
         classDefinition.addExperienceSource("expSourceTest".toUpperCase());
 
-        iActiveCharacter.setProperty(CommonProperties.experiences_mult, 1);
-        abstractAdminCommand.commandAddExperiences(iActiveCharacter, 10D, "expSourceTest");
+        ActiveCharacter.setProperty(CommonProperties.experiences_mult, 1);
+        abstractAdminCommand.commandAddExperiences(ActiveCharacter, 10D, "expSourceTest");
         Assertions.assertEquals(jpaCharacterClass.getExperiences(), 10D);
     }
 
     @Test
-    public void testAddUniqueSkillPointsWrongArgs3(@Stage(READY) IActiveCharacter iActiveCharacter) {
+    public void testAddUniqueSkillPointsWrongArgs3(@Stage(READY) ActiveCharacter ActiveCharacter) {
         Assertions.assertThrows(IllegalStateException.class, () -> {
-            abstractAdminCommand.commandAddUniqueSkillpoint(iActiveCharacter, "Primary", null);
+            abstractAdminCommand.commandAddUniqueSkillpoint(ActiveCharacter, "Primary", null);
         });
     }
 
     @Test
-    public void testAddUniqueSkillPoints(@Stage(READY) IActiveCharacter iActiveCharacter) {
-        PlayerClassData primary = iActiveCharacter.getClassByType("Primary");
-        CharacterBase characterBase = iActiveCharacter.getCharacterBase();
+    public void testAddUniqueSkillPoints(@Stage(READY) ActiveCharacter ActiveCharacter) {
+        PlayerClassData primary = ActiveCharacter.getClassByType("Primary");
+        CharacterBase characterBase = ActiveCharacter.getCharacterBase();
 
         CharacterClass characterClass = characterBase.getCharacterClass(primary.getClassDefinition());
         int i = characterClass.getSkillPoints();
 
-        abstractAdminCommand.commandAddUniqueSkillpoint(iActiveCharacter, "Primary", "testing");
+        abstractAdminCommand.commandAddUniqueSkillpoint(ActiveCharacter, "Primary", "testing");
 
         Assertions.assertEquals(characterClass.getSkillPoints(), i + 1);
         Assertions.assertEquals(characterBase.getUniqueSkillpoints().size(), 1);

@@ -10,7 +10,7 @@ import cz.neumimto.rpg.common.skills.tree.SkillType;
 import cz.neumimto.rpg.common.skills.types.ActiveSkill;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.entities.ProjectileCache;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -31,7 +31,7 @@ import javax.inject.Singleton;
 @Singleton
 @AutoService(ISkill.class)
 @ResourceLoader.Skill("ntrpg:icicle")
-public class Icicle extends ActiveSkill<ISpigotCharacter> {
+public class Icicle extends ActiveSkill<SpigotCharacter> {
 
     @Override
     public void init() {
@@ -46,7 +46,7 @@ public class Icicle extends ActiveSkill<ISpigotCharacter> {
     }
 
     @Override
-    public SkillResult cast(ISpigotCharacter character, PlayerSkillContext skillContext) {
+    public SkillResult cast(SpigotCharacter character, PlayerSkillContext skillContext) {
         Player p = character.getPlayer();
         World world = p.getWorld();
 

@@ -56,7 +56,7 @@ import static cz.neumimto.rpg.common.logging.Log.warn;
 /**
  * Created by NeumimTo on 26.12.2014.
  */
-public abstract class CharacterService<T extends IActiveCharacter> {
+public abstract class CharacterService<T extends ActiveCharacter> {
 
     protected Map<UUID, T> characters;
     @Inject
@@ -270,7 +270,7 @@ public abstract class CharacterService<T extends IActiveCharacter> {
      * @param character
      * @return new character
      */
-    public IActiveCharacter setActiveCharacter(UUID uuid, T character) {
+    public ActiveCharacter setActiveCharacter(UUID uuid, T character) {
         info("Setting active character player " + uuid + " character " + character.getName());
         T activeCharacter = getCharacter(uuid);
         if (activeCharacter == null) {
@@ -326,15 +326,15 @@ public abstract class CharacterService<T extends IActiveCharacter> {
         effectService.applyGlobalEffectsAsEnchantments(p.getEffects(), character, p);
     }
 
-    public IActiveCharacter removeCachedWrapper(UUID uuid) {
+    public ActiveCharacter removeCachedWrapper(UUID uuid) {
         return removeCachedCharacter(uuid);
     }
 
-    public IActiveCharacter removeCachedCharacter(UUID uuid) {
+    public ActiveCharacter removeCachedCharacter(UUID uuid) {
         return deleteCharacterReferences(removeCharacter(uuid));
     }
 
-    protected IActiveCharacter deleteCharacterReferences(T character) {
+    protected ActiveCharacter deleteCharacterReferences(T character) {
         effectService.removeAllEffects(character);
         if (character.hasParty()) {
             character.getParty().removePlayer(character);
@@ -820,7 +820,7 @@ public abstract class CharacterService<T extends IActiveCharacter> {
         character.setAttributePoints(current + attributepoints);
     }
 
-    public void updateSpellbook(IActiveCharacter character, SkillData[][] o) {
+    public void updateSpellbook(ActiveCharacter character, SkillData[][] o) {
         CharacterBase characterBase = character.getCharacterBase();
         String[][] spellbookPages = characterBase.getSpellbookPages();
         for (int i = 0; i < spellbookPages.length; i++) {
@@ -1303,7 +1303,7 @@ public abstract class CharacterService<T extends IActiveCharacter> {
         base.setAttributePoints(attributePoints);
     }
 
-    public boolean processUserAction(IActiveCharacter character, UserActionType userActionType) {
+    public boolean processUserAction(ActiveCharacter character, UserActionType userActionType) {
         IEffectContainer effect = character.getEffect(ClickComboActionComponent.name);
         if (effect == null) {
             return false;
@@ -1365,7 +1365,7 @@ public abstract class CharacterService<T extends IActiveCharacter> {
         return ActionResult.ok();
     }
 
-    public abstract T buildDummyChar(UUID uuid);
+    public abstract <A extends T> A buildDummyChar(UUID uuid);
 
     public abstract void registerDummyChar(T dummy);
 
@@ -1373,7 +1373,7 @@ public abstract class CharacterService<T extends IActiveCharacter> {
 
     public abstract void setHeathscale(T character, double scale);
 
-    public abstract void notifyCooldown(IActiveCharacter caster, PlayerSkillContext skillInfo, long cd);
+    public abstract void notifyCooldown(ActiveCharacter caster, PlayerSkillContext skillInfo, long cd);
 
     public abstract void updateSpellbook(T character);
 }

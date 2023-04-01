@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.spigot.bridges.rpgregions;
 
 import cz.neumimto.rpg.common.Rpg;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import net.islandearth.rpgregions.api.IRPGRegionsAPI;
 import net.islandearth.rpgregions.api.RPGRegionsAPI;
 import net.islandearth.rpgregions.gui.GuiEditable;
@@ -28,7 +28,7 @@ public class RpgRegionsClassExpReward extends DiscoveryReward {
 
     @Override
     public void award(Player player) {
-        IActiveCharacter character = Rpg.get().getCharacterService().getCharacter(player.getUniqueId());
+        ActiveCharacter character = Rpg.get().getCharacterService().getCharacter(player.getUniqueId());
         if (!character.isStub()) {
             Rpg.get().getCharacterService().addExperiences(character, exp, SOURCE);
         }

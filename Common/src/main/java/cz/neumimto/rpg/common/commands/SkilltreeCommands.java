@@ -4,7 +4,7 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.common.gui.Gui;
@@ -36,19 +36,19 @@ public class SkilltreeCommands extends BaseCommand {
 
     @Default
     @CommandCompletion("@issuerclasses")
-    public void _openSkillTreeCommand(IActiveCharacter character, ClassDefinition classDefinition) {
+    public void _openSkillTreeCommand(ActiveCharacter character, ClassDefinition classDefinition) {
         openSkillTreeCommand(character, classDefinition);
     }
 
     @Subcommand("view")
     @CommandCompletion("@issuerclasses")
-    public void openSkillTreeCommand(IActiveCharacter character, ClassDefinition classDefinition) {
+    public void openSkillTreeCommand(ActiveCharacter character, ClassDefinition classDefinition) {
         skillsCommandFacade.openSkillTreeCommand(character, classDefinition);
     }
 
     @Private
     @Subcommand("north")
-    public void skillTreeOptionNorth(IActiveCharacter character) {
+    public void skillTreeOptionNorth(ActiveCharacter character) {
         SkillTreeViewModel viewModel = character.getLastTimeInvokedSkillTreeView();
         viewModel.getLocation().key -= 1;
         Rpg.get().scheduleSyncLater(() -> Gui.moveSkillTreeMenu(character));
@@ -56,7 +56,7 @@ public class SkilltreeCommands extends BaseCommand {
 
     @Private
     @Subcommand("south")
-    public void skillTreeOptionSouth(IActiveCharacter character) {
+    public void skillTreeOptionSouth(ActiveCharacter character) {
         SkillTreeViewModel viewModel = character.getLastTimeInvokedSkillTreeView();
         viewModel.getLocation().key += 1;
         Rpg.get().scheduleSyncLater(() -> Gui.moveSkillTreeMenu(character));
@@ -64,7 +64,7 @@ public class SkilltreeCommands extends BaseCommand {
 
     @Private
     @Subcommand("west")
-    public void skillTreeOptionWest(IActiveCharacter character) {
+    public void skillTreeOptionWest(ActiveCharacter character) {
         SkillTreeViewModel viewModel = character.getLastTimeInvokedSkillTreeView();
         viewModel.getLocation().value += 1;
         Rpg.get().scheduleSyncLater(() -> Gui.moveSkillTreeMenu(character));
@@ -72,7 +72,7 @@ public class SkilltreeCommands extends BaseCommand {
 
     @Private
     @Subcommand("east")
-    public void skillTreeOptionEast(IActiveCharacter character) {
+    public void skillTreeOptionEast(ActiveCharacter character) {
         SkillTreeViewModel viewModel = character.getLastTimeInvokedSkillTreeView();
         viewModel.getLocation().value -= 1;
         Rpg.get().scheduleSyncLater(() -> Gui.moveSkillTreeMenu(character));
@@ -80,7 +80,7 @@ public class SkilltreeCommands extends BaseCommand {
 
     @Private
     @Subcommand("mode")
-    public void skillTreeOptionMode(IActiveCharacter character) {
+    public void skillTreeOptionMode(ActiveCharacter character) {
         SkillTreeViewModel viewModel = character.getLastTimeInvokedSkillTreeView();
         viewModel.setInteractiveMode(viewModel.getInteractiveMode().opposite());
         Rpg.get().scheduleSyncLater(() -> Gui.moveSkillTreeMenu(character));
@@ -88,7 +88,7 @@ public class SkilltreeCommands extends BaseCommand {
 
     @Private
     @Subcommand("skill")
-    public void skillTreeOptionSkill(IActiveCharacter character, ISkill skill) {
+    public void skillTreeOptionSkill(ActiveCharacter character, ISkill skill) {
         SkillTreeViewModel viewModel = character.getLastTimeInvokedSkillTreeView();
 
         if (viewModel.getInteractiveMode() == SkillTreeViewModel.InteractiveMode.FAST) {

@@ -12,7 +12,7 @@ import cz.neumimto.rpg.common.skills.tree.SkillType;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
 import cz.neumimto.rpg.spigot.effects.common.StunEffect;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -51,7 +51,7 @@ public class Bash extends TargetedEntitySkill {
     }
 
     @Override
-    public SkillResult castOn(IEntity target, ISpigotCharacter source, PlayerSkillContext skillContext) {
+    public SkillResult castOn(IEntity target, SpigotCharacter source, PlayerSkillContext skillContext) {
         LivingEntity entity = (LivingEntity) target.getEntity();
 
         double damage = skillContext.getDoubleNodeValue(SkillNodes.DAMAGE);

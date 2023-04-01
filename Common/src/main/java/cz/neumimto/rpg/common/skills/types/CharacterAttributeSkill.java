@@ -4,7 +4,7 @@ import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.configuration.AttributeConfig;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.skills.SkillData;
@@ -16,24 +16,24 @@ import cz.neumimto.rpg.common.skills.utils.SkillLoadingErrors;
 import java.util.*;
 import java.util.function.BiFunction;
 
-public class CharacterAttributeSkill extends AbstractSkill<IActiveCharacter> {
+public class CharacterAttributeSkill extends AbstractSkill<ActiveCharacter> {
 
     public CharacterAttributeSkill() {
         super();
     }
 
     @Override
-    public SkillResult onPreUse(IActiveCharacter character, PlayerSkillContext esi) {
+    public SkillResult onPreUse(ActiveCharacter character, PlayerSkillContext esi) {
         return SkillResult.CANCELLED;
     }
 
     @Override
-    public void onCharacterInit(IActiveCharacter c, int level, PlayerSkillContext context) {
+    public void onCharacterInit(ActiveCharacter c, int level, PlayerSkillContext context) {
         super.onCharacterInit(c, level, context);
         assignAll(c, 1, (integer, integer2) -> integer <= integer2);
     }
 
-    private void assignAll(IActiveCharacter c, int i, BiFunction<Integer, Integer, Boolean> fc) {
+    private void assignAll(ActiveCharacter c, int i, BiFunction<Integer, Integer, Boolean> fc) {
         PlayerSkillContext skill = c.getSkill(getId());
         int totalLevel = skill.getTotalLevel();
         CharacterAttributeSkillData skillData = (CharacterAttributeSkillData) skill.getSkillData();
@@ -45,21 +45,21 @@ public class CharacterAttributeSkill extends AbstractSkill<IActiveCharacter> {
     }
 
     @Override
-    public void skillLearn(IActiveCharacter c, PlayerSkillContext context) {
+    public void skillLearn(ActiveCharacter c, PlayerSkillContext context) {
         super.skillLearn(c, context);
         assignAll(c, 1, (integer, integer2) -> integer <= integer2);
     }
 
     @Override
-    public void skillUpgrade(IActiveCharacter c, int level, PlayerSkillContext context) {
+    public void skillUpgrade(ActiveCharacter c, int level, PlayerSkillContext context) {
         super.skillUpgrade(c, level, context);
         assignAll(c, 1, Objects::equals);
     }
 
     @Override
-    public void skillRefund(IActiveCharacter IActiveCharacter, PlayerSkillContext context) {
-        super.skillRefund(IActiveCharacter, context);
-        assignAll(IActiveCharacter, -1, (integer, integer2) -> integer <= integer2);
+    public void skillRefund(ActiveCharacter ActiveCharacter, PlayerSkillContext context) {
+        super.skillRefund(ActiveCharacter, context);
+        assignAll(ActiveCharacter, -1, (integer, integer2) -> integer <= integer2);
     }
 
 

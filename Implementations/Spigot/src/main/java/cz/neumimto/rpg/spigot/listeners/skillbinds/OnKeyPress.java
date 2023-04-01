@@ -4,7 +4,7 @@ import cz.neumimto.rpg.common.commands.SkillsCommandFacade;
 import cz.neumimto.rpg.common.localization.LocalizationService;
 import cz.neumimto.rpg.common.skills.SkillService;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
 import cz.neumimto.rpg.spigot.inventory.SpigotInventoryService;
 import org.bukkit.Material;
@@ -50,7 +50,7 @@ public class OnKeyPress implements Listener {
         ItemMeta itemMeta = item.getItemMeta();
         if (itemMeta.getPersistentDataContainer().has(key, PersistentDataType.STRING)) {
             String skillId = itemMeta.getPersistentDataContainer().get(key, PersistentDataType.STRING);
-            ISpigotCharacter character = characterService.getCharacter(player);
+            SpigotCharacter character = characterService.getCharacter(player);
             commandFacade.executeSkill(character, skillId);
             int previousSlot = event.getPreviousSlot();
             ItemStack prevItem = inventory.getItem(previousSlot);

@@ -10,7 +10,7 @@ import cz.neumimto.rpg.common.skills.tree.SkillType;
 import cz.neumimto.rpg.nms.NMSHandler;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -61,7 +61,7 @@ public class FireBlast extends TargetedBlockSkill {
     }
 
     @Override
-    protected SkillResult castOn(Block block, BlockFace blockFace, ISpigotCharacter character, PlayerSkillContext skillContext) {
+    protected SkillResult castOn(Block block, BlockFace blockFace, SpigotCharacter character, PlayerSkillContext skillContext) {
         int blastradius = skillContext.getIntNodeValue("blast-radius");
 
         Location location = block.getLocation();

@@ -3,7 +3,7 @@ package cz.neumimto.rpg.spigot.bridges.mythicalmobs;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.skills.SkillResult;
 import cz.neumimto.rpg.common.skills.types.ActiveSkill;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import io.lumine.mythic.api.skills.Skill;
 import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.mythic.lib.damage.DamageType;
@@ -15,7 +15,7 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MythicalMobsSkill extends ActiveSkill<ISpigotCharacter> {
+public class MythicalMobsSkill extends ActiveSkill<SpigotCharacter> {
 
     protected MythicBukkit mm;
     protected Skill mmSkill;
@@ -30,7 +30,7 @@ public class MythicalMobsSkill extends ActiveSkill<ISpigotCharacter> {
     }
 
     @Override
-    public SkillResult cast(ISpigotCharacter character, PlayerSkillContext skillContext) {
+    public SkillResult cast(SpigotCharacter character, PlayerSkillContext skillContext) {
         Player player = character.getPlayer();
         float power = (float) skillContext.getCachedComputedSkillSettings().getDouble("power");
 

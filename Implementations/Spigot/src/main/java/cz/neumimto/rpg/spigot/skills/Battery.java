@@ -12,7 +12,7 @@ import cz.neumimto.rpg.common.skills.SkillNodes;
 import cz.neumimto.rpg.common.skills.SkillResult;
 import cz.neumimto.rpg.common.skills.tree.SkillType;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
 import cz.neumimto.rpg.spigot.skills.particles.CircularYIncrementingEffect;
 import org.bukkit.Color;
@@ -34,11 +34,11 @@ public class Battery extends TargetedEntitySkill {
     }
 
     @Override
-    public SkillResult castOn(IEntity target, ISpigotCharacter source, PlayerSkillContext info) {
+    public SkillResult castOn(IEntity target, SpigotCharacter source, PlayerSkillContext info) {
         if (target.getType() != IEntityType.CHARACTER) {
             return SkillResult.CANCELLED;
         }
-        ISpigotCharacter targetChar = (ISpigotCharacter) target;
+        SpigotCharacter targetChar = (SpigotCharacter) target;
         Resource mana = targetChar.getResource(ResourceService.mana);
         if (mana != null && mana.getType().equals(ResourceService.mana)) {
             mana.setValue(mana.getValue() + info.getDoubleNodeValue(SkillNodes.AMOUNT));

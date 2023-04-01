@@ -9,7 +9,7 @@ import cz.neumimto.rpg.common.items.RpgItemType;
 import cz.neumimto.rpg.common.localization.LocalizationKeys;
 import cz.neumimto.rpg.common.localization.LocalizationService;
 import cz.neumimto.rpg.common.permissions.PermissionService;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
 import cz.neumimto.rpg.spigot.gui.elements.GuiCommand;
 import cz.neumimto.rpg.spigot.inventory.SpigotInventoryService;
@@ -86,7 +86,7 @@ public class ArmorGuiView extends ConfigurableInventoryGui {
         Map<String, List<GuiCommand>> map = new HashMap<>();
         List<GuiCommand> list = new ArrayList<>();
         if (commandSender instanceof Player player) {
-            ISpigotCharacter character = characterService.getCharacter(player);
+            SpigotCharacter character = characterService.getCharacter(player);
             spigotItemService.filterAllowedItems(character, Set.of(ItemClass.ARMOR))
                             .forEach(a->list.add(new GuiCommand(toItemStack(a))));
         }

@@ -13,7 +13,7 @@ import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.entity.EntityService;
 import cz.neumimto.rpg.common.entity.PropertyService;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.parties.PartyService;
 import cz.neumimto.rpg.common.events.EventFactoryService;
 import cz.neumimto.rpg.common.exp.ExperienceService;
@@ -126,7 +126,7 @@ public abstract class AbstractRpg implements RpgApi {
     }
 
     @Override
-    public CharacterService<IActiveCharacter> getCharacterService() {
+    public CharacterService<ActiveCharacter> getCharacterService() {
         return characterService;
     }
 

@@ -5,12 +5,12 @@ import cz.neumimto.rpg.common.ResourceLoader;
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.configuration.PluginConfig;
 import cz.neumimto.rpg.common.effects.EffectService;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.exp.ExperienceService;
 import cz.neumimto.rpg.common.exp.ExperienceSources;
 import cz.neumimto.rpg.spigot.SpigotRpg;
 import cz.neumimto.rpg.spigot.entities.SpigotEntityService;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
 import cz.neumimto.rpg.spigot.inventory.SpigotInventoryService;
 import cz.neumimto.rpg.spigot.services.IRpgListener;
@@ -55,7 +55,7 @@ public class SpigotEntityLifecycleListener implements IRpgListener {
 
     @EventHandler
     public void onPlayerLogin(PlayerJoinEvent event) {
-        //  IActiveCharacter character = characterService.getTarget(event.getTarget().getUniqueId());
+        //  ActiveCharacter character = characterService.getTarget(event.getTarget().getUniqueId());
         characterService.loadPlayerData(event.getPlayer().getUniqueId(), event.getPlayer().getName());
     }
 
@@ -82,7 +82,7 @@ public class SpigotEntityLifecycleListener implements IRpgListener {
         }
         Entity targetEntity = event.getEntity();
         if (targetEntity.getType() == EntityType.PLAYER) {
-            IActiveCharacter character = characterService.getCharacter(targetEntity.getUniqueId());
+            ActiveCharacter character = characterService.getCharacter(targetEntity.getUniqueId());
             if (character.isStub()) {
                 return;
             }
@@ -103,7 +103,7 @@ public class SpigotEntityLifecycleListener implements IRpgListener {
             }
 
             if (source != null) {
-                ISpigotCharacter character = characterService.getCharacter(source.getUniqueId());
+                SpigotCharacter character = characterService.getCharacter(source.getUniqueId());
                 if (character != null) {
 
                     double exp = entityService.getExperiences(targetEntity.getWorld().getName(), targetEntity.getType().name(), targetEntity.getUniqueId());
@@ -116,15 +116,15 @@ public class SpigotEntityLifecycleListener implements IRpgListener {
                             PluginConfig pluginConfig = Rpg.get().getPluginConfig();
                             exp *= pluginConfig.PARTY_EXPERIENCE_MULTIPLIER;
                             double dist = Math.pow(pluginConfig.PARTY_EXPERIENCE_SHARE_DISTANCE, 2);
-                            Set<ISpigotCharacter> set = new HashSet<>();
-                            for (ISpigotCharacter member : character.getParty().getPlayers()) {
+                            Set<SpigotCharacter> set = new HashSet<>();
+                            for (SpigotCharacter member : character.getParty().getPlayers()) {
                                 Player player = member.getPlayer();
                                 if (player.getLocation().distanceSquared(character.getPlayer().getLocation()) <= dist) {
                                     set.add(member);
                                 }
                             }
                             exp /= set.size();
-                            for (ISpigotCharacter character1 : set) {
+                            for (SpigotCharacter character1 : set) {
                                 characterService.addExperiences(character1, exp, experienceSource);
                             }
                         } else {
@@ -158,7 +158,7 @@ public class SpigotEntityLifecycleListener implements IRpgListener {
         if (caught != null) {
             Double fishingExperience = experienceService.getFishingExperience(caught.getType().name());
             if (fishingExperience != null) {
-                ISpigotCharacter character = characterService.getCharacter(event.getPlayer());
+                SpigotCharacter character = characterService.getCharacter(event.getPlayer());
                 characterService.addExperiences(character, fishingExperience, ExperienceSources.FISHING);
             }
         }
@@ -170,7 +170,7 @@ public class SpigotEntityLifecycleListener implements IRpgListener {
             resetPlayer(event.getPlayer());
             return;
         }
-        ISpigotCharacter character = characterService.getCharacter(event.getPlayer().getUniqueId());
+        SpigotCharacter character = characterService.getCharacter(event.getPlayer().getUniqueId());
         if (character.isStub()) {
             return;
         }
@@ -191,7 +191,7 @@ public class SpigotEntityLifecycleListener implements IRpgListener {
             player.setHealth(20D);
         }
 
-        IActiveCharacter character = characterService.removeCachedWrapper(player.getUniqueId());
+        ActiveCharacter character = characterService.removeCachedWrapper(player.getUniqueId());
         if (!character.isStub()) {
             Location loc = player.getLocation();
             World ex = loc.getWorld();

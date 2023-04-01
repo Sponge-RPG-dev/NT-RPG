@@ -12,7 +12,7 @@ import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.classes.ClassService;
 import cz.neumimto.rpg.common.configuration.SkillTreeLoaderImpl;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.gui.ISkillTreeInterfaceModel;
 import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.common.scripting.NTScriptEngine;
@@ -104,7 +104,7 @@ public abstract class SkillService {
         return skillTrees;
     }
 
-    public SkillResult executeSkill(IActiveCharacter character, PlayerSkillContext esi) {
+    public SkillResult executeSkill(ActiveCharacter character, PlayerSkillContext esi) {
         if (esi == null) {
             return SkillResult.WRONG_DATA;
         }
@@ -121,7 +121,7 @@ public abstract class SkillService {
         return skillExecutor.execute(character, esi);
     }
 
-    public PlayerSkillContext invokeSkillByCombo(String combo, IActiveCharacter character) {
+    public PlayerSkillContext invokeSkillByCombo(String combo, ActiveCharacter character) {
         Map<String, PlayerSkillContext> skills = character.getSkills();
         for (PlayerSkillContext playerSkillContext : skills.values()) {
             if (combo.equals(playerSkillContext.getSkillData().getCombination())) {

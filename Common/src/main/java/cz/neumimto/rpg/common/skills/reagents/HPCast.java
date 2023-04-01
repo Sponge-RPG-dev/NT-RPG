@@ -4,7 +4,7 @@ import com.google.auto.service.AutoService;
 import cz.neumimto.rpg.common.damage.DamageService;
 import cz.neumimto.rpg.common.entity.CommonProperties;
 import cz.neumimto.rpg.common.entity.EntityService;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.resources.Resource;
 import cz.neumimto.rpg.common.resources.ResourceService;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
@@ -25,13 +25,13 @@ public class HPCast extends SkillCastMechanic {
     @Inject
     private DamageService damageService;
 
-    double getHPCost(IActiveCharacter character, PlayerSkillContext context) {
+    double getHPCost(ActiveCharacter character, PlayerSkillContext context) {
         return context.getFloatNodeValue(SkillNodes.HPCOST)
                 * entityService.getEntityProperty(character, CommonProperties.health_cost_reduce);
     }
 
     @Override
-    public SkillResult processBefore(IActiveCharacter character, PlayerSkillContext context) {
+    public SkillResult processBefore(ActiveCharacter character, PlayerSkillContext context) {
         Resource health = character.getResource(ResourceService.health);
         if (health.getValue() < getHPCost(character, context)) {
             return SkillResult.NO_HP;
@@ -40,7 +40,7 @@ public class HPCast extends SkillCastMechanic {
     }
 
     @Override
-    public void processAfterSuccess(IActiveCharacter character, PlayerSkillContext context) {
+    public void processAfterSuccess(ActiveCharacter character, PlayerSkillContext context) {
         Resource health = character.getResource(ResourceService.health);
         double newHp = health.getValue() - getHPCost(character, context);
         if (newHp <= 0) {
@@ -55,7 +55,7 @@ public class HPCast extends SkillCastMechanic {
         return super.isValid(skillData, SkillNodes.HPCOST);
     }
 
-    void kill(IActiveCharacter character) {
+    void kill(ActiveCharacter character) {
         damageService.damageEntity(character, Double.MAX_VALUE);
     }
 }

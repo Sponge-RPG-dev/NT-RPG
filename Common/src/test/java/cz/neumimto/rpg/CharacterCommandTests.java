@@ -7,7 +7,7 @@ import cz.neumimto.rpg.common.commands.CharacterCommands;
 import cz.neumimto.rpg.common.configuration.AttributeConfig;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.entity.PropertyService;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.gui.Gui;
 import cz.neumimto.rpg.common.gui.IPlayerMessage;
@@ -61,41 +61,41 @@ public class CharacterCommandTests {
     }
 
     @Test
-    public void testCommandAddAttribute(@Stage(READY) IActiveCharacter iActiveCharacter) {
+    public void testCommandAddAttribute(@Stage(READY) ActiveCharacter ActiveCharacter) {
 
 
         AttributeConfig attributeConfig = new AttributeConfig("test", "test", 100, false, Collections.emptyMap(), "test", "test");
         propertyService.getAttributes().put(attributeConfig.getId(), attributeConfig);
 
-        iActiveCharacter.getCharacterBase().setAttributePoints(1);
-        iActiveCharacter.getTransientAttributes().put("test", 0);
-        Integer value = iActiveCharacter.getAttributeValue(attributeConfig);
+        ActiveCharacter.getCharacterBase().setAttributePoints(1);
+        ActiveCharacter.getTransientAttributes().put("test", 0);
+        Integer value = ActiveCharacter.getAttributeValue(attributeConfig);
         HashMap<AttributeConfig, Integer> map = new HashMap<>();
         map.put(attributeConfig, 1);
-        iActiveCharacter.getAttributesTransaction().put("test", 1);
-        characterCommandFacade.commandCommitAttribute(iActiveCharacter);
+        ActiveCharacter.getAttributesTransaction().put("test", 1);
+        characterCommandFacade.commandCommitAttribute(ActiveCharacter);
 
-        Assertions.assertEquals(iActiveCharacter.getAttributeValue(attributeConfig), value + 1);
-        Assertions.assertEquals(iActiveCharacter.getCharacterBase().getAttributePoints(), 0);
-        Assertions.assertEquals(iActiveCharacter.getCharacterBase().getAttributePointsSpent(), 1);
+        Assertions.assertEquals(ActiveCharacter.getAttributeValue(attributeConfig), value + 1);
+        Assertions.assertEquals(ActiveCharacter.getCharacterBase().getAttributePoints(), 0);
+        Assertions.assertEquals(ActiveCharacter.getCharacterBase().getAttributePointsSpent(), 1);
     }
 
     @Test
-    public void testAddExpCommand(@Stage(READY) IActiveCharacter iActiveCharacter) {
+    public void testAddExpCommand(@Stage(READY) ActiveCharacter ActiveCharacter) {
         ClassDefinition classDefinition = new ClassDefinition("test", Rpg.get().getPluginConfig().CLASS_TYPES.keySet().iterator().next());
-        characterCommands.chooseCharacterClass(iActiveCharacter, classDefinition);
-        Assertions.assertTrue(iActiveCharacter.getClasses().containsKey("test"));
+        characterCommands.chooseCharacterClass(ActiveCharacter, classDefinition);
+        Assertions.assertTrue(ActiveCharacter.getClasses().containsKey("test"));
     }
 
     @Test
-    public void testAddExpCommand_Wrong_Order(@Stage(READY) IActiveCharacter iActiveCharacter) {
+    public void testAddExpCommand_Wrong_Order(@Stage(READY) ActiveCharacter ActiveCharacter) {
         Iterator<String> iterator = Rpg.get().getPluginConfig().CLASS_TYPES.keySet().iterator();
         iterator.next();
         String i = iterator.next();
         ClassDefinition classDefinition = new ClassDefinition("test", i);
         Rpg.get().getPluginConfig().RESPECT_CLASS_SELECTION_ORDER = true;
-        characterCommands.chooseCharacterClass(iActiveCharacter, classDefinition);
-        Assertions.assertFalse(iActiveCharacter.getClasses().containsKey("test"));
+        characterCommands.chooseCharacterClass(ActiveCharacter, classDefinition);
+        Assertions.assertFalse(ActiveCharacter.getClasses().containsKey("test"));
     }
 
     @Test

@@ -3,7 +3,7 @@ package cz.neumimto.rpg.common.impl;
 import cz.neumimto.rpg.common.entity.PropertyService;
 import cz.neumimto.rpg.common.entity.TestCharacter;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.persistance.model.CharacterBase;
 import cz.neumimto.rpg.common.persistance.model.CharacterSkill;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
@@ -102,7 +102,7 @@ public class TestCharacterService extends CharacterService<TestCharacter> {
     }
 
     @Override
-    public void notifyCooldown(IActiveCharacter caster, PlayerSkillContext skillInfo, long cd) {
+    public void notifyCooldown(ActiveCharacter caster, PlayerSkillContext skillInfo, long cd) {
 
     }
 

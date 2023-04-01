@@ -3,7 +3,7 @@ package cz.neumimto.rpg.common.gui;
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.effects.EffectStatusType;
 import cz.neumimto.rpg.common.effects.IEffect;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.common.inventory.CannotUseItemReason;
@@ -15,7 +15,7 @@ import cz.neumimto.rpg.common.skills.tree.SkillTree;
 /**
  * Created by NeumimTo on 6.8.2015.
  */
-public interface IPlayerMessage<T extends IActiveCharacter> {
+public interface IPlayerMessage<T extends ActiveCharacter> {
 
     boolean isClientSideGui();
 
@@ -56,7 +56,7 @@ public interface IPlayerMessage<T extends IActiveCharacter> {
         String msg = Rpg.get().getLocalizationService().translate(LocalizationKeys.SKILL_EXECUTED_MESSAGE,
                 "skill",
                 skill.getSkillData().getSkillName());
-        character.sendNotification(msg);
+        character.sendMessage(msg);
     }
 
     void sendClassesByType(T character, String def);

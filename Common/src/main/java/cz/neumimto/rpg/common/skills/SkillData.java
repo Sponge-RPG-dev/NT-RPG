@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.common.skills;
 
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.skills.scripting.ScriptedSkillNodeDescription;
 
 import java.util.*;
@@ -167,7 +167,7 @@ public class SkillData {
         this.skillName = skillName;
     }
 
-    public List<String> getDescription(IActiveCharacter character) {
+    public List<String> getDescription(ActiveCharacter character) {
         return description.getDescription(character);
     }
 

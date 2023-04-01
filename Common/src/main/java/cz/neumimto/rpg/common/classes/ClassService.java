@@ -3,7 +3,7 @@ package cz.neumimto.rpg.common.classes;
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.damage.DamageService;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.common.permissions.PermissionService;
@@ -60,7 +60,7 @@ public class ClassService {
         return getClasses().values();
     }
 
-    public Set<ClassDefinition> filterByPlayerAndType(IActiveCharacter player, String type) {
+    public Set<ClassDefinition> filterByPlayerAndType(ActiveCharacter player, String type) {
         Set<ClassDefinition> defs = new HashSet<>();
         for (Map.Entry<String, ClassDefinition> entry : getClasses().entrySet()) {
             ClassDefinition value = entry.getValue();

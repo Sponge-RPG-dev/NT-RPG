@@ -8,7 +8,7 @@ import com.denizenscript.denizencore.tags.ObjectTagProcessor;
 import com.denizenscript.denizencore.tags.TagContext;
 import com.denizenscript.denizencore.utilities.CoreUtilities;
 import cz.neumimto.rpg.common.Rpg;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 
 import java.util.UUID;
@@ -16,13 +16,13 @@ import java.util.UUID;
 public class SkillContextTag implements ObjectTag {
 
     private PlayerSkillContext context;
-    private IActiveCharacter character;
+    private ActiveCharacter character;
     private String prefix;
 
     public static ObjectTagProcessor<SkillContextTag> tagProcessor = new ObjectTagProcessor<>();
 
 
-    public SkillContextTag(PlayerSkillContext context, IActiveCharacter character) {
+    public SkillContextTag(PlayerSkillContext context, ActiveCharacter character) {
         this.context = context;
         this.character = character;
     }
@@ -65,7 +65,7 @@ public class SkillContextTag implements ObjectTag {
                 String[] split = string.split(",");
                 UUID uuid = UUID.fromString(split[1]);
                 String skillId = split[0];
-                IActiveCharacter character = Rpg.get().getCharacterService().getCharacter(uuid);
+                ActiveCharacter character = Rpg.get().getCharacterService().getCharacter(uuid);
                 PlayerSkillContext psc = character.getSkill(skillId);
                 return new SkillContextTag(psc, character);
             }

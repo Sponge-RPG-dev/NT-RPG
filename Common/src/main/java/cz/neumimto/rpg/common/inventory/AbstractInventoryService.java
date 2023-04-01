@@ -3,7 +3,7 @@ package cz.neumimto.rpg.common.inventory;
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.entity.EntityHand;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.items.ItemService;
 import cz.neumimto.rpg.common.permissions.PermissionService;
 
@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.Set;
 
 
-public abstract class AbstractInventoryService<T extends IActiveCharacter> implements InventoryService<T> {
+public abstract class AbstractInventoryService<T extends ActiveCharacter> implements InventoryService<T> {
 
     @Inject
     private AssetService assetService;

@@ -1,10 +1,10 @@
 package cz.neumimto.rpg.common.skills;
 
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 
 import java.util.List;
 
 public interface ISkillNodeDescription {
 
-    List<String> getDescription(IActiveCharacter character);
+    List<String> getDescription(ActiveCharacter character);
 }

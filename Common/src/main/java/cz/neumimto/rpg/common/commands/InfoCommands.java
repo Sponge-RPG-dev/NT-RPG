@@ -3,7 +3,7 @@ package cz.neumimto.rpg.common.commands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.gui.Gui;
 
@@ -22,7 +22,7 @@ public class InfoCommands extends BaseCommand {
     private CharacterCommandFacade characterCommandFacade;
 
     @CommandAlias("skilltree")
-    public void openSkillTreeMenuCommand(IActiveCharacter character, ClassDefinition classDefinition) {
+    public void openSkillTreeMenuCommand(ActiveCharacter character, ClassDefinition classDefinition) {
         characterCommandFacade.openSKillTreeMenu(character, classDefinition);
         character.getGuiCommandHistory().add("ntrpg:ninfo skilltree " + classDefinition.getName());
     }
@@ -30,7 +30,7 @@ public class InfoCommands extends BaseCommand {
     @Subcommand("classes")
     @CommandCompletion("@classtypes")
     @CommandPermission("ntrpg.info.classes")
-    public void showClassesCommand(IActiveCharacter character, @Optional String type) {
+    public void showClassesCommand(ActiveCharacter character, @Optional String type) {
         if (type == null) {
             Gui.sendClassTypes(character);
             character.getGuiCommandHistory().add("Ntrpg:ninfo classes");
@@ -43,86 +43,86 @@ public class InfoCommands extends BaseCommand {
     @Subcommand("class")
     @CommandCompletion("@players @class-any")
     @CommandPermission("ntrpg.info.class")
-    public void showClassCommand(IActiveCharacter character, ClassDefinition classDefinition, @Optional String back) {
+    public void showClassCommand(ActiveCharacter character, ClassDefinition classDefinition, @Optional String back) {
         Gui.showClassInfo(character, classDefinition);
         character.getGuiCommandHistory().add("Ntrpg:ninfo class " + classDefinition.getName());
     }
 
     @Subcommand("character")
     @CommandPermission("ntrpg.info.player.characters.other")
-    public void showOtherPlayerCharacterCommand(IActiveCharacter character, OnlineOtherPlayer target) {
+    public void showOtherPlayerCharacterCommand(ActiveCharacter character, OnlineOtherPlayer target) {
         Gui.showCharacterInfo(character, target.character);
         character.getGuiCommandHistory().add("Ntrpg:ninfo character ");
     }
 
     @Subcommand("character")
     @CommandPermission("ntrpg.info.player.characters.self")
-    public void showPlayerCharacterCommand(IActiveCharacter character) {
+    public void showPlayerCharacterCommand(ActiveCharacter character) {
         Gui.showCharacterInfo(character, character);
     }
 
     //todo remove select button
     @Subcommand("characters")
-    public void showPlayerCharactersCommand(IActiveCharacter character) {
+    public void showPlayerCharactersCommand(ActiveCharacter character) {
         Gui.sendListOfCharacters(character, character.getCharacterBase());
     }
 
     @Subcommand("class-weapons")
-    public void showClassWeapons(IActiveCharacter character, ClassDefinition cc) {
+    public void showClassWeapons(ActiveCharacter character, ClassDefinition cc) {
         Gui.displayClassWeapons(cc, character);
     }
 
     @Subcommand("class-armor")
-    public void showClassArmor(IActiveCharacter character, ClassDefinition cc) {
+    public void showClassArmor(ActiveCharacter character, ClassDefinition cc) {
         Gui.displayClassArmor(cc, character);
     }
 
 //    @Subcommand("runeword")
 //    @CommandPermission("ntrpg.info.player.characters.other")
-//    public void showRunewordInfoCommand(IActiveCharacter character, RuneWord runeword) {
+//    public void showRunewordInfoCommand(ActiveCharacter character, RuneWord runeword) {
 //        messaging.displayRuneword(character, runeword, true);
 //    }
 //
 //    @Subcommand("runeword allowed-items")
-//    public void displayRunewordAllowedItemsCommand(IActiveCharacter character, RuneWord runeWord) {
+//    public void displayRunewordAllowedItemsCommand(ActiveCharacter character, RuneWord runeWord) {
 //        messaging.displayRunewordAllowedItems(character, runeWord);
 //    }
 //
 //    @Subcommand("runeword allowed-items")
-//    public void displayRunewordAllowedClassesCommand(IActiveCharacter character, RuneWord runeWord) {
+//    public void displayRunewordAllowedClassesCommand(ActiveCharacter character, RuneWord runeWord) {
 //        messaging.displayRunewordAllowedGroups(character, runeWord);
 //    }
 //
 //    @Subcommand("runeword required-classes")
-//    public void displayRunewordRequiredClassesCommand(IActiveCharacter character, RuneWord runeWord) {
+//    public void displayRunewordRequiredClassesCommand(ActiveCharacter character, RuneWord runeWord) {
 //        messaging.displayRunewordRequiredGroups(character, runeWord);
 //    }
 //
 //    @Subcommand("runeword blocked-classes")
-//    public void displayRunewordBlockedClassesCommand(IActiveCharacter character, RuneWord runeWord) {
+//    public void displayRunewordBlockedClassesCommand(ActiveCharacter character, RuneWord runeWord) {
 //        messaging.displayRunewordBlockedGroups(character, runeWord);
 //    }
 
     @Subcommand("properties-initial")
-    public void displayInitialClassPropertiesCommand(IActiveCharacter character, ClassDefinition classDefinition) {
+    public void displayInitialClassPropertiesCommand(ActiveCharacter character, ClassDefinition classDefinition) {
         Gui.displayInitialProperties(classDefinition, character);
     }
 
     @Subcommand("stats")
-    public void displayCharacterStatsCommand(IActiveCharacter character) {
+    public void displayCharacterStatsCommand(ActiveCharacter character) {
         Gui.sendStatus(character);
     }
 
     @CommandCompletion("@class-any")
     @Subcommand("class-dependencies")
-    public void displayClassDependencies(IActiveCharacter character, ClassDefinition classDefinition) {
+    public void displayClassDependencies(ActiveCharacter character, ClassDefinition classDefinition) {
         Gui.displayClassDependencies(character, classDefinition);
         character.getGuiCommandHistory().add("Ntrpg:ninfo class-dependencies " + classDefinition.getName());
     }
 
     @Subcommand("class-attributes")
     @CommandCompletion("@class-any")
-    public void classAttributes(IActiveCharacter character, ClassDefinition classDefinition) {
+    public void classAttributes(ActiveCharacter character, ClassDefinition classDefinition) {
         Gui.displayClassAttributes(character, classDefinition);
         character.getGuiCommandHistory().add("Ntrpg:ninfo class-attributes " + classDefinition.getName());
     }

@@ -7,9 +7,10 @@ import cz.neumimto.nts.annotations.ScriptMeta.NamedParam;
 import cz.neumimto.rpg.common.IRpgElement;
 import cz.neumimto.rpg.common.damage.DamageService;
 import cz.neumimto.rpg.common.entity.EntityService;
+import cz.neumimto.rpg.common.entity.IEffectConsumer;
 import cz.neumimto.rpg.common.entity.IEntity;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -37,11 +38,13 @@ public class EntitiesM implements NTScriptProxy {
 
     @Handler
     @Function("gain_resource")
-    public void add_resource(@NamedParam("e|entity") IActiveCharacter target,
+    public void add_resource(@NamedParam("e|entity") IEffectConsumer target,
                              @NamedParam("a|amount") float amount,
                              @NamedParam("r|resource") String resource,
                              @NamedParam("s|source") IRpgElement skill) {
-        characterService.gainResource(target, amount, skill, resource);
+        if (target instanceof ActiveCharacter c) {
+            characterService.gainResource(c, amount, skill, resource);
+        }
     }
 
 

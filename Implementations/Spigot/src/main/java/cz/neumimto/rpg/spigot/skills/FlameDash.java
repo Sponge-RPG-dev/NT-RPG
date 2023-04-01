@@ -7,7 +7,7 @@ import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.skills.SkillResult;
 import cz.neumimto.rpg.common.skills.tree.SkillType;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import de.slikey.effectlib.EffectType;
 import de.slikey.effectlib.effect.LineEffect;
 import org.bukkit.Bukkit;
@@ -35,7 +35,7 @@ public class FlameDash extends TargetedBlockSkill {
 
 
     @Override
-    protected SkillResult castOn(Block block, BlockFace blockFace, ISpigotCharacter character, PlayerSkillContext skillContext) {
+    protected SkillResult castOn(Block block, BlockFace blockFace, SpigotCharacter character, PlayerSkillContext skillContext) {
         Player player = character.getPlayer();
         long delay = skillContext.getLongNodeValue("delay");
 

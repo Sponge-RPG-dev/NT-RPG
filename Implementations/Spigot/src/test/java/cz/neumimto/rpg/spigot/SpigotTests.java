@@ -8,14 +8,13 @@ import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.classes.ClassService;
 import cz.neumimto.rpg.common.configuration.PluginConfig;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
-import cz.neumimto.rpg.common.entity.players.PreloadCharacter;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.common.persistance.model.CharacterClass;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.skills.SkillData;
 import cz.neumimto.rpg.common.skills.tree.SkillTree;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import org.bukkit.Bukkit;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
@@ -101,7 +100,7 @@ public class SpigotTests {
         // select primary class
         playerMock.performCommand("char choose class warrior");
         Wait.mainThread(500);
-        ISpigotCharacter character = (ISpigotCharacter) characterService.getCharacter(playerMock.getUniqueId());
+        SpigotCharacter character = (SpigotCharacter) characterService.getCharacter(playerMock.getUniqueId());
         Assertions.assertTrue(character.getClasses().containsKey("warrior"));
 
         // add level

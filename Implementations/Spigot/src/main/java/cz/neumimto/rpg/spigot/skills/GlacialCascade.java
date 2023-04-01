@@ -14,7 +14,7 @@ import cz.neumimto.rpg.common.skills.tree.SkillType;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
 import cz.neumimto.rpg.spigot.entities.ISpigotEntity;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import cz.neumimto.rpg.spigot.packetwrapper.PacketHandler;
 import cz.neumimto.rpg.spigot.skills.utils.AbstractPacket;
 import org.bukkit.*;
@@ -51,7 +51,7 @@ public class GlacialCascade extends TargetedEntitySkill {
     }
 
     @Override
-    public SkillResult castOn(IEntity target, ISpigotCharacter source, PlayerSkillContext info) {
+    public SkillResult castOn(IEntity target, SpigotCharacter source, PlayerSkillContext info) {
         double doubleNodeValue = info.getDoubleNodeValue(SkillNodes.DAMAGE);
         int maxDistance = info.getIntNodeValue(SkillNodes.DISTANCE);
         Effect effect = new Effect(source, (LivingEntity) target.getEntity(), doubleNodeValue, maxDistance);

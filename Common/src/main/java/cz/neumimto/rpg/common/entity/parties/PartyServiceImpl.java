@@ -2,7 +2,8 @@ package cz.neumimto.rpg.common.entity.parties;
 
 
 import cz.neumimto.rpg.common.Rpg;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.parties.PartyService;
 import cz.neumimto.rpg.common.entity.players.party.IParty;
 import cz.neumimto.rpg.common.events.party.PartyCreateEvent;
@@ -18,7 +19,7 @@ import javax.inject.Inject;
 /**
  * Created by NeumimTo on 2.9.2015.
  */
-public abstract class PartyServiceImpl<T extends IActiveCharacter> implements PartyService<T> {
+public abstract class PartyServiceImpl<T extends ActiveCharacter> implements PartyService<T> {
 
     @Inject
     private LocalizationService localizationService;

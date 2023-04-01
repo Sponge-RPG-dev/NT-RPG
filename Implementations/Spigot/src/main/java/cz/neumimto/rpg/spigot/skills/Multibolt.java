@@ -10,7 +10,7 @@ import cz.neumimto.rpg.common.skills.SkillResult;
 import cz.neumimto.rpg.common.skills.tree.SkillType;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -38,7 +38,7 @@ public class Multibolt extends TargetedEntitySkill {
     }
 
     @Override
-    public SkillResult castOn(IEntity target, ISpigotCharacter source, PlayerSkillContext info) {
+    public SkillResult castOn(IEntity target, SpigotCharacter source, PlayerSkillContext info) {
         int maxStrikes = info.getIntNodeValue("max-strikes");
         if (maxStrikes <= 0) {
             return SkillResult.FAIL;

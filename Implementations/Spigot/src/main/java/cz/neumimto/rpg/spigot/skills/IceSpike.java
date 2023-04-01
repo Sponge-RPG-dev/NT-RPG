@@ -12,7 +12,7 @@ import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
 import cz.neumimto.rpg.spigot.effects.SpigotEffectService;
 import cz.neumimto.rpg.spigot.effects.common.IceSpikeEffect;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import cz.neumimto.rpg.spigot.skills.particles.ResettingVortexEffect;
 import de.slikey.effectlib.effect.VortexEffect;
 import org.bukkit.Color;
@@ -55,7 +55,7 @@ public class IceSpike extends TargetedBlockSkill {
     }
 
     @Override
-    protected SkillResult castOn(Block block, BlockFace blockFace, ISpigotCharacter character, PlayerSkillContext skillContext) {
+    protected SkillResult castOn(Block block, BlockFace blockFace, SpigotCharacter character, PlayerSkillContext skillContext) {
 
         double damage = skillContext.getDoubleNodeValue(SkillNodes.DAMAGE);
         double damageInitial = skillContext.getDoubleNodeValue("damage-initial");

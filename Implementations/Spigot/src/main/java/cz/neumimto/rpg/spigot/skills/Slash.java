@@ -13,7 +13,7 @@ import cz.neumimto.rpg.common.skills.SkillResult;
 import cz.neumimto.rpg.common.skills.tree.SkillType;
 import cz.neumimto.rpg.spigot.Resourcepack;
 import cz.neumimto.rpg.spigot.effects.common.BleedingEffect;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import cz.neumimto.rpg.spigot.packetwrapper.PacketHandler;
 import cz.neumimto.rpg.spigot.skills.utils.AbstractPacket;
 import org.bukkit.Bukkit;
@@ -43,7 +43,7 @@ public class Slash extends TargetedEntitySkill {
     }
 
     @Override
-    public SkillResult castOn(IEntity target, ISpigotCharacter source, PlayerSkillContext info) {
+    public SkillResult castOn(IEntity target, SpigotCharacter source, PlayerSkillContext info) {
         double weaponDamageMult = info.getDoubleNodeValue(SkillNodes.MULTIPLIER);
         double max = info.getDoubleNodeValue(SkillNodes.MAX);
 

@@ -12,14 +12,14 @@ import cz.neumimto.rpg.common.skills.SkillResult;
 import cz.neumimto.rpg.common.skills.tree.SkillType;
 import cz.neumimto.rpg.common.skills.types.ActiveSkill;
 import cz.neumimto.rpg.common.skills.types.ITargeted;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import cz.neumimto.rpg.spigot.scripting.mechanics.Targetting;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.RayTraceResult;
 
-public abstract class TargetedEntitySkill extends ActiveSkill<ISpigotCharacter> implements ITargeted<ISpigotCharacter> {
+public abstract class TargetedEntitySkill extends ActiveSkill<SpigotCharacter> implements ITargeted<SpigotCharacter> {
 
     @Inject
     protected DamageService damageService;
@@ -34,7 +34,7 @@ public abstract class TargetedEntitySkill extends ActiveSkill<ISpigotCharacter> 
     }
 
     @Override
-    public SkillResult cast(ISpigotCharacter caster, PlayerSkillContext skillContext) {
+    public SkillResult cast(SpigotCharacter caster, PlayerSkillContext skillContext) {
         int range = skillContext.getIntNodeValue(SkillNodes.RANGE);
         LivingEntity l = rayTraceEntity(caster.getPlayer(), range);
         if (l == null) {
@@ -59,7 +59,7 @@ public abstract class TargetedEntitySkill extends ActiveSkill<ISpigotCharacter> 
             //todo https://github.com/Sponge-RPG-dev/NT-RPG/issues/111
             return SkillResult.CANCELLED;
         }
-        return castOn(event.getTarget(), (ISpigotCharacter) event.getCaster(), skillContext);
+        return castOn(event.getTarget(), (SpigotCharacter) event.getCaster(), skillContext);
     }
 
 

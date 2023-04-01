@@ -9,7 +9,7 @@ import cz.neumimto.rpg.common.localization.LocalizationKeys;
 import cz.neumimto.rpg.common.localization.LocalizationService;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.bridges.DatapackManager;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
 import cz.neumimto.rpg.spigot.gui.elements.GuiCommand;
 import net.kyori.adventure.text.Component;
@@ -68,7 +68,7 @@ public class CharacterAttributesGuiView extends ConfigurableInventoryGui {
 
     @Override
     protected Component getTitle(CommandSender commandSender, GuiConfig guiConfig, String param) {
-        ISpigotCharacter character = characterService.getCharacter((Player) commandSender);
+        SpigotCharacter character = characterService.getCharacter((Player) commandSender);
         return getPrefix(guiConfig).append(Component.text(character.getName() + " " + localizationService.translate(LocalizationKeys.ATTRIBUTES)));
     }
 
@@ -87,7 +87,7 @@ public class CharacterAttributesGuiView extends ConfigurableInventoryGui {
     public Map<String, List<GuiCommand>> getPaneData(CommandSender commandSender, String className, GuiConfig guiConfig) {
         Map<String, List<GuiCommand>> map = new HashMap<>();
 
-        ISpigotCharacter character = characterService.getCharacter((Player) commandSender);
+        SpigotCharacter character = characterService.getCharacter((Player) commandSender);
 
         List<AttributeConfig> collect = Rpg.get().getPropertyService().getAttributes()
                 .values()
@@ -121,7 +121,7 @@ public class CharacterAttributesGuiView extends ConfigurableInventoryGui {
         ClickType click = event.getClick();
         HumanEntity whoClicked = event.getWhoClicked();
         int slot = event.getSlot();
-        ISpigotCharacter character = (ISpigotCharacter) Rpg.get().getCharacterService().getCharacter(whoClicked.getUniqueId());
+        SpigotCharacter character = (SpigotCharacter) Rpg.get().getCharacterService().getCharacter(whoClicked.getUniqueId());
         int attributePoints = character.getAttributePoints();
         Map<String, Integer> attributesTransaction = character.getAttributesTransaction();
         AttributeConfig aConfig = Rpg.get().getPropertyService().getAttributeById(attrId).get();
@@ -150,7 +150,7 @@ public class CharacterAttributesGuiView extends ConfigurableInventoryGui {
         event.setResult(Event.Result.DENY);
     }
 
-    public static ItemStack characterAttributeItemStack(ISpigotCharacter character,
+    public static ItemStack characterAttributeItemStack(SpigotCharacter character,
                                                         AttributeConfig config,
                                                         Integer attributeValue) {
         Map<String, Integer> transientAttributes = character.getTransientAttributes();
@@ -186,7 +186,7 @@ public class CharacterAttributesGuiView extends ConfigurableInventoryGui {
             if (lore == null) {
                 lore = new ArrayList<>();
             }
-            ISpigotCharacter character = (ISpigotCharacter) Rpg.get().getCharacterService().getCharacter(((Player) commandSender).getUniqueId());
+            SpigotCharacter character = (SpigotCharacter) Rpg.get().getCharacterService().getCharacter(((Player) commandSender).getUniqueId());
             Map<String, Integer> attributesTransaction = character.getAttributesTransaction();
             int i = 0;
             for (Integer value : attributesTransaction.values()) {

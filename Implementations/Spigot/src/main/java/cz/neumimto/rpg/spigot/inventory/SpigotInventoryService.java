@@ -6,7 +6,7 @@ import cz.neumimto.rpg.common.items.RpgItemStack;
 import cz.neumimto.rpg.common.model.EquipedSlot;
 import cz.neumimto.rpg.common.skills.SkillData;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import cz.neumimto.rpg.spigot.gui.inventoryviews.ConfigurableInventoryGui;
 import cz.neumimto.rpg.spigot.persistance.SpigotEquipedSlot;
 import org.bukkit.ChatColor;
@@ -26,7 +26,7 @@ import java.util.ServiceLoader;
 import java.util.UUID;
 
 @Singleton
-public class SpigotInventoryService extends AbstractInventoryService<ISpigotCharacter> {
+public class SpigotInventoryService extends AbstractInventoryService<SpigotCharacter> {
 
     public static final String SKILLBIND = "skillbind";
 
@@ -38,7 +38,7 @@ public class SpigotInventoryService extends AbstractInventoryService<ISpigotChar
 
     /*
     @Override
-    public Set<ActiveSkillPreProcessorWrapper> processItemCost(ISpigotCharacter character, PlayerSkillContext skillInfo) {
+    public Set<ActiveSkillPreProcessorWrapper> processItemCost(SpigotCharacter character, PlayerSkillContext skillInfo) {
         SkillCost invokeCost = skillInfo.getSkillData().getInvokeCost();
         if (invokeCost == null) {
             return Collections.emptySet();
@@ -107,7 +107,7 @@ public class SpigotInventoryService extends AbstractInventoryService<ISpigotChar
         return itemStack;
     }
 
-    public void rotatePlayerSpellbook(Player player, ISpigotCharacter character) {
+    public void rotatePlayerSpellbook(Player player, SpigotCharacter character) {
         int page = character.getSpellbookPage();
         if (page > character.getSpellbook().length - 1) {
             page = 0;
@@ -130,7 +130,7 @@ public class SpigotInventoryService extends AbstractInventoryService<ISpigotChar
     }
 
     @Override
-    public void invalidateGUICaches(ISpigotCharacter cc) {
+    public void invalidateGUICaches(SpigotCharacter cc) {
         UUID uniqueId = cc.getEntity().getUniqueId();
 
         ServiceLoader.load(ConfigurableInventoryGui.class, getClass().getClassLoader()).stream()

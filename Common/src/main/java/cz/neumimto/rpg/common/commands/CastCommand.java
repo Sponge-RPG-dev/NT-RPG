@@ -6,7 +6,7 @@ import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.skills.ISkill;
 
 import javax.inject.Inject;
@@ -22,7 +22,7 @@ public class CastCommand extends BaseCommand {
 
     @Default
     @CommandCompletion("@learnedskill")
-    private void playerRunSkillCommand(IActiveCharacter character, ISkill skill) {
+    private void playerRunSkillCommand(ActiveCharacter character, ISkill skill) {
         skillsCommandFacade.executeSkill(character, skill);
     }
 }

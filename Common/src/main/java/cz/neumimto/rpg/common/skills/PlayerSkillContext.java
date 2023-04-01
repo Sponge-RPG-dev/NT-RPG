@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.common.skills;
 
 import cz.neumimto.rpg.common.Rpg;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.common.logging.Log;
@@ -29,7 +29,7 @@ public class PlayerSkillContext {
         EMPTY.setSkillData(SkillData.EMPTY);
     }
 
-    private final IActiveCharacter character;
+    private final ActiveCharacter character;
 
     private int level;
     private SkillData skillData;
@@ -41,7 +41,7 @@ public class PlayerSkillContext {
     private Object2DoubleOpenHashMap<String> cachedComputedSkillSettings;
     private int previousSize = 0;
 
-    public PlayerSkillContext(ClassDefinition classDefinition, ISkill skill, IActiveCharacter character) {
+    public PlayerSkillContext(ClassDefinition classDefinition, ISkill skill, ActiveCharacter character) {
         this.classDefinition = classDefinition;
         this.skill = skill;
         this.character = character;

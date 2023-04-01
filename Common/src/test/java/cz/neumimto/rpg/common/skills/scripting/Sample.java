@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.common.skills.scripting;
 
 import cz.neumimto.rpg.common.entity.IEntity;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.skills.SkillResult;
 import cz.neumimto.rpg.common.skills.types.ActiveSkill;
@@ -31,7 +31,7 @@ public class Sample extends ActiveSkill {
     public ScriptParserTests.A A;
 
     @Override
-    public SkillResult cast(IActiveCharacter character, PlayerSkillContext info) {
+    public SkillResult cast(ActiveCharacter character, PlayerSkillContext info) {
         final int range = info.getIntNodeValue("range");
         final IEntity iEntity = TargettedEntity.get(range, character);
         ;

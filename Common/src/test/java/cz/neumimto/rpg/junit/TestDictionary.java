@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.junit;
 
 import cz.neumimto.rpg.common.configuration.AttributeConfig;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.items.ItemClass;
 import cz.neumimto.rpg.common.items.RpgItemType;
@@ -17,7 +17,7 @@ public class TestDictionary {
 
     public static final ISkill DUMMY_SKILL = new ActiveSkill() {
         @Override
-        public SkillResult cast(IActiveCharacter character, PlayerSkillContext info) {
+        public SkillResult cast(ActiveCharacter character, PlayerSkillContext info) {
             return SkillResult.OK;
         }
     };

@@ -5,7 +5,7 @@ import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.RpgApi;
 import cz.neumimto.rpg.common.effects.IEffectContainer;
 import cz.neumimto.rpg.common.entity.TestCharacter;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.common.persistance.model.CharacterBase;
@@ -51,13 +51,13 @@ public class TestScriptingComplexUsecase {
     }
 
     public static class CharacterEvent {
-        private IActiveCharacter character;
+        private ActiveCharacter character;
 
-        public IActiveCharacter getCharacter() {
+        public ActiveCharacter getCharacter() {
             return character;
         }
 
-        public void setCharacter(IActiveCharacter character) {
+        public void setCharacter(ActiveCharacter character) {
             this.character = character;
         }
     }

@@ -8,11 +8,11 @@ import com.denizenscript.denizencore.scripts.ScriptEntryData;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.spigot.bridges.denizen.tags.CharacterTag;
 import cz.neumimto.rpg.spigot.bridges.denizen.tags.SkillContextTag;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 
 public class EntityCastSkillDenizenEvent extends BukkitScriptEvent {
 
-    public ISpigotCharacter character;
+    public SpigotCharacter character;
     public PlayerSkillContext context;
     public String skillId;
 

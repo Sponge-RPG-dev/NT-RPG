@@ -1,10 +1,14 @@
 package cz.neumimto.rpg.common.entity.players;
 
 import cz.neumimto.rpg.common.Rpg;
+import cz.neumimto.rpg.common.configuration.AttributeConfig;
 import cz.neumimto.rpg.common.effects.*;
+import cz.neumimto.rpg.common.entity.IEffectConsumer;
+import cz.neumimto.rpg.common.entity.IEntity;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.common.entity.players.party.IParty;
+import cz.neumimto.rpg.common.gui.SkillTreeViewModel;
 import cz.neumimto.rpg.common.items.RpgItemType;
 import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.common.persistance.model.CharacterBase;
@@ -27,7 +31,7 @@ import java.util.*;
  * Created by NeumimTo on 26.12.2014.
  */
 
-public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCharacter<T, P> {
+public abstract class ActiveCharacter<T, P extends IParty> implements IEntity<T> {
 
     protected transient UUID pl;
     protected CharacterBase base;
@@ -94,17 +98,14 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
         return pl;
     }
 
-    @Override
     public Optional<InterruptableSkillPreprocessor> getChanneledSkill() {
         return Optional.ofNullable(channeledSkill);
     }
 
-    @Override
     public void setChanneledSkill(InterruptableSkillPreprocessor o) {
         this.channeledSkill = o;
     }
 
-    @Override
     public boolean isSilenced() {
         return channeledSkill == null && hasEffectType(CommonEffectTypes.SILENCE);
     }
@@ -123,6 +124,26 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
         }
     }
 
+
+    public PlayerClassData getClassByType(String type) {
+        for (PlayerClassData value : getClasses().values()) {
+            if (value.getClassDefinition().getClassType().equalsIgnoreCase(type)) {
+                return value;
+            }
+        }
+        return null;
+    }
+
+    public boolean hasEffectType(EffectType effectType) {
+        for (IEffectContainer<Object, IEffect<Object>> container : getEffectMap().values()) {
+            for (IEffect effect : container.getEffects()) {
+                if (effect.getEffectTypes().contains(effectType)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     @Override
     @SuppressWarnings("unchecked")
@@ -144,17 +165,14 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
         }
     }
 
-    @Override
     public String getName() {
         return getCharacterBase().getName();
     }
 
-    @Override
     public boolean isStub() {
         return false;
     }
 
-    @Override
     public double[] getPrimaryProperties() {
         return primaryProperties;
     }
@@ -169,17 +187,14 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
         primaryProperties[index] = value;
     }
 
-    @Override
     public double[] getSecondaryProperties() {
         return secondaryProperties;
     }
 
-    @Override
     public void setSecondaryProperties(double[] arr) {
         this.secondaryProperties = arr;
     }
 
-    @Override
     public void updateLastKnownLocation(int x, int y, int z, String name) {
         getCharacterBase().setX(x);
         getCharacterBase().setY(y);
@@ -187,48 +202,43 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
         getCharacterBase().setWorld(name);
     }
 
-    @Override
     public boolean isInvulnerable() {
         return invulnerable;
     }
 
-    @Override
     public void setInvulnerable(boolean b) {
         this.invulnerable = b;
     }
 
-
-    @Override
     public void setCharacterLevelProperty(int index, double value) {
         secondaryProperties[index] = value;
     }
 
-    @Override
     public double getCharacterPropertyWithoutLevel(int index) {
         return primaryProperties[index];
     }
 
-    @Override
     public Map<String, IEffectContainer<Object, IEffect<Object>>> getEffectMap() {
         return effects;
     }
 
-    @Override
     public int getAttributePoints() {
         return base.getAttributePoints();
     }
 
-    @Override
     public void setAttributePoints(int attributePoints) {
         this.base.setAttributePoints(attributePoints);
     }
 
-    @Override
     public Map<String, Integer> getTransientAttributes() {
         return transientAttributes;
     }
 
-    @Override
+
+    public int getAttributeValue(AttributeConfig name) {
+        return getAttributeValue(name.getId());
+    }
+
     public int getAttributeValue(String name) {
         int i = 0;
         if (base.getAttributes().containsKey(name)) {
@@ -237,24 +247,19 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
         return i + getTransientAttributes().get(name);
     }
 
-    @Override
     public Map<String, Long> getCooldowns() {
         return cooldowns;
     }
 
-    @Override
     public boolean hasCooldown(String thing) {
         return cooldowns.getOrDefault(thing, 0L) > System.currentTimeMillis();
     }
 
-
-    @Override
     public double getBaseProjectileDamage(String id) {
         return projectileDamage.getOrDefault(id, 0);
     }
 
-    @Override
-    public IActiveCharacter updateItemRestrictions() {
+    public ActiveCharacter updateItemRestrictions() {
 
         Log.info("Updating item restrictions " + getName());
 
@@ -278,63 +283,51 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
         return this;
     }
 
-    @Override
     public Map<String, Double> getProjectileDamages() {
         return projectileDamage;
     }
 
-    @Override
     public CharacterBase getCharacterBase() {
         return base;
     }
 
-    @Override
     public Map<String, PlayerSkillContext> getSkills() {
         return skills.getSkills();
     }
 
-    @Override
     public Map<String, PlayerSkillContext> getSkillsByName() {
         return skills.getSkillsByName();
     }
 
-    @Override
     public void addSkill(String id, PlayerSkillContext info) {
         skills.add(id, info);
     }
 
-    @Override
     public PlayerSkillContext getSkill(String id) {
         return skills.get(id);
     }
 
-    @Override
     public void removeAllSkills() {
         getCharacterBase().getCharacterSkills().clear();
         skills.clear();
     }
 
-    @Override
     public PlayerSkillContext getSkillInfo(ISkill skill) {
         return skills.get(skill.getId());
     }
 
-    @Override
     public PlayerSkillContext getSkillInfo(String s) {
         return skills.get(s.toLowerCase());
     }
 
-    @Override
     public boolean hasSkill(String name) {
         return skills.contains(name);
     }
 
-    @Override
     public PlayerClassData getPrimaryClass() {
         return primaryClass;
     }
 
-    @Override
     public void addClass(PlayerClassData playerClassData) {
         if (playerClassData.getClassDefinition().getClassType().equalsIgnoreCase(Rpg.get().getPluginConfig().PRIMARY_CLASS_TYPE)) {
             primaryClass = playerClassData;
@@ -342,12 +335,10 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
         classes.put(playerClassData.getClassDefinition().getName().toLowerCase(), playerClassData);
     }
 
-    @Override
     public void removeClass(ClassDefinition classDefinition) {
         classes.remove(classDefinition.getName().toLowerCase());
     }
 
-    @Override
     public int getLevel() {
         if (primaryClass == null) {
             return 1;
@@ -355,17 +346,14 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
         return getPrimaryClass().getLevel();
     }
 
-    @Override
     public Map<String, PlayerClassData> getClasses() {
         return classes;
     }
 
-    @Override
     public P getParty() {
         return party;
     }
 
-    @Override
     public void setParty(P party) {
         if (this.party != null) {
             this.party.removePlayer(this);
@@ -373,93 +361,76 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
         this.party = party;
     }
 
-    @Override
     public boolean hasParty() {
         return getParty() != null && getParty().getPlayers().size() > 1;
     }
 
-    @Override
-    public boolean isInPartyWith(IActiveCharacter character) {
+    public boolean isInPartyWith(ActiveCharacter character) {
         return (character.hasParty() && hasParty() && character.getParty() == character.getParty());
     }
 
-    @Override
     public boolean hasPreferedDamageType() {
         return preferedDamageType != null;
     }
 
-    @Override
     public String getDamageType() {
         return preferedDamageType;
     }
 
-    @Override
     public void setDamageType(String damageType) {
         this.preferedDamageType = damageType;
     }
 
-    @Override
     public boolean isUsingGuiMod() {
         return isusingguimod;
     }
 
-    @Override
     public void setUsingGuiMod(boolean b) {
         isusingguimod = b;
     }
 
-    @Override
     public boolean isPartyLeader() {
         return hasParty() && getParty().getLeader() == this;
     }
 
-    @Override
     public P getPendingPartyInvite() {
         return pendingPartyInvite.get();
     }
 
-    @Override
     public void setPendingPartyInvite(P party) {
         pendingPartyInvite = new WeakReference<>(party);
     }
 
-    @Override
     public boolean hasClass(ClassDefinition configClass) {
         String type = configClass.getClassType();
         return getClassByType(type) != null;
     }
 
-    @Override
-    public boolean isFriendlyTo(IActiveCharacter character) {
+    public boolean isFriendlyTo(ActiveCharacter character) {
         if (character == this) {
             return true;
         }
         return getParty().getPlayers().contains(character);
     }
 
-    @Override
     public void addSkillTreeSpecialization(SkillTreeSpecialization specialization) {
         this.specs.add(specialization);
     }
 
-    @Override
     public void removeSkillTreeSpecialization(SkillTreeSpecialization specialization) {
         if (hasSkillTreeSpecialization(specialization)) {
             specs.remove(specialization);
         }
     }
 
-    @Override
     public boolean hasSkillTreeSpecialization(SkillTreeSpecialization specialization) {
         return specs.contains(specialization);
     }
 
-    @Override
     public Set<SkillTreeSpecialization> getSkillTreeSpecialization() {
         return Collections.unmodifiableSet(specs);
     }
 
-    @Override
     public double getExperienceBonusFor(String name, String type) {
         double exp = 0;
         for (PlayerClassData playerClassData : getClasses().values()) {
@@ -468,12 +439,49 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
         return exp;
     }
 
-    @Override
     public void restartAttributeGuiSession() {
         attributeSession.clear();
     }
 
-    @Override
+    public Map<String, Integer> getAttributesTransaction() {
+        return attrTransaction;
+    }
+
+    public void setAttributesTransaction(HashMap<String, Integer> map) {
+        attrTransaction = map;
+    }
+
+    public String getPlayerAccountName() {
+        return getCharacterBase().getLastKnownPlayerName();
+    }
+
+    public SkillTreeChangeObserver getSkillUpgradeObservers() {
+        return skillUpgradeObserver;
+    }
+
+    public Stack<String> getGuiCommandHistory() {
+        return guiCommands;
+    }
+
+    public Resource getResource(String name) {
+        return classResources.get(name);
+    }
+
+    public void removeResource(String type) {
+        classResources.remove(type);
+    }
+
+    public void addResource(String name, Resource resource) {
+        classResources.put(name, resource);
+    }
+
+    public String toString() {
+        return "ActiveCharacter{" +
+                "uuid=" + pl +
+                " name=" + getName() +
+                '}';
+    }
+
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -485,51 +493,19 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IActiveCha
         return that.getCharacterBase().getId().equals(this.getCharacterBase().getId());
     }
 
-    @Override
-    public Map<String, Integer> getAttributesTransaction() {
-        return attrTransaction;
+    public abstract void sendMessage(String msg);
+
+    public PlayerClassData getClassByName(String name) {
+        return classes.values().stream().filter(a->a.getClassDefinition().getName().equals(name)).findFirst().orElse(null);
     }
 
-    @Override
-    public void setAttributesTransaction(HashMap<String, Integer> map) {
-        attrTransaction = map;
-    }
+    public abstract void updateResourceUIHandler();
 
-    @Override
-    public String getPlayerAccountName() {
-        return getCharacterBase().getLastKnownPlayerName();
-    }
+    public abstract Map<String, ? extends SkillTreeViewModel> getSkillTreeViewLocation();
 
-    @Override
-    public SkillTreeChangeObserver getSkillUpgradeObservers() {
-        return skillUpgradeObserver;
-    }
+    public abstract SkillTreeViewModel getLastTimeInvokedSkillTreeView();
 
-    @Override
-    public Stack<String> getGuiCommandHistory() {
-        return guiCommands;
-    }
-
-    @Override
-    public Resource getResource(String name) {
-        return classResources.get(name);
-    }
-
-    @Override
-    public void removeResource(String type) {
-        classResources.remove(type);
-    }
-
-    @Override
-    public void addResource(String name, Resource resource) {
-        classResources.put(name, resource);
-    }
-
-    @Override
-    public String toString() {
-        return "ActiveCharacter{" +
-                "uuid=" + pl +
-                " name=" + getName() +
-                '}';
+    public long getCooldown(String skillId) {
+        return cooldowns.getOrDefault(skillId, 0L);
     }
 }

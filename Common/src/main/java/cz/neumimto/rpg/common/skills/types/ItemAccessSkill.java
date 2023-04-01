@@ -5,7 +5,7 @@ import com.typesafe.config.ConfigException;
 import cz.neumimto.rpg.common.configuration.ItemString;
 import cz.neumimto.rpg.common.effects.EffectSourceType;
 import cz.neumimto.rpg.common.effects.IEffectSource;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.inventory.InventoryService;
 import cz.neumimto.rpg.common.items.ItemService;
 import cz.neumimto.rpg.common.items.RpgItemType;
@@ -20,7 +20,7 @@ import javax.inject.Inject;
 import java.util.*;
 
 
-public class ItemAccessSkill extends AbstractSkill<IActiveCharacter> {
+public class ItemAccessSkill extends AbstractSkill<ActiveCharacter> {
 
     @Inject
     private ItemService itemService;
@@ -33,36 +33,36 @@ public class ItemAccessSkill extends AbstractSkill<IActiveCharacter> {
     }
 
     @Override
-    public SkillResult onPreUse(IActiveCharacter character, PlayerSkillContext esi) {
+    public SkillResult onPreUse(ActiveCharacter character, PlayerSkillContext esi) {
         return SkillResult.CANCELLED;
     }
 
     @Override
-    public void skillLearn(IActiveCharacter IActiveCharacter, PlayerSkillContext context) {
-        super.skillLearn(IActiveCharacter, context);
-        resolveItemAccess(IActiveCharacter);
+    public void skillLearn(ActiveCharacter ActiveCharacter, PlayerSkillContext context) {
+        super.skillLearn(ActiveCharacter, context);
+        resolveItemAccess(ActiveCharacter);
 
     }
 
     @Override
-    public void skillUpgrade(IActiveCharacter IActiveCharacter, int level, PlayerSkillContext context) {
-        super.skillUpgrade(IActiveCharacter, level, context);
-        resolveItemAccess(IActiveCharacter);
+    public void skillUpgrade(ActiveCharacter ActiveCharacter, int level, PlayerSkillContext context) {
+        super.skillUpgrade(ActiveCharacter, level, context);
+        resolveItemAccess(ActiveCharacter);
     }
 
     @Override
-    public void onCharacterInit(IActiveCharacter c, int level, PlayerSkillContext context) {
+    public void onCharacterInit(ActiveCharacter c, int level, PlayerSkillContext context) {
         super.onCharacterInit(c, level, context);
         resolveItemAccess(c);
     }
 
     @Override
-    public void skillRefund(IActiveCharacter IActiveCharacter, PlayerSkillContext context) {
-        super.skillRefund(IActiveCharacter, context);
-        resolveItemAccess(IActiveCharacter);
+    public void skillRefund(ActiveCharacter ActiveCharacter, PlayerSkillContext context) {
+        super.skillRefund(ActiveCharacter, context);
+        resolveItemAccess(ActiveCharacter);
     }
 
-    private void resolveItemAccess(IActiveCharacter c) {
+    private void resolveItemAccess(ActiveCharacter c) {
         c.updateItemRestrictions();
         inventoryService.invalidateGUICaches(c);
     }

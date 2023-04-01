@@ -4,7 +4,7 @@ import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.entity.AbstractMob;
 import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.entity.players.classes.ClassResource;
 
@@ -38,9 +38,9 @@ public abstract class ResourceService {
         return registry;
     }
 
-    protected abstract Resource getHpTracker(IActiveCharacter character, ResourceDefinition resourceDefinition);
+    protected abstract Resource getHpTracker(ActiveCharacter character, ResourceDefinition resourceDefinition);
 
-    protected abstract Resource getStaminaTracker(IActiveCharacter character, ResourceDefinition resourceDefinition);
+    protected abstract Resource getStaminaTracker(ActiveCharacter character, ResourceDefinition resourceDefinition);
 
     public void removeResource(ActiveCharacter activeCharacter, ClassDefinition klass) {
         Set<ClassResource> classResources = klass.getClassResources();
@@ -62,7 +62,7 @@ public abstract class ResourceService {
         }
     }
 
-    public void removeResource(IActiveCharacter activeCharacter, ClassResource classResource, String source) {
+    public void removeResource(ActiveCharacter activeCharacter, ClassResource classResource, String source) {
         Resource resource = activeCharacter.getResource(classResource.type);
         if (resource == null) {
             return;
@@ -78,7 +78,7 @@ public abstract class ResourceService {
         }
     }
 
-    public void addResource(IActiveCharacter activeCharacter, ClassResource classResource, String source) {
+    public void addResource(ActiveCharacter activeCharacter, ClassResource classResource, String source) {
         Resource resource = activeCharacter.getResource(classResource.type);
         if (resource == null) {
             ResourceDefinition def = registry.stream().filter(a -> a.type.equalsIgnoreCase(classResource.type)).findAny().get();
@@ -92,7 +92,7 @@ public abstract class ResourceService {
         }
     }
 
-    public void initializeForPlayer(IActiveCharacter activeCharacter) {
+    public void initializeForPlayer(ActiveCharacter activeCharacter) {
         for (ResourceDefinition resourceDefinition : registry) {
             if (resourceDefinition.type.equalsIgnoreCase(health)) {
                 activeCharacter.addResource(health, getHpTracker(activeCharacter, resourceDefinition));

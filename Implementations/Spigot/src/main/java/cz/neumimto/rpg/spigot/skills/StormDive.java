@@ -11,7 +11,7 @@ import cz.neumimto.rpg.common.skills.SkillResult;
 import cz.neumimto.rpg.common.skills.tree.SkillType;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
 import cz.neumimto.rpg.spigot.effects.SpigotEffectService;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import cz.neumimto.rpg.spigot.packetwrapper.PacketHandler;
 import cz.neumimto.rpg.spigot.skills.utils.AbstractPacket;
 import org.bukkit.Bukkit;
@@ -51,7 +51,7 @@ public class StormDive extends TargetedBlockSkill {
     }
 
     @Override
-    protected SkillResult castOn(Block block, BlockFace blockFace, ISpigotCharacter character, PlayerSkillContext skillContext) {
+    protected SkillResult castOn(Block block, BlockFace blockFace, SpigotCharacter character, PlayerSkillContext skillContext) {
         if (block.getLocation().getY() + 2 < character.getPlayer().getEyeLocation().getY()) {
             double damage = skillContext.getDoubleNodeValue(SkillNodes.DAMAGE);
             double range = skillContext.getDoubleNodeValue("land-damage-range");
@@ -68,13 +68,13 @@ public class StormDive extends TargetedBlockSkill {
         private final float pitch;
         private final float yaw;
         private LivingEntity entity;
-        private ISpigotCharacter character;
+        private SpigotCharacter character;
         private double damage;
         private double range;
         private final Vector velocity;
         private final Location targetLoc;
 
-        public Effect(ISpigotCharacter consumer, double damage, double range, Location targetLoc) {
+        public Effect(SpigotCharacter consumer, double damage, double range, Location targetLoc) {
             super("LightningWarpEffect", consumer);
             this.entity = consumer.getEntity();
             this.character = consumer;

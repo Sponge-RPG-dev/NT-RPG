@@ -10,7 +10,7 @@ import cz.neumimto.rpg.common.skills.SkillResult;
 import cz.neumimto.rpg.common.skills.tree.SkillType;
 import cz.neumimto.rpg.common.skills.types.ActiveSkill;
 import cz.neumimto.rpg.spigot.entities.ProjectileCache;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.entity.EntityType;
@@ -25,7 +25,7 @@ import static org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 @Singleton
 @AutoService(ISkill.class)
 @ResourceLoader.Skill("ntrpg:fireball")
-public class Fireball extends ActiveSkill<ISpigotCharacter> {
+public class Fireball extends ActiveSkill<SpigotCharacter> {
 
     @Override
     public void init() {
@@ -41,7 +41,7 @@ public class Fireball extends ActiveSkill<ISpigotCharacter> {
     }
 
     @Override
-    public SkillResult cast(ISpigotCharacter character, PlayerSkillContext skillContext) {
+    public SkillResult cast(SpigotCharacter character, PlayerSkillContext skillContext) {
         Player p = character.getPlayer();
         World world = p.getWorld();
 

@@ -2,11 +2,11 @@ package cz.neumimto.rpg.spigot.entities;
 
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.entity.AbstractMob;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.party.IParty;
 import cz.neumimto.rpg.common.resources.Resource;
 import cz.neumimto.rpg.common.skills.ISkill;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Tameable;
@@ -35,7 +35,7 @@ public class SpigotMob extends AbstractMob<LivingEntity> implements ISpigotEntit
     }
 
     @Override
-    public boolean isFriendlyTo(IActiveCharacter characterr) {
+    public boolean isFriendlyTo(ActiveCharacter characterr) {
         if (!(getEntity() instanceof Tameable)) {
             return false;
         }
@@ -46,16 +46,16 @@ public class SpigotMob extends AbstractMob<LivingEntity> implements ISpigotEntit
         }
 
 
-        ISpigotCharacter character = (ISpigotCharacter) characterr;
+        SpigotCharacter character = (SpigotCharacter) characterr;
         if (owner.getUniqueId().equals(character.getUUID())) {
             return true;
         }
 
 
-        IParty<ISpigotCharacter> party = character.getParty();
+        IParty<SpigotCharacter> party = character.getParty();
 
-        for (ISpigotCharacter iActiveCharacter : party.getPlayers()) {
-            UUID uniqueId = iActiveCharacter.getEntity().getUniqueId();
+        for (SpigotCharacter ActiveCharacter : party.getPlayers()) {
+            UUID uniqueId = ActiveCharacter.getEntity().getUniqueId();
             if (owner.getUniqueId().equals(uniqueId)) {
                 return true;
             }

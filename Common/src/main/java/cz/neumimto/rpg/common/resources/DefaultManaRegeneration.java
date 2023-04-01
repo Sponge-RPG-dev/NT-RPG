@@ -3,7 +3,7 @@ package cz.neumimto.rpg.common.resources;
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.effects.*;
 import cz.neumimto.rpg.common.entity.IEffectConsumer;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.events.character.CharacterResourceChangeValueEvent;
 import cz.neumimto.rpg.common.gui.Gui;
 
@@ -14,11 +14,11 @@ import cz.neumimto.rpg.common.gui.Gui;
 public class DefaultManaRegeneration extends EffectBase {
 
     public static final String name = "DefaultManaRegen";
-    private IActiveCharacter character;
+    private ActiveCharacter character;
 
     public DefaultManaRegeneration(IEffectConsumer character) {
         super(name, character);
-        this.character = (IActiveCharacter) character;
+        this.character = (ActiveCharacter) character;
         setPeriod(Rpg.get().getResourceService()
                 .getRegistry()
                 .stream()

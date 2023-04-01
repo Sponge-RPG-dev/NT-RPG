@@ -8,9 +8,9 @@ import co.aikar.commands.annotation.Subcommand;
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.commands.CharacterCommandFacade;
 import cz.neumimto.rpg.common.configuration.AttributeConfig;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
 import cz.neumimto.rpg.spigot.gui.SpigotGui;
 import cz.neumimto.rpg.spigot.gui.inventoryviews.CharacterAttributesGuiView;
@@ -52,7 +52,7 @@ public class SpigotCharacterCommands extends BaseCommand {
 
     @Subcommand("switch")
     public void switchCharacter(Player executor, String name) {
-        IActiveCharacter character = characterService.getCharacter(executor);
+        ActiveCharacter character = characterService.getCharacter(executor);
 
         characterCommandFacade.commandSwitchCharacter(character, name, runnable -> {
             Rpg.get().scheduleSyncLater(runnable);
@@ -61,7 +61,7 @@ public class SpigotCharacterCommands extends BaseCommand {
 
     @Subcommand("attribute-add")
     public void attributesAdd(Player executor, AttributeConfig a) {
-        ISpigotCharacter character = characterService.getCharacter(executor);
+        SpigotCharacter character = characterService.getCharacter(executor);
         Map<String, Integer> attributesTransaction = character.getAttributesTransaction();
         Integer integer = attributesTransaction.get(a.getId());
         attributesTransaction.put(a.getId(), integer + 1);
@@ -73,7 +73,7 @@ public class SpigotCharacterCommands extends BaseCommand {
         if (openInventory.getType() == InventoryType.CRAFTING) {
             return;
         }
-        ISpigotCharacter character = characterService.getCharacter(executor);
+        SpigotCharacter character = characterService.getCharacter(executor);
         int i = 27;
 
         String[][] persisted = new String[character.getSpellbook().length - 1][character.getSpellbook()[0].length - 1];
@@ -108,14 +108,14 @@ public class SpigotCharacterCommands extends BaseCommand {
 
     @Subcommand("spell-rotation")
     public void toggleSpellRotation(Player executor, boolean state) {
-        ISpigotCharacter character = characterService.getCharacter(executor);
+        SpigotCharacter character = characterService.getCharacter(executor);
         character.setSpellRotation(state);
     }
 
     @Private
     @Subcommand("back")
     public void back(Player executor, @Optional String arg) {
-        ISpigotCharacter character = characterService.getCharacter(executor);
+        SpigotCharacter character = characterService.getCharacter(executor);
         Stack<String> list = character.getGuiCommandHistory();
         if (!list.empty()) {
             list.pop();

@@ -6,7 +6,7 @@ import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
 import cz.neumimto.rpg.common.localization.LocalizationKeys;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import cz.neumimto.rpg.spigot.items.RPGItemMetadataKeys;
 import cz.neumimto.rpg.spigot.services.IRpgListener;
 import org.bukkit.Material;
@@ -54,13 +54,13 @@ public class SpellbookListener implements IRpgListener {
                 Rpg.get().getLocalizationService().translate(LocalizationKeys.SPELLBOOK_ADDPAGE), "char spellbook-add-page");
     }
 
-    public static void addInventory(ISpigotCharacter character, Inventory i, Map<String, PlayerSkillContext> sorted) {
+    public static void addInventory(SpigotCharacter character, Inventory i, Map<String, PlayerSkillContext> sorted) {
         State state = new State(sorted);
         openedInventories.put(i, state);
         drawSpellLine(character, i, state);
     }
 
-    public static void drawSpellLine(ISpigotCharacter character, Inventory inv, State state) {
+    public static void drawSpellLine(SpigotCharacter character, Inventory inv, State state) {
         Set<Map.Entry<String, PlayerSkillContext>> entries = state.sorted.entrySet();
         Iterator<Map.Entry<String, PlayerSkillContext>> iterator = entries.iterator();
         int i = 0;
@@ -138,7 +138,7 @@ public class SpellbookListener implements IRpgListener {
         return openedInventories.containsKey(topInventory);
     }
 
-    public static void commit(ISpigotCharacter character, Inventory topInventory) {
+    public static void commit(SpigotCharacter character, Inventory topInventory) {
         for (int columns = 3; columns < 7; columns++) {
             for (int rows = 0; rows < 9; rows++) {
                 int slotId = columns * rows;

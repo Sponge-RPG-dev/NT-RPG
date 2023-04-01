@@ -10,7 +10,7 @@ import com.denizenscript.denizencore.tags.ObjectTagProcessor;
 import com.denizenscript.denizencore.tags.TagContext;
 import com.denizenscript.denizencore.utilities.CoreUtilities;
 import cz.neumimto.rpg.common.Rpg;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
@@ -18,16 +18,16 @@ import java.util.UUID;
 
 public class CharacterTag implements EntityFormObject {
 
-    private IActiveCharacter character;
+    private ActiveCharacter character;
     private String prefix;
 
     public static ObjectTagProcessor<CharacterTag> tagProcessor = new ObjectTagProcessor<>();
 
-    public CharacterTag(IActiveCharacter character) {
+    public CharacterTag(ActiveCharacter character) {
         this.character = character;
     }
 
-    public IActiveCharacter getCharacter() {
+    public ActiveCharacter getCharacter() {
         return character;
     }
 

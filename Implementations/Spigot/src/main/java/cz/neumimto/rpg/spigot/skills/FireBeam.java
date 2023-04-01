@@ -9,7 +9,7 @@ import cz.neumimto.rpg.common.skills.tree.SkillType;
 import cz.neumimto.rpg.common.skills.types.ActiveSkill;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import de.slikey.effectlib.EffectManager;
 import de.slikey.effectlib.EffectType;
 import de.slikey.effectlib.effect.LineEffect;
@@ -27,7 +27,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @Singleton
 @AutoService(ISkill.class)
 @ResourceLoader.Skill("ntrpg:firebeam")
-public class FireBeam extends ActiveSkill<ISpigotCharacter> {
+public class FireBeam extends ActiveSkill<SpigotCharacter> {
 
     @Inject
     private SpigotDamageService damageService;
@@ -43,7 +43,7 @@ public class FireBeam extends ActiveSkill<ISpigotCharacter> {
     }
 
     @Override
-    public SkillResult cast(ISpigotCharacter character, PlayerSkillContext info) {
+    public SkillResult cast(SpigotCharacter character, PlayerSkillContext info) {
         Player player = character.getPlayer();
         int maxLength = info.getIntNodeValue("max-length");
 

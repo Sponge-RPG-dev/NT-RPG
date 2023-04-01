@@ -9,7 +9,7 @@ import cz.neumimto.rpg.common.resources.ResourceService;
 import cz.neumimto.rpg.spigot.effects.SpigotEffectService;
 import cz.neumimto.rpg.spigot.effects.common.ManaShieldEffect;
 import cz.neumimto.rpg.spigot.effects.common.Rage;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import cz.neumimto.rpg.spigot.events.character.SpigotEffectApplyEvent;
 import cz.neumimto.rpg.spigot.events.damage.SpigotEntityProjectileDamageEarlyEvent;
 import cz.neumimto.rpg.spigot.events.damage.SpigotEntitySkillDamageEarlyEvent;
@@ -68,8 +68,8 @@ public class SkillListener implements IRpgListener {
                 event.setCancelled(true);
             } else {
                 event.setDamage(newDamage);
-                if (event.getTarget() instanceof ISpigotCharacter) {
-                    ISpigotCharacter character = (ISpigotCharacter) event.getTarget();
+                if (event.getTarget() instanceof SpigotCharacter) {
+                    SpigotCharacter character = (SpigotCharacter) event.getTarget();
                     Resource mana = character.getResource(ResourceService.mana);
                     double newMana = mana.getValue() - manaDamage;
                     if (newMana <= 0) {

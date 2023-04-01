@@ -6,7 +6,7 @@ import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.damage.DamageService;
 import cz.neumimto.rpg.common.entity.EntityService;
 import cz.neumimto.rpg.common.entity.PropertyService;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.skills.tree.SkillTree;
 import cz.neumimto.rpg.common.skills.types.AbstractSkill;
 import cz.neumimto.rpg.common.skills.utils.SkillLoadingErrors;
@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.BiFunction;
 
-public class PropertySkill extends AbstractSkill<IActiveCharacter> {
+public class PropertySkill extends AbstractSkill<ActiveCharacter> {
 
     @Inject
     private PropertyService propertyService;
@@ -29,35 +29,35 @@ public class PropertySkill extends AbstractSkill<IActiveCharacter> {
     private EntityService entityService;
 
     @Override
-    public SkillResult onPreUse(IActiveCharacter character, PlayerSkillContext esi) {
+    public SkillResult onPreUse(ActiveCharacter character, PlayerSkillContext esi) {
         return SkillResult.CANCELLED;
     }
 
     @Override
-    public void onCharacterInit(IActiveCharacter c, int level, PlayerSkillContext context) {
+    public void onCharacterInit(ActiveCharacter c, int level, PlayerSkillContext context) {
         super.onCharacterInit(c, level, context);
         add(c, 1, (integer, integer2) -> integer <= integer2);
     }
 
     @Override
-    public void skillLearn(IActiveCharacter IActiveCharacter, PlayerSkillContext context) {
-        super.skillLearn(IActiveCharacter, context);
-        add(IActiveCharacter, 1, (integer, integer2) -> integer <= integer2);
+    public void skillLearn(ActiveCharacter ActiveCharacter, PlayerSkillContext context) {
+        super.skillLearn(ActiveCharacter, context);
+        add(ActiveCharacter, 1, (integer, integer2) -> integer <= integer2);
     }
 
     @Override
-    public void skillRefund(IActiveCharacter IActiveCharacter, PlayerSkillContext context) {
-        super.skillRefund(IActiveCharacter, context);
-        add(IActiveCharacter, -1, (integer, integer2) -> integer <= integer2);
+    public void skillRefund(ActiveCharacter ActiveCharacter, PlayerSkillContext context) {
+        super.skillRefund(ActiveCharacter, context);
+        add(ActiveCharacter, -1, (integer, integer2) -> integer <= integer2);
     }
 
     @Override
-    public void skillUpgrade(IActiveCharacter IActiveCharacter, int level, PlayerSkillContext context) {
-        super.skillUpgrade(IActiveCharacter, level, context);
-        add(IActiveCharacter, 1, Objects::equals);
+    public void skillUpgrade(ActiveCharacter ActiveCharacter, int level, PlayerSkillContext context) {
+        super.skillUpgrade(ActiveCharacter, level, context);
+        add(ActiveCharacter, 1, Objects::equals);
     }
 
-    private void add(IActiveCharacter character, int i, BiFunction<Integer, Integer, Boolean> fc) {
+    private void add(ActiveCharacter character, int i, BiFunction<Integer, Integer, Boolean> fc) {
         PlayerSkillContext skill = character.getSkill(getId());
         PropertySkillData skillData = (PropertySkillData) skill.getSkillData();
         for (Wrapper property : skillData.properties) {

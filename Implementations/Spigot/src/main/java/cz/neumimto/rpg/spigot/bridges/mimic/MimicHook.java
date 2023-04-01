@@ -2,7 +2,7 @@ package cz.neumimto.rpg.spigot.bridges.mimic;
 
 
 import cz.neumimto.rpg.common.classes.ClassService;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -38,7 +38,7 @@ public class MimicHook {
             super(player);
         }
 
-        private IActiveCharacter getCharacter() {
+        private ActiveCharacter getCharacter() {
             return characterService.getCharacter(getPlayer());
         }
 
@@ -62,7 +62,7 @@ public class MimicHook {
             super(player);
         }
 
-        private IActiveCharacter getCharacter() {
+        private ActiveCharacter getCharacter() {
             return characterService.getCharacter(getPlayer());
         }
 
@@ -74,7 +74,7 @@ public class MimicHook {
 
         @Override
         public int getLevel() {
-            IActiveCharacter character = getCharacter();
+            ActiveCharacter character = getCharacter();
             if (character.getPrimaryClass() != null) {
                 return character.getPrimaryClass().getCharacterClass().getLevel();
             }

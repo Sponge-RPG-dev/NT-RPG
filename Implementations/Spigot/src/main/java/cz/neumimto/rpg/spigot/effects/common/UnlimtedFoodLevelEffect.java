@@ -5,7 +5,7 @@ import cz.neumimto.rpg.common.effects.EffectBase;
 import cz.neumimto.rpg.common.effects.Generate;
 import cz.neumimto.rpg.common.effects.IEffect;
 import cz.neumimto.rpg.common.entity.IEffectConsumer;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import org.bukkit.entity.Player;
 
 @AutoService(IEffect.class)
@@ -24,7 +24,7 @@ public class UnlimtedFoodLevelEffect extends EffectBase<Double> {
 
     @Override
     public void onTick(IEffect self) {
-        ISpigotCharacter character = (ISpigotCharacter) getConsumer();
+        SpigotCharacter character = (SpigotCharacter) getConsumer();
         Player player = character.getPlayer();
         player.setFoodLevel(19);
     }

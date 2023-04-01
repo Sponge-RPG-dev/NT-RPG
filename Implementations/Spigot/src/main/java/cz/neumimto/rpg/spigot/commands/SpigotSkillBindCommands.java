@@ -5,7 +5,7 @@ import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.localization.LocalizationKeys;
 import cz.neumimto.rpg.common.localization.LocalizationService;
 import cz.neumimto.rpg.common.skills.ISkill;
@@ -43,7 +43,7 @@ public class SpigotSkillBindCommands extends BaseCommand {
             return;
         }
         if (executor.getMainHand() != null) {
-            IActiveCharacter character = characterService.getCharacter(executor);
+            ActiveCharacter character = characterService.getCharacter(executor);
             if (character.isStub()) {
                 return;
             }

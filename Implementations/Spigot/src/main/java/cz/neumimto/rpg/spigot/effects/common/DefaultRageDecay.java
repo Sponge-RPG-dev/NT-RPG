@@ -3,12 +3,13 @@ package cz.neumimto.rpg.spigot.effects.common;
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.effects.*;
 import cz.neumimto.rpg.common.entity.IEffectConsumer;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.events.character.CharacterResourceChangeValueEvent;
 import cz.neumimto.rpg.common.gui.Gui;
 import cz.neumimto.rpg.common.resources.Resource;
 import cz.neumimto.rpg.common.resources.ResourceService;
 import cz.neumimto.rpg.spigot.effects.common.model.DefaultRageDecayModel;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 
 /**
  * Created by NeumimTo on 9.8.2015.
@@ -17,12 +18,12 @@ import cz.neumimto.rpg.spigot.effects.common.model.DefaultRageDecayModel;
 public class DefaultRageDecay extends UnstackableEffectBase<DefaultRageDecayModel> {
 
     public static final String name = "DefaultRageDecay";
-    private IActiveCharacter character;
+    private SpigotCharacter character;
 
     @Generate.Constructor
     public DefaultRageDecay(IEffectConsumer character, long duration, @Generate.Model DefaultRageDecayModel model) {
         super(name, character);
-        this.character = (IActiveCharacter) character;
+        this.character = (SpigotCharacter) character;
         setValue(model);
         setDuration(duration);
         setPeriod(Rpg.get().getResourceService()

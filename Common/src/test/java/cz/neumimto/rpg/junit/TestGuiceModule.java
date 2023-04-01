@@ -21,7 +21,7 @@ import cz.neumimto.rpg.common.entity.TestPropertyService;
 import cz.neumimto.rpg.common.entity.configuration.MobSettingsDao;
 import cz.neumimto.rpg.common.entity.configuration.TestMobSettingsDao;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.parties.PartyService;
 import cz.neumimto.rpg.common.events.EventFactoryService;
 import cz.neumimto.rpg.common.events.TestEventFactory;
@@ -105,7 +105,7 @@ public class TestGuiceModule extends AbstractModule {
         bind(AssetService.class).to(TestAssetService.class);
         bind(CharacterService.class).to(TestCharacterService.class);
 
-        //bind(new TypeLiteral<CharacterService<IActiveCharacter>>() {
+        //bind(new TypeLiteral<CharacterService<ActiveCharacter>>() {
         //})
         //        .toProvider(SpongeCharacterServiceProvider1.class);//.toProvider(() -> (CharacterService) TestCharacterService);
 
@@ -131,13 +131,13 @@ public class TestGuiceModule extends AbstractModule {
         }
     }
 
-    public static class SpongeCharacterServiceProvider1 implements Provider<CharacterService<IActiveCharacter>> {
+    public static class SpongeCharacterServiceProvider1 implements Provider<CharacterService<ActiveCharacter>> {
 
         @Inject
         private Injector injector;
 
         @Override
-        public CharacterService<IActiveCharacter> get() {
+        public CharacterService<ActiveCharacter> get() {
             if (scs == null) {
                 scs = injector.getInstance(TestCharacterService.class);
             }

@@ -3,7 +3,7 @@ package cz.neumimto.rpg.common.entity.players.leveling;
 
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.common.events.character.CharacterGainedLevelEvent;
@@ -23,7 +23,7 @@ import java.util.concurrent.CompletableFuture;
 public enum SkillTreeType {
     MANUAL {
         @Override
-        public void processClassLevelUp(IActiveCharacter character, PlayerClassData playerClassData, int level) {
+        public void processClassLevelUp(ActiveCharacter character, PlayerClassData playerClassData, int level) {
             CharacterGainedLevelEvent event = Rpg.get().getEventFactory().createEventInstance(CharacterGainedLevelEvent.class);
             event.setTarget(character);
             event.setLevel(level);
@@ -35,13 +35,13 @@ public enum SkillTreeType {
         }
 
         @Override
-        public void processCharacterInit(IActiveCharacter character, PlayerClassData playerClassData) {
+        public void processCharacterInit(ActiveCharacter character, PlayerClassData playerClassData) {
             //No need to load skilltree for character, as each character has learned skills stored in the database
         }
 
         @Override
-        public void processLearnSkill(IActiveCharacter character, PlayerClassData playerClassData, ISkill iSkill) {
-            CharacterService<IActiveCharacter> characterService = Rpg.get().getCharacterService();
+        public void processLearnSkill(ActiveCharacter character, PlayerClassData playerClassData, ISkill iSkill) {
+            CharacterService<ActiveCharacter> characterService = Rpg.get().getCharacterService();
             ClassDefinition classDefinition = playerClassData.getClassDefinition();
 
             ActionResult actionResult = characterService.canLearnSkill(character, classDefinition, iSkill);
@@ -54,8 +54,8 @@ public enum SkillTreeType {
         }
 
         @Override
-        public void processUpgradeSkill(IActiveCharacter character, PlayerClassData playerClassData, ISkill iSkill) {
-            CharacterService<IActiveCharacter> characterService = Rpg.get().getCharacterService();
+        public void processUpgradeSkill(ActiveCharacter character, PlayerClassData playerClassData, ISkill iSkill) {
+            CharacterService<ActiveCharacter> characterService = Rpg.get().getCharacterService();
             ClassDefinition classDefinition = playerClassData.getClassDefinition();
             ActionResult actionResult = characterService.canUpgradeSkill(character, classDefinition, iSkill);
             if (actionResult.isOk()) {
@@ -68,8 +68,8 @@ public enum SkillTreeType {
         }
 
         @Override
-        public void processRefundSkill(IActiveCharacter character, PlayerClassData playerClassData, ISkill iSkill) {
-            CharacterService<IActiveCharacter> characterService = Rpg.get().getCharacterService();
+        public void processRefundSkill(ActiveCharacter character, PlayerClassData playerClassData, ISkill iSkill) {
+            CharacterService<ActiveCharacter> characterService = Rpg.get().getCharacterService();
             ClassDefinition classDefinition = playerClassData.getClassDefinition();
             ActionResult actionResult = characterService.canRefundSkill(character, classDefinition, iSkill);
             if (actionResult.isOk()) {
@@ -90,7 +90,7 @@ public enum SkillTreeType {
     },
     AUTO {
         @Override
-        public void processClassLevelUp(IActiveCharacter character, PlayerClassData playerClassData, int level) {
+        public void processClassLevelUp(ActiveCharacter character, PlayerClassData playerClassData, int level) {
             ClassDefinition classDefinition = playerClassData.getClassDefinition();
             SkillTree skillTree = classDefinition.getSkillTree();
             if (skillTree == null) {
@@ -119,7 +119,7 @@ public enum SkillTreeType {
         }
 
         @Override
-        public void processCharacterInit(IActiveCharacter character, PlayerClassData playerClassData) {
+        public void processCharacterInit(ActiveCharacter character, PlayerClassData playerClassData) {
             ClassDefinition classDefinition = playerClassData.getClassDefinition();
             SkillTree skillTree = classDefinition.getSkillTree();
             if (skillTree == null) {
@@ -141,33 +141,33 @@ public enum SkillTreeType {
         }
 
         @Override
-        public void processLearnSkill(IActiveCharacter character, PlayerClassData playerClassData, ISkill iSkill) {
+        public void processLearnSkill(ActiveCharacter character, PlayerClassData playerClassData, ISkill iSkill) {
             sendErrorMessage(character, playerClassData.getClassDefinition().getName());
         }
 
         @Override
-        public void processUpgradeSkill(IActiveCharacter character, PlayerClassData playerClassData, ISkill iSkill) {
+        public void processUpgradeSkill(ActiveCharacter character, PlayerClassData playerClassData, ISkill iSkill) {
             sendErrorMessage(character, playerClassData.getClassDefinition().getName());
         }
 
         @Override
-        public void processRefundSkill(IActiveCharacter character, PlayerClassData playerClassData, ISkill iSkill) {
+        public void processRefundSkill(ActiveCharacter character, PlayerClassData playerClassData, ISkill iSkill) {
             sendErrorMessage(character, playerClassData.getClassDefinition().getName());
         }
 
-        private void sendErrorMessage(IActiveCharacter player, String className) {
+        private void sendErrorMessage(ActiveCharacter player, String className) {
             String aClass = Rpg.get().getLocalizationService().translate(LocalizationKeys.NOT_ALLOWED_MANUAL_SKILLTREE_MANAGEMENT, Arg.arg("class", className));
             player.sendMessage(aClass);
         }
     };
 
-    public abstract void processClassLevelUp(IActiveCharacter character, PlayerClassData playerClassData, int level);
+    public abstract void processClassLevelUp(ActiveCharacter character, PlayerClassData playerClassData, int level);
 
-    public abstract void processCharacterInit(IActiveCharacter character, PlayerClassData playerClassData);
+    public abstract void processCharacterInit(ActiveCharacter character, PlayerClassData playerClassData);
 
-    public abstract void processLearnSkill(IActiveCharacter character, PlayerClassData playerClassData, ISkill iSkill);
+    public abstract void processLearnSkill(ActiveCharacter character, PlayerClassData playerClassData, ISkill iSkill);
 
-    public abstract void processUpgradeSkill(IActiveCharacter character, PlayerClassData playerClassData, ISkill iSkill);
+    public abstract void processUpgradeSkill(ActiveCharacter character, PlayerClassData playerClassData, ISkill iSkill);
 
-    public abstract void processRefundSkill(IActiveCharacter character, PlayerClassData playerClassData, ISkill iSkill);
+    public abstract void processRefundSkill(ActiveCharacter character, PlayerClassData playerClassData, ISkill iSkill);
 }

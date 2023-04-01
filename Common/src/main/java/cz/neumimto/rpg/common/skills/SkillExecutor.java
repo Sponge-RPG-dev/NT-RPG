@@ -3,7 +3,7 @@ package cz.neumimto.rpg.common.skills;
 
 import com.google.inject.Injector;
 import cz.neumimto.rpg.common.Rpg;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.events.EventFactoryService;
 import cz.neumimto.rpg.common.events.skill.SkillPostUsageEvent;
 import cz.neumimto.rpg.common.events.skill.SkillPreUsageEvent;
@@ -56,7 +56,7 @@ public class SkillExecutor implements ISkillExecutor {
     }
 
     @Override
-    public SkillResult execute(IActiveCharacter character, PlayerSkillContext playerSkillContext) {
+    public SkillResult execute(ActiveCharacter character, PlayerSkillContext playerSkillContext) {
         SkillPreUsageEvent eventPre = eventFactory.createEventInstance(SkillPreUsageEvent.class);
         eventPre.setSkill(playerSkillContext.getSkill());
         eventPre.setCaster(character);

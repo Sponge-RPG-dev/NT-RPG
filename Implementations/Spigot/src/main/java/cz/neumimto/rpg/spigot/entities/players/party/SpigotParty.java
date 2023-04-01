@@ -1,42 +1,42 @@
 package cz.neumimto.rpg.spigot.entities.players.party;
 
 import cz.neumimto.rpg.common.entity.players.party.IParty;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import org.bukkit.scoreboard.Team;
 
 import java.util.Collections;
 import java.util.Set;
 import java.util.UUID;
 
-public class SpigotParty implements IParty<ISpigotCharacter> {
+public class SpigotParty implements IParty<SpigotCharacter> {
     private Team team;
 
-    public SpigotParty(ISpigotCharacter leader) {
+    public SpigotParty(SpigotCharacter leader) {
 
     }
 
     @Override
-    public void addPlayer(ISpigotCharacter character) {
+    public void addPlayer(SpigotCharacter character) {
 
     }
 
     @Override
-    public ISpigotCharacter getLeader() {
+    public SpigotCharacter getLeader() {
         return null;
     }
 
     @Override
-    public void setLeader(ISpigotCharacter leader) {
+    public void setLeader(SpigotCharacter leader) {
 
     }
 
     @Override
-    public void removePlayer(ISpigotCharacter character) {
+    public void removePlayer(SpigotCharacter character) {
 
     }
 
     @Override
-    public Set<ISpigotCharacter> getPlayers() {
+    public Set<SpigotCharacter> getPlayers() {
         return Collections.emptySet();
     }
 

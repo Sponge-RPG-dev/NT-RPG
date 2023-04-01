@@ -8,7 +8,7 @@ import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.configuration.AttributeConfig;
 import cz.neumimto.rpg.common.configuration.ItemString;
 import cz.neumimto.rpg.common.entity.PropertyService;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.common.logging.Log;
@@ -251,14 +251,14 @@ public abstract class ItemService {
         load();
     }
 
-    public boolean checkItemPermission(IActiveCharacter character, RpgItemStack rpgItemStack, String permSuffix) {
+    public boolean checkItemPermission(ActiveCharacter character, RpgItemStack rpgItemStack, String permSuffix) {
         if (rpgItemStack == null) {
             return true;
         }
         return checkItemPermission(character, rpgItemStack.getItemType(), permSuffix);
     }
 
-    public boolean checkItemPermission(IActiveCharacter character, RpgItemType itemType, String permSuffix) {
+    public boolean checkItemPermission(ActiveCharacter character, RpgItemType itemType, String permSuffix) {
         String permission = itemType.getPermission();
         if (permission == null) {
             return true;
@@ -266,7 +266,7 @@ public abstract class ItemService {
         return permissionService.hasPermission(character, permission);
     }
 
-    public Set<RpgItemType> filterAllowedItems(IActiveCharacter character, Set<ItemClass> itemClass) {
+    public Set<RpgItemType> filterAllowedItems(ActiveCharacter character, Set<ItemClass> itemClass) {
         return items.values().stream()
                 .filter(a->itemClass.contains(a.getItemClass()))
                 .filter(a->checkItemPermission(character, a, ""))

@@ -3,7 +3,7 @@ package cz.neumimto.rpg.common.skills;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
 import cz.neumimto.rpg.common.Rpg;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.permissions.PermissionService;
 import cz.neumimto.rpg.common.skills.tree.SkillTree;
 import cz.neumimto.rpg.common.skills.types.ActiveSkill;
@@ -15,13 +15,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CommandSkill extends ActiveSkill<IActiveCharacter> {
+public class CommandSkill extends ActiveSkill<ActiveCharacter> {
 
     @Inject
     private PermissionService permissionService;
 
     @Override
-    public SkillResult cast(IActiveCharacter character, PlayerSkillContext info) {
+    public SkillResult cast(ActiveCharacter character, PlayerSkillContext info) {
         CommandData skillData = (CommandData) info.getSkillData();
         List<String> command = Collections.singletonList(skillData.getCommand());
         Map<String, String> args = new HashMap<>();

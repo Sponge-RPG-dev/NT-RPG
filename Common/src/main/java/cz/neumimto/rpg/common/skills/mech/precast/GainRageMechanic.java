@@ -2,7 +2,7 @@ package cz.neumimto.rpg.common.skills.mech.precast;
 
 import com.google.auto.service.AutoService;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.resources.ResourceService;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.skills.SkillData;
@@ -25,7 +25,7 @@ public class GainRageMechanic implements ISkillCastMechanic, ValidatedMechanic {
     }
 
     @Override
-    public void processAfterSuccess(IActiveCharacter character, PlayerSkillContext context) {
+    public void processAfterSuccess(ActiveCharacter character, PlayerSkillContext context) {
         double f = context.getFloatNodeValue("gain_rage");
         characterService.gainResource(character, f, context.getSkill(), ResourceService.rage);
     }

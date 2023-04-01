@@ -10,7 +10,7 @@ import cz.neumimto.rpg.common.skills.SkillResult;
 import cz.neumimto.rpg.common.skills.tree.SkillType;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import cz.neumimto.rpg.spigot.utils.MathUtils;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -49,7 +49,7 @@ public class BattleCharge extends TargetedEntitySkill {
     }
 
     @Override
-    public SkillResult castOn(IEntity target, ISpigotCharacter source, PlayerSkillContext skillContext) {
+    public SkillResult castOn(IEntity target, SpigotCharacter source, PlayerSkillContext skillContext) {
         Player entity = source.getEntity();
         LivingEntity entity1 = (LivingEntity) target.getEntity();
         Location b = entity.getLocation();

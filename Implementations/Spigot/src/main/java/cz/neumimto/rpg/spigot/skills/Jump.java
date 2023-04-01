@@ -7,7 +7,7 @@ import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.skills.SkillResult;
 import cz.neumimto.rpg.common.skills.tree.SkillType;
 import cz.neumimto.rpg.common.skills.types.ActiveSkill;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -21,7 +21,7 @@ import java.util.EnumSet;
 @Singleton
 @AutoService(ISkill.class)
 @ResourceLoader.Skill("ntrpg:jump")
-public class Jump extends ActiveSkill<ISpigotCharacter> {
+public class Jump extends ActiveSkill<SpigotCharacter> {
 
     static EnumSet<Material> unstableMaterials;
 
@@ -35,7 +35,7 @@ public class Jump extends ActiveSkill<ISpigotCharacter> {
     }
 
     @Override
-    public SkillResult cast(ISpigotCharacter character, PlayerSkillContext skillContext) {
+    public SkillResult cast(SpigotCharacter character, PlayerSkillContext skillContext) {
         Player player = character.getPlayer();
         Location playerLoc = player.getLocation();
 

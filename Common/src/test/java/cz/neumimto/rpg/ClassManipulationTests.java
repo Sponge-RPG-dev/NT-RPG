@@ -5,7 +5,7 @@ import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.RpgApi;
 import cz.neumimto.rpg.common.configuration.ClassTypeDefinition;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.common.persistance.model.CharacterClass;
@@ -47,10 +47,10 @@ public class ClassManipulationTests {
     @Inject
     private RpgApi rpgApi;
 
-    private IActiveCharacter character;
+    private ActiveCharacter character;
 
     @BeforeEach
-    public void beforeEach(@Stage(READY) IActiveCharacter character) {
+    public void beforeEach(@Stage(READY) ActiveCharacter character) {
         this.character = character;
         new RpgTest(rpgApi);
 

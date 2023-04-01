@@ -6,7 +6,7 @@ import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.common.permissions.PermissionService;
 import cz.neumimto.rpg.spigot.SpigotRpg;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.group.GroupManager;
@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-public class SpigotPermissionService implements PermissionService<ISpigotCharacter> {
+public class SpigotPermissionService implements PermissionService<SpigotCharacter> {
 
     private static final String CLASS_PERM_PREFIX = "ntrpg_internal_class_";
     @Inject
@@ -58,7 +58,7 @@ public class SpigotPermissionService implements PermissionService<ISpigotCharact
     }
 
     @Override
-    public boolean hasPermission(ISpigotCharacter character, String value) {
+    public boolean hasPermission(SpigotCharacter character, String value) {
         UUID uuid = character.getUUID();
         return SpigotRpgPlugin.getLuckPerms().getUserManager()
                 .getUser(uuid)
@@ -69,7 +69,7 @@ public class SpigotPermissionService implements PermissionService<ISpigotCharact
     }
 
     @Override
-    public void removePermissions(ISpigotCharacter character, Collection<String> perms) {
+    public void removePermissions(SpigotCharacter character, Collection<String> perms) {
         Player player = character.getPlayer();
         for (String perm : perms) {
             player.addAttachment(SpigotRpgPlugin.getInstance(), perm, false);
@@ -77,7 +77,7 @@ public class SpigotPermissionService implements PermissionService<ISpigotCharact
     }
 
     @Override
-    public void addPermissions(ISpigotCharacter character, Collection<String> perms) {
+    public void addPermissions(SpigotCharacter character, Collection<String> perms) {
         Player player = character.getPlayer();
         for (String perm : perms) {
             player.addAttachment(SpigotRpgPlugin.getInstance(), perm, true);
@@ -85,7 +85,7 @@ public class SpigotPermissionService implements PermissionService<ISpigotCharact
     }
 
     @Override
-    public void refreshPermGroups(ISpigotCharacter tpActiveCharacter) {
+    public void refreshPermGroups(SpigotCharacter tpActiveCharacter) {
         User user = SpigotRpgPlugin.getLuckPerms().getUserManager().getUser(tpActiveCharacter.getUUID());
         user.transientData().clear(node -> node instanceof InheritanceNode i && i.getGroupName().startsWith(CLASS_PERM_PREFIX));
         Map<String, PlayerClassData> classes = tpActiveCharacter.getClasses();

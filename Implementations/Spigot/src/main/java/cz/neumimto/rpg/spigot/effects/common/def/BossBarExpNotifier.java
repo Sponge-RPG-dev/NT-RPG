@@ -8,7 +8,7 @@ import cz.neumimto.rpg.common.localization.LocalizationService;
 import cz.neumimto.rpg.common.utils.MathUtils;
 import cz.neumimto.rpg.common.utils.StringUtils;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
@@ -27,14 +27,14 @@ public class BossBarExpNotifier extends EffectBase<Object> implements IEffectCon
     public static final String name = "BossBarExp";
     private Map<String, SessionWrapper> bossBarMap = new HashMap<>();
 
-    public BossBarExpNotifier(ISpigotCharacter consumer) {
+    public BossBarExpNotifier(SpigotCharacter consumer) {
         super(name, consumer);
         effectTypes.add(CoreEffectTypes.GUI);
         setPeriod(5000);
         setDuration(-1);
     }
 
-    public void notifyExpChange(ISpigotCharacter character, String clazz, double exps) {
+    public void notifyExpChange(SpigotCharacter character, String clazz, double exps) {
         final String classname = clazz.toLowerCase();
         Optional<PlayerClassData> first = Optional.ofNullable(character.getClassByName(classname));
         if (first.isPresent()) {
@@ -82,7 +82,7 @@ public class BossBarExpNotifier extends EffectBase<Object> implements IEffectCon
 
     @Override
     public void onTick(IEffect self) {
-        Audience player = SpigotRpgPlugin.getBukkitAudiences().player(((ISpigotCharacter) getConsumer()).getPlayer());
+        Audience player = SpigotRpgPlugin.getBukkitAudiences().player(((SpigotCharacter) getConsumer()).getPlayer());
 
         for (SessionWrapper sessionWrapper : bossBarMap.values()) {
             if (sessionWrapper.serverBossBar != null) {

@@ -2,12 +2,14 @@ package cz.neumimto.rpg.spigot.bridges;
 
 import cz.neumimto.rpg.common.configuration.PluginConfig;
 import cz.neumimto.rpg.common.entity.PropertyService;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.common.entity.players.leveling.ILevelProgression;
 import cz.neumimto.rpg.common.resources.Resource;
 import cz.neumimto.rpg.common.resources.ResourceService;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
@@ -79,7 +81,7 @@ public class NtRpgPlaceholderExpansion extends PlaceholderExpansion {
         }
 
 
-        ISpigotCharacter character = characterService.getCharacter(player);
+        ActiveCharacter character = characterService.getCharacter(player);
         if (identifier.equals("character_name")) {
             return character.getName();
         }

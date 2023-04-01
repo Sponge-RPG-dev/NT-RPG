@@ -7,7 +7,7 @@ import cz.neumimto.rpg.common.effects.EffectBase;
 import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.effects.IEffect;
 import cz.neumimto.rpg.common.effects.IEffectContainer;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.skills.tree.SkillTree;
 import cz.neumimto.rpg.common.skills.types.ActiveSkill;
 import cz.neumimto.rpg.common.skills.utils.SkillLoadingErrors;
@@ -17,7 +17,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public class RepeatingSkill extends ActiveSkill<IActiveCharacter> {
+public class RepeatingSkill extends ActiveSkill<ActiveCharacter> {
 
     @Inject
     private EffectService effectService;
@@ -42,7 +42,7 @@ public class RepeatingSkill extends ActiveSkill<IActiveCharacter> {
     }
 
     @Override
-    public SkillResult cast(IActiveCharacter character, PlayerSkillContext info) {
+    public SkillResult cast(ActiveCharacter character, PlayerSkillContext info) {
         RepeatingSkillData skillData = (RepeatingSkillData) info.getSkillData();
 
         RepeatingSkillEffect repeatingSkillEffect = new RepeatingSkillEffect(skillData, character, info);
@@ -66,11 +66,11 @@ public class RepeatingSkill extends ActiveSkill<IActiveCharacter> {
     public class RepeatingSkillEffect extends EffectBase implements IEffectContainer {
 
         private final RepeatingSkillData skillData;
-        private final IActiveCharacter character;
+        private final ActiveCharacter character;
         private PlayerSkillContext info;
         private int countRemaining;
 
-        public RepeatingSkillEffect(RepeatingSkillData skillData, IActiveCharacter character, PlayerSkillContext info) {
+        public RepeatingSkillEffect(RepeatingSkillData skillData, ActiveCharacter character, PlayerSkillContext info) {
             super("repeating_" + skillData.getSkillId(), character);
             this.skillData = skillData;
             this.character = character;

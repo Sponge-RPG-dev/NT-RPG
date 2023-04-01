@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.common.skills.conditions;
 
 import com.google.auto.service.AutoService;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.skills.SkillCastCondition;
 import cz.neumimto.rpg.common.skills.SkillData;
@@ -14,7 +14,7 @@ import javax.inject.Singleton;
 public class EffectCondition implements ISkillCondition {
 
     @Override
-    public boolean check(IActiveCharacter character, PlayerSkillContext context) {
+    public boolean check(ActiveCharacter character, PlayerSkillContext context) {
         SkillCastCondition castCondition = context.getSkillData().getSkillCastConditions().get("HasEffect");
         return character.hasEffect(castCondition.getValue());
     }

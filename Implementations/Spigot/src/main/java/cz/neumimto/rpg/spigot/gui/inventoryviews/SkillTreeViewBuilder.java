@@ -6,7 +6,7 @@ import cz.neumimto.rpg.common.gui.ISkillTreeInterfaceModel;
 import cz.neumimto.rpg.common.skills.tree.SkillTree;
 import cz.neumimto.rpg.spigot.Resourcepack;
 import cz.neumimto.rpg.spigot.bridges.DatapackManager;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import cz.neumimto.rpg.spigot.gui.SpigotGuiHelper;
 import cz.neumimto.rpg.spigot.skills.SpigotSkillTreeInterfaceModel;
 import net.kyori.adventure.text.Component;
@@ -109,7 +109,7 @@ public class SkillTreeViewBuilder extends ConfigurableInventoryGui {
         return getPrefix(guiConfig).append(Component.text(param));
     }
 
-    public static Inventory createSkillTreeView(ISpigotCharacter character, SkillTree skillTree) {
+    public static Inventory createSkillTreeView(SpigotCharacter character, SkillTree skillTree) {
         Player player = character.getPlayer();
         Inventory inventory = Bukkit.createInventory(player, 54, instance.getTitle(player, instance.guiConfig, skillTree.getId()));
         fillSkillTreeViewInterface(inventory);

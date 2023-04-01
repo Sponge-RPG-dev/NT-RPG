@@ -7,7 +7,7 @@ import cz.neumimto.rpg.common.effects.IEffect;
 import cz.neumimto.rpg.common.effects.IEffectContainer;
 import cz.neumimto.rpg.common.entity.IEffectConsumer;
 import cz.neumimto.rpg.common.utils.MathUtils;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
@@ -25,11 +25,11 @@ public class CooldownObserver extends EffectBase implements IEffectContainer {
 
     public static final String name = "CooldownObserver";
 
-    private ISpigotCharacter character;
+    private SpigotCharacter character;
 
     public CooldownObserver(IEffectConsumer character, long duration, String value) {
         super(name, character);
-        this.character = (ISpigotCharacter) character;
+        this.character = (SpigotCharacter) character;
         setDuration(duration);
         String s = MathUtils.extractNumber(value);
         long l = 1000;

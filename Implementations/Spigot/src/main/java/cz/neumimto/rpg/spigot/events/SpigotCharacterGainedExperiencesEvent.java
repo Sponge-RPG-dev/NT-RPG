@@ -1,6 +1,6 @@
 package cz.neumimto.rpg.spigot.events;
 
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.events.character.CharacterGainedExperiencesEvent;
 import cz.neumimto.rpg.spigot.events.character.AbstractCharacterEvent;
 import org.bukkit.event.HandlerList;
@@ -10,15 +10,15 @@ public class SpigotCharacterGainedExperiencesEvent extends AbstractCharacterEven
     private double exp;
     private String epxSource;
 
-    private IActiveCharacter character;
+    private ActiveCharacter character;
 
     @Override
-    public IActiveCharacter getCharacter() {
+    public ActiveCharacter getCharacter() {
         return character;
     }
 
     @Override
-    public void setCharacter(IActiveCharacter character) {
+    public void setCharacter(ActiveCharacter character) {
         this.character = character;
     }
 

@@ -12,7 +12,7 @@ import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.skills.SkillResult;
 import cz.neumimto.rpg.common.skills.tree.SkillType;
 import cz.neumimto.rpg.common.skills.types.ActiveSkill;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import cz.neumimto.rpg.spigot.packetwrapper.WrapperPlayServerSpawnEntityLiving;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
@@ -28,7 +28,7 @@ import java.util.UUID;
 @Singleton
 @AutoService(ISkill.class)
 @ResourceLoader.Skill("ntrpg:mineralscan")
-public class MineralScan extends ActiveSkill<ISpigotCharacter> {
+public class MineralScan extends ActiveSkill<SpigotCharacter> {
 
     private static int ID = Integer.MAX_VALUE;
 
@@ -39,7 +39,7 @@ public class MineralScan extends ActiveSkill<ISpigotCharacter> {
     }
 
     @Override
-    public SkillResult cast(ISpigotCharacter character, PlayerSkillContext skillContext) {
+    public SkillResult cast(SpigotCharacter character, PlayerSkillContext skillContext) {
         Player player = character.getPlayer();
         World world = player.getWorld();
         Location location = player.getLocation();

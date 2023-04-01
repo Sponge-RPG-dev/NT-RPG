@@ -1,9 +1,9 @@
 package cz.neumimto.rpg.common.inventory;
 
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.model.EquipedSlot;
 
-public interface InventoryService<T extends IActiveCharacter> {
+public interface InventoryService<T extends ActiveCharacter> {
 
     void load();
 

@@ -3,7 +3,7 @@ package cz.neumimto.rpg.spigot.bridges.mmoitems;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.skills.SkillResult;
 import cz.neumimto.rpg.common.skills.types.ActiveSkill;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import io.lumine.mythic.lib.api.player.EquipmentSlot;
 import io.lumine.mythic.lib.api.player.MMOPlayerData;
 import io.lumine.mythic.lib.damage.AttackMetadata;
@@ -23,7 +23,7 @@ import org.bukkit.entity.Player;
 
 import java.util.Set;
 
-public class MMOItemSkill extends ActiveSkill<ISpigotCharacter> {
+public class MMOItemSkill extends ActiveSkill<SpigotCharacter> {
 
     private RegisteredSkill ability;
 
@@ -40,7 +40,7 @@ public class MMOItemSkill extends ActiveSkill<ISpigotCharacter> {
     }
 
     @Override
-    public SkillResult cast(ISpigotCharacter character, PlayerSkillContext skillContext) {
+    public SkillResult cast(SpigotCharacter character, PlayerSkillContext skillContext) {
         Player player = character.getPlayer();
 
         Object2DoubleOpenHashMap<String> compSettings = skillContext.getCachedComputedSkillSettings();

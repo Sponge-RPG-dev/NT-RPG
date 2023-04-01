@@ -4,7 +4,7 @@ import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.entity.IEffectConsumer;
 import cz.neumimto.rpg.common.entity.IEntity;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.skills.SkillService;
 
 import javax.inject.Inject;
@@ -152,8 +152,8 @@ public abstract class EffectService {
         IEffectContainer eff = effect.getConsumer().getEffect(effect.getName());
         if (Rpg.get().getPluginConfig().DEBUG.isDevelop()) {
             IEffectConsumer consumer1 = effect.getConsumer();
-            if (consumer1 instanceof IActiveCharacter) {
-                IActiveCharacter chara = (IActiveCharacter) consumer1;
+            if (consumer1 instanceof ActiveCharacter) {
+                ActiveCharacter chara = (ActiveCharacter) consumer1;
                 chara.sendMessage("Adding effect: " + effect.getName() +
                         " container: " + (eff == null ? "null" : eff.getEffects().size()) +
                         " provider: " + effectSourceProvider.getType().getClass().getSimpleName());
@@ -191,8 +191,8 @@ public abstract class EffectService {
         IEffectContainer container = consumer.getEffect(effect.getName());
         if (Rpg.get().getPluginConfig().DEBUG.isDevelop()) {
             IEffectConsumer consumer1 = effect.getConsumer();
-            if (consumer1 instanceof IActiveCharacter) {
-                IActiveCharacter chara = (IActiveCharacter) consumer1;
+            if (consumer1 instanceof ActiveCharacter) {
+                ActiveCharacter chara = (ActiveCharacter) consumer1;
                 chara.sendMessage("Removing effect: " + effect.getName() +
                         " container: " + (container == null ? "null" : container.getEffects().size()));
             }
@@ -326,7 +326,7 @@ public abstract class EffectService {
         );
     }
 
-    public void removeGlobalEffectsAsEnchantments(Collection<IGlobalEffect> itemEffects, IActiveCharacter character,
+    public void removeGlobalEffectsAsEnchantments(Collection<IGlobalEffect> itemEffects, ActiveCharacter character,
                                                   IEffectSourceProvider effectSourceProvider) {
         if (Rpg.get().getPluginConfig().DEBUG.isDevelop()) {
             character.sendMessage(itemEffects.size() + " added echn. effect to remove queue.");

@@ -4,7 +4,7 @@ import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.configuration.ItemString;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.common.gui.SkillTreeViewModel;
@@ -18,7 +18,7 @@ import cz.neumimto.rpg.common.skills.tree.SkillTree;
 import cz.neumimto.rpg.spigot.Resourcepack;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.bridges.DatapackManager;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import cz.neumimto.rpg.spigot.gui.elements.GuiCommand;
 import cz.neumimto.rpg.spigot.gui.elements.Icon;
 import cz.neumimto.rpg.spigot.gui.inventoryviews.SkillTreeViewBuilder;
@@ -205,7 +205,7 @@ public class SpigotGuiHelper {
         return unclickableIcon(itemStack, tag);
     }
 
-    public static void sendcharacters(Player player, ISpigotCharacter player1, CharacterBase currentlyCreated) {
+    public static void sendcharacters(Player player, SpigotCharacter player1, CharacterBase currentlyCreated) {
         CompletableFuture.runAsync(() -> {
             List<CharacterBase> playersCharacters = Rpg.get().getCharacterService().getPlayersCharacters(player.getUniqueId());
 
@@ -236,7 +236,7 @@ public class SpigotGuiHelper {
     }
 
 
-    public static Inventory drawSkillTreeViewData(Inventory i, ISpigotCharacter character) {
+    public static Inventory drawSkillTreeViewData(Inventory i, SpigotCharacter character) {
         SpigotSkillTreeViewModel skillTreeViewModel = character.getLastTimeInvokedSkillTreeView();
         SkillTree skillTree = skillTreeViewModel.getSkillTree();
         short[][] skillTreeMap = skillTreeViewModel.getSkillTree().getSkillTreeMap();
@@ -295,7 +295,7 @@ public class SpigotGuiHelper {
         return unclickableInterface(Material.RED_STAINED_GLASS_PANE, 12345);
     }
 
-    private static ItemStack getIcon(ISpigotCharacter character, SpigotSkillTreeViewModel skillTreeViewModel, SkillTree skillTree, SpigotSkillService skillService, short id) {
+    private static ItemStack getIcon(SpigotCharacter character, SpigotSkillTreeViewModel skillTreeViewModel, SkillTree skillTree, SpigotSkillService skillService, short id) {
         ItemStack itemStack;
         SpigotSkillTreeInterfaceModel guiModelById = SkillTreeViewBuilder.getGuiModelById(id);
         if (guiModelById != null) {
@@ -317,7 +317,7 @@ public class SpigotGuiHelper {
     }
 
 
-    private static ItemStack skillToItemStack(ISpigotCharacter character, SkillData skillData, SkillTree skillTree, SpigotSkillTreeViewModel model) {
+    private static ItemStack skillToItemStack(SpigotCharacter character, SkillData skillData, SkillTree skillTree, SpigotSkillTreeViewModel model) {
         List<String> lore;
 
         ISkill skill = skillData.getSkill();
@@ -353,7 +353,7 @@ public class SpigotGuiHelper {
     }
 
 
-    public static ItemStack toItemStack(ISpigotCharacter character, PlayerSkillContext skillContext) {
+    public static ItemStack toItemStack(SpigotCharacter character, PlayerSkillContext skillContext) {
         SkillData skillData = skillContext.getSkillData();
         List<String> lore = itemLoreFactory.toLore(character, skillData, ChatColor.GREEN);
 
@@ -366,7 +366,7 @@ public class SpigotGuiHelper {
         return itemStack;
     }
 
-    private static ItemStack interactiveModeToitemStack(ISpigotCharacter character, SkillTreeViewModel.InteractiveMode interactiveMode) {
+    private static ItemStack interactiveModeToitemStack(SpigotCharacter character, SkillTreeViewModel.InteractiveMode interactiveMode) {
         String translation = null;
         Material itemType = null;
 
@@ -405,7 +405,7 @@ public class SpigotGuiHelper {
         return md;
     }
 
-    private static ChatColor getSkillTextColor(IActiveCharacter character, ISkill skill, SkillData skillData, SkillTree skillTree) {
+    private static ChatColor getSkillTextColor(ActiveCharacter character, ISkill skill, SkillData skillData, SkillTree skillTree) {
         if (character.hasSkill(skillData.getSkillId())) {
             return ChatColor.GREEN;
         }
@@ -422,7 +422,7 @@ public class SpigotGuiHelper {
         return ChatColor.RED + "-" + v;
     }
 
-    public static Inventory createSpellbookInventory(ISpigotCharacter character) {
+    public static Inventory createSpellbookInventory(SpigotCharacter character) {
         LocalizationService localizationService = Rpg.get().getLocalizationService();
         Inventory i = createInventoryTemplate(character.getPlayer(), localizationService.translate("gui.spellbook.label"));
         CharacterBase characterBase = character.getCharacterBase();
@@ -463,7 +463,7 @@ public class SpigotGuiHelper {
         return SpigotGuiHelper.unclickableInterface(Material.WHITE_STAINED_GLASS_PANE, 12345, RPGItemMetadataKeys.SPELLBOOKEMPTY);
     }
 
-    public static void createSkillDetailInventoryView(ISpigotCharacter character, SkillTree tree, SkillData skillData) {
+    public static void createSkillDetailInventoryView(SpigotCharacter character, SkillTree tree, SkillData skillData) {
         String back = Rpg.get().getLocalizationService().translate(LocalizationKeys.BACK);
         ChestGui gui = new ChestGui(6, skillData.getSkillName(), SpigotRpgPlugin.getInstance());
         StaticPane background = new StaticPane(0, 0, 9, 6);

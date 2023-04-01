@@ -19,7 +19,7 @@ import cz.neumimto.rpg.spigot.effects.common.FeatherFall;
 import cz.neumimto.rpg.spigot.effects.common.StunEffect;
 import cz.neumimto.rpg.spigot.entities.ISpigotEntity;
 import cz.neumimto.rpg.spigot.entities.SpigotEntityService;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -38,7 +38,7 @@ import static org.bukkit.event.entity.EntityDamageEvent.DamageCause.*;
 @Singleton
 @AutoService(ISkill.class)
 @ResourceLoader.Skill("ntrpg:soar")
-public class Soar extends ActiveSkill<ISpigotCharacter> {
+public class Soar extends ActiveSkill<SpigotCharacter> {
     static private int tickDelay = 15;
 
     @Inject
@@ -72,7 +72,7 @@ public class Soar extends ActiveSkill<ISpigotCharacter> {
     }
 
     @Override
-    public SkillResult cast(ISpigotCharacter character, PlayerSkillContext skillContext) {
+    public SkillResult cast(SpigotCharacter character, PlayerSkillContext skillContext) {
 
         final Player player = character.getPlayer();
 

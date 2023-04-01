@@ -3,7 +3,7 @@ package cz.neumimto.rpg.spigot.resources;
 import cz.neumimto.rpg.common.resources.Resource;
 import cz.neumimto.rpg.common.utils.MathUtils;
 import cz.neumimto.rpg.spigot.bridges.DatapackManager;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import net.kyori.adventure.text.Component;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Entity;
@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class UIActionbarIcons implements Consumer<ISpigotCharacter>, Listener {
+public class UIActionbarIcons implements Consumer<SpigotCharacter>, Listener {
 
     static Map<String, Component[]> resource = new HashMap<>();
 
@@ -40,7 +40,7 @@ public class UIActionbarIcons implements Consumer<ISpigotCharacter>, Listener {
     }
 
     @Override
-    public void accept(ISpigotCharacter character) {
+    public void accept(SpigotCharacter character) {
         Player player = character.getEntity();
 
         if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) {

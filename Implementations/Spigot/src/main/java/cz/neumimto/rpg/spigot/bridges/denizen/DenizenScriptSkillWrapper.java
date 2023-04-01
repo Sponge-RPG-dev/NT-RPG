@@ -4,13 +4,13 @@ import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.skills.SkillData;
 import cz.neumimto.rpg.common.skills.SkillResult;
 import cz.neumimto.rpg.common.skills.types.ActiveSkill;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 
-public class DenizenScriptSkillWrapper extends ActiveSkill<ISpigotCharacter> {
+public class DenizenScriptSkillWrapper extends ActiveSkill<SpigotCharacter> {
 
 
     @Override
-    public SkillResult cast(ISpigotCharacter character, PlayerSkillContext info) {
+    public SkillResult cast(SpigotCharacter character, PlayerSkillContext info) {
         EntityCastSkillDenizenEvent event = EntityCastSkillDenizenEvent.instance;
         event.character = character;
         event.context = info;

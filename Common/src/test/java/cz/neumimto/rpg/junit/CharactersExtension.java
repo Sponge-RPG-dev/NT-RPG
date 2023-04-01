@@ -1,11 +1,9 @@
 package cz.neumimto.rpg.junit;
 
-import cz.neumimto.rpg.common.entity.IReservable;
 import cz.neumimto.rpg.common.entity.TestCharacter;
 import cz.neumimto.rpg.common.entity.TestPropertyService;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
-import cz.neumimto.rpg.common.items.ItemClass;
 import cz.neumimto.rpg.common.persistance.model.CharacterBase;
 import cz.neumimto.rpg.common.persistance.model.CharacterClass;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -25,7 +23,7 @@ public class CharactersExtension implements ParameterResolver {
 
     @Override
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        return parameterContext.getParameter().getType().isAssignableFrom(IActiveCharacter.class);
+        return parameterContext.getParameter().getType().isAssignableFrom(ActiveCharacter.class);
     }
 
     @Override
@@ -74,17 +72,6 @@ public class CharactersExtension implements ParameterResolver {
         activeCharacter.getClasses().put(playerClassDataSecondary.getClassDefinition().getName(), playerClassDataSecondary);
 
 
-        ManagedSlot managedSlot = new FilteredManagedSlotImpl(0,
-                weaponClass -> weaponClass.getItemType().getItemClass() == ItemClass.ARMOR);
-        ManagedSlot filteredSlot = new FilteredManagedSlotImpl(1,
-                weaponClass -> weaponClass.getItemType().getItemClass() == TestDictionary.WEAPON_CLASS_1);
-
-
-        activeCharacter.getManagedInventory().put(Object.class, new RpgInventoryImpl());
-        activeCharacter.getManagedInventory().get(Object.class).getManagedSlots().put(managedSlot.getId(), managedSlot);
-        activeCharacter.getManagedInventory().get(Object.class).getManagedSlots().put(filteredSlot.getId(), filteredSlot);
-
-
         characterBase.getAttributes().put(TestDictionary.AGI.getId(), 5);
         characterBase.getAttributes().put(TestDictionary.STR.getId(), 5);
         activeCharacter.getTransientAttributes().put(TestDictionary.AGI.getId(), 94);
@@ -104,52 +91,5 @@ public class CharactersExtension implements ParameterResolver {
             READY
         }
     }
-
-    private static class TestPool implements IReservable {
-        double max = 100;
-        private double value = 50;
-        private float regen = 1;
-
-        @Override
-        public void setReservedAmnout(float f) {
-
-        }
-
-        @Override
-        public double getReservedAmount() {
-            return 0;
-        }
-
-        @Override
-        public double getMaxValue() {
-            return max;
-        }
-
-        @Override
-        public void setMaxValue(double f) {
-            this.max = f;
-        }
-
-        @Override
-        public double getValue() {
-            return value;
-        }
-
-        @Override
-        public void setValue(double f) {
-            this.value = f;
-        }
-
-        @Override
-        public double getRegen() {
-            return this.regen;
-        }
-
-        @Override
-        public void setRegen(float f) {
-            this.regen = f;
-        }
-    }
-
 
 }

@@ -4,7 +4,7 @@ import com.google.inject.Injector;
 import cz.neumimto.rpg.common.entity.CommonProperties;
 import cz.neumimto.rpg.common.entity.EntityService;
 import cz.neumimto.rpg.common.entity.PropertyService;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.common.events.EventFactoryService;
 import cz.neumimto.rpg.common.localization.LocalizationService;
@@ -65,7 +65,7 @@ public class SkillExecutionTests {
     }
 
     @Test
-    public void testBasicSkillExecution(@Stage(READY) IActiveCharacter character) {
+    public void testBasicSkillExecution(@Stage(READY) ActiveCharacter character) {
         PlayerClassData primary = (PlayerClassData) character.getClasses().get("primary");
         PlayerSkillContext playerSkillContext = new PlayerSkillContext(primary.getClassDefinition(), testSkill, character);
         playerSkillContext.setSkill(testSkill);
@@ -84,7 +84,7 @@ public class SkillExecutionTests {
     }
 
     @Test
-    public void testBasicSkillExecution_No_Mana(@Stage(READY) IActiveCharacter character) {
+    public void testBasicSkillExecution_No_Mana(@Stage(READY) ActiveCharacter character) {
         PlayerClassData primary = (PlayerClassData) character.getClasses().get("primary");
         PlayerSkillContext playerSkillContext = new PlayerSkillContext(primary.getClassDefinition(), testSkill, character);
         playerSkillContext.setSkill(testSkill);
@@ -104,7 +104,7 @@ public class SkillExecutionTests {
     }
 
     @Test
-    public void testBasicSkillExecution_No_Hp(@Stage(READY) IActiveCharacter character) {
+    public void testBasicSkillExecution_No_Hp(@Stage(READY) ActiveCharacter character) {
         PlayerClassData primary = (PlayerClassData) character.getClasses().get("primary");
         PlayerSkillContext playerSkillContext = new PlayerSkillContext(primary.getClassDefinition(), testSkill, character);
         playerSkillContext.setSkill(testSkill);
@@ -126,7 +126,7 @@ public class SkillExecutionTests {
     }
 
     @Test
-    public void testBasicSkillExecution_On_Cooldown(@Stage(READY) IActiveCharacter character) {
+    public void testBasicSkillExecution_On_Cooldown(@Stage(READY) ActiveCharacter character) {
         PlayerClassData primary = (PlayerClassData) character.getClasses().get("primary");
         PlayerSkillContext playerSkillContext = new PlayerSkillContext(primary.getClassDefinition(), testSkill, character);
         playerSkillContext.setSkill(testSkill);
@@ -155,7 +155,7 @@ public class SkillExecutionTests {
         }
 
         @Override
-        public SkillResult cast(IActiveCharacter character, PlayerSkillContext info) {
+        public SkillResult cast(ActiveCharacter character, PlayerSkillContext info) {
             hadRun = true;
             return SkillResult.OK;
         }

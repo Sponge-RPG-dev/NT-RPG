@@ -4,7 +4,7 @@ import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.skills.SkillNodes;
 import cz.neumimto.rpg.common.skills.SkillResult;
 import cz.neumimto.rpg.common.skills.types.ActiveSkill;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import org.bukkit.FluidCollisionMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -17,7 +17,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public abstract class TargetedBlockSkill extends ActiveSkill<ISpigotCharacter> {
+public abstract class TargetedBlockSkill extends ActiveSkill<SpigotCharacter> {
     protected Set<Material> transparent;
 
 
@@ -26,7 +26,7 @@ public abstract class TargetedBlockSkill extends ActiveSkill<ISpigotCharacter> {
     }
 
     @Override
-    public SkillResult cast(ISpigotCharacter character, PlayerSkillContext skillContext) {
+    public SkillResult cast(SpigotCharacter character, PlayerSkillContext skillContext) {
         Player player = character.getPlayer();
         int range = skillContext.getIntNodeValue(SkillNodes.RANGE);
 
@@ -46,7 +46,7 @@ public abstract class TargetedBlockSkill extends ActiveSkill<ISpigotCharacter> {
         }
     }
 
-    protected abstract SkillResult castOn(Block block, BlockFace blockFace, ISpigotCharacter character, PlayerSkillContext skillContext);
+    protected abstract SkillResult castOn(Block block, BlockFace blockFace, SpigotCharacter character, PlayerSkillContext skillContext);
 
     protected boolean isValidBlock(Block block) {
         return true;

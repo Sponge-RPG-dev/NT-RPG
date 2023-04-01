@@ -2,13 +2,14 @@ package cz.neumimto.rpg.spigot.entities.players;
 
 import cz.neumimto.rpg.common.entity.PropertyService;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.gui.Gui;
 import cz.neumimto.rpg.common.persistance.model.CharacterBase;
 import cz.neumimto.rpg.common.resources.ResourceService;
 import cz.neumimto.rpg.common.skills.ISkill;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
+import cz.neumimto.rpg.spigot.entities.players.party.SpigotParty;
 import cz.neumimto.rpg.spigot.gui.SpellbookListener;
 import cz.neumimto.rpg.spigot.gui.SpigotGuiHelper;
 import org.bukkit.Bukkit;
@@ -27,7 +28,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import static cz.neumimto.rpg.common.logging.Log.info;
 
 @Singleton
-public class SpigotCharacterService extends CharacterService<ISpigotCharacter> {
+public class SpigotCharacterService extends CharacterService<SpigotCharacter> {
 
     @Inject
     private ResourceService resourceService;
@@ -41,7 +42,7 @@ public class SpigotCharacterService extends CharacterService<ISpigotCharacter> {
     }
 
     @Override
-    protected void initSpellbook(ISpigotCharacter activeCharacter, String[][] spellbookPages) {
+    protected void initSpellbook(SpigotCharacter activeCharacter, String[][] spellbookPages) {
         activeCharacter.setSpellbook(new ItemStack[3][9]);
     }
 
@@ -51,18 +52,18 @@ public class SpigotCharacterService extends CharacterService<ISpigotCharacter> {
     }
 
     @Override
-    protected void initSpellbook(ISpigotCharacter activeCharacter, int i, int j, PlayerSkillContext skill) {
+    protected void initSpellbook(SpigotCharacter activeCharacter, int i, int j, PlayerSkillContext skill) {
         activeCharacter.getSpellbook()[i][j] = SpigotGuiHelper.toItemStack(activeCharacter, skill);
     }
 
     @Override
-    public ISpigotCharacter buildDummyChar(UUID uuid) {
+    public SpigotPreloadCharacter buildDummyChar(UUID uuid) {
         info("Creating a dummy character for " + uuid);
         return new SpigotPreloadCharacter(uuid);
     }
 
     @Override
-    public void registerDummyChar(ISpigotCharacter dummy) {
+    public void registerDummyChar(SpigotCharacter dummy) {
 
     }
 
@@ -82,23 +83,23 @@ public class SpigotCharacterService extends CharacterService<ISpigotCharacter> {
         Bukkit.getScheduler().runTaskLater(SpigotRpgPlugin.getInstance(), r, 1L);
     }
 
-    public ISpigotCharacter getCharacter(Player target) {
+    public SpigotCharacter getCharacter(Player target) {
         return getCharacter(target.getUniqueId());
     }
 
-    public void setHeathscale(ISpigotCharacter character, double i) {
+    public void setHeathscale(SpigotCharacter character, double i) {
         character.getCharacterBase().setHealthScale(i);
         character.getPlayer().setHealthScale(i);
         putInSaveQueue(character.getCharacterBase());
     }
 
     @Override
-    public void notifyCooldown(IActiveCharacter caster, PlayerSkillContext skillContext, long cd) {
+    public void notifyCooldown(ActiveCharacter caster, PlayerSkillContext skillContext, long cd) {
         if (cd > 0) {
             ISkill skill = skillContext.getSkill();
 
-            if (caster instanceof ISpigotCharacter) {
-                ISpigotCharacter character = (ISpigotCharacter) caster;
+            if (caster instanceof SpigotCharacter) {
+                SpigotCharacter character = (SpigotCharacter) caster;
                 Player player = character.getPlayer();
 
                 PlayerSkillContext skillInfo = character.getSkillInfo(skill);
@@ -117,7 +118,7 @@ public class SpigotCharacterService extends CharacterService<ISpigotCharacter> {
     }
 
     @Override
-    public void updateSpellbook(ISpigotCharacter character) {
+    public void updateSpellbook(SpigotCharacter character) {
         Player player = character.getPlayer();
         InventoryView openInventory = player.getOpenInventory();
         Inventory topInventory = openInventory.getTopInventory();
@@ -130,7 +131,7 @@ public class SpigotCharacterService extends CharacterService<ISpigotCharacter> {
 
 
     @Override
-    public void addExperiences(ISpigotCharacter character, double exp, String source) {
+    public void addExperiences(SpigotCharacter character, double exp, String source) {
         if ("VANILLA".equals(source)) {
             character.getPlayer().giveExp((int) exp);
         } else {

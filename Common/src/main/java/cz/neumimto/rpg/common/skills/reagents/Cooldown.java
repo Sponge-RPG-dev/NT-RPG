@@ -5,7 +5,7 @@ import cz.neumimto.rpg.common.configuration.PluginConfig;
 import cz.neumimto.rpg.common.entity.CommonProperties;
 import cz.neumimto.rpg.common.entity.EntityService;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.gui.Gui;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
 import cz.neumimto.rpg.common.skills.SkillData;
@@ -28,18 +28,18 @@ public class Cooldown extends SkillCastMechanic {
     @Inject
     private PluginConfig pluginConfig;
 
-    private long getCooldown(IActiveCharacter character, PlayerSkillContext context) {
+    private long getCooldown(ActiveCharacter character, PlayerSkillContext context) {
         return (long) (context.getFloatNodeValue(SkillNodes.COOLDOWN)
                 * entityService.getEntityProperty(character, CommonProperties.cooldown_reduce_mult));
     }
 
     @Override
-    public SkillResult processBefore(IActiveCharacter character, PlayerSkillContext context) {
+    public SkillResult processBefore(ActiveCharacter character, PlayerSkillContext context) {
         return character.hasCooldown(context.getSkill().getId()) ? SkillResult.ON_COOLDOWN : SkillResult.OK;
     }
 
     @Override
-    public void processAfterSuccess(IActiveCharacter character, PlayerSkillContext context) {
+    public void processAfterSuccess(ActiveCharacter character, PlayerSkillContext context) {
         long cd = getCooldown(character, context);
         SkillData skillData = context.getSkillData();
         if (cd > 59999L) {
@@ -58,7 +58,7 @@ public class Cooldown extends SkillCastMechanic {
     }
 
     @Override
-    public void notifyFailure(IActiveCharacter character, PlayerSkillContext context) {
+    public void notifyFailure(ActiveCharacter character, PlayerSkillContext context) {
         long l = (character.getCooldown(context.getSkillData().getSkillId()) - System.currentTimeMillis()) / 1000;
         Gui.sendCooldownMessage(character, context.getSkillData().getSkillName(), l);
     }

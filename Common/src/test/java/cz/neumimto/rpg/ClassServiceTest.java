@@ -1,7 +1,7 @@
 package cz.neumimto.rpg;
 
 import cz.neumimto.rpg.common.classes.ClassService;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.permissions.PermissionService;
 import cz.neumimto.rpg.common.persistance.dao.ClassDefinitionDao;
@@ -58,7 +58,7 @@ public class ClassServiceTest {
     }
 
     @Test
-    public void testFiltering(@Stage(READY) IActiveCharacter character) {
+    public void testFiltering(@Stage(READY) ActiveCharacter character) {
         Set<ClassDefinition> testType = classService.filterByPlayerAndType(character, "TestType");
         Assertions.assertTrue(testType.contains(classDefinition));
         Assertions.assertFalse(testType.contains(classDefinition2));

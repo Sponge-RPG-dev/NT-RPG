@@ -3,7 +3,7 @@ package cz.neumimto.rpg.spigot.effects.common;
 import cz.neumimto.rpg.common.effects.EffectBase;
 import cz.neumimto.rpg.common.effects.IEffect;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import de.slikey.effectlib.Effect;
 import org.bukkit.Particle;
 import org.bukkit.entity.Entity;
@@ -19,7 +19,7 @@ import java.util.List;
 public class IceSpikeEffect extends EffectBase {
 
     public static final String name = "IceSpike Aura";
-    private final ISpigotCharacter caster;
+    private final SpigotCharacter caster;
     private final int radius;
     private final double damage;
     private final Effect effect;
@@ -28,7 +28,7 @@ public class IceSpikeEffect extends EffectBase {
     private Entity entity;
     private Player player;
 
-    public IceSpikeEffect(Entity spike, ISpigotCharacter caster, long duration, int radius, double damage, SpigotDamageService damageService, Effect effect) {
+    public IceSpikeEffect(Entity spike, SpigotCharacter caster, long duration, int radius, double damage, SpigotDamageService damageService, Effect effect) {
         super(name, caster);
         this.radius = radius;
         this.damage = damage;

@@ -2,7 +2,7 @@ package cz.neumimto.rpg.common.skills.types;
 
 import cz.neumimto.rpg.common.ResourceLoader;
 import cz.neumimto.rpg.common.Rpg;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.localization.Arg;
 import cz.neumimto.rpg.common.localization.LocalizationKeys;
 import cz.neumimto.rpg.common.localization.LocalizationService;
@@ -58,28 +58,28 @@ public abstract class AbstractSkill<T> implements ISkill<T> {
     }
 
     @Override
-    public void skillLearn(IActiveCharacter IActiveCharacter, PlayerSkillContext context) {
+    public void skillLearn(ActiveCharacter ActiveCharacter, PlayerSkillContext context) {
         if (Rpg.get().getPluginConfig().PLAYER_LEARNED_SKILL_GLOBAL_MESSAGE) {
             Rpg.get().broadcastLocalizableMessage(LocalizationKeys.PLAYER_LEARNED_SKILL_GLOBAL_MESSAGE,
-                    IActiveCharacter.getName(), context.getSkillData().getSkillName());
+                    ActiveCharacter.getName(), context.getSkillData().getSkillName());
         }
     }
 
     @Override
-    public void skillUpgrade(IActiveCharacter IActiveCharacter, int level, PlayerSkillContext context) {
+    public void skillUpgrade(ActiveCharacter ActiveCharacter, int level, PlayerSkillContext context) {
         if (Rpg.get().getPluginConfig().PLAYER_UPGRADED_SKILL_GLOBAL_MESSAGE) {
             Rpg.get().broadcastLocalizableMessage(LocalizationKeys.PLAYER_UPGRADED_SKILL_GLOBAL_MESSAGE,
-                    Arg.arg(PLAYER, IActiveCharacter.getName())
+                    Arg.arg(PLAYER, ActiveCharacter.getName())
                             .with(SKILL, context.getSkillData().getSkillName())
                             .with("level", level));
         }
     }
 
     @Override
-    public void skillRefund(IActiveCharacter IActiveCharacter, PlayerSkillContext context) {
+    public void skillRefund(ActiveCharacter ActiveCharacter, PlayerSkillContext context) {
         if (Rpg.get().getPluginConfig().PLAYER_REFUNDED_SKILL_GLOBAL_MESSAGE) {
             Rpg.get().broadcastLocalizableMessage(LocalizationKeys.PLAYER_REFUNDED_SKILL_GLOBAL_MESSAGE,
-                    Arg.arg(PLAYER, IActiveCharacter.getName())
+                    Arg.arg(PLAYER, ActiveCharacter.getName())
                             .with(SKILL, context.getSkillData().getSkillName()));
         }
     }
@@ -90,7 +90,7 @@ public abstract class AbstractSkill<T> implements ISkill<T> {
     }
 
     @Override
-    public void onCharacterInit(IActiveCharacter c, int level, PlayerSkillContext context) {
+    public void onCharacterInit(ActiveCharacter c, int level, PlayerSkillContext context) {
         if (Rpg.get().getPluginConfig().SKILLGAIN_MESSAGES_AFTER_LOGIN) {
             String msg = localizationService.translate(LocalizationKeys.PLAYER_GAINED_SKILL,
                     Arg.arg("skill", context.getSkillData().getSkillName()));

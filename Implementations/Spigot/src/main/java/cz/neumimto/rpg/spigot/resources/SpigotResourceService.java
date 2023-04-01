@@ -7,12 +7,12 @@ import com.google.inject.Singleton;
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.entity.AbstractMob;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.resources.Resource;
 import cz.neumimto.rpg.common.resources.ResourceDefinition;
 import cz.neumimto.rpg.common.resources.ResourceService;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitTask;
@@ -34,12 +34,12 @@ public class SpigotResourceService extends ResourceService {
     @Inject
     private SpigotCharacterService characterService;
 
-    private Supplier<Consumer<ISpigotCharacter>> uihandlerfactory;
+    private Supplier<Consumer<SpigotCharacter>> uihandlerfactory;
 
     private Set<Integer> tasks = new HashSet<>();
 
     private Runnable refreshTask = () -> {
-        for (ISpigotCharacter character : characterService.getCharacters()) {
+        for (SpigotCharacter character : characterService.getCharacters()) {
             character.updateResourceUIHandler();
         }
     };
@@ -108,24 +108,24 @@ public class SpigotResourceService extends ResourceService {
     }
 
     @Override
-    public void initializeForPlayer(IActiveCharacter activeCharacter) {
+    public void initializeForPlayer(ActiveCharacter activeCharacter) {
         if (!init) {
             init();
         }
         super.initializeForPlayer(activeCharacter);
         if (uihandlerfactory != null) {
-            Consumer<ISpigotCharacter> resHandler = uihandlerfactory.get();
-            ((ISpigotCharacter) activeCharacter).setResourceUIHandler(resHandler);
+            Consumer<SpigotCharacter> resHandler = uihandlerfactory.get();
+            ((SpigotCharacter) activeCharacter).setResourceUIHandler(resHandler);
         }
     }
 
     @Override
-    protected Resource getHpTracker(IActiveCharacter character, ResourceDefinition resourceDefinition) {
+    protected Resource getHpTracker(ActiveCharacter character, ResourceDefinition resourceDefinition) {
         return new Health(character.getUUID(), resourceDefinition);
     }
 
     @Override
-    protected Resource getStaminaTracker(IActiveCharacter character, ResourceDefinition resourceDefinition) {
+    protected Resource getStaminaTracker(ActiveCharacter character, ResourceDefinition resourceDefinition) {
         return null;
     }
 

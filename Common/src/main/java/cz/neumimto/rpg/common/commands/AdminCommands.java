@@ -14,7 +14,7 @@ import cz.neumimto.rpg.common.effects.IGlobalEffect;
 import cz.neumimto.rpg.common.effects.InternalEffectSourceProvider;
 import cz.neumimto.rpg.common.effects.model.EffectModelFactory;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.entity.players.classes.PlayerClassData;
 import cz.neumimto.rpg.common.events.skill.SkillPostUsageEvent;
@@ -89,7 +89,7 @@ public class AdminCommands extends BaseCommand {
     @Subcommand("skillpoints add")
     @Description("Permanently adds X skillpoints to a player")
     public void addSkillPointsCommand(CommandIssuer commandSender, OnlineOtherPlayer player, ClassDefinition characterClass, @Default("1") int amount) {
-        IActiveCharacter character = player.character;
+        ActiveCharacter character = player.character;
         PlayerClassData classByName = character.getClassByName(characterClass.getName());
         if (classByName == null) {
             throw new IllegalArgumentException("Player " + character.getPlayerAccountName() + " character " + character.getName() + " do not have class " + characterClass.getName());
@@ -103,7 +103,7 @@ public class AdminCommands extends BaseCommand {
     @Description("Adds effect, managed by rpg plugin, to the player")
     public void effectAddCommand(CommandIssuer commandSender, OnlineOtherPlayer player, IGlobalEffect effect, long duration, String[] args) {
         String data = String.join("", args);
-        IActiveCharacter character = player.character;
+        ActiveCharacter character = player.character;
         try {
             commandAddEffectToPlayer(data, effect, duration, character);
         } catch (CommandProcessingException e) {
@@ -125,7 +125,7 @@ public class AdminCommands extends BaseCommand {
     @Subcommand("skill")
     @CommandCompletion("@skilltree @nothing @skillskctx")
     @Description("Executes a skill from specifc skilltree")
-    public void adminExecuteSkillCommand(IActiveCharacter character, SkillTree tree, int level, ISkill skill) {
+    public void adminExecuteSkillCommand(ActiveCharacter character, SkillTree tree, int level, ISkill skill) {
         long e = System.nanoTime();
         commandExecuteSkill(character, tree, skill, level);
         if (Rpg.get().getPluginConfig().DEBUG.isBalance()) {
@@ -178,7 +178,7 @@ public class AdminCommands extends BaseCommand {
     @CommandCompletion("@players @classtypes @nothing")
     @Subcommand("add-unique-skillpoint")
     public void addUniqueSkillpoint(CommandIssuer executor, OnlineOtherPlayer target, String classType, String sourceKey) {
-        IActiveCharacter character = target.character;
+        ActiveCharacter character = target.character;
         if (character.isStub()) {
             throw new IllegalStateException("Stub character");
         }
@@ -219,7 +219,7 @@ public class AdminCommands extends BaseCommand {
         info("[RELOAD] Saving current state of players");
         Set<CharacterBase> characterBases = new HashSet<>();
         for (UUID uuid : getAllOnlinePlayers()) {
-            IActiveCharacter character = characterService.getCharacter(uuid);
+            ActiveCharacter character = characterService.getCharacter(uuid);
             if (character.isStub()) {
                 continue;
             }
@@ -231,11 +231,11 @@ public class AdminCommands extends BaseCommand {
         }
 
         for (UUID uuid : getAllOnlinePlayers()) {
-            IActiveCharacter character = characterService.getCharacter(uuid);
+            ActiveCharacter character = characterService.getCharacter(uuid);
             if (character.isStub()) {
                 continue;
             }
-            IActiveCharacter preloadCharacter = characterService.buildDummyChar(uuid);
+            ActiveCharacter preloadCharacter = characterService.buildDummyChar(uuid);
             characterService.registerDummyChar(preloadCharacter);
         }
 
@@ -298,7 +298,7 @@ public class AdminCommands extends BaseCommand {
                 continue;
             }
             CharacterBase max = playersCharacters.stream().max(Comparator.comparing(CharacterBase::getUpdated)).get();
-            IActiveCharacter activeCharacter = characterService.createActiveCharacter(uuid, max);
+            ActiveCharacter activeCharacter = characterService.createActiveCharacter(uuid, max);
             characterService.setActiveCharacter(uuid, activeCharacter);
             characterService.assignPlayerToCharacter(uuid);
         }
@@ -310,7 +310,7 @@ public class AdminCommands extends BaseCommand {
         doImplSpecificReload();
     }
 
-    public boolean commandAddEffectToPlayer(String data, IGlobalEffect effect, long duration, IActiveCharacter character) throws CommandProcessingException {
+    public boolean commandAddEffectToPlayer(String data, IGlobalEffect effect, long duration, ActiveCharacter character) throws CommandProcessingException {
         EffectParams map = new EffectParams();
         Class<?> modelType = EffectModelFactory.getModelType(effect.asEffectClass());
         if (data == null) {
@@ -363,7 +363,7 @@ public class AdminCommands extends BaseCommand {
         return false;
     }
 
-    public boolean commandAddExperiences(IActiveCharacter character, Double amount, String classOrSource) throws CommandProcessingException {
+    public boolean commandAddExperiences(ActiveCharacter character, Double amount, String classOrSource) throws CommandProcessingException {
         Collection<PlayerClassData> classes = character.getClasses().values();
 
         ClassDefinition classDefinition = Rpg.get().getClassService().getClassDefinitionByName(classOrSource);
@@ -380,7 +380,7 @@ public class AdminCommands extends BaseCommand {
         return true;
     }
 
-    public ActionResult addCharacterClass(IActiveCharacter c, ClassDefinition classDefinition) {
+    public ActionResult addCharacterClass(ActiveCharacter c, ClassDefinition classDefinition) {
         ActionResult actionResult = characterService.canGainClass(c, classDefinition);
         if (actionResult.isOk()) {
             characterService.addNewClass(c, classDefinition);
@@ -388,7 +388,7 @@ public class AdminCommands extends BaseCommand {
         return actionResult;
     }
 
-    public void commandExecuteSkill(IActiveCharacter character, SkillTree skillTree, ISkill skill, int level) {
+    public void commandExecuteSkill(ActiveCharacter character, SkillTree skillTree, ISkill skill, int level) {
         if (character.isStub()) {
             throw new RuntimeException("Character is required even for an admin.");
         }
@@ -414,7 +414,7 @@ public class AdminCommands extends BaseCommand {
         }
     }
 
-    public void commandAddUniqueSkillpoint(IActiveCharacter character, String classType, String sourceKey) {
+    public void commandAddUniqueSkillpoint(ActiveCharacter character, String classType, String sourceKey) {
         PlayerClassData classByType = character.getClassByType(classType);
         if (classByType != null) {
             ActionResult result = characterService.addUniqueSkillpoint(character, classByType, sourceKey);

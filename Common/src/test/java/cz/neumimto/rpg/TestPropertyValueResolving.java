@@ -39,7 +39,7 @@ public class TestPropertyValueResolving {
         RPGItemTypeToRemove item = i.getByItemTypeAndName(ItemTypes.DIAMOND_AXE, (Text) null);
 
         UUID uuid = UUID.randomUUID();
-        IActiveCharacter character = new ActiveCharacter(uuid, new CharacterBase());
+        ActiveCharacter character = new ActiveCharacter(uuid, new CharacterBase());
 
         characterService.initActiveCharacter(character);
 */

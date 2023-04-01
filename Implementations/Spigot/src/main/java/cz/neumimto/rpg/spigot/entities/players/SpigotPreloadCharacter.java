@@ -1,15 +1,11 @@
 package cz.neumimto.rpg.spigot.entities.players;
 
+import cz.neumimto.rpg.common.entity.PropertyService;
 import cz.neumimto.rpg.common.entity.players.PlayerNotInGameException;
-import cz.neumimto.rpg.common.entity.players.PreloadCharacter;
+import cz.neumimto.rpg.common.persistance.model.CharacterBase;
 import cz.neumimto.rpg.common.resources.Resource;
-import cz.neumimto.rpg.common.skills.ISkill;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
-import cz.neumimto.rpg.spigot.entities.ISpigotEntity;
-import cz.neumimto.rpg.spigot.entities.players.party.SpigotParty;
 import cz.neumimto.rpg.spigot.gui.SpigotSkillTreeViewModel;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -17,12 +13,12 @@ import org.bukkit.inventory.ItemStack;
 import java.util.*;
 import java.util.function.Consumer;
 
-public class SpigotPreloadCharacter extends PreloadCharacter<Player, SpigotParty> implements ISpigotCharacter {
+public class SpigotPreloadCharacter extends SpigotCharacter {
 
     private Map<String, SpigotSkillTreeViewModel> skillTreeViewModelMap;
 
     public SpigotPreloadCharacter(UUID uuid) {
-        super(uuid);
+        super(uuid, new CharacterBase(), PropertyService.LAST_ID);
         skillTreeViewModelMap = new HashMap<>();
     }
 
@@ -33,7 +29,7 @@ public class SpigotPreloadCharacter extends PreloadCharacter<Player, SpigotParty
             return player;
         } else {
             throw new PlayerNotInGameException(String.format(
-                    "Player object with uuid=%s has not been constructed yet. Calling PreloadCharacter.getCharacter in a wrong state", getUUID()), this);
+                    "Player object with uuid=%s has not been constructed yet. Calling PreloadCharacter.getCharacter in a wrong state", getUUID()));
         }
     }
 
@@ -113,35 +109,15 @@ public class SpigotPreloadCharacter extends PreloadCharacter<Player, SpigotParty
     }
 
     @Override
-    public UUID getUUID() {
-        return uuid;
-    }
-
-    @Override
     public Map<String, PlayerSkillContext> getSkillsByName() {
         return Collections.emptyMap();
     }
 
-    @Override
-    public ISkill skillOrEffectDamageCause() {
-        return null;
-    }
-
-    @Override
-    public ISpigotEntity setSkillOrEffectDamageCause(ISkill rpgElement) {
-        return this;
-    }
 
     @Override
     public void sendMessage(String message) {
         getPlayer().sendMessage(message);
     }
-
-    @Override
-    public void sendNotification(String message) {
-        getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
-    }
-
     @Override
     public String getPlayerAccountName() {
         return getPlayer().getName();
@@ -149,7 +125,7 @@ public class SpigotPreloadCharacter extends PreloadCharacter<Player, SpigotParty
 
 
     @Override
-    public void setResourceUIHandler(Consumer<ISpigotCharacter> handler) {
+    public void setResourceUIHandler(Consumer<SpigotCharacter> handler) {
 
     }
 

@@ -10,7 +10,7 @@ import cz.neumimto.rpg.common.skills.SkillResult;
 import cz.neumimto.rpg.common.skills.tree.SkillType;
 import cz.neumimto.rpg.common.skills.types.ActiveSkill;
 import cz.neumimto.rpg.spigot.effects.common.ManaShieldEffect;
-import cz.neumimto.rpg.spigot.entities.players.ISpigotCharacter;
+import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -18,7 +18,7 @@ import javax.inject.Singleton;
 @Singleton
 @AutoService(ISkill.class)
 @ResourceLoader.Skill("ntrpg:manashield")
-public class ManaShield extends ActiveSkill<ISpigotCharacter> {
+public class ManaShield extends ActiveSkill<SpigotCharacter> {
 
     @Inject
     private EffectService effectService;
@@ -33,7 +33,7 @@ public class ManaShield extends ActiveSkill<ISpigotCharacter> {
     }
 
     @Override
-    public SkillResult cast(ISpigotCharacter character, PlayerSkillContext info) {
+    public SkillResult cast(SpigotCharacter character, PlayerSkillContext info) {
         if (character.hasEffect(ManaShieldEffect.name)) {
             effectService.removeEffect(ManaShieldEffect.name, character, this);
             return SkillResult.OK_NO_COOLDOWN;

@@ -1,7 +1,7 @@
 package cz.neumimto.rpg.common.commands;
 
 import cz.neumimto.rpg.common.Rpg;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.entity.players.parties.PartyService;
 import cz.neumimto.rpg.common.localization.LocalizationKeys;
 import cz.neumimto.rpg.common.localization.LocalizationService;
@@ -16,13 +16,13 @@ public class PartyCommandFacade {
     @Inject
     private PartyService partyService;
 
-    public void acceptPartyInvite(IActiveCharacter character) {
+    public void acceptPartyInvite(ActiveCharacter character) {
         if (character.getPendingPartyInvite() != null) {
             partyService.addToParty(character.getPendingPartyInvite(), character);
         }
     }
 
-    public void createParty(IActiveCharacter character) {
+    public void createParty(ActiveCharacter character) {
         LocalizationService localizationService = Rpg.get().getLocalizationService();
         if (character.isStub()) {
             character.sendMessage(localizationService.translate(LocalizationKeys.CHARACTER_IS_REQUIRED));

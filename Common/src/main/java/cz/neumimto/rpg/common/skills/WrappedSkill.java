@@ -1,11 +1,11 @@
 package cz.neumimto.rpg.common.skills;
 
 import cz.neumimto.rpg.common.ResourceLoader;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 
 import java.util.Set;
 
-public class WrappedSkill implements ISkill<IActiveCharacter> {
+public class WrappedSkill implements ISkill<ActiveCharacter> {
 
     private ISkill inner;
     private String catalogId;
@@ -41,17 +41,17 @@ public class WrappedSkill implements ISkill<IActiveCharacter> {
     }
 
     @Override
-    public void skillLearn(IActiveCharacter character, PlayerSkillContext context) {
+    public void skillLearn(ActiveCharacter character, PlayerSkillContext context) {
         inner.skillLearn(character, context);
     }
 
     @Override
-    public void skillUpgrade(IActiveCharacter character, int level, PlayerSkillContext context) {
+    public void skillUpgrade(ActiveCharacter character, int level, PlayerSkillContext context) {
         inner.skillUpgrade(character, level, context);
     }
 
     @Override
-    public void skillRefund(IActiveCharacter character, PlayerSkillContext context) {
+    public void skillRefund(ActiveCharacter character, PlayerSkillContext context) {
         inner.skillRefund(character, context);
     }
 
@@ -61,12 +61,12 @@ public class WrappedSkill implements ISkill<IActiveCharacter> {
     }
 
     @Override
-    public void onCharacterInit(IActiveCharacter c, int level, PlayerSkillContext context) {
+    public void onCharacterInit(ActiveCharacter c, int level, PlayerSkillContext context) {
         inner.onCharacterInit(c, level, context);
     }
 
     @Override
-    public SkillResult onPreUse(IActiveCharacter character, PlayerSkillContext esi) {
+    public SkillResult onPreUse(ActiveCharacter character, PlayerSkillContext esi) {
         return inner.onPreUse(character, esi);
     }
 

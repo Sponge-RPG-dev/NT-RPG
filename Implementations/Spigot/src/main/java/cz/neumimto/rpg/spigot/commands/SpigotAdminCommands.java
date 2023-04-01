@@ -14,7 +14,7 @@ import cz.neumimto.rpg.common.damage.DamageService;
 import cz.neumimto.rpg.common.entity.EntityService;
 import cz.neumimto.rpg.common.entity.PropertyService;
 import cz.neumimto.rpg.common.entity.players.CharacterService;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.items.ItemClass;
 import cz.neumimto.rpg.common.items.RpgItemType;
 import cz.neumimto.rpg.spigot.inventory.SpigotItemService;
@@ -63,7 +63,7 @@ public class SpigotAdminCommands extends BaseCommand {
     public void inspectPropertyCommand(CommandSender executor, OnlinePlayer target, String property) {
         try {
             int idByName = propertyService.getIdByName(property);
-            IActiveCharacter character = characterService.getCharacter(target.player.getUniqueId());
+            ActiveCharacter character = characterService.getCharacter(target.player.getUniqueId());
             executor.sendMessage(ChatColor.GOLD + "==================");
             executor.sendMessage(ChatColor.GREEN + property);
 
@@ -125,7 +125,7 @@ public class SpigotAdminCommands extends BaseCommand {
         executor.sendMessage(ChatColor.GOLD + "==================");
 
 
-        IActiveCharacter character = characterService.getCharacter(player.getUniqueId());
+        ActiveCharacter character = characterService.getCharacter(player.getUniqueId());
         executor.sendMessage(ChatColor.RED + "Damage: " + damageService.getCharacterItemDamage(character, fromItemStack));
         executor.sendMessage(ChatColor.RED + "Details: ");
 

@@ -7,7 +7,7 @@ import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.configuration.PluginConfig;
 import cz.neumimto.rpg.common.entity.IEntity;
 import cz.neumimto.rpg.common.entity.IEntityType;
-import cz.neumimto.rpg.common.entity.players.IActiveCharacter;
+import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.events.damage.IEntityWeaponDamageEarlyEvent;
 import cz.neumimto.rpg.common.items.RpgItemStack;
 import cz.neumimto.rpg.common.resources.Resource;
@@ -153,7 +153,7 @@ public class SpigotDamageListener implements IRpgListener {
     }
 
     public static void processRageGain(IEntity target, IEntity damager) {
-        if (target.hasEffect(DefaultRageDecay.name) && target instanceof IActiveCharacter a) {
+        if (target.hasEffect(DefaultRageDecay.name) && target instanceof ActiveCharacter a) {
             Resource resource = a.getResource(ResourceService.rage);
             if (resource.getMaxValue() == 0) {
                 return;
@@ -167,7 +167,7 @@ public class SpigotDamageListener implements IRpgListener {
                 Rpg.get().getCharacterService().gainResource(a, value.damage_taken_from_mobs, effect, ResourceService.rage);
             }
         }
-        if (damager.hasEffect(DefaultRageDecay.name) && damager instanceof IActiveCharacter a) {
+        if (damager.hasEffect(DefaultRageDecay.name) && damager instanceof ActiveCharacter a) {
             Resource resource = a.getResource(ResourceService.rage);
             if (resource.getMaxValue() == 0) {
                 return;
