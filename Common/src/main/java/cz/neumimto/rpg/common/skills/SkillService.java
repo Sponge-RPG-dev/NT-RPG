@@ -11,6 +11,8 @@ import cz.neumimto.nts.NTScript;
 import cz.neumimto.rpg.common.Rpg;
 import cz.neumimto.rpg.common.assets.AssetService;
 import cz.neumimto.rpg.common.classes.ClassService;
+import cz.neumimto.rpg.common.configuration.SkillDumpConfiguration;
+import cz.neumimto.rpg.common.configuration.SkillDumpConfigurations;
 import cz.neumimto.rpg.common.configuration.SkillTreeLoaderImpl;
 import cz.neumimto.rpg.common.entity.players.ActiveCharacter;
 import cz.neumimto.rpg.common.gui.ISkillTreeInterfaceModel;
@@ -39,6 +41,8 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static cz.neumimto.rpg.common.logging.Log.*;
@@ -274,7 +278,7 @@ public abstract class SkillService {
         return getSkills().get(id);
     }
 
-    public void loadInternalSkills() {
+    public CommentedConfig loadAndReturnInternalSkills() {
         String assetAsString = assetService.getAssetAsString("defaults/skills.conf");
 
         HoconFormat instance = HoconFormat.instance();
@@ -282,6 +286,8 @@ public abstract class SkillService {
         CommentedConfig config = parser.parse(assetAsString);
 
         loadSkillDefinitionFile(config, this.getClass().getClassLoader());
+
+        return config;
     }
 
     public void loadSkillDefinitionFile(ClassLoader urlClassLoader, File confFile) {
@@ -326,7 +332,7 @@ public abstract class SkillService {
 
 
     public void reloadSkills() {
-        loadInternalSkills();
+        CommentedConfig commentedConfig = loadAndReturnInternalSkills();
 
         Path addonDir = Paths.get(Rpg.get().getWorkingDirectory() + File.separator + "addons");
 
@@ -341,6 +347,50 @@ public abstract class SkillService {
             }
         }
 
+        dumpSkillConfigOptions(commentedConfig);
+    }
+
+    private void dumpSkillConfigOptions(CommentedConfig commentedConfig) {
+        try {
+            SkillsDefinition definition = new ObjectConverter().toObject(commentedConfig, SkillsDefinition::new);
+
+            List<SkillDumpConfiguration> configurations = new ArrayList<>();
+            for (ISkill value : skills.values()) {
+
+                SkillDumpConfiguration skillDumpConfiguration = new SkillDumpConfiguration();
+                skillDumpConfiguration.setSkillId(value.getId());
+
+                SkillSettings defaultSkillSettings = value.getDefaultSkillSettings();
+
+                Map<String, String> nodes = defaultSkillSettings.getNodes();
+                for (Map.Entry<String, String> e : nodes.entrySet()) {
+                    skillDumpConfiguration.add(e.getKey());
+                }
+                Optional<ScriptSkillModel> first = definition.skills.stream().filter(a -> a.id.equals(value.getId())).findFirst();
+                if (first.isPresent()) {
+                    ScriptSkillModel scriptSkillModel = first.get();
+                    String script = scriptSkillModel.script;
+                    if (script != null) {
+                        Pattern pattern = Pattern.compile("\\$settings\\.([a-zA-Z0-9_-]+)");
+                        Matcher matcher = pattern.matcher(script);
+                        while (matcher.find()) {
+                            skillDumpConfiguration.add(matcher.group(1));
+                        }
+                    }
+                }
+                configurations.add(skillDumpConfiguration);
+            }
+
+            configurations.sort(Comparator.comparing(SkillDumpConfiguration::getSkillId));
+
+            Path dump = Paths.get(Rpg.get().getWorkingDirectory() + File.separator + "skills_dump.conf");
+            try (FileConfig fc = FileConfig.of(dump)) {
+                new ObjectConverter().toConfig(new SkillDumpConfigurations(configurations), fc);
+                fc.save();
+            }
+        } catch (Exception e) {
+            Log.error("Could not create skills_dump.conf", e);
+        }
     }
 
     public void loadSkilltree(Runnable r) {

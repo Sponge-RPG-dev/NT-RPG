@@ -2,8 +2,7 @@ package cz.neumimto.rpg.common.configuration;
 
 import com.electronwill.nightconfig.core.conversion.Path;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 
 public class SkillDumpConfiguration {
@@ -12,10 +11,10 @@ public class SkillDumpConfiguration {
     private String skillId;
 
     @Path("settings")
-    private Set<String> floatNodes;
+    private List<String> nodes;
 
     public SkillDumpConfiguration() {
-        this.floatNodes = new HashSet<>();
+        nodes = new ArrayList<>();
     }
 
     public String getSkillId() {
@@ -26,7 +25,8 @@ public class SkillDumpConfiguration {
         this.skillId = skillId;
     }
 
-    public Set<String> getFloatNodes() {
-        return floatNodes;
+    public void add(String node) {
+        nodes.add(node);
+        nodes.sort(Comparator.naturalOrder());
     }
 }
