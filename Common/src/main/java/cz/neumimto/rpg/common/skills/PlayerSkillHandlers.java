@@ -66,7 +66,7 @@ public class PlayerSkillHandlers {
         }
 
     }
-/*
+
     public static final IPlayerSkillHandler CLASS_PRIORITY = new IPlayerSkillHandler() {
 
         private Map<String, Map<ClassDefinition, PlayerSkillContext>> skills = new HashMap<>();
@@ -105,5 +105,5 @@ public class PlayerSkillHandlers {
             return skills.containsKey(name);
         }
     };
-    */
+
 }

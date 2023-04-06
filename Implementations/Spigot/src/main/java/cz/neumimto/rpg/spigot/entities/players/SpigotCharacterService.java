@@ -8,6 +8,7 @@ import cz.neumimto.rpg.common.persistance.model.CharacterBase;
 import cz.neumimto.rpg.common.resources.ResourceService;
 import cz.neumimto.rpg.common.skills.ISkill;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
+import cz.neumimto.rpg.spigot.Platform;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.entities.players.party.SpigotParty;
 import cz.neumimto.rpg.spigot.gui.SpellbookListener;
@@ -34,11 +35,7 @@ public class SpigotCharacterService extends CharacterService<SpigotCharacter> {
     private ResourceService resourceService;
 
     public SpigotCharacterService() {
-        if (SpigotRpgPlugin.isFolia()) {
-            characters = new ConcurrentHashMap<>();
-        } else {
-            characters = new HashMap<>();
-        }
+        characters = Platform.cacheKV();
     }
 
     @Override

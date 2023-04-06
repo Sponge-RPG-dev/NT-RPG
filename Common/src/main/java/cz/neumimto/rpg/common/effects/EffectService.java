@@ -19,15 +19,11 @@ import java.util.function.Consumer;
 public abstract class EffectService {
 
     public static final long TICK_PERIOD = 5L;
-    private static final long unlimited_duration = -1;
+    protected static final long unlimited_duration = -1;
     protected Set<IEffect> effectSet = new HashSet<>();
     protected Set<IEffect> pendingAdditions = new HashSet<>();
     protected Set<IEffect> pendingRemovals = new HashSet<>();
     protected Map<String, IGlobalEffect> globalEffects = new HashMap<>();
-    @Inject
-    private AssetService assetService;
-    @Inject
-    private SkillService skillService;
     private Map<String, EffectType> effectTypes = new HashMap<>();
 
     public EffectService() {

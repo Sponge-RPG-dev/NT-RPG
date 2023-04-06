@@ -348,12 +348,6 @@ public class SpigotRpgPlugin extends JavaPlugin implements Listener {
         Bukkit.getConsoleSender().sendMessage(empty());
     }
 
-    public static boolean isFolia() {
-        try {
-            Class.forName("io.papermc.paper.threadedregions.RegionisedServer");
-            return true;
-        } catch (ClassNotFoundException e) {
-            return false;
-        }
-    }
+
+
 }

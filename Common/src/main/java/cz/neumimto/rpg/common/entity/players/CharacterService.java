@@ -1181,7 +1181,7 @@ public abstract class CharacterService<T extends ActiveCharacter> {
 
         scheduleNextTick(() -> {
             recalculateProperties(character);
-            resourceService.addResource((ActiveCharacter) character, klass);
+            resourceService.addResource(character, klass);
             scheduleNextTick(() -> {
                 recalculateSecondaryPropertiesOnly(character);
                 applyGlobalEffects(character, klass);

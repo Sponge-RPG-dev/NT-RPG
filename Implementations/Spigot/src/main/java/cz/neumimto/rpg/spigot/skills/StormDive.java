@@ -3,6 +3,7 @@ package cz.neumimto.rpg.spigot.skills;
 import com.google.auto.service.AutoService;
 import cz.neumimto.rpg.common.ResourceLoader;
 import cz.neumimto.rpg.common.effects.EffectBase;
+import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.effects.IEffect;
 import cz.neumimto.rpg.common.skills.ISkill;
 import cz.neumimto.rpg.common.skills.PlayerSkillContext;
@@ -10,7 +11,6 @@ import cz.neumimto.rpg.common.skills.SkillNodes;
 import cz.neumimto.rpg.common.skills.SkillResult;
 import cz.neumimto.rpg.common.skills.tree.SkillType;
 import cz.neumimto.rpg.spigot.damage.SpigotDamageService;
-import cz.neumimto.rpg.spigot.effects.SpigotEffectService;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import cz.neumimto.rpg.spigot.packetwrapper.PacketHandler;
 import cz.neumimto.rpg.spigot.skills.utils.AbstractPacket;
@@ -35,7 +35,7 @@ import java.util.List;
 public class StormDive extends TargetedBlockSkill {
 
     @Inject
-    private SpigotEffectService effectService;
+    private EffectService effectService;
 
     @Inject
     private SpigotDamageService damageService;

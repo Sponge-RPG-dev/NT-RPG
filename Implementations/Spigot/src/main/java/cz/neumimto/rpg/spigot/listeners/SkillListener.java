@@ -2,11 +2,11 @@ package cz.neumimto.rpg.spigot.listeners;
 
 import com.google.auto.service.AutoService;
 import cz.neumimto.rpg.common.ResourceLoader;
+import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.effects.EffectType;
 import cz.neumimto.rpg.common.events.damage.DamageIEntityEarlyEvent;
 import cz.neumimto.rpg.common.resources.Resource;
 import cz.neumimto.rpg.common.resources.ResourceService;
-import cz.neumimto.rpg.spigot.effects.SpigotEffectService;
 import cz.neumimto.rpg.spigot.effects.common.ManaShieldEffect;
 import cz.neumimto.rpg.spigot.effects.common.Rage;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
@@ -27,7 +27,7 @@ import javax.inject.Singleton;
 public class SkillListener implements IRpgListener {
 
     @Inject
-    private SpigotEffectService effectService;
+    private EffectService effectService;
 
     @EventHandler(ignoreCancelled = true)
     public void onEffectApply(SpigotEffectApplyEvent event) {

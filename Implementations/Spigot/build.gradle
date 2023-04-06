@@ -46,6 +46,10 @@ repositories {
             includeGroupByRegex "(me\\.clip)"
         }
     }
+
+    maven {
+        url = "https://repo.papermc.io/repository/maven-snapshots/"
+    }
 }
 
 group = 'cz.neumimto.rpg'
@@ -57,7 +61,9 @@ dependencies {
 
     annotationProcessor project(':Generator')
 
-    compileOnly 'io.papermc.paper:paper-api:1.19.4-R0.1-SNAPSHOT'
+    //compileOnly 'io.papermc.paper:folia-api:1.19.4-R0.1-SNAPSHOT'
+
+    compileOnly 'dev.folia:folia-api:1.19.4-R0.1-SNAPSHOT'
 
     api project(':Common')
     api project(':FlatFiles-Persistence')
@@ -80,7 +86,6 @@ dependencies {
     api "co.aikar:acf-paper:0.5.1-SNAPSHOT"
 
     compileOnly 'me.clip:placeholderapi:2.9.2'
-    compileOnly "io.papermc.paper:paper-api:1.19.4-R0.1-SNAPSHOT"
     compileOnly "ru.endlesscode.mimic:mimic-bukkit-api:0.8.0"
 
     compileOnly('net.Indyuce:MMOItems:6.7.3') {
