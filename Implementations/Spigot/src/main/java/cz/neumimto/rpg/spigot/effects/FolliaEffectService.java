@@ -4,17 +4,16 @@ import cz.neumimto.rpg.common.effects.EffectService;
 import cz.neumimto.rpg.common.effects.IEffect;
 import cz.neumimto.rpg.common.effects.IEffectContainer;
 import cz.neumimto.rpg.common.entity.IEffectConsumer;
-import cz.neumimto.rpg.common.entity.IEntity;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
 
-import java.util.HashSet;
-import java.util.Set;
+import javax.inject.Singleton;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
+@Singleton
 public class FolliaEffectService extends EffectService {
 
     private ScheduledTask asyncTask;
@@ -28,7 +27,7 @@ public class FolliaEffectService extends EffectService {
     @Override
     public void startEffectScheduler() {
         asyncTask = Bukkit.getServer().getAsyncScheduler()
-                .runAtFixedRate(SpigotRpgPlugin.getInstance(), scheduledTask -> {schedule();}, 0L, 50L, TimeUnit.MILLISECONDS);
+                .runAtFixedRate(SpigotRpgPlugin.getInstance(), scheduledTask -> schedule(), 0L, 50L, TimeUnit.MILLISECONDS);
     }
 
     @Override

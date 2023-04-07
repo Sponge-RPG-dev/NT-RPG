@@ -499,8 +499,6 @@ public abstract class ActiveCharacter<T, P extends IParty> implements IEntity<T>
         return classes.values().stream().filter(a->a.getClassDefinition().getName().equals(name)).findFirst().orElse(null);
     }
 
-    public abstract void updateResourceUIHandler();
-
     public abstract Map<String, ? extends SkillTreeViewModel> getSkillTreeViewLocation();
 
     public abstract SkillTreeViewModel getLastTimeInvokedSkillTreeView();

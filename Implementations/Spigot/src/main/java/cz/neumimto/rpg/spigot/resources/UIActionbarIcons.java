@@ -23,6 +23,7 @@ public class UIActionbarIcons implements Consumer<SpigotCharacter>, Listener {
     public static String[] resTypes;
 
 
+
     public static void init(ResourceGui resourceGui) {
         resTypes = new String[resourceGui.display.size()];
 

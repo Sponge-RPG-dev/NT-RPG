@@ -36,16 +36,7 @@ public class SpigotResourceService extends ResourceService {
 
     private Supplier<Consumer<SpigotCharacter>> uihandlerfactory;
 
-    private Set<Integer> tasks = new HashSet<>();
-
-    private Runnable refreshTask = () -> {
-        for (SpigotCharacter character : characterService.getCharacters()) {
-            character.updateResourceUIHandler();
-        }
-    };
-
     private boolean init;
-
 
     @Override
     public void reload() {
@@ -56,10 +47,6 @@ public class SpigotResourceService extends ResourceService {
     //Initialize lazily, which makes it sure its initialized after ia/oraxen & papi if installed
     public void init() {
         init = true;
-        for (Integer id : tasks) {
-            Bukkit.getScheduler().cancelTask(id);
-        }
-        tasks.clear();
 
         Path path = Paths.get(Rpg.get().getWorkingDirectory(), "Resources.conf");
 
@@ -87,10 +74,7 @@ public class SpigotResourceService extends ResourceService {
             if (first.isPresent()) {
                 ResourceGui resourceGui = first.get();
                 if (resourceGui.refreshRate > 0) {
-                    BukkitTask bukkitTask = Bukkit.getScheduler().runTaskTimer(SpigotRpgPlugin.getInstance(),
-                            refreshTask,
-                            0L, resourceGui.refreshRate);
-                    tasks.add(bukkitTask.getTaskId());
+
                 }
 
                 switch (resourceGui.type) {
@@ -113,10 +97,6 @@ public class SpigotResourceService extends ResourceService {
             init();
         }
         super.initializeForPlayer(activeCharacter);
-        if (uihandlerfactory != null) {
-            Consumer<SpigotCharacter> resHandler = uihandlerfactory.get();
-            ((SpigotCharacter) activeCharacter).setResourceUIHandler(resHandler);
-        }
     }
 
     @Override

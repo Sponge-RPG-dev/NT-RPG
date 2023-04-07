@@ -75,7 +75,6 @@ public class DefaultRageDecay extends UnstackableEffectBase<DefaultRageDecayMode
 
         Resource resource = event.getTarget().getResource(event.getType());
         resource.setValue(current);
-        character.updateResourceUIHandler();
     }
 
     @Override

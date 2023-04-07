@@ -4,6 +4,7 @@ import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.Pair;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import com.comphenix.protocol.wrappers.WrappedWatchableObject;
+import cz.neumimto.rpg.spigot.Platform;
 import cz.neumimto.rpg.spigot.Resourcepack;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.skills.utils.AbstractPacket;
@@ -114,7 +115,7 @@ public class PacketHandler {
     }
 
     public static void init() {
-        new Despawn().runTaskTimerAsynchronously(SpigotRpgPlugin.getInstance(), 1, 250);
+        Platform.timer(new Despawn());
     }
 
     private static class Despawn extends BukkitRunnable {

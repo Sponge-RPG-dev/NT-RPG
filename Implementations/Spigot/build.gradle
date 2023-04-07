@@ -180,5 +180,6 @@ build.mustRunAfter tasks.getByPath(':FlatFiles-Persistence:build')
 tasks {
     runServer {
         minecraftVersion("1.19.4")
+        serverJar(new File("C:\\Users\\chleb\\IdeaProjects\\Folia\\build\\libs\\folia-bundler-1.19.4-R0.1-SNAPSHOT-reobf.jar"))
     }
 }

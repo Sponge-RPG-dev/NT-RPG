@@ -48,11 +48,6 @@ public class TestCharacter extends ActiveCharacter<UUID, TestParty> implements A
     }
 
     @Override
-    public void updateResourceUIHandler() {
-
-    }
-
-    @Override
     public UUID getEntity() {
         return pl;
     }

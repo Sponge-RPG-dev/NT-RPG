@@ -6,7 +6,6 @@ import cz.neumimto.rpg.common.effects.IEffectContainer;
 import cz.neumimto.rpg.common.effects.IEffectSourceProvider;
 import cz.neumimto.rpg.common.entity.IEffectConsumer;
 import cz.neumimto.rpg.common.entity.IEntity;
-import cz.neumimto.rpg.spigot.Platform;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.events.character.SpigotEffectApplyEvent;
 import cz.neumimto.rpg.spigot.events.character.SpigotEffectRemoveEvent;
@@ -28,9 +27,6 @@ public class SpigotEffectService extends EffectService {
 
     @Override
     public void startEffectScheduler() {
-        if (Platform.isFolia()) {
-
-        } else {
         bukkitRunnable = new BukkitRunnable() {
             @Override
             public void run() {
@@ -38,7 +34,6 @@ public class SpigotEffectService extends EffectService {
             }
         };
         bukkitRunnable.runTaskTimer(SpigotRpgPlugin.getInstance(), 5L, 5L);
-        }
     }
 
     @Override

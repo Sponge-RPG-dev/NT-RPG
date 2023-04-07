@@ -1,13 +1,11 @@
 package cz.neumimto.rpg.spigot;
 
-import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Entity;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Consumer;
+import java.util.concurrent.TimeUnit;
 
 public class Platform {
 
@@ -15,7 +13,7 @@ public class Platform {
 
     static {
         try {
-            Class.forName("io.papermc.paper.threadedregions.RegionisedServer");
+            Class.forName("io.papermc.paper.threadedregions.scheduler.RegionScheduler");
             multithreading = true;
         } catch (ClassNotFoundException e) {
             multithreading = false;
@@ -41,11 +39,12 @@ public class Platform {
         throw new IllegalArgumentException(type + " cannot select type for ");
     }
 
-    public static void schedule(Entity entity,) {
-        Bukkit.getServer().getPlayer()
-        entity.getScheduler().run(SpigotRpgPlugin.getInstance(), (Consumer<ScheduledTask>) scheduledTask -> {
 
-        }, )
+    public static void timer(Runnable despawn) {
+        if  (multithreading) {
+            Bukkit.getServer().getAsyncScheduler().runAtFixedRate(SpigotRpgPlugin.getInstance(), scheduledTask -> despawn.run(), 0L, 50, TimeUnit.MILLISECONDS);
+        } else {
+            Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(SpigotRpgPlugin.getInstance(), despawn, 0L, 20);
+        }
     }
-
 }

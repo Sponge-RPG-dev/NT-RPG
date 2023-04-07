@@ -28,7 +28,6 @@ public class SpigotCharacter extends ActiveCharacter<Player, SpigotParty> implem
     private boolean spellbookRotationActive = false;
     private ItemStack[][] spellbook;
     private int spellbookPage;
-    private Consumer<SpigotCharacter> handler;
 
     public SpigotCharacter(UUID uuid, CharacterBase base, int propertyCount) {
         super(uuid, base, propertyCount);
@@ -65,16 +64,6 @@ public class SpigotCharacter extends ActiveCharacter<Player, SpigotParty> implem
 
     public void setSpellbookPage(int page) {
         this.spellbookPage = page;
-    }
-
-    public void setResourceUIHandler(Consumer<SpigotCharacter> handler) {
-        this.handler = handler;
-    }
-
-    public void updateResourceUIHandler() {
-        if (handler != null) {
-            handler.accept(this);
-        }
     }
 
     @Override

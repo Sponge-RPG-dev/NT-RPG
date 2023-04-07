@@ -39,7 +39,6 @@ public class ManaCast extends SkillCastMechanic {
     public void processAfterSuccess(ActiveCharacter character, PlayerSkillContext context) {
         Resource mana = character.getResource(ResourceService.mana);
         mana.setValue(mana.getValue() - getManaRequired(character, context));
-        character.updateResourceUIHandler();
     }
 
     @Override

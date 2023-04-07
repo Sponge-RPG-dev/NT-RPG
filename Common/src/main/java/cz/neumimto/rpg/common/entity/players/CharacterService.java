@@ -485,7 +485,7 @@ public abstract class CharacterService<T extends ActiveCharacter> {
             if (classDef.getSkillTreeType() == SkillTreeType.AUTO && classDef.getSkillTree() != SkillTree.Default) {
                 classDef.getSkillTreeType().processCharacterInit(activeCharacter, playerClassData);
             }
-            resourceService.addResource((ActiveCharacter) activeCharacter, classDef);
+            resourceService.addResource(activeCharacter, classDef);
         }
 
 
@@ -1050,7 +1050,6 @@ public abstract class CharacterService<T extends ActiveCharacter> {
 
         Resource r = event.getTarget().getResource(event.getType());
         r.setValue(Math.min(current, r.getMaxValue()));
-        event.getTarget().updateResourceUIHandler();
     }
 
     public ActionResult canGainClass(T character, ClassDefinition klass) {

@@ -124,13 +124,4 @@ public class SpigotPreloadCharacter extends SpigotCharacter {
     }
 
 
-    @Override
-    public void setResourceUIHandler(Consumer<SpigotCharacter> handler) {
-
-    }
-
-    @Override
-    public void updateResourceUIHandler() {
-
-    }
 }
