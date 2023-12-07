@@ -72,7 +72,7 @@ public class TestGuiceModule extends AbstractModule {
         bind(IPlayerDao.class).to(InMemoryPlayerStorage.class);
         bind(ExperienceService.class).to(TestExperienceService.class);
         bind(ClassService.class);
-        bind(ResourceLoader.class).to(ResourceLoader.class);
+        bind(ResourceLoader.class);
         bind(DamageService.class).to(TestDamageService.class);
         bind(EffectService.class).to(TestEffectService.class);
         bind(EntityService.class).to(TestEntityService.class);
@@ -94,7 +94,6 @@ public class TestGuiceModule extends AbstractModule {
             throw new IllegalStateException(":(");
         });
         bind(InventoryService.class).to(TestInventoryService.class);
-        bind(CharacterInventoryInteractionHandler.class).to(InventoryHandler.class);
         bind(ItemService.class).to(TestItemService.class);
         bind(RpgApi.class).to(TestApiImpl.class);
 

@@ -92,6 +92,9 @@ public class TestApiImpl implements RpgApi {
     @Inject
     private ResourceService resourceService;
 
+    @Inject
+    private PermissionService permissionService;
+
     public static List<Object> listeners = new ArrayList<>();
 
     @Override
@@ -242,7 +245,7 @@ public class TestApiImpl implements RpgApi {
 
     @Override
     public PermissionService getPermissionService() {
-        return null;
+        return permissionService;
     }
 
     @Override

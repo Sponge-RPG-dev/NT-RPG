@@ -15,11 +15,6 @@ public class TestInventoryService extends AbstractInventoryService<TestCharacter
     }
 
     @Override
-    public void initializeCharacterInventory(TestCharacter character) {
-
-    }
-
-    @Override
     public EquipedSlot createEquipedSlot(String className, int slotId) {
         return () -> slotId;
     }

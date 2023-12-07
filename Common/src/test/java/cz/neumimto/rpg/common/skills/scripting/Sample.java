@@ -39,7 +39,6 @@ public class Sample extends ActiveSkill {
         if (Exists.test(iEntity)) {
             if (DamageEntity.damage(20, iEntity, character)) {
                 delay(1000, () -> {
-                    character.getAllowedArmor();
                     info.getBonusLevel();
                     iEntity.getEntity();
                     int k = range;

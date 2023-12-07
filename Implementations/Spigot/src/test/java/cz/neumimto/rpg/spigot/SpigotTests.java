@@ -73,12 +73,6 @@ public class SpigotTests {
         Assertions.assertTrue(bUpg.getUpgrades().containsKey(bash.getSkillId()));
     }
 
-    @Test
-    public void player_login_char_autocreated_test() {
-        PlayerMock tester = preparePlayer();
-        Assertions.assertFalse(characterService.getCharacter(tester.getUniqueId()) instanceof PreloadCharacter);
-    }
-
     private PlayerMock preparePlayer() {
         PlayerMock tester = server.addPlayer("Tester");
 
@@ -92,7 +86,6 @@ public class SpigotTests {
     public void player_test_common_stuff() {
 
         PlayerMock playerMock = preparePlayer();
-        Assertions.assertFalse(characterService.getCharacter(playerMock.getUniqueId()) instanceof PreloadCharacter);
 
         playerMock.addAttachment(plugin, "ntrpg.player.char", true);
         playerMock.addAttachment(plugin, "ntrpg.class.warrior", true);

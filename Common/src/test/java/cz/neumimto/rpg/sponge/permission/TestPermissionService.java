@@ -12,6 +12,11 @@ public class TestPermissionService implements PermissionService {
     public static final String MISSING_PERM = ".QWE789456189.";
 
     @Override
+    public void init() {
+
+    }
+
+    @Override
     public boolean hasPermission(ActiveCharacter character, String value) {
         return !value.toLowerCase().contains(MISSING_PERM.toLowerCase());
     }

@@ -10,11 +10,16 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.UUID;
 
-public class TestCharacter extends ActiveCharacter<UUID, TestParty> implements ActiveCharacter<UUID, TestParty> {
+public class TestCharacter extends ActiveCharacter<UUID, TestParty> {
 
 
     public TestCharacter(UUID uuid, CharacterBase base, int propertyCount) {
         super(uuid, base, propertyCount);
+    }
+
+    @Override
+    public IEntityType getType() {
+        return IEntityType.CHARACTER;
     }
 
     @Override
@@ -25,11 +30,6 @@ public class TestCharacter extends ActiveCharacter<UUID, TestParty> implements A
     @Override
     public void sendMessage(String message) {
         Log.info("<<< message " + message);
-    }
-
-    @Override
-    public void sendNotification(String message) {
-        Log.info("<<< notification " + message);
     }
 
     @Override
