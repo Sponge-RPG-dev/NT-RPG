@@ -60,8 +60,8 @@ public class FlameDash extends TargetedBlockSkill {
                     player.teleport(block.getLocation().add(0, 1, 0));
 
                     player.getWorld().playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 0.75f, 0.75f);
-                    player.getWorld().spawnParticle(Particle.EXPLOSION_NORMAL, player.getLocation(), 2);
-                    player.getWorld().spawnParticle(Particle.EXPLOSION_HUGE, player.getLocation(), 1);
+                    player.getWorld().spawnParticle(Particle.EXPLOSION, player.getLocation(), 2);
+                    player.getWorld().spawnParticle(Particle.EXPLOSION, player.getLocation(), 1);
 
                     //  staticCircularBeamEffect.cancel();
 

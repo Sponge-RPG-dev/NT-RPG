@@ -76,15 +76,15 @@ public class SpigotGuiHelper {
         damageTypeToItemStack.put(ENTITY_SWEEP_ATTACK, unclickableIcon(Material.STONE_SWORD, 354, "ENTITY_SWEEP_ATTACK"));
         damageTypeToItemStack.put(CONTACT, unclickableIcon(Material.CACTUS, 354, "CONTACT"));
         damageTypeToItemStack.put(CUSTOM, unclickableIcon(Material.BARRIER, 354, "CUSTOM"));
-        damageTypeToItemStack.put(DROWNING, unclickableIcon(Material.WATER, 354, "DROWNING"));
+        damageTypeToItemStack.put(DROWNING, unclickableIcon(Material.WATER_BUCKET, 354, "DROWNING"));
         damageTypeToItemStack.put(ENTITY_EXPLOSION, unclickableIcon(Material.TNT, 354, "ENTITY_EXPLOSION"));
         damageTypeToItemStack.put(BLOCK_EXPLOSION, unclickableIcon(Material.TNT, 354, "BLOCK_EXPLOSION"));
         damageTypeToItemStack.put(FALL, unclickableIcon(Material.IRON_BOOTS, 354, "FALL"));
         damageTypeToItemStack.put(FIRE, unclickableIcon(Material.BLAZE_POWDER, 354, "FIRE"));
         damageTypeToItemStack.put(STARVATION, unclickableIcon(Material.ROTTEN_FLESH, 354, "STARVATION"));
-        damageTypeToItemStack.put(LAVA, unclickableIcon(Material.LAVA, 354, "LAVA"));
+        damageTypeToItemStack.put(LAVA, unclickableIcon(Material.LAVA_BUCKET, 354, "LAVA"));
         damageTypeToItemStack.put(PROJECTILE, unclickableIcon(Material.TIPPED_ARROW, 354, "PROJECTILE"));
-        damageTypeToItemStack.put(VOID, unclickableIcon(Material.NETHER_PORTAL, 354, "VOID"));
+        damageTypeToItemStack.put(VOID, unclickableIcon(Material.END_PORTAL_FRAME, 354, "VOID"));
         damageTypeToItemStack.put(MAGIC, unclickableIcon(Material.ENCHANTED_BOOK, 354, "MAGIC"));
         damageTypeToItemStack.put(LIGHTNING, unclickableIcon(Material.NETHER_STAR, 354, "LIGHTNING"));
 

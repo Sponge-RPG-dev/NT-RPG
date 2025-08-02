@@ -15,6 +15,7 @@ import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacterService;
 import cz.neumimto.rpg.spigot.skills.particles.CircularYIncrementingEffect;
+import io.papermc.paper.dialog.Dialog;
 import org.bukkit.Color;
 import org.bukkit.Particle;
 
@@ -48,7 +49,7 @@ public class Battery extends TargetedEntitySkill {
             circleEffect.color = Color.fromRGB(51, 204, 255);
             circleEffect.enableRotation = true;
             circleEffect.offsetYIncrement = 0.1;
-            circleEffect.particle = Particle.BLOCK_DUST;
+            circleEffect.particle = Particle.BLOCK_CRUMBLE;
 
             circleEffect.setTargetLocation(targetChar.getEntity().getLocation());
             SpigotRpgPlugin.getEffectManager().start(circleEffect);

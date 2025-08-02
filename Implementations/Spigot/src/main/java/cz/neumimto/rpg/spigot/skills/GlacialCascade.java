@@ -148,8 +148,8 @@ public class GlacialCascade extends TargetedEntitySkill {
 
             location.getWorld().playSound(location, Sound.BLOCK_GLASS_BREAK, 0.75f, 0.5f);
 
-            location.getWorld().spawnParticle(Particle.BLOCK_CRACK, location, 10, 0.0, 0.1, 0.0, Material.ICE.createBlockData());
-            location.getWorld().spawnParticle(Particle.SNOWBALL, location, 8);
+            location.getWorld().spawnParticle(Particle.BLOCK_CRUMBLE, location, 10, 0.0, 0.1, 0.0, Material.ICE.createBlockData());
+            location.getWorld().spawnParticle(Particle.ITEM_SNOWBALL, location, 8);
 
 
             packets = new ArrayList<>();

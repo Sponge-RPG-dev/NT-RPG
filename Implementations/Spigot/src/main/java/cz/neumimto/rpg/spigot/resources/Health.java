@@ -19,11 +19,11 @@ public class Health extends Resource {
     @Override
     protected void setMaxValue(double maxValue) {
         if (maxValue == 0) maxValue = 1;
-        Bukkit.getServer().getPlayer(uuid).getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(maxValue);
+        Bukkit.getServer().getPlayer(uuid).getAttribute(Attribute.MAX_HEALTH).setBaseValue(maxValue);
     }
 
     @Override
     public double getValue() {
-        return Bukkit.getServer().getPlayer(uuid).getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
+        return Bukkit.getServer().getPlayer(uuid).getAttribute(Attribute.MAX_HEALTH).getValue();
     }
 }

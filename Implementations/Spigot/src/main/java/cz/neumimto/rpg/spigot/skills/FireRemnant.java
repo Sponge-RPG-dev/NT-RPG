@@ -12,7 +12,6 @@ import cz.neumimto.rpg.common.skills.SkillNodes;
 import cz.neumimto.rpg.common.skills.SkillResult;
 import cz.neumimto.rpg.common.skills.mech.DamageMechanic;
 import cz.neumimto.rpg.common.skills.types.ActiveSkill;
-import cz.neumimto.rpg.nms.NMSHandler;
 import cz.neumimto.rpg.spigot.Resourcepack;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
@@ -38,9 +37,6 @@ public class FireRemnant extends ActiveSkill<SpigotCharacter> {
 
     @Inject
     private DamageMechanic damageMechanic;
-
-    @Inject
-    private NMSHandler nmsHandler;
 
     @Override
     public void init() {
@@ -110,13 +106,13 @@ public class FireRemnant extends ActiveSkill<SpigotCharacter> {
             particles = new SphereEffect(SpigotRpgPlugin.getEffectManager());
             particles.setDynamicTarget(new DynamicLocation(this.remnant));
             particles.infinite();
-            particles.particle = Particle.DRIP_LAVA;
+            particles.particle = Particle.DRIPPING_LAVA;
 
         }
 
         @Override
         public void onTick(IEffect self) {
-            remnant.getWorld().spawnParticle(Particle.DRIP_LAVA, remnant.getLocation(), 10);
+            remnant.getWorld().spawnParticle(Particle.DRIPPING_LAVA, remnant.getLocation(), 10);
         }
 
         @Override
@@ -129,6 +125,7 @@ public class FireRemnant extends ActiveSkill<SpigotCharacter> {
             Entity entitty = (Entity) getConsumer().getEntity();
             entitty.teleport(remnant);
             if (damage > 0) {
+                /*
                 nmsHandler.spawnFireworkExplosion(remnant.getLocation(),
                         FireworkEffect.builder().withColor(Color.RED,
                                         Color.YELLOW,
@@ -136,8 +133,8 @@ public class FireRemnant extends ActiveSkill<SpigotCharacter> {
                                 .with(FireworkEffect.Type.BURST)
                                 .build(),
                         remnant.getLocation().getWorld().getPlayers());
-
-                remnant.getLocation().getWorld().spawnParticle(Particle.EXPLOSION_NORMAL, remnant.getLocation(), 2);
+*/
+                remnant.getLocation().getWorld().spawnParticle(Particle.EXPLOSION, remnant.getLocation(), 2);
             }
             setDuration(0);
         }

@@ -132,7 +132,7 @@ public class StormDive extends TargetedBlockSkill {
                 entity.setVelocity(velocity);
             }
             entity.getWorld().spawnParticle(Particle.CLOUD, entity.getLocation(), 15);
-            entity.getWorld().spawnParticle(Particle.WATER_DROP, entity.getLocation(), 5);
+            entity.getWorld().spawnParticle(Particle.DRIPPING_WATER, entity.getLocation(), 5);
         }
 
         @Override

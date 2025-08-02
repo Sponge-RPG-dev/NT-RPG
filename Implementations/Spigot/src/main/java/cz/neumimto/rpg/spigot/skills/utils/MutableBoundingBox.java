@@ -50,7 +50,7 @@ public class MutableBoundingBox {
                     if ((x == _minX || x == _maxX) && (z == _minZ || z == _maxZ)) edge = true;
 
                     if (edge) {
-                        world.spawnParticle(Particle.VILLAGER_HAPPY,
+                        world.spawnParticle(Particle.HAPPY_VILLAGER,
                                 new Location(world, x / 100, y / 100, z / 100),
                                 1, 0, 0, 0,
                                 0);

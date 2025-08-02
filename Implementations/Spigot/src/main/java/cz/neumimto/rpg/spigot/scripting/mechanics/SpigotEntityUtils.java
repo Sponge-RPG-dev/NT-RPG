@@ -5,7 +5,6 @@ import cz.neumimto.nts.annotations.ScriptMeta;
 import cz.neumimto.rpg.common.entity.IEntity;
 import cz.neumimto.rpg.common.scripting.mechanics.NTScriptProxy;
 import cz.neumimto.rpg.common.skills.ISkill;
-import cz.neumimto.rpg.nms.NMSHandler;
 import cz.neumimto.rpg.spigot.entities.ISpigotEntity;
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
@@ -14,7 +13,6 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.util.Vector;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import static cz.neumimto.nts.annotations.ScriptMeta.Handler;
@@ -23,9 +21,6 @@ import static cz.neumimto.nts.annotations.ScriptMeta.NamedParam;
 @Singleton
 @AutoService(NTScriptProxy.class)
 public class SpigotEntityUtils implements NTScriptProxy {
-
-    @Inject
-    private NMSHandler nmsHandler;
 
     @Handler
     @ScriptMeta.Function("get_location")
@@ -92,8 +87,18 @@ public class SpigotEntityUtils implements NTScriptProxy {
             cause = EntityDamageEvent.DamageCause.ENTITY_ATTACK;
         }
 
+        return false;
+        /*
+        DamageSource build = DamageSource.builder().withCausingEntity(dEntity).build();
+        tEntity.damage(damage, build);
+        RegistryAccess.registryAccess().getRegistry(RegistryKey.DAMAGE_TYPE).p
+                ;
+        
+
         EntityDamageEvent event = nmsHandler.handleEntityDamageEvent(tEntity, dEntity, cause, damage, knockback);
-        return !event.isCancelled() && event.getFinalDamage() > 0;
+        return !event.isCancelled() && event.getFinalDamage() > 0;\
+
+         */
     }
 
 

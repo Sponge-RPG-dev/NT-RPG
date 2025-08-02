@@ -15,6 +15,7 @@ import cz.neumimto.rpg.common.skills.tree.SkillTree;
 import cz.neumimto.rpg.spigot.effects.common.def.BossBarExpNotifier;
 import cz.neumimto.rpg.spigot.entities.players.SpigotCharacter;
 import cz.neumimto.rpg.spigot.gui.inventoryviews.*;
+import io.papermc.paper.dialog.Dialog;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;

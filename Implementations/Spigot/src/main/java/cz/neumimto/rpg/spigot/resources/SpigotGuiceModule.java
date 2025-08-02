@@ -18,8 +18,6 @@ import cz.neumimto.rpg.common.logging.Log;
 import cz.neumimto.rpg.common.permissions.PermissionService;
 import cz.neumimto.rpg.common.resources.ResourceService;
 import cz.neumimto.rpg.common.skills.SkillService;
-import cz.neumimto.rpg.nms.NMSHandler;
-import cz.neumimto.rpg.nms.NMSHandlerAnyVersion;
 import cz.neumimto.rpg.spigot.SpigotRpg;
 import cz.neumimto.rpg.spigot.SpigotRpgPlugin;
 import cz.neumimto.rpg.spigot.assets.SpigotAssetService;
@@ -76,21 +74,6 @@ public class SpigotGuiceModule extends AbstractRpgGuiceModule {
         map.put(ResourceLoader.class, SpigotResourceLoader.class);
         map.put(CharacterService.class, SpigotCharacterService.class);
         map.put(ResourceService.class, SpigotResourceService.class);
-
-        ServiceLoader<NMSHandler> load = ServiceLoader.load(NMSHandler.class, this.getClass().getClassLoader());
-        if (!SpigotRpgPlugin.testEnv) {
-            for (NMSHandler nmsHandler : load) {
-                if (nmsHandler.getVersion().contains(minecraftVersion)) {
-                    map.put(NMSHandler.class, nmsHandler.getClass());
-                }
-            }
-        }
-        if (!map.containsKey(NMSHandler.class)) {
-            Log.error(" !! NTRPG is not compatible with this version of mc, some features wont work");
-            map.put(NMSHandler.class, NMSHandlerAnyVersion.class);
-        }
-
-
         map.put(SpigotEntityUtils.class, null);
         //map.put(ICharacterClassDao.class).to(JPACharacterClassDao.class);
         //map.put(IPlayerDao.class).to(JPAPlayerDao.class);

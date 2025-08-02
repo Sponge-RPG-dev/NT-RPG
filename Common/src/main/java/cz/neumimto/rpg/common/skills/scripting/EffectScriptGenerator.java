@@ -15,6 +15,7 @@ import net.bytebuddy.description.method.MethodDescription;
 import net.bytebuddy.description.method.MethodList;
 import net.bytebuddy.description.type.TypeDescription;
 import net.bytebuddy.dynamic.DynamicType;
+import net.bytebuddy.dynamic.loading.ClassLoadingStrategy;
 import net.bytebuddy.implementation.Implementation;
 import net.bytebuddy.implementation.MethodCall;
 import net.bytebuddy.implementation.bytecode.ByteCodeAppender;
@@ -30,6 +31,7 @@ import net.bytebuddy.jar.asm.Opcodes;
 import net.bytebuddy.matcher.ElementMatchers;
 import net.bytebuddy.pool.TypePool;
 
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -133,7 +135,7 @@ public class EffectScriptGenerator {
                             return classVisitor;
                         }
                     })
-                    .name("cz.neumimto.rpg.generated.effects." + model.id + System.currentTimeMillis())
+                    .name("cz.neumimto.rpg.common.effects." + model.id + System.currentTimeMillis())
                     .annotateType(AnnotationDescription.Builder.ofType(ScriptMeta.Function.class).define("value", model.id).build())
                     .annotateType(AnnotationDescription.Builder.ofType(ScriptMeta.SimpleName.class).define("value", model.id).build());
 
@@ -181,9 +183,10 @@ public class EffectScriptGenerator {
                 bb = generateMethodBody("onRemove", bb);
 
             }
+            MethodHandles.Lookup lookup = MethodHandles.privateLookupIn(EffectBase.class, MethodHandles.lookup());
 
             Class<? extends EffectBase> loaded = bb.make()
-                    .load(classLoader, INJECTION)
+                    .load(classLoader, ClassLoadingStrategy.UsingLookup.of(lookup))
                     .getLoaded();
 
             injectIfExists("onApply", generateHandler(model.onApply, classLoader, loaded), loaded);
@@ -196,13 +199,15 @@ public class EffectScriptGenerator {
         return null;
     }
 
-    private static ScriptEffectBase.Handler generateHandler(String script, ClassLoader classLoader, Class<? extends EffectBase> loaded) {
+    private static ScriptEffectBase.Handler generateHandler(String script, ClassLoader classLoader, Class<? extends EffectBase> loaded) throws IllegalAccessException {
         if (script == null) {
             return null;
         }
 
         TypeDescription.Generic generic = TypeDescription.Generic.Builder
                 .parameterizedType(ScriptEffectBase.Handler.class, loaded).build();
+
+        MethodHandles.Lookup lookup = MethodHandles.privateLookupIn(ScriptEffectBase.Handler.class, MethodHandles.lookup());
 
         Class<?> loaded1 = new ByteBuddy()
                 .makeInterface(generic)
@@ -213,7 +218,7 @@ public class EffectScriptGenerator {
                 .withoutCode()
                 .annotateMethod(AnnotationDescription.Builder.ofType(ScriptMeta.ScriptTarget.class).build())
                 .make()
-                .load(classLoader, INJECTION)
+                .load(classLoader, ClassLoadingStrategy.UsingLookup.of(lookup))
                 .getLoaded();
 
         Class compile = Rpg.get().getScriptEngine()

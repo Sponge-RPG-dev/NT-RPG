@@ -183,7 +183,7 @@ public class Soar extends ActiveSkill<SpigotCharacter> {
 
                 damageService.damage(entityCaster, currentTarget, ENTITY_ATTACK, dashDamage, false);
                 currentTarget.getWorld().playSound(targetLocation, Sound.ENTITY_PLAYER_ATTACK_KNOCKBACK, 1.0F, 1.0F);
-                currentTarget.getWorld().spawnParticle(Particle.BLOCK_CRACK, targetLocation, 30, 2, 2, 2, Material.REDSTONE_BLOCK.getData());
+                currentTarget.getWorld().spawnParticle(Particle.BLOCK_CRUMBLE, targetLocation, 30, 2, 2, 2, Material.REDSTONE_BLOCK.getData());
                 IEntity targAle = entityService.get(currentTarget);
                 SoaringLevitationEffect effect = (SoaringLevitationEffect) targAle.getEffect(SoarStrikeAffected_NAME);
                 if (effect != null) {

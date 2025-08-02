@@ -62,9 +62,9 @@ public class MMOItemSkill extends ActiveSkill<SpigotCharacter> {
 
         AttackMetadata attackMetadata = new AttackMetadata(damageMetadata, caster);
 
-        var cast = ability.cast(new TriggerMetadata(caster, attackMetadata, null));
+        var cast = ability.cast(new TriggerMetadata(MMOPlayerData.get(character.getUUID()), TriggerType.API, null, caster.getEntity().getLocation(), null, null, attackMetadata, null));
 
-        return cast.isSuccessful(new SkillMetadata(ability, MMOPlayerData.get(player))) ? SkillResult.OK : SkillResult.CANCELLED;
+        return cast.isSuccessful() ? SkillResult.OK : SkillResult.CANCELLED;
     }
 
     public RegisteredSkill getAbility() {

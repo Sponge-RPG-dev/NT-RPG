@@ -60,7 +60,7 @@ public class ManaShieldEffect extends EffectBase<Double> implements IEffectConta
         }
 
         consumer.getLocation().getWorld().spawnParticle(
-                Particle.BLOCK_DUST,
+                Particle.BLOCK_CRUMBLE,
                 consumer.getLocation().add(circle[count]),
                 1,
                 dustOptions

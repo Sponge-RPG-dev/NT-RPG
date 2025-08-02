@@ -70,8 +70,8 @@ public class Icicle extends ActiveSkill<SpigotCharacter> {
         projectileProperties.onHit((event, attacker, target) -> {
             event.setDamage(skillContext.getDoubleNodeValue(SkillNodes.DAMAGE));
             LivingEntity entity = target.getEntity();
-            entity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 60, 1, true, true, true));
-            entity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, 80, 1, true, true, true));
+            entity.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 60, 1, true, true, true));
+            entity.addPotionEffect(new PotionEffect(PotionEffectType.MINING_FATIGUE, 80, 1, true, true, true));
             entity.setFireTicks(0);
             trail.cancel();
         });
@@ -102,8 +102,8 @@ public class Icicle extends ActiveSkill<SpigotCharacter> {
         @Override
         public void run() {
             max--;
-            projectile.getWorld().spawnParticle(Particle.SNOWBALL, projectile.getLocation(), 2);
-            projectile.getWorld().spawnParticle(Particle.BLOCK_CRACK, projectile.getLocation(), 4, 0.0, 0.1, 0.0, data);
+            projectile.getWorld().spawnParticle(Particle.ITEM_SNOWBALL, projectile.getLocation(), 2);
+            projectile.getWorld().spawnParticle(Particle.BLOCK_CRUMBLE, projectile.getLocation(), 4, 0.0, 0.1, 0.0, data);
             if (max == 0) {
                 cancel();
             }

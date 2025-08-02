@@ -6,8 +6,8 @@ subprojects {
     apply plugin: 'java-library'
 
     tasks.withType(JavaCompile) {
-        sourceCompatibility = "17"
-        targetCompatibility = "17"
+        sourceCompatibility = "21"
+        targetCompatibility = "21"
     }
 
     compileJava.options.encoding = compileTestJava.options.encoding = 'UTF-8'
@@ -23,14 +23,6 @@ subprojects {
         }
     }
 
-    task sourcesJar(type: Jar, dependsOn: classes) {
-        classifier = 'sources'
-        from sourceSets.main.allSource
-    }
-
-    artifacts {
-        archives sourcesJar
-    }
 
     test {
         dependsOn jar
@@ -40,13 +32,13 @@ subprojects {
     compileJava {
         options.compilerArgs += ["-parameters"]
         options.fork = true
-        options.forkOptions.executable = 'javac'
+        //options.forkOptions.executable = 'javac'
     }
 
     compileTestJava {
         options.compilerArgs += ["-parameters"]
         options.fork = true
-        options.forkOptions.executable = 'javac'
+        //options.forkOptions.executable = 'javac'
     }
 
     jar {

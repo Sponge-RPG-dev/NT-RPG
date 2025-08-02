@@ -46,11 +46,6 @@ public class SkillContextTag implements ObjectTag {
     }
 
     @Override
-    public String getObjectType() {
-        return "SkillContext";
-    }
-
-    @Override
     public String identify() {
         return "skillContext@" + context.getSkill().getId() + "," + character.getUUID();
     }

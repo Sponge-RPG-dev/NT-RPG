@@ -41,7 +41,7 @@ public class SpigotEntityService extends AbstractEntityService<LivingEntity, Spi
         double speed = getEntityProperty(entity, CommonProperties.walk_speed);
 
         LivingEntity le = entity.getEntity();
-        AttributeInstance attribute = le.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED);
+        AttributeInstance attribute = le.getAttribute(Attribute.MOVEMENT_SPEED);
         attribute.setBaseValue(speed);
 
         if (Rpg.get().getPluginConfig().DEBUG.isBalance()) {

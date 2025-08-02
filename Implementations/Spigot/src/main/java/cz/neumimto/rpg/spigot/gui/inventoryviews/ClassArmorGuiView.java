@@ -7,6 +7,12 @@ import cz.neumimto.rpg.common.entity.players.classes.ClassDefinition;
 import cz.neumimto.rpg.common.items.RpgItemType;
 import cz.neumimto.rpg.common.localization.LocalizationService;
 import cz.neumimto.rpg.spigot.gui.elements.GuiCommand;
+import io.lumine.utils.adventure.text.event.ClickCallback;
+import io.papermc.paper.dialog.Dialog;
+import io.papermc.paper.registry.data.dialog.ActionButton;
+import io.papermc.paper.registry.data.dialog.DialogBase;
+import io.papermc.paper.registry.data.dialog.action.DialogAction;
+import io.papermc.paper.registry.data.dialog.type.DialogType;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.command.CommandSender;
@@ -44,7 +50,28 @@ public class ClassArmorGuiView extends ConfigurableInventoryGui {
         ChestGui gui = instance.loadGui(null, className);
         cache.put(className, gui);
         return gui;
+
+        Dialog dialog = Dialog.create(b -> b.empty()
+                .base(DialogBase.builder(Component.text("BASE TITLE")).build())
+                .type(DialogType.multiAction(
+                        List.of(
+                                ActionButton.builder(Component.text("Hello"))
+                                        .action(DialogAction.customClick((r, aud) ->
+                                                        System.out.println("RESPONSE GET!!"),
+                                                ClickCallback.Options.builder().build())).build(),
+                                ActionButton.builder(Component.text("Hello!!"))
+                                        .action(DialogAction.customClick((r, aud) ->
+                                                        System.out.println("RESPONSE GET!!!!"),
+                                                ClickCallback.Options.builder().build())).build()
+                        ),
+                        ActionButton.builder(Component.text("Boop"))
+                                .action(DialogAction.customClick((r, aud) ->
+                                                System.out.println("RESPONSE GET??"),
+                                        ClickCallback.Options.builder().build())).build(),
+                        1
+                )));
     }
+
 
     @Override
     public void clearCache() {

@@ -61,7 +61,7 @@ public class Bash extends TargetedEntitySkill {
 
         Location location = entity.getLocation();
         location.getWorld().playSound(location, Sound.ENTITY_PLAYER_ATTACK_KNOCKBACK, 1, 1);
-        location.getWorld().spawnParticle(Particle.REDSTONE, location.add(0, 1, 0), 8);
+        location.getWorld().spawnParticle(Particle.BLOCK_CRUMBLE, location.add(0, 1, 0), 8);
 
         double knockback = skillContext.getDoubleNodeValue("knockback");
         if (knockback > 0) {
@@ -95,7 +95,7 @@ public class Bash extends TargetedEntitySkill {
                 if (entity.isDead() || i == 10) {
                     cancel();
                 } else {
-                    entity.getWorld().spawnParticle(Particle.SPELL_MOB, entity.getLocation().add(0, .5, 0),
+                    entity.getWorld().spawnParticle(Particle.LARGE_SMOKE, entity.getLocation().add(0, .5, 0),
                             3, 238, 63, 55);
                     i++;
                 }

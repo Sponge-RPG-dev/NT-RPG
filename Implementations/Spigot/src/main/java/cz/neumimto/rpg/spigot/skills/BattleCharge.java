@@ -81,7 +81,7 @@ public class BattleCharge extends TargetedEntitySkill {
                                     damageService.damage(entity, living, ENTITY_ATTACK, damage, false);
                                 }
                                 if (slowDuration > 0) {
-                                    PotionEffect pe = new PotionEffect(PotionEffectType.SLOW, slowDuration, 2);
+                                    PotionEffect pe = new PotionEffect(PotionEffectType.SLOWNESS, slowDuration, 2);
                                     living.addPotionEffect(pe, true);
                                 }
                             }

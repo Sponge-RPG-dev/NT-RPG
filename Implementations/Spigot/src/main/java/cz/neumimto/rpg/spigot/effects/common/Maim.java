@@ -42,7 +42,7 @@ public class Maim extends SlowEffect {
         circleEffect = new CircleEffect(SpigotRpgPlugin.getEffectManager());
         circleEffect.type = EffectType.REPEATING;
         circleEffect.particles = 30;
-        circleEffect.particle = Particle.REDSTONE;
+        circleEffect.particle = Particle.ASH;
         circleEffect.wholeCircle = true;
         circleEffect.asynchronous = true;
         circleEffect.duration = (int) getDuration();

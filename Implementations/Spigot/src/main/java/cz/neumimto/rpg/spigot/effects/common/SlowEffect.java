@@ -48,11 +48,11 @@ public class SlowEffect extends EffectBase<SlowModel> {
         LivingEntity entity1 = entity.getEntity();
         if (value.decreasedJumpHeight) {
 
-            PotionEffect pe = new PotionEffect(PotionEffectType.JUMP, 17, -1);
+            PotionEffect pe = new PotionEffect(PotionEffectType.JUMP_BOOST, 17, -1);
             entity1.addPotionEffect(pe);
         }
         int slowLevel = value.slowLevel;
-        PotionEffect pe = new PotionEffect(PotionEffectType.SLOW_DIGGING, 17, slowLevel);
+        PotionEffect pe = new PotionEffect(PotionEffectType.MINING_FATIGUE, 17, slowLevel);
         entity1.addPotionEffect(pe);
     }
 

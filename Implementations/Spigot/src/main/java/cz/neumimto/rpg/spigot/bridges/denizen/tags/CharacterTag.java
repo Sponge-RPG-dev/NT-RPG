@@ -54,10 +54,6 @@ public class CharacterTag implements EntityFormObject {
         return true;
     }
 
-    @Override
-    public String getObjectType() {
-        return "Character";
-    }
 
     @Override
     public String identify() {

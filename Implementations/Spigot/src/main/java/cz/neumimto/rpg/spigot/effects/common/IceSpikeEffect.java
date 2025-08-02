@@ -54,8 +54,8 @@ public class IceSpikeEffect extends EffectBase {
                 LivingEntity livingEntity = (LivingEntity) nearbyEntity;
                 if (damageService.canDamage(caster, livingEntity)) {
                     damageService.damage(player, livingEntity, EntityDamageEvent.DamageCause.MAGIC, damage, false);
-                    livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20, 1));
-                    livingEntity.getWorld().spawnParticle(Particle.SNOWBALL, livingEntity.getLocation(), 10, 3, 2, 3);
+                    livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 20, 1));
+                    livingEntity.getWorld().spawnParticle(Particle.ITEM_SNOWBALL, livingEntity.getLocation(), 10, 3, 2, 3);
                 }
             }
         }

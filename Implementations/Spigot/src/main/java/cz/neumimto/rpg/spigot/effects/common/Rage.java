@@ -67,7 +67,7 @@ public class Rage extends EffectBase {
                     loc.clone().add(Math.cos(it), Math.sin(it) + 1, Math.sin(it)),
                     Color.RED);
 
-            display(Particle.REDSTONE,
+            display(Particle.ANGRY_VILLAGER,
                     loc.clone().add(Math.cos(it + Math.PI), Math.sin(it) + 1, Math.sin(it + Math.PI)),
                     Color.BLACK);
         }
